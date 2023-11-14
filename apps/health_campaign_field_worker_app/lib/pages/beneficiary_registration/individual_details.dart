@@ -68,7 +68,9 @@ class _IndividualDetailsPageState
                           isProximityEnabled: false,
                         ),
                       );
-                  router.push(AcknowledgementRoute());
+                  router.push(BeneficiaryAcknowledgementRoute(
+                    enableViewHousehold: true,
+                  ));
                 }
               },
             );
