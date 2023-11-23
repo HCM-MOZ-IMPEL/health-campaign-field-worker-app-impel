@@ -693,6 +693,15 @@ class SearchHouseholdsBloc
       householdMembers: [],
     ));
   }
+
+  Future<List<TaskModel>> fetchTaskbyProjectBeneficiary(
+    List<ProjectBeneficiaryModel> projectBeneficiaries,
+  ) async {
+      return await taskDataRepository.search(TaskSearchModel(
+          projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+    ));
+  }
 }
 
 @freezed
