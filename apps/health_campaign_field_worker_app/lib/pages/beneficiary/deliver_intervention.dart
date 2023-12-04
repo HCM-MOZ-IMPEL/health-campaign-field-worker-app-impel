@@ -308,13 +308,16 @@ class _DeliverInterventionPageState
                                                                       _deliveryCommentKey)
                                                                   .value ==
                                                               "Readministração sem sucesso") {
-                                                        Navigator.of(
+                                                        if (Navigator.of(
                                                           context,
-                                                          rootNavigator: true,
-                                                        ).pop(false);
+                                                        ).canPop()) {
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(false);
+                                                        }
 
-                                                        context.router
-                                                            .push(
+                                                        context.router.push(
                                                           ReferBeneficiaryRoute(
                                                             projectBeneficiaryClientRefId:
                                                                 projectBeneficiaryClientReferenceId ??
@@ -651,7 +654,10 @@ class _DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.administeredSuccess.toValue(),
+      status: (form.control(_deliveryCommentKey).value ==
+              "Readministração sem sucesso")
+          ? Status.beneficiaryReferred.toValue()
+          : Status.administeredSuccess.toValue(),
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [

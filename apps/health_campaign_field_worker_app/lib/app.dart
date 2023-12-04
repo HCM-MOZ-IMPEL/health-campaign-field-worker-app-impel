@@ -110,7 +110,7 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('pt', 'MZ');
+                const defaultLocale = Locale('en', 'MZ');
 
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
@@ -127,7 +127,7 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final firstLanguage = appConfig.languages?.first.value;
+                    final firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
@@ -300,14 +300,8 @@ class MainApplicationState extends State<MainApplication>
                             ],
                             locale: languages != null
                                 ? Locale(
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .first,
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .last,
+                                    languages[2].value.split('_').first,
+                                    languages[2].value.split('_').last,
                                   )
                                 : defaultLocale,
                             theme: DigitTheme.instance.mobileTheme,

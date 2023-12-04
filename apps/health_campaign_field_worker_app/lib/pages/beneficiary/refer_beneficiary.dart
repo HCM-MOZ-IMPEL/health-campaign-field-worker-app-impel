@@ -31,7 +31,7 @@ class ReferBeneficiaryPage extends LocalizedStatefulWidget {
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
     required this.individual,
-    required this.isReadministrationSuccessful ,
+    required this.isReadministrationSuccessful,
   });
   @override
   State<ReferBeneficiaryPage> createState() => _ReferBeneficiaryPageState();
@@ -55,7 +55,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool isReadministrationSuccessful = widget.isReadministrationSuccessful;
+    final bool isReadministrationSuccessful =
+        widget.isReadministrationSuccessful;
     // final router = context.router;
     print("refer page called ");
 
