@@ -263,3 +263,43 @@ class DateFormats {
     }
   }
 }
+
+// attendance
+
+class AttendanceDateTimeManagement {
+  static int getMillisecondEpoch(
+    DateTime k,
+    dynamic sessioncode,
+    String entryTime,
+  ) {
+    if (sessioncode == "0") {
+      if (entryTime == "entryTime") {
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 9);
+
+        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+
+        return millisecondsSinceEpoch;
+      } else {
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 12);
+
+        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+
+        return millisecondsSinceEpoch;
+      }
+    } else {
+      if (entryTime == "entryTime") {
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 12);
+
+        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+
+        return millisecondsSinceEpoch;
+      } else {
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 6);
+
+        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+
+        return millisecondsSinceEpoch;
+      }
+    }
+  }
+}

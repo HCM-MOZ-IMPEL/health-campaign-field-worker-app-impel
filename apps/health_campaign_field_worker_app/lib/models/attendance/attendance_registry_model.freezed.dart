@@ -682,6 +682,7 @@ AttendanceRegisterAdditionalDetails
 
 /// @nodoc
 mixin _$AttendanceRegisterAdditionalDetails {
+  String? get description => throw _privateConstructorUsedError;
   String? get contractId => throw _privateConstructorUsedError;
   String? get orgName => throw _privateConstructorUsedError;
   String? get officerInCharge => throw _privateConstructorUsedError;
@@ -710,7 +711,8 @@ abstract class $AttendanceRegisterAdditionalDetailsCopyWith<$Res> {
           AttendanceRegisterAdditionalDetails>;
   @useResult
   $Res call(
-      {String? contractId,
+      {String? description,
+      String? contractId,
       String? orgName,
       String? officerInCharge,
       String? executingAuthority,
@@ -737,6 +739,7 @@ class _$AttendanceRegisterAdditionalDetailsCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? description = freezed,
     Object? contractId = freezed,
     Object? orgName = freezed,
     Object? officerInCharge = freezed,
@@ -750,6 +753,10 @@ class _$AttendanceRegisterAdditionalDetailsCopyWithImpl<$Res,
     Object? amount = freezed,
   }) {
     return _then(_value.copyWith(
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       contractId: freezed == contractId
           ? _value.contractId
           : contractId // ignore: cast_nullable_to_non_nullable
@@ -808,7 +815,8 @@ abstract class _$$_AttendanceRegisterAdditionalDetailsCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? contractId,
+      {String? description,
+      String? contractId,
       String? orgName,
       String? officerInCharge,
       String? executingAuthority,
@@ -834,6 +842,7 @@ class __$$_AttendanceRegisterAdditionalDetailsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? description = freezed,
     Object? contractId = freezed,
     Object? orgName = freezed,
     Object? officerInCharge = freezed,
@@ -847,6 +856,10 @@ class __$$_AttendanceRegisterAdditionalDetailsCopyWithImpl<$Res>
     Object? amount = freezed,
   }) {
     return _then(_$_AttendanceRegisterAdditionalDetails(
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       contractId: freezed == contractId
           ? _value.contractId
           : contractId // ignore: cast_nullable_to_non_nullable
@@ -900,7 +913,8 @@ class __$$_AttendanceRegisterAdditionalDetailsCopyWithImpl<$Res>
 class _$_AttendanceRegisterAdditionalDetails
     implements _AttendanceRegisterAdditionalDetails {
   const _$_AttendanceRegisterAdditionalDetails(
-      {this.contractId,
+      {this.description,
+      this.contractId,
       this.orgName,
       this.officerInCharge,
       this.executingAuthority,
@@ -916,6 +930,8 @@ class _$_AttendanceRegisterAdditionalDetails
           Map<String, dynamic> json) =>
       _$$_AttendanceRegisterAdditionalDetailsFromJson(json);
 
+  @override
+  final String? description;
   @override
   final String? contractId;
   @override
@@ -941,7 +957,7 @@ class _$_AttendanceRegisterAdditionalDetails
 
   @override
   String toString() {
-    return 'AttendanceRegisterAdditionalDetails(contractId: $contractId, orgName: $orgName, officerInCharge: $officerInCharge, executingAuthority: $executingAuthority, projectId: $projectId, projectName: $projectName, projectType: $projectType, projectDesc: $projectDesc, locality: $locality, ward: $ward, amount: $amount)';
+    return 'AttendanceRegisterAdditionalDetails(description: $description, contractId: $contractId, orgName: $orgName, officerInCharge: $officerInCharge, executingAuthority: $executingAuthority, projectId: $projectId, projectName: $projectName, projectType: $projectType, projectDesc: $projectDesc, locality: $locality, ward: $ward, amount: $amount)';
   }
 
   @override
@@ -949,6 +965,8 @@ class _$_AttendanceRegisterAdditionalDetails
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AttendanceRegisterAdditionalDetails &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.contractId, contractId) ||
                 other.contractId == contractId) &&
             (identical(other.orgName, orgName) || other.orgName == orgName) &&
@@ -974,6 +992,7 @@ class _$_AttendanceRegisterAdditionalDetails
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      description,
       contractId,
       orgName,
       officerInCharge,
@@ -1005,7 +1024,8 @@ class _$_AttendanceRegisterAdditionalDetails
 abstract class _AttendanceRegisterAdditionalDetails
     implements AttendanceRegisterAdditionalDetails {
   const factory _AttendanceRegisterAdditionalDetails(
-      {final String? contractId,
+      {final String? description,
+      final String? contractId,
       final String? orgName,
       final String? officerInCharge,
       final String? executingAuthority,
@@ -1021,6 +1041,8 @@ abstract class _AttendanceRegisterAdditionalDetails
           Map<String, dynamic> json) =
       _$_AttendanceRegisterAdditionalDetails.fromJson;
 
+  @override
+  String? get description;
   @override
   String? get contractId;
   @override

@@ -70,6 +70,7 @@ _$_AttendanceRegisterAdditionalDetails
     _$$_AttendanceRegisterAdditionalDetailsFromJson(
             Map<String, dynamic> json) =>
         _$_AttendanceRegisterAdditionalDetails(
+          description: json['description'] as String?,
           contractId: json['contractId'] as String?,
           orgName: json['orgName'] as String?,
           officerInCharge: json['officerInCharge'] as String?,
@@ -86,6 +87,7 @@ _$_AttendanceRegisterAdditionalDetails
 Map<String, dynamic> _$$_AttendanceRegisterAdditionalDetailsToJson(
         _$_AttendanceRegisterAdditionalDetails instance) =>
     <String, dynamic>{
+      'description': instance.description,
       'contractId': instance.contractId,
       'orgName': instance.orgName,
       'officerInCharge': instance.officerInCharge,

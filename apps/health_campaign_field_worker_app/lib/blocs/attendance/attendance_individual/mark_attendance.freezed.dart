@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'attendance_register.dart';
+part of 'mark_attendance.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,61 +15,64 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$AttendanceProjectsSearchEvent {
+mixin _$MarkAttendanceEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String tenantId, String projectid) search,
+    required TResult Function(int entryTime, int exitTime, int status,
+            String tenantId, String registarId, String projectId)
+        uploadAttendance,
     required TResult Function() dispose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String tenantId, String projectid)? search,
+    TResult? Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult? Function()? dispose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String tenantId, String projectid)? search,
+    TResult Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult Function()? dispose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchAttendanceProjectsEvent value) search,
-    required TResult Function(DisposeAttendanceRegisterEvent value) dispose,
+    required TResult Function(UploadAttendanceMarkEvent value) uploadAttendance,
+    required TResult Function(DisposeAttendanceEvent value) dispose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchAttendanceProjectsEvent value)? search,
-    TResult? Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult? Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult? Function(DisposeAttendanceEvent value)? dispose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchAttendanceProjectsEvent value)? search,
-    TResult Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult Function(DisposeAttendanceEvent value)? dispose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AttendanceProjectsSearchEventCopyWith<$Res> {
-  factory $AttendanceProjectsSearchEventCopyWith(
-          AttendanceProjectsSearchEvent value,
-          $Res Function(AttendanceProjectsSearchEvent) then) =
-      _$AttendanceProjectsSearchEventCopyWithImpl<$Res,
-          AttendanceProjectsSearchEvent>;
+abstract class $MarkAttendanceEventCopyWith<$Res> {
+  factory $MarkAttendanceEventCopyWith(
+          MarkAttendanceEvent value, $Res Function(MarkAttendanceEvent) then) =
+      _$MarkAttendanceEventCopyWithImpl<$Res, MarkAttendanceEvent>;
 }
 
 /// @nodoc
-class _$AttendanceProjectsSearchEventCopyWithImpl<$Res,
-        $Val extends AttendanceProjectsSearchEvent>
-    implements $AttendanceProjectsSearchEventCopyWith<$Res> {
-  _$AttendanceProjectsSearchEventCopyWithImpl(this._value, this._then);
+class _$MarkAttendanceEventCopyWithImpl<$Res, $Val extends MarkAttendanceEvent>
+    implements $MarkAttendanceEventCopyWith<$Res> {
+  _$MarkAttendanceEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -78,39 +81,63 @@ class _$AttendanceProjectsSearchEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$SearchAttendanceProjectsEventCopyWith<$Res> {
-  factory _$$SearchAttendanceProjectsEventCopyWith(
-          _$SearchAttendanceProjectsEvent value,
-          $Res Function(_$SearchAttendanceProjectsEvent) then) =
-      __$$SearchAttendanceProjectsEventCopyWithImpl<$Res>;
+abstract class _$$UploadAttendanceMarkEventCopyWith<$Res> {
+  factory _$$UploadAttendanceMarkEventCopyWith(
+          _$UploadAttendanceMarkEvent value,
+          $Res Function(_$UploadAttendanceMarkEvent) then) =
+      __$$UploadAttendanceMarkEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String tenantId, String projectid});
+  $Res call(
+      {int entryTime,
+      int exitTime,
+      int status,
+      String tenantId,
+      String registarId,
+      String projectId});
 }
 
 /// @nodoc
-class __$$SearchAttendanceProjectsEventCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchEventCopyWithImpl<$Res,
-        _$SearchAttendanceProjectsEvent>
-    implements _$$SearchAttendanceProjectsEventCopyWith<$Res> {
-  __$$SearchAttendanceProjectsEventCopyWithImpl(
-      _$SearchAttendanceProjectsEvent _value,
-      $Res Function(_$SearchAttendanceProjectsEvent) _then)
+class __$$UploadAttendanceMarkEventCopyWithImpl<$Res>
+    extends _$MarkAttendanceEventCopyWithImpl<$Res, _$UploadAttendanceMarkEvent>
+    implements _$$UploadAttendanceMarkEventCopyWith<$Res> {
+  __$$UploadAttendanceMarkEventCopyWithImpl(_$UploadAttendanceMarkEvent _value,
+      $Res Function(_$UploadAttendanceMarkEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? entryTime = null,
+    Object? exitTime = null,
+    Object? status = null,
     Object? tenantId = null,
-    Object? projectid = null,
+    Object? registarId = null,
+    Object? projectId = null,
   }) {
-    return _then(_$SearchAttendanceProjectsEvent(
+    return _then(_$UploadAttendanceMarkEvent(
+      entryTime: null == entryTime
+          ? _value.entryTime
+          : entryTime // ignore: cast_nullable_to_non_nullable
+              as int,
+      exitTime: null == exitTime
+          ? _value.exitTime
+          : exitTime // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as int,
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      projectid: null == projectid
-          ? _value.projectid
-          : projectid // ignore: cast_nullable_to_non_nullable
+      registarId: null == registarId
+          ? _value.registarId
+          : registarId // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -118,68 +145,98 @@ class __$$SearchAttendanceProjectsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchAttendanceProjectsEvent implements SearchAttendanceProjectsEvent {
-  const _$SearchAttendanceProjectsEvent(
-      {required this.tenantId, required this.projectid});
+class _$UploadAttendanceMarkEvent implements UploadAttendanceMarkEvent {
+  _$UploadAttendanceMarkEvent(
+      {required this.entryTime,
+      required this.exitTime,
+      required this.status,
+      required this.tenantId,
+      required this.registarId,
+      required this.projectId});
 
+  @override
+  final int entryTime;
+  @override
+  final int exitTime;
+  @override
+  final int status;
   @override
   final String tenantId;
   @override
-  final String projectid;
+  final String registarId;
+  @override
+  final String projectId;
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchEvent.search(tenantId: $tenantId, projectid: $projectid)';
+    return 'MarkAttendanceEvent.uploadAttendance(entryTime: $entryTime, exitTime: $exitTime, status: $status, tenantId: $tenantId, registarId: $registarId, projectId: $projectId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchAttendanceProjectsEvent &&
+            other is _$UploadAttendanceMarkEvent &&
+            (identical(other.entryTime, entryTime) ||
+                other.entryTime == entryTime) &&
+            (identical(other.exitTime, exitTime) ||
+                other.exitTime == exitTime) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
-            (identical(other.projectid, projectid) ||
-                other.projectid == projectid));
+            (identical(other.registarId, registarId) ||
+                other.registarId == registarId) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, tenantId, projectid);
+  int get hashCode => Object.hash(runtimeType, entryTime, exitTime, status,
+      tenantId, registarId, projectId);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchAttendanceProjectsEventCopyWith<_$SearchAttendanceProjectsEvent>
-      get copyWith => __$$SearchAttendanceProjectsEventCopyWithImpl<
-          _$SearchAttendanceProjectsEvent>(this, _$identity);
+  _$$UploadAttendanceMarkEventCopyWith<_$UploadAttendanceMarkEvent>
+      get copyWith => __$$UploadAttendanceMarkEventCopyWithImpl<
+          _$UploadAttendanceMarkEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String tenantId, String projectid) search,
+    required TResult Function(int entryTime, int exitTime, int status,
+            String tenantId, String registarId, String projectId)
+        uploadAttendance,
     required TResult Function() dispose,
   }) {
-    return search(tenantId, projectid);
+    return uploadAttendance(
+        entryTime, exitTime, status, tenantId, registarId, projectId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String tenantId, String projectid)? search,
+    TResult? Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult? Function()? dispose,
   }) {
-    return search?.call(tenantId, projectid);
+    return uploadAttendance?.call(
+        entryTime, exitTime, status, tenantId, registarId, projectId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String tenantId, String projectid)? search,
+    TResult Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult Function()? dispose,
     required TResult orElse(),
   }) {
-    if (search != null) {
-      return search(tenantId, projectid);
+    if (uploadAttendance != null) {
+      return uploadAttendance(
+          entryTime, exitTime, status, tenantId, registarId, projectId);
     }
     return orElse();
   }
@@ -187,83 +244,85 @@ class _$SearchAttendanceProjectsEvent implements SearchAttendanceProjectsEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchAttendanceProjectsEvent value) search,
-    required TResult Function(DisposeAttendanceRegisterEvent value) dispose,
+    required TResult Function(UploadAttendanceMarkEvent value) uploadAttendance,
+    required TResult Function(DisposeAttendanceEvent value) dispose,
   }) {
-    return search(this);
+    return uploadAttendance(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchAttendanceProjectsEvent value)? search,
-    TResult? Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult? Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult? Function(DisposeAttendanceEvent value)? dispose,
   }) {
-    return search?.call(this);
+    return uploadAttendance?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchAttendanceProjectsEvent value)? search,
-    TResult Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult Function(DisposeAttendanceEvent value)? dispose,
     required TResult orElse(),
   }) {
-    if (search != null) {
-      return search(this);
+    if (uploadAttendance != null) {
+      return uploadAttendance(this);
     }
     return orElse();
   }
 }
 
-abstract class SearchAttendanceProjectsEvent
-    implements AttendanceProjectsSearchEvent {
-  const factory SearchAttendanceProjectsEvent(
-      {required final String tenantId,
-      required final String projectid}) = _$SearchAttendanceProjectsEvent;
+abstract class UploadAttendanceMarkEvent implements MarkAttendanceEvent {
+  factory UploadAttendanceMarkEvent(
+      {required final int entryTime,
+      required final int exitTime,
+      required final int status,
+      required final String tenantId,
+      required final String registarId,
+      required final String projectId}) = _$UploadAttendanceMarkEvent;
 
+  int get entryTime;
+  int get exitTime;
+  int get status;
   String get tenantId;
-  String get projectid;
+  String get registarId;
+  String get projectId;
   @JsonKey(ignore: true)
-  _$$SearchAttendanceProjectsEventCopyWith<_$SearchAttendanceProjectsEvent>
+  _$$UploadAttendanceMarkEventCopyWith<_$UploadAttendanceMarkEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DisposeAttendanceRegisterEventCopyWith<$Res> {
-  factory _$$DisposeAttendanceRegisterEventCopyWith(
-          _$DisposeAttendanceRegisterEvent value,
-          $Res Function(_$DisposeAttendanceRegisterEvent) then) =
-      __$$DisposeAttendanceRegisterEventCopyWithImpl<$Res>;
+abstract class _$$DisposeAttendanceEventCopyWith<$Res> {
+  factory _$$DisposeAttendanceEventCopyWith(_$DisposeAttendanceEvent value,
+          $Res Function(_$DisposeAttendanceEvent) then) =
+      __$$DisposeAttendanceEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$DisposeAttendanceRegisterEventCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchEventCopyWithImpl<$Res,
-        _$DisposeAttendanceRegisterEvent>
-    implements _$$DisposeAttendanceRegisterEventCopyWith<$Res> {
-  __$$DisposeAttendanceRegisterEventCopyWithImpl(
-      _$DisposeAttendanceRegisterEvent _value,
-      $Res Function(_$DisposeAttendanceRegisterEvent) _then)
+class __$$DisposeAttendanceEventCopyWithImpl<$Res>
+    extends _$MarkAttendanceEventCopyWithImpl<$Res, _$DisposeAttendanceEvent>
+    implements _$$DisposeAttendanceEventCopyWith<$Res> {
+  __$$DisposeAttendanceEventCopyWithImpl(_$DisposeAttendanceEvent _value,
+      $Res Function(_$DisposeAttendanceEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$DisposeAttendanceRegisterEvent
-    implements DisposeAttendanceRegisterEvent {
-  const _$DisposeAttendanceRegisterEvent();
+class _$DisposeAttendanceEvent implements DisposeAttendanceEvent {
+  const _$DisposeAttendanceEvent();
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchEvent.dispose()';
+    return 'MarkAttendanceEvent.dispose()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DisposeAttendanceRegisterEvent);
+        (other.runtimeType == runtimeType && other is _$DisposeAttendanceEvent);
   }
 
   @override
@@ -272,7 +331,9 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String tenantId, String projectid) search,
+    required TResult Function(int entryTime, int exitTime, int status,
+            String tenantId, String registarId, String projectId)
+        uploadAttendance,
     required TResult Function() dispose,
   }) {
     return dispose();
@@ -281,7 +342,9 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String tenantId, String projectid)? search,
+    TResult? Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult? Function()? dispose,
   }) {
     return dispose?.call();
@@ -290,7 +353,9 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String tenantId, String projectid)? search,
+    TResult Function(int entryTime, int exitTime, int status, String tenantId,
+            String registarId, String projectId)?
+        uploadAttendance,
     TResult Function()? dispose,
     required TResult orElse(),
   }) {
@@ -303,8 +368,8 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(SearchAttendanceProjectsEvent value) search,
-    required TResult Function(DisposeAttendanceRegisterEvent value) dispose,
+    required TResult Function(UploadAttendanceMarkEvent value) uploadAttendance,
+    required TResult Function(DisposeAttendanceEvent value) dispose,
   }) {
     return dispose(this);
   }
@@ -312,8 +377,8 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchAttendanceProjectsEvent value)? search,
-    TResult? Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult? Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult? Function(DisposeAttendanceEvent value)? dispose,
   }) {
     return dispose?.call(this);
   }
@@ -321,8 +386,8 @@ class _$DisposeAttendanceRegisterEvent
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchAttendanceProjectsEvent value)? search,
-    TResult Function(DisposeAttendanceRegisterEvent value)? dispose,
+    TResult Function(UploadAttendanceMarkEvent value)? uploadAttendance,
+    TResult Function(DisposeAttendanceEvent value)? dispose,
     required TResult orElse(),
   }) {
     if (dispose != null) {
@@ -332,21 +397,17 @@ class _$DisposeAttendanceRegisterEvent
   }
 }
 
-abstract class DisposeAttendanceRegisterEvent
-    implements AttendanceProjectsSearchEvent {
-  const factory DisposeAttendanceRegisterEvent() =
-      _$DisposeAttendanceRegisterEvent;
+abstract class DisposeAttendanceEvent implements MarkAttendanceEvent {
+  const factory DisposeAttendanceEvent() = _$DisposeAttendanceEvent;
 }
 
 /// @nodoc
-mixin _$AttendanceProjectsSearchState {
+mixin _$MarkAttendanceState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)
-        loaded,
+    required TResult Function(bool flagStatus, String responseMsg) loaded,
     required TResult Function(String? error) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -354,9 +415,7 @@ mixin _$AttendanceProjectsSearchState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult? Function(bool flagStatus, String responseMsg)? loaded,
     TResult? Function(String? error)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -364,9 +423,7 @@ mixin _$AttendanceProjectsSearchState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult Function(bool flagStatus, String responseMsg)? loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) =>
@@ -399,19 +456,16 @@ mixin _$AttendanceProjectsSearchState {
 }
 
 /// @nodoc
-abstract class $AttendanceProjectsSearchStateCopyWith<$Res> {
-  factory $AttendanceProjectsSearchStateCopyWith(
-          AttendanceProjectsSearchState value,
-          $Res Function(AttendanceProjectsSearchState) then) =
-      _$AttendanceProjectsSearchStateCopyWithImpl<$Res,
-          AttendanceProjectsSearchState>;
+abstract class $MarkAttendanceStateCopyWith<$Res> {
+  factory $MarkAttendanceStateCopyWith(
+          MarkAttendanceState value, $Res Function(MarkAttendanceState) then) =
+      _$MarkAttendanceStateCopyWithImpl<$Res, MarkAttendanceState>;
 }
 
 /// @nodoc
-class _$AttendanceProjectsSearchStateCopyWithImpl<$Res,
-        $Val extends AttendanceProjectsSearchState>
-    implements $AttendanceProjectsSearchStateCopyWith<$Res> {
-  _$AttendanceProjectsSearchStateCopyWithImpl(this._value, this._then);
+class _$MarkAttendanceStateCopyWithImpl<$Res, $Val extends MarkAttendanceState>
+    implements $MarkAttendanceStateCopyWith<$Res> {
+  _$MarkAttendanceStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -428,7 +482,7 @@ abstract class _$$_InitialCopyWith<$Res> {
 
 /// @nodoc
 class __$$_InitialCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchStateCopyWithImpl<$Res, _$_Initial>
+    extends _$MarkAttendanceStateCopyWithImpl<$Res, _$_Initial>
     implements _$$_InitialCopyWith<$Res> {
   __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
       : super(_value, _then);
@@ -441,7 +495,7 @@ class _$_Initial extends _Initial {
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchState.initial()';
+    return 'MarkAttendanceState.initial()';
   }
 
   @override
@@ -458,9 +512,7 @@ class _$_Initial extends _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)
-        loaded,
+    required TResult Function(bool flagStatus, String responseMsg) loaded,
     required TResult Function(String? error) error,
   }) {
     return initial();
@@ -471,9 +523,7 @@ class _$_Initial extends _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult? Function(bool flagStatus, String responseMsg)? loaded,
     TResult? Function(String? error)? error,
   }) {
     return initial?.call();
@@ -484,9 +534,7 @@ class _$_Initial extends _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult Function(bool flagStatus, String responseMsg)? loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
@@ -534,7 +582,7 @@ class _$_Initial extends _Initial {
   }
 }
 
-abstract class _Initial extends AttendanceProjectsSearchState {
+abstract class _Initial extends MarkAttendanceState {
   const factory _Initial() = _$_Initial;
   const _Initial._() : super._();
 }
@@ -548,7 +596,7 @@ abstract class _$$_LoadingCopyWith<$Res> {
 
 /// @nodoc
 class __$$_LoadingCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchStateCopyWithImpl<$Res, _$_Loading>
+    extends _$MarkAttendanceStateCopyWithImpl<$Res, _$_Loading>
     implements _$$_LoadingCopyWith<$Res> {
   __$$_LoadingCopyWithImpl(_$_Loading _value, $Res Function(_$_Loading) _then)
       : super(_value, _then);
@@ -561,7 +609,7 @@ class _$_Loading extends _Loading {
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchState.loading()';
+    return 'MarkAttendanceState.loading()';
   }
 
   @override
@@ -578,9 +626,7 @@ class _$_Loading extends _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)
-        loaded,
+    required TResult Function(bool flagStatus, String responseMsg) loaded,
     required TResult Function(String? error) error,
   }) {
     return loading();
@@ -591,9 +637,7 @@ class _$_Loading extends _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult? Function(bool flagStatus, String responseMsg)? loaded,
     TResult? Function(String? error)? error,
   }) {
     return loading?.call();
@@ -604,9 +648,7 @@ class _$_Loading extends _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult Function(bool flagStatus, String responseMsg)? loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
@@ -654,7 +696,7 @@ class _$_Loading extends _Loading {
   }
 }
 
-abstract class _Loading extends AttendanceProjectsSearchState {
+abstract class _Loading extends MarkAttendanceState {
   const factory _Loading() = _$_Loading;
   const _Loading._() : super._();
 }
@@ -664,15 +706,12 @@ abstract class _$$_LoadedCopyWith<$Res> {
   factory _$$_LoadedCopyWith(_$_Loaded value, $Res Function(_$_Loaded) then) =
       __$$_LoadedCopyWithImpl<$Res>;
   @useResult
-  $Res call({AttendanceMarkRegisterModelResponse? attendanceRegistersModel});
-
-  $AttendanceMarkRegisterModelResponseCopyWith<$Res>?
-      get attendanceRegistersModel;
+  $Res call({bool flagStatus, String responseMsg});
 }
 
 /// @nodoc
 class __$$_LoadedCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchStateCopyWithImpl<$Res, _$_Loaded>
+    extends _$MarkAttendanceStateCopyWithImpl<$Res, _$_Loaded>
     implements _$$_LoadedCopyWith<$Res> {
   __$$_LoadedCopyWithImpl(_$_Loaded _value, $Res Function(_$_Loaded) _then)
       : super(_value, _then);
@@ -680,42 +719,37 @@ class __$$_LoadedCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? attendanceRegistersModel = freezed,
+    Object? flagStatus = null,
+    Object? responseMsg = null,
   }) {
     return _then(_$_Loaded(
-      freezed == attendanceRegistersModel
-          ? _value.attendanceRegistersModel
-          : attendanceRegistersModel // ignore: cast_nullable_to_non_nullable
-              as AttendanceMarkRegisterModelResponse?,
+      flagStatus: null == flagStatus
+          ? _value.flagStatus
+          : flagStatus // ignore: cast_nullable_to_non_nullable
+              as bool,
+      responseMsg: null == responseMsg
+          ? _value.responseMsg
+          : responseMsg // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $AttendanceMarkRegisterModelResponseCopyWith<$Res>?
-      get attendanceRegistersModel {
-    if (_value.attendanceRegistersModel == null) {
-      return null;
-    }
-
-    return $AttendanceMarkRegisterModelResponseCopyWith<$Res>(
-        _value.attendanceRegistersModel!, (value) {
-      return _then(_value.copyWith(attendanceRegistersModel: value));
-    });
   }
 }
 
 /// @nodoc
 
 class _$_Loaded extends _Loaded {
-  const _$_Loaded(this.attendanceRegistersModel) : super._();
+  const _$_Loaded({this.flagStatus = false, this.responseMsg = ''}) : super._();
 
   @override
-  final AttendanceMarkRegisterModelResponse? attendanceRegistersModel;
+  @JsonKey()
+  final bool flagStatus;
+  @override
+  @JsonKey()
+  final String responseMsg;
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchState.loaded(attendanceRegistersModel: $attendanceRegistersModel)';
+    return 'MarkAttendanceState.loaded(flagStatus: $flagStatus, responseMsg: $responseMsg)';
   }
 
   @override
@@ -723,13 +757,14 @@ class _$_Loaded extends _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Loaded &&
-            (identical(
-                    other.attendanceRegistersModel, attendanceRegistersModel) ||
-                other.attendanceRegistersModel == attendanceRegistersModel));
+            (identical(other.flagStatus, flagStatus) ||
+                other.flagStatus == flagStatus) &&
+            (identical(other.responseMsg, responseMsg) ||
+                other.responseMsg == responseMsg));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, attendanceRegistersModel);
+  int get hashCode => Object.hash(runtimeType, flagStatus, responseMsg);
 
   @JsonKey(ignore: true)
   @override
@@ -742,12 +777,10 @@ class _$_Loaded extends _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)
-        loaded,
+    required TResult Function(bool flagStatus, String responseMsg) loaded,
     required TResult Function(String? error) error,
   }) {
-    return loaded(attendanceRegistersModel);
+    return loaded(flagStatus, responseMsg);
   }
 
   @override
@@ -755,12 +788,10 @@ class _$_Loaded extends _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult? Function(bool flagStatus, String responseMsg)? loaded,
     TResult? Function(String? error)? error,
   }) {
-    return loaded?.call(attendanceRegistersModel);
+    return loaded?.call(flagStatus, responseMsg);
   }
 
   @override
@@ -768,14 +799,12 @@ class _$_Loaded extends _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult Function(bool flagStatus, String responseMsg)? loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(attendanceRegistersModel);
+      return loaded(flagStatus, responseMsg);
     }
     return orElse();
   }
@@ -818,13 +847,13 @@ class _$_Loaded extends _Loaded {
   }
 }
 
-abstract class _Loaded extends AttendanceProjectsSearchState {
-  const factory _Loaded(
-          final AttendanceMarkRegisterModelResponse? attendanceRegistersModel) =
+abstract class _Loaded extends MarkAttendanceState {
+  const factory _Loaded({final bool flagStatus, final String responseMsg}) =
       _$_Loaded;
   const _Loaded._() : super._();
 
-  AttendanceMarkRegisterModelResponse? get attendanceRegistersModel;
+  bool get flagStatus;
+  String get responseMsg;
   @JsonKey(ignore: true)
   _$$_LoadedCopyWith<_$_Loaded> get copyWith =>
       throw _privateConstructorUsedError;
@@ -840,7 +869,7 @@ abstract class _$$_ErrorCopyWith<$Res> {
 
 /// @nodoc
 class __$$_ErrorCopyWithImpl<$Res>
-    extends _$AttendanceProjectsSearchStateCopyWithImpl<$Res, _$_Error>
+    extends _$MarkAttendanceStateCopyWithImpl<$Res, _$_Error>
     implements _$$_ErrorCopyWith<$Res> {
   __$$_ErrorCopyWithImpl(_$_Error _value, $Res Function(_$_Error) _then)
       : super(_value, _then);
@@ -869,7 +898,7 @@ class _$_Error extends _Error {
 
   @override
   String toString() {
-    return 'AttendanceProjectsSearchState.error(error: $error)';
+    return 'MarkAttendanceState.error(error: $error)';
   }
 
   @override
@@ -894,9 +923,7 @@ class _$_Error extends _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)
-        loaded,
+    required TResult Function(bool flagStatus, String responseMsg) loaded,
     required TResult Function(String? error) error,
   }) {
     return error(this.error);
@@ -907,9 +934,7 @@ class _$_Error extends _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult? Function(bool flagStatus, String responseMsg)? loaded,
     TResult? Function(String? error)? error,
   }) {
     return error?.call(this.error);
@@ -920,9 +945,7 @@ class _$_Error extends _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(
-            AttendanceMarkRegisterModelResponse? attendanceRegistersModel)?
-        loaded,
+    TResult Function(bool flagStatus, String responseMsg)? loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
@@ -970,7 +993,7 @@ class _$_Error extends _Error {
   }
 }
 
-abstract class _Error extends AttendanceProjectsSearchState {
+abstract class _Error extends MarkAttendanceState {
   const factory _Error(final String? error) = _$_Error;
   const _Error._() : super._();
 

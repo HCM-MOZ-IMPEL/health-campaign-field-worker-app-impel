@@ -476,15 +476,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       },
     ));
 // attendance
-    widgetList.add(HomeItemCard(
-      icon: Icons.group_add_outlined,
-      label: i18.attendance.viewAttendanceLabel,
-      onPressed: () {
-        context.router.push(
-          const TrackAttendanceWrapperRoute(),
-        );
-      },
-    ));
+    // widgetList.add(HomeItemCard(
+    //   icon: Icons.group_add_outlined,
+    //   label: i18.attendance.viewAttendanceLabel,
+    //   onPressed: () {
+    //     context.router.push(
+    //       const TrackAttendanceWrapperRoute(),
+    //     );
+    //   },
+    // ));
 
     return widgetList;
   }

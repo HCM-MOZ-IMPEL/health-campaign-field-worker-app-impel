@@ -50,18 +50,20 @@ class AttendanceRegister with _$AttendanceRegister {
 @freezed
 class AttendanceRegisterAdditionalDetails
     with _$AttendanceRegisterAdditionalDetails {
-  const factory AttendanceRegisterAdditionalDetails(
-      {String? contractId,
-      String? orgName,
-      String? officerInCharge,
-      String? executingAuthority,
-      String? projectId,
-      String? projectName,
-      String? projectType,
-      String? projectDesc,
-      String? locality,
-      String? ward,
-      int? amount}) = _AttendanceRegisterAdditionalDetails;
+  const factory AttendanceRegisterAdditionalDetails({
+    String? description,
+    String? contractId,
+    String? orgName,
+    String? officerInCharge,
+    String? executingAuthority,
+    String? projectId,
+    String? projectName,
+    String? projectType,
+    String? projectDesc,
+    String? locality,
+    String? ward,
+    int? amount,
+  }) = _AttendanceRegisterAdditionalDetails;
 
   factory AttendanceRegisterAdditionalDetails.fromJson(
     Map<String, dynamic> json,
@@ -71,11 +73,12 @@ class AttendanceRegisterAdditionalDetails
 
 @freezed
 class RegisterAuditDetails with _$RegisterAuditDetails {
-  const factory RegisterAuditDetails(
-      {String? createdBy,
-      String? lastModifiedBy,
-      int? createdTime,
-      int? lastModifiedTime}) = _RegisterAuditDetails;
+  const factory RegisterAuditDetails({
+    String? createdBy,
+    String? lastModifiedBy,
+    int? createdTime,
+    int? lastModifiedTime,
+  }) = _RegisterAuditDetails;
 
   factory RegisterAuditDetails.fromJson(
     Map<String, dynamic> json,
@@ -85,11 +88,12 @@ class RegisterAuditDetails with _$RegisterAuditDetails {
 
 @freezed
 class StaffEntries with _$StaffEntries {
-  const factory StaffEntries(
-      {String? id,
-      String? userId,
-      String? registerId,
-      int? enrollmentDate}) = _StaffEntries;
+  const factory StaffEntries({
+    String? id,
+    String? userId,
+    String? registerId,
+    int? enrollmentDate,
+  }) = _StaffEntries;
 
   factory StaffEntries.fromJson(
     Map<String, dynamic> json,
@@ -99,15 +103,16 @@ class StaffEntries with _$StaffEntries {
 
 @freezed
 class AttendeesEntries with _$AttendeesEntries {
-  const factory AttendeesEntries(
-      {String? id,
-      required String tenantId,
-      String? registerId,
-      String? individualId,
-      int? enrollmentDate,
-      int? denrollmentDate,
-      @JsonKey(name: 'additionalDetails')
-          AttendeesAdditionalDetails? additionalDetails}) = _AttendeesEntries;
+  const factory AttendeesEntries({
+    String? id,
+    required String tenantId,
+    String? registerId,
+    String? individualId,
+    int? enrollmentDate,
+    int? denrollmentDate,
+    @JsonKey(name: 'additionalDetails')
+        AttendeesAdditionalDetails? additionalDetails,
+  }) = _AttendeesEntries;
 
   factory AttendeesEntries.fromJson(
     Map<String, dynamic> json,

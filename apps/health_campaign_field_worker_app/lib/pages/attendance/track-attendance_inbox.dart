@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../blocs/attendance/attendance_register.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../models/attendance/attendance_registry_model.dart';
+import '../../models/attendance/attendance_mark_model/register_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 class TrackAttendanceInboxPage extends LocalizedStatefulWidget {
   const TrackAttendanceInboxPage({
@@ -22,18 +25,24 @@ class TrackAttendanceInboxPage extends LocalizedStatefulWidget {
 
 class _TrackAttendanceInboxPageState extends State<TrackAttendanceInboxPage> {
   List<Map<dynamic, dynamic>> projectList = [];
-  List<AttendanceRegister> attendanceRegisters = [];
+  List<AttendanceMarkRegisterModel> attendanceRegisters = [];
 
   @override
   void initState() {
     context.read<AttendanceProjectsSearchBloc>().add(
-          const SearchAttendanceProjectsEvent(),
+          SearchAttendanceProjectsEvent(
+            projectid: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            // tenantId: 'lb',
+          ),
         );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocListener<AttendanceProjectsSearchBloc,
@@ -43,35 +52,26 @@ class _TrackAttendanceInboxPageState extends State<TrackAttendanceInboxPage> {
               loading: () => const Center(
                 child: CircularProgressIndicator.adaptive(),
               ),
-              loaded: (AttendanceRegistersModel? attendanceRegistersModel) {
-                attendanceRegisters = List<AttendanceRegister>.from(
+              loaded: (AttendanceMarkRegisterModelResponse?
+                  attendanceRegistersModel) {
+                attendanceRegisters = List<AttendanceMarkRegisterModel>.from(
                   attendanceRegistersModel!.attendanceRegister!,
                 );
 
-                attendanceRegisters.sort((a, b) =>
-                    b.registerAuditDetails!.lastModifiedTime!.compareTo(
-                      a.registerAuditDetails!.lastModifiedTime!.toInt(),
-                    ));
+                attendanceRegisters
+                    .sort((a, b) => b.auditDetails!.lastModifiedTime!.compareTo(
+                          a.auditDetails!.lastModifiedTime!.toInt(),
+                        ));
 
-                projectList = attendanceRegisters
+                projectList = attendanceRegisters!
                     .map((e) => {
-                          "Work order Number": e
-                                  .attendanceRegisterAdditionalDetails
-                                  ?.contractId ??
-                              "",
-                          "Register ID": e.registerNumber,
-                          "Project ID": e.attendanceRegisterAdditionalDetails
-                                  ?.projectId ??
-                              "",
-                          "Project Name": e.attendanceRegisterAdditionalDetails
-                                  ?.projectName ??
-                              "",
-                          "Project Description": e
-                                  .attendanceRegisterAdditionalDetails
-                                  ?.projectDesc ??
-                              "",
-                          " Individuals Count": e.attendeesEntries != null
-                              ? e.attendeesEntries
+                          "Event Type": e.serviceCode,
+                          "Description": (e.additionalDetails != null)
+                              ? e.additionalDetails!.description ?? ""
+                              : "",
+                          "Event Location": context.boundary.name,
+                          "Total Attendees": e.attendanceAttendees != null
+                              ? e.attendanceAttendees
                                   ?.where((att) =>
                                       att.denrollmentDate == null ||
                                       !(att.denrollmentDate! <=
@@ -90,6 +90,7 @@ class _TrackAttendanceInboxPageState extends State<TrackAttendanceInboxPage> {
                               e.endDate!,
                             ),
                           ),
+                          "Event status": e.status,
                         })
                     .toList();
               },
@@ -102,18 +103,27 @@ class _TrackAttendanceInboxPageState extends State<TrackAttendanceInboxPage> {
             builder: (context, state) {
               return state.maybeWhen(
                 orElse: () => Container(),
-                loading: () => const Center(
-                  child: CircularProgressIndicator.adaptive(),
+                loading: () => Center(
+                  child: Loaders.circularLoader(context),
                 ),
-                loaded: (AttendanceRegistersModel? attendanceModel) {
+                loaded: (AttendanceMarkRegisterModelResponse? attendanceModel) {
                   var list = <Widget>[];
 
                   for (int i = 0; i < projectList.length; i++) {
                     list.add(RegistarCard(
                       data: projectList[i] as Map<String, dynamic>,
-                      regisId: attendanceModel!.attendanceRegister![i].id!,
-                      tenatId: attendanceModel!.attendanceRegister![i].tenantId,
+                      regisId: attendanceRegisters![i].id!,
+                      tenatId: attendanceRegisters![i].tenantId!,
                       show: true,
+                      attendee:
+                          attendanceRegisters![i].attendanceAttendees ?? [],
+                      startdate: DateTime.fromMillisecondsSinceEpoch(
+                        attendanceRegisters[i].startDate!,
+                      ),
+                      endDate: DateTime.fromMillisecondsSinceEpoch(
+                        attendanceRegisters[i].endDate!,
+                      ),
+                      localizations: localizations,
                     ));
                   }
 
@@ -124,7 +134,7 @@ class _TrackAttendanceInboxPageState extends State<TrackAttendanceInboxPage> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          'Attendance Registers(${projectList.length})',
+                          "${localizations.translate(i18.attendance.attendanceRegistarLabel)}(${projectList.length})",
                           style: DigitTheme
                               .instance.mobileTheme.textTheme.headlineLarge
                               ?.apply(color: const DigitColors().black),
@@ -158,12 +168,21 @@ class RegistarCard extends StatelessWidget {
   final String tenatId;
   final String regisId;
   final bool show;
+  final DateTime startdate;
+  final DateTime endDate;
+  final List<AttendanceMarkIndividualModelAttendee> attendee;
+
+  final AppLocalizations localizations;
   const RegistarCard({
     super.key,
     required this.data,
     required this.tenatId,
     required this.regisId,
     this.show = false,
+    required this.attendee,
+    required this.startdate,
+    required this.endDate,
+    required this.localizations,
   });
 
   @override
@@ -176,11 +195,18 @@ class RegistarCard extends StatelessWidget {
           ),
           show
               ? DigitElevatedButton(
-                  child: const Text("Mark Attendance"),
+                  child: Text(localizations
+                      .translate(i18.attendance.markAttendanceLabel)),
                   onPressed: () {
                     context.router.push(AttendanceDateSessionSelectionRoute(
+                      //id: registarId
+
                       id: regisId,
                       tenantId: tenatId,
+                      attendanceMarkIndividualModelAttendee:
+                          fetchAttendeeList(attendee),
+                      eventEnd: endDate,
+                      eventStart: startdate,
                     ));
                   },
                 )
@@ -188,5 +214,17 @@ class RegistarCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<String> fetchAttendeeList(
+    List<AttendanceMarkIndividualModelAttendee> s,
+  ) {
+    final d = s
+        .map(
+          (e) => e.individualId!,
+        )
+        .toList();
+
+    return d;
   }
 }

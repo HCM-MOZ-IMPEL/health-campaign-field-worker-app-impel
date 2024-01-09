@@ -59,7 +59,7 @@ class CircularButton extends StatelessWidget {
                       ? 'A'
                       : index == 0.5
                           ? 'H'
-                          : 'F',
+                          : 'P',
               style: TextStyle(
                 fontSize: 16,
                 color: index.isNegative || onTap == null

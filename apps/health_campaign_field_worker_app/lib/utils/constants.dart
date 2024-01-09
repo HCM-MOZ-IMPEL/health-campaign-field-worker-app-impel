@@ -394,13 +394,14 @@ class ApiUtil {
     required int limit,
     required int offset,
     required String tenantId,
-    required bool isDeleted,
+    bool isDeleted = false,
   }) {
-    return "individual/v1/_search?limit=$limit&offset=$offset&tenantId=$tenantId&includeDeleted=$isDeleted";
+    return "individual/v1/_search?limit=$limit&offset=$offset&tenantId=$tenantId";
+    // individual/v1/_search?limit=1000&offset=0&tenantId=lb
   }
 
-  static String fetchRegisters() {
-    return "";
+  static String fetchRegisters(String projectId, String tenantId) {
+    return "attendance/v1/_search?tenantId=$tenantId&referenceId=$projectId";
   }
 
   static String fetchIndividualAttendanceLog() {
@@ -408,6 +409,6 @@ class ApiUtil {
   }
 
   static String createAttendanceLog() {
-    return "";
+    return "attendance/log/v1/_create";
   }
 }

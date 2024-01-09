@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../data/local_store/no_sql/schema/absent_attendee.dart';
 import '../../../data/repositories/remote/repo_attendance_register.dart';
-import '../../../models/attendance/attendance_model/attendance_attendee_log.dart';
-import '../../../models/attendance/attendance_model/attendance_attendee_model.dart';
-import '../../../models/attendance/attendance_model/attendance_row_model.dart';
-import '../../../models/attendance/attendance_model/attendee_wraper_log_model.dart';
+import '../../../models/attendance/attendance_mark_model/attendee_indv_model.dart';
+
+import '../../../models/attendance/attendance_model/attendance_collection_attendee.dart';
 
 part 'individual_attendance_log.freezed.dart';
 
@@ -22,6 +22,8 @@ class AttendanceIndividualBloc
         ) {
     on<AttendanceIndividualLogSearchEvent>(_onIndividualAttendanceLogSearch);
     on<AttendanceMarkEvent>(_onIndividualAttendanceMark);
+    on<UploadAttendanceEvent>(_onUploadAttendanceToServer);
+    on<SearchAttendeesEvent>(_onSearchAttendeeByName);
     on<DisposeAttendanceIndividualEvent>(_onDispose);
   }
 
@@ -36,305 +38,291 @@ class AttendanceIndividualBloc
     AttendanceIndividualLogSearchEvent event,
     AttendanceIndividualEmitter emit,
   ) async {
-    if (event.offset == 0) {
-      emit(const AttendanceIndividualState.loading());
-      AttendeeServerResponse a =
-          await attendanceRegisterRepository.fetchAttendees();
+    emit(const AttendanceIndividualState.loading());
 
-      AttendeeLogWrappperResponse l =
-          await attendanceRegisterRepository.fetchAttendeesLog(
-        registartId: "registartId",
-        fromTime: 9,
-        toTime: 10,
-        individualId: ["1", "2", "3"],
+    try {
+      List<AbsentAttendee> filterData =
+          await attendanceRegisterRepository.getAttendeeListFromLocalDB(
+        tenantId: event.tenantId,
+        entryTime: event.entryTime,
+        exitTime: event.exitTime,
+        registarId: event.registerId,
       );
-      List<AttendeeAttendanceResponseLog> b = l.attendanceAttendeLog!;
-      List<AttendanceRowModel> data = a.attendeeResponseModel!
-          .map(
-            (e) => AttendanceRowModel(
-              entryDate: b
-                      .where((mu) => mu.individualId == e.id)
-                      .toList()
-                      .isNotEmpty
-                  ? b
-                              .where((element) => element.individualId == e.id)
-                              .first
-                              .type ==
-                          "ENTRY"
-                      ? 120
-                      : 130
-                  : 130,
-              existDate: b
-                      .where((mu) => mu.individualId == e.id)
-                      .toList()
-                      .isNotEmpty
-                  ? b
-                              .where((element) => element.individualId == e.id)
-                              .first
-                              .type ==
-                          "EXIT"
-                      ? 150
-                      : 180
-                  : 180,
-              name: e.name!.givenName,
-              type: b.where((mu) => mu.individualId == e.id).toList().isNotEmpty
-                  ? b
-                      .where((element) => element.individualId == e.id)
-                      .first
-                      .type
-                  : "INACTIVE",
-              status: b
-                      .where((mu) => mu.individualId == e.id)
-                      .toList()
-                      .isNotEmpty
-                  ? b
-                              .where((element) => element.individualId == e.id)
-                              .first
-                              .status ==
-                          "ACTIVE"
-                      ? 1
-                      : 0
-                  : -1,
-              individualId: e.id,
-            ),
-          )
-          .toList();
+      if (filterData.isEmpty) {
+        AttendanceMarkIndividualModel a =
+            await attendanceRegisterRepository.fetchAttendees(
+          attendeeids: event.attendeeId,
+          limit: 1000,
+          offset: 0,
+          tenantId: event.tenantId,
+        );
 
-      await Future.delayed(const Duration(seconds: 3));
+        List<AbsentAttendee> wq = a.attendanceRegister!.map(
+          (e) {
+            final absentAttendee = AbsentAttendee()
+              ..name = e.name!.givenName ?? ""
+              ..entryTime = event.entryTime
+              ..exitTime = event.exitTime
+              ..eventStartDate = event.currentDate
+              ..eventEndDate = event.currentDate
+              ..individualId = e.id!
+              ..projectId = event.projectId
+              ..status = -1
+              ..currentDate = 12334567
+              ..registerId = event.registerId
+              ..tenantId = event.tenantId
+              ..userName = e.userDetails!.username ?? "";
 
-      emit(
-        _AttendanceRowModelLoaded(
-          attendanceRowModelList: data,
-          countData: a.count,
-          limitData: event.limit,
-          offsetData: event.offset,
-          currentOffset: event.offset,
-        ),
-      );
-    } else {
-      await state.maybeMap(
-        orElse: () {},
-        loaded: (value) async {
-          // emit(const AttendanceIndividualState.loading());
-          try {
-            if (event.offset <= value.currentOffset) {
-              // dynamic d = value.attendanceRowModelList!.sublist(
-              //   value.offsetData,
-              //   value.offsetData + value.limitData <=
-              //           value.attendanceRowModelList!.length
-              //       ? value.offsetData + value.limitData
-              //       : value.attendanceRowModelList!.length,
-              // );
+            return absentAttendee;
+          },
+        ).toList();
 
-              // emit(
-              //   value.copyWith(
-              //     attendanceRowModelList: d,
-              //     countData: value.countData,
-              //     limitData: event.limit,
-              //     offsetData: event.offset,
-              //     currentOffset: event.offset < value.currentOffset
-              //         ? value.currentOffset
-              //         : event.offset + value.currentOffset,
-              //   ),
-              // );
-              emit(value.copyWith(offsetData: event.offset));
-            } else {
-              AttendeeServerResponse a =
-                  await attendanceRegisterRepository.fetchAttendees();
+        await attendanceRegisterRepository.storeAbsentAttendee(wq);
 
-              AttendeeLogWrappperResponse l =
-                  await attendanceRegisterRepository.fetchAttendeesLog(
-                registartId: "registartId",
-                fromTime: 9,
-                toTime: 10,
-                individualId: ["1", "2", "3"],
-              );
-              List<AttendeeAttendanceResponseLog> b = l.attendanceAttendeLog!;
-              List<AttendanceRowModel> data = a.attendeeResponseModel!
-                  .map(
-                    (e) => AttendanceRowModel(
-                      entryDate: b
-                              .where((mu) => mu.individualId == e.id)
-                              .toList()
-                              .isNotEmpty
-                          ? b
-                                      .where(
-                                        (element) =>
-                                            element.individualId == e.id,
-                                      )
-                                      .first
-                                      .type ==
-                                  "ENTRY"
-                              ? 120
-                              : 130
-                          : 130,
-                      existDate: b
-                              .where((mu) => mu.individualId == e.id)
-                              .toList()
-                              .isNotEmpty
-                          ? b
-                                      .where(
-                                        (element) =>
-                                            element.individualId == e.id,
-                                      )
-                                      .first
-                                      .type ==
-                                  "EXIT"
-                              ? 150
-                              : 180
-                          : 180,
-                      name: e.name!.givenName,
-                      type: b
-                              .where((mu) => mu.individualId == e.id)
-                              .toList()
-                              .isNotEmpty
-                          ? b
-                              .where((element) => element.individualId == e.id)
-                              .first
-                              .type
-                          : "INACTIVE",
-                      status: b
-                              .where((mu) => mu.individualId == e.id)
-                              .toList()
-                              .isNotEmpty
-                          ? b
-                                      .where(
-                                        (element) =>
-                                            element.individualId == e.id,
-                                      )
-                                      .first
-                                      .status ==
-                                  "ACTIVE"
-                              ? 1
-                              : 0
-                          : -1,
-                      individualId: e.id,
-                    ),
-                  )
-                  .toList();
+        List<AttendeeCollectionModel> emitData = wq.map((e) {
+          AttendeeCollectionModel s = AttendeeCollectionModel(
+            entryTime: e.entryTime,
+            name: e.name,
+            individualId: e.individualId,
+            exitTime: e.exitTime,
+            eventStartDate: e.eventStartDate,
+            eventEndDate: e.eventEndDate,
+            status: e.status,
+            id: e.id,
+            registerId: event.registerId,
+            userName: e.userName,
+          );
 
-              final updatedModel = value.copyWith(
-                attendanceRowModelList: [
-                  ...value.attendanceRowModelList!,
-                  ...data,
-                ],
-              );
-              await Future.delayed(const Duration(seconds: 3));
-
-              emit(
-                value.copyWith(
-                  attendanceRowModelList: updatedModel.attendanceRowModelList,
-                  countData: a.count,
-                  limitData: event.limit,
-                  offsetData: event.offset,
-                  currentOffset: value.currentOffset + 1,
-                ),
-              );
-            }
-          } catch (error) {
-            // Handle errors if any
-            // For example: emit an error state or log the error
-            print('Error occurred: $error');
-            // emit(value); // emit error state or current state
+          return s;
+        }).toList();
+        emitData.sort((a, b) => a.name!.compareTo(b.name!));
+        await Future.delayed(const Duration(milliseconds: 800));
+        emit(
+          _AttendanceRowModelLoaded(
+            attendanceCollectionModel: emitData,
+            attendanceSearchModelList: [],
+            countData: emitData.length,
+            limitData: event.limit,
+            offsetData: event.offset,
+            currentOffset: emitData.length,
+          ),
+        );
+      } else {
+        int counter = 0;
+        List<AttendeeCollectionModel> emitData = filterData.map((e) {
+          if (e.status == -1) {
+            counter = counter + 1;
           }
-        },
-      );
+          AttendeeCollectionModel s = AttendeeCollectionModel(
+            id: e.id,
+            entryTime: e.entryTime,
+            name: e.name,
+            individualId: e.individualId,
+            exitTime: e.exitTime,
+            eventStartDate: e.eventStartDate,
+            eventEndDate: e.eventEndDate,
+            status: e.status,
+            registerId: event.registerId,
+            userName: e.userName,
+          );
+
+          return s;
+        }).toList();
+        emitData.sort((a, b) => a.name!.compareTo(b.name!));
+        await Future.delayed(const Duration(milliseconds: 800));
+        emit(
+          _AttendanceRowModelLoaded(
+            attendanceCollectionModel: emitData,
+            attendanceSearchModelList: [],
+            countData: emitData.length,
+            limitData: event.limit,
+            offsetData: event.offset,
+            currentOffset: counter,
+          ),
+        );
+      }
+    } catch (ex) {
+      emit(const AttendanceIndividualState.error("Something went wrong!!!"));
     }
-    // emit(const AttendanceIndividualState.loading());
-    // AttendeeServerResponse a =
-    //     await attendanceRegisterRepository.fetchAttendees();
-
-    // AttendeeLogWrappperResponse l =
-    //     await attendanceRegisterRepository.fetchAttendeesLog(
-    //   registartId: "registartId",
-    //   fromTime: 9,
-    //   toTime: 10,
-    //   individualId: ["1", "2", "3"],
-    // );
-    // List<AttendeeAttendanceResponseLog> b = l.attendanceAttendeLog!;
-    // List<AttendanceRowModel> data = a.attendeeResponseModel!
-    //     .map(
-    //       (e) => AttendanceRowModel(
-    //         entryDate: b
-    //                 .where((mu) => mu.individualId == e.id)
-    //                 .toList()
-    //                 .isNotEmpty
-    //             ? b
-    //                         .where((element) => element.individualId == e.id)
-    //                         .first
-    //                         .type ==
-    //                     "ENTRY"
-    //                 ? 120
-    //                 : 130
-    //             : 130,
-    //         existDate: b
-    //                 .where((mu) => mu.individualId == e.id)
-    //                 .toList()
-    //                 .isNotEmpty
-    //             ? b
-    //                         .where((element) => element.individualId == e.id)
-    //                         .first
-    //                         .type ==
-    //                     "EXIT"
-    //                 ? 150
-    //                 : 180
-    //             : 180,
-    //         name: e.name!.givenName,
-    //         type: b.where((mu) => mu.individualId == e.id).toList().isNotEmpty
-    //             ? b.where((element) => element.individualId == e.id).first.type
-    //             : "INACTIVE",
-    //         status: b.where((mu) => mu.individualId == e.id).toList().isNotEmpty
-    //             ? b
-    //                         .where((element) => element.individualId == e.id)
-    //                         .first
-    //                         .status ==
-    //                     "ACTIVE"
-    //                 ? 1
-    //                 : 0
-    //             : -1,
-    //         individualId: e.id,
-    //       ),
-    //     )
-    //     .toList();
-
-    // await Future.delayed(const Duration(seconds: 3));
-
-    // emit(
-    //   _AttendanceRowModelLoaded(
-    //     attendanceRowModelList: data,
-    //     countData: a.count,
-    //     limitData: 50,
-    //     offsetData: 7,
-    //   ),
-    // );
   }
 
   FutureOr<void> _onIndividualAttendanceMark(
     AttendanceMarkEvent event,
     AttendanceIndividualEmitter emit,
   ) async {
-    state.maybeMap(
-      loaded: (value) {
-        List<AttendanceRowModel> k = value.attendanceRowModelList!.map((e) {
-          return e.individualId == event.individualId.toString()
-              ? AttendanceRowModel(
-                  name: e.name,
-                  individualId: e.individualId,
-                  entryDate: e.entryDate,
-                  existDate: e.existDate,
-                  status: e.status == -1
-                      ? 1
-                      : e.status == 1
-                          ? 0
-                          : 1,
-                  type: e.type,
-                )
-              : e;
+    await state.maybeMap(
+      loaded: (value) async {
+        List<AttendeeCollectionModel> searchList = [];
+        int counter = 0;
+        value.attendanceCollectionModel;
+        AbsentAttendee s = await attendanceRegisterRepository
+            .updateAttendeeInLocalDB(id: event.id);
+        List<AttendeeCollectionModel> updatedList =
+            value.attendanceCollectionModel!.map((e) {
+          if (e.status == -1) {
+            counter = counter + 1;
+          }
+
+          if (e.id == event.id) {
+            if (e.status == -1) {
+              counter = counter - 1;
+            }
+            AttendeeCollectionModel s = AttendeeCollectionModel(
+              userName: e.userName,
+              registerId: e.registerId,
+              id: e.id,
+              entryTime: e.entryTime,
+              name: e.name,
+              individualId: e.individualId,
+              exitTime: e.exitTime,
+              eventStartDate: e.eventStartDate,
+              eventEndDate: e.eventEndDate,
+              status: e.status == -1
+                  ? 1
+                  : e.status == 1
+                      ? 0
+                      : 1,
+            );
+
+            return s;
+          } else {
+            return e;
+          }
         }).toList();
 
-        emit(value.copyWith(attendanceRowModelList: k));
+        if (value.attendanceSearchModelList.isNotEmpty) {
+          searchList = value.attendanceSearchModelList!.map((e) {
+            if (e.status == -1) {
+              counter = counter + 1;
+            }
+
+            if (e.id == event.id) {
+              if (e.status == -1) {
+                counter = counter - 1;
+              }
+              AttendeeCollectionModel s = AttendeeCollectionModel(
+                userName: e.userName,
+                registerId: e.registerId,
+                id: e.id,
+                entryTime: e.entryTime,
+                name: e.name,
+                individualId: e.individualId,
+                exitTime: e.exitTime,
+                eventStartDate: e.eventStartDate,
+                eventEndDate: e.eventEndDate,
+                status: e.status == -1
+                    ? 1
+                    : e.status == 1
+                        ? 0
+                        : 1,
+              );
+
+              return s;
+            } else {
+              return e;
+            }
+          }).toList();
+        }
+
+        emit(value.copyWith(
+          attendanceSearchModelList: searchList,
+          attendanceCollectionModel: updatedList,
+          currentOffset: counter,
+        ));
       },
       orElse: () {},
+    );
+  }
+
+  FutureOr<void> _onUploadAttendanceToServer(
+    UploadAttendanceEvent event,
+    AttendanceIndividualEmitter emit,
+  ) async {
+    List<Map<String, dynamic>> m = [];
+    List<AbsentAttendee> filterData =
+        await attendanceRegisterRepository.getAttendeeListFromLocalDB(
+      tenantId: event.tenantId,
+      entryTime: event.entryTime,
+      exitTime: event.exitTime,
+      registarId: event.registarId,
+    );
+    await state.maybeMap(
+      orElse: () {},
+      loaded: (value) async {
+        try {
+          emit(value.copyWith(
+            flag: true,
+          ));
+          for (var element in filterData) {
+            if (element.status == 1) {
+              final entry = {
+                "registerId": element.registerId,
+                "individualId": element.individualId,
+                "tenantId": element.tenantId,
+                "time": element.entryTime,
+                "type": "ENTRY",
+                "status": "ACTIVE",
+                "documentIds": [],
+                "additionalDetails": {},
+              };
+
+              final exit = {
+                "registerId": element.registerId,
+                "individualId": element.individualId,
+                "tenantId": element.tenantId,
+                "time": element.exitTime,
+                "type": "EXIT",
+                "status": "ACTIVE",
+                "documentIds": [],
+                "additionalDetails": {},
+              };
+              m.add(entry);
+              m.add(exit);
+            }
+          }
+
+          final check = await attendanceRegisterRepository.createAttendanceLog(
+            attedeesList: m,
+            registartId: event.registarId,
+          );
+
+          if (check) {
+            emit(value.copyWith(
+              flag: false,
+            ));
+          }
+
+          print(m);
+        } catch (e) {
+          // emit(value.copyWith(
+          //   flag: false,
+          // ));
+          emit(AttendanceIndividualState.error(e.toString()));
+        }
+      },
+      error: (value) {},
+    );
+  }
+
+  FutureOr<void> _onSearchAttendeeByName(
+    SearchAttendeesEvent event,
+    AttendanceIndividualEmitter emit,
+  ) {
+    state.maybeMap(
+      orElse: () {},
+      loaded: (value) {
+        if (event.name.isNotEmpty) {
+          final List<AttendeeCollectionModel> result = value
+              .attendanceCollectionModel!
+              .where((item) =>
+                  item.name!.toLowerCase().contains(event.name.toLowerCase()))
+              .toList();
+
+          emit(value.copyWith(attendanceSearchModelList: result));
+        } else {
+          emit(value.copyWith(attendanceSearchModelList: []));
+        }
+      },
     );
   }
 }
@@ -342,8 +330,12 @@ class AttendanceIndividualBloc
 @freezed
 class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
   const factory AttendanceIndividualEvent.individualAttendanceLogSearch({
-    @Default('') String registerId,
-    @Default('') String tenantId,
+    required String registerId,
+    required String tenantId,
+    required int entryTime,
+    required int exitTime,
+    required int currentDate,
+    required String projectId,
     required List<String> attendeeId,
     required int offset,
     required int limit,
@@ -354,7 +346,27 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     @Default(-1) status,
     required String individualId,
     required String registarId,
+    required int id,
   }) = AttendanceMarkEvent;
+
+  const factory AttendanceIndividualEvent.uploadAttendance({
+    required int entryTime,
+    required int exitTime,
+    required int status,
+    required String tenantId,
+    required String registarId,
+    required String projectId,
+  }) = UploadAttendanceEvent;
+
+  const factory AttendanceIndividualEvent.searchAttendees({
+    required int entryTime,
+    required int exitTime,
+    required String name,
+    required String tenantId,
+    required String registarId,
+    required String projectId,
+  }) = SearchAttendeesEvent;
+
   const factory AttendanceIndividualEvent.dispose() =
       DisposeAttendanceIndividualEvent;
 }
@@ -366,11 +378,13 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
   const factory AttendanceIndividualState.initial() = _Initial;
   const factory AttendanceIndividualState.loading() = _Loading;
   factory AttendanceIndividualState.loaded({
-    List<AttendanceRowModel>? attendanceRowModelList,
+    @Default([]) List<AttendeeCollectionModel> attendanceSearchModelList,
+    List<AttendeeCollectionModel>? attendanceCollectionModel,
     @Default(0) int offsetData,
     @Default(0) int currentOffset,
     @Default(0) int countData,
     @Default(10) int limitData,
+    @Default(false) bool flag,
   }) = _AttendanceRowModelLoaded;
   const factory AttendanceIndividualState.error(String? error) = _Error;
 }
