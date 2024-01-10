@@ -165,19 +165,19 @@ class SearchHouseholdsBloc
     // Initialize a list to store household member wrappers.
     final containers = <HouseholdMemberWrapper>[];
     if (individuals.isNotEmpty || households.isNotEmpty) {
-      final hhMembers = beneficiaryType == BeneficiaryType.individual
-          ? await householdMember.search(
-              HouseholdMemberSearchModel(
-                clientReferenceId:
-                    individuals.map((e) => e.clientReferenceId).toList(),
-              ),
-            )
-          : await householdMember.search(
-              HouseholdMemberSearchModel(
-                clientReferenceId:
-                    households.map((e) => e.clientReferenceId).toList(),
-              ),
-            );
+     final hhMembers = beneficiaryType == BeneficiaryType.individual
+    ? await householdMember.search(
+        HouseholdMemberSearchModel(
+          individualClientReferenceIds:
+              individuals.map((e) => e.clientReferenceId).toList(),
+        ),
+      )
+    : await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceIds:
+              households.map((e) => e.clientReferenceId).toList(),
+        ),
+      );
       final head = hhMembers.firstWhere((element) => element.isHeadOfHousehold);
 
       final members = await householdMember.search(

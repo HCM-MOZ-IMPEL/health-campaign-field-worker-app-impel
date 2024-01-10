@@ -572,7 +572,7 @@ void showDownloadDialog(
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.router.pop();
+                context.router.popUntilRouteWithName(HomeRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -599,7 +599,7 @@ void showDownloadDialog(
                   label: model.secondaryButtonLabel ?? '',
                   action: (ctx) {
                     Navigator.of(context, rootNavigator: true).pop();
-                    context.router.pop();
+                    context.router.popUntilRouteWithName(HomeRoute.name);
                   },
                 )
               : null,

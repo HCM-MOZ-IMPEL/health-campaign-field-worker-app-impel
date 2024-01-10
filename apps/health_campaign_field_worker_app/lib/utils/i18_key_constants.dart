@@ -33,7 +33,7 @@ const attendance = Attendance();
 
 class Common {
   const Common();
-
+  String get noMatchFound => 'CORE_COMMON_NOMATCH_FOUND';
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
 
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
