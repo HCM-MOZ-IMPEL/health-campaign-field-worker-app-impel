@@ -3,7 +3,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/widgets/beneficiary/distribution_center_card.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -12,11 +11,11 @@ import '../../blocs/project/project.dart';
 import '../../blocs/scanner/scanner.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
+import '../../widgets/beneficiary/distribution_center_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
@@ -299,30 +298,44 @@ class _HouseholdOverviewPageState
                                       ),
                                     ),
                                   ),
-                                  DigitTableCard(
-                                    element: {
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding,
+                                      right: kPadding,
+                                    ),
+                                    child: Text(
                                       localizations.translate(i18
                                           .householdOverView
-                                          .householdOverViewHouseholdHeadNameLabel): [
-                                        state.householdMemberWrapper
-                                            .headOfHousehold.name?.givenName,
-                                        state.householdMemberWrapper
-                                            .headOfHousehold.name?.familyName,
-                                      ].whereNotNull().join(' '),
-                                      localizations.translate(
-                                        i18.householdLocation
-                                            .administrationAreaFormLabel,
-                                      ): context.boundary.name,
-                                      localizations.translate(
-                                        i18.deliverIntervention.memberCountText,
-                                      ): state.householdMemberWrapper.household
-                                          .memberCount,
-                                      localizations.translate(
-                                        i18.common.coreCommonMobileNumber,
-                                      ): state.householdMemberWrapper
-                                              .headOfHousehold.mobileNumber ??
-                                          "--",
-                                    },
+                                          .householdOverViewLabel),
+                                      style: theme.textTheme.displayMedium,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding,
+                                      right: kPadding,
+                                    ),
+                                    child: DigitTableCard(
+                                      element: {
+                                        localizations.translate(i18
+                                                .householdOverView
+                                                .householdOverViewHouseholdHeadNameLabel):
+                                            state
+                                                .householdMemberWrapper
+                                                .headOfHousehold
+                                                .name
+                                                ?.givenName,
+                                        localizations.translate(
+                                          i18.householdLocation
+                                              .administrationAreaFormLabel,
+                                        ): context.boundary.name,
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .memberCountText,
+                                        ): state.householdMemberWrapper
+                                            .household.memberCount,
+                                      },
+                                    ),
                                   ),
                                   Column(
                                     children: state
@@ -365,24 +378,28 @@ class _HouseholdOverviewPageState
                                                               e.clientReferenceId,
                                                         )
                                                         .toList();
-
-                                            final taskdata = state
-                                                .householdMemberWrapper.tasks
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
-                                            final referralData = state
-                                                .householdMemberWrapper
-                                                .referrals
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
+                                            final taskdata = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .tasks
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
+                                            final referralData = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .referrals
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
                                             final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty
@@ -491,7 +508,15 @@ class _HouseholdOverviewPageState
                                                         (element) =>
                                                             element
                                                                 .beneficiaryClientReferenceId ==
-                                                            e.clientReferenceId,
+                                                            (context.beneficiaryType ==
+                                                                    BeneficiaryType
+                                                                        .individual
+                                                                ? e
+                                                                    .clientReferenceId
+                                                                : state
+                                                                    .householdMemberWrapper
+                                                                    .household
+                                                                    .clientReferenceId),
                                                       ),
                                                     ),
                                                     children: [
@@ -537,6 +562,14 @@ class _HouseholdOverviewPageState
                                                 DigitDialog.show(
                                                   context,
                                                   options: DigitDialogOptions(
+                                                    titlePadding:
+                                                        const EdgeInsets
+                                                            .fromLTRB(
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding / 2,
+                                                    ),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .householdOverView
@@ -611,9 +644,29 @@ class _HouseholdOverviewPageState
                                                       sideEffectData,
                                                     )
                                                   : false,
-                                              // TODO Need to handle the null check
-                                              name:
-                                                  '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
+                                              name: e.name?.givenName ?? ' - ',
+                                              years: (e.dateOfBirth == null
+                                                      ? null
+                                                      : DigitDateUtils
+                                                          .calculateAge(
+                                                          DigitDateUtils
+                                                                  .getFormattedDateToDateTime(
+                                                                e.dateOfBirth!,
+                                                              ) ??
+                                                              DateTime.now(),
+                                                        ).years) ??
+                                                  0,
+                                              months: (e.dateOfBirth == null
+                                                      ? null
+                                                      : DigitDateUtils
+                                                          .calculateAge(
+                                                          DigitDateUtils
+                                                                  .getFormattedDateToDateTime(
+                                                                e.dateOfBirth!,
+                                                              ) ??
+                                                              DateTime.now(),
+                                                        ).months) ??
+                                                  0,
                                               gender: e.gender?.name,
                                               isBeneficiaryRefused:
                                                   isBeneficiaryRefused &&
@@ -647,6 +700,53 @@ class _HouseholdOverviewPageState
                                         );
                                       },
                                     ).toList(),
+                                  ),
+                                  Center(
+                                    child: DigitIconButton(
+                                      onPressed: () async {
+                                        final bloc = context
+                                            .read<HouseholdOverviewBloc>();
+                                        final wrapper =
+                                            state.householdMemberWrapper;
+                                        final address =
+                                            wrapper.household.address;
+                                        if (address == null) return;
+                                        final projectId = context.projectId;
+                                        context.read<ScannerBloc>().add(
+                                              const ScannerEvent.handleScanner(
+                                                [],
+                                                [],
+                                              ),
+                                            );
+                                        await context.router.push(
+                                          BeneficiaryRegistrationWrapperRoute(
+                                            initialState:
+                                                BeneficiaryRegistrationAddMemberState(
+                                              addressModel: address,
+                                              householdModel: wrapper.household,
+                                            ),
+                                            children: [
+                                              IndividualDetailsRoute(),
+                                            ],
+                                          ),
+                                        );
+                                        bloc.add(
+                                          HouseholdOverviewReloadEvent(
+                                            projectId: projectId,
+                                            projectBeneficiaryType:
+                                                beneficiaryType,
+                                          ),
+                                        );
+                                      },
+                                      iconText: localizations.translate(
+                                        i18.householdOverView
+                                            .householdOverViewAddActionText,
+                                      ),
+                                      icon: Icons.add_circle,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: kPadding,
                                   ),
                                 ],
                               ),

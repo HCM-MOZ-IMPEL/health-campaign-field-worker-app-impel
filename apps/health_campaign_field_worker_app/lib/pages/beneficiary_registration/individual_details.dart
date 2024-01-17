@@ -43,6 +43,7 @@ class _IndividualDetailsPageState
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
   bool isDuplicateTag = false;
+  final clickedStatus = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -254,6 +255,7 @@ class _IndividualDetailsPageState
                                 tag: scannerBloc.state.qrcodes.isNotEmpty
                                     ? scannerBloc.state.qrcodes.first
                                     : null,
+                                householdModel: householdModel,
                               ),
                             );
                           }

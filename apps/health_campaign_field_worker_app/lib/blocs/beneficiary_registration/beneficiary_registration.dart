@@ -363,21 +363,28 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId: [event.model.clientReferenceId],
+              beneficiaryClientReferenceId: [
+                beneficiaryType == BeneficiaryType.individual
+                    ? event.model.clientReferenceId
+                    : event.householdModel.clientReferenceId,
+              ],
             ),
           );
-          final IndividualModel? existingIndividual =
-              (await individualRepository.search(IndividualSearchModel(
-            clientReferenceId: [individual.clientReferenceId],
-          )))
-                  .firstOrNull;
+          await individualRepository.update(individual);
 
-          await individualRepository.update(individual.copyWith(
-            id: existingIndividual?.id,
-            rowVersion: existingIndividual?.rowVersion ?? 1,
-            nonRecoverableError:
-                existingIndividual?.nonRecoverableError ?? false,
-          ));
+          // final IndividualModel? existingIndividual =
+          //     (await individualRepository.search(IndividualSearchModel(
+          //   clientReferenceId: [individual.clientReferenceId],
+          // )))
+          //         .firstOrNull;
+
+          // await individualRepository.update(individual.copyWith(
+          //   id: existingIndividual?.id,
+          //   rowVersion: existingIndividual?.rowVersion ?? 1,
+          //   nonRecoverableError:
+          //       existingIndividual?.nonRecoverableError ?? false,
+          // ));
+
           if (projectBeneficiary.isNotEmpty) {
             if (projectBeneficiary.first.tag != event.tag) {
               await projectBeneficiaryRepository
@@ -517,6 +524,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationEvent.updateIndividualDetails({
     required IndividualModel model,
     String? tag,
+    required HouseholdModel householdModel,
     required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 

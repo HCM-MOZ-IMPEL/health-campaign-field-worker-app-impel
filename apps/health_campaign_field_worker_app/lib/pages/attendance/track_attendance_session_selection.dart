@@ -86,10 +86,23 @@ class _AttendanceDateSessionSelectionPageState
                     if (!form.valid) {
                       return;
                     } else {
+                      DateTime s1 = DateTime(s.year, s.month, s.day);
+                      DateTime s2 = DateTime(
+                        widget.eventStart.year,
+                        widget.eventStart.month,
+                        widget.eventStart.day,
+                      );
+                      DateTime e1 = DateTime(s.year, s.month, s.day);
+                      DateTime e2 = DateTime(
+                        widget.eventEnd.year,
+                        widget.eventEnd.month,
+                        widget.eventEnd.day,
+                      );
+
                       if (!((s.isAfter(widget.eventStart) ||
-                              s.isAtSameMomentAs(widget.eventStart)) &&
+                              datesAreEqual(s1, s2)) &&
                           (s.isBefore(widget.eventEnd) ||
-                              s.isAtSameMomentAs(widget.eventEnd)))) {
+                              datesAreEqual(e1, e2)))) {
                         DigitToast.show(
                           context,
                           options: DigitToastOptions(
@@ -177,6 +190,12 @@ class _AttendanceDateSessionSelectionPageState
         },
       ),
     );
+  }
+
+  bool datesAreEqual(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   FormGroup buildForm(BuildContext ctx) {
