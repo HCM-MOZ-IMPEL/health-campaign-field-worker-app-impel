@@ -341,7 +341,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                           attribute?[i]
                                                                   .values
                                                                   ?.length ==
-                                                              3) &&
+                                                              3 ||
+                                                          attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              4) &&
                                                       controller[i].text ==
                                                           attribute?[i]
                                                               .values?[1]
@@ -493,7 +497,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -506,17 +509,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             text: value!,
                           ),
                         ).value;
-                        if (excludedIndexes.isNotEmpty) {
-                          for (int i = 0; i < excludedIndexes.length; i++) {
-                            // Clear excluded child controllers
-                            controller[excludedIndexes[i]].value =
-                                TextEditingController.fromValue(
-                              const TextEditingValue(
-                                text: '',
-                              ),
-                            ).value;
-                          }
-                        }
 
                         // Remove corresponding controllers based on the removed attributes
                       });
