@@ -109,6 +109,18 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    BeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const BeneficiaryAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
     AcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<AcknowledgementRouteArgs>(
           orElse: () => const AcknowledgementRouteArgs());
@@ -309,6 +321,7 @@ class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
           isEditing: args.isEditing,
+          fromSurvey: args.fromSurvey,
         ),
       );
     },
@@ -322,6 +335,9 @@ class _$AppRouter extends RootStackRouter {
           isEditing: args.isEditing,
           projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
           individual: args.individual,
+          isReadministrationUnSuccessful: args.isReadministrationUnSuccessful,
+          quantityWasted: args.quantityWasted,
+          productVariantId: args.productVariantId,
         ),
       );
     },
@@ -727,6 +743,11 @@ class _$AppRouter extends RootStackRouter {
                   parent: ChecklistWrapperRoute.name,
                 ),
               ],
+            ),
+            RouteConfig(
+              BeneficiaryAcknowledgementRoute.name,
+              path: 'beneficiary-acknowledgement',
+              parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
               AcknowledgementRoute.name,
@@ -1159,6 +1180,46 @@ class ChecklistWrapperRouteArgs {
   @override
   String toString() {
     return 'ChecklistWrapperRouteArgs{key: $key, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryAcknowledgementPage]
+class BeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
+  BeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+  }) : super(
+          BeneficiaryAcknowledgementRoute.name,
+          path: 'beneficiary-acknowledgement',
+          args: BeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+        );
+
+  static const String name = 'BeneficiaryAcknowledgementRoute';
+}
+
+class BeneficiaryAcknowledgementRouteArgs {
+  const BeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 
@@ -1766,6 +1827,7 @@ class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
     AppLocalizations? appLocalizations,
     required List<TaskModel> tasks,
     bool isEditing = false,
+    bool fromSurvey = false,
   }) : super(
           SideEffectsRoute.name,
           path: 'side-effects',
@@ -1774,6 +1836,7 @@ class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
             appLocalizations: appLocalizations,
             tasks: tasks,
             isEditing: isEditing,
+            fromSurvey: fromSurvey,
           ),
         );
 
@@ -1786,6 +1849,7 @@ class SideEffectsRouteArgs {
     this.appLocalizations,
     required this.tasks,
     this.isEditing = false,
+    this.fromSurvey = false,
   });
 
   final Key? key;
@@ -1796,9 +1860,11 @@ class SideEffectsRouteArgs {
 
   final bool isEditing;
 
+  final bool fromSurvey;
+
   @override
   String toString() {
-    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing, fromSurvey: $fromSurvey}';
   }
 }
 
@@ -1811,6 +1877,9 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
     bool isEditing = false,
     required String projectBeneficiaryClientRefId,
     required IndividualModel individual,
+    bool isReadministrationUnSuccessful = false,
+    String quantityWasted = "00",
+    String? productVariantId,
   }) : super(
           ReferBeneficiaryRoute.name,
           path: 'refer-beneficiary',
@@ -1820,6 +1889,9 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
             isEditing: isEditing,
             projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
             individual: individual,
+            isReadministrationUnSuccessful: isReadministrationUnSuccessful,
+            quantityWasted: quantityWasted,
+            productVariantId: productVariantId,
           ),
         );
 
@@ -1833,6 +1905,9 @@ class ReferBeneficiaryRouteArgs {
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
     required this.individual,
+    this.isReadministrationUnSuccessful = false,
+    this.quantityWasted = "00",
+    this.productVariantId,
   });
 
   final Key? key;
@@ -1845,9 +1920,15 @@ class ReferBeneficiaryRouteArgs {
 
   final IndividualModel individual;
 
+  final bool isReadministrationUnSuccessful;
+
+  final String quantityWasted;
+
+  final String? productVariantId;
+
   @override
   String toString() {
-    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual, isReadministrationUnSuccessful: $isReadministrationUnSuccessful, quantityWasted: $quantityWasted, productVariantId: $productVariantId}';
   }
 }
 

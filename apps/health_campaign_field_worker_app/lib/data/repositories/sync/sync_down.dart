@@ -21,6 +21,8 @@ class PerformSyncDown {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const householdIdKey = 'householdId';
+    const individualIdKey = 'individualId';
 
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -36,9 +38,7 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) =>
-            element.type != DataModelType.householdMember &&
-            element.type != DataModelType.service)
+        .where((element) => element.type != DataModelType.service)
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -332,6 +332,71 @@ class PerformSyncDown {
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+          case DataModelType.householdMember:
+            responseEntities = await remote.search(HouseholdMemberSearchModel(
+              clientReferenceId: entities
+                  .whereType<HouseholdMemberModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as HouseholdMemberModel;
+              final responseEntity = responseEntities
+                  .whereType<HouseholdMemberModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                final householdAdditionalId =
+                    responseEntity?.householdId == null
+                        ? null
+                        : AdditionalId(
+                            idType: householdIdKey,
+                            id: responseEntity!.householdId!,
+                          );
+                final individualAdditionalId =
+                    responseEntity?.individualId == null
+                        ? null
+                        : AdditionalId(
+                            idType: individualIdKey,
+                            id: responseEntity!.individualId!,
+                          );
+
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                    additionalIds: [
+                      if (householdAdditionalId != null) householdAdditionalId,
+                      if (individualAdditionalId != null)
+                        individualAdditionalId,
+                    ],
                   ),
                 );
               } else {

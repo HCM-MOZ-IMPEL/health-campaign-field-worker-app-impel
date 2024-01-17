@@ -27,12 +27,12 @@ class LocalSecureStore {
 
   LocalSecureStore._();
 
-  Future<String?> get accessToken {
-    return storage.read(key: accessTokenKey);
+  Future<String?> get accessToken async {
+    return await storage.read(key: accessTokenKey);
   }
 
-  Future<String?> get refreshToken {
-    return storage.read(key: refreshTokenKey);
+  Future<String?> get refreshToken async {
+    return await storage.read(key: refreshTokenKey);
   }
 
   Future<bool> get isBackgroundSerivceRunning async {
@@ -112,9 +112,8 @@ class LocalSecureStore {
     if (actionsListString == null) return null;
 
     try {
-      final actions = Mapper.fromMap<RoleActionsWrapperModel>(json.decode(
-        actionsListString,
-      ));
+      final actions =
+          RoleActionsWrapperModel.fromJson(json.decode(actionsListString));
 
       return actions;
     } catch (_) {
@@ -156,6 +155,10 @@ class LocalSecureStore {
     );
   }
 
+  Future<void> setRoleActions(String actions) async {
+    await storage.write(key: actionsListkey, value: actions);
+  }
+
   Future<void> setAuthCredentials(AuthModel model) async {
     await storage.write(key: accessTokenKey, value: model.accessToken);
     await storage.write(key: refreshTokenKey, value: model.refreshToken);
@@ -169,13 +172,6 @@ class LocalSecureStore {
     await storage.write(
       key: boundaryRefetchInKey,
       value: isboundaryRefetch.toString(),
-    );
-  }
-
-  Future<void> setRoleActions(RoleActionsWrapperModel actions) async {
-    await storage.write(
-      key: actionsListkey,
-      value: actions.toString(),
     );
   }
 

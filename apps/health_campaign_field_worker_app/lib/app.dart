@@ -90,6 +90,8 @@ class MainApplicationState extends State<MainApplication>
               BlocProvider(
                 create: (ctx) => AuthBloc(
                   authRepository: ctx.read(),
+                  boundaryLocalRepository: ctx.read<
+                      LocalRepository<BoundaryModel, BoundarySearchModel>>(),
                   mdmsRepository: MdmsRepository(widget.client),
                 )..add(
                     AuthAutoLoginEvent(
@@ -116,7 +118,7 @@ class MainApplicationState extends State<MainApplication>
                       return const MaterialApp(
                         home: Scaffold(
                           body: Center(
-                            child: Text('Loading'),
+                            child: Text('Carregando'),
                           ),
                         ),
                       );

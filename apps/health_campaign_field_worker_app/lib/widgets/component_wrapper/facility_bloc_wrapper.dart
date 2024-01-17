@@ -38,6 +38,7 @@ class FacilityBlocWrapper extends StatelessWidget {
                 userId: context.loggedInUserUuid,
               ),
             ),
+          lazy: false,
           child: child,
         );
       },

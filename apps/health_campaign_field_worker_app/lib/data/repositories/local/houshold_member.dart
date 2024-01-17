@@ -2,10 +2,10 @@ import 'dart:async';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/household_member_base.dart';
 
 class HouseholdMemberLocalRepository
-    extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
+    extends HouseholdMemberLocalBaseRepository {
   HouseholdMemberLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -52,6 +52,7 @@ class HouseholdMemberLocalRepository
           final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
+            id: householdMember.id,
             householdId: householdMember.householdId,
             householdClientReferenceId:
                 householdMember.householdClientReferenceId,
@@ -104,7 +105,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> update(
     HouseholdMemberModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
   }) async {
     final householdMemberCompanion = entity.companion;
 
@@ -124,7 +125,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
@@ -151,7 +152,4 @@ class HouseholdMemberLocalRepository
 
     return super.delete(updated, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.householdMember;
 }

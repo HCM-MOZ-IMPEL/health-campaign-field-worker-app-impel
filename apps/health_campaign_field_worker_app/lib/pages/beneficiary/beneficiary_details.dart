@@ -66,7 +66,9 @@ class _BeneficiaryDetailsPageState
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
+                      projectBeneficiary.first.clientReferenceId &&
+                  element.status != Status.beneficiaryRefused.toValue() &&
+                  element.status != Status.beneficiaryReferred.toValue())
               .toList();
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
@@ -254,7 +256,7 @@ class _BeneficiaryDetailsPageState
                                       : state.selectedIndividual?.name
                                                   ?.givenName !=
                                               null
-                                          ? '${householdMemberWrapper.headOfHousehold.name?.givenName ?? ''} ${householdMemberWrapper.headOfHousehold.name?.familyName ?? ''}'
+                                          ? '${state.selectedIndividual?.name?.givenName ?? ''} ${state.selectedIndividual?.name?.familyName ?? ''}'
                                           : '--',
                                   localizations.translate(
                                     i18.common.coreCommonAge,
@@ -299,15 +301,6 @@ class _BeneficiaryDetailsPageState
                                               .selectedIndividual?.gender?.name
                                               .toUpperCase() ??
                                           '--'),
-                                  localizations.translate(
-                                    i18.common.coreCommonMobileNumber,
-                                  ): context.beneficiaryType !=
-                                          BeneficiaryType.individual
-                                      ? householdMemberWrapper
-                                          .headOfHousehold.mobileNumber
-                                      : state.selectedIndividual
-                                              ?.mobileNumber ??
-                                          '--',
                                   localizations.translate(i18
                                       .deliverIntervention
                                       .dateOfRegistrationLabel): () {

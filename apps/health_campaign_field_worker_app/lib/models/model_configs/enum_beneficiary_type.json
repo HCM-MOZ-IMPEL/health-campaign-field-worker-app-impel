@@ -12,6 +12,22 @@
       {
         "name": "product",
         "value": "PRODUCT"
+      },
+      {
+        "name": "individual1",
+        "value": "3-11MONTH"
+      },
+      {
+        "name": "individual2",
+        "value": "12-59MONTH"
+      },
+      {
+        "name": "spaq1",
+        "value": "SPAQ1"
+      },
+      {
+        "name": "spaq2",
+        "value": "SPAQ2"
       }
     ],
     "isEnum": true

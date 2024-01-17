@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../theme/colors.dart';
+import '../theme/digit_theme.dart';
+
 class DigitCheckboxTile extends StatelessWidget {
   final bool value;
   final String label;
@@ -25,20 +28,19 @@ class DigitCheckboxTile extends StatelessWidget {
       child: InkWell(
         onTap: () => onChanged?.call(!value),
         child: Padding(
-          padding: padding ??
-              const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 8,
-              ),
+          padding: const EdgeInsets.only(left: 0, bottom: kPadding * 2),
           child: Row(
             children: [
               Icon(
                 value
                     ? Icons.check_box_outlined
                     : Icons.check_box_outline_blank_sharp,
-                color: theme.colorScheme.secondary,
+                color: value
+                    ? theme.colorScheme.secondary
+                    : const DigitColors().davyGray,
+                size: kPadding * 3,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: kPadding * 2),
               Expanded(
                 child: Text(
                   label,

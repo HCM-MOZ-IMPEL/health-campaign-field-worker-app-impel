@@ -5,9 +5,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/task_base.dart';
 
-class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
+class TaskLocalRepository extends TaskLocalBaseRepository {
   TaskLocalRepository(super.sql, super.opLogManager);
 
   void listenToChanges({
@@ -103,6 +103,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             if (query.projectBeneficiaryClientReferenceId != null)
               sql.task.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
+              ),
+            if (query.status != null)
+              sql.task.status.equals(
+                query.status,
               ),
             if (userId != null)
               sql.task.auditCreatedBy.equals(

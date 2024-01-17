@@ -157,19 +157,10 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
     if (viewValue == null || (viewValue.years == 0 && viewValue.months == 0)) {
       return null;
     } else {
-      final months = viewValue.months;
-      final days = DigitDateUtils.yearsMonthsDaysToDays(
-          viewValue.years, viewValue.months, viewValue.days);
-
-      final calculatedDate = DateTime.now().subtract(Duration(days: days));
-
-      return (viewValue.years == 0 && months == 0) || months > 11
+      return (viewValue.years == 0 && viewValue.months == 0) ||
+              viewValue.months > 11
           ? null
-          : DateTime(
-              calculatedDate.year,
-              calculatedDate.month,
-              1,
-            );
+          : DigitDateUtils.calculateDob(viewValue);
     }
   }
 }
@@ -200,7 +191,9 @@ class DobValueAccessorYearsString
     final years = int.tryParse(viewValue ?? '');
 
     final dobAge = DigitDOBAge(
-        years: years ?? 0, months: int.tryParse(existingMonth) ?? 0, days: 1);
+        years: years ?? 0,
+        months: int.tryParse(existingMonth) ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -232,7 +225,9 @@ class DobValueAccessorMonthString
   DateTime? viewToModelValue(String? viewValue) {
     final months = int.tryParse(viewValue ?? '');
     final dobAge = DigitDOBAge(
-        years: int.tryParse(existingYear) ?? 0, months: months ?? 0, days: 1);
+        years: int.tryParse(existingYear) ?? 0,
+        months: months ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
 }

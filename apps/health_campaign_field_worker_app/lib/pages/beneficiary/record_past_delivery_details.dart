@@ -205,6 +205,7 @@ class _RecordPastDeliveryDetailsPageState
                               router.push(
                                 SideEffectsRoute(
                                   tasks: [(futureTaskList ?? []).last],
+                                  fromSurvey: true,
                                 ),
                               );
                             },
@@ -246,15 +247,13 @@ class _RecordPastDeliveryDetailsPageState
                                 return Column(
                                   children: [
                                     DigitRadioButtonList(
-                                      labelText: "${localizations.translate(
-                                        i18.deliverIntervention
-                                            .wasDosePastDeliveryDetails,
-                                      )} $doseNumber ${localizations.translate(
-                                        i18.deliverIntervention
-                                            .wasDosePastRecordDeliveryDetails,
-                                      )} ${localizations.translate(
-                                        i18.beneficiaryDetails.beneficiaryDose,
-                                      )} ${doseNumber - 1} ? *",
+                                      labelText: localizations.translate(
+                                        doseNumber == 2
+                                            ? i18.deliverIntervention
+                                                .wasDosePastDeliveryDetailPart2
+                                            : i18.deliverIntervention
+                                                .wasDosePastDeliveryDetailPart3,
+                                      ),
                                       labelStyle: DigitTheme.instance
                                           .mobileTheme.textTheme.headlineSmall,
                                       formControlName:

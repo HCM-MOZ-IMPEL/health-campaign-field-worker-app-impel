@@ -68,7 +68,9 @@ class _IndividualDetailsPageState
                           isProximityEnabled: false,
                         ),
                       );
-                  router.push(AcknowledgementRoute());
+                  router.push(BeneficiaryAcknowledgementRoute(
+                    enableViewHousehold: true,
+                  ));
                 }
               },
             );
@@ -111,6 +113,29 @@ class _IndividualDetailsPageState
                             form: form,
                             oldIndividual: null,
                           );
+
+                          final locationBloc = context.read<LocationBloc>();
+                          final locationInitialState = locationBloc.state;
+                          final initialLat = locationInitialState.latitude;
+                          final initialLng = locationInitialState.longitude;
+                          final initialAccuracy = locationInitialState.accuracy;
+                          if (addressModel != null &&
+                              (addressModel.latitude == null ||
+                                  addressModel.longitude == null ||
+                                  addressModel.locationAccuracy == null)) {
+                            bloc.add(
+                              BeneficiaryRegistrationSaveAddressEvent(
+                                addressModel.copyWith(
+                                  latitude: initialLat ??
+                                      addressModel.locationAccuracy,
+                                  longitude: initialLng ??
+                                      addressModel.locationAccuracy,
+                                  locationAccuracy: initialAccuracy ??
+                                      addressModel.locationAccuracy,
+                                ),
+                              ),
+                            );
+                          }
 
                           final boundary = context.boundary;
 
@@ -245,7 +270,11 @@ class _IndividualDetailsPageState
                     children: [
                       Text(
                         localizations.translate(
-                          i18.individualDetails.individualsDetailsLabelText,
+                          widget.isHeadOfHousehold
+                              ? i18.individualDetails
+                                  .headHouseholdDetailsLabelText
+                              : i18.individualDetails
+                                  .childIndividualsDetailsLabelText,
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
@@ -254,7 +283,10 @@ class _IndividualDetailsPageState
                           DigitTextFormField(
                             formControlName: _individualNameKey,
                             label: localizations.translate(
-                              i18.individualDetails.firstNameLabelText,
+                              widget.isHeadOfHousehold
+                                  ? i18.individualDetails.firstNameHeadLabelText
+                                  : i18.individualDetails
+                                      .childFirstNameLabelText,
                             ),
                             maxLength: 200,
                             isRequired: true,
@@ -269,12 +301,18 @@ class _IndividualDetailsPageState
                               'maxLength': (object) => localizations.translate(
                                     i18.individualDetails.firstNameLengthError,
                                   ),
+                              "min3": (object) => localizations.translate(
+                                    i18.common.min3CharsRequired,
+                                  ),
                             },
                           ),
                           DigitTextFormField(
                             formControlName: _individualLastNameKey,
                             label: localizations.translate(
-                              i18.individualDetails.lastNameLabelText,
+                              widget.isHeadOfHousehold
+                                  ? i18.individualDetails.lastNameHeadLabelText
+                                  : i18
+                                      .individualDetails.childLastNameLabelText,
                             ),
                             maxLength: 200,
                             isRequired: true,
@@ -288,6 +326,9 @@ class _IndividualDetailsPageState
                                   ),
                               'maxLength': (object) => localizations.translate(
                                     i18.individualDetails.lastNameLengthError,
+                                  ),
+                              "min3": (object) => localizations.translate(
+                                    i18.common.min3CharsRequired,
                                   ),
                             },
                           ),
@@ -371,23 +412,27 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
-                          DigitTextFormField(
-                            keyboardType: TextInputType.number,
-                            formControlName: _mobileNumberKey,
-                            label: localizations.translate(
-                              i18.individualDetails.mobileNumberLabelText,
-                            ),
-                            maxLength: 9,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp("[0-9]"),
+                          Offstage(
+                            offstage: !widget.isHeadOfHousehold,
+                            child: DigitTextFormField(
+                              keyboardType: TextInputType.number,
+                              formControlName: _mobileNumberKey,
+                              label: localizations.translate(
+                                i18.individualDetails.mobileNumberLabelText,
                               ),
-                            ],
-                            validationMessages: {
-                              'mobileNumber': (object) =>
-                                  localizations.translate(i18.individualDetails
-                                      .mobileNumberInvalidFormatValidationMessage),
-                            },
+                              maxLength: 9,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9]"),
+                                ),
+                              ],
+                              validationMessages: {
+                                'mobileNumber': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberInvalidFormatValidationMessage),
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -514,7 +559,7 @@ class _IndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          Validators.minLength(validation.individual.nameMinLength),
+          CustomValidator.requiredMin3,
           Validators.maxLength(validation.individual.nameMaxLength),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
@@ -522,7 +567,7 @@ class _IndividualDetailsPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          Validators.minLength(validation.individual.nameMinLength),
+          CustomValidator.requiredMin3,
           Validators.maxLength(validation.individual.nameMaxLength),
         ],
         value: individual?.name?.familyName ?? '',

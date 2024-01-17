@@ -131,7 +131,9 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                       () => context.router.pop(),
                                     );
                                   },
-                            child: const Text('Submit'),
+                            child: Text(AppLocalizations.of(
+                              context,
+                            ).translate(i18.common.coreCommonSubmit)),
                           ),
                         ),
                       ),

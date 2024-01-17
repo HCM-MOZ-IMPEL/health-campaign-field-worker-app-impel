@@ -165,6 +165,17 @@ class SearchHouseholdsBloc
               },
             )?.individualClientReferenceId,
       );
+      final tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
+
+      final sideEffects =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
+      ));
+
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
 
       if (headOfHousehold == null) {
         emit(state.copyWith(
@@ -177,6 +188,9 @@ class SearchHouseholdsBloc
           headOfHousehold: headOfHousehold,
           members: individuals,
           projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isNotEmpty ? tasks : null,
+          sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
+          referrals: referrals.isNotEmpty ? referrals : null,
         );
 
         emit(
@@ -463,9 +477,7 @@ class SearchHouseholdsBloc
       ...firstNameClientRefResults,
       ...lastNameClientRefResults,
     ]
-        .where((obj) =>
-            uniqueClientRefIds.contains(obj.clientReferenceId) &&
-            obj.auditDetails?.createdBy == userUid)
+        .where((obj) => uniqueClientRefIds.contains(obj.clientReferenceId))
         .toList();
 
     // Search for individual results based on the search text only.
@@ -498,11 +510,7 @@ class SearchHouseholdsBloc
     List<IndividualModel> results = [
       ...firstNameResults,
       ...lastNameResults,
-    ]
-        .where((obj) =>
-            uniqueIds.contains(obj.clientReferenceId) &&
-            obj.auditDetails?.createdBy == userUid)
-        .toList();
+    ].where((obj) => uniqueIds.contains(obj.clientReferenceId)).toList();
 
     // Initialize a list to store household members.
     final householdMembers = <HouseholdMemberModel>[];
@@ -685,6 +693,16 @@ class SearchHouseholdsBloc
       householdMembers: [],
     ));
   }
+
+  // Fetch the task
+  Future<List<TaskModel>> fetchTaskbyProjectBeneficiary(
+    List<ProjectBeneficiaryModel> projectBeneficiaries,
+  ) async {
+    return await taskDataRepository.search(TaskSearchModel(
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+    ));
+  }  
 }
 
 @freezed

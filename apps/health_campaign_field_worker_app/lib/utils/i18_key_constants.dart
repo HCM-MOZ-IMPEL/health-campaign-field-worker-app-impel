@@ -100,6 +100,10 @@ class Common {
   String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
+
+  String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
 }
 
 class AdverseEvents {
@@ -120,6 +124,10 @@ class AdverseEvents {
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 
   String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
+
+  String get sideEffectsAlertTitle => 'SIDE_EFFECTS_ALERT_TITLE';
+
+  String get sideEffectsAlertContent => 'SIDE_EFFECTS_ALERT_CONTENT';
 }
 
 class Login {
@@ -134,6 +142,14 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get loginError => 'LOGIN_ERROR';
+
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
+
+  String get sessionExpired => 'CORE_SESSION_EXPIRED';
+
+  String get pleaseLogout => 'PLEASE_LOGOUT_USER';
 }
 
 class Checklist {
@@ -218,6 +234,9 @@ class Home {
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
+
+  String get healthFacilitySupervisorCheckList =>
+      'HF_SUPERVISOR_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {
@@ -284,11 +303,24 @@ class IndividualDetails {
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
+  String get headHouseholdDetailsLabelText => 'HOUSEHOLD_HEAD_LABEL_TEXT';
+
+  String get childIndividualsDetailsLabelText => 'CHILD_INDIVIDUAL_LABEL_TEXT';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
 
+  String get firstNameHeadLabelText => 'HEAD_HOUSEHOLD_FIRST_NAME_LABEL_TEXT';
+
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelText =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
@@ -392,6 +424,9 @@ class HouseholdOverView {
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
 
+  String get householdOverViewHouseholderHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
 
@@ -467,12 +502,17 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
   String get markIneligibleLabel => 'MEMBER_CARD_MARK_INELIGIBLE_LABEL';
+  String get householdMemberText => "HOUSEHOLD_MEMBER_TEXT";
+  String get householdMembersText => "HOUSEHOLD_MEMBERS_TEXT";
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
+  String get deliverInteventionAdministeredLabel =>
+      'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
 
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
@@ -489,6 +529,9 @@ class DeliverIntervention {
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
 
+  String get quantityWastedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
+
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
 
@@ -504,6 +547,12 @@ class DeliverIntervention {
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+
+  String get referDialogTitle => 'DELIVER_INTERVENTION_REFER_DIALOG_TITLE';
+
+  String get referDialogContent => 'DELIVER_INTERVENTION_REFER_DIALOG_CONTENT';
+
+  String get referDialogSubmit => 'DELIVER_INTERVENTION_REFER_DIALOG_SUBMIT';
 
   String get didYouObserveAdvEventsTitle =>
       'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
@@ -538,6 +587,12 @@ class DeliverIntervention {
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
 
   String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
+
+  // [new key added for record past delivery details]
+  String get wasDosePastDeliveryDetailPart2 =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS_2';
+  String get wasDosePastDeliveryDetailPart3 =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS_3';
 }
 
 class ProjectSelection {
@@ -574,6 +629,8 @@ class WarehouseDetails {
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
+
+  String get organizationUnit => 'WAREHOSUE_DETAILS_ORGANIZATION_UNIT';
 
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
 
@@ -660,10 +717,13 @@ class StockReconciliationDetails {
   String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+  String get facilityName => 'STOCK_RECONCILIATION_FACILITY_NAME';
 
   String get stockLabel => 'STOCK_LABEL';
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
+
+  String get spaqLabel => 'STOCK_RECONCILIATION_SPAQ_LABEL';
 
   String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
 
@@ -687,6 +747,8 @@ class StockReconciliationDetails {
   String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
 
   String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT_SPAQ';
+  String get infoCardDescription =>
+      'STOCK_RECONCILIATION_INFO_CARD_DESCRIPTION_SPAQ';
 
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
@@ -716,8 +778,11 @@ class StockReconciliationDetails {
   String get spaqDamaged => 'SPAQ_DAMAGED';
   String get spaqOnHand => 'SPAQ_ON_HAND';
   String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get physicalSpaqCount => 'PHYSICAL_SPAQ_COUNT';
   String get reconciliationCommentRequiredError =>
       'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
+  String get spaqSent => 'SPAQ_SENT';
+  String get spaqTheoretical => 'SPAQ_THEORETICAL';
 }
 
 class ManageStock {
@@ -882,7 +947,7 @@ class InventoryReportSelection {
   }
 
   String get inventoryReportReceiptLabel {
-    return 'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL';
+    return 'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL_SPAQ';
   }
 
   String get inventoryReportReceiptDescription {
@@ -898,7 +963,7 @@ class InventoryReportSelection {
   }
 
   String get inventoryReportReturnedLabel {
-    return 'INVENTORY_REPORT_SELECTION_RETURNED_LABEL';
+    return 'INVENTORY_REPORT_SELECTION_RETURNED_LABEL_SPAQ';
   }
 
   String get inventoryReportReturnedDescription {
@@ -1069,6 +1134,7 @@ class ReferBeneficiary {
 
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
@@ -1079,6 +1145,11 @@ class ReferBeneficiary {
   String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
   String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';
   String get dialogCancel => 'REFERRAL_CONFIRMATION_CANCEL_LABEL';
+  String get referredDialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_BOX_TITLE';
+  String get referredDialogContent =>
+      'REFERRAL_CONFIRMATION_DIALOG_BOX_CONTENT';
+  String get referAlertDialogTitle => 'REFERRAL_ALERT_DIALOG_TITLE';
+  String get referAlertDialogContent => 'REFERRAL_ALERT_DIALOG_CONTENT';
 }
 
 class IneligibilityReasons {

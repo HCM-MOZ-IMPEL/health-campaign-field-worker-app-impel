@@ -42,15 +42,24 @@ class _DeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
-
+  static const _defaultQuantity = 1;
+  static const _administeredQuantity = 2;
   // Variable to track dose administration status
   bool doseAdministered = false;
 
   // List of controllers for form elements
   final List _controllers = [];
+
+  // toggle doseAdministered
+  void checkDoseAdministration(bool newValue) {
+    setState(() {
+      doseAdministered = newValue;
+    });
+  }
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
@@ -86,6 +95,9 @@ class _DeliverInterventionPageState
                       .toList();
 
           final projectState = context.read<ProjectBloc>().state;
+          final selectedIndividual = state.selectedIndividual;
+          final projectBeneficiaryClientReferenceId =
+              projectBeneficiary.first.clientReferenceId;
 
           return Scaffold(
             body: state.loading
@@ -183,32 +195,7 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else if ((((form.control(
-                                                          _quantityDistributedKey,
-                                                        ) as FormArray)
-                                                            .value) ??
-                                                        [])
-                                                    .any((e) => e == null)) {
-                                                  await DigitToast.show(
-                                                    context,
-                                                    options: DigitToastOptions(
-                                                      localizations.translate(i18
-                                                          .deliverIntervention
-                                                          .resourceCannotBeZero),
-                                                      true,
-                                                      theme,
-                                                    ),
-                                                  );
-                                                } else if ((((form.control(
-                                                              _quantityDistributedKey,
-                                                            ) as FormArray)
-                                                                .value) ??
-                                                            [])
-                                                        .any((e) =>
-                                                            e != null &&
-                                                            int.parse(e
-                                                                    .toString()) >
-                                                                1) &&
+                                                } else if (doseAdministered &&
                                                     form
                                                             .control(
                                                               _deliveryCommentKey,
@@ -226,6 +213,20 @@ class _DeliverInterventionPageState
                                                     ),
                                                   );
                                                 } else {
+                                                  bool isReferral = form
+                                                              .control(
+                                                                _deliveryCommentKey,
+                                                              )
+                                                              .value !=
+                                                          null &&
+                                                      form
+                                                              .control(
+                                                                _deliveryCommentKey,
+                                                              )
+                                                              .value ==
+                                                          "ADMINISTRATION_NOT_SUCCESSFUL" &&
+                                                      doseAdministered;
+
                                                   final shouldSubmit =
                                                       await DigitDialog.show<
                                                           bool>(
@@ -233,20 +234,34 @@ class _DeliverInterventionPageState
                                                     options: DigitDialogOptions(
                                                       titleText: localizations
                                                           .translate(
-                                                        i18.deliverIntervention
-                                                            .dialogTitle,
+                                                        isReferral
+                                                            ? i18
+                                                                .deliverIntervention
+                                                                .referDialogTitle
+                                                            : i18
+                                                                .deliverIntervention
+                                                                .dialogTitle,
                                                       ),
                                                       contentText: localizations
                                                           .translate(
-                                                        i18.deliverIntervention
-                                                            .dialogContent,
+                                                        isReferral
+                                                            ? i18
+                                                                .deliverIntervention
+                                                                .referDialogContent
+                                                            : i18
+                                                                .deliverIntervention
+                                                                .dialogContent,
                                                       ),
                                                       primaryAction:
                                                           DigitDialogActions(
                                                         label: localizations
                                                             .translate(
-                                                          i18.common
-                                                              .coreCommonSubmit,
+                                                          isReferral
+                                                              ? i18
+                                                                  .deliverIntervention
+                                                                  .referDialogSubmit
+                                                              : i18.common
+                                                                  .coreCommonSubmit,
                                                         ),
                                                         action: (ctx) {
                                                           Navigator.of(
@@ -278,62 +293,100 @@ class _DeliverInterventionPageState
                                                         BeneficiaryWrapperRoute
                                                             .name,
                                                       );
-                                                      context
-                                                          .read<
-                                                              DeliverInterventionBloc>()
-                                                          .add(
-                                                            DeliverInterventionSubmitEvent(
-                                                              _getTaskModel(
-                                                                context,
-                                                                form: form,
-                                                                oldTask: null,
-                                                                projectBeneficiaryClientReferenceId:
-                                                                    projectBeneficiary
-                                                                        .first
-                                                                        .clientReferenceId,
-                                                                dose:
-                                                                    deliveryInterventionstate
-                                                                        .dose,
-                                                                cycle:
-                                                                    deliveryInterventionstate
-                                                                        .cycle,
-                                                                deliveryStrategy:
-                                                                    getDeliveryStrategy,
-                                                                address:
-                                                                    householdMemberWrapper
-                                                                        .members
-                                                                        .first
-                                                                        .address
-                                                                        ?.first,
-                                                              ),
-                                                              false,
-                                                              context.boundary,
-                                                            ),
-                                                          );
 
-                                                      if (state.futureDeliveries !=
-                                                              null &&
-                                                          state
-                                                              .futureDeliveries!
-                                                              .isNotEmpty &&
-                                                          projectState
-                                                                  .projectType
-                                                                  ?.cycles
-                                                                  ?.isNotEmpty ==
-                                                              true) {
-                                                        context.router.push(
-                                                          SplashAcknowledgementRoute(
-                                                            enableBackToSearch:
-                                                                false,
+                                                      if (isReferral) {
+                                                        if (Navigator.canPop(
+                                                          context,
+                                                        )) {
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(false);
+                                                        }
+
+                                                        await context.router
+                                                            .push(
+                                                          ReferBeneficiaryRoute(
+                                                            projectBeneficiaryClientRefId:
+                                                                projectBeneficiaryClientReferenceId ??
+                                                                    '',
+                                                            individual:
+                                                                selectedIndividual!,
+                                                            isReadministrationUnSuccessful:
+                                                                true,
+                                                            quantityWasted:
+                                                                (((form.control(_quantityWastedKey)
+                                                                            as FormArray)
+                                                                        .value)?[0])
+                                                                    .toString(),
+                                                            productVariantId:
+                                                                ((form.control(_resourceDeliveredKey)
+                                                                                as FormArray)
+                                                                            .value
+                                                                        as List<
+                                                                            ProductVariantModel?>)
+                                                                    .first
+                                                                    ?.id,
                                                           ),
                                                         );
                                                       } else {
-                                                        context.router.push(
-                                                          SplashAcknowledgementRoute(
-                                                            enableBackToSearch:
-                                                                true,
-                                                          ),
-                                                        );
+                                                        context
+                                                            .read<
+                                                                DeliverInterventionBloc>()
+                                                            .add(
+                                                              DeliverInterventionSubmitEvent(
+                                                                _getTaskModel(
+                                                                  context,
+                                                                  form: form,
+                                                                  oldTask: null,
+                                                                  projectBeneficiaryClientReferenceId:
+                                                                      projectBeneficiary
+                                                                          .first
+                                                                          .clientReferenceId,
+                                                                  dose:
+                                                                      deliveryInterventionstate
+                                                                          .dose,
+                                                                  cycle:
+                                                                      deliveryInterventionstate
+                                                                          .cycle,
+                                                                  deliveryStrategy:
+                                                                      getDeliveryStrategy,
+                                                                  address: householdMemberWrapper
+                                                                      .members
+                                                                      .first
+                                                                      .address
+                                                                      ?.first,
+                                                                ),
+                                                                false,
+                                                                context
+                                                                    .boundary,
+                                                              ),
+                                                            );
+
+                                                        if (state.futureDeliveries !=
+                                                                null &&
+                                                            state
+                                                                .futureDeliveries!
+                                                                .isNotEmpty &&
+                                                            projectState
+                                                                    .projectType
+                                                                    ?.cycles
+                                                                    ?.isNotEmpty ==
+                                                                true) {
+                                                          context.router.push(
+                                                            SplashAcknowledgementRoute(
+                                                              enableBackToSearch:
+                                                                  false,
+                                                            ),
+                                                          );
+                                                        } else {
+                                                          context.router.push(
+                                                            SplashAcknowledgementRoute(
+                                                              enableBackToSearch:
+                                                                  true,
+                                                            ),
+                                                          );
+                                                        }
                                                       }
                                                     }
                                                   }
@@ -444,6 +497,10 @@ class _DeliverInterventionPageState
                                                           totalItems:
                                                               _controllers
                                                                   .length,
+                                                          isAdministered:
+                                                              doseAdministered,
+                                                          checkDoseAdministration:
+                                                              checkDoseAdministration,
                                                           onDelete: (index) {
                                                             (form.control(
                                                               _resourceDeliveredKey,
@@ -453,6 +510,12 @@ class _DeliverInterventionPageState
                                                             );
                                                             (form.control(
                                                               _quantityDistributedKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            (form.control(
+                                                              _quantityWastedKey,
                                                             ) as FormArray)
                                                                 .removeAt(
                                                               index,
@@ -506,7 +569,8 @@ class _DeliverInterventionPageState
                                                             .deliveryCommentLabel,
                                                       ),
                                                       valueMapper: (value) =>
-                                                          value,
+                                                          localizations
+                                                              .translate(value),
                                                       initialValue:
                                                           deliveryCommentOptions
                                                               .firstOrNull
@@ -514,8 +578,7 @@ class _DeliverInterventionPageState
                                                       menuItems:
                                                           deliveryCommentOptions
                                                               .map((e) {
-                                                        return localizations
-                                                            .translate(e.name);
+                                                        return e.code;
                                                       }).toList(),
                                                       formControlName:
                                                           _deliveryCommentKey,
@@ -547,6 +610,8 @@ class _DeliverInterventionPageState
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
+        .add(FormControl<String>(validators: [Validators.required]));
+    (form.control(_quantityWastedKey) as FormArray)
         .add(FormControl<String>(validators: [Validators.required]));
   }
 
@@ -597,9 +662,9 @@ class _DeliverInterventionPageState
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
-                quantity: (((form.control(_quantityDistributedKey) as FormArray)
-                        .value)?[productvariantList.indexOf(e)])
-                    .toString(),
+                quantity: doseAdministered
+                    ? _administeredQuantity.toString()
+                    : _defaultQuantity.toString(),
                 clientAuditDetails: ClientAuditDetails(
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
@@ -608,6 +673,15 @@ class _DeliverInterventionPageState
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
                 ),
+                additionalFields:
+                    TaskResourceAdditionalFields(version: 1, fields: [
+                  AdditionalField(
+                    _quantityWastedKey,
+                    (((form.control(_quantityWastedKey) as FormArray)
+                            .value)?[productvariantList.indexOf(e)])
+                        .toString(),
+                  ),
+                ]),
               ))
           .toList(),
       address: address?.copyWith(
@@ -694,6 +768,11 @@ class _DeliverInterventionPageState
       _quantityDistributedKey: FormArray<String>([
         ..._controllers.map(
           (e) => FormControl<String>(validators: [Validators.required]),
+        ),
+      ]),
+      _quantityWastedKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(),
         ),
       ]),
     });

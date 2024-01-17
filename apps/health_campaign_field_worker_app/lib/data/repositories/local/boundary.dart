@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/boundary_base.dart';
 
-class BoundaryLocalRepository
-    extends LocalRepository<BoundaryModel, BoundarySearchModel> {
+class BoundaryLocalRepository extends BoundaryLocalBaseRepository {
   BoundaryLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -51,6 +50,8 @@ class BoundaryLocalRepository
           ..where(buildAnd([
             if (query.code != null)
               sql.boundary.materializedPath.like('%${query.code}%'),
+            if (query.boundaryType != null && query.boundaryType!.isNotEmpty)
+              sql.boundary.label.equals(query.boundaryType),
             sql.boundary.materializedPath.isNotNull(),
             sql.boundary.materializedPath.isNotIn(['']),
             sql.boundary.code.isNotNull(),
@@ -76,7 +77,4 @@ class BoundaryLocalRepository
 
     return queriedBoundaries;
   }
-
-  @override
-  DataModelType get type => DataModelType.boundary;
 }

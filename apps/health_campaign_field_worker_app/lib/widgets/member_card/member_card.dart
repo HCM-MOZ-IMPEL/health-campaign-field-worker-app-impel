@@ -59,6 +59,7 @@ class MemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
+    final doseStatus = checkStatus(tasks, context.selectedCycle);
 
     return Container(
       decoration: BoxDecoration(
@@ -103,25 +104,11 @@ class MemberCard extends StatelessWidget {
                         widget: ActionCard(
                           items: [
                             ActionCardModel(
-                              icon: Icons.person,
-                              label: localizations.translate(
-                                i18.memberCard.assignAsHouseholdhead,
-                              ),
-                              action: isHead ? null : setAsHeadAction,
-                            ),
-                            ActionCardModel(
                               icon: Icons.edit,
                               label: localizations.translate(
                                 i18.memberCard.editIndividualDetails,
                               ),
                               action: editMemberAction,
-                            ),
-                            ActionCardModel(
-                              icon: Icons.delete,
-                              label: localizations.translate(
-                                i18.memberCard.deleteIndividualActionText,
-                              ),
-                              action: isHead ? null : deleteMemberAction,
                             ),
                           ],
                         ),
@@ -175,15 +162,18 @@ class MemberCard extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          (isNotEligible || isBeneficiaryIneligible)
+                          isHead
                               ? i18.householdOverView
-                                  .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryReferred
+                                  .householdOverViewHouseholderHeadLabel
+                              : (isNotEligible || isBeneficiaryIneligible)
                                   ? i18.householdOverView
-                                      .householdOverViewBeneficiaryReferredLabel
-                                  : isBeneficiaryRefused
-                                      ? Status.beneficiaryRefused.toValue()
-                                      : Status.notVisited.toValue(),
+                                      .householdOverViewNotEligibleIconLabel
+                                  : isBeneficiaryReferred
+                                      ? i18.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabel
+                                      : isBeneficiaryRefused
+                                          ? Status.beneficiaryRefused.toValue()
+                                          : Status.notVisited.toValue(),
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -210,422 +200,512 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Column(
-                children: [
-                  isNotEligible ||
-                          isBeneficiaryIneligible ||
-                          isBeneficiaryRefused ||
-                          (isBeneficiaryReferred &&
-                              !checkStatus(
-                                tasks,
-                                context.selectedCycle,
-                              ))
-                      ? const Offstage()
-                      : !isNotEligible
-                          ? DigitElevatedButton(
-                              onPressed: () async {
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
-                                if (isBeneficiaryReferred) {
-                                  final shouldSubmit =
-                                      await DigitDialog.show<bool>(
-                                    context,
-                                    options: DigitDialogOptions(
-                                      titleText: localizations.translate(
-                                        i18.referBeneficiary.dialogTitle,
-                                      ),
-                                      contentText: localizations.translate(
-                                        i18.referBeneficiary.dialogContent,
-                                      ),
-                                      secondaryAction: DigitDialogActions(
-                                        label: localizations.translate(
-                                          i18.referBeneficiary.dialogCancel,
-                                        ),
-                                        action: (ctx) {
-                                          final clientReferenceId =
-                                              IdGen.i.identifier;
-                                          context
-                                              .read<DeliverInterventionBloc>()
-                                              .add(
-                                                DeliverInterventionSubmitEvent(
-                                                  TaskModel(
-                                                    projectBeneficiaryClientReferenceId:
-                                                        projectBeneficiaryClientReferenceId,
-                                                    clientReferenceId:
-                                                        clientReferenceId,
-                                                    tenantId: envConfig
-                                                        .variables.tenantId,
-                                                    rowVersion: 1,
-                                                    auditDetails: AuditDetails(
-                                                      createdBy: context
-                                                          .loggedInUserUuid,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    projectId:
-                                                        context.projectId,
-                                                    status: Status
-                                                        .beneficiaryReferred
-                                                        .toValue(),
-                                                    clientAuditDetails:
-                                                        ClientAuditDetails(
-                                                      createdBy: context
-                                                          .loggedInUserUuid,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                      lastModifiedBy: context
-                                                          .loggedInUserUuid,
-                                                      lastModifiedTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    additionalFields:
-                                                        TaskAdditionalFields(
-                                                      version: 1,
-                                                      fields: [
-                                                        AdditionalField(
-                                                          'taskStatus',
-                                                          Status
+              child: isHead
+                  ? const Column(
+                      children: [],
+                    )
+                  : Column(
+                      children: [
+                        (isNotEligible || isBeneficiaryIneligible) &&
+                                !doseStatus
+                            ? const Offstage()
+                            : !isNotEligible
+                                ? DigitElevatedButton(
+                                    onPressed: () async {
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
+                                      if (isBeneficiaryReferred) {
+                                        final shouldSubmit =
+                                            await DigitDialog.show<bool>(
+                                          context,
+                                          options: DigitDialogOptions(
+                                            titleText: localizations.translate(
+                                              i18.referBeneficiary
+                                                  .referredDialogTitle,
+                                            ),
+                                            contentText:
+                                                localizations.translate(
+                                              i18.referBeneficiary
+                                                  .referredDialogContent,
+                                            ),
+                                            secondaryAction: DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.referBeneficiary
+                                                    .dialogCancel,
+                                              ),
+                                              action: (ctx) {
+                                                final clientReferenceId =
+                                                    IdGen.i.identifier;
+                                                context
+                                                    .read<
+                                                        DeliverInterventionBloc>()
+                                                    .add(
+                                                      DeliverInterventionSubmitEvent(
+                                                        TaskModel(
+                                                          projectBeneficiaryClientReferenceId:
+                                                              projectBeneficiaryClientReferenceId,
+                                                          clientReferenceId:
+                                                              clientReferenceId,
+                                                          tenantId: envConfig
+                                                              .variables
+                                                              .tenantId,
+                                                          rowVersion: 1,
+                                                          auditDetails:
+                                                              AuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                          ),
+                                                          projectId:
+                                                              context.projectId,
+                                                          status: Status
                                                               .beneficiaryReferred
                                                               .toValue(),
+                                                          clientAuditDetails:
+                                                              ClientAuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                            lastModifiedBy: context
+                                                                .loggedInUserUuid,
+                                                            lastModifiedTime:
+                                                                context
+                                                                    .millisecondsSinceEpoch(),
+                                                          ),
+                                                          additionalFields:
+                                                              TaskAdditionalFields(
+                                                            version: 1,
+                                                            fields: [
+                                                              AdditionalField(
+                                                                'taskStatus',
+                                                                Status
+                                                                    .beneficiaryReferred
+                                                                    .toValue(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          address: individual
+                                                              .address?.first
+                                                              .copyWith(
+                                                            relatedClientReferenceId:
+                                                                clientReferenceId,
+                                                            id: null,
+                                                          ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    address: individual
-                                                        .address?.first
-                                                        .copyWith(
-                                                      relatedClientReferenceId:
-                                                          clientReferenceId,
-                                                      id: null,
-                                                    ),
-                                                  ),
-                                                  false,
-                                                  context.boundary,
-                                                ),
-                                              );
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop(false);
-                                        },
-                                      ),
-                                      primaryAction: DigitDialogActions(
-                                        label: localizations.translate(
-                                          i18.referBeneficiary.dialogSuccess,
-                                        ),
-                                        action: (context) => Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(true),
-                                      ),
-                                    ),
-                                  );
-
-                                  if (!(shouldSubmit ?? false)) {
-                                    Future.delayed(
-                                      const Duration(milliseconds: 100),
-                                      () {
-                                        bloc.add(HouseholdOverviewReloadEvent(
-                                          projectId: context.projectId,
-                                          projectBeneficiaryType:
-                                              context.beneficiaryType,
-                                        ));
-                                      },
-                                    );
-
-                                    return;
-                                  }
-                                }
-
-                                bloc.add(
-                                  HouseholdOverviewEvent.selectedIndividual(
-                                    individualModel: individual,
-                                  ),
-                                );
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
-
-                                final futureTaskList = tasks
-                                    ?.where((task) =>
-                                        task.status ==
-                                        Status.delivered.toValue())
-                                    .toList();
-
-                                if ((futureTaskList ?? []).isNotEmpty) {
-                                  context.router.push(
-                                    RecordPastDeliveryDetailsRoute(
-                                      tasks: tasks,
-                                    ),
-                                  );
-                                } else {
-                                  context.router
-                                      .push(BeneficiaryDetailsRoute());
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  allDosesDelivered(
-                                            tasks,
-                                            context.selectedCycle,
-                                            sideEffects,
-                                            individual,
-                                          ) &&
-                                          !checkStatus(
-                                            tasks,
-                                            context.selectedCycle,
-                                          )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
-                                      : localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewActionText,
-                                        ),
-                                ),
-                              ),
-                            )
-                          : const Offstage(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  (isNotEligible ||
-                          isBeneficiaryRefused ||
-                          isBeneficiaryIneligible ||
-                          (isBeneficiaryReferred &&
-                              !checkStatus(
-                                tasks,
-                                context.selectedCycle,
-                              )) ||
-                          (allDosesDelivered(
-                                tasks,
-                                context.selectedCycle,
-                                sideEffects,
-                                individual,
-                              ) &&
-                              !checkStatus(tasks, context.selectedCycle)))
-                      ? const Offstage()
-                      : DigitOutLineButton(
-                          label: localizations.translate(
-                            i18.memberCard.unableToDeliverLabel,
-                          ),
-                          buttonStyle: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(
-                              width: 1.0,
-                              color: theme.colorScheme.secondary,
-                            ),
-                            minimumSize: Size(
-                              MediaQuery.of(context).size.width / 1.15,
-                              50,
-                            ),
-                          ),
-                          onPressed: () async {
-                            await DigitActionDialog.show(
-                              context,
-                              widget: Column(
-                                children: [
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.beneficiaryRefusedLabel,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                      final clientReferenceId =
-                                          IdGen.i.identifier;
-                                      context
-                                          .read<DeliverInterventionBloc>()
-                                          .add(
-                                            DeliverInterventionSubmitEvent(
-                                              TaskModel(
-                                                projectBeneficiaryClientReferenceId:
-                                                    projectBeneficiaryClientReferenceId,
-                                                clientReferenceId:
-                                                    clientReferenceId,
-                                                tenantId: envConfig
-                                                    .variables.tenantId,
-                                                rowVersion: 1,
-                                                auditDetails: AuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
-                                                projectId: context.projectId,
-                                                status: Status
-                                                    .beneficiaryRefused
-                                                    .toValue(),
-                                                clientAuditDetails:
-                                                    ClientAuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                  lastModifiedBy:
-                                                      context.loggedInUserUuid,
-                                                  lastModifiedTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
-                                                additionalFields:
-                                                    TaskAdditionalFields(
-                                                  version: 1,
-                                                  fields: [
-                                                    AdditionalField(
-                                                      'taskStatus',
-                                                      Status.beneficiaryRefused
-                                                          .toValue(),
-                                                    ),
-                                                  ],
-                                                ),
-                                                address: individual
-                                                    .address?.first
-                                                    .copyWith(
-                                                  relatedClientReferenceId:
-                                                      clientReferenceId,
-                                                  id: null,
-                                                ),
-                                              ),
-                                              false,
-                                              context.boundary,
+                                                        false,
+                                                        context.boundary,
+                                                      ),
+                                                    );
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop(false);
+                                              },
                                             ),
-                                          );
-                                      final parent = context.router.parent()
-                                          as StackRouter;
-                                      parent
-                                        ..pop()
-                                        ..pop();
-                                      context.router.push(
-                                        AcknowledgementRoute(),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.referBeneficiaryLabel,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop();
-                                      await context.router.push(
-                                        ReferBeneficiaryRoute(
-                                          projectBeneficiaryClientRefId:
-                                              projectBeneficiaryClientReferenceId ??
-                                                  '',
-                                          individual: individual,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.recordAdverseEventsLabel,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: tasks != null &&
-                                                (tasks ?? []).isNotEmpty
-                                            ? theme.colorScheme.secondary
-                                            : theme.colorScheme.outline,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: tasks != null &&
-                                            (tasks ?? []).isNotEmpty
-                                        ? () async {
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-                                            await context.router.push(
-                                              SideEffectsRoute(
-                                                tasks: tasks!,
+                                            primaryAction: DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.referBeneficiary
+                                                    .dialogSuccess,
                                               ),
-                                            );
-                                          }
-                                        : null,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.markIneligibleLabel,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop();
-                                      await context.router.push(
-                                        IneligibilityReasonsRoute(
-                                          projectBeneficiaryClientRefId:
-                                              projectBeneficiaryClientReferenceId ??
-                                                  '',
-                                          individual: individual,
+                                              action: (context) => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(true),
+                                            ),
+                                          ),
+                                        );
+
+                                        if (!(shouldSubmit ?? false)) {
+                                          Future.delayed(
+                                            const Duration(milliseconds: 100),
+                                            () {
+                                              bloc.add(
+                                                  HouseholdOverviewReloadEvent(
+                                                projectId: context.projectId,
+                                                projectBeneficiaryType:
+                                                    context.beneficiaryType,
+                                              ));
+                                            },
+                                          );
+
+                                          return;
+                                        }
+                                      }
+
+                                      bloc.add(
+                                        HouseholdOverviewEvent
+                                            .selectedIndividual(
+                                          individualModel: individual,
                                         ),
                                       );
+                                      bloc.add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
+
+                                      final futureTaskList = tasks
+                                          ?.where((task) =>
+                                              task.status ==
+                                              Status.delivered.toValue())
+                                          .toList();
+
+                                      if ((futureTaskList ?? []).isNotEmpty) {
+                                        context.router.push(
+                                          RecordPastDeliveryDetailsRoute(
+                                            tasks: tasks,
+                                          ),
+                                        );
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
                                     },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                    child: Center(
+                                      child: Text(
+                                        allDosesDelivered(
+                                                  tasks,
+                                                  context.selectedCycle,
+                                                  sideEffects,
+                                                  individual,
+                                                ) &&
+                                                !checkStatus(
+                                                  tasks,
+                                                  context.selectedCycle,
+                                                )
+                                            ? localizations.translate(
+                                                i18.householdOverView
+                                                    .viewDeliveryLabel,
+                                              )
+                                            : localizations.translate(
+                                                i18.householdOverView
+                                                    .householdOverViewActionText,
+                                              ),
+                                      ),
+                                    ),
+                                  )
+                                : const Offstage(),
+                        const SizedBox(
+                          height: 10,
                         ),
-                ],
-              ),
+                        (isNotEligible ||
+                                isBeneficiaryIneligible ||
+                                (allDosesDelivered(
+                                      tasks,
+                                      context.selectedCycle,
+                                      sideEffects,
+                                      individual,
+                                    ) &&
+                                    !doseStatus))
+                            ? const Offstage()
+                            : DigitOutLineButton(
+                                label: localizations.translate(
+                                  i18.memberCard.unableToDeliverLabel,
+                                ),
+                                buttonStyle: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: BorderSide(
+                                    width: 1.0,
+                                    color: theme.colorScheme.secondary,
+                                  ),
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width / 1.15,
+                                    50,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  await DigitActionDialog.show(
+                                    context,
+                                    widget: Column(
+                                      children: [
+                                        DigitOutLineButton(
+                                          label: localizations.translate(
+                                            i18.memberCard
+                                                .beneficiaryRefusedLabel,
+                                          ),
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: BorderSide(
+                                              width: 1.0,
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                            minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.25,
+                                              50,
+                                            ),
+                                          ),
+                                          onPressed: tasks != null &&
+                                                  (tasks ?? [])
+                                                      .where((element) =>
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue() &&
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryReferred
+                                                                  .toValue())
+                                                      .toList()
+                                                      .isNotEmpty &&
+                                                  !checkStatus(
+                                                    tasks,
+                                                    context.selectedCycle,
+                                                  )
+                                              ? null
+                                              : () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                  final clientReferenceId =
+                                                      IdGen.i.identifier;
+                                                  context
+                                                      .read<
+                                                          DeliverInterventionBloc>()
+                                                      .add(
+                                                        DeliverInterventionSubmitEvent(
+                                                          TaskModel(
+                                                            projectBeneficiaryClientReferenceId:
+                                                                projectBeneficiaryClientReferenceId,
+                                                            clientReferenceId:
+                                                                clientReferenceId,
+                                                            tenantId: envConfig
+                                                                .variables
+                                                                .tenantId,
+                                                            rowVersion: 1,
+                                                            auditDetails:
+                                                                AuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                            ),
+                                                            projectId: context
+                                                                .projectId,
+                                                            status: Status
+                                                                .beneficiaryRefused
+                                                                .toValue(),
+                                                            clientAuditDetails:
+                                                                ClientAuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                              lastModifiedBy:
+                                                                  context
+                                                                      .loggedInUserUuid,
+                                                              lastModifiedTime:
+                                                                  context
+                                                                      .millisecondsSinceEpoch(),
+                                                            ),
+                                                            additionalFields:
+                                                                TaskAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                                AdditionalField(
+                                                                  'taskStatus',
+                                                                  Status
+                                                                      .beneficiaryRefused
+                                                                      .toValue(),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            address: individual
+                                                                .address?.first
+                                                                .copyWith(
+                                                              relatedClientReferenceId:
+                                                                  clientReferenceId,
+                                                              id: null,
+                                                            ),
+                                                          ),
+                                                          false,
+                                                          context.boundary,
+                                                        ),
+                                                      );
+                                                  final parent = context.router
+                                                      .parent() as StackRouter;
+                                                  parent
+                                                    ..pop()
+                                                    ..pop();
+                                                  context.router.push(
+                                                    AcknowledgementRoute(),
+                                                  );
+                                                },
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        DigitOutLineButton(
+                                          label: localizations.translate(
+                                            i18.memberCard
+                                                .referBeneficiaryLabel,
+                                          ),
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: BorderSide(
+                                              width: 1.0,
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                            minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.25,
+                                              50,
+                                            ),
+                                          ),
+                                          onPressed: tasks != null &&
+                                                  (tasks ?? [])
+                                                      .where((element) =>
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue() &&
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryReferred
+                                                                  .toValue())
+                                                      .toList()
+                                                      .isNotEmpty &&
+                                                  !checkStatus(
+                                                    tasks,
+                                                    context.selectedCycle,
+                                                  )
+                                              ? null
+                                              : () async {
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                  await context.router.push(
+                                                    ReferBeneficiaryRoute(
+                                                      projectBeneficiaryClientRefId:
+                                                          projectBeneficiaryClientReferenceId ??
+                                                              '',
+                                                      individual: individual,
+                                                    ),
+                                                  );
+                                                },
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        DigitOutLineButton(
+                                          label: localizations.translate(
+                                            i18.memberCard
+                                                .recordAdverseEventsLabel,
+                                          ),
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: BorderSide(
+                                              width: 1.0,
+                                              color: tasks != null &&
+                                                      (tasks ?? []).isNotEmpty
+                                                  ? theme.colorScheme.secondary
+                                                  : theme.colorScheme.outline,
+                                            ),
+                                            minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.25,
+                                              50,
+                                            ),
+                                          ),
+                                          onPressed: tasks != null &&
+                                                  (tasks ?? [])
+                                                      .where((element) =>
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue() &&
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryReferred
+                                                                  .toValue())
+                                                      .toList()
+                                                      .isNotEmpty
+                                              ? () async {
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                  await context.router.push(
+                                                    SideEffectsRoute(
+                                                      tasks: tasks!,
+                                                    ),
+                                                  );
+                                                }
+                                              : null,
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        DigitOutLineButton(
+                                          label: localizations.translate(
+                                            i18.memberCard.markIneligibleLabel,
+                                          ),
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: BorderSide(
+                                              width: 1.0,
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                            minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.25,
+                                              50,
+                                            ),
+                                          ),
+                                          onPressed: tasks != null &&
+                                                  (tasks ?? [])
+                                                      .where((element) =>
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue() &&
+                                                          element.status !=
+                                                              Status
+                                                                  .beneficiaryReferred
+                                                                  .toValue())
+                                                      .toList()
+                                                      .isNotEmpty &&
+                                                  !checkStatus(
+                                                    tasks,
+                                                    context.selectedCycle,
+                                                  )
+                                              ? null
+                                              : () async {
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop();
+                                                  await context.router.push(
+                                                    IneligibilityReasonsRoute(
+                                                      projectBeneficiaryClientRefId:
+                                                          projectBeneficiaryClientReferenceId ??
+                                                              '',
+                                                      individual: individual,
+                                                    ),
+                                                  );
+                                                },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                      ],
+                    ),
             ),
           ),
         ],
