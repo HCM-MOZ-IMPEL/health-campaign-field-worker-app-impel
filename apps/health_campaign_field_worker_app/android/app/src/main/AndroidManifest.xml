@@ -22,7 +22,7 @@
   </queries>
   <!--#enddocregion android-queries-->
    <application
-        android:label="salama"
+        android:label="QSM Salama"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
