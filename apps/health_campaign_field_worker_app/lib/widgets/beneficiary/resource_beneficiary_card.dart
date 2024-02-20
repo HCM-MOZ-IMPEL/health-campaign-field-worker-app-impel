@@ -36,6 +36,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 class _ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   bool doseAdministered = false;
+  static const _deliveryCommentKey = 'deliveryComment';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,6 +87,13 @@ class _ResourceBeneficiaryCardState
                 setState(() {
                   doseAdministered = value!;
                   widget.checkDoseAdministration(value);
+                  if (!value) {
+                    widget.form
+                        .control(
+                          _deliveryCommentKey,
+                        )
+                        .value = null;
+                  }
                 });
               },
             ),

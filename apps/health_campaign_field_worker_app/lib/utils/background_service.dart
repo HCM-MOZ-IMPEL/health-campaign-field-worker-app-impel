@@ -119,7 +119,10 @@ void onStart(ServiceInstance service) async {
           } else {
             final isManualSyncRunning =
                 await LocalSecureStore.instance.isManualSyncRunning;
-            if (frequencyCount != null && !isManualSyncRunning) {
+            final isSyncRunning = await LocalSecureStore.instance.isSyncRunning;
+            if (frequencyCount != null &&
+                !isManualSyncRunning &&
+                !isSyncRunning) {
               final serviceRegistryList =
                   await isar.serviceRegistrys.where().findAll();
 
@@ -161,26 +164,33 @@ void onStart(ServiceInstance service) async {
                       'batchSize': configuredBatchSize,
                     });
 
-                    final isSyncCompleted = await const NetworkManager(
-                      configuration: NetworkManagerConfiguration(
-                        persistenceConfig:
-                            PersistenceConfiguration.offlineFirst,
-                      ),
-                    ).performSync(
-                      localRepositories:
-                          Constants.getLocalRepositories(_sql, isar).toList(),
-                      remoteRepositories: Constants.getRemoteRepositories(
-                        _dio,
-                        getActionMap(serviceRegistryList),
-                      ),
-                      bandwidthModel: bandwidthModel,
-                      service: service,
-                    );
-                    i++;
-                    final isAppInActive =
-                        await LocalSecureStore.instance.isAppInActive;
+                    try {
+                      final isSyncCompleted = await const NetworkManager(
+                        configuration: NetworkManagerConfiguration(
+                          persistenceConfig:
+                              PersistenceConfiguration.offlineFirst,
+                        ),
+                      ).performSync(
+                        localRepositories:
+                            Constants.getLocalRepositories(_sql, isar).toList(),
+                        remoteRepositories: Constants.getRemoteRepositories(
+                          _dio,
+                          getActionMap(serviceRegistryList),
+                        ),
+                        bandwidthModel: bandwidthModel,
+                        service: service,
+                      );
+                      i++;
+                      final isAppInActive =
+                          await LocalSecureStore.instance.isAppInActive;
 
-                    if (isSyncCompleted && i >= 2 && isAppInActive) {
+                      if (isSyncCompleted && i >= 2 && isAppInActive) {
+                        service.stopSelf();
+                      }
+                    } catch (e) {
+                      service.invoke('serviceRunning', {
+                        "enablesManualSync": true,
+                      });
                       service.stopSelf();
                     }
                   }
@@ -268,15 +278,15 @@ int getBatchSizeToBandwidth(
   return batchSize;
 }
 
-Future<bool> getIsConnected() async {
-  try {
-    final result = await InternetAddress.lookup('example.com');
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      return true;
-    }
+// Future<bool> getIsConnected() async {
+//   try {
+//     final result = await InternetAddress.lookup('example.com');
+//     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//       return true;
+//     }
 
-    return false;
-  } on SocketException catch (_) {
-    return false;
-  }
-}
+//     return false;
+//   } on SocketException catch (_) {
+//     return false;
+//   }
+// }

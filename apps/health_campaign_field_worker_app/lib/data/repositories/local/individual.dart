@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import 'base/individual_base.dart';
+import '../../data_repository.dart';
 
 class IndividualLocalRepository extends IndividualLocalBaseRepository {
   const IndividualLocalRepository(super.sql, super.opLogManager);
@@ -36,6 +37,8 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
         ),
       ],
     );
+    final r = await selectQuery.get();
+    print(r.length);
 
     final results = await (selectQuery
           ..where(
@@ -259,6 +262,83 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
     });
 
     await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<IndividualModel> entities,
+  ) async {
+    final individualCompanions = entities.map((e) => e.companion).toList();
+
+    final identifiersList = entities
+        .map((e) => e.identifiers!.map((a) {
+              return a
+                  .copyWith(
+                    clientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                    auditDetails: e.auditDetails,
+                  )
+                  .companion;
+            }).toList())
+        .toList();
+
+    final identifierCompanions = identifiersList.expand((e) => [e[0]]).toList();
+
+    await sql.batch((batch) async {
+      final addressList = entities
+          .map((e) =>
+              e.address?.map((a) {
+                return a
+                    .copyWith(
+                      relatedClientReferenceId: e.clientReferenceId,
+                      clientAuditDetails: e.clientAuditDetails,
+                      auditDetails: e.auditDetails,
+                    )
+                    .companion;
+              }).toList() ??
+              [])
+          .toList();
+      final addressCompanions = addressList.expand((e) => [e[0]]).toList();
+      final nameCompanions = entities.map((e) {
+        if (e.name != null) {
+          // batch.deleteWhere(
+          //     sql.name,
+          //     (tbl) => tbl.individualClientReferenceId
+          //         .contains(e.clientReferenceId),);
+
+          return e.name!
+              .copyWith(
+                individualClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
+              )
+              .companion;
+        }
+      }).toList();
+      if (nameCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.name,
+          nameCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      batch.insertAll(
+        sql.address,
+        addressCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+      batch.insertAll(
+        sql.identifier,
+        identifierCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+      batch.insertAll(
+        sql.individual,
+        individualCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override

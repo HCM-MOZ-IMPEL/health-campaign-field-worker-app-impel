@@ -12,6 +12,7 @@ export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
 export 'entities/deliver_strategy_type.dart';
 export 'entities/document.dart';
+export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
 export 'entities/household.dart';
@@ -47,6 +48,7 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
+export 'entities/roles_type.dart';
 
 abstract class DataModel {
   final String? boundaryCode;
@@ -170,4 +172,6 @@ enum DataModelType {
   boundary,
   serviceAttributes,
   locality,
+  downsync,
+  downsyncCriteria,
 }

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
+import '../../local_store/sql_store/sql_store.dart';
 import 'base/task_base.dart';
 
 class TaskLocalRepository extends TaskLocalBaseRepository {
@@ -298,6 +299,57 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
       await super.create(
         entity,
       );
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<TaskModel> entities,
+  ) async {
+    final taskCompanions = entities.map((e) => e.companion).toList();
+
+    List<AddressCompanion> addressCompanions = [];
+    List<TaskResourceCompanion> resourceCompanions = [];
+
+    for (TaskModel entity in entities) {
+      final addressCompanion = entity.address
+          ?.copyWith(
+            relatedClientReferenceId: entity.clientReferenceId,
+            auditDetails: entity.auditDetails,
+            clientAuditDetails: entity.clientAuditDetails,
+          )
+          .companion;
+      if (addressCompanion != null) {
+        addressCompanions.add(addressCompanion);
+      }
+
+      final resources = entity.resources?.map((e) {
+            return e
+                .copyWith(
+                  taskclientReferenceId: entity.clientReferenceId,
+                )
+                .companion;
+          }).toList() ??
+          [];
+      resourceCompanions.addAll(resources);
+    }
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.task,
+        taskCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+
+      if (addressCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.address,
+          addressCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      batch.insertAllOnConflictUpdate(sql.taskResource, resourceCompanions);
     });
   }
 

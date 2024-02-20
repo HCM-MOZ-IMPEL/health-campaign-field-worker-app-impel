@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import 'base/household_member_base.dart';
@@ -18,6 +20,14 @@ class HouseholdMemberLocalRepository
           ..where(
             buildAnd(
               [
+                                if (query.householdClientReferenceIds != null)
+                  sql.householdMember.householdClientReferenceId.isIn(
+                    query.householdClientReferenceIds!,
+                  ),
+                       if (query.individualClientReferenceIds != null)
+                  sql.householdMember.individualClientReferenceId.isIn(
+                    query.individualClientReferenceIds!,
+                  ),
                 if (query.householdClientReferenceId != null)
                   sql.householdMember.householdClientReferenceId.equals(
                     query.householdClientReferenceId,
@@ -100,6 +110,21 @@ class HouseholdMemberLocalRepository
     });
 
     await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<HouseholdMemberModel> entities,
+  ) async {
+    final householdMemberCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.householdMember,
+        householdMemberCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override

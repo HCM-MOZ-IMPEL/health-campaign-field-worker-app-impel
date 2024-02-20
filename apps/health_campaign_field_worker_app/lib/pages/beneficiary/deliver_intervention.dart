@@ -227,6 +227,12 @@ class _DeliverInterventionPageState
                                                           "ADMINISTRATION_NOT_SUCCESSFUL" &&
                                                       doseAdministered;
 
+                                                  String? wastedCount =
+                                                      (((form.control(_quantityWastedKey)
+                                                                  as FormArray)
+                                                              .value)?[0])
+                                                          .toString();
+
                                                   final shouldSubmit =
                                                       await DigitDialog.show<
                                                           bool>(
@@ -238,9 +244,17 @@ class _DeliverInterventionPageState
                                                             ? i18
                                                                 .deliverIntervention
                                                                 .referDialogTitle
-                                                            : i18
-                                                                .deliverIntervention
-                                                                .dialogTitle,
+                                                            : (doseAdministered &&
+                                                                    wastedCount
+                                                                        .isNotEmpty &&
+                                                                    wastedCount !=
+                                                                        'null')
+                                                                ? i18
+                                                                    .deliverIntervention
+                                                                    .wastedDialogTitle
+                                                                : i18
+                                                                    .deliverIntervention
+                                                                    .dialogTitle,
                                                       ),
                                                       contentText: localizations
                                                           .translate(
@@ -248,9 +262,17 @@ class _DeliverInterventionPageState
                                                             ? i18
                                                                 .deliverIntervention
                                                                 .referDialogContent
-                                                            : i18
-                                                                .deliverIntervention
-                                                                .dialogContent,
+                                                            : (doseAdministered &&
+                                                                    wastedCount
+                                                                        .isNotEmpty &&
+                                                                    wastedCount !=
+                                                                        'null')
+                                                                ? i18
+                                                                    .deliverIntervention
+                                                                    .wastedDialogContent
+                                                                : i18
+                                                                    .deliverIntervention
+                                                                    .dialogContent,
                                                       ),
                                                       primaryAction:
                                                           DigitDialogActions(
@@ -568,6 +590,8 @@ class _DeliverInterventionPageState
                                                         i18.deliverIntervention
                                                             .deliveryCommentLabel,
                                                       ),
+                                                      readOnly:
+                                                          !doseAdministered,
                                                       valueMapper: (value) =>
                                                           localizations
                                                               .translate(value),

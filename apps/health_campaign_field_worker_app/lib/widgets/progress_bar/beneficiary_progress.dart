@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/data_repository.dart';
@@ -81,11 +83,11 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
           results = results
               .where((result) =>
                   DateTime.fromMillisecondsSinceEpoch(
-                          result.clientAuditDetails!.createdTime,)
-                      .isAfter(gte) &&
+                    result.clientAuditDetails!.createdTime,
+                  ).isAfter(gte) &&
                   DateTime.fromMillisecondsSinceEpoch(
-                          result.clientAuditDetails!.createdTime,)
-                      .isBefore(lte))
+                    result.clientAuditDetails!.createdTime,
+                  ).isBefore(lte))
               .toList();
 
           // Grouping results by client reference ID
@@ -116,11 +118,13 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
   Widget build(BuildContext context) {
     final target = 65;
 
-    return ProgressIndicatorContainer(
-      label: '${max(target - current, 0).round()} ${widget.label}',
-      prefixLabel: '$current ${widget.prefixLabel}',
-      suffixLabel: target.toStringAsFixed(0),
-      value: target == 0 ? 0 : min(current / target, 1),
+    return DigitCard(
+      child: ProgressIndicatorContainer(
+        label: '${max(target - current, 0).round()} ${widget.label}',
+        prefixLabel: '$current ${widget.prefixLabel}',
+        suffixLabel: target.toStringAsFixed(0),
+        value: target == 0 ? 0 : min(current / target, 1),
+      ),
     );
   }
 }

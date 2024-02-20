@@ -18,6 +18,7 @@ class LocalSecureStore {
   static const actionsListkey = 'actionsListkey';
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
+  static const isSyncRunningKey = 'isSyncRunningKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
 
   final storage = const FlutterSecureStorage();
@@ -107,6 +108,17 @@ class LocalSecureStore {
     }
   }
 
+  Future<bool> get isSyncRunning async {
+    final isSyncRunning = await storage.read(key: isSyncRunningKey);
+
+    switch (isSyncRunning) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
+  }
+
   Future<RoleActionsWrapperModel?> get savedActions async {
     final actionsListString = await storage.read(key: actionsListkey);
     if (actionsListString == null) return null;
@@ -152,6 +164,13 @@ class LocalSecureStore {
     await storage.write(
       key: manualSyncKey,
       value: isManualSync.toString(),
+    );
+  }
+
+  Future<void> setSyncRunning(bool isSyncRunning) async {
+    await storage.write(
+      key: isSyncRunningKey,
+      value: isSyncRunning.toString(),
     );
   }
 

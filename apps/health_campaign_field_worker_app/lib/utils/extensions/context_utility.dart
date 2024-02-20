@@ -81,6 +81,38 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isDownSyncEnabled {
+    try {
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.communityDistributor.toValue() ||
+                role.code == RolesType.healthFacilitySupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  List<UserRoleModel> get loggedInUserRoles {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel, actionsWrapper) {
+        return userModel.roles;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject;
+  }
+
   String get loggedInUserUuid => loggedInUser.uuid;
 
   UserRequestModel get loggedInUser {

@@ -71,6 +71,8 @@ class Common {
 
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
+  String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
+
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
@@ -104,6 +106,10 @@ class Common {
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
   String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
+  String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+  String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+  String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
+  String get loading => 'CORE_COMMON_LOADING';
 }
 
 class AdverseEvents {
@@ -296,6 +302,57 @@ class BeneficiaryDetails {
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
   String get beneficiary => 'BENEFICIARY';
+  String get unableToScan => 'UNABLE_TO_SCAN';
+
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+
+  String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+
+  String get scannerLabel => 'SCANNER_LABEL';
+
+  String get noOfResourceScanned => 'NO_OF_RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
+
+  String get saveScannedResource => 'SAVE_SCANNED_RESOURCE';
+
+  String get flashOn => 'FLASH_ON';
+
+  String get flashOff => 'FLASH_OFF';
+
+  String get scannerDialogTitle => 'SCANNER_DIALOG_TITLE';
+
+  String get scannerDialogContent => 'SCANNER_DIALOG_CONTENT';
+
+  String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
+
+  String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+  String get beneficiaryHeader => 'BENEFICIARY_HEADER';
+  String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+
+  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+  String get dataFound => 'DATA_FOUND';
+  String get noDataFound => 'NO_DATA_FOUND';
+  String get dataFoundContent => 'DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+  String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+  String get downloadreport => 'DOWNLOAD_REPORT';
+  String get boundary => 'BOUNDARY';
+  String get status => 'STATUS';
+  String get downloadedon => 'DOWNLOADED_ON';
+  String get recordsdownload => 'RECORDS_DOWNLOAD';
+  String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+  String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+  String get download => 'DOWNLOAD';
+  String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+  String get downloadtime => 'DOWNLOAD_TIME';
+  String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
+  String get insufficientStorageContent =>
+      'INSUFFICIENT_STORAGE_WARNING_CONTENT';
 }
 
 class IndividualDetails {
@@ -399,6 +456,10 @@ class AcknowledgementSuccess {
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+
+  String get goToHome => 'GO_TO_HOME_SCREEN';
+  String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+  String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
 class HouseholdDetails {
@@ -547,6 +608,11 @@ class DeliverIntervention {
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+
+  String get wastedDialogTitle => 'DELIVER_INTERVENTION_WASTED_DIALOG_TITLE';
+
+  String get wastedDialogContent =>
+      'DELIVER_INTERVENTION_WASTED_DIALOG_CONTENT';
 
   String get referDialogTitle => 'DELIVER_INTERVENTION_REFER_DIALOG_TITLE';
 
@@ -709,6 +775,16 @@ class StockDetails {
   String get returnedSpaqDetails => 'RETURNED_SPAQ_DETAILS';
   String get damagedSpaqDetails => 'DAMAGED_SPAQ_DETAILS';
   String get quantityDamagedCountLabel => 'STOCK_DAMAGED_QUANTITY_LABEL';
+
+  String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
+
+  String get countContent => 'STOCK_DETAILS_COUNT_DIALOG_CONTENT';
+
+  String get countDialogSuccess =>
+      'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+
+  String get countDialogCancel =>
+      'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
 }
 
 class StockReconciliationDetails {
@@ -1127,6 +1203,8 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+  String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
+  String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }
 
 class ReferBeneficiary {

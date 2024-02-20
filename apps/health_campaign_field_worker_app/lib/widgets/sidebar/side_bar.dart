@@ -1,9 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart';
+
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
@@ -48,7 +50,7 @@ class SideBar extends StatelessWidget {
                     if (value.userModel.permanentCity != null)
                       Text(
                         value.userModel.permanentCity.toString(),
-                        style: theme.textTheme.labelSmall,
+                        style: theme.textTheme.displayMedium,
                       ),
                   ],
                 ),
@@ -66,6 +68,18 @@ class SideBar extends StatelessWidget {
               context.router.replace(HomeRoute());
             },
           ),
+          context.isDownSyncEnabled
+              ? DigitIconTile(
+                  title: AppLocalizations.of(context).translate(
+                    i18.common.coreCommonViewDownloadedData,
+                  ),
+                  icon: Icons.download,
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(const BeneficiariesReportRoute());
+                  },
+                )
+              : const Offstage(),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),

@@ -168,6 +168,8 @@ class HouseholdOverviewBloc
           .toList(),
     ));
 
+    individuals.sort((a, b) => (a.clientAuditDetails?.createdTime ?? 0)
+        .compareTo(b.clientAuditDetails?.createdTime ?? 0));
     // Update the state with the loaded data and stop loading.
     emit(
       state.copyWith(

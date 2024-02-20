@@ -3,13 +3,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recase/recase.dart';
 
-import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -229,6 +226,80 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     transactingPartyType ??= 'WAREHOUSE';
 
+                                    if (entryType ==
+                                        StockRecordEntryType.dispatch) {
+                                      int issueQuantity = quantity ?? 0;
+
+                                      List<StockModel> stocksByProductVAriant =
+                                          stockState.existingStocks
+                                              .where((element) =>
+                                                  element.productVariantId ==
+                                                  productVariant.id)
+                                              .toList();
+
+                                      num stockReceived = _getQuantityCount(
+                                        stocksByProductVAriant.where((e) =>
+                                            e.transactionType ==
+                                                TransactionType.received &&
+                                            e.transactionReason ==
+                                                TransactionReason.received),
+                                      );
+
+                                      num stockIssued = _getQuantityCount(
+                                        stocksByProductVAriant.where((e) =>
+                                            e.transactionType ==
+                                                TransactionType.dispatched &&
+                                            e.transactionReason == null),
+                                      );
+
+                                      num stockReturned = _getQuantityCount(
+                                        stocksByProductVAriant.where((e) =>
+                                            e.transactionType ==
+                                                TransactionType.received &&
+                                            e.transactionReason ==
+                                                TransactionReason.returned),
+                                      );
+
+                                      num stockInHand =
+                                          (stockReceived + stockReturned) -
+                                              (stockIssued);
+                                      if (issueQuantity > stockInHand) {
+                                        final alert =
+                                            await DigitDialog.show<bool>(
+                                          context,
+                                          options: DigitDialogOptions(
+                                            titleText: localizations.translate(
+                                              i18.stockDetails.countDialogTitle,
+                                            ),
+                                            contentText: localizations
+                                                .translate(
+                                                  i18.stockDetails.countContent,
+                                                )
+                                                .replaceAll(
+                                                  '{}',
+                                                  stockInHand.toString(),
+                                                ),
+                                            primaryAction: DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.stockDetails
+                                                    .countDialogSuccess,
+                                              ),
+                                              action: (context) {
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop(false);
+                                              },
+                                            ),
+                                          ),
+                                        );
+
+                                        if (!(alert ?? false)) {
+                                          return;
+                                        }
+                                      }
+                                    }
+
                                     final stockModel = StockModel(
                                       clientReferenceId: IdGen.i.identifier,
                                       productVariantId: productVariant.id,
@@ -268,7 +339,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     'damaged_quantity',
                                                     damagedQuantity,
                                                   ),
-                                                if (comments != null)
+                                                if (comments != null &&
+                                                    comments.isNotEmpty)
                                                   AdditionalField(
                                                     'comments',
                                                     comments,
@@ -479,6 +551,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           );
         },
       ),
+    );
+  }
+
+  num _getQuantityCount(Iterable<StockModel> stocks) {
+    return stocks.fold<num>(
+      0.0,
+      (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
     );
   }
 }

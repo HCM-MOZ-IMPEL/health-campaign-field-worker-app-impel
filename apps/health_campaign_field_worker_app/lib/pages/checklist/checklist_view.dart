@@ -116,11 +116,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       AutovalidateMode.onUserInteraction,
                                   isRequired: true,
                                   controller: controller[index],
-                                  inputFormatter: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[a-zA-Z0-9]",
-                                    )),
-                                  ],
+                                  // inputFormatter: [
+                                  //   FilteringTextInputFormatter.allow(RegExp(
+                                  //     "[a-zA-Z0-9]",
+                                  //   )),
+                                  // ],
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
@@ -595,11 +595,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
         autoValidation: AutovalidateMode.onUserInteraction,
         isRequired: true,
         controller: controller[index],
-        inputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp(
-            "[a-zA-Z0-9]",
-          )),
-        ],
+        // inputFormatter: [
+        //   FilteringTextInputFormatter.allow(RegExp(
+        //     "[a-zA-Z0-9]",
+        //   )),
+        // ],
         validator: (value) {
           if (((value == null || value == '') && item.required == true)) {
             return localizations.translate("${item.code}_REQUIRED");

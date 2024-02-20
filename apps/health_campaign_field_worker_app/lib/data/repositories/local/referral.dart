@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -116,6 +117,21 @@ class ReferralLocalRepository extends ReferralLocalBaseRepository {
     await sql.batch((batch) async {
       batch.insert(sql.referral, referralCompanion);
       await super.create(entity);
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<ReferralModel> entities,
+  ) async {
+    final referralCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.referral,
+        referralCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
     });
   }
 
