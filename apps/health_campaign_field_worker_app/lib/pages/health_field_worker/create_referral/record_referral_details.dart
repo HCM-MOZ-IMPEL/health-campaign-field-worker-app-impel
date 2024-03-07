@@ -42,7 +42,6 @@ class _RecordReferralDetailsPageState
   static const _referredByKey = 'referredBy';
   static const _genderKey = 'gender';
   static const _cycleKey = 'cycle';
-  static const _beneficiaryIdKey = 'beneficiaryId';
   static const _referralCodeKey = 'referralCode';
   static const _ageKey = 'ageInMonths';
   final clickedStatus = ValueNotifier<bool>(false);
@@ -189,9 +188,6 @@ class _RecordReferralDetailsPageState
                                               final gender = form
                                                   .control(_genderKey)
                                                   .value as String;
-                                              final beneficiaryId = form
-                                                  .control(_beneficiaryIdKey)
-                                                  .value as String?;
                                               final referralCode = form
                                                   .control(_referralCodeKey)
                                                   .value as String?;
@@ -535,9 +531,6 @@ class _RecordReferralDetailsPageState
                                                 final gender = form
                                                     .control(_genderKey)
                                                     .value as String;
-                                                final beneficiaryId = form
-                                                    .control(_beneficiaryIdKey)
-                                                    .value as String?;
                                                 final referralCode = form
                                                     .control(_referralCodeKey)
                                                     .value as String?;
@@ -807,14 +800,6 @@ class _RecordReferralDetailsPageState
                                         },
                                       ),
                                       DigitTextFormField(
-                                        formControlName: _beneficiaryIdKey,
-                                        label: localizations.translate(
-                                          i18.referBeneficiary
-                                              .beneficiaryIdLabel,
-                                        ),
-                                        readOnly: viewOnly,
-                                      ),
-                                      DigitTextFormField(
                                         formControlName: _referralCodeKey,
                                         label: localizations.translate(
                                           i18.referBeneficiary
@@ -1000,15 +985,6 @@ class _RecordReferralDetailsPageState
         validators: [
           Validators.required,
         ],
-      ),
-      _beneficiaryIdKey: FormControl<String>(
-        value: referralState.mapOrNull(
-          create: (value) => value.hfReferralModel?.beneficiaryId,
-        ),
-        disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
       ),
       _referralCodeKey: FormControl<String>(
         value: referralState.mapOrNull(
