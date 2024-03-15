@@ -222,6 +222,22 @@ class _IndividualDetailsPageState
                                             context.millisecondsSinceEpoch(),
                                       )
                                     : null,
+                                auditDetails: (individual
+                                                .auditDetails?.createdBy !=
+                                            null &&
+                                        individual.auditDetails?.createdTime !=
+                                            null)
+                                    ? AuditDetails(
+                                        createdBy:
+                                            individual.auditDetails!.createdBy,
+                                        createdTime: individual
+                                            .auditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
                               ),
                             ),
                           );

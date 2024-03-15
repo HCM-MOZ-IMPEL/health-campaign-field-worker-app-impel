@@ -32,6 +32,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _transactionDamagedQuantityKey = 'quantityDamaged';
   static const _commentsKey = 'comments';
   List<ValidatorFunction> damagedQuantityValidator = [];
+  List<ValidatorFunction> transactionQuantityValidator = [
+    Validators.number,
+    Validators.required,
+    Validators.min(0),
+    Validators.max(10000),
+  ];
 
   FormGroup _form() {
     return fb.group({
@@ -41,12 +47,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _transactingPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
-        Validators.required,
-        Validators.min(0),
-        Validators.max(10000),
-      ]),
+      _transactionQuantityKey:
+          FormControl<int>(validators: transactionQuantityValidator),
       _transactionDamagedQuantityKey:
           FormControl<int>(validators: damagedQuantityValidator),
       _commentsKey: FormControl<String>(),
@@ -88,6 +90,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   transactionPartyLabel = module.selectTransactingPartyReceived;
                   quantityCountLabel = module.quantityReceivedLabel;
                   transactionType = TransactionType.received;
+                  transactionQuantityValidator = [
+                    Validators.number,
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(20000),
+                  ];
                   break;
                 case StockRecordEntryType.dispatch:
                   pageTitle = module.issuedSpaqDetails;
@@ -448,11 +456,30 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
-                                final facilities = state.whenOrNull(
-                                      fetched: (_, facilities, __) =>
-                                          facilities,
-                                    ) ??
-                                    [];
+                                List<FacilityModel> unSortedFacilities =
+                                    state.whenOrNull(
+                                          fetched: (_, facilities, __) =>
+                                              facilities,
+                                        ) ??
+                                        [];
+
+                                if ([
+                                      StockRecordEntryType.dispatch,
+                                      StockRecordEntryType.returned,
+                                    ].contains(entryType) &&
+                                    context.isSupervisor) {
+                                  unSortedFacilities = unSortedFacilities
+                                      .where((element) =>
+                                          element.usage == 'DeliveryTeam')
+                                      .toList();
+                                }
+
+                                var facilities = unSortedFacilities.toList();
+                                facilities.sort((a, b) =>
+                                    (b.auditDetails?.lastModifiedTime ?? 0)
+                                        .compareTo(
+                                      (a.auditDetails?.lastModifiedTime ?? 0),
+                                    ));
 
                                 return DigitTextFormField(
                                   valueAccessor: FacilityValueAccessor(

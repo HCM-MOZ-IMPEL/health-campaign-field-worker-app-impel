@@ -8,10 +8,11 @@
     {
       "name": "Health facility Supervisor",
       "value": "HEALTH_FACILITY_SUPERVISOR"
+    },
+    {
+      "name": "Community Supervisor",
+      "value": "COMMUNITY_SUPERVISOR"
     }
   ],
   "isEnum": true
 }
-
-
-

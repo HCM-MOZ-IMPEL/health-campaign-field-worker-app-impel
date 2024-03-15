@@ -33,12 +33,15 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,12 +61,15 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -83,12 +89,15 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -103,6 +112,7 @@ mixin _$SearchHouseholdsEvent {
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -115,6 +125,7 @@ mixin _$SearchHouseholdsEvent {
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -126,6 +137,7 @@ mixin _$SearchHouseholdsEvent {
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -208,12 +220,15 @@ class _$SearchHouseholdsInitializedEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return initialize();
   }
@@ -236,12 +251,15 @@ class _$SearchHouseholdsInitializedEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return initialize?.call();
   }
@@ -264,12 +282,15 @@ class _$SearchHouseholdsInitializedEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -290,6 +311,7 @@ class _$SearchHouseholdsInitializedEvent
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return initialize(this);
   }
@@ -305,6 +327,7 @@ class _$SearchHouseholdsInitializedEvent
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return initialize?.call(this);
   }
@@ -319,6 +342,7 @@ class _$SearchHouseholdsInitializedEvent
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -478,12 +502,15 @@ class _$SearchHouseholdsByHouseholdsEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByHousehold(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -507,12 +534,15 @@ class _$SearchHouseholdsByHouseholdsEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByHousehold?.call(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -536,12 +566,15 @@ class _$SearchHouseholdsByHouseholdsEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -563,6 +596,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByHousehold(this);
   }
@@ -578,6 +612,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByHousehold?.call(this);
   }
@@ -592,6 +627,7 @@ class _$SearchHouseholdsByHouseholdsEvent
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -637,7 +673,9 @@ abstract class _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<$Res> {
       bool isProximityEnabled,
       double? latitude,
       double? longitude,
-      double? maxRadius});
+      double? maxRadius,
+      int offset,
+      int limit});
 }
 
 /// @nodoc
@@ -659,6 +697,8 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? maxRadius = freezed,
+    Object? offset = null,
+    Object? limit = null,
   }) {
     return _then(_$SearchHouseholdsSearchByHouseholdHeadEvent(
       searchText: null == searchText
@@ -685,6 +725,14 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -699,7 +747,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
       required this.isProximityEnabled,
       this.latitude,
       this.longitude,
-      this.maxRadius});
+      this.maxRadius,
+      required this.offset,
+      required this.limit});
 
   @override
   final String searchText;
@@ -713,10 +763,14 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
   final double? longitude;
   @override
   final double? maxRadius;
+  @override
+  final int offset;
+  @override
+  final int limit;
 
   @override
   String toString() {
-    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId, isProximityEnabled: $isProximityEnabled, latitude: $latitude, longitude: $longitude, maxRadius: $maxRadius)';
+    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId, isProximityEnabled: $isProximityEnabled, latitude: $latitude, longitude: $longitude, maxRadius: $maxRadius, offset: $offset, limit: $limit)';
   }
 
   @override
@@ -735,12 +789,14 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, searchText, projectId,
-      isProximityEnabled, latitude, longitude, maxRadius);
+      isProximityEnabled, latitude, longitude, maxRadius, offset, limit);
 
   @JsonKey(ignore: true)
   @override
@@ -769,15 +825,18 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
-        latitude, longitude, maxRadius);
+        latitude, longitude, maxRadius, offset, limit);
   }
 
   @override
@@ -798,15 +857,18 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByHouseholdHead?.call(searchText, projectId,
-        isProximityEnabled, latitude, longitude, maxRadius);
+        isProximityEnabled, latitude, longitude, maxRadius, offset, limit);
   }
 
   @override
@@ -827,17 +889,20 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
       return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
-          latitude, longitude, maxRadius);
+          latitude, longitude, maxRadius, offset, limit);
     }
     return orElse();
   }
@@ -854,6 +919,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByHouseholdHead(this);
   }
@@ -869,6 +935,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByHouseholdHead?.call(this);
   }
@@ -883,6 +950,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -900,7 +968,9 @@ abstract class SearchHouseholdsSearchByHouseholdHeadEvent
       required final bool isProximityEnabled,
       final double? latitude,
       final double? longitude,
-      final double? maxRadius}) = _$SearchHouseholdsSearchByHouseholdHeadEvent;
+      final double? maxRadius,
+      required final int offset,
+      required final int limit}) = _$SearchHouseholdsSearchByHouseholdHeadEvent;
 
   String get searchText;
   String get projectId;
@@ -908,6 +978,8 @@ abstract class SearchHouseholdsSearchByHouseholdHeadEvent
   double? get latitude;
   double? get longitude;
   double? get maxRadius;
+  int get offset;
+  int get limit;
   @JsonKey(ignore: true)
   _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<
           _$SearchHouseholdsSearchByHouseholdHeadEvent>
@@ -1056,12 +1128,15 @@ class _$SearchHouseholdsByProximityEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByProximity(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1085,12 +1160,15 @@ class _$SearchHouseholdsByProximityEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByProximity?.call(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1114,12 +1192,15 @@ class _$SearchHouseholdsByProximityEvent
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1141,6 +1222,7 @@ class _$SearchHouseholdsByProximityEvent
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByProximity(this);
   }
@@ -1156,6 +1238,7 @@ class _$SearchHouseholdsByProximityEvent
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByProximity?.call(this);
   }
@@ -1170,6 +1253,7 @@ class _$SearchHouseholdsByProximityEvent
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1258,12 +1342,15 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return clear();
   }
@@ -1286,12 +1373,15 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return clear?.call();
   }
@@ -1314,12 +1404,15 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -1340,6 +1433,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return clear(this);
   }
@@ -1355,6 +1449,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return clear?.call(this);
   }
@@ -1369,6 +1464,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -1383,9 +1479,204 @@ abstract class SearchHouseholdsClearEvent implements SearchHouseholdsEvent {
 }
 
 /// @nodoc
+abstract class _$$SearchHouseholdsLoadingEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsLoadingEventCopyWith(
+          _$SearchHouseholdsLoadingEvent value,
+          $Res Function(_$SearchHouseholdsLoadingEvent) then) =
+      __$$SearchHouseholdsLoadingEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$SearchHouseholdsLoadingEventCopyWithImpl<$Res>
+    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
+        _$SearchHouseholdsLoadingEvent>
+    implements _$$SearchHouseholdsLoadingEventCopyWith<$Res> {
+  __$$SearchHouseholdsLoadingEventCopyWithImpl(
+      _$SearchHouseholdsLoadingEvent _value,
+      $Res Function(_$SearchHouseholdsLoadingEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$SearchHouseholdsLoadingEvent implements SearchHouseholdsLoadingEvent {
+  const _$SearchHouseholdsLoadingEvent();
+
+  @override
+  String toString() {
+    return 'SearchHouseholdsEvent.load()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchHouseholdsLoadingEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)
+        searchByHousehold,
+    required TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)
+        searchByHouseholdHead,
+    required TResult Function(double latitude, double longititude,
+            String projectId, double maxRadius, int offset, int limit)
+        searchByProximity,
+    required TResult Function() clear,
+    required TResult Function() load,
+  }) {
+    return load();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult? Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult? Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult? Function()? clear,
+    TResult? Function()? load,
+  }) {
+    return load?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult Function()? clear,
+    TResult Function()? load,
+    required TResult orElse(),
+  }) {
+    if (load != null) {
+      return load();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchHouseholdsInitializedEvent value)
+        initialize,
+    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
+        searchByHousehold,
+    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
+        searchByHouseholdHead,
+    required TResult Function(SearchHouseholdsByProximityEvent value)
+        searchByProximity,
+    required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
+  }) {
+    return load(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult? Function(SearchHouseholdsByProximityEvent value)?
+        searchByProximity,
+    TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
+  }) {
+    return load?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
+    required TResult orElse(),
+  }) {
+    if (load != null) {
+      return load(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchHouseholdsLoadingEvent implements SearchHouseholdsEvent {
+  const factory SearchHouseholdsLoadingEvent() = _$SearchHouseholdsLoadingEvent;
+}
+
+/// @nodoc
 mixin _$SearchHouseholdsState {
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
+  int get offset => throw _privateConstructorUsedError;
+  int get limit => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
   int get registeredHouseholds => throw _privateConstructorUsedError;
@@ -1407,6 +1698,8 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       String? searchQuery,
+      int offset,
+      int limit,
       List<HouseholdMemberWrapper> householdMembers,
       int registeredHouseholds,
       int deliveredInterventions,
@@ -1430,6 +1723,8 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
   $Res call({
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? offset = null,
+    Object? limit = null,
     Object? householdMembers = null,
     Object? registeredHouseholds = null,
     Object? deliveredInterventions = null,
@@ -1445,6 +1740,14 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       householdMembers: null == householdMembers
           ? _value.householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
@@ -1480,6 +1783,8 @@ abstract class _$$_SearchHouseholdsStateCopyWith<$Res>
   $Res call(
       {bool loading,
       String? searchQuery,
+      int offset,
+      int limit,
       List<HouseholdMemberWrapper> householdMembers,
       int registeredHouseholds,
       int deliveredInterventions,
@@ -1500,6 +1805,8 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
   $Res call({
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? offset = null,
+    Object? limit = null,
     Object? householdMembers = null,
     Object? registeredHouseholds = null,
     Object? deliveredInterventions = null,
@@ -1515,6 +1822,14 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       householdMembers: null == householdMembers
           ? _value._householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
@@ -1545,6 +1860,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   const _$_SearchHouseholdsState(
       {this.loading = false,
       this.searchQuery,
+      this.offset = 0,
+      this.limit = 10,
       final List<HouseholdMemberWrapper> householdMembers = const [],
       this.registeredHouseholds = 0,
       this.deliveredInterventions = 0,
@@ -1558,6 +1875,12 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   final bool loading;
   @override
   final String? searchQuery;
+  @override
+  @JsonKey()
+  final int offset;
+  @override
+  @JsonKey()
+  final int limit;
   final List<HouseholdMemberWrapper> _householdMembers;
   @override
   @JsonKey()
@@ -1581,7 +1904,7 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
 
   @override
   String toString() {
-    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, householdMembers: $householdMembers, registeredHouseholds: $registeredHouseholds, deliveredInterventions: $deliveredInterventions, sideEffectsObserved: $sideEffectsObserved, referralsDone: $referralsDone)';
+    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, offset: $offset, limit: $limit, householdMembers: $householdMembers, registeredHouseholds: $registeredHouseholds, deliveredInterventions: $deliveredInterventions, sideEffectsObserved: $sideEffectsObserved, referralsDone: $referralsDone)';
   }
 
   @override
@@ -1592,6 +1915,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
             const DeepCollectionEquality()
                 .equals(other._householdMembers, _householdMembers) &&
             (identical(other.registeredHouseholds, registeredHouseholds) ||
@@ -1609,6 +1934,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
       runtimeType,
       loading,
       searchQuery,
+      offset,
+      limit,
       const DeepCollectionEquality().hash(_householdMembers),
       registeredHouseholds,
       deliveredInterventions,
@@ -1627,6 +1954,8 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   const factory _SearchHouseholdsState(
       {final bool loading,
       final String? searchQuery,
+      final int offset,
+      final int limit,
       final List<HouseholdMemberWrapper> householdMembers,
       final int registeredHouseholds,
       final int deliveredInterventions,
@@ -1638,6 +1967,10 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   bool get loading;
   @override
   String? get searchQuery;
+  @override
+  int get offset;
+  @override
+  int get limit;
   @override
   List<HouseholdMemberWrapper> get householdMembers;
   @override

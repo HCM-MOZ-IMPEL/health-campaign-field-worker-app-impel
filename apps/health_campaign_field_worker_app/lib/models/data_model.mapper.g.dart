@@ -14,6 +14,7 @@ import 'entities/document.dart';
 import 'entities/downsync.dart';
 import 'entities/facility.dart';
 import 'entities/gender.dart';
+import 'entities/h_f_referral.dart';
 import 'entities/household.dart';
 import 'entities/household_member.dart';
 import 'entities/identifier.dart';
@@ -78,6 +79,9 @@ var _mappers = <BaseMapper>{
   FacilitySearchModelMapper._(),
   FacilityModelMapper._(),
   FacilityAdditionalFieldsMapper._(),
+  HFReferralSearchModelMapper._(),
+  HFReferralModelMapper._(),
+  HFReferralAdditionalFieldsMapper._(),
   HouseholdSearchModelMapper._(),
   HouseholdModelMapper._(),
   HouseholdAdditionalFieldsMapper._(),
@@ -180,13 +184,13 @@ var _mappers = <BaseMapper>{
   BloodGroupMapper._(),
   DeliverStrategyTypeMapper._(),
   GenderMapper._(),
+  RolesTypeMapper._(),
   StatusMapper._(),
   TransactionReasonMapper._(),
   TransactionTypeMapper._(),
   DataOperationMapper._(),
   ApiOperationMapper._(),
   PgrServiceApplicationStatusMapper._(),
-  RolesTypeMapper._(),
   // custom mappers
 };
 
@@ -208,6 +212,7 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is DocumentModel) { return DocumentModelMapper._().encode(v); }
     else if (v is DownsyncModel) { return DownsyncModelMapper._().encode(v); }
     else if (v is FacilityModel) { return FacilityModelMapper._().encode(v); }
+    else if (v is HFReferralModel) { return HFReferralModelMapper._().encode(v); }
     else if (v is HouseholdModel) { return HouseholdModelMapper._().encode(v); }
     else if (v is HouseholdMemberModel) { return HouseholdMemberModelMapper._().encode(v); }
     else if (v is IdentifierModel) { return IdentifierModelMapper._().encode(v); }
@@ -302,6 +307,7 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is DocumentSearchModel) { return DocumentSearchModelMapper._().encode(v); }
     else if (v is DownsyncSearchModel) { return DownsyncSearchModelMapper._().encode(v); }
     else if (v is FacilitySearchModel) { return FacilitySearchModelMapper._().encode(v); }
+    else if (v is HFReferralSearchModel) { return HFReferralSearchModelMapper._().encode(v); }
     else if (v is HouseholdSearchModel) { return HouseholdSearchModelMapper._().encode(v); }
     else if (v is HouseholdMemberSearchModel) { return HouseholdMemberSearchModelMapper._().encode(v); }
     else if (v is IdentifierSearchModel) { return IdentifierSearchModelMapper._().encode(v); }
@@ -359,6 +365,7 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is DocumentAdditionalFields) { return DocumentAdditionalFieldsMapper._().encode(v); }
     else if (v is DownsyncAdditionalFields) { return DownsyncAdditionalFieldsMapper._().encode(v); }
     else if (v is FacilityAdditionalFields) { return FacilityAdditionalFieldsMapper._().encode(v); }
+    else if (v is HFReferralAdditionalFields) { return HFReferralAdditionalFieldsMapper._().encode(v); }
     else if (v is HouseholdAdditionalFields) { return HouseholdAdditionalFieldsMapper._().encode(v); }
     else if (v is HouseholdMemberAdditionalFields) { return HouseholdMemberAdditionalFieldsMapper._().encode(v); }
     else if (v is IdentifierAdditionalFields) { return IdentifierAdditionalFieldsMapper._().encode(v); }
@@ -1169,6 +1176,122 @@ class _FacilityAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<FacilityAdd
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(FacilityAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
+class HFReferralSearchModelMapper extends BaseMapper<HFReferralSearchModel> {
+  HFReferralSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  HFReferralSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HFReferralSearchModel fromMap(Map<String, dynamic> map) => HFReferralSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), name: Mapper.i.$getOpt(map, 'name'), projectId: Mapper.i.$getOpt(map, 'projectId'), projectFacilityId: Mapper.i.$getOpt(map, 'projectFacilityId'), symptomSurveyId: Mapper.i.$getOpt(map, 'symptomSurveyId'), beneficiaryId: Mapper.i.$getOpt(map, 'beneficiaryId'), referralCode: Mapper.i.$getOpt(map, 'referralCode'), nationalLevelId: Mapper.i.$getOpt(map, 'nationalLevelId'), symptom: Mapper.i.$getOpt(map, 'symptom'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+
+  @override Function get encoder => (HFReferralSearchModel v) => encode(v);
+  dynamic encode(HFReferralSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(HFReferralSearchModel h) => {if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.name, 'name') != null) 'name': Mapper.i.$enc(h.name, 'name'), if (Mapper.i.$enc(h.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(h.projectId, 'projectId'), if (Mapper.i.$enc(h.projectFacilityId, 'projectFacilityId') != null) 'projectFacilityId': Mapper.i.$enc(h.projectFacilityId, 'projectFacilityId'), if (Mapper.i.$enc(h.symptomSurveyId, 'symptomSurveyId') != null) 'symptomSurveyId': Mapper.i.$enc(h.symptomSurveyId, 'symptomSurveyId'), if (Mapper.i.$enc(h.beneficiaryId, 'beneficiaryId') != null) 'beneficiaryId': Mapper.i.$enc(h.beneficiaryId, 'beneficiaryId'), if (Mapper.i.$enc(h.referralCode, 'referralCode') != null) 'referralCode': Mapper.i.$enc(h.referralCode, 'referralCode'), if (Mapper.i.$enc(h.nationalLevelId, 'nationalLevelId') != null) 'nationalLevelId': Mapper.i.$enc(h.nationalLevelId, 'nationalLevelId'), if (Mapper.i.$enc(h.symptom, 'symptom') != null) 'symptom': Mapper.i.$enc(h.symptom, 'symptom'), if (Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(h.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(h.boundaryCode, 'boundaryCode')};
+
+  @override String stringify(HFReferralSearchModel self) => 'HFReferralSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, name: ${Mapper.asString(self.name)}, projectId: ${Mapper.asString(self.projectId)}, projectFacilityId: ${Mapper.asString(self.projectFacilityId)}, symptomSurveyId: ${Mapper.asString(self.symptomSurveyId)}, beneficiaryId: ${Mapper.asString(self.beneficiaryId)}, referralCode: ${Mapper.asString(self.referralCode)}, nationalLevelId: ${Mapper.asString(self.nationalLevelId)}, symptom: ${Mapper.asString(self.symptom)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
+  @override int hash(HFReferralSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.projectFacilityId) ^ Mapper.hash(self.symptomSurveyId) ^ Mapper.hash(self.beneficiaryId) ^ Mapper.hash(self.referralCode) ^ Mapper.hash(self.nationalLevelId) ^ Mapper.hash(self.symptom) ^ Mapper.hash(self.clientReferenceId);
+  @override bool equals(HFReferralSearchModel self, HFReferralSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.projectFacilityId, other.projectFacilityId) && Mapper.isEqual(self.symptomSurveyId, other.symptomSurveyId) && Mapper.isEqual(self.beneficiaryId, other.beneficiaryId) && Mapper.isEqual(self.referralCode, other.referralCode) && Mapper.isEqual(self.nationalLevelId, other.nationalLevelId) && Mapper.isEqual(self.symptom, other.symptom) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
+
+  @override Function get typeFactory => (f) => f<HFReferralSearchModel>();
+}
+
+extension HFReferralSearchModelMapperExtension  on HFReferralSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HFReferralSearchModelCopyWith<HFReferralSearchModel> get copyWith => HFReferralSearchModelCopyWith(this, $identity);
+}
+
+abstract class HFReferralSearchModelCopyWith<$R> {
+  factory HFReferralSearchModelCopyWith(HFReferralSearchModel value, Then<HFReferralSearchModel, $R> then) = _HFReferralSearchModelCopyWithImpl<$R>;
+  $R call({String? id, String? tenantId, String? name, String? projectId, String? projectFacilityId, String? symptomSurveyId, String? beneficiaryId, String? referralCode, String? nationalLevelId, String? symptom, List<String>? clientReferenceId, String? boundaryCode});
+  $R apply(HFReferralSearchModel Function(HFReferralSearchModel) transform);
+}
+
+class _HFReferralSearchModelCopyWithImpl<$R> extends BaseCopyWith<HFReferralSearchModel, $R> implements HFReferralSearchModelCopyWith<$R> {
+  _HFReferralSearchModelCopyWithImpl(HFReferralSearchModel value, Then<HFReferralSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? tenantId = $none, Object? name = $none, Object? projectId = $none, Object? projectFacilityId = $none, Object? symptomSurveyId = $none, Object? beneficiaryId = $none, Object? referralCode = $none, Object? nationalLevelId = $none, Object? symptom = $none, Object? clientReferenceId = $none, Object? boundaryCode = $none}) => $then(HFReferralSearchModel.ignoreDeleted(id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), name: or(name, $value.name), projectId: or(projectId, $value.projectId), projectFacilityId: or(projectFacilityId, $value.projectFacilityId), symptomSurveyId: or(symptomSurveyId, $value.symptomSurveyId), beneficiaryId: or(beneficiaryId, $value.beneficiaryId), referralCode: or(referralCode, $value.referralCode), nationalLevelId: or(nationalLevelId, $value.nationalLevelId), symptom: or(symptom, $value.symptom), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+}
+
+class HFReferralModelMapper extends BaseMapper<HFReferralModel> {
+  HFReferralModelMapper._();
+
+  @override Function get decoder => decode;
+  HFReferralModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HFReferralModel fromMap(Map<String, dynamic> map) => HFReferralModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), name: Mapper.i.$getOpt(map, 'name'), projectId: Mapper.i.$getOpt(map, 'projectId'), projectFacilityId: Mapper.i.$getOpt(map, 'projectFacilityId'), symptomSurveyId: Mapper.i.$getOpt(map, 'symptomSurveyId'), beneficiaryId: Mapper.i.$getOpt(map, 'beneficiaryId'), referralCode: Mapper.i.$getOpt(map, 'referralCode'), nationalLevelId: Mapper.i.$getOpt(map, 'nationalLevelId'), symptom: Mapper.i.$getOpt(map, 'symptom'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (HFReferralModel v) => encode(v);
+  dynamic encode(HFReferralModel v) => toMap(v);
+  Map<String, dynamic> toMap(HFReferralModel h) => {if (Mapper.i.$enc(h.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(h.additionalFields, 'additionalFields'), if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.name, 'name') != null) 'name': Mapper.i.$enc(h.name, 'name'), if (Mapper.i.$enc(h.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(h.projectId, 'projectId'), if (Mapper.i.$enc(h.projectFacilityId, 'projectFacilityId') != null) 'projectFacilityId': Mapper.i.$enc(h.projectFacilityId, 'projectFacilityId'), if (Mapper.i.$enc(h.symptomSurveyId, 'symptomSurveyId') != null) 'symptomSurveyId': Mapper.i.$enc(h.symptomSurveyId, 'symptomSurveyId'), if (Mapper.i.$enc(h.beneficiaryId, 'beneficiaryId') != null) 'beneficiaryId': Mapper.i.$enc(h.beneficiaryId, 'beneficiaryId'), if (Mapper.i.$enc(h.referralCode, 'referralCode') != null) 'referralCode': Mapper.i.$enc(h.referralCode, 'referralCode'), if (Mapper.i.$enc(h.nationalLevelId, 'nationalLevelId') != null) 'nationalLevelId': Mapper.i.$enc(h.nationalLevelId, 'nationalLevelId'), if (Mapper.i.$enc(h.symptom, 'symptom') != null) 'symptom': Mapper.i.$enc(h.symptom, 'symptom'), if (Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(h.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(h.rowVersion, 'rowVersion'), if (Mapper.i.$enc(h.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(h.auditDetails, 'auditDetails'), if (Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(h.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(h.isDeleted, 'isDeleted')};
+
+  @override String stringify(HFReferralModel self) => 'HFReferralModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, name: ${Mapper.asString(self.name)}, projectId: ${Mapper.asString(self.projectId)}, projectFacilityId: ${Mapper.asString(self.projectFacilityId)}, symptomSurveyId: ${Mapper.asString(self.symptomSurveyId)}, beneficiaryId: ${Mapper.asString(self.beneficiaryId)}, referralCode: ${Mapper.asString(self.referralCode)}, nationalLevelId: ${Mapper.asString(self.nationalLevelId)}, symptom: ${Mapper.asString(self.symptom)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(HFReferralModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.projectFacilityId) ^ Mapper.hash(self.symptomSurveyId) ^ Mapper.hash(self.beneficiaryId) ^ Mapper.hash(self.referralCode) ^ Mapper.hash(self.nationalLevelId) ^ Mapper.hash(self.symptom) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(HFReferralModel self, HFReferralModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.projectFacilityId, other.projectFacilityId) && Mapper.isEqual(self.symptomSurveyId, other.symptomSurveyId) && Mapper.isEqual(self.beneficiaryId, other.beneficiaryId) && Mapper.isEqual(self.referralCode, other.referralCode) && Mapper.isEqual(self.nationalLevelId, other.nationalLevelId) && Mapper.isEqual(self.symptom, other.symptom) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<HFReferralModel>();
+}
+
+extension HFReferralModelMapperExtension  on HFReferralModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HFReferralModelCopyWith<HFReferralModel> get copyWith => HFReferralModelCopyWith(this, $identity);
+}
+
+abstract class HFReferralModelCopyWith<$R> {
+  factory HFReferralModelCopyWith(HFReferralModel value, Then<HFReferralModel, $R> then) = _HFReferralModelCopyWithImpl<$R>;
+  HFReferralAdditionalFieldsCopyWith<$R>? get additionalFields;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
+  $R call({HFReferralAdditionalFields? additionalFields, String? id, String? tenantId, String? name, String? projectId, String? projectFacilityId, String? symptomSurveyId, String? beneficiaryId, String? referralCode, String? nationalLevelId, String? symptom, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R apply(HFReferralModel Function(HFReferralModel) transform);
+}
+
+class _HFReferralModelCopyWithImpl<$R> extends BaseCopyWith<HFReferralModel, $R> implements HFReferralModelCopyWith<$R> {
+  _HFReferralModelCopyWithImpl(HFReferralModel value, Then<HFReferralModel, $R> then) : super(value, then);
+
+  @override HFReferralAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? HFReferralAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? name = $none, Object? projectId = $none, Object? projectFacilityId = $none, Object? symptomSurveyId = $none, Object? beneficiaryId = $none, Object? referralCode = $none, Object? nationalLevelId = $none, Object? symptom = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(HFReferralModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), name: or(name, $value.name), projectId: or(projectId, $value.projectId), projectFacilityId: or(projectFacilityId, $value.projectFacilityId), symptomSurveyId: or(symptomSurveyId, $value.symptomSurveyId), beneficiaryId: or(beneficiaryId, $value.beneficiaryId), referralCode: or(referralCode, $value.referralCode), nationalLevelId: or(nationalLevelId, $value.nationalLevelId), symptom: or(symptom, $value.symptom), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class HFReferralAdditionalFieldsMapper extends BaseMapper<HFReferralAdditionalFields> {
+  HFReferralAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  HFReferralAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HFReferralAdditionalFields fromMap(Map<String, dynamic> map) => HFReferralAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'HFReferral', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
+
+  @override Function get encoder => (HFReferralAdditionalFields v) => encode(v);
+  dynamic encode(HFReferralAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(HFReferralAdditionalFields h) => {'schema': Mapper.i.$enc(h.schema, 'schema'), 'version': Mapper.i.$enc(h.version, 'version'), 'fields': Mapper.i.$enc(h.fields, 'fields')};
+
+  @override String stringify(HFReferralAdditionalFields self) => 'HFReferralAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
+  @override int hash(HFReferralAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
+  @override bool equals(HFReferralAdditionalFields self, HFReferralAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
+
+  @override Function get typeFactory => (f) => f<HFReferralAdditionalFields>();
+}
+
+extension HFReferralAdditionalFieldsMapperExtension  on HFReferralAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HFReferralAdditionalFieldsCopyWith<HFReferralAdditionalFields> get copyWith => HFReferralAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class HFReferralAdditionalFieldsCopyWith<$R> {
+  factory HFReferralAdditionalFieldsCopyWith(HFReferralAdditionalFields value, Then<HFReferralAdditionalFields, $R> then) = _HFReferralAdditionalFieldsCopyWithImpl<$R>;
+  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  $R apply(HFReferralAdditionalFields Function(HFReferralAdditionalFields) transform);
+}
+
+class _HFReferralAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<HFReferralAdditionalFields, $R> implements HFReferralAdditionalFieldsCopyWith<$R> {
+  _HFReferralAdditionalFieldsCopyWithImpl(HFReferralAdditionalFields value, Then<HFReferralAdditionalFields, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
+  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(HFReferralAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
+}
+
 class HouseholdSearchModelMapper extends BaseMapper<HouseholdSearchModel> {
   HouseholdSearchModelMapper._();
 
@@ -1524,15 +1647,15 @@ class IndividualSearchModelMapper extends BaseMapper<IndividualSearchModel> {
 
   @override Function get decoder => decode;
   IndividualSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  IndividualSearchModel fromMap(Map<String, dynamic> map) => IndividualSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), dateOfBirth: Mapper.i.$getOpt(map, 'dateOfBirth'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), name: Mapper.i.$getOpt(map, 'name'), gender: Mapper.i.$getOpt(map, 'gender'), identifiers: Mapper.i.$getOpt(map, 'identifiers'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+  IndividualSearchModel fromMap(Map<String, dynamic> map) => IndividualSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), dateOfBirth: Mapper.i.$getOpt(map, 'dateOfBirth'), limit: Mapper.i.$getOpt(map, 'limit'), offset: Mapper.i.$getOpt(map, 'offset'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), name: Mapper.i.$getOpt(map, 'name'), gender: Mapper.i.$getOpt(map, 'gender'), identifiers: Mapper.i.$getOpt(map, 'identifiers'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
 
   @override Function get encoder => (IndividualSearchModel v) => encode(v);
   dynamic encode(IndividualSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(IndividualSearchModel i) => {if (Mapper.i.$enc(i.id, 'id') != null) 'id': Mapper.i.$enc(i.id, 'id'), if (Mapper.i.$enc(i.dateOfBirth, 'dateOfBirth') != null) 'dateOfBirth': Mapper.i.$enc(i.dateOfBirth, 'dateOfBirth'), if (Mapper.i.$enc(i.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(i.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(i.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(i.tenantId, 'tenantId'), if (Mapper.i.$enc(i.name, 'name') != null) 'name': Mapper.i.$enc(i.name, 'name'), if (Mapper.i.$enc(i.gender, 'gender') != null) 'gender': Mapper.i.$enc(i.gender, 'gender'), if (Mapper.i.$enc(i.identifiers, 'identifiers') != null) 'identifiers': Mapper.i.$enc(i.identifiers, 'identifiers'), if (Mapper.i.$enc(i.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(i.boundaryCode, 'boundaryCode')};
+  Map<String, dynamic> toMap(IndividualSearchModel i) => {if (Mapper.i.$enc(i.id, 'id') != null) 'id': Mapper.i.$enc(i.id, 'id'), if (Mapper.i.$enc(i.dateOfBirth, 'dateOfBirth') != null) 'dateOfBirth': Mapper.i.$enc(i.dateOfBirth, 'dateOfBirth'), if (Mapper.i.$enc(i.limit, 'limit') != null) 'limit': Mapper.i.$enc(i.limit, 'limit'), if (Mapper.i.$enc(i.offset, 'offset') != null) 'offset': Mapper.i.$enc(i.offset, 'offset'), if (Mapper.i.$enc(i.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(i.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(i.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(i.tenantId, 'tenantId'), if (Mapper.i.$enc(i.name, 'name') != null) 'name': Mapper.i.$enc(i.name, 'name'), if (Mapper.i.$enc(i.gender, 'gender') != null) 'gender': Mapper.i.$enc(i.gender, 'gender'), if (Mapper.i.$enc(i.identifiers, 'identifiers') != null) 'identifiers': Mapper.i.$enc(i.identifiers, 'identifiers'), if (Mapper.i.$enc(i.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(i.boundaryCode, 'boundaryCode')};
 
-  @override String stringify(IndividualSearchModel self) => 'IndividualSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, dateOfBirth: ${Mapper.asString(self.dateOfBirth)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, name: ${Mapper.asString(self.name)}, gender: ${Mapper.asString(self.gender)}, identifiers: ${Mapper.asString(self.identifiers)})';
-  @override int hash(IndividualSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.dateOfBirth) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.gender) ^ Mapper.hash(self.identifiers);
-  @override bool equals(IndividualSearchModel self, IndividualSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.dateOfBirth, other.dateOfBirth) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.gender, other.gender) && Mapper.isEqual(self.identifiers, other.identifiers);
+  @override String stringify(IndividualSearchModel self) => 'IndividualSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, dateOfBirth: ${Mapper.asString(self.dateOfBirth)}, limit: ${Mapper.asString(self.limit)}, offset: ${Mapper.asString(self.offset)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, name: ${Mapper.asString(self.name)}, gender: ${Mapper.asString(self.gender)}, identifiers: ${Mapper.asString(self.identifiers)})';
+  @override int hash(IndividualSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.dateOfBirth) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.gender) ^ Mapper.hash(self.identifiers);
+  @override bool equals(IndividualSearchModel self, IndividualSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.dateOfBirth, other.dateOfBirth) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.gender, other.gender) && Mapper.isEqual(self.identifiers, other.identifiers);
 
   @override Function get typeFactory => (f) => f<IndividualSearchModel>();
 }
@@ -1547,7 +1670,7 @@ abstract class IndividualSearchModelCopyWith<$R> {
   factory IndividualSearchModelCopyWith(IndividualSearchModel value, Then<IndividualSearchModel, $R> then) = _IndividualSearchModelCopyWithImpl<$R>;
   NameSearchModelCopyWith<$R>? get name;
   ListCopyWith<$R, IdentifierSearchModel, IdentifierSearchModelCopyWith<$R>>? get identifiers;
-  $R call({String? id, String? dateOfBirth, List<String>? clientReferenceId, String? tenantId, NameSearchModel? name, Gender? gender, List<IdentifierSearchModel>? identifiers, String? boundaryCode});
+  $R call({String? id, String? dateOfBirth, int? limit, int? offset, List<String>? clientReferenceId, String? tenantId, NameSearchModel? name, Gender? gender, List<IdentifierSearchModel>? identifiers, String? boundaryCode});
   $R apply(IndividualSearchModel Function(IndividualSearchModel) transform);
 }
 
@@ -1556,7 +1679,7 @@ class _IndividualSearchModelCopyWithImpl<$R> extends BaseCopyWith<IndividualSear
 
   @override NameSearchModelCopyWith<$R>? get name => $value.name != null ? NameSearchModelCopyWith($value.name!, (v) => call(name: v)) : null;
   @override ListCopyWith<$R, IdentifierSearchModel, IdentifierSearchModelCopyWith<$R>>? get identifiers => $value.identifiers != null ? ListCopyWith($value.identifiers!, (v, t) => IdentifierSearchModelCopyWith(v, t), (v) => call(identifiers: v)) : null;
-  @override $R call({Object? id = $none, Object? dateOfBirth = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? name = $none, Object? gender = $none, Object? identifiers = $none, Object? boundaryCode = $none}) => $then(IndividualSearchModel.ignoreDeleted(id: or(id, $value.id), dateOfBirth: or(dateOfBirth, $value.dateOfBirth), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), name: or(name, $value.name), gender: or(gender, $value.gender), identifiers: or(identifiers, $value.identifiers), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+  @override $R call({Object? id = $none, Object? dateOfBirth = $none, Object? limit = $none, Object? offset = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? name = $none, Object? gender = $none, Object? identifiers = $none, Object? boundaryCode = $none}) => $then(IndividualSearchModel.ignoreDeleted(id: or(id, $value.id), dateOfBirth: or(dateOfBirth, $value.dateOfBirth), limit: or(limit, $value.limit), offset: or(offset, $value.offset), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), name: or(name, $value.name), gender: or(gender, $value.gender), identifiers: or(identifiers, $value.identifiers), boundaryCode: or(boundaryCode, $value.boundaryCode)));
 }
 
 class IndividualModelMapper extends BaseMapper<IndividualModel> {
@@ -1766,15 +1889,15 @@ class NameSearchModelMapper extends BaseMapper<NameSearchModel> {
 
   @override Function get decoder => decode;
   NameSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  NameSearchModel fromMap(Map<String, dynamic> map) => NameSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), givenName: Mapper.i.$getOpt(map, 'givenName'), familyName: Mapper.i.$getOpt(map, 'familyName'), otherNames: Mapper.i.$getOpt(map, 'otherNames'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+  NameSearchModel fromMap(Map<String, dynamic> map) => NameSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), givenName: Mapper.i.$getOpt(map, 'givenName'), familyName: Mapper.i.$getOpt(map, 'familyName'), otherNames: Mapper.i.$getOpt(map, 'otherNames'), limit: Mapper.i.$getOpt(map, 'limit'), offset: Mapper.i.$getOpt(map, 'offset'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
 
   @override Function get encoder => (NameSearchModel v) => encode(v);
   dynamic encode(NameSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(NameSearchModel n) => {if (Mapper.i.$enc(n.id, 'id') != null) 'id': Mapper.i.$enc(n.id, 'id'), if (Mapper.i.$enc(n.givenName, 'givenName') != null) 'givenName': Mapper.i.$enc(n.givenName, 'givenName'), if (Mapper.i.$enc(n.familyName, 'familyName') != null) 'familyName': Mapper.i.$enc(n.familyName, 'familyName'), if (Mapper.i.$enc(n.otherNames, 'otherNames') != null) 'otherNames': Mapper.i.$enc(n.otherNames, 'otherNames'), if (Mapper.i.$enc(n.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(n.tenantId, 'tenantId'), if (Mapper.i.$enc(n.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(n.boundaryCode, 'boundaryCode')};
+  Map<String, dynamic> toMap(NameSearchModel n) => {if (Mapper.i.$enc(n.id, 'id') != null) 'id': Mapper.i.$enc(n.id, 'id'), if (Mapper.i.$enc(n.givenName, 'givenName') != null) 'givenName': Mapper.i.$enc(n.givenName, 'givenName'), if (Mapper.i.$enc(n.familyName, 'familyName') != null) 'familyName': Mapper.i.$enc(n.familyName, 'familyName'), if (Mapper.i.$enc(n.otherNames, 'otherNames') != null) 'otherNames': Mapper.i.$enc(n.otherNames, 'otherNames'), if (Mapper.i.$enc(n.limit, 'limit') != null) 'limit': Mapper.i.$enc(n.limit, 'limit'), if (Mapper.i.$enc(n.offset, 'offset') != null) 'offset': Mapper.i.$enc(n.offset, 'offset'), if (Mapper.i.$enc(n.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(n.tenantId, 'tenantId'), if (Mapper.i.$enc(n.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(n.boundaryCode, 'boundaryCode')};
 
-  @override String stringify(NameSearchModel self) => 'NameSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, givenName: ${Mapper.asString(self.givenName)}, familyName: ${Mapper.asString(self.familyName)}, otherNames: ${Mapper.asString(self.otherNames)}, tenantId: ${Mapper.asString(self.tenantId)})';
-  @override int hash(NameSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.givenName) ^ Mapper.hash(self.familyName) ^ Mapper.hash(self.otherNames) ^ Mapper.hash(self.tenantId);
-  @override bool equals(NameSearchModel self, NameSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.givenName, other.givenName) && Mapper.isEqual(self.familyName, other.familyName) && Mapper.isEqual(self.otherNames, other.otherNames) && Mapper.isEqual(self.tenantId, other.tenantId);
+  @override String stringify(NameSearchModel self) => 'NameSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, givenName: ${Mapper.asString(self.givenName)}, familyName: ${Mapper.asString(self.familyName)}, otherNames: ${Mapper.asString(self.otherNames)}, limit: ${Mapper.asString(self.limit)}, offset: ${Mapper.asString(self.offset)}, tenantId: ${Mapper.asString(self.tenantId)})';
+  @override int hash(NameSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.givenName) ^ Mapper.hash(self.familyName) ^ Mapper.hash(self.otherNames) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.tenantId);
+  @override bool equals(NameSearchModel self, NameSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.givenName, other.givenName) && Mapper.isEqual(self.familyName, other.familyName) && Mapper.isEqual(self.otherNames, other.otherNames) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.tenantId, other.tenantId);
 
   @override Function get typeFactory => (f) => f<NameSearchModel>();
 }
@@ -1787,14 +1910,14 @@ extension NameSearchModelMapperExtension  on NameSearchModel {
 
 abstract class NameSearchModelCopyWith<$R> {
   factory NameSearchModelCopyWith(NameSearchModel value, Then<NameSearchModel, $R> then) = _NameSearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? givenName, String? familyName, String? otherNames, String? tenantId, String? boundaryCode});
+  $R call({String? id, String? givenName, String? familyName, String? otherNames, int? limit, int? offset, String? tenantId, String? boundaryCode});
   $R apply(NameSearchModel Function(NameSearchModel) transform);
 }
 
 class _NameSearchModelCopyWithImpl<$R> extends BaseCopyWith<NameSearchModel, $R> implements NameSearchModelCopyWith<$R> {
   _NameSearchModelCopyWithImpl(NameSearchModel value, Then<NameSearchModel, $R> then) : super(value, then);
 
-  @override $R call({Object? id = $none, Object? givenName = $none, Object? familyName = $none, Object? otherNames = $none, Object? tenantId = $none, Object? boundaryCode = $none}) => $then(NameSearchModel.ignoreDeleted(id: or(id, $value.id), givenName: or(givenName, $value.givenName), familyName: or(familyName, $value.familyName), otherNames: or(otherNames, $value.otherNames), tenantId: or(tenantId, $value.tenantId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+  @override $R call({Object? id = $none, Object? givenName = $none, Object? familyName = $none, Object? otherNames = $none, Object? limit = $none, Object? offset = $none, Object? tenantId = $none, Object? boundaryCode = $none}) => $then(NameSearchModel.ignoreDeleted(id: or(id, $value.id), givenName: or(givenName, $value.givenName), familyName: or(familyName, $value.familyName), otherNames: or(otherNames, $value.otherNames), limit: or(limit, $value.limit), offset: or(offset, $value.offset), tenantId: or(tenantId, $value.tenantId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
 }
 
 class NameModelMapper extends BaseMapper<NameModel> {
@@ -2236,15 +2359,15 @@ class ProjectBeneficiarySearchModelMapper extends BaseMapper<ProjectBeneficiaryS
 
   @override Function get decoder => decode;
   ProjectBeneficiarySearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  ProjectBeneficiarySearchModel fromMap(Map<String, dynamic> map) => ProjectBeneficiarySearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), beneficiaryId: Mapper.i.$getOpt(map, 'beneficiaryId'), beneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'beneficiaryClientReferenceId'), beneficiaryRegistrationDateLte: Mapper.i.$getOpt(map, 'beneficiaryRegistrationDateLte'), beneficiaryRegistrationDateGte: Mapper.i.$getOpt(map, 'beneficiaryRegistrationDateGte'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), dateOfRegistration: Mapper.i.$getOpt(map, 'dateOfRegistration'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+  ProjectBeneficiarySearchModel fromMap(Map<String, dynamic> map) => ProjectBeneficiarySearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), beneficiaryId: Mapper.i.$getOpt(map, 'beneficiaryId'), beneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'beneficiaryClientReferenceId'), beneficiaryRegistrationDateLte: Mapper.i.$getOpt(map, 'beneficiaryRegistrationDateLte'), beneficiaryRegistrationDateGte: Mapper.i.$getOpt(map, 'beneficiaryRegistrationDateGte'), limit: Mapper.i.$getOpt(map, 'limit'), offset: Mapper.i.$getOpt(map, 'offset'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), dateOfRegistration: Mapper.i.$getOpt(map, 'dateOfRegistration'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
 
   @override Function get encoder => (ProjectBeneficiarySearchModel v) => encode(v);
   dynamic encode(ProjectBeneficiarySearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(ProjectBeneficiarySearchModel p) => {if (Mapper.i.$enc(p.id, 'id') != null) 'id': Mapper.i.$enc(p.id, 'id'), if (Mapper.i.$enc(p.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(p.projectId, 'projectId'), if (Mapper.i.$enc(p.beneficiaryId, 'beneficiaryId') != null) 'beneficiaryId': Mapper.i.$enc(p.beneficiaryId, 'beneficiaryId'), if (Mapper.i.$enc(p.beneficiaryClientReferenceId, 'beneficiaryClientReferenceId') != null) 'beneficiaryClientReferenceId': Mapper.i.$enc(p.beneficiaryClientReferenceId, 'beneficiaryClientReferenceId'), if (Mapper.i.$enc(p.beneficiaryRegistrationDateLte, 'beneficiaryRegistrationDateLte') != null) 'beneficiaryRegistrationDateLte': Mapper.i.$enc(p.beneficiaryRegistrationDateLte, 'beneficiaryRegistrationDateLte'), if (Mapper.i.$enc(p.beneficiaryRegistrationDateGte, 'beneficiaryRegistrationDateGte') != null) 'beneficiaryRegistrationDateGte': Mapper.i.$enc(p.beneficiaryRegistrationDateGte, 'beneficiaryRegistrationDateGte'), if (Mapper.i.$enc(p.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(p.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(p.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(p.tenantId, 'tenantId'), if (Mapper.i.$enc(p.dateOfRegistration, 'dateOfRegistration') != null) 'dateOfRegistration': Mapper.i.$enc(p.dateOfRegistration, 'dateOfRegistration'), if (Mapper.i.$enc(p.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(p.boundaryCode, 'boundaryCode')};
+  Map<String, dynamic> toMap(ProjectBeneficiarySearchModel p) => {if (Mapper.i.$enc(p.id, 'id') != null) 'id': Mapper.i.$enc(p.id, 'id'), if (Mapper.i.$enc(p.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(p.projectId, 'projectId'), if (Mapper.i.$enc(p.beneficiaryId, 'beneficiaryId') != null) 'beneficiaryId': Mapper.i.$enc(p.beneficiaryId, 'beneficiaryId'), if (Mapper.i.$enc(p.beneficiaryClientReferenceId, 'beneficiaryClientReferenceId') != null) 'beneficiaryClientReferenceId': Mapper.i.$enc(p.beneficiaryClientReferenceId, 'beneficiaryClientReferenceId'), if (Mapper.i.$enc(p.beneficiaryRegistrationDateLte, 'beneficiaryRegistrationDateLte') != null) 'beneficiaryRegistrationDateLte': Mapper.i.$enc(p.beneficiaryRegistrationDateLte, 'beneficiaryRegistrationDateLte'), if (Mapper.i.$enc(p.beneficiaryRegistrationDateGte, 'beneficiaryRegistrationDateGte') != null) 'beneficiaryRegistrationDateGte': Mapper.i.$enc(p.beneficiaryRegistrationDateGte, 'beneficiaryRegistrationDateGte'), if (Mapper.i.$enc(p.limit, 'limit') != null) 'limit': Mapper.i.$enc(p.limit, 'limit'), if (Mapper.i.$enc(p.offset, 'offset') != null) 'offset': Mapper.i.$enc(p.offset, 'offset'), if (Mapper.i.$enc(p.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(p.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(p.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(p.tenantId, 'tenantId'), if (Mapper.i.$enc(p.dateOfRegistration, 'dateOfRegistration') != null) 'dateOfRegistration': Mapper.i.$enc(p.dateOfRegistration, 'dateOfRegistration'), if (Mapper.i.$enc(p.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(p.boundaryCode, 'boundaryCode')};
 
-  @override String stringify(ProjectBeneficiarySearchModel self) => 'ProjectBeneficiarySearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, beneficiaryId: ${Mapper.asString(self.beneficiaryId)}, beneficiaryClientReferenceId: ${Mapper.asString(self.beneficiaryClientReferenceId)}, beneficiaryRegistrationDateLte: ${Mapper.asString(self.beneficiaryRegistrationDateLte)}, beneficiaryRegistrationDateGte: ${Mapper.asString(self.beneficiaryRegistrationDateGte)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, dateOfRegistrationTime: ${Mapper.asString(self.dateOfRegistrationTime)})';
-  @override int hash(ProjectBeneficiarySearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.beneficiaryId) ^ Mapper.hash(self.beneficiaryClientReferenceId) ^ Mapper.hash(self.beneficiaryRegistrationDateLte) ^ Mapper.hash(self.beneficiaryRegistrationDateGte) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.dateOfRegistrationTime);
-  @override bool equals(ProjectBeneficiarySearchModel self, ProjectBeneficiarySearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.beneficiaryId, other.beneficiaryId) && Mapper.isEqual(self.beneficiaryClientReferenceId, other.beneficiaryClientReferenceId) && Mapper.isEqual(self.beneficiaryRegistrationDateLte, other.beneficiaryRegistrationDateLte) && Mapper.isEqual(self.beneficiaryRegistrationDateGte, other.beneficiaryRegistrationDateGte) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.dateOfRegistrationTime, other.dateOfRegistrationTime);
+  @override String stringify(ProjectBeneficiarySearchModel self) => 'ProjectBeneficiarySearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, beneficiaryId: ${Mapper.asString(self.beneficiaryId)}, beneficiaryClientReferenceId: ${Mapper.asString(self.beneficiaryClientReferenceId)}, beneficiaryRegistrationDateLte: ${Mapper.asString(self.beneficiaryRegistrationDateLte)}, beneficiaryRegistrationDateGte: ${Mapper.asString(self.beneficiaryRegistrationDateGte)}, limit: ${Mapper.asString(self.limit)}, offset: ${Mapper.asString(self.offset)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, dateOfRegistrationTime: ${Mapper.asString(self.dateOfRegistrationTime)})';
+  @override int hash(ProjectBeneficiarySearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.beneficiaryId) ^ Mapper.hash(self.beneficiaryClientReferenceId) ^ Mapper.hash(self.beneficiaryRegistrationDateLte) ^ Mapper.hash(self.beneficiaryRegistrationDateGte) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.dateOfRegistrationTime);
+  @override bool equals(ProjectBeneficiarySearchModel self, ProjectBeneficiarySearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.beneficiaryId, other.beneficiaryId) && Mapper.isEqual(self.beneficiaryClientReferenceId, other.beneficiaryClientReferenceId) && Mapper.isEqual(self.beneficiaryRegistrationDateLte, other.beneficiaryRegistrationDateLte) && Mapper.isEqual(self.beneficiaryRegistrationDateGte, other.beneficiaryRegistrationDateGte) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.dateOfRegistrationTime, other.dateOfRegistrationTime);
 
   @override Function get typeFactory => (f) => f<ProjectBeneficiarySearchModel>();
 }
@@ -2257,14 +2380,14 @@ extension ProjectBeneficiarySearchModelMapperExtension  on ProjectBeneficiarySea
 
 abstract class ProjectBeneficiarySearchModelCopyWith<$R> {
   factory ProjectBeneficiarySearchModelCopyWith(ProjectBeneficiarySearchModel value, Then<ProjectBeneficiarySearchModel, $R> then) = _ProjectBeneficiarySearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? projectId, String? beneficiaryId, List<String>? beneficiaryClientReferenceId, DateTime? beneficiaryRegistrationDateLte, DateTime? beneficiaryRegistrationDateGte, List<String>? clientReferenceId, String? tenantId, int? dateOfRegistration, String? boundaryCode});
+  $R call({String? id, String? projectId, String? beneficiaryId, List<String>? beneficiaryClientReferenceId, DateTime? beneficiaryRegistrationDateLte, DateTime? beneficiaryRegistrationDateGte, int? limit, int? offset, List<String>? clientReferenceId, String? tenantId, int? dateOfRegistration, String? boundaryCode});
   $R apply(ProjectBeneficiarySearchModel Function(ProjectBeneficiarySearchModel) transform);
 }
 
 class _ProjectBeneficiarySearchModelCopyWithImpl<$R> extends BaseCopyWith<ProjectBeneficiarySearchModel, $R> implements ProjectBeneficiarySearchModelCopyWith<$R> {
   _ProjectBeneficiarySearchModelCopyWithImpl(ProjectBeneficiarySearchModel value, Then<ProjectBeneficiarySearchModel, $R> then) : super(value, then);
 
-  @override $R call({Object? id = $none, Object? projectId = $none, Object? beneficiaryId = $none, Object? beneficiaryClientReferenceId = $none, Object? beneficiaryRegistrationDateLte = $none, Object? beneficiaryRegistrationDateGte = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? dateOfRegistration = $none, Object? boundaryCode = $none}) => $then(ProjectBeneficiarySearchModel.ignoreDeleted(id: or(id, $value.id), projectId: or(projectId, $value.projectId), beneficiaryId: or(beneficiaryId, $value.beneficiaryId), beneficiaryClientReferenceId: or(beneficiaryClientReferenceId, $value.beneficiaryClientReferenceId), beneficiaryRegistrationDateLte: or(beneficiaryRegistrationDateLte, $value.beneficiaryRegistrationDateLte), beneficiaryRegistrationDateGte: or(beneficiaryRegistrationDateGte, $value.beneficiaryRegistrationDateGte), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), dateOfRegistration: or(dateOfRegistration, $value.dateOfRegistration), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+  @override $R call({Object? id = $none, Object? projectId = $none, Object? beneficiaryId = $none, Object? beneficiaryClientReferenceId = $none, Object? beneficiaryRegistrationDateLte = $none, Object? beneficiaryRegistrationDateGte = $none, Object? limit = $none, Object? offset = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? dateOfRegistration = $none, Object? boundaryCode = $none}) => $then(ProjectBeneficiarySearchModel.ignoreDeleted(id: or(id, $value.id), projectId: or(projectId, $value.projectId), beneficiaryId: or(beneficiaryId, $value.beneficiaryId), beneficiaryClientReferenceId: or(beneficiaryClientReferenceId, $value.beneficiaryClientReferenceId), beneficiaryRegistrationDateLte: or(beneficiaryRegistrationDateLte, $value.beneficiaryRegistrationDateLte), beneficiaryRegistrationDateGte: or(beneficiaryRegistrationDateGte, $value.beneficiaryRegistrationDateGte), limit: or(limit, $value.limit), offset: or(offset, $value.offset), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), dateOfRegistration: or(dateOfRegistration, $value.dateOfRegistration), boundaryCode: or(boundaryCode, $value.boundaryCode)));
 }
 
 class ProjectBeneficiaryModelMapper extends BaseMapper<ProjectBeneficiaryModel> {
@@ -3868,15 +3991,15 @@ class TaskSearchModelMapper extends BaseMapper<TaskSearchModel> {
 
   @override Function get decoder => decode;
   TaskSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  TaskSearchModel fromMap(Map<String, dynamic> map) => TaskSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), projectBeneficiaryId: Mapper.i.$getOpt(map, 'projectBeneficiaryId'), projectBeneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'projectBeneficiaryClientReferenceId'), createdBy: Mapper.i.$getOpt(map, 'createdBy'), status: Mapper.i.$getOpt(map, 'status'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), plannedStartDate: Mapper.i.$getOpt(map, 'plannedStartDate'), plannedEndDate: Mapper.i.$getOpt(map, 'plannedEndDate'), actualStartDate: Mapper.i.$getOpt(map, 'actualStartDate'), actualEndDate: Mapper.i.$getOpt(map, 'actualEndDate'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+  TaskSearchModel fromMap(Map<String, dynamic> map) => TaskSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), projectBeneficiaryId: Mapper.i.$getOpt(map, 'projectBeneficiaryId'), projectBeneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'projectBeneficiaryClientReferenceId'), createdBy: Mapper.i.$getOpt(map, 'createdBy'), status: Mapper.i.$getOpt(map, 'status'), limit: Mapper.i.$getOpt(map, 'limit'), offset: Mapper.i.$getOpt(map, 'offset'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), plannedStartDate: Mapper.i.$getOpt(map, 'plannedStartDate'), plannedEndDate: Mapper.i.$getOpt(map, 'plannedEndDate'), actualStartDate: Mapper.i.$getOpt(map, 'actualStartDate'), actualEndDate: Mapper.i.$getOpt(map, 'actualEndDate'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
 
   @override Function get encoder => (TaskSearchModel v) => encode(v);
   dynamic encode(TaskSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(TaskSearchModel t) => {if (Mapper.i.$enc(t.id, 'id') != null) 'id': Mapper.i.$enc(t.id, 'id'), if (Mapper.i.$enc(t.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(t.projectId, 'projectId'), if (Mapper.i.$enc(t.projectBeneficiaryId, 'projectBeneficiaryId') != null) 'projectBeneficiaryId': Mapper.i.$enc(t.projectBeneficiaryId, 'projectBeneficiaryId'), if (Mapper.i.$enc(t.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId') != null) 'projectBeneficiaryClientReferenceId': Mapper.i.$enc(t.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId'), if (Mapper.i.$enc(t.createdBy, 'createdBy') != null) 'createdBy': Mapper.i.$enc(t.createdBy, 'createdBy'), if (Mapper.i.$enc(t.status, 'status') != null) 'status': Mapper.i.$enc(t.status, 'status'), if (Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(t.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(t.tenantId, 'tenantId'), if (Mapper.i.$enc(t.plannedStartDate, 'plannedStartDate') != null) 'plannedStartDate': Mapper.i.$enc(t.plannedStartDate, 'plannedStartDate'), if (Mapper.i.$enc(t.plannedEndDate, 'plannedEndDate') != null) 'plannedEndDate': Mapper.i.$enc(t.plannedEndDate, 'plannedEndDate'), if (Mapper.i.$enc(t.actualStartDate, 'actualStartDate') != null) 'actualStartDate': Mapper.i.$enc(t.actualStartDate, 'actualStartDate'), if (Mapper.i.$enc(t.actualEndDate, 'actualEndDate') != null) 'actualEndDate': Mapper.i.$enc(t.actualEndDate, 'actualEndDate'), if (Mapper.i.$enc(t.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(t.boundaryCode, 'boundaryCode')};
+  Map<String, dynamic> toMap(TaskSearchModel t) => {if (Mapper.i.$enc(t.id, 'id') != null) 'id': Mapper.i.$enc(t.id, 'id'), if (Mapper.i.$enc(t.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(t.projectId, 'projectId'), if (Mapper.i.$enc(t.projectBeneficiaryId, 'projectBeneficiaryId') != null) 'projectBeneficiaryId': Mapper.i.$enc(t.projectBeneficiaryId, 'projectBeneficiaryId'), if (Mapper.i.$enc(t.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId') != null) 'projectBeneficiaryClientReferenceId': Mapper.i.$enc(t.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId'), if (Mapper.i.$enc(t.createdBy, 'createdBy') != null) 'createdBy': Mapper.i.$enc(t.createdBy, 'createdBy'), if (Mapper.i.$enc(t.status, 'status') != null) 'status': Mapper.i.$enc(t.status, 'status'), if (Mapper.i.$enc(t.limit, 'limit') != null) 'limit': Mapper.i.$enc(t.limit, 'limit'), if (Mapper.i.$enc(t.offset, 'offset') != null) 'offset': Mapper.i.$enc(t.offset, 'offset'), if (Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(t.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(t.tenantId, 'tenantId'), if (Mapper.i.$enc(t.plannedStartDate, 'plannedStartDate') != null) 'plannedStartDate': Mapper.i.$enc(t.plannedStartDate, 'plannedStartDate'), if (Mapper.i.$enc(t.plannedEndDate, 'plannedEndDate') != null) 'plannedEndDate': Mapper.i.$enc(t.plannedEndDate, 'plannedEndDate'), if (Mapper.i.$enc(t.actualStartDate, 'actualStartDate') != null) 'actualStartDate': Mapper.i.$enc(t.actualStartDate, 'actualStartDate'), if (Mapper.i.$enc(t.actualEndDate, 'actualEndDate') != null) 'actualEndDate': Mapper.i.$enc(t.actualEndDate, 'actualEndDate'), if (Mapper.i.$enc(t.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(t.boundaryCode, 'boundaryCode')};
 
-  @override String stringify(TaskSearchModel self) => 'TaskSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, projectBeneficiaryId: ${Mapper.asString(self.projectBeneficiaryId)}, projectBeneficiaryClientReferenceId: ${Mapper.asString(self.projectBeneficiaryClientReferenceId)}, createdBy: ${Mapper.asString(self.createdBy)}, status: ${Mapper.asString(self.status)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, plannedStartDateTime: ${Mapper.asString(self.plannedStartDateTime)}, plannedEndDateTime: ${Mapper.asString(self.plannedEndDateTime)}, actualStartDateTime: ${Mapper.asString(self.actualStartDateTime)}, actualEndDateTime: ${Mapper.asString(self.actualEndDateTime)})';
-  @override int hash(TaskSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.projectBeneficiaryId) ^ Mapper.hash(self.projectBeneficiaryClientReferenceId) ^ Mapper.hash(self.createdBy) ^ Mapper.hash(self.status) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.plannedStartDateTime) ^ Mapper.hash(self.plannedEndDateTime) ^ Mapper.hash(self.actualStartDateTime) ^ Mapper.hash(self.actualEndDateTime);
-  @override bool equals(TaskSearchModel self, TaskSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.projectBeneficiaryId, other.projectBeneficiaryId) && Mapper.isEqual(self.projectBeneficiaryClientReferenceId, other.projectBeneficiaryClientReferenceId) && Mapper.isEqual(self.createdBy, other.createdBy) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.plannedStartDateTime, other.plannedStartDateTime) && Mapper.isEqual(self.plannedEndDateTime, other.plannedEndDateTime) && Mapper.isEqual(self.actualStartDateTime, other.actualStartDateTime) && Mapper.isEqual(self.actualEndDateTime, other.actualEndDateTime);
+  @override String stringify(TaskSearchModel self) => 'TaskSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, projectBeneficiaryId: ${Mapper.asString(self.projectBeneficiaryId)}, projectBeneficiaryClientReferenceId: ${Mapper.asString(self.projectBeneficiaryClientReferenceId)}, createdBy: ${Mapper.asString(self.createdBy)}, status: ${Mapper.asString(self.status)}, limit: ${Mapper.asString(self.limit)}, offset: ${Mapper.asString(self.offset)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, plannedStartDateTime: ${Mapper.asString(self.plannedStartDateTime)}, plannedEndDateTime: ${Mapper.asString(self.plannedEndDateTime)}, actualStartDateTime: ${Mapper.asString(self.actualStartDateTime)}, actualEndDateTime: ${Mapper.asString(self.actualEndDateTime)})';
+  @override int hash(TaskSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.projectBeneficiaryId) ^ Mapper.hash(self.projectBeneficiaryClientReferenceId) ^ Mapper.hash(self.createdBy) ^ Mapper.hash(self.status) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.plannedStartDateTime) ^ Mapper.hash(self.plannedEndDateTime) ^ Mapper.hash(self.actualStartDateTime) ^ Mapper.hash(self.actualEndDateTime);
+  @override bool equals(TaskSearchModel self, TaskSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.projectBeneficiaryId, other.projectBeneficiaryId) && Mapper.isEqual(self.projectBeneficiaryClientReferenceId, other.projectBeneficiaryClientReferenceId) && Mapper.isEqual(self.createdBy, other.createdBy) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.plannedStartDateTime, other.plannedStartDateTime) && Mapper.isEqual(self.plannedEndDateTime, other.plannedEndDateTime) && Mapper.isEqual(self.actualStartDateTime, other.actualStartDateTime) && Mapper.isEqual(self.actualEndDateTime, other.actualEndDateTime);
 
   @override Function get typeFactory => (f) => f<TaskSearchModel>();
 }
@@ -3889,14 +4012,14 @@ extension TaskSearchModelMapperExtension  on TaskSearchModel {
 
 abstract class TaskSearchModelCopyWith<$R> {
   factory TaskSearchModelCopyWith(TaskSearchModel value, Then<TaskSearchModel, $R> then) = _TaskSearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? projectId, String? projectBeneficiaryId, List<String>? projectBeneficiaryClientReferenceId, String? createdBy, String? status, List<String>? clientReferenceId, String? tenantId, int? plannedStartDate, int? plannedEndDate, int? actualStartDate, int? actualEndDate, String? boundaryCode});
+  $R call({String? id, String? projectId, String? projectBeneficiaryId, List<String>? projectBeneficiaryClientReferenceId, String? createdBy, String? status, int? limit, int? offset, List<String>? clientReferenceId, String? tenantId, int? plannedStartDate, int? plannedEndDate, int? actualStartDate, int? actualEndDate, String? boundaryCode});
   $R apply(TaskSearchModel Function(TaskSearchModel) transform);
 }
 
 class _TaskSearchModelCopyWithImpl<$R> extends BaseCopyWith<TaskSearchModel, $R> implements TaskSearchModelCopyWith<$R> {
   _TaskSearchModelCopyWithImpl(TaskSearchModel value, Then<TaskSearchModel, $R> then) : super(value, then);
 
-  @override $R call({Object? id = $none, Object? projectId = $none, Object? projectBeneficiaryId = $none, Object? projectBeneficiaryClientReferenceId = $none, Object? createdBy = $none, Object? status = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? plannedStartDate = $none, Object? plannedEndDate = $none, Object? actualStartDate = $none, Object? actualEndDate = $none, Object? boundaryCode = $none}) => $then(TaskSearchModel.ignoreDeleted(id: or(id, $value.id), projectId: or(projectId, $value.projectId), projectBeneficiaryId: or(projectBeneficiaryId, $value.projectBeneficiaryId), projectBeneficiaryClientReferenceId: or(projectBeneficiaryClientReferenceId, $value.projectBeneficiaryClientReferenceId), createdBy: or(createdBy, $value.createdBy), status: or(status, $value.status), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), plannedStartDate: or(plannedStartDate, $value.plannedStartDate), plannedEndDate: or(plannedEndDate, $value.plannedEndDate), actualStartDate: or(actualStartDate, $value.actualStartDate), actualEndDate: or(actualEndDate, $value.actualEndDate), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+  @override $R call({Object? id = $none, Object? projectId = $none, Object? projectBeneficiaryId = $none, Object? projectBeneficiaryClientReferenceId = $none, Object? createdBy = $none, Object? status = $none, Object? limit = $none, Object? offset = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? plannedStartDate = $none, Object? plannedEndDate = $none, Object? actualStartDate = $none, Object? actualEndDate = $none, Object? boundaryCode = $none}) => $then(TaskSearchModel.ignoreDeleted(id: or(id, $value.id), projectId: or(projectId, $value.projectId), projectBeneficiaryId: or(projectBeneficiaryId, $value.projectBeneficiaryId), projectBeneficiaryClientReferenceId: or(projectBeneficiaryClientReferenceId, $value.projectBeneficiaryClientReferenceId), createdBy: or(createdBy, $value.createdBy), status: or(status, $value.status), limit: or(limit, $value.limit), offset: or(offset, $value.offset), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), plannedStartDate: or(plannedStartDate, $value.plannedStartDate), plannedEndDate: or(plannedEndDate, $value.plannedEndDate), actualStartDate: or(actualStartDate, $value.actualStartDate), actualEndDate: or(actualEndDate, $value.actualEndDate), boundaryCode: or(boundaryCode, $value.boundaryCode)));
 }
 
 class TaskModelMapper extends BaseMapper<TaskModel> {
@@ -4876,6 +4999,13 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
       case "dateOfAdministration": return AdditionalFieldsType.dateOfAdministration;
       case "dateOfDelivery": return AdditionalFieldsType.dateOfDelivery;
       case "referralComments": return AdditionalFieldsType.referralComments;
+      case "cycle": return AdditionalFieldsType.cycle;
+      case "hfCoordinator": return AdditionalFieldsType.hFCoordinator;
+      case "referredBy": return AdditionalFieldsType.referredBy;
+      case "dateOfEvaluation": return AdditionalFieldsType.dateOfEvaluation;
+      case "nameOfReferral": return AdditionalFieldsType.nameOfReferral;
+      case "gender": return AdditionalFieldsType.gender;
+      case "age": return AdditionalFieldsType.age;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4889,6 +5019,13 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
       case AdditionalFieldsType.dateOfAdministration: return "dateOfAdministration";
       case AdditionalFieldsType.dateOfDelivery: return "dateOfDelivery";
       case AdditionalFieldsType.referralComments: return "referralComments";
+      case AdditionalFieldsType.cycle: return "cycle";
+      case AdditionalFieldsType.hFCoordinator: return "hfCoordinator";
+      case AdditionalFieldsType.referredBy: return "referredBy";
+      case AdditionalFieldsType.dateOfEvaluation: return "dateOfEvaluation";
+      case AdditionalFieldsType.nameOfReferral: return "nameOfReferral";
+      case AdditionalFieldsType.gender: return "gender";
+      case AdditionalFieldsType.age: return "age";
     }
   }
 }
@@ -5037,6 +5174,31 @@ class GenderMapper extends EnumMapper<Gender> {
 }
 
 extension GenderMapperExtension on Gender {
+  dynamic toValue() => Mapper.toValue(this);
+}
+
+class RolesTypeMapper extends EnumMapper<RolesType> {
+  RolesTypeMapper._();
+
+  @override  RolesType decode(dynamic value) {
+    switch (value) {
+      case "COMMUNITY_DISTRIBUTOR": return RolesType.communityDistributor;
+      case "HEALTH_FACILITY_SUPERVISOR": return RolesType.healthFacilitySupervisor;
+      case "COMMUNITY_SUPERVISOR": return RolesType.communitySupervisor;
+      default: throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override  dynamic encode(RolesType self) {
+    switch (self) {
+      case RolesType.communityDistributor: return "COMMUNITY_DISTRIBUTOR";
+      case RolesType.healthFacilitySupervisor: return "HEALTH_FACILITY_SUPERVISOR";
+      case RolesType.communitySupervisor: return "COMMUNITY_SUPERVISOR";
+    }
+  }
+}
+
+extension RolesTypeMapperExtension on RolesType {
   dynamic toValue() => Mapper.toValue(this);
 }
 
@@ -5231,29 +5393,6 @@ class PgrServiceApplicationStatusMapper extends EnumMapper<PgrServiceApplication
 }
 
 extension PgrServiceApplicationStatusMapperExtension on PgrServiceApplicationStatus {
-  dynamic toValue() => Mapper.toValue(this);
-}
-
-class RolesTypeMapper extends EnumMapper<RolesType> {
-  RolesTypeMapper._();
-
-  @override  RolesType decode(dynamic value) {
-    switch (value) {
-      case "COMMUNITY_DISTRIBUTOR": return RolesType.communityDistributor;
-      case "HEALTH_FACILITY_SUPERVISOR": return RolesType.healthFacilitySupervisor;
-      default: throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override  dynamic encode(RolesType self) {
-    switch (self) {
-      case RolesType.communityDistributor: return "COMMUNITY_DISTRIBUTOR";
-      case RolesType.healthFacilitySupervisor: return "HEALTH_FACILITY_SUPERVISOR";
-    }
-  }
-}
-
-extension RolesTypeMapperExtension on RolesType {
   dynamic toValue() => Mapper.toValue(this);
 }
 

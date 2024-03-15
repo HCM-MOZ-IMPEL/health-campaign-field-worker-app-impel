@@ -31,6 +31,9 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
             ),
         ]),
       );
+    if (query.limit != null && query.offset != null) {
+      select.limit(query.limit!, offset: query.offset);
+    }
 
     select.watch().listen((results) {
       final data = results
@@ -95,6 +98,9 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
       ),
     ]);
 
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
@@ -109,9 +115,14 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
               sql.task.status.equals(
                 query.status,
               ),
-            if (userId != null)
+            if (userId != null || query.createdBy != null)
               sql.task.auditCreatedBy.equals(
-                userId,
+                userId ?? query.createdBy,
+              ),
+            if (query.plannedEndDate != null)
+              sql.task.clientCreatedTime.isBetweenValues(
+                query.plannedStartDate,
+                query.plannedEndDate,
               ),
           ])))
         .get();
@@ -146,6 +157,15 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
                   lastModifiedBy: resources.auditModifiedBy,
                   lastModifiedTime: resources.auditModifiedTime,
                 ),
+                clientAuditDetails: (task.clientCreatedBy != null &&
+                        task.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: task.clientCreatedBy!,
+                        createdTime: task.clientCreatedTime!,
+                        lastModifiedBy: task.clientModifiedBy,
+                        lastModifiedTime: task.clientModifiedTime,
+                      )
+                    : null,
               ),
             );
       } else {

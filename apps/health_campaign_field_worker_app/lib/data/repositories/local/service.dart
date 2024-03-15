@@ -61,6 +61,7 @@ class ServiceLocalRepository extends ServiceLocalBaseRepository {
         ],
       ),
       auditDetails: entity.auditDetails,
+      clientAuditDetails: entity.clientAuditDetails,
       attributes: entity.attributes?.map((e) {
         return e.dataType == 'Number'
             ? e.copyWith(value: int.tryParse(e.value))
@@ -99,6 +100,10 @@ class ServiceLocalRepository extends ServiceLocalBaseRepository {
               sql.service.serviceDefId.equals(
                 query.id,
               ),
+            if (query.clientId != null)
+              sql.service.clientId.equals(
+                query.clientId,
+              ),
           ])))
         .get();
 
@@ -121,6 +126,7 @@ class ServiceLocalRepository extends ServiceLocalBaseRepository {
             clientReferenceId: attribute.clientReferenceId,
             attributeCode: attribute.attributeCode,
             value: attribute.value,
+            referenceId: attribute.referenceId,
             dataType: attribute.dataType,
             additionalDetails: attribute.additionalDetails,
             tenantId: attribute.tenantId,

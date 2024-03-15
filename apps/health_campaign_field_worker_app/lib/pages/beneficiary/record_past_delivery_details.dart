@@ -9,6 +9,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
+import '../../models/data_model.dart';
 import '../../models/data_model.mapper.g.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
@@ -94,7 +95,7 @@ class _RecordPastDeliveryDetailsPageState
                               router.pop();
                               final event =
                                   context.read<DeliverInterventionBloc>();
-
+                              List<TaskModel> completedTask = [];
                               for (int i = 0;
                                   i < (futureTaskList ?? []).length;
                                   i++) {
@@ -113,23 +114,31 @@ class _RecordPastDeliveryDetailsPageState
                                     : Status.administeredFailed.toValue();
 
                                 // Create a new task with the updated status
-                                final result =
+                                TaskModel result =
                                     futureTaskList![i].copyWith(status: status);
 
-                                // Add the updated task to the event
-                                event.add(DeliverInterventionSubmitEvent(
-                                  result,
-                                  true,
-                                  context.boundary,
-                                ));
+                                if (result.auditDetails != null) {
+                                  result = result.copyWith(
+                                    auditDetails: AuditDetails(
+                                      createdBy: result.auditDetails!.createdBy,
+                                      createdTime:
+                                          result.auditDetails!.createdTime,
+                                      lastModifiedBy: context.loggedInUserUuid,
+                                      lastModifiedTime:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                    ),
+                                  );
+                                }
+                                completedTask.add(result);
                               }
+                              // Add the updated task to the event
+                              event.add(DeliverInterventionSubmitEvent(
+                                completedTask,
+                                true,
+                                context.boundary,
+                              ));
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
-
-                              bloc.add(HouseholdOverviewReloadEvent(
-                                projectId: context.projectId,
-                                projectBeneficiaryType: context.beneficiaryType,
-                              ));
 
                               event.add(DeliverInterventionSearchEvent(
                                 TaskSearchModel(
@@ -141,13 +150,11 @@ class _RecordPastDeliveryDetailsPageState
                                       .toList(),
                                 ),
                               ));
+
                               context.router.popUntilRouteWithName(
                                 SearchBeneficiaryRoute.name,
                               );
-                              bloc.add(HouseholdOverviewReloadEvent(
-                                projectId: context.projectId,
-                                projectBeneficiaryType: context.beneficiaryType,
-                              ));
+
                               Navigator.of(ctx).pop();
 
                               router.push(
@@ -165,7 +172,7 @@ class _RecordPastDeliveryDetailsPageState
                                   context.read<DeliverInterventionBloc>();
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
-
+                              List<TaskModel> completedTask = [];
                               for (int i = 0;
                                   i < (futureTaskList ?? []).length;
                                   i++) {
@@ -186,14 +193,14 @@ class _RecordPastDeliveryDetailsPageState
                                 // Create a new task with the updated status
                                 final result =
                                     futureTaskList![i].copyWith(status: status);
-
+                                completedTask.add(result);
                                 // Add the updated task to the event
-                                event.add(DeliverInterventionSubmitEvent(
-                                  result,
-                                  true,
-                                  context.boundary,
-                                ));
                               }
+                              event.add(DeliverInterventionSubmitEvent(
+                                completedTask,
+                                true,
+                                context.boundary,
+                              ));
                               context.router.popUntilRouteWithName(
                                 SearchBeneficiaryRoute.name,
                               );

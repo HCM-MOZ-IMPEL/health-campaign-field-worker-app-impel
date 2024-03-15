@@ -46,7 +46,9 @@ class _ChecklistBoundaryViewPageState
               children: [
                 Text(
                   localizations.translate(
-                    i18.checklist.checklistDetailLabel,
+                    context.isDistributor
+                        ? i18.checklist.communityDistributorChecklistDetailLabel
+                        : i18.checklist.checklistDetailLabel,
                   ),
                   style: theme.textTheme.displayMedium,
                 ),

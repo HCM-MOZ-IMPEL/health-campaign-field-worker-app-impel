@@ -58,7 +58,7 @@ class NetworkManager {
         remoteRepositories: remoteRepositories.toSet().toList(),
         configuration: configuration,
       );
-    } catch (e) {
+    } catch (e, stack) {
       syncError = SyncDownError(e);
     }
 

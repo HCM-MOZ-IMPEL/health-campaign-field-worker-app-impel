@@ -125,69 +125,73 @@ class _IneligibilityReasonsPageState
                                                           DeliverInterventionBloc>()
                                                       .add(
                                                         DeliverInterventionSubmitEvent(
-                                                          TaskModel(
-                                                            projectBeneficiaryClientReferenceId:
-                                                                widget
-                                                                    .projectBeneficiaryClientRefId,
-                                                            clientReferenceId:
-                                                                clientReferenceId,
-                                                            tenantId: envConfig
-                                                                .variables
-                                                                .tenantId,
-                                                            rowVersion: 1,
-                                                            auditDetails:
-                                                                AuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                            ),
-                                                            projectId: context
-                                                                .projectId,
-                                                            status: Status
-                                                                .beneficiaryIneligible
-                                                                .toValue(),
-                                                            clientAuditDetails:
-                                                                ClientAuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
-                                                            additionalFields:
-                                                                TaskAdditionalFields(
-                                                              version: 1,
-                                                              fields: [
-                                                                AdditionalField(
-                                                                  'taskStatus',
-                                                                  Status
-                                                                      .beneficiaryIneligible
-                                                                      .toValue(),
-                                                                ),
-                                                                AdditionalField(
-                                                                  'ineligibleReasons',
-                                                                  reasons.join(
-                                                                    ',',
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            address: widget
-                                                                .individual
-                                                                .address
-                                                                ?.first
-                                                                .copyWith(
-                                                              relatedClientReferenceId:
+                                                          [
+                                                            TaskModel(
+                                                              projectBeneficiaryClientReferenceId:
+                                                                  widget
+                                                                      .projectBeneficiaryClientRefId,
+                                                              clientReferenceId:
                                                                   clientReferenceId,
-                                                              id: null,
+                                                              tenantId:
+                                                                  envConfig
+                                                                      .variables
+                                                                      .tenantId,
+                                                              rowVersion: 1,
+                                                              auditDetails:
+                                                                  AuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                              ),
+                                                              projectId: context
+                                                                  .projectId,
+                                                              status: Status
+                                                                  .beneficiaryIneligible
+                                                                  .toValue(),
+                                                              clientAuditDetails:
+                                                                  ClientAuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
+                                                              additionalFields:
+                                                                  TaskAdditionalFields(
+                                                                version: 1,
+                                                                fields: [
+                                                                  AdditionalField(
+                                                                    'taskStatus',
+                                                                    Status
+                                                                        .beneficiaryIneligible
+                                                                        .toValue(),
+                                                                  ),
+                                                                  AdditionalField(
+                                                                    'ineligibleReasons',
+                                                                    reasons
+                                                                        .join(
+                                                                      ',',
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              address: widget
+                                                                  .individual
+                                                                  .address
+                                                                  ?.first
+                                                                  .copyWith(
+                                                                relatedClientReferenceId:
+                                                                    clientReferenceId,
+                                                                id: null,
+                                                              ),
                                                             ),
-                                                          ),
+                                                          ],
                                                           false,
                                                           context.boundary,
                                                         ),

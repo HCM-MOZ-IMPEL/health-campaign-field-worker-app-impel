@@ -206,7 +206,11 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAll();
 
-    for (final oplog in opLogs) {
+    for (final oplog in opLogs
+        .where(
+          (element) => element.entityType.name != DataModelType.service.name,
+        )
+        .toList()) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
       OpLogEntry updatedEntry = entry.copyWith(
@@ -581,6 +585,32 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
 
   @override
   bool? getNonRecoverableError(ReferralModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class HFReferralOpLogManager extends OpLogManager<HFReferralModel> {
+  HFReferralOpLogManager(super.isar);
+
+  @override
+  HFReferralModel applyServerGeneratedIdToEntity(
+    HFReferralModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(HFReferralModel entity) =>
+      entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(HFReferralModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(HFReferralModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(HFReferralModel entity) =>
       entity.nonRecoverableError;
 }
 

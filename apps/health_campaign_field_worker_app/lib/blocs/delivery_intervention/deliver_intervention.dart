@@ -35,27 +35,29 @@ class DeliverInterventionBloc
     try {
       if (event.isEditing) {
         // Update an existing task
-        final TaskModel? existingTaskModel =
-            (await taskRepository.search(TaskSearchModel(
-          clientReferenceId: [event.task.clientReferenceId],
-        )))
-                .firstOrNull;
 
-        await taskRepository.update(event.task.copyWith(
-          clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
-                      null &&
-                  event.task.clientAuditDetails?.createdTime != null)
-              ? ClientAuditDetails(
-                  createdBy: event.task.clientAuditDetails!.createdBy,
-                  createdTime: event.task.clientAuditDetails!.createdTime,
-                  lastModifiedBy: event.task.clientAuditDetails!.lastModifiedBy,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                )
-              : null,
-          id: existingTaskModel?.id,
-          rowVersion: existingTaskModel?.rowVersion ?? 1,
-          nonRecoverableError: existingTaskModel?.nonRecoverableError ?? false,
-        ));
+        final tasks = event.task
+            .map((e) => e.copyWith(
+                  clientAuditDetails:
+                      (e.clientAuditDetails?.createdBy != null &&
+                              e.clientAuditDetails?.createdTime != null)
+                          ? ClientAuditDetails(
+                              createdBy: e.clientAuditDetails!.createdBy,
+                              createdTime: e.clientAuditDetails!.createdTime,
+                              lastModifiedBy: e.auditDetails?.lastModifiedBy ??
+                                  e.clientAuditDetails!.createdBy,
+                              lastModifiedTime:
+                                  DateTime.now().millisecondsSinceEpoch,
+                            )
+                          : null,
+                  id: e.id,
+                  rowVersion: e.rowVersion ?? 1,
+                  nonRecoverableError: e.nonRecoverableError ?? false,
+                ))
+            .toList();
+        for (var i = 0; i < tasks.length; i++) {
+          await taskRepository.update(tasks[i]);
+        }
       } else {
         // Create a new task
         final code = event.boundaryModel.code;
@@ -65,13 +67,15 @@ class DeliverInterventionBloc
             ? null
             : LocalityModel(code: code, name: name);
 
-        await taskRepository.create(event.task.copyWith(
-          address: event.task.address?.copyWith(
-            locality: localityModel,
-          ),
-        ));
+        for (var i = 0; i < event.task.length; i++) {
+          await taskRepository.create(event.task[i].copyWith(
+            address: event.task[i].address?.copyWith(
+              locality: localityModel,
+            ),
+          ));
+        }
         emit(state.copyWith(
-          oldTask: event.task,
+          oldTask: event.task.last,
         ));
       }
     } catch (error) {
@@ -247,7 +251,7 @@ class DeliverInterventionBloc
 @freezed
 class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSubmit(
-    TaskModel task,
+    List<TaskModel> task,
     bool isEditing,
     BoundaryModel boundaryModel,
   ) = DeliverInterventionSubmitEvent;

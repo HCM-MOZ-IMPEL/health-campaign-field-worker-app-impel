@@ -30,6 +30,10 @@ class ProjectBeneficiaryLocalRepository
         ]),
       );
 
+    if (query.limit != null && query.offset != null) {
+      select.limit(query.limit!, offset: query.offset);
+    }
+
     select.watch().listen((event) {
       final data = event.map((e) {
         return ProjectBeneficiaryModel(
@@ -192,7 +196,7 @@ class ProjectBeneficiaryLocalRepository
       isDeleted: true,
       rowVersion: entity.rowVersion,
       clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
-              entity.clientAuditDetails!.createdTime != null)
+              entity.clientAuditDetails?.createdTime != null)
           ? ClientAuditDetails(
               createdBy: entity.clientAuditDetails!.createdBy,
               createdTime: entity.clientAuditDetails!.createdTime,

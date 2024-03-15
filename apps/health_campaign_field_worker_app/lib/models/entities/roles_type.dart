@@ -5,5 +5,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 enum RolesType {
   @MappableValue("COMMUNITY_DISTRIBUTOR") communityDistributor,
   @MappableValue("HEALTH_FACILITY_SUPERVISOR") healthFacilitySupervisor,
+  @MappableValue("COMMUNITY_SUPERVISOR") communitySupervisor,
   ;
 }

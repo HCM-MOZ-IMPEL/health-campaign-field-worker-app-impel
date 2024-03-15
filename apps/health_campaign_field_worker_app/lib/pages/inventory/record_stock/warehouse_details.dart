@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,6 +70,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
             facility = facilityState.whenOrNull(
               fetched: (_, __, facility) => facility,
             );
+
+            if (facility == null && context.isSupervisor) {
+              facility = facilities.firstWhereOrNull(
+                (element) => element.name == context.loggedInUser.userName,
+              );
+            }
 
             return Scaffold(
               body: GestureDetector(

@@ -283,6 +283,11 @@ bool checkEligibilityForAgeAndSideEffect(
   List<SideEffectModel>? sideEffects,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
+  bool skipAge = [
+    Status.administeredFailed.toValue(),
+    Status.administeredSuccess.toValue(),
+    Status.delivered.toValue(),
+  ].contains(tasks?.status);
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
     (e) =>
         (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
@@ -304,16 +309,18 @@ bool checkEligibilityForAgeAndSideEffect(
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
+          ? skipAge ||
+                  (totalAgeMonths >= projectType!.validMinAge! &&
+                      totalAgeMonths <= projectType.validMaxAge!)
               ? recordedSideEffect && !checkStatus([tasks], currentCycle)
                   ? false
                   : true
               : false
           : false;
     } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
+      return skipAge ||
+              (totalAgeMonths >= projectType!.validMinAge! &&
+                  totalAgeMonths <= projectType.validMaxAge!)
           ? true
           : false;
     }
@@ -479,6 +486,11 @@ DoseCriteriaModel? fetchProductVariant(
         final minAge = int.parse(ageRange.first);
         final maxAge = int.parse(ageRange.last);
 
+        // temp change for SMC specific use case
+        if (maxAge == 59 && individualAgeInMonths > 59) {
+          return true;
+        }
+
         return individualAgeInMonths >= minAge &&
             individualAgeInMonths <= maxAge;
       }
@@ -629,4 +641,15 @@ void showDownloadDialog(
     default:
       return;
   }
+}
+
+// Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
+dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
+  for (var map in data) {
+    if (map["key"] == key) {
+      return map["value"];
+    }
+  }
+
+  return null; // Key not found
 }

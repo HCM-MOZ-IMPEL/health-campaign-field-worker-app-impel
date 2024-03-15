@@ -13,6 +13,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final List<String>? beneficiaryClientReferenceId;
   final DateTime? beneficiaryRegistrationDateLte;
   final DateTime? beneficiaryRegistrationDateGte;
+  final int? limit;
+  final int? offset;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? dateOfRegistrationTime;
@@ -24,6 +26,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.beneficiaryClientReferenceId,
     this.beneficiaryRegistrationDateLte,
     this.beneficiaryRegistrationDateGte,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     int? dateOfRegistration,
@@ -42,6 +46,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.beneficiaryClientReferenceId,
     this.beneficiaryRegistrationDateLte,
     this.beneficiaryRegistrationDateGte,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     int? dateOfRegistration,

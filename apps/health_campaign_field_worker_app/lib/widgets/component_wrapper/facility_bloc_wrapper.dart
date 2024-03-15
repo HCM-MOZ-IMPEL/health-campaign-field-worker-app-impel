@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/facility/facility.dart';
+import '../../blocs/project_facility/project_facility.dart';
 import '../../models/data_model.dart';
 import '../../utils/extensions/extensions.dart';
 import 'selected_project_builder.dart';
@@ -39,7 +40,20 @@ class FacilityBlocWrapper extends StatelessWidget {
               ),
             ),
           lazy: false,
-          child: child,
+          child: BlocProvider(
+            create: (_) => ProjectFacilityBloc(
+              const ProjectFacilityState.empty(),
+              projectFacilityDataRepository: projectFacilityRepository,
+              facilityDataRepository: facilityRepository,
+            )..add(
+                ProjectFacilityLoadEvent(
+                  query: ProjectFacilitySearchModel(
+                    projectId: [context.projectId],
+                  ),
+                ),
+              ),
+            child: child,
+          ),
         );
       },
     );

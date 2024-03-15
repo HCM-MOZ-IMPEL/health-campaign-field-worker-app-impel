@@ -59,6 +59,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.complaints:
               case DataModelType.sideEffect:
               case DataModelType.referral:
+              case DataModelType.hFReferral:
                 return true;
               default:
                 return false;
@@ -82,6 +83,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.sideEffect:
               case DataModelType.referral:
               case DataModelType.householdMember:
+              case DataModelType.hFReferral:
                 return true;
               default:
                 return false;

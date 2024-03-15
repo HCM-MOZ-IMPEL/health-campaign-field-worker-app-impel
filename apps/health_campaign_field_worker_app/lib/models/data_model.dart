@@ -15,6 +15,7 @@ export 'entities/document.dart';
 export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
+export 'entities/h_f_referral.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -31,6 +32,7 @@ export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
 export 'entities/referral.dart';
+export 'entities/roles_type.dart';
 export 'entities/service.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
@@ -48,7 +50,6 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'entities/roles_type.dart';
 
 abstract class DataModel {
   final String? boundaryCode;
@@ -174,4 +175,5 @@ enum DataModelType {
   locality,
   downsync,
   downsyncCriteria,
+  hFReferral,
 }

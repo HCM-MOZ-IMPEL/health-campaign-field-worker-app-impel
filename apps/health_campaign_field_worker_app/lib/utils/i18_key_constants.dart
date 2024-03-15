@@ -99,9 +99,18 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+
+  String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
+
+  String get maxValue => 'MAX_VALUE_ALLOWED';
+
+  String get noResultsFound => 'NO_RESULTS_FOUND';
+
   String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+  String get projectFacilitySearchHeaderLabel =>
+      'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
@@ -163,13 +172,21 @@ class Checklist {
 
   String get checklist => 'CHECKLIST';
 
+  String get communityDistributorChecklist => 'COMMUNITY_DISTRIBUTOR_CHECKLIST';
+
   String get checklistlabel => 'CHECKLIST_LABEL';
+
+  String get communityDistributorChecklistlabel =>
+      'COMMUNITY_DISTRIBUTOR_CHECKLIST_LABEL';
 
   String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
 
   String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
 
   String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get communityDistributorChecklistDetailLabel =>
+      'COMMUNITY_DISTRIBUTOR_CHECKLIST_DETAILS_LABEL';
 
   String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
 
@@ -243,6 +260,12 @@ class Home {
 
   String get healthFacilitySupervisorCheckList =>
       'HF_SUPERVISOR_CHECK_LIST_LABEL';
+
+  String get communityDistributorChecklist =>
+      'COMMUNITY_DISTRIBUTOR_CHECK_LIST_LABEL';
+  String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
+  String get db => 'HOME_DB_LABEL';
+  String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
 }
 
 class SearchBeneficiary {
@@ -651,6 +674,8 @@ class DeliverIntervention {
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get wastedCountValidation => 'WASTED_COUNT_VALIDATION';
 
   String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
 
@@ -1211,6 +1236,8 @@ class ReferBeneficiary {
   const ReferBeneficiary();
 
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get dateOfEvaluationLabel =>
+      'REFER_BENEFICIARY_DATE_OF_EVALUATION_LABEL';
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
   String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
@@ -1219,6 +1246,20 @@ class ReferBeneficiary {
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
   String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get facilityDetails => 'FACILITY_DETAILS_HEADER';
+  String get evaluationFacilityLabel => 'EVALUATION_FACILITY_LABEL';
+  String get nameOfHealthFacilityCoordinatorLabel =>
+      'NAME_OF_HEALTH_FACILITY_COORDINATOR';
+  String get healthFacilityCoordinatorLabel => 'NAME_OF_HF_COORDINATOR_LABEL';
+  String get nameOfTheChildLabel => 'REFERRAL_NAME_OF_CHILD_LABEL';
+  String get beneficiaryIdLabel => 'REFERRAL_BENEFICIARY_ID_LABEL';
+  String get referralCodeLabel => 'REFERRAL_CODE_LABEL';
+  String get reasonForReferralHeader => 'REASON_FOR_REFERRAL_HEADER';
+  String get searchReferralsHeader => 'SEARCH_REFERRALS_HEADER';
+  String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
+  String get selectCycle => 'REFERRAL_SELECT_CYCLE';
+  String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
+  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
   String get dialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_TITLE';
   String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
   String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';

@@ -9,6 +9,8 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class IndividualSearchModel extends EntitySearchModel {
   final String? id;
   final String? dateOfBirth;
+  final int? limit;
+  final int? offset;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final NameSearchModel? name;
@@ -18,6 +20,8 @@ class IndividualSearchModel extends EntitySearchModel {
   IndividualSearchModel({
     this.id,
     this.dateOfBirth,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     this.name,
@@ -31,6 +35,8 @@ class IndividualSearchModel extends EntitySearchModel {
   IndividualSearchModel.ignoreDeleted({
     this.id,
     this.dateOfBirth,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     this.name,

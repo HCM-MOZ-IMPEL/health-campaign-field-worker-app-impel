@@ -17,6 +17,7 @@ import '../data/network_manager.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
+import '../data/repositories/local/h_f_referral.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -39,6 +40,7 @@ import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
+import '../data/repositories/remote/h_f_referral.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -279,6 +281,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           DownsyncOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -493,14 +502,22 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        // if (value == DataModelType.downsync)
-        RepositoryProvider<
-            RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
-          create: (_) => DownsyncRemoteRepository(
-            dio,
-            actionMap: actions,
+        if (value == DataModelType.downsync)
+          RepositoryProvider<
+              RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
+            create: (_) => DownsyncRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
           ),
-        ),
+        if (value == DataModelType.hFReferral)
+          RepositoryProvider<
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
+            create: (_) => HFReferralRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

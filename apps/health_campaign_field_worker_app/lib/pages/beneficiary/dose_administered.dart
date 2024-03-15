@@ -102,14 +102,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
                                   if (doseAdministered && context.mounted) {
                                     // Iterate through future deliveries
-
+                                    List<TaskModel> completedTask = [];
                                     for (var e in bloc.futureDeliveries!) {
                                       int doseIndex = e.id;
                                       final clientReferenceId =
                                           IdGen.i.identifier;
                                       final address = bloc.oldTask?.address;
                                       // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
-                                      event.add(DeliverInterventionSubmitEvent(
+                                      completedTask.add(
                                         TaskModel(
                                           projectId: context.projectId,
                                           address: address?.copyWith(
@@ -216,10 +216,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                             ],
                                           ),
                                         ),
-                                        false,
-                                        context.boundary,
-                                      ));
+                                      );
                                     }
+
+                                    event.add(DeliverInterventionSubmitEvent(
+                                      completedTask,
+                                      false,
+                                      context.boundary,
+                                    ));
                                   }
 
                                   final reloadState =

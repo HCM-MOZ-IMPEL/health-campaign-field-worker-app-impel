@@ -241,59 +241,62 @@ class MemberCard extends StatelessWidget {
                                                         DeliverInterventionBloc>()
                                                     .add(
                                                       DeliverInterventionSubmitEvent(
-                                                        TaskModel(
-                                                          projectBeneficiaryClientReferenceId:
-                                                              projectBeneficiaryClientReferenceId,
-                                                          clientReferenceId:
-                                                              clientReferenceId,
-                                                          tenantId: envConfig
-                                                              .variables
-                                                              .tenantId,
-                                                          rowVersion: 1,
-                                                          auditDetails:
-                                                              AuditDetails(
-                                                            createdBy: context
-                                                                .loggedInUserUuid,
-                                                            createdTime: context
-                                                                .millisecondsSinceEpoch(),
-                                                          ),
-                                                          projectId:
-                                                              context.projectId,
-                                                          status: Status
-                                                              .beneficiaryReferred
-                                                              .toValue(),
-                                                          clientAuditDetails:
-                                                              ClientAuditDetails(
-                                                            createdBy: context
-                                                                .loggedInUserUuid,
-                                                            createdTime: context
-                                                                .millisecondsSinceEpoch(),
-                                                            lastModifiedBy: context
-                                                                .loggedInUserUuid,
-                                                            lastModifiedTime:
-                                                                context
-                                                                    .millisecondsSinceEpoch(),
-                                                          ),
-                                                          additionalFields:
-                                                              TaskAdditionalFields(
-                                                            version: 1,
-                                                            fields: [
-                                                              AdditionalField(
-                                                                'taskStatus',
-                                                                Status
-                                                                    .beneficiaryReferred
-                                                                    .toValue(),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          address: individual
-                                                              .address?.first
-                                                              .copyWith(
-                                                            relatedClientReferenceId:
+                                                        [
+                                                          TaskModel(
+                                                            projectBeneficiaryClientReferenceId:
+                                                                projectBeneficiaryClientReferenceId,
+                                                            clientReferenceId:
                                                                 clientReferenceId,
-                                                            id: null,
-                                                          ),
-                                                        ),
+                                                            tenantId: envConfig
+                                                                .variables
+                                                                .tenantId,
+                                                            rowVersion: 1,
+                                                            auditDetails:
+                                                                AuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                            ),
+                                                            projectId: context
+                                                                .projectId,
+                                                            status: Status
+                                                                .beneficiaryReferred
+                                                                .toValue(),
+                                                            clientAuditDetails:
+                                                                ClientAuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                              lastModifiedBy:
+                                                                  context
+                                                                      .loggedInUserUuid,
+                                                              lastModifiedTime:
+                                                                  context
+                                                                      .millisecondsSinceEpoch(),
+                                                            ),
+                                                            additionalFields:
+                                                                TaskAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                                AdditionalField(
+                                                                  'taskStatus',
+                                                                  Status
+                                                                      .beneficiaryReferred
+                                                                      .toValue(),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            address: individual
+                                                                .address?.first
+                                                                .copyWith(
+                                                              relatedClientReferenceId:
+                                                                  clientReferenceId,
+                                                              id: null,
+                                                            ),
+                                                          )
+                                                        ],
                                                         false,
                                                         context.boundary,
                                                       ),
@@ -322,11 +325,12 @@ class MemberCard extends StatelessWidget {
                                             const Duration(milliseconds: 100),
                                             () {
                                               bloc.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                projectId: context.projectId,
-                                                projectBeneficiaryType:
-                                                    context.beneficiaryType,
-                                              ));
+                                                HouseholdOverviewReloadEvent(
+                                                  projectId: context.projectId,
+                                                  projectBeneficiaryType:
+                                                      context.beneficiaryType,
+                                                ),
+                                              );
                                             },
                                           );
 
@@ -469,60 +473,65 @@ class MemberCard extends StatelessWidget {
                                                           DeliverInterventionBloc>()
                                                       .add(
                                                         DeliverInterventionSubmitEvent(
-                                                          TaskModel(
-                                                            projectBeneficiaryClientReferenceId:
-                                                                projectBeneficiaryClientReferenceId,
-                                                            clientReferenceId:
-                                                                clientReferenceId,
-                                                            tenantId: envConfig
-                                                                .variables
-                                                                .tenantId,
-                                                            rowVersion: 1,
-                                                            auditDetails:
-                                                                AuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                            ),
-                                                            projectId: context
-                                                                .projectId,
-                                                            status: Status
-                                                                .beneficiaryRefused
-                                                                .toValue(),
-                                                            clientAuditDetails:
-                                                                ClientAuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
-                                                            additionalFields:
-                                                                TaskAdditionalFields(
-                                                              version: 1,
-                                                              fields: [
-                                                                AdditionalField(
-                                                                  'taskStatus',
-                                                                  Status
-                                                                      .beneficiaryRefused
-                                                                      .toValue(),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            address: individual
-                                                                .address?.first
-                                                                .copyWith(
-                                                              relatedClientReferenceId:
+                                                          [
+                                                            TaskModel(
+                                                              projectBeneficiaryClientReferenceId:
+                                                                  projectBeneficiaryClientReferenceId,
+                                                              clientReferenceId:
                                                                   clientReferenceId,
-                                                              id: null,
-                                                            ),
-                                                          ),
+                                                              tenantId:
+                                                                  envConfig
+                                                                      .variables
+                                                                      .tenantId,
+                                                              rowVersion: 1,
+                                                              auditDetails:
+                                                                  AuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                              ),
+                                                              projectId: context
+                                                                  .projectId,
+                                                              status: Status
+                                                                  .beneficiaryRefused
+                                                                  .toValue(),
+                                                              clientAuditDetails:
+                                                                  ClientAuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
+                                                              additionalFields:
+                                                                  TaskAdditionalFields(
+                                                                version: 1,
+                                                                fields: [
+                                                                  AdditionalField(
+                                                                    'taskStatus',
+                                                                    Status
+                                                                        .beneficiaryRefused
+                                                                        .toValue(),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              address:
+                                                                  individual
+                                                                      .address
+                                                                      ?.first
+                                                                      .copyWith(
+                                                                relatedClientReferenceId:
+                                                                    clientReferenceId,
+                                                                id: null,
+                                                              ),
+                                                            )
+                                                          ],
                                                           false,
                                                           context.boundary,
                                                         ),

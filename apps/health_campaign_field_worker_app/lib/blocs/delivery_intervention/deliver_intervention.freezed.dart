@@ -19,7 +19,7 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -33,7 +33,7 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -46,7 +46,7 @@ mixin _$DeliverInterventionEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -120,7 +120,8 @@ abstract class _$$DeliverInterventionSubmitEventCopyWith<$Res> {
           $Res Function(_$DeliverInterventionSubmitEvent) then) =
       __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({TaskModel task, bool isEditing, BoundaryModel boundaryModel});
+  $Res call(
+      {List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel});
 }
 
 /// @nodoc
@@ -142,9 +143,9 @@ class __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>
   }) {
     return _then(_$DeliverInterventionSubmitEvent(
       null == task
-          ? _value.task
+          ? _value._task
           : task // ignore: cast_nullable_to_non_nullable
-              as TaskModel,
+              as List<TaskModel>,
       null == isEditing
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
@@ -162,10 +163,16 @@ class __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>
 class _$DeliverInterventionSubmitEvent
     implements DeliverInterventionSubmitEvent {
   const _$DeliverInterventionSubmitEvent(
-      this.task, this.isEditing, this.boundaryModel);
+      final List<TaskModel> task, this.isEditing, this.boundaryModel)
+      : _task = task;
 
+  final List<TaskModel> _task;
   @override
-  final TaskModel task;
+  List<TaskModel> get task {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_task);
+  }
+
   @override
   final bool isEditing;
   @override
@@ -181,7 +188,7 @@ class _$DeliverInterventionSubmitEvent
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DeliverInterventionSubmitEvent &&
-            (identical(other.task, task) || other.task == task) &&
+            const DeepCollectionEquality().equals(other._task, _task) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
             (identical(other.boundaryModel, boundaryModel) ||
@@ -189,7 +196,8 @@ class _$DeliverInterventionSubmitEvent
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, task, isEditing, boundaryModel);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_task), isEditing, boundaryModel);
 
   @JsonKey(ignore: true)
   @override
@@ -202,7 +210,7 @@ class _$DeliverInterventionSubmitEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -219,7 +227,7 @@ class _$DeliverInterventionSubmitEvent
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -235,7 +243,7 @@ class _$DeliverInterventionSubmitEvent
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -302,11 +310,11 @@ class _$DeliverInterventionSubmitEvent
 abstract class DeliverInterventionSubmitEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionSubmitEvent(
-      final TaskModel task,
+      final List<TaskModel> task,
       final bool isEditing,
       final BoundaryModel boundaryModel) = _$DeliverInterventionSubmitEvent;
 
-  TaskModel get task;
+  List<TaskModel> get task;
   bool get isEditing;
   BoundaryModel get boundaryModel;
   @JsonKey(ignore: true)
@@ -385,7 +393,7 @@ class _$DeliverInterventionSearchEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -402,7 +410,7 @@ class _$DeliverInterventionSearchEvent
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -418,7 +426,7 @@ class _$DeliverInterventionSearchEvent
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -597,7 +605,7 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -614,7 +622,7 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -630,7 +638,7 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -829,7 +837,7 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
@@ -847,7 +855,7 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, Cycle cycle, IndividualModel? individualModel)?
@@ -864,7 +872,7 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+            List<TaskModel> task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, Cycle cycle, IndividualModel? individualModel)?
