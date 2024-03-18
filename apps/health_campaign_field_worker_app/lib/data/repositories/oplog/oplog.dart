@@ -129,7 +129,7 @@ abstract class OpLogManager<T extends EntityModel> {
     return oplogs.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
 
-  Future<void> put(OpLogEntry<T> entry) async {
+  Future<void> put(OpLogEntry<dynamic> entry) async {
     await isar.writeTxn(() async {
       await isar.opLogs.put(entry
           .copyWith(
