@@ -33,6 +33,10 @@ class TransactionReasonMapper extends EnumMapper<TransactionReason> {
         return TransactionReason.lostInStorage;
       case "LOST_IN_TRANSIT":
         return TransactionReason.lostInTransit;
+      case "GAINED_IN_STORAGE":
+        return TransactionReason.gainedInStorage;
+      case "GAINED_IN_TRANSIT":
+        return TransactionReason.gainedInTransit;
       case "DAMAGED_IN_STORAGE":
         return TransactionReason.damagedInStorage;
       case "DAMAGED_IN_TRANSIT":
@@ -53,14 +57,14 @@ class TransactionReasonMapper extends EnumMapper<TransactionReason> {
         return "LOST_IN_STORAGE";
       case TransactionReason.lostInTransit:
         return "LOST_IN_TRANSIT";
+      case TransactionReason.gainedInStorage:
+        return "GAINED_IN_STORAGE";
+      case TransactionReason.gainedInTransit:
+        return "GAINED_IN_TRANSIT";
       case TransactionReason.damagedInStorage:
         return "DAMAGED_IN_STORAGE";
       case TransactionReason.damagedInTransit:
         return "DAMAGED_IN_TRANSIT";
-      case TransactionReason.gainedInStorage:
-        // TODO: Handle this case.
-      case TransactionReason.gainedInTransit:
-        // TODO: Handle this case.
     }
   }
 }

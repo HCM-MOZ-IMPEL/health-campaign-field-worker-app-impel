@@ -15,6 +15,5 @@ enum Status {
   @MappableValue("IN_COMPLETE") inComplete,
   @MappableValue("TO_ADMINISTER") toAdminister,
   @MappableValue("BENEFICIARY_INELIGIBLE") beneficiaryIneligible,
-
   ;
 }

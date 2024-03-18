@@ -17,10 +17,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
-  final String? receiverId;
-  final String? receiverType;
-  final String? senderId;
-  final String? senderType;
   final List<String>? clientReferenceId;
   final List<TransactionType>? transactionType;
   final List<TransactionReason>? transactionReason;
@@ -35,10 +31,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
-    this.receiverId,
-    this.receiverType,
-    this.senderId,
-    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -60,10 +52,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
-    this.receiverId,
-    this.receiverType,
-    this.senderId,
-    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -73,6 +61,9 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   ? null
       : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
    super(isDeleted: false);
+
+  int? get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
@@ -90,15 +81,11 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactingPartyType;
   final String? quantity;
   final String? waybillNumber;
-  final String? receiverId;
-  final String? receiverType;
-  final String? senderId;
-  final String? senderType;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
   final TransactionType? transactionType;
-  final TransactionReason? transactionReason;  
+  final TransactionReason? transactionReason;
   final DateTime? dateOfEntryTime;
   final StockAdditionalFields? additionalFields;
 
@@ -114,10 +101,6 @@ class StockModel extends EntityModel with StockModelMappable {
     this.transactingPartyType,
     this.quantity,
     this.waybillNumber,
-    this.receiverId,
-    this.receiverType,
-    this.senderId,
-    this.senderType,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.rowVersion,
@@ -132,6 +115,7 @@ class StockModel extends EntityModel with StockModelMappable {
       super();
 
   int?  get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
+  
 
   StockCompanion get companion {
     return StockCompanion(
