@@ -144,7 +144,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     List<ProjectStaffModel> projectStaffList;
     try {
       projectStaffList = await projectStaffRemoteRepository.search(
-        ProjectStaffSearchModel(staffId: [uuid.toString()]),
+        ProjectStaffSearchModel(staffId: uuid),
       );
     } on DioError catch (error) {
       if (error.response != null &&

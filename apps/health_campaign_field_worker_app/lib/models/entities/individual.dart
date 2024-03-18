@@ -9,7 +9,7 @@ part 'individual.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class IndividualSearchModel extends EntitySearchModel with IndividualSearchModelMappable {
-  final String? id;
+  final List<String>? id;
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;

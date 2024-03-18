@@ -98,7 +98,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
                 individualNumber: individualList
                     ?.where((i) => i.id == a.individualId)
                     .first
-                    .individualId,
+                    .id,
               ),
             )
             .toList();
