@@ -410,8 +410,6 @@ abstract class LocalRepository<D extends EntityModel,
 
   const LocalRepository(this.sql, this.opLogManager);
 
-  TableInfo get table;
-
   @override
   @mustCallSuper
   FutureOr<void> create(
@@ -449,7 +447,7 @@ abstract class LocalRepository<D extends EntityModel,
       entity,
       operation,
       createdAt: DateTime.now(),
-      createdBy: auditDetails.createdBy,
+      createdBy: entity.clientAuditDetails?.lastModifiedBy ?? '',
       type: type,
     );
 
