@@ -13,6 +13,7 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
   final String? code;
   final int? boundaryNum;
   final bool? isSingle;
+  final String? area;
 
   BoundarySearchModel({
     this.boundaryType,
@@ -20,6 +21,7 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
     this.code,
     this.boundaryNum,
     this.isSingle,
+    this.area,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -31,6 +33,7 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
     this.code,
     this.boundaryNum,
     this.isSingle,
+    this.area,
     super.boundaryCode,
     super.additionalFields,
     super.auditDetails,
@@ -48,6 +51,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
   final String? materializedPath;
   final String? tenantId;
   final int? rowVersion;
+  final String? area;
   final List<BoundaryModel> children;
 
   BoundaryModel({
@@ -61,6 +65,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     this.boundaryNum,
     this.rowVersion,
     this.children = const [],
+    this.area,
     super.auditDetails,
     super.isDeleted = false,
   }) : super();
@@ -81,6 +86,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      area: Value(area)
     );
   }
 

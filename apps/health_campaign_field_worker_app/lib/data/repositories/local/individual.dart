@@ -48,7 +48,7 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                   query.clientReferenceId!,
                 ),
               if (query.id != null)
-                sql.individual.id.isIn(
+                sql.individual.id.equals(
                   query.id!,
                 ),
               if (query.tenantId != null)
