@@ -428,16 +428,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       ),
 
-      // attendance
-      i18.attendance.viewAttendanceLabel: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.attendance.viewAttendanceLabel,
-        onPressed: () {
-          context.router.push(
-            const TrackAttendanceWrapperRoute(),
-          );
-        },
-      ),
     };
 
     final homeItemsLabel = <String>[
