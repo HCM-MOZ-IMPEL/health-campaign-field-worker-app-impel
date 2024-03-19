@@ -117,6 +117,8 @@ class Common {
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
+  String get loading => 'CORE_COMMON_LOADING';
 }
 
 class AdverseEvents {

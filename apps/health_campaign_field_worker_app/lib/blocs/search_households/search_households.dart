@@ -54,6 +54,7 @@ class SearchHouseholdsBloc
     on(_handleClear);
     on(_handleSearchByHousehold);
     on(_handleSearchByTag);
+    on(_handleLoad);
   }
 
   Future<void> _handleSearchByHousehold(
@@ -617,6 +618,8 @@ class SearchHouseholdsBloc
       tag: null,
       searchQuery: null,
       householdMembers: [],
+      offset: 0,
+      limit: 10,
     ));
   }
 

@@ -163,6 +163,10 @@ class _SearchBeneficiaryPageState
                                               } else {
                                                 if (isProximityEnabled &&
                                                     value.trim().length < 3) {
+                                                  bloc.add(
+                                                    const SearchHouseholdsLoadingEvent(),
+                                                  );
+
                                                   bloc.add(SearchHouseholdsEvent
                                                       .searchByProximity(
                                                     latitude:
@@ -177,6 +181,13 @@ class _SearchBeneficiaryPageState
                                                     offset: bloc.state.offset,
                                                   ));
                                                 } else {
+                                                  bloc.add(
+                                                    const SearchHouseholdsClearEvent(),
+                                                  );
+
+                                                  bloc.add(
+                                                    const SearchHouseholdsLoadingEvent(),
+                                                  );
                                                   bloc.add(
                                                     SearchHouseholdsSearchByHouseholdHeadEvent(
                                                       searchText: value.trim(),
@@ -231,6 +242,11 @@ class _SearchBeneficiaryPageState
                                                             isProximityEnabled) {
                                                           final bloc = context.read<
                                                               SearchHouseholdsBloc>();
+
+                                                          bloc.add(
+                                                            const SearchHouseholdsLoadingEvent(),
+                                                          );
+
                                                           bloc.add(
                                                             SearchHouseholdsEvent
                                                                 .searchByProximity(
@@ -287,9 +303,15 @@ class _SearchBeneficiaryPageState
                         ),
                       ),
                       if (searchState.loading)
-                        const SliverFillRemaining(
-                          child: Center(
-                            child: CircularProgressIndicator(),
+                        SliverFillRemaining(
+                          child: Container(
+                            height: 150,
+                            color: Colors.white,
+                            child: Center(
+                              child: Text(
+                                '${localizations.translate(i18.common.loading)}...',
+                              ),
+                            ),
                           ),
                         ),
                       BlocBuilder<LocationBloc, LocationState>(
