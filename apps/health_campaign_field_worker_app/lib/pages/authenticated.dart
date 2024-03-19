@@ -4,13 +4,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:health_campaign_field_worker_app/blocs/attendance/attendance_register.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
-import '../blocs/attendance/attendance_individual/individual_attendance_log.dart';
 
-import '../blocs/attendance/attendance_individual/mark_attendance.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
@@ -25,7 +22,6 @@ import '../data/repositories/local/address.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 
-import '../data/repositories/remote/repo_attendance_register.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -259,39 +255,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                     networkManager: ctx.read(),
                   ),
                 ),
-                BlocProvider(
-                  create: (ctx) {
-                    final isar = context.read<Isar>();
-
-                    return AttendanceProjectsSearchBloc(
-                      attendanceRegisterRepository:
-                          AttendanceRegisterRepository(
-                        DioClient().dio,
-                        isar,
-                      ),
-                    );
-                  },
-                ),
-                BlocProvider(create: (ctx) {
-                  final isar = context.read<Isar>();
-
-                  return AttendanceIndividualBloc(
-                    attendanceRegisterRepository: AttendanceRegisterRepository(
-                      DioClient().dio,
-                      isar,
-                    ),
-                  );
-                }),
-                BlocProvider(create: (ctx) {
-                  final isar = context.read<Isar>();
-
-                  return MarkAttendanceBloc(
-                    attendanceRegisterRepository: AttendanceRegisterRepository(
-                      DioClient().dio,
-                      isar,
-                    ),
-                  );
-                }),
               ],
               child: AutoRouter(
                 navigatorObservers: () => [

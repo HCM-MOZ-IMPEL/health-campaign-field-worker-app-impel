@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/absent_attendee.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -41,7 +40,6 @@ class NoSqlStore {
         AppConfigurationSchema,
         OpLogSchema,
         RowVersionListSchema,
-        AbsentAttendeeSchema,
       ],
       directory: directory.path,
       name: 'HCM',

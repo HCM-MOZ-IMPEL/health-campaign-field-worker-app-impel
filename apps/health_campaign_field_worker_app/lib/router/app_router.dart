@@ -8,11 +8,6 @@ import '../blocs/record_stock/record_stock.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
-import '../pages/attendance/track-attendance_inbox.dart';
-import '../pages/attendance/track_attendance_mark.dart';
-import '../pages/attendance/track_attendance_session_selection.dart';
-import '../pages/attendance/track_attendance_wrapper.dart';
-import '../pages/attendance/widget/attendance_acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
@@ -263,32 +258,6 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: ComplaintsDetailsPage,
               path: 'complaints-details',
-            ),
-          ],
-        ),
-
-        /// Attendance Module
-        // AutoRoute(page: TrackAttendanceInboxPage,path: ''),
-        AutoRoute(
-          page: TrackAttendanceWrapperPage,
-          path: 'beneficiary-attendance',
-          children: [
-            AutoRoute(
-              page: TrackAttendanceInboxPage,
-              path: "search-registar",
-              initial: true,
-            ),
-            AutoRoute(
-              page: AttendanceDateSessionSelectionPage,
-              path: 'attendance-date-selection',
-            ),
-            AutoRoute(
-              page: MarkAttendancePage,
-              path: "mark-attendance",
-            ),
-            AutoRoute(
-              page: AttendanceAcknowledgementPage,
-              path: "acknowledge-page",
             ),
           ],
         ),
