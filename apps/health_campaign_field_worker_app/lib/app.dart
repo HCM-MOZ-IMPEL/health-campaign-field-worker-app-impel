@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
@@ -18,6 +20,7 @@ import 'blocs/project/project.dart';
 import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
+import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -179,7 +182,10 @@ class MainApplicationState extends State<MainApplication>
                                     widget.isar,
                                   ),
                         ),
-                        BlocProvider(
+                        MultiRepositoryProvider(providers: [
+                          
+                        ] , 
+                        child:                    BlocProvider(
                           create: (ctx) => ProjectBloc(
                             mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
@@ -231,8 +237,28 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            individualRemoteRepository: ctx.read<
+                                RemoteRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            context: context,
                           ),
-                        ),
+                        ),)
+
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
@@ -310,6 +336,14 @@ class MainApplicationState extends State<MainApplication>
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
+                              attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  defaultLocale.toString(),
+                                ),
+                                appConfig.languages!,
+                              ),
                             ],
                             locale: languages != null
                                 ? Locale(

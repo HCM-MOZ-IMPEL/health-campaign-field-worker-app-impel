@@ -248,7 +248,7 @@ class Home {
 
   String get healthFacilitySupervisorCheckList =>
       'HF_SUPERVISOR_CHECK_LIST_LABEL';
-  String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+  String get manageAttendanceLabel => 'HOME_VIEW_ATTENDANCE_LABEL';
 
 }
 
