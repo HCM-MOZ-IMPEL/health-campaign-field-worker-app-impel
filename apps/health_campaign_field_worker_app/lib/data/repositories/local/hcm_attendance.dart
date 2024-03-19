@@ -211,4 +211,8 @@ class AttendanceLocalRepository extends LocalRepository<
 
   @override
   DataModelType get type => DataModelType.attendanceRegister;
+  
+  @override
+  // TODO: implement table
+  TableInfo<Table, dynamic> get table => throw UnimplementedError();
 }

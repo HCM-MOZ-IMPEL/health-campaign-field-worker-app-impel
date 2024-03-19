@@ -410,6 +410,8 @@ abstract class LocalRepository<D extends EntityModel,
 
   const LocalRepository(this.sql, this.opLogManager);
 
+  TableInfo get table;
+
   @override
   @mustCallSuper
   FutureOr<void> create(
