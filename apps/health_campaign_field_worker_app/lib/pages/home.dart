@@ -426,8 +426,39 @@ class _HomePageState extends LocalizedState<HomePage> {
             ),
           );
         },
-      ),
-
+      ),      
+      i18.home.manageAttendanceLabel:HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageAttendancePage(
+                  attendanceListeners: HCMAttendanceBloc(
+                    userId: context.loggedInUserUuid,
+                    projectId: context.projectId,
+                    attendanceLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceRegisterModel,
+                            HCMAttendanceSearchModel>>(),
+                    individualLocalRepository: context.read<
+                        LocalRepository<IndividualModel,
+                            IndividualSearchModel>>(),
+                    attendanceLogLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceLogModel,
+                            HCMAttendanceLogSearchModel>>(),
+                    context: context,
+                    individualId: context.loggedInIndividualId,
+                  ),
+                  projectId: context.projectId,
+                  userId: context.loggedInUserUuid,
+                  appVersion: Constants().version,
+                ),
+                settings: const RouteSettings(name: '/manage-attendance'),
+              ),
+            );
+          },
+        ),
     };
 
     final homeItemsLabel = <String>[
@@ -440,9 +471,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      'DB',
       // attendance
-      i18.attendance.viewAttendanceLabel,
+      i18.home.manageAttendanceLabel,
+      'DB',
     ];
 
     final List<String> filteredLabels = homeItemsLabel

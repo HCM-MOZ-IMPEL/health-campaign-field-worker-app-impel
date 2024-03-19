@@ -28,11 +28,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final MdmsRepository mdmsRepository;
   final LocalRepository<BoundaryModel, BoundarySearchModel>
       boundaryLocalRepository;
+  final RemoteRepository<IndividualModel, IndividualSearchModel>
+      individualRemoteRepository;
 
   AuthBloc({
     required this.authRepository,
     required this.boundaryLocalRepository,
     required this.mdmsRepository,
+    required this.individualRemoteRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
         super(const AuthUnauthenticatedState()) {
@@ -54,6 +57,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final refreshToken = await localSecureStore.refreshToken;
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
+      final userIndividualId = await localSecureStore.userIndividualId;
+
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
@@ -64,6 +69,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           accessToken: accessToken,
           refreshToken: refreshToken,
           userModel: userObject,
+          individualId: userIndividualId,
           actionsWrapper: actionsList,
         ));
       }
@@ -189,6 +195,7 @@ class AuthState with _$AuthState {
     required String refreshToken,
     required UserRequestModel userModel,
     required RoleActionsWrapperModel actionsWrapper,
+    String? individualId,
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;
