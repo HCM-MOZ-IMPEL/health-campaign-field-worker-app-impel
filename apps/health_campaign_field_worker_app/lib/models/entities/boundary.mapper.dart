@@ -36,6 +36,9 @@ class BoundarySearchModelMapper
   static bool? _$isSingle(BoundarySearchModel v) => v.isSingle;
   static const Field<BoundarySearchModel, bool> _f$isSingle =
       Field('isSingle', _$isSingle, opt: true);
+  static String? _$area(BoundarySearchModel v) => v.area;
+  static const Field<BoundarySearchModel, String> _f$area =
+      Field('area', _$area, opt: true);
   static String? _$boundaryCode(BoundarySearchModel v) => v.boundaryCode;
   static const Field<BoundarySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -55,6 +58,7 @@ class BoundarySearchModelMapper
     #code: _f$code,
     #boundaryNum: _f$boundaryNum,
     #isSingle: _f$isSingle,
+    #area: _f$area,
     #boundaryCode: _f$boundaryCode,
     #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
@@ -77,6 +81,7 @@ class BoundarySearchModelMapper
         code: data.dec(_f$code),
         boundaryNum: data.dec(_f$boundaryNum),
         isSingle: data.dec(_f$isSingle),
+        area: data.dec(_f$area),
         boundaryCode: data.dec(_f$boundaryCode),
         additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails));
@@ -151,6 +156,7 @@ abstract class BoundarySearchModelCopyWith<$R, $In extends BoundarySearchModel,
       String? code,
       int? boundaryNum,
       bool? isSingle,
+      String? area,
       String? boundaryCode,
       AdditionalFields? additionalFields,
       AuditDetails? auditDetails});
@@ -180,6 +186,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
           Object? code = $none,
           Object? boundaryNum = $none,
           Object? isSingle = $none,
+          Object? area = $none,
           Object? boundaryCode = $none,
           Object? additionalFields = $none,
           Object? auditDetails = $none}) =>
@@ -189,6 +196,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
         if (code != $none) #code: code,
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
         if (isSingle != $none) #isSingle: isSingle,
+        if (area != $none) #area: area,
         if (boundaryCode != $none) #boundaryCode: boundaryCode,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails
@@ -202,6 +210,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
           code: data.get(#code, or: $value.code),
           boundaryNum: data.get(#boundaryNum, or: $value.boundaryNum),
           isSingle: data.get(#isSingle, or: $value.isSingle),
+          area: data.get(#area, or: $value.area),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
           additionalFields:
               data.get(#additionalFields, or: $value.additionalFields),
@@ -258,6 +267,9 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
   static List<BoundaryModel> _$children(BoundaryModel v) => v.children;
   static const Field<BoundaryModel, List<BoundaryModel>> _f$children =
       Field('children', _$children, opt: true, def: const []);
+  static String? _$area(BoundaryModel v) => v.area;
+  static const Field<BoundaryModel, String> _f$area =
+      Field('area', _$area, opt: true);
   static AuditDetails? _$auditDetails(BoundaryModel v) => v.auditDetails;
   static const Field<BoundaryModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -281,6 +293,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
     #boundaryNum: _f$boundaryNum,
     #rowVersion: _f$rowVersion,
     #children: _f$children,
+    #area: _f$area,
     #auditDetails: _f$auditDetails,
     #isDeleted: _f$isDeleted,
     #clientAuditDetails: _f$clientAuditDetails,
@@ -300,6 +313,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
         boundaryNum: data.dec(_f$boundaryNum),
         rowVersion: data.dec(_f$rowVersion),
         children: data.dec(_f$children),
+        area: data.dec(_f$area),
         auditDetails: data.dec(_f$auditDetails),
         isDeleted: data.dec(_f$isDeleted));
   }
@@ -375,6 +389,7 @@ abstract class BoundaryModelCopyWith<$R, $In extends BoundaryModel, $Out>
       int? boundaryNum,
       int? rowVersion,
       List<BoundaryModel>? children,
+      String? area,
       AuditDetails? auditDetails,
       bool? isDeleted});
   BoundaryModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -408,6 +423,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
           Object? boundaryNum = $none,
           Object? rowVersion = $none,
           List<BoundaryModel>? children,
+          Object? area = $none,
           Object? auditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
@@ -421,6 +437,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (children != null) #children: children,
+        if (area != $none) #area: area,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
@@ -437,6 +454,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
       boundaryNum: data.get(#boundaryNum, or: $value.boundaryNum),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       children: data.get(#children, or: $value.children),
+      area: data.get(#area, or: $value.area),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 

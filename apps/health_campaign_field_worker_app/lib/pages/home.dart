@@ -544,6 +544,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       StockReconciliationSearchModel>>(),
               context.read<
                   RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<HCMAttendanceLogModel,
+                      HCMAttendanceLogSearchModel>>(),
             ],
           ),
         );

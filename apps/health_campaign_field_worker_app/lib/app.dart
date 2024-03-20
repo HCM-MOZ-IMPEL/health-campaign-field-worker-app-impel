@@ -182,10 +182,7 @@ class MainApplicationState extends State<MainApplication>
                                     widget.isar,
                                   ),
                         ),
-                        MultiRepositoryProvider(providers: [
-                          
-                        ] , 
-                        child:                    BlocProvider(
+                        BlocProvider(
                           create: (ctx) => ProjectBloc(
                             mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
@@ -257,8 +254,7 @@ class MainApplicationState extends State<MainApplication>
                                     HCMAttendanceLogSearchModel>>(),
                             context: context,
                           ),
-                        ),)
-
+                        ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
