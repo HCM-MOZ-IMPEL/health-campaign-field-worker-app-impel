@@ -80,7 +80,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
                             DateTime.now().millisecondsSinceEpoch) >=
                         DateTime.now().millisecondsSinceEpoch))
                 .map((a) => a.individualId!)
-                .toList().first,
+                .toList(),
           ),
         );
         final attendeeList = e.attendanceRegister.attendees
@@ -98,7 +98,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
                 individualNumber: individualList
                     ?.where((i) => i.id == a.individualId)
                     .first
-                    .id,
+                    .individualId,
               ),
             )
             .toList();
