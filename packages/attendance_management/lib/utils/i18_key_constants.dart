@@ -121,6 +121,8 @@ class Attendance {
 
   String get campaignNameLabel => 'CAMPAIGN_NAME_LABEL';
 
+  String get registerNameLabel => "REGISTER_NAME_LABEL";
+
   String get eventTypeLabel => 'EVENT_TYPE_LABEL';
 
   String get staffCountLabel => 'STAFF_COUNT_LABEL';
@@ -213,6 +215,9 @@ class Attendance {
   String get missedAttendanceHeader => "MISSED_ATTENDANCE_HEADER";
 
   String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
+
+  String get boundaryNameLabel => "BOUNDARY_NAME_LABEL";
+  String get description => "DESCRIPTION_TEXT";
 
   String get halfDay => 'HALF_DAY';
   String get present => 'PRESENT';
