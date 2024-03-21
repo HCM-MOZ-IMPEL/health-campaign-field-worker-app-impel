@@ -29,6 +29,12 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
   static double? _$longitude(AddressSearchModel v) => v.longitude;
   static const Field<AddressSearchModel, double> _f$longitude =
       Field('longitude', _$longitude, opt: true);
+  static int? _$limit(AddressSearchModel v) => v.limit;
+  static const Field<AddressSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
+  static int? _$offset(AddressSearchModel v) => v.offset;
+  static const Field<AddressSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
   static double? _$maxRadius(AddressSearchModel v) => v.maxRadius;
   static const Field<AddressSearchModel, double> _f$maxRadius =
       Field('maxRadius', _$maxRadius, opt: true);
@@ -51,6 +57,8 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
     #id: _f$id,
     #latitude: _f$latitude,
     #longitude: _f$longitude,
+    #limit: _f$limit,
+    #offset: _f$offset,
     #maxRadius: _f$maxRadius,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
@@ -73,6 +81,8 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
         id: data.dec(_f$id),
         latitude: data.dec(_f$latitude),
         longitude: data.dec(_f$longitude),
+        limit: data.dec(_f$limit),
+        offset: data.dec(_f$offset),
         maxRadius: data.dec(_f$maxRadius),
         tenantId: data.dec(_f$tenantId),
         boundaryCode: data.dec(_f$boundaryCode));
@@ -140,6 +150,8 @@ abstract class AddressSearchModelCopyWith<$R, $In extends AddressSearchModel,
       {String? id,
       double? latitude,
       double? longitude,
+      int? limit,
+      int? offset,
       double? maxRadius,
       String? tenantId,
       String? boundaryCode});
@@ -160,6 +172,8 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
           {Object? id = $none,
           Object? latitude = $none,
           Object? longitude = $none,
+          Object? limit = $none,
+          Object? offset = $none,
           Object? maxRadius = $none,
           Object? tenantId = $none,
           Object? boundaryCode = $none}) =>
@@ -167,6 +181,8 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
         if (id != $none) #id: id,
         if (latitude != $none) #latitude: latitude,
         if (longitude != $none) #longitude: longitude,
+        if (limit != $none) #limit: limit,
+        if (offset != $none) #offset: offset,
         if (maxRadius != $none) #maxRadius: maxRadius,
         if (tenantId != $none) #tenantId: tenantId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
@@ -177,6 +193,8 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
           id: data.get(#id, or: $value.id),
           latitude: data.get(#latitude, or: $value.latitude),
           longitude: data.get(#longitude, or: $value.longitude),
+          limit: data.get(#limit, or: $value.limit),
+          offset: data.get(#offset, or: $value.offset),
           maxRadius: data.get(#maxRadius, or: $value.maxRadius),
           tenantId: data.get(#tenantId, or: $value.tenantId),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));

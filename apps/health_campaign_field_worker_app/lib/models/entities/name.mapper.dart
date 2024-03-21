@@ -32,6 +32,12 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   static String? _$otherNames(NameSearchModel v) => v.otherNames;
   static const Field<NameSearchModel, String> _f$otherNames =
       Field('otherNames', _$otherNames, opt: true);
+  static int? _$limit(NameSearchModel v) => v.limit;
+  static const Field<NameSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
+  static int? _$offset(NameSearchModel v) => v.offset;
+  static const Field<NameSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
   static String? _$tenantId(NameSearchModel v) => v.tenantId;
   static const Field<NameSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
@@ -52,6 +58,8 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
     #givenName: _f$givenName,
     #familyName: _f$familyName,
     #otherNames: _f$otherNames,
+    #limit: _f$limit,
+    #offset: _f$offset,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
@@ -74,6 +82,8 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
         givenName: data.dec(_f$givenName),
         familyName: data.dec(_f$familyName),
         otherNames: data.dec(_f$otherNames),
+        limit: data.dec(_f$limit),
+        offset: data.dec(_f$offset),
         tenantId: data.dec(_f$tenantId),
         boundaryCode: data.dec(_f$boundaryCode));
   }
@@ -139,6 +149,8 @@ abstract class NameSearchModelCopyWith<$R, $In extends NameSearchModel, $Out>
       String? givenName,
       String? familyName,
       String? otherNames,
+      int? limit,
+      int? offset,
       String? tenantId,
       String? boundaryCode});
   NameSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -159,6 +171,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
           Object? givenName = $none,
           Object? familyName = $none,
           Object? otherNames = $none,
+          Object? limit = $none,
+          Object? offset = $none,
           Object? tenantId = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
@@ -166,6 +180,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
         if (givenName != $none) #givenName: givenName,
         if (familyName != $none) #familyName: familyName,
         if (otherNames != $none) #otherNames: otherNames,
+        if (limit != $none) #limit: limit,
+        if (offset != $none) #offset: offset,
         if (tenantId != $none) #tenantId: tenantId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
@@ -175,6 +191,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
       givenName: data.get(#givenName, or: $value.givenName),
       familyName: data.get(#familyName, or: $value.familyName),
       otherNames: data.get(#otherNames, or: $value.otherNames),
+      limit: data.get(#limit, or: $value.limit),
+      offset: data.get(#offset, or: $value.offset),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
