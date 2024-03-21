@@ -34,6 +34,20 @@
       "name": "otherNames",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "isEnum": false

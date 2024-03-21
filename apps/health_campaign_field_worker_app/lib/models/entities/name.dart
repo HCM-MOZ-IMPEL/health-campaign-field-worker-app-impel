@@ -13,6 +13,8 @@ class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
+  final int? limit;
+  final int? offset;
   final String? tenantId;
   
   NameSearchModel({
@@ -20,6 +22,8 @@ class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
     this.givenName,
     this.familyName,
     this.otherNames,
+    this.limit,
+    this.offset,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
@@ -31,6 +35,8 @@ class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
     this.givenName,
     this.familyName,
     this.otherNames,
+    this.limit,
+    this.offset,
     this.tenantId,
     super.boundaryCode,
   }):  super(isDeleted: false);

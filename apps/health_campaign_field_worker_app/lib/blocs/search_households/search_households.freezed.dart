@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'search_households.dart';
 
@@ -12,7 +12,7 @@ part of 'search_households.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$SearchHouseholdsEvent {
@@ -33,13 +33,16 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -59,13 +62,16 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -85,13 +91,16 @@ mixin _$SearchHouseholdsEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -107,6 +116,7 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -120,6 +130,7 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -132,6 +143,7 @@ mixin _$SearchHouseholdsEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -157,29 +169,29 @@ class _$SearchHouseholdsEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsInitializedEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsInitializedEventImplCopyWith(
-          _$SearchHouseholdsInitializedEventImpl value,
-          $Res Function(_$SearchHouseholdsInitializedEventImpl) then) =
-      __$$SearchHouseholdsInitializedEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsInitializedEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsInitializedEventCopyWith(
+          _$SearchHouseholdsInitializedEvent value,
+          $Res Function(_$SearchHouseholdsInitializedEvent) then) =
+      __$$SearchHouseholdsInitializedEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SearchHouseholdsInitializedEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsInitializedEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsInitializedEventImpl>
-    implements _$$SearchHouseholdsInitializedEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsInitializedEventImplCopyWithImpl(
-      _$SearchHouseholdsInitializedEventImpl _value,
-      $Res Function(_$SearchHouseholdsInitializedEventImpl) _then)
+        _$SearchHouseholdsInitializedEvent>
+    implements _$$SearchHouseholdsInitializedEventCopyWith<$Res> {
+  __$$SearchHouseholdsInitializedEventCopyWithImpl(
+      _$SearchHouseholdsInitializedEvent _value,
+      $Res Function(_$SearchHouseholdsInitializedEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SearchHouseholdsInitializedEventImpl
+class _$SearchHouseholdsInitializedEvent
     implements SearchHouseholdsInitializedEvent {
-  const _$SearchHouseholdsInitializedEventImpl();
+  const _$SearchHouseholdsInitializedEvent();
 
   @override
   String toString() {
@@ -187,10 +199,10 @@ class _$SearchHouseholdsInitializedEventImpl
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsInitializedEventImpl);
+            other is _$SearchHouseholdsInitializedEvent);
   }
 
   @override
@@ -214,13 +226,16 @@ class _$SearchHouseholdsInitializedEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return initialize();
   }
@@ -243,13 +258,16 @@ class _$SearchHouseholdsInitializedEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return initialize?.call();
   }
@@ -272,13 +290,16 @@ class _$SearchHouseholdsInitializedEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -300,6 +321,7 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return initialize(this);
   }
@@ -316,6 +338,7 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return initialize?.call(this);
   }
@@ -331,6 +354,7 @@ class _$SearchHouseholdsInitializedEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -343,15 +367,15 @@ class _$SearchHouseholdsInitializedEventImpl
 abstract class SearchHouseholdsInitializedEvent
     implements SearchHouseholdsEvent {
   const factory SearchHouseholdsInitializedEvent() =
-      _$SearchHouseholdsInitializedEventImpl;
+      _$SearchHouseholdsInitializedEvent;
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsByHouseholdsEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsByHouseholdsEventImplCopyWith(
-          _$SearchHouseholdsByHouseholdsEventImpl value,
-          $Res Function(_$SearchHouseholdsByHouseholdsEventImpl) then) =
-      __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsByHouseholdsEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsByHouseholdsEventCopyWith(
+          _$SearchHouseholdsByHouseholdsEvent value,
+          $Res Function(_$SearchHouseholdsByHouseholdsEvent) then) =
+      __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -363,13 +387,13 @@ abstract class _$$SearchHouseholdsByHouseholdsEventImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsByHouseholdsEventImpl>
-    implements _$$SearchHouseholdsByHouseholdsEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl(
-      _$SearchHouseholdsByHouseholdsEventImpl _value,
-      $Res Function(_$SearchHouseholdsByHouseholdsEventImpl) _then)
+        _$SearchHouseholdsByHouseholdsEvent>
+    implements _$$SearchHouseholdsByHouseholdsEventCopyWith<$Res> {
+  __$$SearchHouseholdsByHouseholdsEventCopyWithImpl(
+      _$SearchHouseholdsByHouseholdsEvent _value,
+      $Res Function(_$SearchHouseholdsByHouseholdsEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -382,7 +406,7 @@ class __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl<$Res>
     Object? isProximityEnabled = null,
     Object? householdModel = null,
   }) {
-    return _then(_$SearchHouseholdsByHouseholdsEventImpl(
+    return _then(_$SearchHouseholdsByHouseholdsEvent(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -413,9 +437,9 @@ class __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchHouseholdsByHouseholdsEventImpl
+class _$SearchHouseholdsByHouseholdsEvent
     implements SearchHouseholdsByHouseholdsEvent {
-  const _$SearchHouseholdsByHouseholdsEventImpl(
+  const _$SearchHouseholdsByHouseholdsEvent(
       {required this.projectId,
       this.latitude,
       this.longitude,
@@ -442,10 +466,10 @@ class _$SearchHouseholdsByHouseholdsEventImpl
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsByHouseholdsEventImpl &&
+            other is _$SearchHouseholdsByHouseholdsEvent &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.latitude, latitude) ||
@@ -467,10 +491,10 @@ class _$SearchHouseholdsByHouseholdsEventImpl
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchHouseholdsByHouseholdsEventImplCopyWith<
-          _$SearchHouseholdsByHouseholdsEventImpl>
-      get copyWith => __$$SearchHouseholdsByHouseholdsEventImplCopyWithImpl<
-          _$SearchHouseholdsByHouseholdsEventImpl>(this, _$identity);
+  _$$SearchHouseholdsByHouseholdsEventCopyWith<
+          _$SearchHouseholdsByHouseholdsEvent>
+      get copyWith => __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<
+          _$SearchHouseholdsByHouseholdsEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -490,13 +514,16 @@ class _$SearchHouseholdsByHouseholdsEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByHousehold(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -520,13 +547,16 @@ class _$SearchHouseholdsByHouseholdsEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByHousehold?.call(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -550,13 +580,16 @@ class _$SearchHouseholdsByHouseholdsEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -579,6 +612,7 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByHousehold(this);
   }
@@ -595,6 +629,7 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByHousehold?.call(this);
   }
@@ -610,6 +645,7 @@ class _$SearchHouseholdsByHouseholdsEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -628,7 +664,7 @@ abstract class SearchHouseholdsByHouseholdsEvent
           final double? maxRadius,
           required final bool isProximityEnabled,
           required final HouseholdModel householdModel}) =
-      _$SearchHouseholdsByHouseholdsEventImpl;
+      _$SearchHouseholdsByHouseholdsEvent;
 
   String get projectId;
   double? get latitude;
@@ -637,18 +673,17 @@ abstract class SearchHouseholdsByHouseholdsEvent
   bool get isProximityEnabled;
   HouseholdModel get householdModel;
   @JsonKey(ignore: true)
-  _$$SearchHouseholdsByHouseholdsEventImplCopyWith<
-          _$SearchHouseholdsByHouseholdsEventImpl>
+  _$$SearchHouseholdsByHouseholdsEventCopyWith<
+          _$SearchHouseholdsByHouseholdsEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith(
-          _$SearchHouseholdsSearchByHouseholdHeadEventImpl value,
-          $Res Function(_$SearchHouseholdsSearchByHouseholdHeadEventImpl)
-              then) =
-      __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith(
+          _$SearchHouseholdsSearchByHouseholdHeadEvent value,
+          $Res Function(_$SearchHouseholdsSearchByHouseholdHeadEvent) then) =
+      __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String searchText,
@@ -656,17 +691,19 @@ abstract class _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith<$Res> {
       bool isProximityEnabled,
       double? latitude,
       double? longitude,
-      double? maxRadius});
+      double? maxRadius,
+      int offset,
+      int limit});
 }
 
 /// @nodoc
-class __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsSearchByHouseholdHeadEventImpl>
-    implements _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl(
-      _$SearchHouseholdsSearchByHouseholdHeadEventImpl _value,
-      $Res Function(_$SearchHouseholdsSearchByHouseholdHeadEventImpl) _then)
+        _$SearchHouseholdsSearchByHouseholdHeadEvent>
+    implements _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<$Res> {
+  __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl(
+      _$SearchHouseholdsSearchByHouseholdHeadEvent _value,
+      $Res Function(_$SearchHouseholdsSearchByHouseholdHeadEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -678,8 +715,10 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? maxRadius = freezed,
+    Object? offset = null,
+    Object? limit = null,
   }) {
-    return _then(_$SearchHouseholdsSearchByHouseholdHeadEventImpl(
+    return _then(_$SearchHouseholdsSearchByHouseholdHeadEvent(
       searchText: null == searchText
           ? _value.searchText
           : searchText // ignore: cast_nullable_to_non_nullable
@@ -704,21 +743,31 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
 
-class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
+class _$SearchHouseholdsSearchByHouseholdHeadEvent
     implements SearchHouseholdsSearchByHouseholdHeadEvent {
-  const _$SearchHouseholdsSearchByHouseholdHeadEventImpl(
+  const _$SearchHouseholdsSearchByHouseholdHeadEvent(
       {required this.searchText,
       required this.projectId,
       required this.isProximityEnabled,
       this.latitude,
       this.longitude,
-      this.maxRadius});
+      this.maxRadius,
+      required this.offset,
+      required this.limit});
 
   @override
   final String searchText;
@@ -732,17 +781,21 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
   final double? longitude;
   @override
   final double? maxRadius;
+  @override
+  final int offset;
+  @override
+  final int limit;
 
   @override
   String toString() {
-    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId, isProximityEnabled: $isProximityEnabled, latitude: $latitude, longitude: $longitude, maxRadius: $maxRadius)';
+    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId, isProximityEnabled: $isProximityEnabled, latitude: $latitude, longitude: $longitude, maxRadius: $maxRadius, offset: $offset, limit: $limit)';
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsSearchByHouseholdHeadEventImpl &&
+            other is _$SearchHouseholdsSearchByHouseholdHeadEvent &&
             (identical(other.searchText, searchText) ||
                 other.searchText == searchText) &&
             (identical(other.projectId, projectId) ||
@@ -754,22 +807,23 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, searchText, projectId,
-      isProximityEnabled, latitude, longitude, maxRadius);
+      isProximityEnabled, latitude, longitude, maxRadius, offset, limit);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith<
-          _$SearchHouseholdsSearchByHouseholdHeadEventImpl>
+  _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<
+          _$SearchHouseholdsSearchByHouseholdHeadEvent>
       get copyWith =>
-          __$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWithImpl<
-                  _$SearchHouseholdsSearchByHouseholdHeadEventImpl>(
-              this, _$identity);
+          __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<
+              _$SearchHouseholdsSearchByHouseholdHeadEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -789,16 +843,19 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
-        latitude, longitude, maxRadius);
+        latitude, longitude, maxRadius, offset, limit);
   }
 
   @override
@@ -819,16 +876,19 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByHouseholdHead?.call(searchText, projectId,
-        isProximityEnabled, latitude, longitude, maxRadius);
+        isProximityEnabled, latitude, longitude, maxRadius, offset, limit);
   }
 
   @override
@@ -849,18 +909,21 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
       return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
-          latitude, longitude, maxRadius);
+          latitude, longitude, maxRadius, offset, limit);
     }
     return orElse();
   }
@@ -878,6 +941,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByHouseholdHead(this);
   }
@@ -894,6 +958,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByHouseholdHead?.call(this);
   }
@@ -909,6 +974,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -921,13 +987,14 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
 abstract class SearchHouseholdsSearchByHouseholdHeadEvent
     implements SearchHouseholdsEvent {
   const factory SearchHouseholdsSearchByHouseholdHeadEvent(
-          {required final String searchText,
-          required final String projectId,
-          required final bool isProximityEnabled,
-          final double? latitude,
-          final double? longitude,
-          final double? maxRadius}) =
-      _$SearchHouseholdsSearchByHouseholdHeadEventImpl;
+      {required final String searchText,
+      required final String projectId,
+      required final bool isProximityEnabled,
+      final double? latitude,
+      final double? longitude,
+      final double? maxRadius,
+      required final int offset,
+      required final int limit}) = _$SearchHouseholdsSearchByHouseholdHeadEvent;
 
   String get searchText;
   String get projectId;
@@ -935,34 +1002,38 @@ abstract class SearchHouseholdsSearchByHouseholdHeadEvent
   double? get latitude;
   double? get longitude;
   double? get maxRadius;
+  int get offset;
+  int get limit;
   @JsonKey(ignore: true)
-  _$$SearchHouseholdsSearchByHouseholdHeadEventImplCopyWith<
-          _$SearchHouseholdsSearchByHouseholdHeadEventImpl>
+  _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<
+          _$SearchHouseholdsSearchByHouseholdHeadEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsByProximityEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsByProximityEventImplCopyWith(
-          _$SearchHouseholdsByProximityEventImpl value,
-          $Res Function(_$SearchHouseholdsByProximityEventImpl) then) =
-      __$$SearchHouseholdsByProximityEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsByProximityEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsByProximityEventCopyWith(
+          _$SearchHouseholdsByProximityEvent value,
+          $Res Function(_$SearchHouseholdsByProximityEvent) then) =
+      __$$SearchHouseholdsByProximityEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {double latitude,
       double longititude,
       String projectId,
-      double maxRadius});
+      double maxRadius,
+      int offset,
+      int limit});
 }
 
 /// @nodoc
-class __$$SearchHouseholdsByProximityEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsByProximityEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsByProximityEventImpl>
-    implements _$$SearchHouseholdsByProximityEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsByProximityEventImplCopyWithImpl(
-      _$SearchHouseholdsByProximityEventImpl _value,
-      $Res Function(_$SearchHouseholdsByProximityEventImpl) _then)
+        _$SearchHouseholdsByProximityEvent>
+    implements _$$SearchHouseholdsByProximityEventCopyWith<$Res> {
+  __$$SearchHouseholdsByProximityEventCopyWithImpl(
+      _$SearchHouseholdsByProximityEvent _value,
+      $Res Function(_$SearchHouseholdsByProximityEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -972,8 +1043,10 @@ class __$$SearchHouseholdsByProximityEventImplCopyWithImpl<$Res>
     Object? longititude = null,
     Object? projectId = null,
     Object? maxRadius = null,
+    Object? offset = null,
+    Object? limit = null,
   }) {
-    return _then(_$SearchHouseholdsByProximityEventImpl(
+    return _then(_$SearchHouseholdsByProximityEvent(
       latitude: null == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -990,19 +1063,29 @@ class __$$SearchHouseholdsByProximityEventImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
 
-class _$SearchHouseholdsByProximityEventImpl
+class _$SearchHouseholdsByProximityEvent
     implements SearchHouseholdsByProximityEvent {
-  const _$SearchHouseholdsByProximityEventImpl(
+  const _$SearchHouseholdsByProximityEvent(
       {required this.latitude,
       required this.longititude,
       required this.projectId,
-      required this.maxRadius});
+      required this.maxRadius,
+      required this.offset,
+      required this.limit});
 
   @override
   final double latitude;
@@ -1012,17 +1095,21 @@ class _$SearchHouseholdsByProximityEventImpl
   final String projectId;
   @override
   final double maxRadius;
+  @override
+  final int offset;
+  @override
+  final int limit;
 
   @override
   String toString() {
-    return 'SearchHouseholdsEvent.searchByProximity(latitude: $latitude, longititude: $longititude, projectId: $projectId, maxRadius: $maxRadius)';
+    return 'SearchHouseholdsEvent.searchByProximity(latitude: $latitude, longititude: $longititude, projectId: $projectId, maxRadius: $maxRadius, offset: $offset, limit: $limit)';
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsByProximityEventImpl &&
+            other is _$SearchHouseholdsByProximityEvent &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longititude, longititude) ||
@@ -1030,20 +1117,22 @@ class _$SearchHouseholdsByProximityEventImpl
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius));
+                other.maxRadius == maxRadius) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, latitude, longititude, projectId, maxRadius);
+  int get hashCode => Object.hash(
+      runtimeType, latitude, longititude, projectId, maxRadius, offset, limit);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchHouseholdsByProximityEventImplCopyWith<
-          _$SearchHouseholdsByProximityEventImpl>
-      get copyWith => __$$SearchHouseholdsByProximityEventImplCopyWithImpl<
-          _$SearchHouseholdsByProximityEventImpl>(this, _$identity);
+  _$$SearchHouseholdsByProximityEventCopyWith<
+          _$SearchHouseholdsByProximityEvent>
+      get copyWith => __$$SearchHouseholdsByProximityEventCopyWithImpl<
+          _$SearchHouseholdsByProximityEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1063,15 +1152,19 @@ class _$SearchHouseholdsByProximityEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
-    return searchByProximity(latitude, longititude, projectId, maxRadius);
+    return searchByProximity(
+        latitude, longititude, projectId, maxRadius, offset, limit);
   }
 
   @override
@@ -1092,15 +1185,19 @@ class _$SearchHouseholdsByProximityEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
-    return searchByProximity?.call(latitude, longititude, projectId, maxRadius);
+    return searchByProximity?.call(
+        latitude, longititude, projectId, maxRadius, offset, limit);
   }
 
   @override
@@ -1121,17 +1218,21 @@ class _$SearchHouseholdsByProximityEventImpl
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
-      return searchByProximity(latitude, longititude, projectId, maxRadius);
+      return searchByProximity(
+          latitude, longititude, projectId, maxRadius, offset, limit);
     }
     return orElse();
   }
@@ -1149,6 +1250,7 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByProximity(this);
   }
@@ -1165,6 +1267,7 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByProximity?.call(this);
   }
@@ -1180,6 +1283,7 @@ class _$SearchHouseholdsByProximityEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1192,40 +1296,43 @@ class _$SearchHouseholdsByProximityEventImpl
 abstract class SearchHouseholdsByProximityEvent
     implements SearchHouseholdsEvent {
   const factory SearchHouseholdsByProximityEvent(
-          {required final double latitude,
-          required final double longititude,
-          required final String projectId,
-          required final double maxRadius}) =
-      _$SearchHouseholdsByProximityEventImpl;
+      {required final double latitude,
+      required final double longititude,
+      required final String projectId,
+      required final double maxRadius,
+      required final int offset,
+      required final int limit}) = _$SearchHouseholdsByProximityEvent;
 
   double get latitude;
   double get longititude;
   String get projectId;
   double get maxRadius;
+  int get offset;
+  int get limit;
   @JsonKey(ignore: true)
-  _$$SearchHouseholdsByProximityEventImplCopyWith<
-          _$SearchHouseholdsByProximityEventImpl>
+  _$$SearchHouseholdsByProximityEventCopyWith<
+          _$SearchHouseholdsByProximityEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsByTagEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsByTagEventImplCopyWith(
-          _$SearchHouseholdsByTagEventImpl value,
-          $Res Function(_$SearchHouseholdsByTagEventImpl) then) =
-      __$$SearchHouseholdsByTagEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsByTagEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsByTagEventCopyWith(
+          _$SearchHouseholdsByTagEvent value,
+          $Res Function(_$SearchHouseholdsByTagEvent) then) =
+      __$$SearchHouseholdsByTagEventCopyWithImpl<$Res>;
   @useResult
   $Res call({String tag, String projectId});
 }
 
 /// @nodoc
-class __$$SearchHouseholdsByTagEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsByTagEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsByTagEventImpl>
-    implements _$$SearchHouseholdsByTagEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsByTagEventImplCopyWithImpl(
-      _$SearchHouseholdsByTagEventImpl _value,
-      $Res Function(_$SearchHouseholdsByTagEventImpl) _then)
+        _$SearchHouseholdsByTagEvent>
+    implements _$$SearchHouseholdsByTagEventCopyWith<$Res> {
+  __$$SearchHouseholdsByTagEventCopyWithImpl(
+      _$SearchHouseholdsByTagEvent _value,
+      $Res Function(_$SearchHouseholdsByTagEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1234,7 +1341,7 @@ class __$$SearchHouseholdsByTagEventImplCopyWithImpl<$Res>
     Object? tag = null,
     Object? projectId = null,
   }) {
-    return _then(_$SearchHouseholdsByTagEventImpl(
+    return _then(_$SearchHouseholdsByTagEvent(
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -1249,8 +1356,8 @@ class __$$SearchHouseholdsByTagEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
-  const _$SearchHouseholdsByTagEventImpl(
+class _$SearchHouseholdsByTagEvent implements SearchHouseholdsByTagEvent {
+  const _$SearchHouseholdsByTagEvent(
       {required this.tag, required this.projectId});
 
   @override
@@ -1264,10 +1371,10 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsByTagEventImpl &&
+            other is _$SearchHouseholdsByTagEvent &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId));
@@ -1279,9 +1386,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchHouseholdsByTagEventImplCopyWith<_$SearchHouseholdsByTagEventImpl>
-      get copyWith => __$$SearchHouseholdsByTagEventImplCopyWithImpl<
-          _$SearchHouseholdsByTagEventImpl>(this, _$identity);
+  _$$SearchHouseholdsByTagEventCopyWith<_$SearchHouseholdsByTagEvent>
+      get copyWith => __$$SearchHouseholdsByTagEventCopyWithImpl<
+          _$SearchHouseholdsByTagEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1301,13 +1408,16 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return searchByTag(tag, projectId);
   }
@@ -1330,13 +1440,16 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return searchByTag?.call(tag, projectId);
   }
@@ -1359,13 +1472,16 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1387,6 +1503,7 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return searchByTag(this);
   }
@@ -1403,6 +1520,7 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return searchByTag?.call(this);
   }
@@ -1418,6 +1536,7 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1430,38 +1549,38 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
 abstract class SearchHouseholdsByTagEvent implements SearchHouseholdsEvent {
   const factory SearchHouseholdsByTagEvent(
       {required final String tag,
-      required final String projectId}) = _$SearchHouseholdsByTagEventImpl;
+      required final String projectId}) = _$SearchHouseholdsByTagEvent;
 
   String get tag;
   String get projectId;
   @JsonKey(ignore: true)
-  _$$SearchHouseholdsByTagEventImplCopyWith<_$SearchHouseholdsByTagEventImpl>
+  _$$SearchHouseholdsByTagEventCopyWith<_$SearchHouseholdsByTagEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsClearEventImplCopyWith<$Res> {
-  factory _$$SearchHouseholdsClearEventImplCopyWith(
-          _$SearchHouseholdsClearEventImpl value,
-          $Res Function(_$SearchHouseholdsClearEventImpl) then) =
-      __$$SearchHouseholdsClearEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchHouseholdsClearEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsClearEventCopyWith(
+          _$SearchHouseholdsClearEvent value,
+          $Res Function(_$SearchHouseholdsClearEvent) then) =
+      __$$SearchHouseholdsClearEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SearchHouseholdsClearEventImplCopyWithImpl<$Res>
+class __$$SearchHouseholdsClearEventCopyWithImpl<$Res>
     extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$SearchHouseholdsClearEventImpl>
-    implements _$$SearchHouseholdsClearEventImplCopyWith<$Res> {
-  __$$SearchHouseholdsClearEventImplCopyWithImpl(
-      _$SearchHouseholdsClearEventImpl _value,
-      $Res Function(_$SearchHouseholdsClearEventImpl) _then)
+        _$SearchHouseholdsClearEvent>
+    implements _$$SearchHouseholdsClearEventCopyWith<$Res> {
+  __$$SearchHouseholdsClearEventCopyWithImpl(
+      _$SearchHouseholdsClearEvent _value,
+      $Res Function(_$SearchHouseholdsClearEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
-  const _$SearchHouseholdsClearEventImpl();
+class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
+  const _$SearchHouseholdsClearEvent();
 
   @override
   String toString() {
@@ -1469,10 +1588,10 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsClearEventImpl);
+            other is _$SearchHouseholdsClearEvent);
   }
 
   @override
@@ -1496,13 +1615,16 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)
+            double? maxRadius,
+            int offset,
+            int limit)
         searchByHouseholdHead,
     required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius)
+            String projectId, double maxRadius, int offset, int limit)
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function() load,
   }) {
     return clear();
   }
@@ -1525,13 +1647,16 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function()? load,
   }) {
     return clear?.call();
   }
@@ -1554,13 +1679,16 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
             bool isProximityEnabled,
             double? latitude,
             double? longitude,
-            double? maxRadius)?
+            double? maxRadius,
+            int offset,
+            int limit)?
         searchByHouseholdHead,
     TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius)?
+            double maxRadius, int offset, int limit)?
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function()? load,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -1582,6 +1710,7 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
   }) {
     return clear(this);
   }
@@ -1598,6 +1727,7 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
   }) {
     return clear?.call(this);
   }
@@ -1613,6 +1743,7 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -1623,7 +1754,206 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
 }
 
 abstract class SearchHouseholdsClearEvent implements SearchHouseholdsEvent {
-  const factory SearchHouseholdsClearEvent() = _$SearchHouseholdsClearEventImpl;
+  const factory SearchHouseholdsClearEvent() = _$SearchHouseholdsClearEvent;
+}
+
+/// @nodoc
+abstract class _$$SearchHouseholdsLoadingEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsLoadingEventCopyWith(
+          _$SearchHouseholdsLoadingEvent value,
+          $Res Function(_$SearchHouseholdsLoadingEvent) then) =
+      __$$SearchHouseholdsLoadingEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$SearchHouseholdsLoadingEventCopyWithImpl<$Res>
+    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
+        _$SearchHouseholdsLoadingEvent>
+    implements _$$SearchHouseholdsLoadingEventCopyWith<$Res> {
+  __$$SearchHouseholdsLoadingEventCopyWithImpl(
+      _$SearchHouseholdsLoadingEvent _value,
+      $Res Function(_$SearchHouseholdsLoadingEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$SearchHouseholdsLoadingEvent implements SearchHouseholdsLoadingEvent {
+  const _$SearchHouseholdsLoadingEvent();
+
+  @override
+  String toString() {
+    return 'SearchHouseholdsEvent.load()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchHouseholdsLoadingEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)
+        searchByHousehold,
+    required TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)
+        searchByHouseholdHead,
+    required TResult Function(double latitude, double longititude,
+            String projectId, double maxRadius, int offset, int limit)
+        searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
+    required TResult Function() clear,
+    required TResult Function() load,
+  }) {
+    return load();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult? Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult? Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
+    TResult? Function()? clear,
+    TResult? Function()? load,
+  }) {
+    return load?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
+    TResult Function()? clear,
+    TResult Function()? load,
+    required TResult orElse(),
+  }) {
+    if (load != null) {
+      return load();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchHouseholdsInitializedEvent value)
+        initialize,
+    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
+        searchByHousehold,
+    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
+        searchByHouseholdHead,
+    required TResult Function(SearchHouseholdsByProximityEvent value)
+        searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
+    required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(SearchHouseholdsLoadingEvent value) load,
+  }) {
+    return load(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult? Function(SearchHouseholdsByProximityEvent value)?
+        searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(SearchHouseholdsLoadingEvent value)? load,
+  }) {
+    return load?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(SearchHouseholdsLoadingEvent value)? load,
+    required TResult orElse(),
+  }) {
+    if (load != null) {
+      return load(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchHouseholdsLoadingEvent implements SearchHouseholdsEvent {
+  const factory SearchHouseholdsLoadingEvent() = _$SearchHouseholdsLoadingEvent;
 }
 
 /// @nodoc
@@ -1631,6 +1961,8 @@ mixin _$SearchHouseholdsState {
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
   String? get tag => throw _privateConstructorUsedError;
+  int get offset => throw _privateConstructorUsedError;
+  int get limit => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
 
@@ -1649,6 +1981,8 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       {bool loading,
       String? searchQuery,
       String? tag,
+      int offset,
+      int limit,
       List<HouseholdMemberWrapper> householdMembers});
 }
 
@@ -1669,6 +2003,8 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
     Object? loading = null,
     Object? searchQuery = freezed,
     Object? tag = freezed,
+    Object? offset = null,
+    Object? limit = null,
     Object? householdMembers = null,
   }) {
     return _then(_value.copyWith(
@@ -1684,6 +2020,14 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       householdMembers: null == householdMembers
           ? _value.householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
@@ -1693,28 +2037,28 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$SearchHouseholdsStateImplCopyWith<$Res>
+abstract class _$$_SearchHouseholdsStateCopyWith<$Res>
     implements $SearchHouseholdsStateCopyWith<$Res> {
-  factory _$$SearchHouseholdsStateImplCopyWith(
-          _$SearchHouseholdsStateImpl value,
-          $Res Function(_$SearchHouseholdsStateImpl) then) =
-      __$$SearchHouseholdsStateImplCopyWithImpl<$Res>;
+  factory _$$_SearchHouseholdsStateCopyWith(_$_SearchHouseholdsState value,
+          $Res Function(_$_SearchHouseholdsState) then) =
+      __$$_SearchHouseholdsStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {bool loading,
       String? searchQuery,
       String? tag,
+      int offset,
+      int limit,
       List<HouseholdMemberWrapper> householdMembers});
 }
 
 /// @nodoc
-class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
-    extends _$SearchHouseholdsStateCopyWithImpl<$Res,
-        _$SearchHouseholdsStateImpl>
-    implements _$$SearchHouseholdsStateImplCopyWith<$Res> {
-  __$$SearchHouseholdsStateImplCopyWithImpl(_$SearchHouseholdsStateImpl _value,
-      $Res Function(_$SearchHouseholdsStateImpl) _then)
+class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
+    extends _$SearchHouseholdsStateCopyWithImpl<$Res, _$_SearchHouseholdsState>
+    implements _$$_SearchHouseholdsStateCopyWith<$Res> {
+  __$$_SearchHouseholdsStateCopyWithImpl(_$_SearchHouseholdsState _value,
+      $Res Function(_$_SearchHouseholdsState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1723,9 +2067,11 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? searchQuery = freezed,
     Object? tag = freezed,
+    Object? offset = null,
+    Object? limit = null,
     Object? householdMembers = null,
   }) {
-    return _then(_$SearchHouseholdsStateImpl(
+    return _then(_$_SearchHouseholdsState(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1738,6 +2084,14 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String?,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       householdMembers: null == householdMembers
           ? _value._householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
@@ -1748,11 +2102,13 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
-  const _$SearchHouseholdsStateImpl(
+class _$_SearchHouseholdsState extends _SearchHouseholdsState {
+  const _$_SearchHouseholdsState(
       {this.loading = false,
       this.searchQuery,
       this.tag,
+      this.offset = 0,
+      this.limit = 10,
       final List<HouseholdMemberWrapper> householdMembers = const []})
       : _householdMembers = householdMembers,
         super._();
@@ -1764,44 +2120,50 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
   final String? searchQuery;
   @override
   final String? tag;
+  @override
+  @JsonKey()
+  final int offset;
+  @override
+  @JsonKey()
+  final int limit;
   final List<HouseholdMemberWrapper> _householdMembers;
   @override
   @JsonKey()
   List<HouseholdMemberWrapper> get householdMembers {
-    if (_householdMembers is EqualUnmodifiableListView)
-      return _householdMembers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_householdMembers);
   }
 
   @override
   String toString() {
-    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
+    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, tag: $tag, offset: $offset, limit: $limit, householdMembers: $householdMembers)';
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchHouseholdsStateImpl &&
+            other is _$_SearchHouseholdsState &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
             const DeepCollectionEquality()
                 .equals(other._householdMembers, _householdMembers));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, loading, searchQuery, tag,
-      const DeepCollectionEquality().hash(_householdMembers));
+      offset, limit, const DeepCollectionEquality().hash(_householdMembers));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchHouseholdsStateImplCopyWith<_$SearchHouseholdsStateImpl>
-      get copyWith => __$$SearchHouseholdsStateImplCopyWithImpl<
-          _$SearchHouseholdsStateImpl>(this, _$identity);
+  _$$_SearchHouseholdsStateCopyWith<_$_SearchHouseholdsState> get copyWith =>
+      __$$_SearchHouseholdsStateCopyWithImpl<_$_SearchHouseholdsState>(
+          this, _$identity);
 }
 
 abstract class _SearchHouseholdsState extends SearchHouseholdsState {
@@ -1809,8 +2171,10 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
           {final bool loading,
           final String? searchQuery,
           final String? tag,
+          final int offset,
+          final int limit,
           final List<HouseholdMemberWrapper> householdMembers}) =
-      _$SearchHouseholdsStateImpl;
+      _$_SearchHouseholdsState;
   const _SearchHouseholdsState._() : super._();
 
   @override
@@ -1820,11 +2184,15 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   @override
   String? get tag;
   @override
+  int get offset;
+  @override
+  int get limit;
+  @override
   List<HouseholdMemberWrapper> get householdMembers;
   @override
   @JsonKey(ignore: true)
-  _$$SearchHouseholdsStateImplCopyWith<_$SearchHouseholdsStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$_SearchHouseholdsStateCopyWith<_$_SearchHouseholdsState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1922,12 +2290,11 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$HouseholdMemberWrapperImplCopyWith<$Res>
+abstract class _$$_HouseholdMemberWrapperCopyWith<$Res>
     implements $HouseholdMemberWrapperCopyWith<$Res> {
-  factory _$$HouseholdMemberWrapperImplCopyWith(
-          _$HouseholdMemberWrapperImpl value,
-          $Res Function(_$HouseholdMemberWrapperImpl) then) =
-      __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>;
+  factory _$$_HouseholdMemberWrapperCopyWith(_$_HouseholdMemberWrapper value,
+          $Res Function(_$_HouseholdMemberWrapper) then) =
+      __$$_HouseholdMemberWrapperCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1942,13 +2309,12 @@ abstract class _$$HouseholdMemberWrapperImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
+class __$$_HouseholdMemberWrapperCopyWithImpl<$Res>
     extends _$HouseholdMemberWrapperCopyWithImpl<$Res,
-        _$HouseholdMemberWrapperImpl>
-    implements _$$HouseholdMemberWrapperImplCopyWith<$Res> {
-  __$$HouseholdMemberWrapperImplCopyWithImpl(
-      _$HouseholdMemberWrapperImpl _value,
-      $Res Function(_$HouseholdMemberWrapperImpl) _then)
+        _$_HouseholdMemberWrapper>
+    implements _$$_HouseholdMemberWrapperCopyWith<$Res> {
+  __$$_HouseholdMemberWrapperCopyWithImpl(_$_HouseholdMemberWrapper _value,
+      $Res Function(_$_HouseholdMemberWrapper) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1963,7 +2329,7 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
     Object? sideEffects = freezed,
     Object? referrals = freezed,
   }) {
-    return _then(_$HouseholdMemberWrapperImpl(
+    return _then(_$_HouseholdMemberWrapper(
       household: null == household
           ? _value.household
           : household // ignore: cast_nullable_to_non_nullable
@@ -2002,8 +2368,8 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
-  const _$HouseholdMemberWrapperImpl(
+class _$_HouseholdMemberWrapper implements _HouseholdMemberWrapper {
+  const _$_HouseholdMemberWrapper(
       {required this.household,
       required this.headOfHousehold,
       required final List<IndividualModel> members,
@@ -2025,7 +2391,6 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   final List<IndividualModel> _members;
   @override
   List<IndividualModel> get members {
-    if (_members is EqualUnmodifiableListView) return _members;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_members);
   }
@@ -2033,8 +2398,6 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   final List<ProjectBeneficiaryModel> _projectBeneficiaries;
   @override
   List<ProjectBeneficiaryModel> get projectBeneficiaries {
-    if (_projectBeneficiaries is EqualUnmodifiableListView)
-      return _projectBeneficiaries;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projectBeneficiaries);
   }
@@ -2046,7 +2409,6 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   List<TaskModel>? get tasks {
     final value = _tasks;
     if (value == null) return null;
-    if (_tasks is EqualUnmodifiableListView) return _tasks;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -2056,7 +2418,6 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   List<SideEffectModel>? get sideEffects {
     final value = _sideEffects;
     if (value == null) return null;
-    if (_sideEffects is EqualUnmodifiableListView) return _sideEffects;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -2066,7 +2427,6 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   List<ReferralModel>? get referrals {
     final value = _referrals;
     if (value == null) return null;
-    if (_referrals is EqualUnmodifiableListView) return _referrals;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -2077,10 +2437,10 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdMemberWrapperImpl &&
+            other is _$_HouseholdMemberWrapper &&
             (identical(other.household, household) ||
                 other.household == household) &&
             (identical(other.headOfHousehold, headOfHousehold) ||
@@ -2112,9 +2472,9 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdMemberWrapperImplCopyWith<_$HouseholdMemberWrapperImpl>
-      get copyWith => __$$HouseholdMemberWrapperImplCopyWithImpl<
-          _$HouseholdMemberWrapperImpl>(this, _$identity);
+  _$$_HouseholdMemberWrapperCopyWith<_$_HouseholdMemberWrapper> get copyWith =>
+      __$$_HouseholdMemberWrapperCopyWithImpl<_$_HouseholdMemberWrapper>(
+          this, _$identity);
 }
 
 abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
@@ -2126,7 +2486,7 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
       final double? distance,
       final List<TaskModel>? tasks,
       final List<SideEffectModel>? sideEffects,
-      final List<ReferralModel>? referrals}) = _$HouseholdMemberWrapperImpl;
+      final List<ReferralModel>? referrals}) = _$_HouseholdMemberWrapper;
 
   @override
   HouseholdModel get household;
@@ -2146,6 +2506,6 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   List<ReferralModel>? get referrals;
   @override
   @JsonKey(ignore: true)
-  _$$HouseholdMemberWrapperImplCopyWith<_$HouseholdMemberWrapperImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$_HouseholdMemberWrapperCopyWith<_$_HouseholdMemberWrapper> get copyWith =>
+      throw _privateConstructorUsedError;
 }

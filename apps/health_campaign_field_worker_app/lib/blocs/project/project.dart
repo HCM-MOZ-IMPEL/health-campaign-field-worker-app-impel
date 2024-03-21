@@ -424,6 +424,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         FacilitySearchModel(
           id: null,
         ),
+        limit: 1000,
       );
 
       await facilityLocalRepository.bulkCreate(facilities);
@@ -433,11 +434,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ProjectFacilitySearchModel(
           projectId: [parentProjectId],
         ),
+        limit: 1000,
       );
       final facilities = await facilityRemoteRepository.search(
         FacilitySearchModel(
           id: parentProjectFacilities.map((e) => e.facilityId).toList(),
         ),
+        limit: 1000,
       );
 
       await facilityLocalRepository.bulkCreate(facilities);

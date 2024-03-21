@@ -37,8 +37,10 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
         ),
       ],
     );
-    final r = await selectQuery.get();
-    print(r.length);
+
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
 
     final results = await (selectQuery
           ..where(
@@ -64,13 +66,23 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                   query.gender!.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.contains(
-                  query.name!.givenName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.givenName!,
+                  ),
+                  sql.name.familyName.contains(
+                    query.name!.givenName!,
+                  ),
+                ]),
               if (query.name?.familyName != null)
-                sql.name.familyName.contains(
-                  query.name!.familyName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.familyName!,
+                  ),
+                  sql.name.familyName.contains(
+                    query.name!.familyName!,
+                  ),
+                ]),
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(
                   query.name!.otherNames!,
@@ -80,7 +92,13 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                   userId,
                 ),
             ]),
-          ))
+          )
+          ..orderBy([
+            OrderingTerm(
+              expression: sql.individual.clientCreatedTime,
+              mode: OrderingMode.asc,
+            ),
+          ]))
         .get();
 
     return results
