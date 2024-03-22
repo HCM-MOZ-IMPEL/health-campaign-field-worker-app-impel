@@ -74,8 +74,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 children: [
                                   Text(
                                     boundaryName,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.surface,
+                                    //todo revert it
+                                    style: const TextStyle(
+                                      color: Colors.black,
                                       fontSize: 16,
                                     ),
                                   ),

@@ -18,12 +18,15 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
   final String projectId;
   final String userId;
   final String appVersion;
+  //modify this 
+  final String boundaryName; 
 
   const ManageAttendancePage({
     required this.attendanceListeners,
     required this.projectId,
     required this.userId,
     required this.appVersion,
+    required this.boundaryName,
     super.key,
   });
 
@@ -96,8 +99,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                           calculateCompletedDays(attendanceRegisters[i]) ??
                               t.translate(i18.common.coreCommonNA),
                       t.translate(i18.attendance.boundaryNameLabel):
-                          register.additionalDetails?[
-                              EnumValues.boundary.toValue()],
+                           widget.boundaryName ,
                       t.translate(i18.attendance.description):
                           register.additionalDetails?[
                               EnumValues.description.toValue()],
