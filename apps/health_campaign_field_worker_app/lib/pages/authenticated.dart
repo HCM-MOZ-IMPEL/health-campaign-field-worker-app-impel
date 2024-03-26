@@ -45,7 +45,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
         return Portal(
           child: Scaffold(
-            backgroundColor: DigitTheme.instance.colorScheme.background,
             appBar: AppBar(
               backgroundColor:DigitTheme.instance.colorScheme.primary,
               actions: showDrawer
@@ -92,6 +91,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                     ]
                   : null,
+                  iconTheme:const IconThemeData(color: Colors.white),
             ),
             drawer: showDrawer ? const Drawer(child: SideBar()) : null,
             body: MultiBlocProvider(
