@@ -48,6 +48,19 @@ class OpLog {
         final entity = StockModelMapper.fromJson(entityString);
         return entity;
 
+      case "stockReconciliation":
+        final entity = StockReconciliationModelMapper.fromJson(entityString);
+        return entity;
+
+      case "service":
+        final entity = ServiceModelMapper.fromJson(entityString);
+        return entity;
+
+      case "complaints":
+        print(entityString);
+        final entity = PgrServiceModelMapper.fromJson(entityString);
+        return entity;
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
         return entity;

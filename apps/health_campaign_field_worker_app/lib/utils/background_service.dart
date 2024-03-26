@@ -21,6 +21,7 @@ import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../models/data_model.init.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -30,6 +31,7 @@ Dio _dio = DioClient().dio;
 
 Future<Isar> isarARE = Constants().isar;
 Future<void> initializeService(dio, isar) async {
+  initializeMappers();
   await envConfig.initialize();
   final service = FlutterBackgroundService();
 
@@ -71,6 +73,7 @@ void onStart(ServiceInstance service) async {
     void Function(Timer timer) callback, {
     bool fireNow = false,
   }) {
+    initializeMappers();
     var timer = Timer.periodic(duration, callback);
     if (fireNow) {
       callback(timer);

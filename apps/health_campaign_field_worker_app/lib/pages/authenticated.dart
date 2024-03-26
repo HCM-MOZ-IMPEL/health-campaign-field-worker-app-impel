@@ -41,6 +41,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       stream: _drawerVisibilityController.stream,
       builder: (context, snapshot) {
         final showDrawer = snapshot.data ?? false;
+        final theme = Theme.of(context);
 
         return Portal(
           child: Scaffold(
@@ -60,8 +61,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   i18.projectSelection.onProjectMapped,
                                 );
 
-                            final theme = Theme.of(context);
-
                             return GestureDetector(
                               onTap: () {
                                 ctx.router.replaceAll([
@@ -75,8 +74,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   Text(
                                     boundaryName,
                                     //todo revert it
-                                    style: const TextStyle(
-                                      color: Colors.black,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.surface,
                                       fontSize: 16,
                                     ),
                                   ),
@@ -90,7 +89,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         },
                       ),
                     ]
-                  : null,
+                  : null,            
+                  backgroundColor: Color.fromARGB(156, 1, 39, 53),
             ),
             drawer: showDrawer ? const Drawer(child: SideBar()) : null,
             body: MultiBlocProvider(
