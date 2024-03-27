@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import '../../../../models/entities/blood_group.dart';
 import '../../../../models/entities/gender.dart';
 
+@TableIndex(name: 'individualclientref', columns: {#client_reference_id})
 class Individual extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get individualId => text().nullable()();

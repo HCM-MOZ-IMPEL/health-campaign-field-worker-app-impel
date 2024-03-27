@@ -37631,6 +37631,27 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $DownsyncTable downsync = $DownsyncTable(this);
   late final $DownsyncCriteriaTable downsyncCriteria =
       $DownsyncCriteriaTable(this);
+  late final Index addressclientref =
+      Index('addressclientref', 'CREATE INDEX addressclientref ON address ()');
+  late final Index givennameclientref =
+      Index('givennameclientref', 'CREATE INDEX givennameclientref ON name ()');
+  late final Index familynameclientref = Index(
+      'familynameclientref', 'CREATE INDEX familynameclientref ON name ()');
+  late final Index householdclientref = Index(
+      'householdclientref', 'CREATE INDEX householdclientref ON household ()');
+  late final Index memberclientref = Index(
+      'memberclientref', 'CREATE INDEX memberclientref ON household_member ()');
+  late final Index individualclientref = Index('individualclientref',
+      'CREATE INDEX individualclientref ON individual ()');
+  late final Index projectclientref = Index('projectclientref',
+      'CREATE INDEX projectclientref ON project_beneficiary ()');
+  late final Index taskprojectbeneficiaryclientref = Index(
+      'taskprojectbeneficiaryclientref',
+      'CREATE INDEX taskprojectbeneficiaryclientref ON task ()');
+  late final Index taskclientref =
+      Index('taskclientref', 'CREATE INDEX taskclientref ON task ()');
+  late final Index taskresourceclientref = Index('taskresourceclientref',
+      'CREATE INDEX taskresourceclientref ON task_resource ()');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -37674,6 +37695,16 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         pgrComplainant,
         user,
         downsync,
-        downsyncCriteria
+        downsyncCriteria,
+        addressclientref,
+        givennameclientref,
+        familynameclientref,
+        householdclientref,
+        memberclientref,
+        individualclientref,
+        projectclientref,
+        taskprojectbeneficiaryclientref,
+        taskclientref,
+        taskresourceclientref
       ];
 }

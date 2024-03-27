@@ -2,7 +2,8 @@
 
 import 'package:drift/drift.dart';
 
-
+@TableIndex(name: 'givennameclientref', columns: {#given_name})
+@TableIndex(name: 'familynameclientref', columns: {#family_name})
 class Name extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get individualClientReferenceId => text().nullable()();

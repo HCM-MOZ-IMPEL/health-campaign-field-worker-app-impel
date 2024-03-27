@@ -2,7 +2,8 @@
 
 import 'package:drift/drift.dart';
 
-
+@TableIndex(name: 'taskprojectbeneficiaryclientref', columns: {#project_beneficiary_client_reference_id})
+@TableIndex(name: 'taskclientref', columns: {#client_reference_id})
 class Task extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
