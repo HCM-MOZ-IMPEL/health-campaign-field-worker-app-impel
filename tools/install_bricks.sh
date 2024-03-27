@@ -1,7 +1,7 @@
 home="$PWD"
 
-flutter pub global activate mason_cli
-flutter pub global activate melos
+dart pub global activate mason_cli
+dart pub global activate melos
 
 melos run generate-hooks
 
