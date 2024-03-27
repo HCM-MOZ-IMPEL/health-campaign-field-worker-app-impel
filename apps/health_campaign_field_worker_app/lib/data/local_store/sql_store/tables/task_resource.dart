@@ -2,7 +2,7 @@
 
 import 'package:drift/drift.dart';
 
-@TableIndex(name: 'taskresourceclientref', columns: {#taskclient_reference_id})
+@TableIndex(name: 'taskresourceclientref', columns: {#taskclientReferenceId})
 class TaskResource extends Table {
   TextColumn get clientReferenceId => text()();
   TextColumn get taskclientReferenceId => text().nullable()();
