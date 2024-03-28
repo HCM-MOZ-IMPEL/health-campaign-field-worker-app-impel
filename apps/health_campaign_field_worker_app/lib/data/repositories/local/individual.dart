@@ -226,6 +226,7 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                   ),
                 ),
             ],
+            individualId: individual.individualId,
           );
         })
         .where((element) => element.isDeleted != true)
