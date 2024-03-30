@@ -99,6 +99,7 @@ flutter_icons:
 flutter:
   assets:
     - ./
+    - assets/icons/svg/
     - ./assets/audio/add.wav
     - ./assets/audio/buzzer.wav
     - ./assets/registar_data.json
