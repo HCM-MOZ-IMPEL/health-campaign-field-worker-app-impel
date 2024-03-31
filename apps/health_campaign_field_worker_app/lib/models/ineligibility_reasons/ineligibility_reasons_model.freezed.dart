@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'ineligibility_reasons_model.dart';
 
@@ -12,7 +12,7 @@ part of 'ineligibility_reasons_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 IneligibilityReasonsWrapperModel _$IneligibilityReasonsWrapperModelFromJson(
     Map<String, dynamic> json) {
@@ -41,7 +41,7 @@ abstract class $IneligibilityReasonsWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'ineligibilityReasons')
-          List<IneligibilityReasonType>? ineligibilityReasonsList});
+      List<IneligibilityReasonType>? ineligibilityReasonsList});
 }
 
 /// @nodoc
@@ -70,27 +70,27 @@ class _$IneligibilityReasonsWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_IneligibilityReasonsWrapperModelCopyWith<$Res>
+abstract class _$$IneligibilityReasonsWrapperModelImplCopyWith<$Res>
     implements $IneligibilityReasonsWrapperModelCopyWith<$Res> {
-  factory _$$_IneligibilityReasonsWrapperModelCopyWith(
-          _$_IneligibilityReasonsWrapperModel value,
-          $Res Function(_$_IneligibilityReasonsWrapperModel) then) =
-      __$$_IneligibilityReasonsWrapperModelCopyWithImpl<$Res>;
+  factory _$$IneligibilityReasonsWrapperModelImplCopyWith(
+          _$IneligibilityReasonsWrapperModelImpl value,
+          $Res Function(_$IneligibilityReasonsWrapperModelImpl) then) =
+      __$$IneligibilityReasonsWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'ineligibilityReasons')
-          List<IneligibilityReasonType>? ineligibilityReasonsList});
+      List<IneligibilityReasonType>? ineligibilityReasonsList});
 }
 
 /// @nodoc
-class __$$_IneligibilityReasonsWrapperModelCopyWithImpl<$Res>
+class __$$IneligibilityReasonsWrapperModelImplCopyWithImpl<$Res>
     extends _$IneligibilityReasonsWrapperModelCopyWithImpl<$Res,
-        _$_IneligibilityReasonsWrapperModel>
-    implements _$$_IneligibilityReasonsWrapperModelCopyWith<$Res> {
-  __$$_IneligibilityReasonsWrapperModelCopyWithImpl(
-      _$_IneligibilityReasonsWrapperModel _value,
-      $Res Function(_$_IneligibilityReasonsWrapperModel) _then)
+        _$IneligibilityReasonsWrapperModelImpl>
+    implements _$$IneligibilityReasonsWrapperModelImplCopyWith<$Res> {
+  __$$IneligibilityReasonsWrapperModelImplCopyWithImpl(
+      _$IneligibilityReasonsWrapperModelImpl _value,
+      $Res Function(_$IneligibilityReasonsWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -98,7 +98,7 @@ class __$$_IneligibilityReasonsWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? ineligibilityReasonsList = freezed,
   }) {
-    return _then(_$_IneligibilityReasonsWrapperModel(
+    return _then(_$IneligibilityReasonsWrapperModelImpl(
       ineligibilityReasonsList: freezed == ineligibilityReasonsList
           ? _value._ineligibilityReasonsList
           : ineligibilityReasonsList // ignore: cast_nullable_to_non_nullable
@@ -109,16 +109,16 @@ class __$$_IneligibilityReasonsWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_IneligibilityReasonsWrapperModel
+class _$IneligibilityReasonsWrapperModelImpl
     implements _IneligibilityReasonsWrapperModel {
-  const _$_IneligibilityReasonsWrapperModel(
+  const _$IneligibilityReasonsWrapperModelImpl(
       {@JsonKey(name: 'ineligibilityReasons')
-          final List<IneligibilityReasonType>? ineligibilityReasonsList})
+      final List<IneligibilityReasonType>? ineligibilityReasonsList})
       : _ineligibilityReasonsList = ineligibilityReasonsList;
 
-  factory _$_IneligibilityReasonsWrapperModel.fromJson(
+  factory _$IneligibilityReasonsWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_IneligibilityReasonsWrapperModelFromJson(json);
+      _$$IneligibilityReasonsWrapperModelImplFromJson(json);
 
   final List<IneligibilityReasonType>? _ineligibilityReasonsList;
   @override
@@ -126,6 +126,8 @@ class _$_IneligibilityReasonsWrapperModel
   List<IneligibilityReasonType>? get ineligibilityReasonsList {
     final value = _ineligibilityReasonsList;
     if (value == null) return null;
+    if (_ineligibilityReasonsList is EqualUnmodifiableListView)
+      return _ineligibilityReasonsList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -136,10 +138,10 @@ class _$_IneligibilityReasonsWrapperModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IneligibilityReasonsWrapperModel &&
+            other is _$IneligibilityReasonsWrapperModelImpl &&
             const DeepCollectionEquality().equals(
                 other._ineligibilityReasonsList, _ineligibilityReasonsList));
   }
@@ -152,14 +154,14 @@ class _$_IneligibilityReasonsWrapperModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IneligibilityReasonsWrapperModelCopyWith<
-          _$_IneligibilityReasonsWrapperModel>
-      get copyWith => __$$_IneligibilityReasonsWrapperModelCopyWithImpl<
-          _$_IneligibilityReasonsWrapperModel>(this, _$identity);
+  _$$IneligibilityReasonsWrapperModelImplCopyWith<
+          _$IneligibilityReasonsWrapperModelImpl>
+      get copyWith => __$$IneligibilityReasonsWrapperModelImplCopyWithImpl<
+          _$IneligibilityReasonsWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IneligibilityReasonsWrapperModelToJson(
+    return _$$IneligibilityReasonsWrapperModelImplToJson(
       this,
     );
   }
@@ -169,19 +171,20 @@ abstract class _IneligibilityReasonsWrapperModel
     implements IneligibilityReasonsWrapperModel {
   const factory _IneligibilityReasonsWrapperModel(
           {@JsonKey(name: 'ineligibilityReasons')
-              final List<IneligibilityReasonType>? ineligibilityReasonsList}) =
-      _$_IneligibilityReasonsWrapperModel;
+          final List<IneligibilityReasonType>? ineligibilityReasonsList}) =
+      _$IneligibilityReasonsWrapperModelImpl;
 
   factory _IneligibilityReasonsWrapperModel.fromJson(
-      Map<String, dynamic> json) = _$_IneligibilityReasonsWrapperModel.fromJson;
+          Map<String, dynamic> json) =
+      _$IneligibilityReasonsWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'ineligibilityReasons')
   List<IneligibilityReasonType>? get ineligibilityReasonsList;
   @override
   @JsonKey(ignore: true)
-  _$$_IneligibilityReasonsWrapperModelCopyWith<
-          _$_IneligibilityReasonsWrapperModel>
+  _$$IneligibilityReasonsWrapperModelImplCopyWith<
+          _$IneligibilityReasonsWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -247,23 +250,25 @@ class _$IneligibilityReasonTypeCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_IneligibilityReasonTypeCopyWith<$Res>
+abstract class _$$IneligibilityReasonTypeImplCopyWith<$Res>
     implements $IneligibilityReasonTypeCopyWith<$Res> {
-  factory _$$_IneligibilityReasonTypeCopyWith(_$_IneligibilityReasonType value,
-          $Res Function(_$_IneligibilityReasonType) then) =
-      __$$_IneligibilityReasonTypeCopyWithImpl<$Res>;
+  factory _$$IneligibilityReasonTypeImplCopyWith(
+          _$IneligibilityReasonTypeImpl value,
+          $Res Function(_$IneligibilityReasonTypeImpl) then) =
+      __$$IneligibilityReasonTypeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name, bool active});
 }
 
 /// @nodoc
-class __$$_IneligibilityReasonTypeCopyWithImpl<$Res>
+class __$$IneligibilityReasonTypeImplCopyWithImpl<$Res>
     extends _$IneligibilityReasonTypeCopyWithImpl<$Res,
-        _$_IneligibilityReasonType>
-    implements _$$_IneligibilityReasonTypeCopyWith<$Res> {
-  __$$_IneligibilityReasonTypeCopyWithImpl(_$_IneligibilityReasonType _value,
-      $Res Function(_$_IneligibilityReasonType) _then)
+        _$IneligibilityReasonTypeImpl>
+    implements _$$IneligibilityReasonTypeImplCopyWith<$Res> {
+  __$$IneligibilityReasonTypeImplCopyWithImpl(
+      _$IneligibilityReasonTypeImpl _value,
+      $Res Function(_$IneligibilityReasonTypeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -273,7 +278,7 @@ class __$$_IneligibilityReasonTypeCopyWithImpl<$Res>
     Object? name = null,
     Object? active = null,
   }) {
-    return _then(_$_IneligibilityReasonType(
+    return _then(_$IneligibilityReasonTypeImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -292,12 +297,12 @@ class __$$_IneligibilityReasonTypeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_IneligibilityReasonType implements _IneligibilityReasonType {
-  const _$_IneligibilityReasonType(
+class _$IneligibilityReasonTypeImpl implements _IneligibilityReasonType {
+  const _$IneligibilityReasonTypeImpl(
       {required this.code, required this.name, required this.active});
 
-  factory _$_IneligibilityReasonType.fromJson(Map<String, dynamic> json) =>
-      _$$_IneligibilityReasonTypeFromJson(json);
+  factory _$IneligibilityReasonTypeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IneligibilityReasonTypeImplFromJson(json);
 
   @override
   final String code;
@@ -312,10 +317,10 @@ class _$_IneligibilityReasonType implements _IneligibilityReasonType {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IneligibilityReasonType &&
+            other is _$IneligibilityReasonTypeImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.active, active) || other.active == active));
@@ -328,14 +333,13 @@ class _$_IneligibilityReasonType implements _IneligibilityReasonType {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IneligibilityReasonTypeCopyWith<_$_IneligibilityReasonType>
-      get copyWith =>
-          __$$_IneligibilityReasonTypeCopyWithImpl<_$_IneligibilityReasonType>(
-              this, _$identity);
+  _$$IneligibilityReasonTypeImplCopyWith<_$IneligibilityReasonTypeImpl>
+      get copyWith => __$$IneligibilityReasonTypeImplCopyWithImpl<
+          _$IneligibilityReasonTypeImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IneligibilityReasonTypeToJson(
+    return _$$IneligibilityReasonTypeImplToJson(
       this,
     );
   }
@@ -345,10 +349,10 @@ abstract class _IneligibilityReasonType implements IneligibilityReasonType {
   const factory _IneligibilityReasonType(
       {required final String code,
       required final String name,
-      required final bool active}) = _$_IneligibilityReasonType;
+      required final bool active}) = _$IneligibilityReasonTypeImpl;
 
   factory _IneligibilityReasonType.fromJson(Map<String, dynamic> json) =
-      _$_IneligibilityReasonType.fromJson;
+      _$IneligibilityReasonTypeImpl.fromJson;
 
   @override
   String get code;
@@ -358,6 +362,6 @@ abstract class _IneligibilityReasonType implements IneligibilityReasonType {
   bool get active;
   @override
   @JsonKey(ignore: true)
-  _$$_IneligibilityReasonTypeCopyWith<_$_IneligibilityReasonType>
+  _$$IneligibilityReasonTypeImplCopyWith<_$IneligibilityReasonTypeImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

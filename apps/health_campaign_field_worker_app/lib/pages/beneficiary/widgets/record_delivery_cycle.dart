@@ -220,12 +220,11 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      label:
-                          '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${e.deliveries!.indexOf(item) + 1}',
+                      '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
-                      label: localizations.translate(
+                      localizations.translate(
                         index == selectedIndex
                             ? Status.toAdminister.toValue()
                             : tasks?.status ?? Status.inComplete.toValue(),
@@ -244,7 +243,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      label: tasks?.status ==
+                      tasks?.status ==
                               Status.administeredFailed.toValue()
                           ? '--'
                           : (tasks?.additionalFields?.fields

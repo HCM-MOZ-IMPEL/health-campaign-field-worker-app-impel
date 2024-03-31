@@ -194,6 +194,7 @@ class _ComplaintsInboxFilterPageState
                                       refreshToken,
                                       userModel,
                                       actions,
+                                      individualId,
                                     ) {
                                       return userModel.name;
                                     },

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'auth.dart';
 
@@ -12,7 +12,7 @@ part of 'auth.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AuthEvent {
@@ -89,20 +89,20 @@ class _$AuthEventCopyWithImpl<$Res, $Val extends AuthEvent>
 }
 
 /// @nodoc
-abstract class _$$AuthLoginEventCopyWith<$Res> {
-  factory _$$AuthLoginEventCopyWith(
-          _$AuthLoginEvent value, $Res Function(_$AuthLoginEvent) then) =
-      __$$AuthLoginEventCopyWithImpl<$Res>;
+abstract class _$$AuthLoginEventImplCopyWith<$Res> {
+  factory _$$AuthLoginEventImplCopyWith(_$AuthLoginEventImpl value,
+          $Res Function(_$AuthLoginEventImpl) then) =
+      __$$AuthLoginEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String userId, String password, String tenantId});
 }
 
 /// @nodoc
-class __$$AuthLoginEventCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthLoginEvent>
-    implements _$$AuthLoginEventCopyWith<$Res> {
-  __$$AuthLoginEventCopyWithImpl(
-      _$AuthLoginEvent _value, $Res Function(_$AuthLoginEvent) _then)
+class __$$AuthLoginEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthLoginEventImpl>
+    implements _$$AuthLoginEventImplCopyWith<$Res> {
+  __$$AuthLoginEventImplCopyWithImpl(
+      _$AuthLoginEventImpl _value, $Res Function(_$AuthLoginEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -112,7 +112,7 @@ class __$$AuthLoginEventCopyWithImpl<$Res>
     Object? password = null,
     Object? tenantId = null,
   }) {
-    return _then(_$AuthLoginEvent(
+    return _then(_$AuthLoginEventImpl(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -131,8 +131,8 @@ class __$$AuthLoginEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AuthLoginEvent implements AuthLoginEvent {
-  const _$AuthLoginEvent(
+class _$AuthLoginEventImpl implements AuthLoginEvent {
+  const _$AuthLoginEventImpl(
       {required this.userId, required this.password, required this.tenantId});
 
   @override
@@ -148,10 +148,10 @@ class _$AuthLoginEvent implements AuthLoginEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthLoginEvent &&
+            other is _$AuthLoginEventImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.password, password) ||
                 other.password == password) &&
@@ -165,8 +165,9 @@ class _$AuthLoginEvent implements AuthLoginEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthLoginEventCopyWith<_$AuthLoginEvent> get copyWith =>
-      __$$AuthLoginEventCopyWithImpl<_$AuthLoginEvent>(this, _$identity);
+  _$$AuthLoginEventImplCopyWith<_$AuthLoginEventImpl> get copyWith =>
+      __$$AuthLoginEventImplCopyWithImpl<_$AuthLoginEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -250,31 +251,31 @@ abstract class AuthLoginEvent implements AuthEvent {
   const factory AuthLoginEvent(
       {required final String userId,
       required final String password,
-      required final String tenantId}) = _$AuthLoginEvent;
+      required final String tenantId}) = _$AuthLoginEventImpl;
 
   String get userId;
   String get password;
   String get tenantId;
   @JsonKey(ignore: true)
-  _$$AuthLoginEventCopyWith<_$AuthLoginEvent> get copyWith =>
+  _$$AuthLoginEventImplCopyWith<_$AuthLoginEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AuthAutoLoginEventCopyWith<$Res> {
-  factory _$$AuthAutoLoginEventCopyWith(_$AuthAutoLoginEvent value,
-          $Res Function(_$AuthAutoLoginEvent) then) =
-      __$$AuthAutoLoginEventCopyWithImpl<$Res>;
+abstract class _$$AuthAutoLoginEventImplCopyWith<$Res> {
+  factory _$$AuthAutoLoginEventImplCopyWith(_$AuthAutoLoginEventImpl value,
+          $Res Function(_$AuthAutoLoginEventImpl) then) =
+      __$$AuthAutoLoginEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String tenantId});
 }
 
 /// @nodoc
-class __$$AuthAutoLoginEventCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthAutoLoginEvent>
-    implements _$$AuthAutoLoginEventCopyWith<$Res> {
-  __$$AuthAutoLoginEventCopyWithImpl(
-      _$AuthAutoLoginEvent _value, $Res Function(_$AuthAutoLoginEvent) _then)
+class __$$AuthAutoLoginEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthAutoLoginEventImpl>
+    implements _$$AuthAutoLoginEventImplCopyWith<$Res> {
+  __$$AuthAutoLoginEventImplCopyWithImpl(_$AuthAutoLoginEventImpl _value,
+      $Res Function(_$AuthAutoLoginEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -282,7 +283,7 @@ class __$$AuthAutoLoginEventCopyWithImpl<$Res>
   $Res call({
     Object? tenantId = null,
   }) {
-    return _then(_$AuthAutoLoginEvent(
+    return _then(_$AuthAutoLoginEventImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -293,8 +294,8 @@ class __$$AuthAutoLoginEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
-  const _$AuthAutoLoginEvent({required this.tenantId});
+class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
+  const _$AuthAutoLoginEventImpl({required this.tenantId});
 
   @override
   final String tenantId;
@@ -305,10 +306,10 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthAutoLoginEvent &&
+            other is _$AuthAutoLoginEventImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId));
   }
@@ -319,8 +320,8 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthAutoLoginEventCopyWith<_$AuthAutoLoginEvent> get copyWith =>
-      __$$AuthAutoLoginEventCopyWithImpl<_$AuthAutoLoginEvent>(
+  _$$AuthAutoLoginEventImplCopyWith<_$AuthAutoLoginEventImpl> get copyWith =>
+      __$$AuthAutoLoginEventImplCopyWithImpl<_$AuthAutoLoginEventImpl>(
           this, _$identity);
 
   @override
@@ -403,34 +404,34 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
 
 abstract class AuthAutoLoginEvent implements AuthEvent {
   const factory AuthAutoLoginEvent({required final String tenantId}) =
-      _$AuthAutoLoginEvent;
+      _$AuthAutoLoginEventImpl;
 
   String get tenantId;
   @JsonKey(ignore: true)
-  _$$AuthAutoLoginEventCopyWith<_$AuthAutoLoginEvent> get copyWith =>
+  _$$AuthAutoLoginEventImplCopyWith<_$AuthAutoLoginEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AuthLogoutEventCopyWith<$Res> {
-  factory _$$AuthLogoutEventCopyWith(
-          _$AuthLogoutEvent value, $Res Function(_$AuthLogoutEvent) then) =
-      __$$AuthLogoutEventCopyWithImpl<$Res>;
+abstract class _$$AuthLogoutEventImplCopyWith<$Res> {
+  factory _$$AuthLogoutEventImplCopyWith(_$AuthLogoutEventImpl value,
+          $Res Function(_$AuthLogoutEventImpl) then) =
+      __$$AuthLogoutEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AuthLogoutEventCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutEvent>
-    implements _$$AuthLogoutEventCopyWith<$Res> {
-  __$$AuthLogoutEventCopyWithImpl(
-      _$AuthLogoutEvent _value, $Res Function(_$AuthLogoutEvent) _then)
+class __$$AuthLogoutEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutEventImpl>
+    implements _$$AuthLogoutEventImplCopyWith<$Res> {
+  __$$AuthLogoutEventImplCopyWithImpl(
+      _$AuthLogoutEventImpl _value, $Res Function(_$AuthLogoutEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AuthLogoutEvent implements AuthLogoutEvent {
-  const _$AuthLogoutEvent();
+class _$AuthLogoutEventImpl implements AuthLogoutEvent {
+  const _$AuthLogoutEventImpl();
 
   @override
   String toString() {
@@ -438,9 +439,9 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthLogoutEvent);
+        (other.runtimeType == runtimeType && other is _$AuthLogoutEventImpl);
   }
 
   @override
@@ -525,31 +526,31 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
 }
 
 abstract class AuthLogoutEvent implements AuthEvent {
-  const factory AuthLogoutEvent() = _$AuthLogoutEvent;
+  const factory AuthLogoutEvent() = _$AuthLogoutEventImpl;
 }
 
 /// @nodoc
-abstract class _$$AuthLogoutWithoutTokenEventCopyWith<$Res> {
-  factory _$$AuthLogoutWithoutTokenEventCopyWith(
-          _$AuthLogoutWithoutTokenEvent value,
-          $Res Function(_$AuthLogoutWithoutTokenEvent) then) =
-      __$$AuthLogoutWithoutTokenEventCopyWithImpl<$Res>;
+abstract class _$$AuthLogoutWithoutTokenEventImplCopyWith<$Res> {
+  factory _$$AuthLogoutWithoutTokenEventImplCopyWith(
+          _$AuthLogoutWithoutTokenEventImpl value,
+          $Res Function(_$AuthLogoutWithoutTokenEventImpl) then) =
+      __$$AuthLogoutWithoutTokenEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AuthLogoutWithoutTokenEventCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutWithoutTokenEvent>
-    implements _$$AuthLogoutWithoutTokenEventCopyWith<$Res> {
-  __$$AuthLogoutWithoutTokenEventCopyWithImpl(
-      _$AuthLogoutWithoutTokenEvent _value,
-      $Res Function(_$AuthLogoutWithoutTokenEvent) _then)
+class __$$AuthLogoutWithoutTokenEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutWithoutTokenEventImpl>
+    implements _$$AuthLogoutWithoutTokenEventImplCopyWith<$Res> {
+  __$$AuthLogoutWithoutTokenEventImplCopyWithImpl(
+      _$AuthLogoutWithoutTokenEventImpl _value,
+      $Res Function(_$AuthLogoutWithoutTokenEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AuthLogoutWithoutTokenEvent implements AuthLogoutWithoutTokenEvent {
-  const _$AuthLogoutWithoutTokenEvent();
+class _$AuthLogoutWithoutTokenEventImpl implements AuthLogoutWithoutTokenEvent {
+  const _$AuthLogoutWithoutTokenEventImpl();
 
   @override
   String toString() {
@@ -557,10 +558,10 @@ class _$AuthLogoutWithoutTokenEvent implements AuthLogoutWithoutTokenEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthLogoutWithoutTokenEvent);
+            other is _$AuthLogoutWithoutTokenEventImpl);
   }
 
   @override
@@ -645,7 +646,8 @@ class _$AuthLogoutWithoutTokenEvent implements AuthLogoutWithoutTokenEvent {
 }
 
 abstract class AuthLogoutWithoutTokenEvent implements AuthEvent {
-  const factory AuthLogoutWithoutTokenEvent() = _$AuthLogoutWithoutTokenEvent;
+  const factory AuthLogoutWithoutTokenEvent() =
+      _$AuthLogoutWithoutTokenEventImpl;
 }
 
 /// @nodoc
@@ -654,8 +656,12 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) =>
@@ -664,8 +670,12 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) =>
@@ -674,8 +684,12 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -726,25 +740,27 @@ class _$AuthStateCopyWithImpl<$Res, $Val extends AuthState>
 }
 
 /// @nodoc
-abstract class _$$AuthUnauthenticatedStateCopyWith<$Res> {
-  factory _$$AuthUnauthenticatedStateCopyWith(_$AuthUnauthenticatedState value,
-          $Res Function(_$AuthUnauthenticatedState) then) =
-      __$$AuthUnauthenticatedStateCopyWithImpl<$Res>;
+abstract class _$$AuthUnauthenticatedStateImplCopyWith<$Res> {
+  factory _$$AuthUnauthenticatedStateImplCopyWith(
+          _$AuthUnauthenticatedStateImpl value,
+          $Res Function(_$AuthUnauthenticatedStateImpl) then) =
+      __$$AuthUnauthenticatedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AuthUnauthenticatedStateCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthUnauthenticatedState>
-    implements _$$AuthUnauthenticatedStateCopyWith<$Res> {
-  __$$AuthUnauthenticatedStateCopyWithImpl(_$AuthUnauthenticatedState _value,
-      $Res Function(_$AuthUnauthenticatedState) _then)
+class __$$AuthUnauthenticatedStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthUnauthenticatedStateImpl>
+    implements _$$AuthUnauthenticatedStateImplCopyWith<$Res> {
+  __$$AuthUnauthenticatedStateImplCopyWithImpl(
+      _$AuthUnauthenticatedStateImpl _value,
+      $Res Function(_$AuthUnauthenticatedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
-  const _$AuthUnauthenticatedState();
+class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
+  const _$AuthUnauthenticatedStateImpl();
 
   @override
   String toString() {
@@ -752,10 +768,10 @@ class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthUnauthenticatedState);
+            other is _$AuthUnauthenticatedStateImpl);
   }
 
   @override
@@ -766,8 +782,12 @@ class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -779,8 +799,12 @@ class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -792,8 +816,12 @@ class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -843,29 +871,29 @@ class _$AuthUnauthenticatedState implements AuthUnauthenticatedState {
 }
 
 abstract class AuthUnauthenticatedState implements AuthState {
-  const factory AuthUnauthenticatedState() = _$AuthUnauthenticatedState;
+  const factory AuthUnauthenticatedState() = _$AuthUnauthenticatedStateImpl;
 }
 
 /// @nodoc
-abstract class _$$AuthLoadingStateCopyWith<$Res> {
-  factory _$$AuthLoadingStateCopyWith(
-          _$AuthLoadingState value, $Res Function(_$AuthLoadingState) then) =
-      __$$AuthLoadingStateCopyWithImpl<$Res>;
+abstract class _$$AuthLoadingStateImplCopyWith<$Res> {
+  factory _$$AuthLoadingStateImplCopyWith(_$AuthLoadingStateImpl value,
+          $Res Function(_$AuthLoadingStateImpl) then) =
+      __$$AuthLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AuthLoadingStateCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoadingState>
-    implements _$$AuthLoadingStateCopyWith<$Res> {
-  __$$AuthLoadingStateCopyWithImpl(
-      _$AuthLoadingState _value, $Res Function(_$AuthLoadingState) _then)
+class __$$AuthLoadingStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthLoadingStateImpl>
+    implements _$$AuthLoadingStateImplCopyWith<$Res> {
+  __$$AuthLoadingStateImplCopyWithImpl(_$AuthLoadingStateImpl _value,
+      $Res Function(_$AuthLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AuthLoadingState implements AuthLoadingState {
-  const _$AuthLoadingState();
+class _$AuthLoadingStateImpl implements AuthLoadingState {
+  const _$AuthLoadingStateImpl();
 
   @override
   String toString() {
@@ -873,9 +901,9 @@ class _$AuthLoadingState implements AuthLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AuthLoadingState);
+        (other.runtimeType == runtimeType && other is _$AuthLoadingStateImpl);
   }
 
   @override
@@ -886,8 +914,12 @@ class _$AuthLoadingState implements AuthLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -899,8 +931,12 @@ class _$AuthLoadingState implements AuthLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -912,8 +948,12 @@ class _$AuthLoadingState implements AuthLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -963,31 +1003,34 @@ class _$AuthLoadingState implements AuthLoadingState {
 }
 
 abstract class AuthLoadingState implements AuthState {
-  const factory AuthLoadingState() = _$AuthLoadingState;
+  const factory AuthLoadingState() = _$AuthLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$AuthAuthenticatedStateCopyWith<$Res> {
-  factory _$$AuthAuthenticatedStateCopyWith(_$AuthAuthenticatedState value,
-          $Res Function(_$AuthAuthenticatedState) then) =
-      __$$AuthAuthenticatedStateCopyWithImpl<$Res>;
+abstract class _$$AuthAuthenticatedStateImplCopyWith<$Res> {
+  factory _$$AuthAuthenticatedStateImplCopyWith(
+          _$AuthAuthenticatedStateImpl value,
+          $Res Function(_$AuthAuthenticatedStateImpl) then) =
+      __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String accessToken,
       String refreshToken,
       UserRequestModel userModel,
-      RoleActionsWrapperModel actionsWrapper});
+      RoleActionsWrapperModel actionsWrapper,
+      String? individualId});
 
   $UserRequestModelCopyWith<$Res> get userModel;
   $RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper;
 }
 
 /// @nodoc
-class __$$AuthAuthenticatedStateCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthAuthenticatedState>
-    implements _$$AuthAuthenticatedStateCopyWith<$Res> {
-  __$$AuthAuthenticatedStateCopyWithImpl(_$AuthAuthenticatedState _value,
-      $Res Function(_$AuthAuthenticatedState) _then)
+class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthAuthenticatedStateImpl>
+    implements _$$AuthAuthenticatedStateImplCopyWith<$Res> {
+  __$$AuthAuthenticatedStateImplCopyWithImpl(
+      _$AuthAuthenticatedStateImpl _value,
+      $Res Function(_$AuthAuthenticatedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -997,8 +1040,9 @@ class __$$AuthAuthenticatedStateCopyWithImpl<$Res>
     Object? refreshToken = null,
     Object? userModel = null,
     Object? actionsWrapper = null,
+    Object? individualId = freezed,
   }) {
-    return _then(_$AuthAuthenticatedState(
+    return _then(_$AuthAuthenticatedStateImpl(
       accessToken: null == accessToken
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
@@ -1015,6 +1059,10 @@ class __$$AuthAuthenticatedStateCopyWithImpl<$Res>
           ? _value.actionsWrapper
           : actionsWrapper // ignore: cast_nullable_to_non_nullable
               as RoleActionsWrapperModel,
+      individualId: freezed == individualId
+          ? _value.individualId
+          : individualId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 
@@ -1038,12 +1086,13 @@ class __$$AuthAuthenticatedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AuthAuthenticatedState implements AuthAuthenticatedState {
-  const _$AuthAuthenticatedState(
+class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
+  const _$AuthAuthenticatedStateImpl(
       {required this.accessToken,
       required this.refreshToken,
       required this.userModel,
-      required this.actionsWrapper});
+      required this.actionsWrapper,
+      this.individualId});
 
   @override
   final String accessToken;
@@ -1053,17 +1102,19 @@ class _$AuthAuthenticatedState implements AuthAuthenticatedState {
   final UserRequestModel userModel;
   @override
   final RoleActionsWrapperModel actionsWrapper;
+  @override
+  final String? individualId;
 
   @override
   String toString() {
-    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper)';
+    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthAuthenticatedState &&
+            other is _$AuthAuthenticatedStateImpl &&
             (identical(other.accessToken, accessToken) ||
                 other.accessToken == accessToken) &&
             (identical(other.refreshToken, refreshToken) ||
@@ -1071,31 +1122,38 @@ class _$AuthAuthenticatedState implements AuthAuthenticatedState {
             (identical(other.userModel, userModel) ||
                 other.userModel == userModel) &&
             (identical(other.actionsWrapper, actionsWrapper) ||
-                other.actionsWrapper == actionsWrapper));
+                other.actionsWrapper == actionsWrapper) &&
+            (identical(other.individualId, individualId) ||
+                other.individualId == individualId));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, accessToken, refreshToken, userModel, actionsWrapper);
+  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
+      userModel, actionsWrapper, individualId);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthAuthenticatedStateCopyWith<_$AuthAuthenticatedState> get copyWith =>
-      __$$AuthAuthenticatedStateCopyWithImpl<_$AuthAuthenticatedState>(
-          this, _$identity);
+  _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
+      get copyWith => __$$AuthAuthenticatedStateImplCopyWithImpl<
+          _$AuthAuthenticatedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
-    return authenticated(accessToken, refreshToken, userModel, actionsWrapper);
+    return authenticated(
+        accessToken, refreshToken, userModel, actionsWrapper, individualId);
   }
 
   @override
@@ -1103,13 +1161,17 @@ class _$AuthAuthenticatedState implements AuthAuthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
     return authenticated?.call(
-        accessToken, refreshToken, userModel, actionsWrapper);
+        accessToken, refreshToken, userModel, actionsWrapper, individualId);
   }
 
   @override
@@ -1117,15 +1179,19 @@ class _$AuthAuthenticatedState implements AuthAuthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
       return authenticated(
-          accessToken, refreshToken, userModel, actionsWrapper);
+          accessToken, refreshToken, userModel, actionsWrapper, individualId);
     }
     return orElse();
   }
@@ -1170,36 +1236,37 @@ class _$AuthAuthenticatedState implements AuthAuthenticatedState {
 
 abstract class AuthAuthenticatedState implements AuthState {
   const factory AuthAuthenticatedState(
-          {required final String accessToken,
-          required final String refreshToken,
-          required final UserRequestModel userModel,
-          required final RoleActionsWrapperModel actionsWrapper}) =
-      _$AuthAuthenticatedState;
+      {required final String accessToken,
+      required final String refreshToken,
+      required final UserRequestModel userModel,
+      required final RoleActionsWrapperModel actionsWrapper,
+      final String? individualId}) = _$AuthAuthenticatedStateImpl;
 
   String get accessToken;
   String get refreshToken;
   UserRequestModel get userModel;
   RoleActionsWrapperModel get actionsWrapper;
+  String? get individualId;
   @JsonKey(ignore: true)
-  _$$AuthAuthenticatedStateCopyWith<_$AuthAuthenticatedState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AuthErrorStateCopyWith<$Res> {
-  factory _$$AuthErrorStateCopyWith(
-          _$AuthErrorState value, $Res Function(_$AuthErrorState) then) =
-      __$$AuthErrorStateCopyWithImpl<$Res>;
+abstract class _$$AuthErrorStateImplCopyWith<$Res> {
+  factory _$$AuthErrorStateImplCopyWith(_$AuthErrorStateImpl value,
+          $Res Function(_$AuthErrorStateImpl) then) =
+      __$$AuthErrorStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String? error});
 }
 
 /// @nodoc
-class __$$AuthErrorStateCopyWithImpl<$Res>
-    extends _$AuthStateCopyWithImpl<$Res, _$AuthErrorState>
-    implements _$$AuthErrorStateCopyWith<$Res> {
-  __$$AuthErrorStateCopyWithImpl(
-      _$AuthErrorState _value, $Res Function(_$AuthErrorState) _then)
+class __$$AuthErrorStateImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$AuthErrorStateImpl>
+    implements _$$AuthErrorStateImplCopyWith<$Res> {
+  __$$AuthErrorStateImplCopyWithImpl(
+      _$AuthErrorStateImpl _value, $Res Function(_$AuthErrorStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1207,7 +1274,7 @@ class __$$AuthErrorStateCopyWithImpl<$Res>
   $Res call({
     Object? error = freezed,
   }) {
-    return _then(_$AuthErrorState(
+    return _then(_$AuthErrorStateImpl(
       freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -1218,8 +1285,8 @@ class __$$AuthErrorStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AuthErrorState implements AuthErrorState {
-  const _$AuthErrorState([this.error]);
+class _$AuthErrorStateImpl implements AuthErrorState {
+  const _$AuthErrorStateImpl([this.error]);
 
   @override
   final String? error;
@@ -1230,10 +1297,10 @@ class _$AuthErrorState implements AuthErrorState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthErrorState &&
+            other is _$AuthErrorStateImpl &&
             (identical(other.error, error) || other.error == error));
   }
 
@@ -1243,16 +1310,21 @@ class _$AuthErrorState implements AuthErrorState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthErrorStateCopyWith<_$AuthErrorState> get copyWith =>
-      __$$AuthErrorStateCopyWithImpl<_$AuthErrorState>(this, _$identity);
+  _$$AuthErrorStateImplCopyWith<_$AuthErrorStateImpl> get copyWith =>
+      __$$AuthErrorStateImplCopyWithImpl<_$AuthErrorStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -1264,8 +1336,12 @@ class _$AuthErrorState implements AuthErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -1277,8 +1353,12 @@ class _$AuthErrorState implements AuthErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1328,10 +1408,10 @@ class _$AuthErrorState implements AuthErrorState {
 }
 
 abstract class AuthErrorState implements AuthState {
-  const factory AuthErrorState([final String? error]) = _$AuthErrorState;
+  const factory AuthErrorState([final String? error]) = _$AuthErrorStateImpl;
 
   String? get error;
   @JsonKey(ignore: true)
-  _$$AuthErrorStateCopyWith<_$AuthErrorState> get copyWith =>
+  _$$AuthErrorStateImplCopyWith<_$AuthErrorStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -5,9 +5,12 @@ import 'package:drift/drift.dart';
 import '../../../../models/entities/blood_group.dart';
 import '../../../../models/entities/gender.dart';
 
+@TableIndex(name: 'individualclientref', columns: {#clientReferenceId})
 class Individual extends Table {
   TextColumn get id => text().nullable()();
+  TextColumn get individualId => text().nullable()();
   TextColumn get userId => text().nullable()();
+  TextColumn get userUuid => text().nullable()();
   TextColumn get dateOfBirth => text().nullable()();
   TextColumn get mobileNumber => text().nullable()();
   TextColumn get altContactNumber => text().nullable()();
@@ -17,11 +20,11 @@ class Individual extends Table {
   TextColumn get photo => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
+  IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();
   TextColumn get clientCreatedBy => text().nullable()();
   IntColumn get clientModifiedTime => integer().nullable()();
-  IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();

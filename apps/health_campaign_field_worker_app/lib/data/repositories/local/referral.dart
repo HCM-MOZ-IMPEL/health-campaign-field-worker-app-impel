@@ -19,7 +19,7 @@ class ReferralLocalRepository extends ReferralLocalBaseRepository {
         buildOr([
           if (query.id != null)
             sql.referral.id.equals(
-              query.id,
+              query.id!,
             ),
         ]),
       );

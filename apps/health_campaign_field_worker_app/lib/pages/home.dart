@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -17,6 +18,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart'
     as app_config;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/hcm_attendance_bloc.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
@@ -424,18 +426,40 @@ class _HomePageState extends LocalizedState<HomePage> {
             ),
           );
         },
-      ),
-
-      // attendance
-      i18.attendance.viewAttendanceLabel: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.attendance.viewAttendanceLabel,
-        onPressed: () {
-          context.router.push(
-            const TrackAttendanceWrapperRoute(),
-          );
-        },
-      ),
+      ),      
+      i18.home.manageAttendanceLabel:HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageAttendancePage(
+                  attendanceListeners: HCMAttendanceBloc(
+                    userId: context.loggedInUserUuid,
+                    projectId: context.projectId,
+                    attendanceLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceRegisterModel,
+                            HCMAttendanceSearchModel>>(),
+                    individualLocalRepository: context.read<
+                        LocalRepository<IndividualModel,
+                            IndividualSearchModel>>(),
+                    attendanceLogLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceLogModel,
+                            HCMAttendanceLogSearchModel>>(),
+                    context: context,
+                    individualId: context.loggedInIndividualId,
+                  ),
+                  projectId: context.projectId,
+                  userId: context.loggedInUserUuid,
+                  appVersion: Constants().version,
+                  boundaryName : context.boundary.name!,
+                ),
+                settings: const RouteSettings(name: '/manage-attendance'),
+              ),
+            );
+          },
+        ),
     };
 
     final homeItemsLabel = <String>[
@@ -448,9 +472,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      'DB',
       // attendance
-      i18.attendance.viewAttendanceLabel,
+      i18.home.manageAttendanceLabel,
+      'DB',
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -493,6 +517,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       StockReconciliationSearchModel>>(),
               context.read<
                   LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                    LocalRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -518,6 +545,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       StockReconciliationSearchModel>>(),
               context.read<
                   RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<HCMAttendanceLogModel,
+                      HCMAttendanceLogSearchModel>>(),
             ],
           ),
         );

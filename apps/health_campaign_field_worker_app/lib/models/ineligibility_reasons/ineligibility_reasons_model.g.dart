@@ -6,9 +6,10 @@ part of 'ineligibility_reasons_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_IneligibilityReasonsWrapperModel
-    _$$_IneligibilityReasonsWrapperModelFromJson(Map<String, dynamic> json) =>
-        _$_IneligibilityReasonsWrapperModel(
+_$IneligibilityReasonsWrapperModelImpl
+    _$$IneligibilityReasonsWrapperModelImplFromJson(
+            Map<String, dynamic> json) =>
+        _$IneligibilityReasonsWrapperModelImpl(
           ineligibilityReasonsList: (json['ineligibilityReasons']
                   as List<dynamic>?)
               ?.map((e) =>
@@ -16,22 +17,22 @@ _$_IneligibilityReasonsWrapperModel
               .toList(),
         );
 
-Map<String, dynamic> _$$_IneligibilityReasonsWrapperModelToJson(
-        _$_IneligibilityReasonsWrapperModel instance) =>
+Map<String, dynamic> _$$IneligibilityReasonsWrapperModelImplToJson(
+        _$IneligibilityReasonsWrapperModelImpl instance) =>
     <String, dynamic>{
       'ineligibilityReasons': instance.ineligibilityReasonsList,
     };
 
-_$_IneligibilityReasonType _$$_IneligibilityReasonTypeFromJson(
+_$IneligibilityReasonTypeImpl _$$IneligibilityReasonTypeImplFromJson(
         Map<String, dynamic> json) =>
-    _$_IneligibilityReasonType(
+    _$IneligibilityReasonTypeImpl(
       code: json['code'] as String,
       name: json['name'] as String,
       active: json['active'] as bool,
     );
 
-Map<String, dynamic> _$$_IneligibilityReasonTypeToJson(
-        _$_IneligibilityReasonType instance) =>
+Map<String, dynamic> _$$IneligibilityReasonTypeImplToJson(
+        _$IneligibilityReasonTypeImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

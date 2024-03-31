@@ -95,15 +95,13 @@ Widget buildTableContent(
                                   ?.indexOf(e) ==
                               0
                           ? TableData(
-                              label:
-                                  '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${deliverInterventionState.dose}',
+                              '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
-                          : TableData(label: ''),
+                          : TableData(''),
                       // Display the SKU value in the second column.
                       TableData(
-                        label:
-                            '$quantity - ${localizations.translate(value.toString())}',
+                        '$quantity - ${localizations.translate(value.toString())}',
                         cellKey: 'resources',
                       ),
                     ]);

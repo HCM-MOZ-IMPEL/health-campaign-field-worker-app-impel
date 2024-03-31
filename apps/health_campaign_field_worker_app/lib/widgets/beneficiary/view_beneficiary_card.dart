@@ -175,15 +175,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final isStatusReset = checkStatus(taskdata, currentCycle);
 
         final rowTableData = [
-          TableData(
-            label: [
+          TableData( 
+            [
               e.name?.givenName,
               e.name?.familyName,
             ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
           TableData(
-            label: isHead
+            isHead
                 ? localizations.translate(
                     i18.householdOverView.householdOverViewHouseholderHeadLabel,
                   )
@@ -209,7 +209,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             ),
           ),
           TableData(
-            label: e.dateOfBirth == null
+            e.dateOfBirth == null
                 ? ''
                 : '${DigitDateUtils.calculateAge(
                     DigitDateUtils.getFormattedDateToDateTime(
@@ -225,8 +225,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'age',
           ),
           TableData(
-            label:
-                localizations.translate(e.gender?.name.toUpperCase() ?? '--'),
+            localizations.translate(e.gender?.name.toUpperCase() ?? '--'),
             cellKey: 'gender',
           ),
         ];

@@ -27,7 +27,7 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
         buildOr([
           if (query.projectId != null)
             sql.task.projectId.equals(
-              query.projectId,
+              query.projectId!,
             ),
         ]),
       );
@@ -160,7 +160,7 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
           createdDate: task.createdDate,
           additionalFields: task.additionalFields == null
               ? null
-              : Mapper.fromJson<TaskAdditionalFields>(
+              : TaskAdditionalFieldsMapper.fromJson(
                   task.additionalFields!,
                 ),
           address: address == null
@@ -387,7 +387,7 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
           sql.address,
           addressCompanion,
           where: (table) => table.relatedClientReferenceId.equals(
-            addressCompanion.relatedClientReferenceId.value,
+            addressCompanion.relatedClientReferenceId.value!,
           ),
         );
       }

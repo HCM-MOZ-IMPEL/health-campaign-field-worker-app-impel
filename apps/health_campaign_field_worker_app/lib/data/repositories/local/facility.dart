@@ -55,7 +55,7 @@ class FacilityLocalRepository extends FacilityLocalBaseRepository {
         name: facility.name,
         additionalFields: facility.additionalFields == null
             ? null
-            : Mapper.fromJson<FacilityAdditionalFields>(
+            : FacilityAdditionalFieldsMapper.fromJson(
                 facility.additionalFields!,
               ),
         address: address == null

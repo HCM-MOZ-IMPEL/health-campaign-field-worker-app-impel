@@ -4,13 +4,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:health_campaign_field_worker_app/blocs/attendance/attendance_register.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
-import '../blocs/attendance/attendance_individual/individual_attendance_log.dart';
 
-import '../blocs/attendance/attendance_individual/mark_attendance.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
@@ -25,7 +22,6 @@ import '../data/repositories/local/address.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 
-import '../data/repositories/remote/repo_attendance_register.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -45,10 +41,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       stream: _drawerVisibilityController.stream,
       builder: (context, snapshot) {
         final showDrawer = snapshot.data ?? false;
+        final theme = Theme.of(context);
 
         return Portal(
           child: Scaffold(
             appBar: AppBar(
+              backgroundColor:DigitTheme.instance.colorScheme.primary,
               actions: showDrawer
                   ? [
                       BlocBuilder<BoundaryBloc, BoundaryState>(
@@ -64,8 +62,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   i18.projectSelection.onProjectMapped,
                                 );
 
-                            final theme = Theme.of(context);
-
                             return GestureDetector(
                               onTap: () {
                                 ctx.router.replaceAll([
@@ -78,6 +74,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 children: [
                                   Text(
                                     boundaryName,
+                                    //todo revert it
                                     style: TextStyle(
                                       color: theme.colorScheme.surface,
                                       fontSize: 16,
@@ -94,6 +91,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                     ]
                   : null,
+                  iconTheme:const IconThemeData(color: Colors.white),
             ),
             drawer: showDrawer ? const Drawer(child: SideBar()) : null,
             body: MultiBlocProvider(
@@ -167,6 +165,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.complaints:
                                   case DataModelType.sideEffect:
                                   case DataModelType.referral:
+                                  case DataModelType.attendance:
                                     return true;
                                   default:
                                     return false;
@@ -202,6 +201,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.sideEffect:
                                   case DataModelType.referral:
                                   case DataModelType.householdMember:
+                                  case DataModelType.attendance:
                                     return true;
                                   default:
                                     return false;
@@ -257,39 +257,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                     networkManager: ctx.read(),
                   ),
                 ),
-                BlocProvider(
-                  create: (ctx) {
-                    final isar = context.read<Isar>();
-
-                    return AttendanceProjectsSearchBloc(
-                      attendanceRegisterRepository:
-                          AttendanceRegisterRepository(
-                        DioClient().dio,
-                        isar,
-                      ),
-                    );
-                  },
-                ),
-                BlocProvider(create: (ctx) {
-                  final isar = context.read<Isar>();
-
-                  return AttendanceIndividualBloc(
-                    attendanceRegisterRepository: AttendanceRegisterRepository(
-                      DioClient().dio,
-                      isar,
-                    ),
-                  );
-                }),
-                BlocProvider(create: (ctx) {
-                  final isar = context.read<Isar>();
-
-                  return MarkAttendanceBloc(
-                    attendanceRegisterRepository: AttendanceRegisterRepository(
-                      DioClient().dio,
-                      isar,
-                    ),
-                  );
-                }),
               ],
               child: AutoRouter(
                 navigatorObservers: () => [

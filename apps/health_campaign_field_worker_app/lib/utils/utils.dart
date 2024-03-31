@@ -15,11 +15,13 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
 import '../models/project_type/project_type_model.dart';
@@ -32,14 +34,14 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
-Expression<bool> buildAnd(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value & element);
 
   return result.equals(true);
 }
 
-Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value | element);
 
@@ -320,6 +322,25 @@ bool checkEligibilityForAgeAndSideEffect(
   }
 
   return false;
+}
+
+
+//Function to read the localizations from ISAR,
+getLocalizationString(Isar isar, String selectedLocale) async {
+  List<dynamic> localizationValues = [];
+
+  final List<LocalizationWrapper> localizationList =
+      await isar.localizationWrappers
+          .filter()
+          .localeEqualTo(
+            selectedLocale.toString(),
+          )
+          .findAll();
+  if (localizationList.isNotEmpty) {
+    localizationValues.addAll(localizationList.first.localization!);
+  }
+
+  return localizationValues;
 }
 
 bool checkIfBeneficiaryRefused(

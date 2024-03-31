@@ -267,7 +267,7 @@ class PerformSyncUp {
                       PgrComplaintResponseModel pgrComplaintModel;
                       try {
                         pgrServiceCreateResponseModel =
-                            Mapper.fromMap<PgrServiceCreateResponseModel>(
+                            PgrServiceCreateResponseModelMapper.fromMap(
                           responseData,
                         );
                         pgrComplaintModel =

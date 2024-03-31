@@ -1,8 +1,10 @@
+@MappableLib(
+  generateInitializerForScope: InitializerScope.package,
+)
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
-
-export 'data_model.mapper.g.dart';
+import 'data_model.dart';
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -15,6 +17,8 @@ export 'entities/document.dart';
 export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
+export 'entities/hcm_attendance_log_model.dart';
+export 'entities/hcm_attendance_model.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -31,6 +35,8 @@ export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
 export 'entities/referral.dart';
+export 'entities/roles.dart';
+export 'entities/roles_type.dart';
 export 'entities/service.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
@@ -48,7 +54,9 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'entities/roles_type.dart';
+export 'package:attendance_management/models/attendance_log.dart';
+
+part 'data_model.mapper.dart';
 
 abstract class DataModel {
   final String? boundaryCode;
@@ -60,8 +68,15 @@ abstract class DataModel {
   });
 }
 
-@MappableClass()
-abstract class EntityModel extends DataModel {
+@MappableClass(includeSubClasses: [
+  BoundaryModel,
+  HouseholdModel,
+  IndividualModel,
+  NameModel,
+  HCMAttendanceLogModel,
+  HCMAttendanceRegisterModel,
+])
+abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
   const EntityModel({
@@ -71,8 +86,14 @@ abstract class EntityModel extends DataModel {
   });
 }
 
-@MappableClass(ignoreNull: true)
-abstract class EntitySearchModel extends DataModel {
+@MappableClass(ignoreNull: true, includeSubClasses: [
+  AddressSearchModel,
+  HCMAttendanceLogSearchModel,
+  HCMAttendanceSearchModel,
+
+])
+abstract class EntitySearchModel extends DataModel
+    with EntitySearchModelMappable {
   final AuditDetails? auditDetails;
   final AdditionalFields? additionalFields;
 
@@ -91,8 +112,10 @@ abstract class EntitySearchModel extends DataModel {
   }) : super(isDeleted: false);
 }
 
-@MappableClass()
-abstract class AdditionalFields {
+@MappableClass(
+  includeSubClasses: [AddressAdditionalFields, HCMAttendanceAdditionalModel],
+)
+abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;
   final List<AdditionalField> fields;
@@ -104,8 +127,8 @@ abstract class AdditionalFields {
   });
 }
 
-@MappableClass()
-class AdditionalField {
+@MappableClass(includeSubClasses: [])
+class AdditionalField with AdditionalFieldMappable {
   final String key;
   final dynamic value;
 
@@ -113,7 +136,7 @@ class AdditionalField {
 }
 
 @MappableClass()
-class ClientAuditDetails {
+class ClientAuditDetails with ClientAuditDetailsMappable {
   final int createdTime;
   final int? lastModifiedTime;
   final String createdBy;
@@ -129,7 +152,7 @@ class ClientAuditDetails {
 }
 
 @MappableClass()
-class AuditDetails {
+class AuditDetails with AuditDetailsMappable {
   final String createdBy;
   final String lastModifiedBy;
   final int createdTime;
@@ -174,4 +197,7 @@ enum DataModelType {
   locality,
   downsync,
   downsyncCriteria,
+  hFReferral,
+  attendanceRegister,
+  attendance,
 }
