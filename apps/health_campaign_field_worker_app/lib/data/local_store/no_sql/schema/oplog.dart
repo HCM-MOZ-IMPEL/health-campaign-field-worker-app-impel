@@ -57,7 +57,6 @@ class OpLog {
         return entity;
 
       case "complaints":
-        print(entityString);
         final entity = PgrServiceModelMapper.fromJson(entityString);
         return entity;
 
