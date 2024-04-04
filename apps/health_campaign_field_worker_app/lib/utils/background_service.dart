@@ -24,12 +24,14 @@ import '../models/data_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
+import '../models/data_model.init.dart';
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 Dio _dio = DioClient().dio;
 
 Future<Isar> isarARE = Constants().isar;
 Future<void> initializeService(dio, isar) async {
+  initializeMappers();
   await envConfig.initialize();
   final service = FlutterBackgroundService();
 
@@ -71,6 +73,7 @@ void onStart(ServiceInstance service) async {
     void Function(Timer timer) callback, {
     bool fireNow = false,
   }) {
+    initializeMappers();
     var timer = Timer.periodic(duration, callback);
     if (fireNow) {
       callback(timer);

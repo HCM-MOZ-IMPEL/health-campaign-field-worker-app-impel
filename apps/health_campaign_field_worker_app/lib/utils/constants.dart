@@ -60,6 +60,7 @@ import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../firebase_options.dart';
 import '../models/data_model.dart';
+import '../models/data_model.init.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -72,6 +73,7 @@ class Constants {
     return _instance;
   }
   Future initialize(version) async {
+    initializeMappers();
     await _initializeIsar(version);
   }
 
