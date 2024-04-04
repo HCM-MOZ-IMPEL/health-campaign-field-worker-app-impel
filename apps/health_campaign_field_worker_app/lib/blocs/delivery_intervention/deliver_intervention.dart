@@ -36,6 +36,21 @@ class DeliverInterventionBloc
       if (event.isEditing) {
         // Update an existing task
 
+        Map<String?,String?> clientReferenceIdVsId = {} ;
+        List<String> taskClientReferenceIds = [];
+        for (var element in event.task) {
+          var clientReferenceId = element.clientReferenceId;
+          taskClientReferenceIds.add(clientReferenceId);
+          clientReferenceIdVsId[clientReferenceId] = element.id;
+        }
+        final List<TaskModel> existingTaskModels = await taskRepository.search(TaskSearchModel(
+          clientReferenceId: taskClientReferenceIds,
+        ));
+
+        for(var element in existingTaskModels){
+          clientReferenceIdVsId[element.clientReferenceId] = element.id;
+        }
+        
         final tasks = event.task
             .map((e) => e.copyWith(
                   clientAuditDetails:
@@ -50,7 +65,7 @@ class DeliverInterventionBloc
                                   DateTime.now().millisecondsSinceEpoch,
                             )
                           : null,
-                  id: e.id,
+                  id: clientReferenceIdVsId[e.clientReferenceId],
                   rowVersion: e.rowVersion ?? 1,
                   nonRecoverableError: e.nonRecoverableError ?? false,
                 ))
