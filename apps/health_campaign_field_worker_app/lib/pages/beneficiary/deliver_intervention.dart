@@ -78,11 +78,19 @@ class _DeliverInterventionPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
+          final project = context.selectedProject;
+          Map<String, dynamic>? additionalDetails = project.additionalDetails;
+          int maxResourcesDelivery = 3;
+
+          if (additionalDetails != null) {
+            maxResourcesDelivery =
+                additionalDetails['maxResourcesDelivery'] ?? 3;
+          }
           memberCount = (householdMemberWrapper.household.memberCount ??
               householdMemberWrapper.members.length);
           calculatedCount = min(
             memberCount / 1.8,
-            3,
+            maxResourcesDelivery,
           ).round();
 
           final projectBeneficiary =

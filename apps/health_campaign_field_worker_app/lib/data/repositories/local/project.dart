@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
@@ -72,7 +73,8 @@ class ProjectLocalRepository extends ProjectLocalBaseRepository {
 
     final targetResults = await (selectQuery
           ..where(buildAnd([
-            if (query.id != null) sql.target.clientReferenceId.equals(query.id!),
+            if (query.id != null)
+              sql.target.clientReferenceId.equals(query.id!),
           ])))
         .get();
 
@@ -84,6 +86,7 @@ class ProjectLocalRepository extends ProjectLocalBaseRepository {
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
+        additionalDetails: jsonDecode(data.additionalDetails.toString()),
         name: data.name,
         address: address == null
             ? null

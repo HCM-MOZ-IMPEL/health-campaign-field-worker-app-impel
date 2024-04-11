@@ -13412,6 +13412,12 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
   late final GeneratedColumn<String> projectHierarchy = GeneratedColumn<String>(
       'project_hierarchy', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalDetailsMeta =
+      const VerificationMeta('additionalDetails');
+  @override
+  late final GeneratedColumn<String> additionalDetails =
+      GeneratedColumn<String>('additional_details', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
   @override
@@ -13523,6 +13529,7 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
         description,
         referenceId,
         projectHierarchy,
+        additionalDetails,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -13611,6 +13618,12 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
           _projectHierarchyMeta,
           projectHierarchy.isAcceptableOrUnknown(
               data['project_hierarchy']!, _projectHierarchyMeta));
+    }
+    if (data.containsKey('additional_details')) {
+      context.handle(
+          _additionalDetailsMeta,
+          additionalDetails.isAcceptableOrUnknown(
+              data['additional_details']!, _additionalDetailsMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(
@@ -13725,6 +13738,8 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
           .read(DriftSqlType.string, data['${effectivePrefix}reference_id']),
       projectHierarchy: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}project_hierarchy']),
+      additionalDetails: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_details']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
       nonRecoverableError: attachedDatabase.typeMapping.read(
@@ -13776,6 +13791,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
+  final String? additionalDetails;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -13803,6 +13819,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       this.description,
       this.referenceId,
       this.projectHierarchy,
+      this.additionalDetails,
       this.auditCreatedBy,
       this.nonRecoverableError,
       this.auditCreatedTime,
@@ -13849,6 +13866,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     }
     if (!nullToAbsent || projectHierarchy != null) {
       map['project_hierarchy'] = Variable<String>(projectHierarchy);
+    }
+    if (!nullToAbsent || additionalDetails != null) {
+      map['additional_details'] = Variable<String>(additionalDetails);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy);
@@ -13928,6 +13948,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       projectHierarchy: projectHierarchy == null && nullToAbsent
           ? const Value.absent()
           : Value(projectHierarchy),
+      additionalDetails: additionalDetails == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalDetails),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -13991,6 +14014,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       description: serializer.fromJson<String?>(json['description']),
       referenceId: serializer.fromJson<String?>(json['referenceId']),
       projectHierarchy: serializer.fromJson<String?>(json['projectHierarchy']),
+      additionalDetails:
+          serializer.fromJson<String?>(json['additionalDetails']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -14024,6 +14049,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       'description': serializer.toJson<String?>(description),
       'referenceId': serializer.toJson<String?>(referenceId),
       'projectHierarchy': serializer.toJson<String?>(projectHierarchy),
+      'additionalDetails': serializer.toJson<String?>(additionalDetails),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -14054,6 +14080,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           Value<String?> description = const Value.absent(),
           Value<String?> referenceId = const Value.absent(),
           Value<String?> projectHierarchy = const Value.absent(),
+          Value<String?> additionalDetails = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
           Value<int?> auditCreatedTime = const Value.absent(),
@@ -14088,6 +14115,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         projectHierarchy: projectHierarchy.present
             ? projectHierarchy.value
             : this.projectHierarchy,
+        additionalDetails: additionalDetails.present
+            ? additionalDetails.value
+            : this.additionalDetails,
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
         nonRecoverableError: nonRecoverableError.present
@@ -14137,6 +14167,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           ..write('description: $description, ')
           ..write('referenceId: $referenceId, ')
           ..write('projectHierarchy: $projectHierarchy, ')
+          ..write('additionalDetails: $additionalDetails, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -14169,6 +14200,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         description,
         referenceId,
         projectHierarchy,
+        additionalDetails,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -14200,6 +14232,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           other.description == this.description &&
           other.referenceId == this.referenceId &&
           other.projectHierarchy == this.projectHierarchy &&
+          other.additionalDetails == this.additionalDetails &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
           other.auditCreatedTime == this.auditCreatedTime &&
@@ -14229,6 +14262,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   final Value<String?> description;
   final Value<String?> referenceId;
   final Value<String?> projectHierarchy;
+  final Value<String?> additionalDetails;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -14257,6 +14291,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.description = const Value.absent(),
     this.referenceId = const Value.absent(),
     this.projectHierarchy = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -14286,6 +14321,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.description = const Value.absent(),
     this.referenceId = const Value.absent(),
     this.projectHierarchy = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -14316,6 +14352,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     Expression<String>? description,
     Expression<String>? referenceId,
     Expression<String>? projectHierarchy,
+    Expression<String>? additionalDetails,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
     Expression<int>? auditCreatedTime,
@@ -14345,6 +14382,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       if (description != null) 'description': description,
       if (referenceId != null) 'reference_id': referenceId,
       if (projectHierarchy != null) 'project_hierarchy': projectHierarchy,
+      if (additionalDetails != null) 'additional_details': additionalDetails,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
         'non_recoverable_error': nonRecoverableError,
@@ -14378,6 +14416,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       Value<String?>? description,
       Value<String?>? referenceId,
       Value<String?>? projectHierarchy,
+      Value<String?>? additionalDetails,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -14406,6 +14445,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       description: description ?? this.description,
       referenceId: referenceId ?? this.referenceId,
       projectHierarchy: projectHierarchy ?? this.projectHierarchy,
+      additionalDetails: additionalDetails ?? this.additionalDetails,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -14460,6 +14500,9 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     }
     if (projectHierarchy.present) {
       map['project_hierarchy'] = Variable<String>(projectHierarchy.value);
+    }
+    if (additionalDetails.present) {
+      map['additional_details'] = Variable<String>(additionalDetails.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
@@ -14526,6 +14569,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
           ..write('description: $description, ')
           ..write('referenceId: $referenceId, ')
           ..write('projectHierarchy: $projectHierarchy, ')
+          ..write('additionalDetails: $additionalDetails, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
