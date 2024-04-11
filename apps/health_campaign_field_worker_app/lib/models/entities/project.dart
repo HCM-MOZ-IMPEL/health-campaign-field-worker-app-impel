@@ -1,4 +1,6 @@
 // Generated using mason. Do not modify by hand
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
@@ -8,7 +10,8 @@ import '../../data/local_store/sql_store/sql_store.dart';
 part 'project.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappable {
+class ProjectSearchModel extends EntitySearchModel
+    with ProjectSearchModelMappable {
   final String? id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -17,10 +20,11 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
   final String? parent;
   final String? department;
   final String? referenceId;
+  final dynamic? additionalDetails;
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-  
+
   ProjectSearchModel({
     this.id,
     this.projectTypeId,
@@ -28,6 +32,7 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
     this.subProjectTypeId,
     this.isTaskEnabled,
     this.parent,
+    this.additionalDetails,
     this.department,
     this.referenceId,
     this.tenantId,
@@ -35,13 +40,13 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
     int? endDate,
     super.boundaryCode,
     super.isDeleted,
-  }): startDateTime = startDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(startDate),
-  endDateTime = endDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(endDate),
-   super();
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super();
 
   @MappableConstructor()
   ProjectSearchModel.ignoreDeleted({
@@ -51,30 +56,28 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
     this.subProjectTypeId,
     this.isTaskEnabled,
     this.parent,
+    this.additionalDetails,
     this.department,
     this.referenceId,
     this.tenantId,
     int? startDate,
     int? endDate,
     super.boundaryCode,
-  }): startDateTime = startDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(startDate),
-  endDateTime = endDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(endDate),
-   super(isDeleted: false);
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super(isDeleted: false);
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
-  
 
   int? get endDate => endDateTime?.millisecondsSinceEpoch;
-  
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectModel extends EntityModel with ProjectModelMappable {
-
   static const schemaName = 'Project';
 
   final String id;
@@ -88,6 +91,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
+  final Map<String, dynamic>? additionalDetails;
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
@@ -111,6 +115,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     this.description,
     this.referenceId,
     this.projectHierarchy,
+    this.additionalDetails,
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
@@ -119,21 +124,20 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     this.documents,
     int? startDate,
     int? endDate,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): startDateTime = startDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(startDate),
-      endDateTime = endDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(endDate),
-      super();
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super();
 
-  int?  get startDate => startDateTime?.millisecondsSinceEpoch;
-  
+  int? get startDate => startDateTime?.millisecondsSinceEpoch;
 
-  int?  get endDate => endDateTime?.millisecondsSinceEpoch;
-  
+  int? get endDate => endDateTime?.millisecondsSinceEpoch;
 
   ProjectCompanion get companion {
     return ProjectCompanion(
@@ -158,21 +162,22 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       description: Value(description),
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
+      additionalDetails: Value(json.encode(additionalDetails)),
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectAdditionalFields extends AdditionalFields with ProjectAdditionalFieldsMappable {
+class ProjectAdditionalFields extends AdditionalFields
+    with ProjectAdditionalFieldsMappable {
   ProjectAdditionalFields({
     super.schema = 'Project',
     required super.version,
     super.fields,
   });
 }
-

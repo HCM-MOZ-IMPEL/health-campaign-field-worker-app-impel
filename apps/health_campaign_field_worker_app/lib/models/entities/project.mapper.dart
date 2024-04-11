@@ -300,6 +300,9 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static String? _$projectHierarchy(ProjectModel v) => v.projectHierarchy;
   static const Field<ProjectModel, String> _f$projectHierarchy =
       Field('projectHierarchy', _$projectHierarchy, opt: true);
+  static dynamic _$additionalDetails(ProjectModel v) => v.additionalDetails;
+  static const Field<ProjectModel, dynamic> _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
   static bool? _$nonRecoverableError(ProjectModel v) => v.nonRecoverableError;
   static const Field<ProjectModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
@@ -356,6 +359,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
     #description: _f$description,
     #referenceId: _f$referenceId,
     #projectHierarchy: _f$projectHierarchy,
+    #additionalDetails: _f$additionalDetails,
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
@@ -395,6 +399,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
         description: data.dec(_f$description),
         referenceId: data.dec(_f$referenceId),
         projectHierarchy: data.dec(_f$projectHierarchy),
+        additionalDetails: data.dec(_f$additionalDetails),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
@@ -488,6 +493,7 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
       String? description,
       String? referenceId,
       String? projectHierarchy,
+      dynamic additionalDetails,
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
@@ -553,6 +559,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
           Object? description = $none,
           Object? referenceId = $none,
           Object? projectHierarchy = $none,
+          Object? additionalDetails = $none,
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
@@ -577,6 +584,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
         if (description != $none) #description: description,
         if (referenceId != $none) #referenceId: referenceId,
         if (projectHierarchy != $none) #projectHierarchy: projectHierarchy,
+        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (tenantId != $none) #tenantId: tenantId,
@@ -608,6 +616,8 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       referenceId: data.get(#referenceId, or: $value.referenceId),
       projectHierarchy:
           data.get(#projectHierarchy, or: $value.projectHierarchy),
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails),
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),
