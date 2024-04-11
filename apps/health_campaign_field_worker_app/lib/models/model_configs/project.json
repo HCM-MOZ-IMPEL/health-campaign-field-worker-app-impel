@@ -60,6 +60,10 @@
     {
       "name": "projectHierarchy",
       "type": "String"
+    },
+    {
+        "name": "additionalDetails",
+        "type": "dynamic"
     }
   ],
   "customAttributes": [
