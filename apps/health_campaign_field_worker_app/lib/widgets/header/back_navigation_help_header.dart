@@ -1,3 +1,4 @@
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,
-    this.handleback,
+    this.handleback, 
   });
 
   @override
@@ -27,7 +28,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
         children: [
           Expanded(
@@ -80,10 +81,18 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               onPressed: helpClicked,
               child: Row(
                 children: <Widget>[
-                  Text(
-                    AppLocalizations.of(context)
-                        .translate(i18.common.coreCommonHelp),
-                    overflow: TextOverflow.ellipsis,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      kPadding,
+                      kPadding,
+                      kPadding / 1,
+                      kPadding,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)
+                          .translate(i18.common.coreCommonHelp),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const Icon(
                     Icons.help_outline_outlined,

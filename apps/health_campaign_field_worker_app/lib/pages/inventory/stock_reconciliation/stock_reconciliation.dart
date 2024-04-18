@@ -121,16 +121,23 @@ class _StockReconciliationPageState
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
+                            enableFixedButton: true,
                             header: const Column(children: [
                               BackNavigationHelpHeaderWidget(),
                             ]),
                             footer: SizedBox(
-                              height: 85,
                               child: DigitCard(
-                                margin: const EdgeInsets.only(
-                                  left: 0,
-                                  right: 0,
-                                  top: 10,
+                                margin: const EdgeInsets.fromLTRB(
+                                  0,
+                                  kPadding,
+                                  0,
+                                  0,
+                                ),
+                                padding: const EdgeInsets.fromLTRB(
+                                  kPadding,
+                                  0,
+                                  kPadding,
+                                  0,
                                 ),
                                 child: ReactiveFormConsumer(
                                   builder: (ctx, form, child) =>
@@ -471,7 +478,13 @@ class _StockReconciliationPageState
                                             .infoCardTitle,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      height: kPadding * 2,
+                                    ),
                                     const DigitDivider(),
+                                    const SizedBox(
+                                      height: kPadding,
+                                    ),
                                     DigitTextFormField(
                                       isRequired: true,
                                       label: localizations.translate(
@@ -549,6 +562,8 @@ class _StockReconciliationPageState
                                         i18.stockReconciliationDetails
                                             .commentsLabel,
                                       ),
+                                      maxLines: 3,
+                                      minLines: 3,
                                       formControlName:
                                           _reconciliationCommentsKey,
                                       validationMessages: {

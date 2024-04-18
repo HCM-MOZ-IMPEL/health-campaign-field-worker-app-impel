@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:digit_components/digit_components.dart';
 
 class DigitSearchBar extends StatelessWidget {
   final TextEditingController? controller;
@@ -33,7 +34,7 @@ class DigitSearchBar extends StatelessWidget {
       ),
       margin: margin,
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(kPadding),
         child: TextField(
           controller: controller,
           onChanged: onChanged,

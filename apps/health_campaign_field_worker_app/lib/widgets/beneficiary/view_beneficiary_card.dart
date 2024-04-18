@@ -298,7 +298,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle: widget.distance != null
-                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? localizations.translate(i18.memberCard.householdMemberText) : localizations.translate(i18.memberCard.householdMembersText)}  \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} metros) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
                       : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? localizations.translate(i18.memberCard.householdMemberText) : localizations.translate(i18.memberCard.householdMembersText)}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
@@ -317,6 +317,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               ),
               Flexible(
                 child: DigitOutLineButton(
+                  buttonStyle: OutlinedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                  ),
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,
@@ -330,11 +335,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               headerList: filteredHeaderList,
               tableData: tableData,
               columnWidth: 130,
+              columnRowFixedHeight: 65,
               height: householdMember.members.length == 1
-                  ? 61 * 2
+                  ? 65 * 2
                   : householdMember.members.length <= 4
                       ? (householdMember.members.length + 1) * 58
-                      : 5 * 60,
+                      : 5 * 68,
               scrollPhysics: householdMember.members.length <= 4
                   ? const NeverScrollableScrollPhysics()
                   : const ClampingScrollPhysics(),
@@ -349,7 +355,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 isCardExpanded
                     ? Icons.keyboard_arrow_up
                     : Icons.keyboard_arrow_down,
-                size: 16,
+                size: 24,
               ),
               onPressed: () => isCardExpanded = !isCardExpanded,
             ),

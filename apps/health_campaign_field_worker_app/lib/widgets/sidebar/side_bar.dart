@@ -12,10 +12,12 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/background_service.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -34,13 +36,16 @@ class SideBar extends StatelessWidget {
             padding: const EdgeInsets.all(kPadding),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 200,
+              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
                     Text(
-                      value.userModel.userName.toString(),
+                      value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
                     Text(

@@ -40,7 +40,7 @@ class ProjectStaffLocalRepository extends ProjectStaffLocalBaseRepository {
           ..where(buildAnd([
             if (query.id != null)
               sql.projectStaff.id.equals(
-                query.id,
+                query.id!,
               ),
           ])))
         .get();

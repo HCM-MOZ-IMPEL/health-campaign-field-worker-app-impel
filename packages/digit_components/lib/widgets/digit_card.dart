@@ -1,3 +1,4 @@
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 
 class DigitCard extends StatelessWidget {

@@ -77,12 +77,11 @@ class _IndividualDetailsPageState
           },
           builder: (context, state) {
             return ScrollableContent(
+              enableFixedButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
-              footer: SizedBox(
-                height: 85,
-                child: DigitCard(
+              footer: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
                     onPressed: () async {
@@ -277,7 +276,6 @@ class _IndividualDetailsPageState
                     ),
                   ),
                 ),
-              ),
               children: [
                 DigitCard(
                   child: Column(

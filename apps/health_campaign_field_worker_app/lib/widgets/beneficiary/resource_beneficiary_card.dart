@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import '../../models/data_model.dart';
 
 import '../../blocs/product_variant/product_variant.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -50,8 +51,11 @@ class _ResourceBeneficiaryCardState
           Radius.circular(4.0),
         ),
       ),
-      margin: DigitTheme.instance.containerMargin,
-      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
+      ),
+      padding: const EdgeInsets.all(kPadding),
       child: Column(
         children: [
           BlocBuilder<ProductVariantBloc, ProductVariantState>(

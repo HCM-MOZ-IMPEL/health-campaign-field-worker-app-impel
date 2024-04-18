@@ -351,7 +351,6 @@ class _SearchBeneficiaryPageState
             bottomNavigationBar: isKeyboardVisible
                 ? null
                 : SizedBox(
-                    height: 85,
                     child: DigitCard(
                       margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                       child: BlocBuilder<SearchHouseholdsBloc,

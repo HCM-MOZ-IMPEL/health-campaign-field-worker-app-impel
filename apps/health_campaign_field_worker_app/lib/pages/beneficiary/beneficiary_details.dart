@@ -124,6 +124,7 @@ class _BeneficiaryDetailsPageState
 
                   return Scaffold(
                     body: ScrollableContent(
+                      enableFixedButton: true,
                       header: const Column(children: [
                         BackNavigationHelpHeaderWidget(),
                       ]),
@@ -135,67 +136,78 @@ class _BeneficiaryDetailsPageState
 
                           return cycles != null && cycles.isNotEmpty
                               ? deliverState.hasCycleArrived
-                                  ? SizedBox(
-                                      height: 100,
-                                      child: DigitCard(
-                                        margin: const EdgeInsets.all(kPadding),
-                                        child: DigitElevatedButton(
-                                          onPressed: () async {
-                                            final selectedCycle =
-                                                cycles.firstWhereOrNull((c) =>
-                                                    c.id == deliverState.cycle);
-                                            if (selectedCycle != null) {
-                                              bloc.add(
-                                                DeliverInterventionEvent
-                                                    .selectFutureCycleDose(
-                                                  deliverState.dose,
-                                                  projectState
-                                                      .projectType!.cycles!
-                                                      .firstWhere((c) =>
-                                                          c.id ==
-                                                          deliverState.cycle),
+                                  ? DigitCard(
+                                      margin: const EdgeInsets.fromLTRB(
+                                        0,
+                                        kPadding,
+                                        0,
+                                        0,
+                                      ),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        kPadding,
+                                        0,
+                                        kPadding,
+                                        0,
+                                      ),
+                                      child: DigitElevatedButton(
+                                        onPressed: () async {
+                                          final selectedCycle =
+                                              cycles.firstWhereOrNull((c) =>
+                                                  c.id == deliverState.cycle);
+                                          if (selectedCycle != null) {
+                                            bloc.add(
+                                              DeliverInterventionEvent
+                                                  .selectFutureCycleDose(
+                                                deliverState.dose,
+                                                projectState
+                                                    .projectType!.cycles!
+                                                    .firstWhere((c) =>
+                                                        c.id ==
+                                                        deliverState.cycle),
+                                                state.selectedIndividual,
+                                              ),
+                                            );
+                                            await DigitDialog.show<bool>(
+                                              context,
+                                              options: DigitDialogOptions(
+                                                titlePadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  kPadding,
+                                                  0,
+                                                  kPadding,
+                                                  0,
+                                                ),
+                                                titleText:
+                                                    localizations.translate(i18
+                                                        .beneficiaryDetails
+                                                        .resourcesTobeDelivered),
+                                                content: buildTableContent(
+                                                  deliverState,
+                                                  context,
+                                                  variant,
                                                   state.selectedIndividual,
                                                 ),
-                                              );
-                                              await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  dialogPadding:
-                                                      const EdgeInsets.all(
-                                                    8.0,
-                                                  ),
-                                                  titleText: localizations
+                                                barrierDismissible: true,
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label: localizations
                                                       .translate(i18
                                                           .beneficiaryDetails
-                                                          .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                  ),
-                                                  barrierDismissible: true,
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .beneficiaryDetails
-                                                            .ctaProceed),
-                                                    action: (ctx) {
-                                                      Navigator.of(ctx).pop();
-                                                      router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    },
-                                                  ),
+                                                          .ctaProceed),
+                                                  action: (ctx) {
+                                                    Navigator.of(ctx).pop();
+                                                    router.push(
+                                                      DeliverInterventionRoute(),
+                                                    );
+                                                  },
                                                 ),
-                                              );
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              '${localizations.translate(i18.deliverIntervention.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${(deliverState.dose).toString()}',
-                                            ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            '${localizations.translate(i18.deliverIntervention.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${(deliverState.dose).toString()}',
                                           ),
                                         ),
                                       ),
@@ -203,6 +215,12 @@ class _BeneficiaryDetailsPageState
                                   : const SizedBox.shrink()
                               : DigitCard(
                                   margin: const EdgeInsets.only(top: kPadding),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    kPadding,
+                                    0,
+                                    kPadding,
+                                    0,
+                                  ),
                                   child: DigitElevatedButton(
                                     child: Center(
                                       child: Text(localizations.translate(i18
@@ -219,12 +237,6 @@ class _BeneficiaryDetailsPageState
                       ),
                       children: [
                         DigitCard(
-                          padding: const EdgeInsets.only(
-                            left: 16.0,
-                            top: 16,
-                            bottom: 4,
-                            right: 4,
-                          ),
                           child: Column(
                             children: [
                               Row(
@@ -339,23 +351,16 @@ class _BeneficiaryDetailsPageState
                                                                   ?.cycles ??
                                                               [])
                                                           .isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(
-                                                            kPadding,
-                                                          ),
-                                                          child:
-                                                              RecordDeliveryCycle(
-                                                            projectCycles: projectState
-                                                                    .projectType
-                                                                    ?.cycles ??
-                                                                [],
-                                                            taskData:
-                                                                taskData ?? [],
-                                                            individualModel: state
-                                                                .selectedIndividual,
-                                                          ),
+                                                      ? RecordDeliveryCycle(
+                                                          projectCycles:
+                                                              projectState
+                                                                      .projectType
+                                                                      ?.cycles ??
+                                                                  [],
+                                                          taskData:
+                                                              taskData ?? [],
+                                                          individualModel: state
+                                                              .selectedIndividual,
                                                         )
                                                       : const Offstage(),
                                                 ],

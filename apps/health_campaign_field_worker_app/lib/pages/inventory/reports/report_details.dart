@@ -131,11 +131,14 @@ class _InventoryReportDetailsPageState
             children: [
               const BackNavigationHelpHeaderWidget(),
               Container(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.displayMedium,
+                padding: const EdgeInsets.all(kPadding),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ),
               ),
               ReactiveFormBuilder(
@@ -637,7 +640,7 @@ class _ReportDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kPadding * 2),
+      padding: const EdgeInsets.all(kPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

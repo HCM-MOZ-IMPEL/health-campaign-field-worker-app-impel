@@ -51,19 +51,19 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                 ),
               if (query.id != null)
                 sql.individual.id.equals(
-                  query.id,
+                  query.id!,
                 ),
               if (query.tenantId != null)
                 sql.individual.tenantId.equals(
-                  query.tenantId,
+                  query.tenantId!,
                 ),
               if (query.dateOfBirth != null)
                 sql.individual.dateOfBirth.equals(
-                  query.dateOfBirth,
+                  query.dateOfBirth!,
                 ),
               if (query.gender != null)
                 sql.individual.gender.equals(
-                  query.gender?.index,
+                  query.gender!.index,
                 ),
               if (query.name?.givenName != null)
                 buildOr([
@@ -85,7 +85,7 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
                 ]),
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(
-                  query.name!.otherNames,
+                  query.name!.otherNames!,
                 ),
               if (userId != null)
                 sql.individual.auditCreatedBy.equals(
@@ -366,7 +366,14 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
   }) async {
     final individualCompanion = entity.companion;
 
-    final nameCompanion = entity.name?.companion;
+    final nameCompanion = entity.name
+        ?.copyWith(
+          individualClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
+        )
+        .companion;
+        
     final addressCompanions = entity.address?.map((e) {
           return e
               .copyWith(
@@ -388,7 +395,7 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
           sql.name,
           nameCompanion,
           where: (table) => table.individualClientReferenceId.equals(
-            nameCompanion.individualClientReferenceId.value,
+            nameCompanion.individualClientReferenceId.value!,
           ),
         );
       }

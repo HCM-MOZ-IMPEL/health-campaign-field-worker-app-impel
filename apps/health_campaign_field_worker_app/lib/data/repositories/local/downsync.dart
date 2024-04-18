@@ -38,7 +38,7 @@ class DownsyncLocalRepository extends DownsyncLocalBaseRepository {
         sql.downsync,
         downSyncCompanion,
         where: (table) => table.locality.equals(
-          entity.locality,
+          entity.locality!,
         ),
       );
     });
@@ -56,7 +56,7 @@ class DownsyncLocalRepository extends DownsyncLocalBaseRepository {
           ..where(
             buildAnd([
               if (query.locality != null)
-                sql.downsync.locality.equals(query.locality),
+                sql.downsync.locality.equals(query.locality!),
             ]),
           ))
         .get();

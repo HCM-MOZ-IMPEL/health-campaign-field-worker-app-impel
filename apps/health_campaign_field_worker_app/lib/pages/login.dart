@@ -32,7 +32,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     Widget buildPasswordVisibility() {
       return IconButton(
         icon: Icon(
-          passwordVisible ? Icons.visibility : Icons.visibility_off,
+          passwordVisible ? Icons.visibility_off : Icons.visibility,
         ),
         onPressed: () {
           setState(() {
@@ -152,6 +152,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             ),
                           );
                         },
+                      ),
+                      const SizedBox(
+                        height: 16,
                       ),
                     ],
                   ),

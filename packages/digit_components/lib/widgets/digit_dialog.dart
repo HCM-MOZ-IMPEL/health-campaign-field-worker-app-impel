@@ -39,10 +39,16 @@ class DigitDialog extends StatelessWidget {
         title: Padding(
           padding: options.dialogPadding != null
               ? options.dialogPadding!
-              : const EdgeInsets.all(0),
+              : const EdgeInsets.all(kPadding),
           child: options.title,
         ),
-        content: options.content,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: kPadding),
+            child: options.content,
+          ),
+        ),
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
@@ -59,13 +65,16 @@ class DigitDialog extends StatelessWidget {
                             options.secondaryAction!.action?.call(context),
                         label: options.secondaryAction!.label,
                         buttonStyle: OutlinedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                           backgroundColor: Colors.white,
                           side: BorderSide(
                             width: 1.0,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                           minimumSize:
-                              Size(MediaQuery.of(context).size.width / 4, 45),
+                              Size(MediaQuery.of(context).size.width / 4, 50),
                         ),
                       ),
                     ),
@@ -73,7 +82,6 @@ class DigitDialog extends StatelessWidget {
                   if (options.primaryAction != null)
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3,
-                      height: 45,
                       child: DigitOutLineButton(
                         onPressed: () =>
                             options.primaryAction!.action?.call(context),
@@ -96,15 +104,10 @@ class DigitDialog extends StatelessWidget {
             Column(
               children: <Widget>[
                 if (options.primaryAction != null)
-                  Padding(
-                    padding: options.dialogPadding != null
-                        ? options.dialogPadding!
-                        : const EdgeInsets.all(0),
-                    child: DigitElevatedButton(
-                      onPressed: () =>
-                          options.primaryAction!.action?.call(context),
-                      child: Center(child: Text(options.primaryAction!.label)),
-                    ),
+                  DigitElevatedButton(
+                    onPressed: () =>
+                        options.primaryAction!.action?.call(context),
+                    child: Center(child: Text(options.primaryAction!.label)),
                   ),
                 if (options.secondaryAction != null)
                   TextButton(
@@ -148,7 +151,10 @@ class DigitDialogOptions {
     this.barrierDismissible = false,
     this.enableRecordPast = false,
     this.isScrollable = false,
-    this.titlePadding = const EdgeInsets.all(kPadding),
+    this.titlePadding = const EdgeInsets.only(
+      top: kPadding,
+      bottom: kPadding,
+    ),
     this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
     this.key,

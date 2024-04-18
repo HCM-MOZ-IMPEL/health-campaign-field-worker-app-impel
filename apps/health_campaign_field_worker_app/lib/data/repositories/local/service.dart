@@ -98,11 +98,11 @@ class ServiceLocalRepository extends ServiceLocalBaseRepository {
           ..where(buildAnd([
             if (query.id != null)
               sql.service.serviceDefId.equals(
-                query.id,
+                query.id!,
               ),
             if (query.clientId != null)
               sql.service.clientId.equals(
-                query.clientId,
+                query.clientId!,
               ),
           ])))
         .get();

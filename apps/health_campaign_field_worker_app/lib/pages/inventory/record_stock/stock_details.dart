@@ -148,14 +148,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 form: _form,
                 builder: (context, form, child) {
                   return ScrollableContent(
+                    enableFixedButton: true,
                     header: const Column(children: [
                       BackNavigationHelpHeaderWidget(),
                     ]),
                     footer: SizedBox(
-                      height: 85,
                       child: DigitCard(
-                        margin:
-                            const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                        padding:
+                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: ReactiveFormConsumer(
                           builder: (context, form, child) =>
                               DigitElevatedButton(
@@ -447,7 +448,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       menuItems: productVariants,
                                       validationMessages: {
                                         'required': (object) =>
-                                            '${module.selectProductLabel}_IS_REQUIRED',
+                                            localizations.translate(
+                                              '${module.selectProductLabel}_IS_REQUIRED',
+                                            ),
                                       },
                                     );
                                   },
@@ -563,7 +566,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,
                               ),
-                              minLines: 2,
+                              minLines: 3,
                               maxLines: 3,
                               formControlName: _commentsKey,
                             ),

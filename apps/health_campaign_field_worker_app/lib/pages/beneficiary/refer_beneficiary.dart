@@ -99,6 +99,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
               body: ReactiveFormBuilder(
                 form: buildForm,
                 builder: (context, form, child) => ScrollableContent(
+                  enableFixedButton: true,
                   header: Column(children: [
                     widget.isReadministrationUnSuccessful
                         ? const BackNavigationHelpHeaderWidget(
@@ -106,235 +107,226 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           )
                         : const BackNavigationHelpHeaderWidget(),
                   ]),
-                  footer: SizedBox(
-                    height: 85,
-                    child: DigitCard(
-                      margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                      child: ValueListenableBuilder(
-                        valueListenable: clickedStatus,
-                        builder: (context, bool isClicked, _) {
-                          return DigitElevatedButton(
-                            onPressed: isClicked
-                                ? null
-                                : () {
-                                    if (form.control(_referralReason).value ==
-                                        null) {
-                                      clickedStatus.value = false;
-                                      form
-                                          .control(_referralReason)
-                                          .setErrors({'': true});
-                                    }
-                                    form.markAllAsTouched();
+                  footer: DigitCard(
+                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    child: ValueListenableBuilder(
+                      valueListenable: clickedStatus,
+                      builder: (context, bool isClicked, _) {
+                        return DigitElevatedButton(
+                          onPressed: isClicked
+                              ? null
+                              : () {
+                                  if (form.control(_referralReason).value ==
+                                      null) {
+                                    clickedStatus.value = false;
+                                    form
+                                        .control(_referralReason)
+                                        .setErrors({'': true});
+                                  }
+                                  form.markAllAsTouched();
 
-                                    if (!form.valid) {
-                                      return;
-                                    } else {
-                                      clickedStatus.value = true;
-                                      final recipient = form
-                                          .control(_referredToKey)
-                                          .value as FacilityModel;
-                                      final reason = form
-                                          .control(_referralReason)
-                                          .value as KeyValue;
-                                      final recipientType =
-                                          recipient.id == 'APS'
-                                              ? 'STAFF'
-                                              : 'FACILITY';
-                                      final recipientId = recipient.id == 'APS'
-                                          ? context.loggedInUserUuid
-                                          : recipient.id;
-                                      final referralComment =
-                                          form.control(_referralComments).value;
+                                  if (!form.valid) {
+                                    return;
+                                  } else {
+                                    clickedStatus.value = true;
+                                    final recipient = form
+                                        .control(_referredToKey)
+                                        .value as FacilityModel;
+                                    final reason = form
+                                        .control(_referralReason)
+                                        .value as KeyValue;
+                                    final recipientType = recipient.id == 'APS'
+                                        ? 'STAFF'
+                                        : 'FACILITY';
+                                    final recipientId = recipient.id == 'APS'
+                                        ? context.loggedInUserUuid
+                                        : recipient.id;
+                                    final referralComment =
+                                        form.control(_referralComments).value;
 
-                                      final referralCode =
-                                          form.control(_referralCode).value;
+                                    final referralCode =
+                                        form.control(_referralCode).value;
 
-                                      final event =
-                                          context.read<ReferralBloc>();
-                                      event.add(ReferralSubmitEvent(
-                                        ReferralModel(
-                                          clientReferenceId: IdGen.i.identifier,
-                                          projectId: context.projectId,
-                                          projectBeneficiaryClientReferenceId:
-                                              widget
-                                                  .projectBeneficiaryClientRefId,
-                                          referrerId: context.loggedInUserUuid,
-                                          recipientId: recipientId,
-                                          recipientType: recipientType,
-                                          reasons: [reason.key],
-                                          tenantId:
-                                              envConfig.variables.tenantId,
-                                          rowVersion: 1,
-                                          auditDetails: AuditDetails(
-                                            createdBy: context.loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                                context.loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          clientAuditDetails:
-                                              ClientAuditDetails(
-                                            createdBy: context.loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                                context.loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalFields:
-                                              ReferralAdditionalFields(
-                                            version: 1,
-                                            fields: [
-                                              if (referralComment != null &&
-                                                  referralComment
-                                                      .toString()
-                                                      .trim()
-                                                      .isNotEmpty)
-                                                AdditionalField(
-                                                  AdditionalFieldsType
-                                                      .referralComments
-                                                      .toValue(),
-                                                  referralComment,
-                                                ),
-                                              if (referralCode != null &&
-                                                  referralCode
-                                                      .toString()
-                                                      .trim()
-                                                      .isNotEmpty)
-                                                AdditionalField(
-                                                  _referralCode,
-                                                  referralCode,
-                                                ),
-                                            ],
-                                          ),
+                                    final event = context.read<ReferralBloc>();
+                                    event.add(ReferralSubmitEvent(
+                                      ReferralModel(
+                                        clientReferenceId: IdGen.i.identifier,
+                                        projectId: context.projectId,
+                                        projectBeneficiaryClientReferenceId:
+                                            widget
+                                                .projectBeneficiaryClientRefId,
+                                        referrerId: context.loggedInUserUuid,
+                                        recipientId: recipientId,
+                                        recipientType: recipientType,
+                                        reasons: [reason.key],
+                                        tenantId: envConfig.variables.tenantId,
+                                        rowVersion: 1,
+                                        auditDetails: AuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
                                         ),
-                                        false,
-                                      ));
+                                        clientAuditDetails: ClientAuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        additionalFields:
+                                            ReferralAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            if (referralComment != null &&
+                                                referralComment
+                                                    .toString()
+                                                    .trim()
+                                                    .isNotEmpty)
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .referralComments
+                                                    .toValue(),
+                                                referralComment,
+                                              ),
+                                            if (referralCode != null &&
+                                                referralCode
+                                                    .toString()
+                                                    .trim()
+                                                    .isNotEmpty)
+                                              AdditionalField(
+                                                _referralCode,
+                                                referralCode,
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      false,
+                                    ));
 
-                                      final clientReferenceId =
-                                          IdGen.i.identifier;
-                                      context
-                                          .read<DeliverInterventionBloc>()
-                                          .add(
-                                            DeliverInterventionSubmitEvent(
-                                              [
-                                                TaskModel(
-                                                  projectBeneficiaryClientReferenceId:
-                                                      widget
-                                                          .projectBeneficiaryClientRefId,
-                                                  clientReferenceId:
-                                                      clientReferenceId,
-                                                  tenantId: envConfig
-                                                      .variables.tenantId,
-                                                  rowVersion: 1,
-                                                  auditDetails: AuditDetails(
-                                                    createdBy: context
-                                                        .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                  projectId: context.projectId,
-                                                  status: Status
-                                                      .beneficiaryReferred
-                                                      .toValue(),
-                                                  clientAuditDetails:
-                                                      ClientAuditDetails(
-                                                    createdBy: context
-                                                        .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy: context
-                                                        .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                  additionalFields:
-                                                      TaskAdditionalFields(
-                                                    version: 1,
-                                                    fields: [
+                                    final clientReferenceId =
+                                        IdGen.i.identifier;
+                                    context.read<DeliverInterventionBloc>().add(
+                                          DeliverInterventionSubmitEvent(
+                                            [
+                                              TaskModel(
+                                                projectBeneficiaryClientReferenceId:
+                                                    widget
+                                                        .projectBeneficiaryClientRefId,
+                                                clientReferenceId:
+                                                    clientReferenceId,
+                                                tenantId: envConfig
+                                                    .variables.tenantId,
+                                                rowVersion: 1,
+                                                auditDetails: AuditDetails(
+                                                  createdBy:
+                                                      context.loggedInUserUuid,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                                projectId: context.projectId,
+                                                status: Status
+                                                    .beneficiaryReferred
+                                                    .toValue(),
+                                                clientAuditDetails:
+                                                    ClientAuditDetails(
+                                                  createdBy:
+                                                      context.loggedInUserUuid,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                  lastModifiedBy:
+                                                      context.loggedInUserUuid,
+                                                  lastModifiedTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                                additionalFields:
+                                                    TaskAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    AdditionalField(
+                                                      'taskStatus',
+                                                      Status.beneficiaryReferred
+                                                          .toValue(),
+                                                    ),
+                                                    if (widget
+                                                        .isReadministrationUnSuccessful)
                                                       AdditionalField(
-                                                        'taskStatus',
-                                                        Status
-                                                            .beneficiaryReferred
-                                                            .toValue(),
+                                                        'quantityWasted',
+                                                        widget.quantityWasted
+                                                                    .toString()
+                                                                    .length ==
+                                                                1
+                                                            ? "0${widget.quantityWasted}"
+                                                            : widget
+                                                                .quantityWasted
+                                                                .toString(),
                                                       ),
-                                                      if (widget
-                                                          .isReadministrationUnSuccessful)
-                                                        AdditionalField(
-                                                          'quantityWasted',
-                                                          widget.quantityWasted
-                                                                      .toString()
-                                                                      .length ==
-                                                                  1
-                                                              ? "0${widget.quantityWasted}"
-                                                              : widget
-                                                                  .quantityWasted
-                                                                  .toString(),
-                                                        ),
-                                                      if (widget
-                                                          .isReadministrationUnSuccessful)
-                                                        const AdditionalField(
-                                                          'unsuccessfullDelivery',
-                                                          'true',
-                                                        ),
-                                                      if (widget
-                                                              .productVariantId !=
-                                                          null)
-                                                        AdditionalField(
-                                                          'productVariantId',
-                                                          widget
-                                                              .productVariantId,
-                                                        ),
-                                                    ],
-                                                  ),
-                                                  address: widget
-                                                      .individual.address?.first
-                                                      .copyWith(
-                                                    relatedClientReferenceId:
-                                                        clientReferenceId,
-                                                    id: null,
-                                                  ),
+                                                    if (widget
+                                                        .isReadministrationUnSuccessful)
+                                                      const AdditionalField(
+                                                        'unsuccessfullDelivery',
+                                                        'true',
+                                                      ),
+                                                    if (widget
+                                                            .productVariantId !=
+                                                        null)
+                                                      AdditionalField(
+                                                        'productVariantId',
+                                                        widget.productVariantId,
+                                                      ),
+                                                  ],
                                                 ),
-                                              ],
-                                              false,
-                                              context.boundary,
-                                            ),
-                                          );
-
-                                      final reloadState =
-                                          context.read<HouseholdOverviewBloc>();
-
-                                      Future.delayed(
-                                        const Duration(milliseconds: 500),
-                                        () {
-                                          reloadState
-                                              .add(HouseholdOverviewReloadEvent(
-                                            projectId: context.projectId,
-                                            projectBeneficiaryType:
-                                                context.beneficiaryType,
-                                          ));
-                                        },
-                                      ).then(
-                                        (value) => context.router.popAndPush(
-                                          HouseholdAcknowledgementRoute(
-                                            enableViewHousehold: true,
+                                                address: widget
+                                                    .individual.address?.first
+                                                    .copyWith(
+                                                  relatedClientReferenceId:
+                                                      clientReferenceId,
+                                                  id: null,
+                                                ),
+                                              ),
+                                            ],
+                                            false,
+                                            context.boundary,
                                           ),
+                                        );
+
+                                    final reloadState =
+                                        context.read<HouseholdOverviewBloc>();
+
+                                    Future.delayed(
+                                      const Duration(milliseconds: 500),
+                                      () {
+                                        reloadState
+                                            .add(HouseholdOverviewReloadEvent(
+                                          projectId: context.projectId,
+                                          projectBeneficiaryType:
+                                              context.beneficiaryType,
+                                        ));
+                                      },
+                                    ).then(
+                                      (value) => context.router.popAndPush(
+                                        HouseholdAcknowledgementRoute(
+                                          enableViewHousehold: true,
                                         ),
-                                      );
-                                    }
-                                  },
-                            child: Center(
-                              child: Text(
-                                localizations
-                                    .translate(i18.common.coreCommonSubmit),
-                              ),
+                                      ),
+                                    );
+                                  }
+                                },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonSubmit),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   children: [

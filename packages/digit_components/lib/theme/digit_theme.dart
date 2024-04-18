@@ -40,6 +40,7 @@ class DigitTheme {
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
       dialogTheme: dialogTheme,
+      useMaterial3: false,
     );
   }
 

@@ -66,13 +66,13 @@ class ProjectLocalRepository extends ProjectLocalBaseRepository {
 
     final results = await (selectQuery
           ..where(
-            buildAnd([if (query.id != null) sql.project.id.equals(query.id)]),
+            buildAnd([if (query.id != null) sql.project.id.equals(query.id!)]),
           ))
         .get();
 
     final targetResults = await (selectQuery
           ..where(buildAnd([
-            if (query.id != null) sql.target.clientReferenceId.equals(query.id),
+            if (query.id != null) sql.target.clientReferenceId.equals(query.id!),
           ])))
         .get();
 

@@ -33,7 +33,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(kPadding*2, kPadding, kPadding*2, kPadding),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -45,43 +45,43 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               ),
               Column(children: [
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordSpaqReceipt),
-                  description: localizations
-                      .translate(i18.manageStock.recordSpaqReceivedAtFacility),
-                  prefixIcon: Icons.file_download_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.receipt,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReceiptLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockReceiptDescription,),
+                    prefixIcon: Icons.file_download_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.receipt,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title:
-                      localizations.translate(i18.manageStock.recordSpaqIssued),
-                  description: localizations
-                      .translate(i18.manageStock.spaqSentFromFacility),
-                  prefixIcon: Icons.file_upload_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockIssuedLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockIssuedDescription,),
+                    prefixIcon: Icons.file_upload_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.dispatch,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordSpaqReturned),
-                  description: localizations.translate(
-                    i18.manageStock.recordSpaqReturnedToFacility,
-                  ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.returned,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReturnedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockReturnedDescription,
                     ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.returned,
+                      ),
                   ),
                 ),
               ]),

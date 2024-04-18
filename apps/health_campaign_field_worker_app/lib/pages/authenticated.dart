@@ -43,14 +43,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         final showDrawer = snapshot.data ?? false;
 
-        return Portal(
-          child: Scaffold(
-            appBar: AppBar(
-              actions: showDrawer
-                  ? [
-                      BlocBuilder<BoundaryBloc, BoundaryState>(
-                        builder: (ctx, state) {
-                          final selectedBoundary = ctx.boundaryOrNull;
+              return Portal(
+                child: Scaffold(
+                  backgroundColor: DigitTheme.instance.colorScheme.background,
+                  appBar: AppBar(
+            backgroundColor: DigitTheme.instance.colorScheme.primary,
+                    actions: showDrawer
+                        ? [
+                            BlocBuilder<BoundaryBloc, BoundaryState>(
+                              builder: (ctx, state) {
+                                final selectedBoundary = ctx.boundaryOrNull;
 
                           if (selectedBoundary == null) {
                             return const SizedBox.shrink();

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'record_stock.dart';
 
@@ -12,7 +12,7 @@ part of 'record_stock.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$RecordStockEvent {
@@ -90,23 +90,23 @@ class _$RecordStockEventCopyWithImpl<$Res, $Val extends RecordStockEvent>
 }
 
 /// @nodoc
-abstract class _$$RecordStockSaveWarehouseDetailsEventCopyWith<$Res> {
-  factory _$$RecordStockSaveWarehouseDetailsEventCopyWith(
-          _$RecordStockSaveWarehouseDetailsEvent value,
-          $Res Function(_$RecordStockSaveWarehouseDetailsEvent) then) =
-      __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl<$Res>;
+abstract class _$$RecordStockSaveWarehouseDetailsEventImplCopyWith<$Res> {
+  factory _$$RecordStockSaveWarehouseDetailsEventImplCopyWith(
+          _$RecordStockSaveWarehouseDetailsEventImpl value,
+          $Res Function(_$RecordStockSaveWarehouseDetailsEventImpl) then) =
+      __$$RecordStockSaveWarehouseDetailsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({DateTime dateOfRecord, FacilityModel facilityModel});
 }
 
 /// @nodoc
-class __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl<$Res>
+class __$$RecordStockSaveWarehouseDetailsEventImplCopyWithImpl<$Res>
     extends _$RecordStockEventCopyWithImpl<$Res,
-        _$RecordStockSaveWarehouseDetailsEvent>
-    implements _$$RecordStockSaveWarehouseDetailsEventCopyWith<$Res> {
-  __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl(
-      _$RecordStockSaveWarehouseDetailsEvent _value,
-      $Res Function(_$RecordStockSaveWarehouseDetailsEvent) _then)
+        _$RecordStockSaveWarehouseDetailsEventImpl>
+    implements _$$RecordStockSaveWarehouseDetailsEventImplCopyWith<$Res> {
+  __$$RecordStockSaveWarehouseDetailsEventImplCopyWithImpl(
+      _$RecordStockSaveWarehouseDetailsEventImpl _value,
+      $Res Function(_$RecordStockSaveWarehouseDetailsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -115,7 +115,7 @@ class __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl<$Res>
     Object? dateOfRecord = null,
     Object? facilityModel = null,
   }) {
-    return _then(_$RecordStockSaveWarehouseDetailsEvent(
+    return _then(_$RecordStockSaveWarehouseDetailsEventImpl(
       dateOfRecord: null == dateOfRecord
           ? _value.dateOfRecord
           : dateOfRecord // ignore: cast_nullable_to_non_nullable
@@ -130,9 +130,9 @@ class __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordStockSaveWarehouseDetailsEvent
+class _$RecordStockSaveWarehouseDetailsEventImpl
     implements RecordStockSaveWarehouseDetailsEvent {
-  const _$RecordStockSaveWarehouseDetailsEvent(
+  const _$RecordStockSaveWarehouseDetailsEventImpl(
       {required this.dateOfRecord, required this.facilityModel});
 
   @override
@@ -146,10 +146,10 @@ class _$RecordStockSaveWarehouseDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordStockSaveWarehouseDetailsEvent &&
+            other is _$RecordStockSaveWarehouseDetailsEventImpl &&
             (identical(other.dateOfRecord, dateOfRecord) ||
                 other.dateOfRecord == dateOfRecord) &&
             (identical(other.facilityModel, facilityModel) ||
@@ -162,10 +162,10 @@ class _$RecordStockSaveWarehouseDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordStockSaveWarehouseDetailsEventCopyWith<
-          _$RecordStockSaveWarehouseDetailsEvent>
-      get copyWith => __$$RecordStockSaveWarehouseDetailsEventCopyWithImpl<
-          _$RecordStockSaveWarehouseDetailsEvent>(this, _$identity);
+  _$$RecordStockSaveWarehouseDetailsEventImplCopyWith<
+          _$RecordStockSaveWarehouseDetailsEventImpl>
+      get copyWith => __$$RecordStockSaveWarehouseDetailsEventImplCopyWithImpl<
+          _$RecordStockSaveWarehouseDetailsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -250,34 +250,34 @@ abstract class RecordStockSaveWarehouseDetailsEvent
   const factory RecordStockSaveWarehouseDetailsEvent(
           {required final DateTime dateOfRecord,
           required final FacilityModel facilityModel}) =
-      _$RecordStockSaveWarehouseDetailsEvent;
+      _$RecordStockSaveWarehouseDetailsEventImpl;
 
   DateTime get dateOfRecord;
   FacilityModel get facilityModel;
   @JsonKey(ignore: true)
-  _$$RecordStockSaveWarehouseDetailsEventCopyWith<
-          _$RecordStockSaveWarehouseDetailsEvent>
+  _$$RecordStockSaveWarehouseDetailsEventImplCopyWith<
+          _$RecordStockSaveWarehouseDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordStockSaveStockDetailsEventCopyWith<$Res> {
-  factory _$$RecordStockSaveStockDetailsEventCopyWith(
-          _$RecordStockSaveStockDetailsEvent value,
-          $Res Function(_$RecordStockSaveStockDetailsEvent) then) =
-      __$$RecordStockSaveStockDetailsEventCopyWithImpl<$Res>;
+abstract class _$$RecordStockSaveStockDetailsEventImplCopyWith<$Res> {
+  factory _$$RecordStockSaveStockDetailsEventImplCopyWith(
+          _$RecordStockSaveStockDetailsEventImpl value,
+          $Res Function(_$RecordStockSaveStockDetailsEventImpl) then) =
+      __$$RecordStockSaveStockDetailsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({StockModel stockModel});
 }
 
 /// @nodoc
-class __$$RecordStockSaveStockDetailsEventCopyWithImpl<$Res>
+class __$$RecordStockSaveStockDetailsEventImplCopyWithImpl<$Res>
     extends _$RecordStockEventCopyWithImpl<$Res,
-        _$RecordStockSaveStockDetailsEvent>
-    implements _$$RecordStockSaveStockDetailsEventCopyWith<$Res> {
-  __$$RecordStockSaveStockDetailsEventCopyWithImpl(
-      _$RecordStockSaveStockDetailsEvent _value,
-      $Res Function(_$RecordStockSaveStockDetailsEvent) _then)
+        _$RecordStockSaveStockDetailsEventImpl>
+    implements _$$RecordStockSaveStockDetailsEventImplCopyWith<$Res> {
+  __$$RecordStockSaveStockDetailsEventImplCopyWithImpl(
+      _$RecordStockSaveStockDetailsEventImpl _value,
+      $Res Function(_$RecordStockSaveStockDetailsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -285,7 +285,7 @@ class __$$RecordStockSaveStockDetailsEventCopyWithImpl<$Res>
   $Res call({
     Object? stockModel = null,
   }) {
-    return _then(_$RecordStockSaveStockDetailsEvent(
+    return _then(_$RecordStockSaveStockDetailsEventImpl(
       stockModel: null == stockModel
           ? _value.stockModel
           : stockModel // ignore: cast_nullable_to_non_nullable
@@ -296,9 +296,9 @@ class __$$RecordStockSaveStockDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordStockSaveStockDetailsEvent
+class _$RecordStockSaveStockDetailsEventImpl
     implements RecordStockSaveStockDetailsEvent {
-  const _$RecordStockSaveStockDetailsEvent({required this.stockModel});
+  const _$RecordStockSaveStockDetailsEventImpl({required this.stockModel});
 
   @override
   final StockModel stockModel;
@@ -309,10 +309,10 @@ class _$RecordStockSaveStockDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordStockSaveStockDetailsEvent &&
+            other is _$RecordStockSaveStockDetailsEventImpl &&
             (identical(other.stockModel, stockModel) ||
                 other.stockModel == stockModel));
   }
@@ -323,10 +323,10 @@ class _$RecordStockSaveStockDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordStockSaveStockDetailsEventCopyWith<
-          _$RecordStockSaveStockDetailsEvent>
-      get copyWith => __$$RecordStockSaveStockDetailsEventCopyWithImpl<
-          _$RecordStockSaveStockDetailsEvent>(this, _$identity);
+  _$$RecordStockSaveStockDetailsEventImplCopyWith<
+          _$RecordStockSaveStockDetailsEventImpl>
+      get copyWith => __$$RecordStockSaveStockDetailsEventImplCopyWithImpl<
+          _$RecordStockSaveStockDetailsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -409,39 +409,39 @@ class _$RecordStockSaveStockDetailsEvent
 abstract class RecordStockSaveStockDetailsEvent implements RecordStockEvent {
   const factory RecordStockSaveStockDetailsEvent(
           {required final StockModel stockModel}) =
-      _$RecordStockSaveStockDetailsEvent;
+      _$RecordStockSaveStockDetailsEventImpl;
 
   StockModel get stockModel;
   @JsonKey(ignore: true)
-  _$$RecordStockSaveStockDetailsEventCopyWith<
-          _$RecordStockSaveStockDetailsEvent>
+  _$$RecordStockSaveStockDetailsEventImplCopyWith<
+          _$RecordStockSaveStockDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordStockCreateStockEntryEventCopyWith<$Res> {
-  factory _$$RecordStockCreateStockEntryEventCopyWith(
-          _$RecordStockCreateStockEntryEvent value,
-          $Res Function(_$RecordStockCreateStockEntryEvent) then) =
-      __$$RecordStockCreateStockEntryEventCopyWithImpl<$Res>;
+abstract class _$$RecordStockCreateStockEntryEventImplCopyWith<$Res> {
+  factory _$$RecordStockCreateStockEntryEventImplCopyWith(
+          _$RecordStockCreateStockEntryEventImpl value,
+          $Res Function(_$RecordStockCreateStockEntryEventImpl) then) =
+      __$$RecordStockCreateStockEntryEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$RecordStockCreateStockEntryEventCopyWithImpl<$Res>
+class __$$RecordStockCreateStockEntryEventImplCopyWithImpl<$Res>
     extends _$RecordStockEventCopyWithImpl<$Res,
-        _$RecordStockCreateStockEntryEvent>
-    implements _$$RecordStockCreateStockEntryEventCopyWith<$Res> {
-  __$$RecordStockCreateStockEntryEventCopyWithImpl(
-      _$RecordStockCreateStockEntryEvent _value,
-      $Res Function(_$RecordStockCreateStockEntryEvent) _then)
+        _$RecordStockCreateStockEntryEventImpl>
+    implements _$$RecordStockCreateStockEntryEventImplCopyWith<$Res> {
+  __$$RecordStockCreateStockEntryEventImplCopyWithImpl(
+      _$RecordStockCreateStockEntryEventImpl _value,
+      $Res Function(_$RecordStockCreateStockEntryEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RecordStockCreateStockEntryEvent
+class _$RecordStockCreateStockEntryEventImpl
     implements RecordStockCreateStockEntryEvent {
-  const _$RecordStockCreateStockEntryEvent();
+  const _$RecordStockCreateStockEntryEventImpl();
 
   @override
   String toString() {
@@ -449,10 +449,10 @@ class _$RecordStockCreateStockEntryEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordStockCreateStockEntryEvent);
+            other is _$RecordStockCreateStockEntryEventImpl);
   }
 
   @override
@@ -538,7 +538,7 @@ class _$RecordStockCreateStockEntryEvent
 
 abstract class RecordStockCreateStockEntryEvent implements RecordStockEvent {
   const factory RecordStockCreateStockEntryEvent() =
-      _$RecordStockCreateStockEntryEvent;
+      _$RecordStockCreateStockEntryEventImpl;
 }
 
 /// @nodoc
@@ -703,11 +703,12 @@ class _$RecordStockStateCopyWithImpl<$Res, $Val extends RecordStockState>
 }
 
 /// @nodoc
-abstract class _$$RecordStockCreateStateCopyWith<$Res>
+abstract class _$$RecordStockCreateStateImplCopyWith<$Res>
     implements $RecordStockStateCopyWith<$Res> {
-  factory _$$RecordStockCreateStateCopyWith(_$RecordStockCreateState value,
-          $Res Function(_$RecordStockCreateState) then) =
-      __$$RecordStockCreateStateCopyWithImpl<$Res>;
+  factory _$$RecordStockCreateStateImplCopyWith(
+          _$RecordStockCreateStateImpl value,
+          $Res Function(_$RecordStockCreateStateImpl) then) =
+      __$$RecordStockCreateStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -721,11 +722,12 @@ abstract class _$$RecordStockCreateStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$RecordStockCreateStateCopyWithImpl<$Res>
-    extends _$RecordStockStateCopyWithImpl<$Res, _$RecordStockCreateState>
-    implements _$$RecordStockCreateStateCopyWith<$Res> {
-  __$$RecordStockCreateStateCopyWithImpl(_$RecordStockCreateState _value,
-      $Res Function(_$RecordStockCreateState) _then)
+class __$$RecordStockCreateStateImplCopyWithImpl<$Res>
+    extends _$RecordStockStateCopyWithImpl<$Res, _$RecordStockCreateStateImpl>
+    implements _$$RecordStockCreateStateImplCopyWith<$Res> {
+  __$$RecordStockCreateStateImplCopyWithImpl(
+      _$RecordStockCreateStateImpl _value,
+      $Res Function(_$RecordStockCreateStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -739,7 +741,7 @@ class __$$RecordStockCreateStateCopyWithImpl<$Res>
     Object? stockModel = freezed,
     Object? existingStocks = null,
   }) {
-    return _then(_$RecordStockCreateState(
+    return _then(_$RecordStockCreateStateImpl(
       entryType: null == entryType
           ? _value.entryType
           : entryType // ignore: cast_nullable_to_non_nullable
@@ -774,8 +776,8 @@ class __$$RecordStockCreateStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordStockCreateState extends RecordStockCreateState {
-  _$RecordStockCreateState(
+class _$RecordStockCreateStateImpl extends RecordStockCreateState {
+  _$RecordStockCreateStateImpl(
       {required this.entryType,
       this.loading = false,
       required this.projectId,
@@ -803,6 +805,7 @@ class _$RecordStockCreateState extends RecordStockCreateState {
   @override
   @JsonKey()
   List<StockModel> get existingStocks {
+    if (_existingStocks is EqualUnmodifiableListView) return _existingStocks;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_existingStocks);
   }
@@ -813,10 +816,10 @@ class _$RecordStockCreateState extends RecordStockCreateState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordStockCreateState &&
+            other is _$RecordStockCreateStateImpl &&
             (identical(other.entryType, entryType) ||
                 other.entryType == entryType) &&
             (identical(other.loading, loading) || other.loading == loading) &&
@@ -846,9 +849,9 @@ class _$RecordStockCreateState extends RecordStockCreateState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordStockCreateStateCopyWith<_$RecordStockCreateState> get copyWith =>
-      __$$RecordStockCreateStateCopyWithImpl<_$RecordStockCreateState>(
-          this, _$identity);
+  _$$RecordStockCreateStateImplCopyWith<_$RecordStockCreateStateImpl>
+      get copyWith => __$$RecordStockCreateStateImplCopyWithImpl<
+          _$RecordStockCreateStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -969,7 +972,7 @@ abstract class RecordStockCreateState extends RecordStockState {
       final DateTime? dateOfRecord,
       final FacilityModel? facilityModel,
       final StockModel? stockModel,
-      final List<StockModel> existingStocks}) = _$RecordStockCreateState;
+      final List<StockModel> existingStocks}) = _$RecordStockCreateStateImpl;
   RecordStockCreateState._() : super._();
 
   @override
@@ -987,17 +990,17 @@ abstract class RecordStockCreateState extends RecordStockState {
   List<StockModel> get existingStocks;
   @override
   @JsonKey(ignore: true)
-  _$$RecordStockCreateStateCopyWith<_$RecordStockCreateState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$RecordStockCreateStateImplCopyWith<_$RecordStockCreateStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordStockPersistedStateCopyWith<$Res>
+abstract class _$$RecordStockPersistedStateImplCopyWith<$Res>
     implements $RecordStockStateCopyWith<$Res> {
-  factory _$$RecordStockPersistedStateCopyWith(
-          _$RecordStockPersistedState value,
-          $Res Function(_$RecordStockPersistedState) then) =
-      __$$RecordStockPersistedStateCopyWithImpl<$Res>;
+  factory _$$RecordStockPersistedStateImplCopyWith(
+          _$RecordStockPersistedStateImpl value,
+          $Res Function(_$RecordStockPersistedStateImpl) then) =
+      __$$RecordStockPersistedStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1010,11 +1013,13 @@ abstract class _$$RecordStockPersistedStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$RecordStockPersistedStateCopyWithImpl<$Res>
-    extends _$RecordStockStateCopyWithImpl<$Res, _$RecordStockPersistedState>
-    implements _$$RecordStockPersistedStateCopyWith<$Res> {
-  __$$RecordStockPersistedStateCopyWithImpl(_$RecordStockPersistedState _value,
-      $Res Function(_$RecordStockPersistedState) _then)
+class __$$RecordStockPersistedStateImplCopyWithImpl<$Res>
+    extends _$RecordStockStateCopyWithImpl<$Res,
+        _$RecordStockPersistedStateImpl>
+    implements _$$RecordStockPersistedStateImplCopyWith<$Res> {
+  __$$RecordStockPersistedStateImplCopyWithImpl(
+      _$RecordStockPersistedStateImpl _value,
+      $Res Function(_$RecordStockPersistedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1027,7 +1032,7 @@ class __$$RecordStockPersistedStateCopyWithImpl<$Res>
     Object? stockModel = freezed,
     Object? existingStocks = null,
   }) {
-    return _then(_$RecordStockPersistedState(
+    return _then(_$RecordStockPersistedStateImpl(
       entryType: null == entryType
           ? _value.entryType
           : entryType // ignore: cast_nullable_to_non_nullable
@@ -1058,8 +1063,8 @@ class __$$RecordStockPersistedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordStockPersistedState extends RecordStockPersistedState {
-  _$RecordStockPersistedState(
+class _$RecordStockPersistedStateImpl extends RecordStockPersistedState {
+  _$RecordStockPersistedStateImpl(
       {required this.entryType,
       required this.projectId,
       this.dateOfRecord,
@@ -1083,6 +1088,7 @@ class _$RecordStockPersistedState extends RecordStockPersistedState {
   @override
   @JsonKey()
   List<StockModel> get existingStocks {
+    if (_existingStocks is EqualUnmodifiableListView) return _existingStocks;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_existingStocks);
   }
@@ -1093,10 +1099,10 @@ class _$RecordStockPersistedState extends RecordStockPersistedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordStockPersistedState &&
+            other is _$RecordStockPersistedStateImpl &&
             (identical(other.entryType, entryType) ||
                 other.entryType == entryType) &&
             (identical(other.projectId, projectId) ||
@@ -1124,9 +1130,9 @@ class _$RecordStockPersistedState extends RecordStockPersistedState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordStockPersistedStateCopyWith<_$RecordStockPersistedState>
-      get copyWith => __$$RecordStockPersistedStateCopyWithImpl<
-          _$RecordStockPersistedState>(this, _$identity);
+  _$$RecordStockPersistedStateImplCopyWith<_$RecordStockPersistedStateImpl>
+      get copyWith => __$$RecordStockPersistedStateImplCopyWithImpl<
+          _$RecordStockPersistedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1246,7 +1252,7 @@ abstract class RecordStockPersistedState extends RecordStockState {
       final DateTime? dateOfRecord,
       final FacilityModel? facilityModel,
       final StockModel? stockModel,
-      final List<StockModel> existingStocks}) = _$RecordStockPersistedState;
+      final List<StockModel> existingStocks}) = _$RecordStockPersistedStateImpl;
   RecordStockPersistedState._() : super._();
 
   @override
@@ -1263,6 +1269,6 @@ abstract class RecordStockPersistedState extends RecordStockState {
   List<StockModel> get existingStocks;
   @override
   @JsonKey(ignore: true)
-  _$$RecordStockPersistedStateCopyWith<_$RecordStockPersistedState>
+  _$$RecordStockPersistedStateImplCopyWith<_$RecordStockPersistedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

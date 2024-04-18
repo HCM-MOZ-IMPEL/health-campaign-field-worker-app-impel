@@ -32,14 +32,14 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
-Expression<bool> buildAnd(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value & element);
 
   return result.equals(true);
 }
 
-Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value | element);
 

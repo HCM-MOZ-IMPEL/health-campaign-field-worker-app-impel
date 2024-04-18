@@ -48,9 +48,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          left: 16,
-                          top: 16,
-                          bottom: 16,
+                          left: kPadding * 2,
+                          bottom: kPadding,
                         ),
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -66,12 +65,13 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     ...[
                       SliverToBoxAdapter(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: EdgeInsets.zero,
+                                padding:
+                                    const EdgeInsets.only(left: kPadding * 2),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSearchRoute());
@@ -79,6 +79,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.search),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.searchCTA,
                                   )),
@@ -96,6 +99,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.filter_list_alt),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.filterCTA,
                                   )),
@@ -105,7 +111,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: EdgeInsets.zero,
+                                padding:
+                                    const EdgeInsets.only(right: kPadding * 2),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSortRoute());
@@ -113,6 +120,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.segment),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.sortCTA,
                                   )),
@@ -154,9 +164,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                 ),
               ),
               SizedBox(
-                height: 85,
                 child: DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () async {
                       var loggedInUserUuid = context.loggedInUserUuid;
@@ -215,7 +225,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding, bottom: kPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -243,7 +253,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding, bottom: kPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -269,7 +279,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding, bottom: kPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -295,7 +305,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding, bottom: kPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -319,7 +329,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding, bottom: kPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -345,7 +355,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 16, bottom: 10),
+            padding: const EdgeInsets.only(top: kPadding * 2),
             child: Row(
               children: [
                 Expanded(
@@ -361,10 +371,15 @@ class _ComplaintsInboxItem extends StatelessWidget {
                         width: 1.0,
                         color: theme.colorScheme.secondary,
                       ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
                     child: Text(
                       localizations.translate(i18.searchBeneficiary.iconLabel),
-                      style: TextStyle(
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.headlineSmall
+                          ?.apply(
                         color: theme.colorScheme.secondary,
                       ),
                     ),

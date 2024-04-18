@@ -2,7 +2,8 @@
 
 import 'package:drift/drift.dart';
 
-
+@TableIndex(name: 'taskprojectbeneficiaryclientref', columns: {#projectBeneficiaryClientReferenceId})
+@TableIndex(name: 'taskclientref', columns: {#clientReferenceId})
 class Task extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
@@ -12,11 +13,11 @@ class Task extends Table {
   TextColumn get status => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
+  IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();
   TextColumn get clientCreatedBy => text().nullable()();
   IntColumn get clientModifiedTime => integer().nullable()();
-  IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();

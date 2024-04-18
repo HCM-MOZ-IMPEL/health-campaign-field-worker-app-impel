@@ -78,8 +78,8 @@ class PgrServiceRemoteRepository
     List<PgrComplaintResponseModel> pgrComplaintModel;
     try {
       pgrServiceCreateResponseModel =
-          Mapper.fromMap<PgrServiceCreateResponseModel>(
-        responseMap,
+          PgrServiceCreateResponseModelMapper.fromMap(
+        responseMap,                       
       );
       pgrComplaintModel = pgrServiceCreateResponseModel.serviceWrappers;
     } catch (e) {

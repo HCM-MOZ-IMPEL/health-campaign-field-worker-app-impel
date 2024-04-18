@@ -66,7 +66,8 @@ class _HouseholdOverviewPageState
                           child: SingleChildScrollView(
                             child: DigitCard(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Row(
                                     mainAxisAlignment:
@@ -130,26 +131,45 @@ class _HouseholdOverviewPageState
                                       ),
                                     ),
                                   ),
-                                  DigitTableCard(
-                                    element: {
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding,
+                                      right: kPadding,
+                                    ),
+                                    child: Text(
                                       localizations.translate(i18
                                           .householdOverView
-                                          .householdOverViewHouseholdHeadNameLabel): [
-                                        state.householdMemberWrapper
-                                            .headOfHousehold.name?.givenName,
-                                        state.householdMemberWrapper
-                                            .headOfHousehold.name?.familyName,
-                                      ].whereNotNull().join(' '),
-                                      localizations.translate(
-                                        i18.householdLocation
-                                            .administrationAreaFormLabel,
-                                      ): state.householdMemberWrapper.household
-                                          .address?.addressLine1,
-                                      localizations.translate(
-                                        i18.deliverIntervention.memberCountText,
-                                      ): state.householdMemberWrapper.household
-                                          .memberCount,
-                                    },
+                                          .householdOverViewLabel),
+                                      style: theme.textTheme.displayMedium,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding,
+                                      right: kPadding,
+                                    ),
+                                    child: DigitTableCard(
+                                      element: {
+                                        localizations.translate(i18
+                                            .householdOverView
+                                            .householdOverViewHouseholdHeadNameLabel): [
+                                          state.householdMemberWrapper
+                                              .headOfHousehold.name?.givenName,
+                                          state.householdMemberWrapper
+                                              .headOfHousehold.name?.familyName,
+                                        ].whereNotNull().join(' '),
+                                        localizations.translate(
+                                          i18.householdLocation
+                                              .administrationAreaFormLabel,
+                                        ): state.householdMemberWrapper
+                                            .household.address?.addressLine1,
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .memberCountText,
+                                        ): state.householdMemberWrapper
+                                            .household.memberCount,
+                                      },
+                                    ),
                                   ),
                                   Column(
                                     children: state
@@ -343,6 +363,14 @@ class _HouseholdOverviewPageState
                                                 DigitDialog.show(
                                                   context,
                                                   options: DigitDialogOptions(
+                                                    titlePadding:
+                                                        const EdgeInsets
+                                                            .fromLTRB(
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding / 2,
+                                                    ),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .householdOverView
@@ -518,6 +546,9 @@ class _HouseholdOverviewPageState
                                       icon: Icons.add_circle,
                                     ),
                                   ),
+                                  const SizedBox(
+                                    height: kPadding,
+                                  ),
                                 ],
                               ),
                             ),
@@ -529,49 +560,44 @@ class _HouseholdOverviewPageState
                 ),
           bottomNavigationBar: Offstage(
             offstage: beneficiaryType == BeneficiaryType.individual,
-            child: SizedBox(
-              height: 85,
-              child: BlocBuilder<DeliverInterventionBloc,
-                  DeliverInterventionState>(
-                builder: (ctx, state) => DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: state.tasks?.first.status ==
-                          Status.administeredSuccess.toValue()
-                      ? DigitOutLineButton(
-                          label: localizations.translate(
-                            i18.memberCard.deliverDetailsUpdateLabel,
-                          ),
-                          onPressed: () async {
-                            await context.router
-                                .push(BeneficiaryDetailsRoute());
-                          },
-                        )
-                      : DigitElevatedButton(
-                          onPressed: () async {
-                            final bloc = ctx.read<HouseholdOverviewBloc>();
+            child:
+                BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+              builder: (ctx, state) => DigitCard(
+                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                child: state.tasks?.first.status ==
+                        Status.administeredSuccess.toValue()
+                    ? DigitOutLineButton(
+                        label: localizations.translate(
+                          i18.memberCard.deliverDetailsUpdateLabel,
+                        ),
+                        onPressed: () async {
+                          await context.router.push(BeneficiaryDetailsRoute());
+                        },
+                      )
+                    : DigitElevatedButton(
+                        onPressed: () async {
+                          final bloc = ctx.read<HouseholdOverviewBloc>();
 
-                            final projectId = context.projectId;
+                          final projectId = context.projectId;
 
-                            bloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: projectId,
-                                projectBeneficiaryType: beneficiaryType,
-                              ),
-                            );
+                          bloc.add(
+                            HouseholdOverviewReloadEvent(
+                              projectId: projectId,
+                              projectBeneficiaryType: beneficiaryType,
+                            ),
+                          );
 
-                            await context.router
-                                .push(BeneficiaryDetailsRoute());
-                          },
-                          child: Center(
-                            child: Text(
-                              localizations.translate(
-                                i18.householdOverView
-                                    .householdOverViewActionText,
-                              ),
+                          await context.router.push(BeneficiaryDetailsRoute());
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.householdOverView.householdOverViewActionText,
                             ),
                           ),
                         ),
-                ),
+                      ),
               ),
             ),
           ),

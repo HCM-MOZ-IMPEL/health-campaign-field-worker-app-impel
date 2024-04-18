@@ -5,12 +5,16 @@ import '../../blocs/localization/app_localization.dart';
 
 class HomeItemCard extends StatelessWidget {
   final IconData icon;
+  final String customIcon;
   final String label;
   final VoidCallback? onPressed;
+  final bool enableCustomIcon;
 
   const HomeItemCard({
     required this.icon,
     required this.label,
+    this.enableCustomIcon = false,
+    this.customIcon = "",
     this.onPressed,
     super.key,
   });
@@ -21,9 +25,10 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding).copyWith(top: kPadding * 5),
+      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding * 3),
+      margin: const EdgeInsets.all(kPadding),
       child: Align(
-        alignment: Alignment.topCenter,
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -9,7 +9,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/user/user.dart';
-import '../models/data_model.mapper.g.dart';
 import '../models/entities/user.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';

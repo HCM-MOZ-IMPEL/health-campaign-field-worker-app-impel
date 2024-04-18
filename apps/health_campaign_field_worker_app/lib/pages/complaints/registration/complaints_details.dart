@@ -101,15 +101,17 @@ class _ComplaintsDetailsPageState
                         i18.complaints.raisedForMyself;
 
                 return ScrollableContent(
+                  enableFixedButton: true,
                   header: const Column(
                     children: [
                       BackNavigationHelpHeaderWidget(),
                     ],
                   ),
                   footer: SizedBox(
-                    height: 85,
                     child: DigitCard(
-                      margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                       child: DigitElevatedButton(
                         onPressed: () async {
                           setState(() {

@@ -26,6 +26,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
 
     return Scaffold(
       body: ScrollableContent(
+        enableFixedButton: true,
         header: Column(
           children: [
             const BackNavigationHelpHeaderWidget(),
@@ -45,7 +46,8 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
         footer: SizedBox(
           height: 85,
           child: DigitCard(
-            margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
             child: DigitElevatedButton(
               onPressed: () {
                 router.pop();
@@ -63,12 +65,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxNumberLabel),
@@ -84,7 +86,9 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                           complaint.serviceRequestId ??
                               "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
                           style: TextStyle(
-                            color: theme.colorScheme.secondary,
+                            color: complaint.serviceRequestId != null
+                                ? theme.colorScheme.secondary
+                                : const DigitColors().woodsmokeBlack,
                           ),
                         ),
                       ),
@@ -93,12 +97,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxTypeLabel),
@@ -123,12 +127,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxDateLabel),
@@ -151,12 +155,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.complainantName),
@@ -177,12 +181,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxAreaLabel),
@@ -203,12 +207,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations.translate(
                             i18.complaints.complainantContactNumber,
@@ -230,12 +234,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxStatusLabel),
@@ -258,12 +262,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.complaintDescription),
