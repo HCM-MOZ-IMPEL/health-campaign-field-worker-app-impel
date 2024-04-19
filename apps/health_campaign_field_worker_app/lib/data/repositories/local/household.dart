@@ -3,9 +3,11 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:drift/isolate.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
+import '../../local_store/sql_store/sql_store.dart';
 import 'base/household_base.dart';
 
 class HouseholdLocalRepository extends HouseholdLocalBaseRepository {
@@ -224,26 +226,32 @@ class HouseholdLocalRepository extends HouseholdLocalBaseRepository {
           clientAuditDetails: entity.clientAuditDetails,
         )
         .companion;
+    await sql.computeWithDatabase(
+      computation: (database) async {
+        await sql.batch((batch) async {
+          batch.update(
+            sql.household,
+            householdCompanion,
+            where: (table) => table.clientReferenceId.equals(
+              entity.clientReferenceId,
+            ),
+          );
 
-    await sql.batch((batch) async {
-      batch.update(
-        sql.household,
-        householdCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
-      );
-
-      if (addressCompanion != null) {
-        batch.update(
-          sql.address,
-          addressCompanion,
-          where: (table) => table.relatedClientReferenceId.equals(
-            addressCompanion.relatedClientReferenceId.value!,
-          ),
-        );
-      }
-    });
+          if (addressCompanion != null) {
+            batch.update(
+              sql.address,
+              addressCompanion,
+              where: (table) => table.relatedClientReferenceId.equals(
+                addressCompanion.relatedClientReferenceId.value!,
+              ),
+            );
+          }
+        });
+      },
+      connect: (connect) {
+        return LocalSqlDataStore(connect);
+      },
+    );
 
     await super.update(entity, createOpLog: createOpLog);
   }
