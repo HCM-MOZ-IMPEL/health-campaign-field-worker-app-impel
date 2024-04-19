@@ -45,7 +45,7 @@ class SideBar extends StatelessWidget {
                       height: 16.0,
                     ),
                     Text(
-                      value.userModel.name.toString(),
+                      value.userModel.userName.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
                     Text(
