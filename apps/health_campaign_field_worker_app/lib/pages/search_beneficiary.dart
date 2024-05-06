@@ -371,9 +371,7 @@ class _SearchBeneficiaryPageState
                                   router
                                       .push(BeneficiaryRegistrationWrapperRoute(
                                     initialState:
-                                        BeneficiaryRegistrationCreateState(
-                                      searchQuery: state.searchQuery,
-                                    ),
+                                        const BeneficiaryRegistrationCreateState(),
                                   ));
                                 };
 
