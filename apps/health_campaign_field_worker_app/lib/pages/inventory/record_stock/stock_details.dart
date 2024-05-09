@@ -42,7 +42,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _commentsKey = 'comments';
   late ProductVariantModel productVariantModel;
   bool transportbyHand = false;
-  bool enableBaleScanning = false;
+  bool enableBaleScanning = true;
   List<ValidatorFunction> balesQuantityValidator = [];
 
   FormGroup _form() {

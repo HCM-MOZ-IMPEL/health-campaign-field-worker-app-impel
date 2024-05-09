@@ -442,28 +442,28 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           onPressed: () async {
                             String code = _resourceController.value.text
                                 .replaceAll(' ', '');
-                            // if (!widget.isGS1code) {
-                            //   if (!pattern.hasMatch(
-                            //     code,
-                            //   )) {
-                            //     await handleError(
-                            //       i18.deliverIntervention.scanValidResource,
-                            //     );
+                            if (!widget.isGS1code) {
+                              if (!pattern.hasMatch(
+                                code,
+                              )) {
+                                await handleError(
+                                  i18.deliverIntervention.scanValidResource,
+                                );
 
-                            //     return;
-                            //   } else {
-                            //     bool isLimiteExceeded = await isLimitExceeded(
-                            //       code,
-                            //     );
-                            //     if (isLimiteExceeded) {
-                            //       await handleError(
-                            //         i18.deliverIntervention.scanValidResource,
-                            //       );
+                                return;
+                              } else {
+                                bool isLimiteExceeded = await isLimitExceeded(
+                                  code,
+                                );
+                                if (isLimiteExceeded) {
+                                  await handleError(
+                                    i18.deliverIntervention.scanValidResource,
+                                  );
 
-                            //       return;
-                            //     }
-                            //   }
-                            // }
+                                  return;
+                                }
+                              }
+                            }
                             final bloc = context.read<ScannerBloc>();
                             codes.add(code);
                             bloc.add(
@@ -612,24 +612,24 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
 
             return;
           } else {
-            // if (pattern.hasMatch(
-            //   code,
-            // )) {
-            //   bool isLimiteExceeded = await isLimitExceeded(
-            //     code,
-            //   );
-            //   if (isLimiteExceeded) {
-            //     await handleError(
-            //       i18.deliverIntervention.scanValidResource,
-            //     );
-            //   } else {
+            if (pattern.hasMatch(
+              code,
+            )) {
+              bool isLimiteExceeded = await isLimitExceeded(
+                code,
+              );
+              if (isLimiteExceeded) {
+                await handleError(
+                  i18.deliverIntervention.scanValidResource,
+                );
+              } else {
             await storeCode(code);
-            //   }
-            // } else {
-            //   await handleError(
-            //     i18.deliverIntervention.scanValidResource,
-            //   );
-            // }
+              }
+            } else {
+              await handleError(
+                i18.deliverIntervention.scanValidResource,
+              );
+            }
           }
         }
       }
