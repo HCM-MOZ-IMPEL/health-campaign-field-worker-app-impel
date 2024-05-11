@@ -676,6 +676,8 @@ class DeliverIntervention {
   String get manualCodeDescription => 'MANUAL_CODE_DESCRIPTION';
 
   String get resourceCode => 'RESOURCE_CODE';
+  
+  String get resourceCodeVerify => 'RESOURCE_CODE_VERIFY';
 
   String get voucherCode => 'VOUCHER_CODE';
 

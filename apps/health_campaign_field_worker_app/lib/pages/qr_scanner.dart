@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'dart:io';
 import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 
-import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/scanner/scanner.dart';
@@ -55,6 +55,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   bool flashstatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final _resourceController = TextEditingController();
+  final _resourcevalidateController = TextEditingController();
   bool submitButton = false;
   RegExp pattern = RegExp(r'^\d{4}-\d{2}-\d{2}-\d{1}-\d{3}-[A-Za-z]{2}$');
 
@@ -288,12 +289,20 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
 
-                      Positioned(
+                        Positioned(
                           bottom: (kPadding * 7.5),
-                          height:  (state.barcodes.length + state.qrcodes.length) < 5
-                                  ? ( (state.barcodes.isEmpty || state.qrcodes.isEmpty) ? (state.barcodes.length + state.qrcodes.length) * 30 :  (state.barcodes.length + state.qrcodes.length) * 15) + 80
+                          height:
+                              (state.barcodes.length + state.qrcodes.length) < 5
+                                  ? ((state.barcodes.isEmpty ||
+                                              state.qrcodes.isEmpty)
+                                          ? (state.barcodes.length +
+                                                  state.qrcodes.length) *
+                                              30
+                                          : (state.barcodes.length +
+                                                  state.qrcodes.length) *
+                                              15) +
+                                      80
                                   : MediaQuery.of(context).size.height / 2.2,
-                              
                           width: MediaQuery.of(context).size.width,
                           child: Container(
                             width: 100,
@@ -336,144 +345,181 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: SizedBox(child: ScrollableContent(children: [
-                                      ...state.qrcodes.map((e) => Container(
-                                            margin: const EdgeInsets.all(kPadding),
-                                            height: kPadding * 6,
-                                            decoration: BoxDecoration(
-                                              color: DigitTheme.instance
-                                                  .colorScheme.background,
-                                              border: Border.all(
-                                                color: DigitTheme.instance
-                                                    .colorScheme.outline,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                Radius.circular(4.0),
-                                              ),
-                                            ),
-                                            padding:
-                                                const EdgeInsets.all(kPadding),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    trimString(state
-                                                        .qrcodes[state.qrcodes.indexOf(e)]
-                                                        .toString()),
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.delete,
-                                                    color: Colors.red,
-                                                    size: 24,
-                                                  ),
-                                                  onPressed: () {
-                                                    final bloc = context
-                                                        .read<ScannerBloc>();
-
-                                                    codes = List.from(
-                                                      state.qrcodes,
-                                                    );
-                                                    codes.removeAt(state.qrcodes.indexOf(e));
-                                                    setState(() {
-                                                      codes = codes;
-                                                    });
-
-                                                    bloc.add(
-                                                      ScannerEvent
-                                                          .handleScanner(
-                                                        state.barcodes,
-                                                        codes,
+                                    child: SizedBox(
+                                      child: ScrollableContent(
+                                        children: [
+                                          ...state.qrcodes
+                                              .map((e) => Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            kPadding),
+                                                    height: kPadding * 6,
+                                                    decoration: BoxDecoration(
+                                                      color: DigitTheme
+                                                          .instance
+                                                          .colorScheme
+                                                          .background,
+                                                      border: Border.all(
+                                                        color: DigitTheme
+                                                            .instance
+                                                            .colorScheme
+                                                            .outline,
+                                                        width: 1,
                                                       ),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          )).toList(),
-                                          
-                                 ...state.barcodes.map((e) =>  Container(
-                                           margin: const EdgeInsets.all(kPadding),
-                                            height: kPadding * 6,
-                                            decoration: BoxDecoration(
-                                              color: DigitTheme.instance
-                                                  .colorScheme.background,
-                                              border: Border.all(
-                                                color: DigitTheme.instance
-                                                    .colorScheme.outline,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                Radius.circular(4.0),
-                                              ),
-                                            ),
-                                            padding:
-                                                const EdgeInsets.all(kPadding),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    state
-                                                        .barcodes[state.barcodes.indexOf(e)]
-                                                        .elements
-                                                        .entries
-                                                        .last
-                                                        .value
-                                                        .data
-                                                        .toString(),
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.delete,
-                                                    color: Colors.red,
-                                                    size: 24,
-                                                  ),
-                                                  onPressed: () {
-                                                    final bloc = context
-                                                        .read<ScannerBloc>();
-                                                    result = List.from(
-                                                      state.barcodes,
-                                                    );
-                                                    result.removeAt(state.barcodes.indexOf(e));
-                                                    setState(() {
-                                                      result = result;
-                                                    });
-                                                    bloc.add(
-                                                      ScannerEvent
-                                                          .handleScanner(
-                                                        result,
-                                                        state.qrcodes,
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(4.0),
                                                       ),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          )).toList(),
-                              
-                                    ],),),
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            kPadding),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            trimString(state
+                                                                .qrcodes[state
+                                                                    .qrcodes
+                                                                    .indexOf(e)]
+                                                                .toString()),
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.red,
+                                                            size: 24,
+                                                          ),
+                                                          onPressed: () {
+                                                            final bloc =
+                                                                context.read<
+                                                                    ScannerBloc>();
+
+                                                            codes = List.from(
+                                                              state.qrcodes,
+                                                            );
+                                                            codes.removeAt(state
+                                                                .qrcodes
+                                                                .indexOf(e));
+                                                            setState(() {
+                                                              codes = codes;
+                                                            });
+
+                                                            bloc.add(
+                                                              ScannerEvent
+                                                                  .handleScanner(
+                                                                state.barcodes,
+                                                                codes,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          ...state.barcodes
+                                              .map((e) => Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            kPadding),
+                                                    height: kPadding * 6,
+                                                    decoration: BoxDecoration(
+                                                      color: DigitTheme
+                                                          .instance
+                                                          .colorScheme
+                                                          .background,
+                                                      border: Border.all(
+                                                        color: DigitTheme
+                                                            .instance
+                                                            .colorScheme
+                                                            .outline,
+                                                        width: 1,
+                                                      ),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(4.0),
+                                                      ),
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            kPadding),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            state
+                                                                .barcodes[state
+                                                                    .barcodes
+                                                                    .indexOf(e)]
+                                                                .elements
+                                                                .entries
+                                                                .last
+                                                                .value
+                                                                .data
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.red,
+                                                            size: 24,
+                                                          ),
+                                                          onPressed: () {
+                                                            final bloc =
+                                                                context.read<
+                                                                    ScannerBloc>();
+                                                            result = List.from(
+                                                              state.barcodes,
+                                                            );
+                                                            result.removeAt(
+                                                                state
+                                                                    .barcodes
+                                                                    .indexOf(
+                                                                        e));
+                                                            setState(() {
+                                                              result = result;
+                                                            });
+                                                            bloc.add(
+                                                              ScannerEvent
+                                                                  .handleScanner(
+                                                                result,
+                                                                state.qrcodes,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                         
                               ],
                             ),
                           ),
@@ -499,18 +545,47 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             i18.common.coreCommonSubmit,
                           )),
                           onPressed: () async {
-                            if (manualcode) {
+                            final role = context.loggedInUserRoles
+                                .firstWhereOrNull((element) =>
+                                    element.code == 'WAREHOUSE_MANAGER');
+
+                            if (manualcode && role != null) {
                               String code = _resourceController.value.text
                                   .replaceAll(' ', '');
-                              final bloc = context.read<ScannerBloc>();
-                              codes.add(code);
+// TODO need to add the GS1 regex pattren
+                              if (widget.isGS1code) {
+                                if (!pattern.hasMatch(
+                                  code,
+                                )) {
+                                  await handleError(
+                                    i18.deliverIntervention.scanValidResource,
+                                  );
 
-                              bloc.add(
-                                ScannerEvent.handleScanner(
-                                  state.barcodes,
-                                  codes,
-                                ),
-                              );
+                                  return;
+                                } else {
+                                  bool isLimiteExceeded = await isLimitExceeded(
+                                    code,
+                                  );
+                                  if (isLimiteExceeded) {
+                                    await handleError(
+                                      i18.deliverIntervention.scanValidResource,
+                                    );
+
+                                    return;
+                                  }
+                                }
+                              }
+
+                              final bloc = context.read<ScannerBloc>();
+                              if (code.isNotEmpty) {
+                                codes.add(code);
+                                bloc.add(
+                                  ScannerEvent.handleScanner(
+                                    state.barcodes,
+                                    codes,
+                                  ),
+                                );
+                              }
                               manualcode = false;
                               initializeCameras();
                             } else {
@@ -548,6 +623,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               );
                               setState(() {
                                 manualcode = false;
+                                initializeCameras();
                               });
                               if (widget.isGS1code) {
                                 buildDialog();
@@ -596,6 +672,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               i18.deliverIntervention.resourceCode,
                             ),
                             controller: _resourceController,
+                          ),
+                          DigitTextField(
+                            label: localizations.translate(
+                              i18.deliverIntervention.resourceCodeVerify,
+                            ),
+                            controller: _resourcevalidateController,
                           ),
                         ],
                       ),
@@ -816,6 +898,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   void dispose() {
     _cameraController?.dispose();
     _barcodeScanner.close();
+    player.dispose();
     super.dispose();
   }
 
