@@ -251,7 +251,6 @@ class Home {
   String get healthFacilitySupervisorCheckList =>
       'HF_SUPERVISOR_CHECK_LIST_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
-
 }
 
 class SearchBeneficiary {
@@ -677,6 +676,8 @@ class DeliverIntervention {
 
   String get resourceCode => 'RESOURCE_CODE';
 
+  String get resourceCodeVerify => 'RESOURCE_CODE_VERIFY';
+
   String get voucherCode => 'VOUCHER_CODE';
 
   String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
@@ -821,6 +822,14 @@ class StockDetails {
 
   String get commentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
 
+  String get manualScanCommentsLabel =>
+      'STOCK_DETAILS_MANUAL_SCAN_COMMENTS_LABEL';
+
+  String get baleMismatchCommentsLabel =>
+      'STOCK_DETAILS_BALE_MISMATCH_COMMENTS_LABEL';
+
+  String get manualCodeMismatchError => 'MANUAL_CODE_MISMATCH_ERROR';
+
   String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
@@ -842,6 +851,8 @@ class StockDetails {
   String get noBalesScannedError => 'NO_BALES_SCANNED_ERROR';
 
   String get baleMismatchCommentRequired => 'BALE_MISMATCH_COMMENT_REQUIRED';
+
+  String get manualScanCommentRequired => 'MANUAL_SCAN_COMMENT_REQUIRED';
 
   String get balesScanned => 'BALES_SCANNED';
 
