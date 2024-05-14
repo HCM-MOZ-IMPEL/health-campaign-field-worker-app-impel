@@ -474,6 +474,21 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   comments,
                                                 ));
                                               }
+                                              if (baleMismtachComments !=
+                                                  null) {
+                                                additionalFields
+                                                    .add(AdditionalField(
+                                                  'baleMismtachComments',
+                                                  baleMismtachComments,
+                                                ));
+                                              }
+                                              if (manualScanComments != null) {
+                                                additionalFields
+                                                    .add(AdditionalField(
+                                                  'manualScanComments',
+                                                  manualScanComments,
+                                                ));
+                                              }
                                               if (transportType != null) {
                                                 additionalFields
                                                     .add(AdditionalField(
