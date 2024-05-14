@@ -58,6 +58,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   final _resourcevalidateController = TextEditingController();
   bool submitButton = false;
   RegExp pattern = RegExp(r'^\d{4}-\d{2}-\d{2}-\d{1}-\d{3}-[A-Za-z]{2}$');
+  RegExp balePattern = RegExp(r'^\d{18}$');
 
   @override
   void initState() {
@@ -135,27 +136,30 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
                         // [TODO : Need move to constants]
-                        Positioned(
-                          top: MediaQuery.of(context).size.width / 5,
-                          left: MediaQuery.of(context).size.width / 2.6,
-                          width: 250,
-                          height: 250,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 3,
-                            height: MediaQuery.of(context).size.height / 3,
-                            // [TODO: Localization need to be added]
-                            child: Text(
-                              localizations.translate(
-                                i18.deliverIntervention.scannerLabel,
-                              ),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        !widget.isGS1code
+                        !context.isRegistrar
+                            ? Positioned(
+                                top: MediaQuery.of(context).size.width / 5,
+                                left: MediaQuery.of(context).size.width / 2.6,
+                                width: 250,
+                                height: 250,
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height:
+                                      MediaQuery.of(context).size.height / 3,
+                                  // [TODO: Localization need to be added]
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.deliverIntervention.scannerLabel,
+                                    ),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const Offstage(),
+                        !context.isRegistrar
                             ? Positioned(
                                 top: MediaQuery.of(context).size.height / 2.4,
                                 left: MediaQuery.of(context).size.width / 4,
@@ -180,40 +184,44 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 ),
                               )
                             : const Offstage(),
-                        Positioned(
-                          top: MediaQuery.of(context).size.height / 2.2,
-                          left: MediaQuery.of(context).size.width / 5,
-                          width: 250,
-                          height: 50,
-                          child: SizedBox(
-                            width: 150,
-                            height: 50,
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  manualcode = true;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: kPadding),
-                                child: Text(
-                                  localizations.translate(
-                                    i18.deliverIntervention.manualEnterCode,
-                                  ),
-                                  style: TextStyle(
-                                    color: theme.colorScheme.secondary,
-                                    fontSize: 20,
-                                    decoration: TextDecoration.underline,
+                        widget.isGS1code
+                            ? Positioned(
+                                top: MediaQuery.of(context).size.height / 2.2,
+                                left: MediaQuery.of(context).size.width / 5,
+                                width: 250,
+                                height: 50,
+                                child: SizedBox(
+                                  width: 150,
+                                  height: 50,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        manualcode = true;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: kPadding),
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .manualEnterCode,
+                                        ),
+                                        style: TextStyle(
+                                          color: theme.colorScheme.secondary,
+                                          fontSize: 20,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        !widget.isGS1code
+                              )
+                            : const Offstage(),
+                        !widget.isGS1code && !context.isRegistrar
                             ? Positioned(
-                                top: MediaQuery.of(context).size.height / 2.0,
-                                left: MediaQuery.of(context).size.width / 6,
+                                top: MediaQuery.of(context).size.height / 2.2,
+                                left: MediaQuery.of(context).size.width / 5,
                                 width: 250,
                                 height: 50,
                                 child: SizedBox(
@@ -264,7 +272,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   .translate(i18.common.coreCommonSubmit)),
                               onPressed: () async {
                                 if (widget.isGS1code &&
-                                    result.length < widget.quantity) {
+                                    result.length + codes.length <
+                                        widget.quantity) {
                                   buildDialog();
                                 } else {
                                   final bloc =
@@ -552,9 +561,20 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             if (manualcode && role != null) {
                               String code = _resourceController.value.text
                                   .replaceAll(' ', '');
-// TODO need to add the GS1 regex pattren
+                              String validationCode =
+                                  _resourcevalidateController.value.text
+                                      .replaceAll(' ', '');
+
                               if (widget.isGS1code) {
-                                if (!pattern.hasMatch(
+                                if (code != validationCode) {
+                                  await handleError(
+                                    i18.stockDetails.manualCodeMismatchError,
+                                  );
+
+                                  return;
+                                }
+
+                                if (!balePattern.hasMatch(
                                   code,
                                 )) {
                                   await handleError(
@@ -562,17 +582,25 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   );
 
                                   return;
-                                } else {
-                                  bool isLimiteExceeded = await isLimitExceeded(
-                                    code,
-                                  );
-                                  if (isLimiteExceeded) {
-                                    await handleError(
-                                      i18.deliverIntervention.scanValidResource,
-                                    );
+                                }
 
-                                    return;
-                                  }
+                                if (codes.contains(code)) {
+                                  await handleError(
+                                    i18.deliverIntervention
+                                        .resourceAlreadyScanned,
+                                  );
+
+                                  return;
+                                }
+
+                                if (widget.quantity <=
+                                    (codes.length + result.length)) {
+                                  await handleError(
+                                    i18.deliverIntervention
+                                        .scannedResourceCountMisMatch,
+                                  );
+
+                                  return;
                                 }
                               }
 
@@ -587,6 +615,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 );
                               }
                               manualcode = false;
+                              _resourceController.clear();
+                              _resourcevalidateController.clear();
                               initializeCameras();
                             } else {
                               String code = _resourceController.value.text
@@ -673,12 +703,13 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             ),
                             controller: _resourceController,
                           ),
-                          DigitTextField(
-                            label: localizations.translate(
-                              i18.deliverIntervention.resourceCodeVerify,
+                          if (widget.isGS1code)
+                            DigitTextField(
+                              label: localizations.translate(
+                                i18.deliverIntervention.resourceCodeVerify,
+                              ),
+                              controller: _resourcevalidateController,
                             ),
-                            controller: _resourcevalidateController,
-                          ),
                         ],
                       ),
                     )
@@ -752,7 +783,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
             //     element.elements.entries.last.value.data ==
             //     parsedResult.elements.entries.last.value.data);
 
-            if (widget.quantity > result.length) {
+            if (widget.quantity > (result.length + codes.length)) {
               await storeValue(parsedResult);
             } else {
               await handleError(

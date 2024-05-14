@@ -40,6 +40,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
+  static const _manualScanCommentsKey = 'manualScanComments';
+  static const _baleMismatchCommentsKey = 'baleMismatchCommentsKey';
   late ProductVariantModel productVariantModel;
   bool transportbyHand = false;
   bool enableBaleScanning = true;
@@ -79,6 +81,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       ),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
+      _manualScanCommentsKey: FormControl<String>(
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
+      _baleMismatchCommentsKey: FormControl<String>(
         validators: [
           CustomValidator.requiredMin,
         ],
@@ -300,6 +312,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_commentsKey)
                                                   .value as String?;
 
+                                              final manualScanComments = form
+                                                  .control(
+                                                    _manualScanCommentsKey,
+                                                  )
+                                                  .value as String?;
+
+                                              final baleMismtachComments = form
+                                                  .control(
+                                                    _baleMismatchCommentsKey,
+                                                  )
+                                                  .value as String?;
+
                                               String? transactingPartyType;
 
                                               final fields = transactingParty
@@ -331,17 +355,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               final List<GS1Barcode> barcodes =
                                                   scannerState.barcodes;
 
+                                              final List<String> qrCodes =
+                                                  scannerState.qrcodes;
+
                                               if ([
                                                     StockRecordEntryType
                                                         .receipt,
                                                   ].contains(entryType) &&
                                                   enableBaleScanning) {
                                                 if (balesQuantity != null &&
-                                                    barcodes.length !=
+                                                    (barcodes.length +
+                                                            qrCodes.length) !=
                                                         int.parse(balesQuantity
                                                             .toString()) &&
-                                                    (comments == null ||
-                                                        comments.isEmpty)) {
+                                                    (baleMismtachComments ==
+                                                            null ||
+                                                        baleMismtachComments
+                                                            .isEmpty)) {
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
@@ -355,6 +385,27 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                                   return;
                                                 }
+
+                                                if (qrCodes.isNotEmpty &&
+                                                    (manualScanComments ==
+                                                            null ||
+                                                        manualScanComments
+                                                            .isEmpty)) {
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .stockDetails
+                                                          .manualScanCommentRequired),
+                                                      true,
+                                                      theme,
+                                                    ),
+                                                  );
+
+                                                  return;
+                                                }
+
+                                                int qrCodeCount = 0;
 
                                                 for (var element in barcodes) {
                                                   List<String> keys = [];
@@ -376,6 +427,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       values.join('|'),
                                                     ),
                                                   );
+                                                }
+
+                                                for (var qrCode in qrCodes) {
+                                                  additionalFields.add(
+                                                    AdditionalField(
+                                                      'manualScan-$qrCodeCount',
+                                                      qrCode,
+                                                    ),
+                                                  );
+                                                  qrCodeCount = qrCodeCount + 1;
                                                 }
                                               }
 
@@ -552,7 +613,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       localizations.translate(pageTitle),
                                       style: theme.textTheme.displayMedium,
                                     ),
-
                                     if ([
                                       StockRecordEntryType.loss,
                                       StockRecordEntryType.gained,
@@ -806,7 +866,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               ),
                                         },
                                       ),
-
                                     BlocBuilder<AppInitializationBloc,
                                         AppInitializationState>(
                                       builder: (context, state) =>
@@ -909,7 +968,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                       },
                                     ),
-                                    // Commenting this because we need this functionality for other APK
                                     if ([
                                           StockRecordEntryType.receipt,
                                         ].contains(entryType) &&
@@ -969,6 +1027,53 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         label: localizations.translate(
                                           i18.common.scanBales,
                                         ),
+                                      ),
+                                    if ([
+                                          StockRecordEntryType.receipt,
+                                        ].contains(entryType) &&
+                                        enableBaleScanning)
+                                      DigitTextFormField(
+                                        label: localizations.translate(
+                                          i18.stockDetails
+                                              .baleMismatchCommentsLabel,
+                                        ),
+                                        minLines: 2,
+                                        maxLines: 3,
+                                        formControlName:
+                                            _baleMismatchCommentsKey,
+                                        validationMessages: {
+                                          "required": (object) =>
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                          "min2": (object) =>
+                                              localizations.translate(
+                                                i18.common.min2CharsRequired,
+                                              ),
+                                        },
+                                      ),
+                                    if ([
+                                          StockRecordEntryType.receipt,
+                                        ].contains(entryType) &&
+                                        enableBaleScanning)
+                                      DigitTextFormField(
+                                        label: localizations.translate(
+                                          i18.stockDetails
+                                              .manualScanCommentsLabel,
+                                        ),
+                                        minLines: 2,
+                                        maxLines: 3,
+                                        formControlName: _manualScanCommentsKey,
+                                        validationMessages: {
+                                          "required": (object) =>
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                          "min2": (object) =>
+                                              localizations.translate(
+                                                i18.common.min2CharsRequired,
+                                              ),
+                                        },
                                       ),
                                   ],
                                 ),
