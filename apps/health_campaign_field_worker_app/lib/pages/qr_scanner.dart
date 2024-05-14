@@ -186,12 +186,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             : const Offstage(),
                         widget.isGS1code
                             ? Positioned(
-                                top: MediaQuery.of(context).size.height / 2.2,
+                                top: MediaQuery.of(context).size.height / 2.0,
                                 left: MediaQuery.of(context).size.width / 5,
                                 width: 250,
                                 height: 50,
                                 child: SizedBox(
-                                  width: 150,
+                                  width: 200,
                                   height: 50,
                                   child: TextButton(
                                     onPressed: () {
@@ -220,12 +220,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             : const Offstage(),
                         !widget.isGS1code && !context.isRegistrar
                             ? Positioned(
-                                top: MediaQuery.of(context).size.height / 2.2,
+                                top: MediaQuery.of(context).size.height / 2.0,
                                 left: MediaQuery.of(context).size.width / 5,
                                 width: 250,
                                 height: 50,
                                 child: SizedBox(
-                                  width: 150,
+                                  width: 200,
                                   height: 50,
                                   child: TextButton(
                                     onPressed: () {
@@ -554,56 +554,49 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             i18.common.coreCommonSubmit,
                           )),
                           onPressed: () async {
-                            final role = context.loggedInUserRoles
-                                .firstWhereOrNull((element) =>
-                                    element.code == 'WAREHOUSE_MANAGER');
-
-                            if (manualcode && role != null) {
+                            if (manualcode && widget.isGS1code) {
                               String code = _resourceController.value.text
                                   .replaceAll(' ', '');
                               String validationCode =
                                   _resourcevalidateController.value.text
                                       .replaceAll(' ', '');
 
-                              if (widget.isGS1code) {
-                                if (code != validationCode) {
-                                  await handleError(
-                                    i18.stockDetails.manualCodeMismatchError,
-                                  );
+                              if (code != validationCode) {
+                                await handleError(
+                                  i18.stockDetails.manualCodeMismatchError,
+                                );
 
-                                  return;
-                                }
-
-                                if (!balePattern.hasMatch(
-                                  code,
-                                )) {
-                                  await handleError(
-                                    i18.deliverIntervention.scanValidResource,
-                                  );
-
-                                  return;
-                                }
-
-                                if (codes.contains(code)) {
-                                  await handleError(
-                                    i18.deliverIntervention
-                                        .resourceAlreadyScanned,
-                                  );
-
-                                  return;
-                                }
-
-                                if (widget.quantity <=
-                                    (codes.length + result.length)) {
-                                  await handleError(
-                                    i18.deliverIntervention
-                                        .scannedResourceCountMisMatch,
-                                  );
-
-                                  return;
-                                }
+                                return;
                               }
 
+                              if (!balePattern.hasMatch(
+                                code,
+                              )) {
+                                await handleError(
+                                  i18.deliverIntervention.scanValidResource,
+                                );
+
+                                return;
+                              }
+
+                              if (codes.contains(code)) {
+                                await handleError(
+                                  i18.deliverIntervention
+                                      .resourceAlreadyScanned,
+                                );
+
+                                return;
+                              }
+
+                              if (widget.quantity <=
+                                  (codes.length + result.length)) {
+                                await handleError(
+                                  i18.deliverIntervention
+                                      .scannedResourceCountMisMatch,
+                                );
+
+                                return;
+                              }
                               final bloc = context.read<ScannerBloc>();
                               if (code.isNotEmpty) {
                                 codes.add(code);
