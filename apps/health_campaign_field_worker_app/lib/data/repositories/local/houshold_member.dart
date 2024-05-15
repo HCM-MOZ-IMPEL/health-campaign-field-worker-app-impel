@@ -135,8 +135,7 @@ class HouseholdMemberLocalRepository
     bool createOpLog = true,
   }) async {
     final householdMemberCompanion = entity.companion;
-    await sql.computeWithDatabase(
-      computation: (database) async {
+ 
         await sql.batch((batch) {
           batch.update(
             sql.householdMember,
@@ -146,11 +145,7 @@ class HouseholdMemberLocalRepository
             ),
           );
         });
-      },
-      connect: (connect) {
-        return LocalSqlDataStore(connect);
-      },
-    );
+
 
     await super.update(entity, createOpLog: createOpLog);
   }

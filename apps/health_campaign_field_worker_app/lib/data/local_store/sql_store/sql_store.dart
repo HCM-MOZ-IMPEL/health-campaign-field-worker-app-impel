@@ -1,6 +1,9 @@
+import 'dart:isolate';
+
+import 'package:drift/isolate.dart';
+
 import 'tables/address.dart';
 import 'dart:io';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -52,6 +55,9 @@ import 'tables/user.dart';
 
 part 'sql_store.g.dart';
 
+
+
+
 @DriftDatabase(tables: [
   at.Address, // TODO: address same in sql_store.g.dart and rename the address class created in the same file to avoid conflict
   Name,
@@ -91,6 +97,16 @@ part 'sql_store.g.dart';
   HFReferral,
 ])
 
+
+
+class _IsolateStartRequest {
+  final SendPort sendDriftIsolate;
+  final String targetPath;
+
+  _IsolateStartRequest(this.sendDriftIsolate, this.targetPath);
+}
+
+
 /* Singleton class : 
 Same instance be used by Background service and Main method */
 class LocalSqlDataStore extends _$LocalSqlDataStore {
@@ -114,16 +130,15 @@ static LocalSqlDataStore? _instance;
   @override
   int get schemaVersion => 1;
   // Replace this method with your actual method to open the connection
-  static   LazyDatabase  _openConnection() {
+  static   DatabaseConnection  _openConnection() {
     // Your logic to open the connection
     // For example:
-    // return NativeDatabase(file, logStatements: true, setup: (data) {});
-    return LazyDatabase(() async {
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final file = File(p.join(dbFolder.path, 'db.sqlite'));
+ return  DatabaseConnection.delayed(Future.sync(() async {
+    final isolate = await _createDriftIsolate();
+    
+    return await isolate.connect(singleClientMode: true);
+  }));
 
-      return NativeDatabase.createInBackground(file, logStatements: true,);
-    });
   }
 
   @override
@@ -199,3 +214,37 @@ static LocalSqlDataStore? _instance;
     await delete(table).go();
   }
 }
+Future<DriftIsolate> _createDriftIsolate() async {
+  // this method is called from the main isolate. Since we can't use
+  // getApplicationDocumentsDirectory on a background isolate, we calculate
+  // the database path in the foreground isolate and then inform the
+  // background isolate about the path.
+  final dir = await getApplicationDocumentsDirectory();
+  final path = p.join(dir.path, 'db.sqlite');
+  final receivePort = ReceivePort();
+
+  await Isolate.spawn(
+    _startBackground,
+    _IsolateStartRequest(receivePort.sendPort, path),
+  );
+
+  // _startBackground will send the DriftIsolate to this ReceivePort
+  return await receivePort.first as DriftIsolate;
+}
+
+void _startBackground(_IsolateStartRequest request) {
+  // this is the entry point from the background isolate! Let's create
+  // the database from the path we received
+  final executor = NativeDatabase(File(request.targetPath));
+  // we're using DriftIsolate.inCurrent here as this method already runs on a
+  // background isolate. If we used DriftIsolate.spawn, a third isolate would be
+  // started which is not what we want!
+  final driftIsolate = DriftIsolate.inCurrent(
+    () => DatabaseConnection(executor),
+  );
+  // inform the starting isolate about this, so that it can call .connect()
+  request.sendDriftIsolate.send(driftIsolate);
+}
+
+// used to bundle the SendPort and the target path, since isolate entry point
+// functions can only take one parameter.

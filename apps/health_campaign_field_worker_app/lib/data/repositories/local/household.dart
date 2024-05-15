@@ -226,8 +226,7 @@ class HouseholdLocalRepository extends HouseholdLocalBaseRepository {
           clientAuditDetails: entity.clientAuditDetails,
         )
         .companion;
-    await sql.computeWithDatabase(
-      computation: (database) async {
+
         await sql.batch((batch) async {
           batch.update(
             sql.household,
@@ -247,11 +246,7 @@ class HouseholdLocalRepository extends HouseholdLocalBaseRepository {
             );
           }
         });
-      },
-      connect: (connect) {
-        return LocalSqlDataStore(connect);
-      },
-    );
+   
 
     await super.update(entity, createOpLog: createOpLog);
   }

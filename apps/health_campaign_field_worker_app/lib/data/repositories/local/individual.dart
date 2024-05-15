@@ -390,8 +390,6 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
           return e.companion;
         }).toList() ??
         [];
-    await sql.computeWithDatabase(
-      computation: (database) async {
         await sql.batch((batch) async {
           if (nameCompanion != null) {
             batch.update(
@@ -414,12 +412,7 @@ class IndividualLocalRepository extends IndividualLocalBaseRepository {
           batch.insertAllOnConflictUpdate(sql.address, addressCompanions);
           batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
         });
-      },
-      connect: (connect) {
-        return LocalSqlDataStore(connect);
-      },
-    );
-
+  
     await super.update(entity, createOpLog: createOpLog);
   }
 
