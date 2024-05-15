@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 
+import '../local/household.dart';
 import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
@@ -693,6 +694,7 @@ class PerformSyncDown {
         }
 
         for (var element in responseEntities) {
+     
           await local.update(element, createOpLog: false);
         }
       }

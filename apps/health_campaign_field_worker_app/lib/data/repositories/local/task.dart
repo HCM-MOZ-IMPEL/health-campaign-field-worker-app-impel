@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:drift/isolate.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -397,6 +398,8 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
         }).toList() ??
         [];
 
+    await sql.computeWithDatabase(
+      computation: (database) async {
     await sql.batch((batch) {
       batch.update(
         sql.task,
@@ -418,7 +421,12 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
 
       batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
     });
-
+   },
+      connect: (connect) {
+        return LocalSqlDataStore(connect);
+      },
+    );
+    
     await super.update(entity, createOpLog: createOpLog);
   }
 
