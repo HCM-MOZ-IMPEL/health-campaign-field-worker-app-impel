@@ -426,40 +426,40 @@ class _HomePageState extends LocalizedState<HomePage> {
             ),
           );
         },
-      ),      
-      i18.home.manageAttendanceLabel:HomeItemCard(
-          icon: Icons.fingerprint_outlined,
-          label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ManageAttendancePage(
-                  attendanceListeners: HCMAttendanceBloc(
-                    userId: context.loggedInUserUuid,
-                    projectId: context.projectId,
-                    attendanceLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceRegisterModel,
-                            HCMAttendanceSearchModel>>(),
-                    individualLocalRepository: context.read<
-                        LocalRepository<IndividualModel,
-                            IndividualSearchModel>>(),
-                    attendanceLogLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceLogModel,
-                            HCMAttendanceLogSearchModel>>(),
-                    context: context,
-                    individualId: context.loggedInIndividualId,
-                  ),
-                  projectId: context.projectId,
+      ),
+      i18.home.manageAttendanceLabel: HomeItemCard(
+        icon: Icons.fingerprint_outlined,
+        label: i18.home.manageAttendanceLabel,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ManageAttendancePage(
+                attendanceListeners: HCMAttendanceBloc(
                   userId: context.loggedInUserUuid,
-                  appVersion: Constants().version,
-                  boundaryName : context.boundary.name!,
+                  projectId: context.projectId,
+                  attendanceLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceRegisterModel,
+                          HCMAttendanceSearchModel>>(),
+                  individualLocalRepository: context.read<
+                      LocalRepository<IndividualModel,
+                          IndividualSearchModel>>(),
+                  attendanceLogLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceLogModel,
+                          HCMAttendanceLogSearchModel>>(),
+                  context: context,
+                  individualId: context.loggedInIndividualId,
                 ),
-                settings: const RouteSettings(name: '/manage-attendance'),
+                projectId: context.projectId,
+                userId: context.loggedInUserUuid,
+                appVersion: Constants().version,
+                boundaryName: context.boundary.name!,
               ),
-            );
-          },
-        ),
+              settings: const RouteSettings(name: '/manage-attendance'),
+            ),
+          );
+        },
+      ),
     };
 
     final homeItemsLabel = <String>[
@@ -478,10 +478,12 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element))
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element == 'DB')
         .toList();
 
     final List<Widget> widgetList =
@@ -518,8 +520,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
               context.read<
-                    LocalRepository<HCMAttendanceLogModel,
-                        HCMAttendanceLogSearchModel>>(),
+                  LocalRepository<HCMAttendanceLogModel,
+                      HCMAttendanceLogSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<

@@ -644,10 +644,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   codes,
                                 ),
                               );
-                              setState(() {
-                                manualcode = false;
-                                initializeCameras();
-                              });
+
                               if (widget.isGS1code) {
                                 buildDialog();
                               } else {
