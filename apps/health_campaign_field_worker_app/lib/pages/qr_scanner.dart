@@ -300,18 +300,17 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
 
                         Positioned(
                           bottom: (kPadding * 7.5),
-                          height:
-                              (state.barcodes.length + state.qrcodes.length) < 5
-                                  ? ((state.barcodes.isEmpty ||
-                                              state.qrcodes.isEmpty)
-                                          ? (state.barcodes.length +
-                                                  state.qrcodes.length) *
-                                              30
-                                          : (state.barcodes.length +
-                                                  state.qrcodes.length) *
-                                              15) +
+                          height: widget.isGS1code
+                              ? (state.barcodes.length + state.qrcodes.length) <
+                                      3
+                                  ? ((state.barcodes.length +
+                                              state.qrcodes.length) *
+                                          60) +
                                       80
-                                  : MediaQuery.of(context).size.height / 2.2,
+                                  : MediaQuery.of(context).size.height / 3.9
+                              : state.qrcodes.length < 3
+                                  ? (state.qrcodes.length * 60) + 80
+                                  : MediaQuery.of(context).size.height / 3.9,
                           width: MediaQuery.of(context).size.width,
                           child: Container(
                             width: 100,
