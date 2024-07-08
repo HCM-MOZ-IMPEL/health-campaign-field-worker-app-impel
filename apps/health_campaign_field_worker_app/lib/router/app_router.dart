@@ -32,6 +32,7 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
+import '../pages/custom-inventory/custom_manage_stocks.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -285,6 +286,15 @@ class AppRouter extends _$AppRouter {
           page: ManageStocksRoute.page,
           path: 'manage-stocks',
         ),
+        AutoRoute(
+          page: CustomManageStocksRoute.page,
+          path: 'custom-manage-stocks',
+        ),
+        RedirectRoute(
+          path: 'manage-stocks',
+          redirectTo: 'custom-manage-stocks',
+        ),
+
         AutoRoute(
             page: RecordStockWrapperRoute.page,
             path: 'record-stock',
