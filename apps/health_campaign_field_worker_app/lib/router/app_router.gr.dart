@@ -228,6 +228,17 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    CustomManageStocksRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomManageStocksRouteArgs>(
+          orElse: () => const CustomManageStocksRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomManageStocksPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -305,6 +316,8 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ...RegistrationDeliveryRoute().pagesMap,
+    ...InventoryRoute().pagesMap,
   };
 }
 
@@ -1042,6 +1055,45 @@ class ComplaintsRegistrationWrapperRouteArgs {
   @override
   String toString() {
     return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
+  }
+}
+
+/// generated route for
+/// [CustomManageStocksPage]
+class CustomManageStocksRoute
+    extends PageRouteInfo<CustomManageStocksRouteArgs> {
+  CustomManageStocksRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomManageStocksRoute.name,
+          args: CustomManageStocksRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageStocksRoute';
+
+  static const PageInfo<CustomManageStocksRouteArgs> page =
+      PageInfo<CustomManageStocksRouteArgs>(name);
+}
+
+class CustomManageStocksRouteArgs {
+  const CustomManageStocksRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

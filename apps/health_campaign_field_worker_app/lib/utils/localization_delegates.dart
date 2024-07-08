@@ -1,3 +1,7 @@
+import 'package:inventory_management/blocs/app_localization.dart'
+    as inventory_localization;
+import 'package:registration_delivery/blocs/app_localization.dart'
+    as registration_delivery_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 
@@ -18,5 +22,20 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+    registration_delivery_localization.RegistrationDeliveryLocalization
+        .getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
+    inventory_localization.InventoryLocalization.getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
   ];
 }

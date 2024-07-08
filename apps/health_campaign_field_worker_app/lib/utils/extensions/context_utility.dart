@@ -101,6 +101,8 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     // INFO: Set Boundary for packages
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
 
     return selectedBoundary;
   }
