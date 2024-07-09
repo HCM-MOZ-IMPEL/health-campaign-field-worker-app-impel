@@ -146,14 +146,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
               ),
             ],
-            header: Column(
+            header: const Column(
               children: [
                 BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
+                  showcaseButton: null,
                 ),
               ],
             ),

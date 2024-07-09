@@ -38,6 +38,9 @@ import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
 export 'package:auto_route/auto_route.dart';
 import '../pages/inventory/custom_manage_stocks.dart';
+import '../pages/inventory/custom_stock_reconciliation.dart';
+import '../pages/reports/inventory/custom_report_selection.dart';
+import '../pages/beneficiary_registration/custom_individual_details.dart';
 
 part 'app_router.gr.dart';
 
@@ -59,11 +62,10 @@ class AppRouter extends _$AppRouter {
       path: '/',
       children: [
         AutoRoute(
-          page: LanguageSelectionRoute.page,
-          path: 'language_selection',
+          page: LoginRoute.page,
+          path: 'login',
           initial: true,
         ),
-        AutoRoute(page: LoginRoute.page, path: 'login'),
       ],
     ),
     AutoRoute(
@@ -113,8 +115,24 @@ class AppRouter extends _$AppRouter {
           path: 'stock-reconciliation',
         ),
         AutoRoute(
+          page: CustomStockReconciliationRoute.page,
+          path: 'custom-stock-reconciliation',
+        ),
+        RedirectRoute(
+          path: 'stock-reconciliation',
+          redirectTo: 'custom-stock-reconciliation',
+        ),
+        AutoRoute(
           page: InventoryReportSelectionRoute.page,
           path: 'inventory-report-selection',
+        ),
+        AutoRoute(
+          page: CustomInventoryReportSelectionRoute.page,
+          path: 'custom-inventory-report-selection',
+        ),
+        RedirectRoute(
+          path: 'inventory-report-selection',
+          redirectTo: 'custom-inventory-report-selection',
         ),
         AutoRoute(
           page: InventoryReportDetailsRoute.page,
@@ -147,6 +165,14 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                       page: IndividualDetailsRoute.page,
                       path: 'individual-details'),
+                  AutoRoute(
+                    page: CustomIndividualDetailsRoute.page,
+                    path: 'custom-individual-details',
+                  ),
+                  RedirectRoute(
+                    path: 'individual-details',
+                    redirectTo: 'custom-individual-details',
+                  ),
                   AutoRoute(
                       page: HouseHoldDetailsRoute.page,
                       path: 'household-details'),
