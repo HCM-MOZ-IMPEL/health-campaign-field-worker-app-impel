@@ -45,8 +45,6 @@ class CustomIndividualDetailsPage extends IndividualDetailsPage {
 
 class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
   static const _individualNameKey = 'individualName';
-  static const _idTypeKey = 'idType';
-  static const _idNumberKey = 'idNumber';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
@@ -99,9 +97,6 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                         if ((age.years == 0 && age.months == 0) ||
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
-                        }
-                        if (form.control(_idTypeKey).value == null) {
-                          form.control(_idTypeKey).setErrors({'': true});
                         }
                         if (form.control(_genderKey).value == null) {
                           setState(() {
@@ -350,78 +345,6 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                               value: widget.isHeadOfHousehold,
                             ),
                           ),
-                          DigitReactiveSearchDropdown<String>(
-                            label: localizations.translate(
-                              i18.individualDetails.idTypeLabelText,
-                            ),
-                            form: form,
-                            menuItems: RegistrationDeliverySingleton()
-                                .idTypeOptions!
-                                .map(
-                              (e) {
-                                return e;
-                              },
-                            ).toList(),
-                            formControlName: _idTypeKey,
-                            valueMapper: (value) {
-                              return localizations.translate(value);
-                            },
-                            onSelected: (value) {
-                              setState(() {
-                                if (value == 'DEFAULT') {
-                                  form.control(_idNumberKey).value =
-                                      IdGen.i.identifier.toString();
-                                } else {
-                                  form.control(_idNumberKey).value = null;
-                                }
-                              });
-                            },
-                            isRequired: true,
-                            validationMessage: localizations.translate(
-                              i18.common.corecommonRequired,
-                            ),
-                            emptyText: localizations
-                                .translate(i18.common.noMatchFound),
-                          ),
-                          if (form.control(_idTypeKey).value != 'DEFAULT')
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ReactiveFormConsumer(
-                                  builder: (context, formGroup, child) {
-                                    return DigitTextFormField(
-                                      readOnly:
-                                          form.control(_idTypeKey).value ==
-                                              'DEFAULT',
-                                      isRequired: form
-                                          .control(_idNumberKey)
-                                          .validators
-                                          .isNotEmpty,
-                                      formControlName: _idNumberKey,
-                                      label: localizations.translate(
-                                        i18.individualDetails.idNumberLabelText,
-                                      ),
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                            ),
-                                      },
-                                      padding: const EdgeInsets.only(
-                                        top: kPadding * 2,
-                                        left: kPadding / 2,
-                                        right: kPadding / 2,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 4),
-                              ],
-                            ),
-                          if (form.control(_idTypeKey).value == 'DEFAULT')
-                            const SizedBox(
-                              height: kPadding,
-                            ),
                           individualDetailsShowcaseData.dateOfBirth.buildWith(
                             child: DigitDobPicker(
                               datePickerFormControl: _dobKey,
@@ -528,94 +451,6 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        if ((RegistrationDeliverySingleton().beneficiaryType ==
-                                    BeneficiaryType.household &&
-                                widget.isHeadOfHousehold) ||
-                            (RegistrationDeliverySingleton().beneficiaryType ==
-                                BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                            builder: (context, state) => state
-                                    .qrCodes.isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
-                                          ),
-                                          style: theme.textTheme.headlineSmall,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          localizations
-                                              .translate(state.qrCodes.first),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: kPadding * 2,
-                                        ),
-                                        child: IconButton(
-                                          color: theme.colorScheme.secondary,
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
-                                                  isEditEnabled: true,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-
-                                    // ignore: no-empty-block
-                                  )
-                                : DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const DigitScannerPage(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            singleValue: true,
-                                          ),
-                                          settings: const RouteSettings(
-                                              name: '/qr-scanner'),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.individualDetails
-                                          .linkVoucherToIndividual,
-                                    ),
-                                  ),
-                          ),
                       ],
                     ),
                   ),
@@ -711,8 +546,8 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: form.control(_idNumberKey).value,
-          identifierType: form.control(_idTypeKey).value,
+          identifierId: "DEFAULT",
+          identifierType: "DEFAULT",
         ),
       ],
     );
@@ -752,13 +587,6 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery,
-      ),
-      _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.firstOrNull?.identifierType,
-      ),
-      _idNumberKey: FormControl<String>(
-        validators: [Validators.required],
-        value: individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
