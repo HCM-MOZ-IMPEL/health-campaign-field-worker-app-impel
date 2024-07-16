@@ -4,7 +4,8 @@ import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
-
+import 'package:digit_scanner/blocs/app_localization.dart'
+    as scanner_localization;
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import 'utils.dart';
@@ -22,6 +23,13 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+        scanner_localization.ScannerLocalization.getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
     registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
       getLocalizationString(
