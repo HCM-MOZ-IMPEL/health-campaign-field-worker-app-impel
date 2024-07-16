@@ -35,7 +35,7 @@ class CustomIndividualDetailsPage extends IndividualDetailsPage {
   const CustomIndividualDetailsPage({
     super.key,
     super.appLocalizations,
-    this.isHeadOfHousehold = false,
+    this.isHeadOfHousehold = true,
   });
 
   @override
