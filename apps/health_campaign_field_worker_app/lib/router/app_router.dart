@@ -204,12 +204,20 @@ class AppRouter extends _$AppRouter {
                     initial: true,
                   ),
                   AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
                   ),
                   AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: RefusedDeliveryRoute.page,
+                    path: 'refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,
@@ -239,6 +247,7 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
+                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                 ],
               ),
             ]),
