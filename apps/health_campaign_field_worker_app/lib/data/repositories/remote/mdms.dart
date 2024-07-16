@@ -137,6 +137,10 @@ class MdmsRepository {
       ..serviceInterval =
           element?.backgroundServiceConfig?.first.serviceInterval;
 
+    final firebaseConfig = FirebaseConfig()
+      ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
+      ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
+
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
       ..persistenceMode = appConfig?.persistenceMode
@@ -144,7 +148,8 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
-      ..backgroundServiceConfig = backgroundServiceConfig;
+      ..backgroundServiceConfig = backgroundServiceConfig
+      ..firebaseConfig = firebaseConfig;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {
@@ -285,6 +290,15 @@ class MdmsRepository {
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
+    appConfiguration.searchHouseHoldFilters =
+        result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
@@ -299,6 +313,25 @@ class MdmsRepository {
         result.hcmWrapperModel?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()
         ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+    appConfiguration.houseStructureTypes =
+        result.hcmWrapperModel?.houseStructureTypes?.map((e) {
+      final structureTypes = HouseStructureTypes()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return structureTypes;
+    }).toList();
+
+    appConfiguration.refusalReasons =
+        result.hcmWrapperModel?.refusalReasons?.map((e) {
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
         ..code = e.code
         ..active = e.active;
 

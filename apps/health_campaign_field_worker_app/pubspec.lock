@@ -475,10 +475,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
+      sha256: "5e61df395dbc9991909fc2b20f5f7ec77368fdfe6f4ee81868de2c4a5f7df954"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+2"
+    version: "1.0.0+4"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -1501,10 +1501,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: c315da85605c6d08b9b05147ced61a93ecb566d98bafee1653681659cfde4b84
+      sha256: cb972c73d910895de66687e85eeb1dbd9d7364077d078925a6f93409b9aaa9a9
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "0.0.0-dev.9"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

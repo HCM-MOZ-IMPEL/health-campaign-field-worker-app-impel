@@ -1098,7 +1098,7 @@ class CustomIndividualDetailsRoute
     extends PageRouteInfo<CustomIndividualDetailsRouteArgs> {
   CustomIndividualDetailsRoute({
     Key? key,
-    AppLocalizations? appLocalizations,
+    RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
     List<PageRouteInfo>? children,
   }) : super(
@@ -1126,7 +1126,7 @@ class CustomIndividualDetailsRouteArgs {
 
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final RegistrationDeliveryLocalization? appLocalizations;
 
   final bool isHeadOfHousehold;
 

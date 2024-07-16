@@ -582,9 +582,18 @@ void setPackagesSingleton(BuildContext context) {
               .map((e) => e.code)
               .toList(),
           symptomsTypes:
-              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+              ? appConfiguration.searchHouseHoldFilters!
+                  .map((e) => e.code)
+                  .toList()
+              : [],
           referralReasons:
-              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
       });
 }

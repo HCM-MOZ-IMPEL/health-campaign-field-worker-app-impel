@@ -41,6 +41,7 @@ import '../pages/inventory/custom_manage_stocks.dart';
 import '../pages/inventory/custom_stock_reconciliation.dart';
 import '../pages/reports/inventory/custom_report_selection.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
 
 part 'app_router.gr.dart';
 
@@ -184,6 +185,12 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
+                  ),
+                  AutoRoute(
+                      page: HouseDetailsRoute.page, path: 'house-details'),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
                   ),
                 ],
               ),

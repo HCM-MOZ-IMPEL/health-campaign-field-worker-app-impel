@@ -72,7 +72,12 @@ class AppConfiguration {
 
   late List<SymptomsTypes>? symptomsTypes;
 
+  @Name('SEARCH_HOUSEHOLD_FILTERS')
+  late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
+
   late List<ReferralReasons>? referralReasons;
+  late List<HouseStructureTypes>? houseStructureTypes;
+  late List<RefusalReasons>? refusalReasons;
 }
 
 @embedded
@@ -164,6 +169,13 @@ class HouseholdDeletionReasonOptions {
 }
 
 @embedded
+class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class HouseholdMemberDeletionReasonOptions {
   late String name;
   late String code;
@@ -177,8 +189,11 @@ class CallSupportList {
 
 @embedded
 class FirebaseConfig {
-  bool? enableCrashlytics;
-  bool? enableAnalytics;
+  @Name("enableCrashlytics")
+  late bool? enableCrashlytics;
+
+  @Name("enableAnalytics")
+  late bool? enableAnalytics;
 }
 
 @embedded
@@ -190,6 +205,20 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class HouseStructureTypes {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class RefusalReasons {
   late String code;
   late String name;
   late bool active;

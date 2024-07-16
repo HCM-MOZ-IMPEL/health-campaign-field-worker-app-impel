@@ -31,6 +31,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.symptomTypes;
       case "REFERRAL_REASONS":
         return MasterEnums.referralReasons;
+      case "HOUSE_STRUCTURE_TYPES":
+        return MasterEnums.houseStructureTypes;
+      case "REFUSAL_REASONS":
+        return MasterEnums.refusalReasons;
       case "BANDWIDTH_BATCH_SIZE":
         return MasterEnums.bandWidthBatchSize;
       case "DOWNSYNC-BANDWIDTH_BATCH_SIZE":
@@ -61,6 +65,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.rowVersion;
       case "ServiceDefs":
         return MasterEnums.serviceDefinitions;
+      case "FIREBASE_CONFIG":
+        return MasterEnums.firebaseConfig;
+      case "SEARCH_HOUSEHOLD_FILTERS":
+        return MasterEnums.searchHouseHoldFilters;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -75,6 +83,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SYMPTOM_TYPES";
       case MasterEnums.referralReasons:
         return "REFERRAL_REASONS";
+      case MasterEnums.houseStructureTypes:
+        return "HOUSE_STRUCTURE_TYPES";
+      case MasterEnums.refusalReasons:
+        return "REFUSAL_REASONS";
       case MasterEnums.bandWidthBatchSize:
         return "BANDWIDTH_BATCH_SIZE";
       case MasterEnums.downSyncBandwidthBatchSize:
@@ -105,6 +117,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ROW_VERSIONS";
       case MasterEnums.serviceDefinitions:
         return "ServiceDefs";
+      case MasterEnums.firebaseConfig:
+        return "FIREBASE_CONFIG";
+      case MasterEnums.searchHouseHoldFilters:
+        return "SEARCH_HOUSEHOLD_FILTERS";
     }
   }
 }
