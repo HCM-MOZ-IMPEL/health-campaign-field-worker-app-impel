@@ -44,6 +44,8 @@ import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
+import '../pages/beneficiary_registration/custom_household_overview.dart';
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(
@@ -210,7 +212,15 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: HouseholdOverviewRoute.page,
                     path: 'overview',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdOverviewRoute.page,
+                    path: 'custom-overview',
                     initial: true,
+                  ),
+                  RedirectRoute(
+                    path: 'overview',
+                    redirectTo: 'custom-overview',
                   ),
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,

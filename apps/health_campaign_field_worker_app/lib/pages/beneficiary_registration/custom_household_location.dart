@@ -11,12 +11,14 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
+
+import '../../widgets/custom_digit_text_form_field.dart';
 
 @RoutePage()
 class CustomHouseholdLocationPage extends LocalizedStatefulWidget {
@@ -221,11 +223,14 @@ class _CustomHouseholdLocationPageState
                                 },
                               ),
                             ),
-                            const DigitTextFormField(
+                            CustomDigitTextFormField(
                               formControlName: _accuracyKey,
-                              readOnly: true,
-                              label: "Accuracy",
-                            ),
+                              label: localizations.translate(i18
+                                  .householdLocation
+                                  .householdLocationAccuracyText),
+                              colorCondition: (value) =>
+                                  value != null && value > 5,
+                            )
                           ]),
                         ],
                       ),
