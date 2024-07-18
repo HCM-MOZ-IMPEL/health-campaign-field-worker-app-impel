@@ -151,39 +151,40 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       const SizedBox(
                         height: 16,
                       ),
-                      TextButton(
-                        onPressed: () => DigitDialog.show(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(
-                              i18.forgotPassword.labelText,
-                            ),
-                            contentText: localizations.translate(
-                              i18.forgotPassword.contentText,
-                            ),
-                            primaryAction: DigitDialogActions(
-                                label: localizations.translate(
-                                  i18.forgotPassword.primaryActionLabel,
-                                ),
-                                action: (ctx) {
-                                  Navigator.of(ctx).pop();
-                                  context.router.popUntilRoot();
-                                }),
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: const Size(0, 0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.forgotPassword.actionLabel,
-                            ),
-                          ),
-                        ),
-                      ),
+                      //solution customisation
+                      // TextButton(
+                      //   onPressed: () => DigitDialog.show(
+                      //     context,
+                      //     options: DigitDialogOptions(
+                      //       titleText: localizations.translate(
+                      //         i18.forgotPassword.labelText,
+                      //       ),
+                      //       contentText: localizations.translate(
+                      //         i18.forgotPassword.contentText,
+                      //       ),
+                      //       primaryAction: DigitDialogActions(
+                      //           label: localizations.translate(
+                      //             i18.forgotPassword.primaryActionLabel,
+                      //           ),
+                      //           action: (ctx) {
+                      //             Navigator.of(ctx).pop();
+                      //             context.router.popUntilRoot();
+                      //           }),
+                      //     ),
+                      //   ),
+                      //   style: TextButton.styleFrom(
+                      //     padding: EdgeInsets.zero,
+                      //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      //     minimumSize: const Size(0, 0),
+                      //   ),
+                      //   child: Center(
+                      //     child: Text(
+                      //       localizations.translate(
+                      //         i18.forgotPassword.actionLabel,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 );
