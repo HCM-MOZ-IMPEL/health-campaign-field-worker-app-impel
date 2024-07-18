@@ -31,6 +31,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -146,12 +147,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
               ),
             ],
-            header: const Column(
+            header: Column(
               children: [
-                BackNavigationHelpHeaderWidget(
+                const BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
                   showHelp: false,
                   showcaseButton: null,
+                ),
+                CustomBeneficiaryProgressBar(
+                  label: localizations.translate(
+                    i18.home.progressIndicatorTitle,
+                  ),
+                  prefixLabel: localizations.translate(
+                    i18.home.progressIndicatorPrefixLabel,
+                  ),
                 ),
               ],
             ),
