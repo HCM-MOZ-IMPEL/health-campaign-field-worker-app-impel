@@ -42,8 +42,6 @@ class _CustomSearchBeneficiaryPageState
   double long = 0.0;
   List<String> selectedFilters = [];
 
-  bool isFilterOpen = false;
-
   SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
     loading: false,
     householdMembers: [],
@@ -221,7 +219,7 @@ class _CustomSearchBeneficiaryPageState
                                 child: DigitIconButton(
                                   iconText: getFilterIconNLabel()['label'],
                                   icon: getFilterIconNLabel()['icon'],
-                                  onPressed: onFilterClick,
+                                  onPressed: () => showFilterDialog(),
                                 ),
                               ),
                               selectedFilters.isNotEmpty
@@ -399,7 +397,7 @@ class _CustomSearchBeneficiaryPageState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: isFilterOpen ? 70 : 130,
+          height: 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
@@ -430,33 +428,6 @@ class _CustomSearchBeneficiaryPageState
                       )),
                     ),
                   ),
-                  Offstage(
-                    offstage: isFilterOpen,
-                    child: DigitOutlineIconButton(
-                      buttonStyle: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                      onPressed: () {
-                        blocWrapper.clearEvent();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const DigitScannerPage(
-                              quantity: 1,
-                              isGS1code: false,
-                              singleValue: true,
-                            ),
-                            settings: const RouteSettings(name: '/qr-scanner'),
-                          ),
-                        );
-                      },
-                      icon: Icons.qr_code,
-                      label: localizations.translate(
-                        i18.deliverIntervention.scannerLabel,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -473,13 +444,6 @@ class _CustomSearchBeneficiaryPageState
       ),
       'icon': Icons.filter_alt
     };
-  }
-
-  void onFilterClick() {
-    setState(() {
-      isFilterOpen = true;
-    });
-    showFilterDialog();
   }
 
   showFilterDialog() async {
@@ -505,14 +469,8 @@ class _CustomSearchBeneficiaryPageState
         }
       }
       triggerGlobalSearchEvent();
-      setState(() {
-        isFilterOpen = false;
-      });
     } else {
       blocWrapper.clearEvent();
-      setState(() {
-        isFilterOpen = false;
-      });
     }
   }
 
