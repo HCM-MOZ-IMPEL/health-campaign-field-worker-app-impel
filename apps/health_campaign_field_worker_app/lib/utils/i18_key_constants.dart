@@ -855,6 +855,12 @@ class HouseholdLocation {
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
+  String get householdLocationAccuracyText =>
+      'HOUSEHOLD_LOCATION_ACCURACY_LABEL_TEXT';
+
+  String get householdLocationDescriptionText =>
+      'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
+
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
 
   String get administrationAreaRequiredValidation =>

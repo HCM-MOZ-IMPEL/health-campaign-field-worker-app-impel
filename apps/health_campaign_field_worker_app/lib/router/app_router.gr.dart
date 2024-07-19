@@ -228,6 +228,28 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    CustomHouseholdLocationRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdLocationRouteArgs>(
+          orElse: () => const CustomHouseholdLocationRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdLocationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomHouseholdOverviewRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdOverviewRouteArgs>(
+          orElse: () => const CustomHouseholdOverviewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdOverviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomIndividualDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomIndividualDetailsRouteArgs>(
           orElse: () => const CustomIndividualDetailsRouteArgs());
@@ -257,6 +279,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomManageStocksPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomSearchBeneficiaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSearchBeneficiaryRouteArgs>(
+          orElse: () => const CustomSearchBeneficiaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -1093,6 +1126,84 @@ class ComplaintsRegistrationWrapperRouteArgs {
 }
 
 /// generated route for
+/// [CustomHouseholdLocationPage]
+class CustomHouseholdLocationRoute
+    extends PageRouteInfo<CustomHouseholdLocationRouteArgs> {
+  CustomHouseholdLocationRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdLocationRoute.name,
+          args: CustomHouseholdLocationRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdLocationRoute';
+
+  static const PageInfo<CustomHouseholdLocationRouteArgs> page =
+      PageInfo<CustomHouseholdLocationRouteArgs>(name);
+}
+
+class CustomHouseholdLocationRouteArgs {
+  const CustomHouseholdLocationRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdOverviewPage]
+class CustomHouseholdOverviewRoute
+    extends PageRouteInfo<CustomHouseholdOverviewRouteArgs> {
+  CustomHouseholdOverviewRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdOverviewRoute.name,
+          args: CustomHouseholdOverviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdOverviewRoute';
+
+  static const PageInfo<CustomHouseholdOverviewRouteArgs> page =
+      PageInfo<CustomHouseholdOverviewRouteArgs>(name);
+}
+
+class CustomHouseholdOverviewRouteArgs {
+  const CustomHouseholdOverviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomIndividualDetailsPage]
 class CustomIndividualDetailsRoute
     extends PageRouteInfo<CustomIndividualDetailsRouteArgs> {
@@ -1211,6 +1322,45 @@ class CustomManageStocksRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSearchBeneficiaryPage]
+class CustomSearchBeneficiaryRoute
+    extends PageRouteInfo<CustomSearchBeneficiaryRouteArgs> {
+  CustomSearchBeneficiaryRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSearchBeneficiaryRoute.name,
+          args: CustomSearchBeneficiaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSearchBeneficiaryRoute';
+
+  static const PageInfo<CustomSearchBeneficiaryRouteArgs> page =
+      PageInfo<CustomSearchBeneficiaryRouteArgs>(name);
+}
+
+class CustomSearchBeneficiaryRouteArgs {
+  const CustomSearchBeneficiaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
