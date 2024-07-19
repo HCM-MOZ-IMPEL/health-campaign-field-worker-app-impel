@@ -296,6 +296,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomRefusedDeliveryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomRefusedDeliveryRouteArgs>(
+          orElse: () => const CustomRefusedDeliveryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomRefusedDeliveryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomSearchBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomSearchBeneficiaryRouteArgs>(
           orElse: () => const CustomSearchBeneficiaryRouteArgs());
@@ -1378,6 +1389,45 @@ class CustomManageStocksRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomRefusedDeliveryPage]
+class CustomRefusedDeliveryRoute
+    extends PageRouteInfo<CustomRefusedDeliveryRouteArgs> {
+  CustomRefusedDeliveryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomRefusedDeliveryRoute.name,
+          args: CustomRefusedDeliveryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomRefusedDeliveryRoute';
+
+  static const PageInfo<CustomRefusedDeliveryRouteArgs> page =
+      PageInfo<CustomRefusedDeliveryRouteArgs>(name);
+}
+
+class CustomRefusedDeliveryRouteArgs {
+  const CustomRefusedDeliveryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomRefusedDeliveryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

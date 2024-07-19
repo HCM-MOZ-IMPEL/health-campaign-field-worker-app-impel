@@ -47,6 +47,7 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
+import '../pages/beneficiary/custom_refused_delivery.dart';
 
 part 'app_router.gr.dart';
 
@@ -256,6 +257,14 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: RefusedDeliveryRoute.page,
                     path: 'refused-delivery',
+                  ),
+                  AutoRoute(
+                    page: CustomRefusedDeliveryRoute.page,
+                    path: 'custom-refused-delivery',
+                  ),
+                  RedirectRoute(
+                    path: 'refused-delivery',
+                    redirectTo: 'custom-refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,
