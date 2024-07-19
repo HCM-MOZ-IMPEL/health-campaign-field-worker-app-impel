@@ -46,6 +46,7 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
+import '../pages/beneficiary/custom_deliver_intervention.dart';
 
 part 'app_router.gr.dart';
 
@@ -243,6 +244,14 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: CustomDeliverInterventionRoute.page,
+                    path: 'custom-deliver-intervention',
+                  ),
+                  RedirectRoute(
+                    path: 'deliver-intervention',
+                    redirectTo: 'custom-deliver-intervention',
                   ),
                   AutoRoute(
                     page: RefusedDeliveryRoute.page,
