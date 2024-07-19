@@ -45,6 +45,7 @@ import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../pages/beneficiary_registration/custom_household_overview.dart';
+import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
 
 part 'app_router.gr.dart';
 
@@ -152,9 +153,18 @@ class AppRouter extends _$AppRouter {
             path: 'registration-delivery-wrapper',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
+                page: SearchBeneficiaryRoute.page,
+                path: 'search-beneficiary',
+              ),
+              AutoRoute(
+                initial: true,
+                page: CustomSearchBeneficiaryRoute.page,
+                path: 'custom-search-beneficiary',
+              ),
+              RedirectRoute(
+                path: 'search-beneficiary',
+                redirectTo: 'custom-search-beneficiary',
+              ),
 
               AutoRoute(
                 page: FacilitySelectionRoute.page,
