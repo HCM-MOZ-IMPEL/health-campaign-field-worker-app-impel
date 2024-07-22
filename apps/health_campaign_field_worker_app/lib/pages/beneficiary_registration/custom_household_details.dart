@@ -3,8 +3,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -17,6 +19,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
+import '../../router/app_router.dart';
 import '../../widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -67,6 +70,10 @@ class CustomHouseHoldDetailsPageState
                 padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                 child: DigitElevatedButton(
                   onPressed: () {
+                    final userId =
+                        RegistrationDeliverySingleton().loggedInUserUuid;
+                    final projectId = RegistrationDeliverySingleton().projectId;
+                    final boundary = RegistrationDeliverySingleton().boundary;
                     form.markAllAsTouched();
                     if (!form.valid) return;
 
@@ -75,11 +82,14 @@ class CustomHouseHoldDetailsPageState
 
                     final dateOfRegistration =
                         form.control(_dateOfRegistrationKey).value as DateTime;
+
                     //[TODO: Use pregnant women form value based on project config
-                    final pregnantWomen =
-                        form.control(_pregnantWomenCountKey).value as int;
-                    final children =
-                        form.control(_childrenCountKey).value as int;
+                    final pregnantWomen = widget.isEligible
+                        ? form.control(_pregnantWomenCountKey).value as int
+                        : 0;
+                    final children = widget.isEligible
+                        ? form.control(_childrenCountKey).value as int
+                        : 0;
 
                     if (widget.isEligible &&
                         (memberCount < (pregnantWomen + children))) {
@@ -199,6 +209,21 @@ class CustomHouseHoldDetailsPageState
                             context.router.push(
                               IndividualDetailsRoute(isHeadOfHousehold: true),
                             );
+                          } else {
+                            final scannerBloc =
+                                context.read<DigitScannerBloc>();
+                            bloc.add(
+                              BeneficiaryRegistrationSummaryEvent(
+                                projectId: projectId!,
+                                userUuid: userId!,
+                                boundary: boundary!,
+                                tag: scannerBloc.state.qrCodes.isNotEmpty
+                                    ? scannerBloc.state.qrCodes.first
+                                    : null,
+                              ),
+                            );
+                            router.push(CustomSummaryRoute(
+                                isEligible: widget.isEligible));
                           }
                         },
                         editHousehold: (

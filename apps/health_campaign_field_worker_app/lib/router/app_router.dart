@@ -50,6 +50,7 @@ import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/custom_refused_delivery.dart';
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
+import '../pages/custom_summary_page.dart';
 
 part 'app_router.gr.dart';
 

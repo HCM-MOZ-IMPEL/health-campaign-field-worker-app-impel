@@ -17,9 +17,11 @@ import 'package:registration_delivery/utils/utils.dart';
 
 @RoutePage()
 class CustomSummaryPage extends LocalizedStatefulWidget {
+  final bool isEligible;
   const CustomSummaryPage({
     super.key,
     super.appLocalizations,
+    required this.isEligible,
   });
 
   @override
@@ -170,6 +172,15 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
+                                      //todo need to verify this
+                                      context.router.popUntilRouteWithName(
+                                        BeneficiaryWrapperRoute.name,
+                                      );
+                                      context.router.push(
+                                        SplashAcknowledgementRoute(
+                                          enableBackToSearch: false,
+                                        ),
+                                      );
                                     }
                                   }
                                 },
@@ -233,36 +244,39 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                           .toString() ??
                                       '0',
                                   isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfPregnantWomenCountLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.pregnantWomen
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfChildrenBelow5YearsLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.children
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
+                              if (widget.isEligible)
+                                LabelValuePair(
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfPregnantWomenCountLabel),
+                                    value: householdState.householdModel
+                                            ?.additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true),
+                              if (widget.isEligible)
+                                LabelValuePair(
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfChildrenBelow5YearsLabel),
+                                    value: householdState.householdModel
+                                            ?.additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType.children
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true),
                             ]),
                       ),
                       DigitCard(

@@ -352,13 +352,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomSummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomSummaryRouteArgs>(
-          orElse: () => const CustomSummaryRouteArgs());
+      final args = routeData.argsAs<CustomSummaryRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomSummaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          isEligible: args.isEligible,
         ),
       );
     },
@@ -1631,12 +1631,14 @@ class CustomSummaryRoute extends PageRouteInfo<CustomSummaryRouteArgs> {
   CustomSummaryRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    required bool isEligible,
     List<PageRouteInfo>? children,
   }) : super(
           CustomSummaryRoute.name,
           args: CustomSummaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            isEligible: isEligible,
           ),
           initialChildren: children,
         );
@@ -1651,15 +1653,18 @@ class CustomSummaryRouteArgs {
   const CustomSummaryRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.isEligible,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final bool isEligible;
+
   @override
   String toString() {
-    return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
   }
 }
 
