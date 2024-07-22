@@ -48,6 +48,8 @@ import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/custom_refused_delivery.dart';
+import '../pages/beneficiary_registration/custom_house_details.dart';
+import '../pages/beneficiary_registration/custom_household_details.dart';
 
 part 'app_router.gr.dart';
 
@@ -190,8 +192,17 @@ class AppRouter extends _$AppRouter {
                     redirectTo: 'custom-individual-details',
                   ),
                   AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
+                    page: HouseHoldDetailsRoute.page,
+                    path: 'household-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseHoldDetailsRoute.page,
+                    path: 'custom-household-details',
+                  ),
+                  RedirectRoute(
+                    path: 'household-details',
+                    redirectTo: 'custom-household-details',
+                  ),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
@@ -210,11 +221,29 @@ class AppRouter extends _$AppRouter {
                     path: 'beneficiary-acknowledgement',
                   ),
                   AutoRoute(
-                      page: HouseDetailsRoute.page, path: 'house-details'),
+                    page: HouseDetailsRoute.page,
+                    path: 'house-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseDetailsRoute.page,
+                    path: 'custom-house-details',
+                  ),
+                  RedirectRoute(
+                    path: 'house-details',
+                    redirectTo: 'custom-house-details',
+                  ),
                   AutoRoute(
                     page: SummaryRoute.page,
                     path: 'beneficiary-summary',
                   ),
+                  AutoRoute(
+                    page: CustomSummaryRoute.page,
+                    path: 'custom-beneficiary-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-summary',
+                    redirectTo: 'custom-beneficiary-summary',
+                  )
                 ],
               ),
               AutoRoute(
