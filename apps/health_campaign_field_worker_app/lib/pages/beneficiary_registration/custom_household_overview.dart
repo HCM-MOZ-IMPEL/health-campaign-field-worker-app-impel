@@ -114,8 +114,14 @@ class _CustomHouseholdOverviewPageState
                                             ),
                                           );
 
-                                          await context.router.push(
-                                              BeneficiaryChecklistRoute());
+                                          // await context.router.push(
+                                          //     BeneficiaryChecklistRoute());
+
+                                          await context.router
+                                              .push(BeneficiaryWrapperRoute(
+                                            wrapper:
+                                                state.householdMemberWrapper,
+                                          ));
                                         },
                                   child: Center(
                                     child: Text(

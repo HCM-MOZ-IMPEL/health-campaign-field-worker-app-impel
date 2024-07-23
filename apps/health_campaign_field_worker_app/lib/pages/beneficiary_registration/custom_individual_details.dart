@@ -11,6 +11,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -25,6 +26,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../blocs/beneficiary_registration/custom_search_households_bloc.dart';
 import '../../widgets/custom_digit_dob_picker.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
@@ -60,6 +62,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
     final router = context.router;
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
+    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -71,6 +74,67 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
               persisted: (value) {
                 if (value.navigateToRoot) {
                   (router.parent() as StackRouter).maybePop();
+                } else {
+                  // router.popUntil((route) =>
+                  //     route.settings.name == CustomSearchBeneficiaryRoute.name);
+
+                  Future.delayed(
+                    const Duration(
+                      milliseconds: 1000,
+                    ),
+                    () {
+                      context.read<SearchHouseholdsBloc>().add(
+                            SearchHouseholdsEvent.searchByHousehold(
+                              householdModel: value.householdModel,
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                              isProximityEnabled: false,
+                            ),
+                          );
+                    },
+                  ).then(
+                    (value) {
+                      final overviewBloc =
+                          context.read<HouseholdOverviewBloc>();
+
+                      Future.delayed(
+                        const Duration(
+                          milliseconds: 1000,
+                        ),
+                        () {
+                          overviewBloc.add(
+                            HouseholdOverviewReloadEvent(
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                              projectBeneficiaryType: beneficiaryType,
+                            ),
+                          );
+                        },
+                      ).then(
+                        (value) {
+                          (router.parent() as StackRouter).maybePop();
+                        },
+                      );
+                    },
+                  );
+
+                  // context.read<CustomSearchHouseholdsBloc>().add(
+                  //   SearchHouseholdsSetBeneficiaryWrapperEvent(value.)
+                  // );
+
+                  // router.push(BeneficiaryChecklistRoute());
+
+                  // router.replaceAll([
+                  //   HomeRoute(),
+                  //   BeneficiaryWrapperRoute(
+                  //     wrapper: context
+                  //         .read<SearchBlocWrapper>()
+                  //         .searchHouseholdsBloc
+                  //         .state
+                  //         .householdMembers
+                  //         .first,
+                  //   ),
+                  // ]);
                 }
               },
             );
@@ -157,20 +221,69 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                                 ),
                               );
                             } else {
-                              clickedStatus.value = true;
-                              final scannerBloc =
-                                  context.read<DigitScannerBloc>();
-                              bloc.add(
-                                BeneficiaryRegistrationSummaryEvent(
-                                  projectId: projectId!,
-                                  userUuid: userId!,
-                                  boundary: boundary!,
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
-                                      : null,
+                              final submit = await DigitDialog.show<bool>(
+                                context,
+                                options: DigitDialogOptions(
+                                  titleText: localizations.translate(
+                                    i18.deliverIntervention.dialogTitle,
+                                  ),
+                                  contentText: localizations.translate(
+                                    i18.deliverIntervention.dialogContent,
+                                  ),
+                                  primaryAction: DigitDialogActions(
+                                    label: localizations.translate(
+                                      i18.common.coreCommonSubmit,
+                                    ),
+                                    action: (context) {
+                                      clickedStatus.value = true;
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop(true);
+                                    },
+                                  ),
+                                  secondaryAction: DigitDialogActions(
+                                    label: localizations.translate(
+                                      i18.common.coreCommonCancel,
+                                    ),
+                                    action: (context) => Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop(false),
+                                  ),
                                 ),
                               );
-                              router.push(SummaryRoute());
+
+                              if (context.mounted) {
+                                if (submit ?? false) {
+                                  clickedStatus.value = true;
+                                  final scannerBloc =
+                                      context.read<DigitScannerBloc>();
+                                  bloc.add(
+                                    BeneficiaryRegistrationSummaryEvent(
+                                      projectId: projectId!,
+                                      userUuid: userId!,
+                                      boundary: boundary!,
+                                      tag: scannerBloc.state.qrCodes.isNotEmpty
+                                          ? scannerBloc.state.qrCodes.first
+                                          : null,
+                                    ),
+                                  );
+                                  // router.push(SummaryRoute());
+
+                                  bloc.add(
+                                    BeneficiaryRegistrationCreateEvent(
+                                        projectId: projectId,
+                                        userUuid: userId,
+                                        boundary: boundary,
+                                        tag: scannerBloc
+                                                .state.qrCodes.isNotEmpty
+                                            ? scannerBloc.state.qrCodes.first
+                                            : null,
+                                        navigateToSummary: false),
+                                  );
+                                }
+                              }
                             }
                           },
                           editIndividual: (

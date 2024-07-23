@@ -7,12 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
+import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/beneficiary_registration/custom_search_households_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -99,6 +110,43 @@ class MainApplicationState extends State<MainApplication>
                 },
                 lazy: false,
               ),
+              BlocProvider(
+                create: (context) {
+                  return SearchHouseholdsBloc(
+                      beneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType!,
+                      userUid:
+                          RegistrationDeliverySingleton().loggedInUserUuid!,
+                      projectId: RegistrationDeliverySingleton().projectId!,
+                      addressRepository:
+                          context.read<RegistrationDeliveryAddressRepo>(),
+                      projectBeneficiary: context.repository<
+                          ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(),
+                      householdMember: context.repository<HouseholdMemberModel,
+                          HouseholdMemberSearchModel>(),
+                      household: context
+                          .repository<HouseholdModel, HouseholdSearchModel>(),
+                      individual: context
+                          .repository<IndividualModel, IndividualSearchModel>(),
+                      taskDataRepository:
+                          context.repository<TaskModel, TaskSearchModel>(),
+                      sideEffectDataRepository: context
+                          .repository<SideEffectModel, SideEffectSearchModel>(),
+                      referralDataRepository: context
+                          .repository<ReferralModel, ReferralSearchModel>(),
+                      individualGlobalSearchRepository:
+                          context.read<IndividualGlobalSearchRepository>(),
+                      houseHoldGlobalSearchRepository:
+                          context.read<HouseHoldGlobalSearchRepository>());
+                },
+              ),
+              // BlocProvider(
+              //   create: (context) => CustomSearchHouseholdsBloc(
+              //     const CustomSearchHouseholdsState.newState(),
+              //     context.read<SearchHouseholdsBloc>(),
+              //   ),
+              // ),
 
               BlocProvider(
                 create: (_) {
@@ -158,6 +206,25 @@ class MainApplicationState extends State<MainApplication>
                     var firstLanguage;
                     firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
+
+                    final task =
+                        context.repository<TaskModel, TaskSearchModel>();
+                    final individual = context
+                        .repository<IndividualModel, IndividualSearchModel>();
+
+                    final household = context
+                        .repository<HouseholdModel, HouseholdSearchModel>();
+
+                    final householdMember = context.repository<
+                        HouseholdMemberModel, HouseholdMemberSearchModel>();
+
+                    final projectBeneficiary = context.repository<
+                        ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>();
+                    final referral = context
+                        .repository<ReferralModel, ReferralSearchModel>();
+                    final sideEffect = context
+                        .repository<SideEffectModel, SideEffectSearchModel>();
 
                     return MultiBlocProvider(
                       providers: [
@@ -282,6 +349,30 @@ class MainApplicationState extends State<MainApplication>
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
                           ),
+                        ),
+                        BlocProvider(
+                          create: (_) => ServiceDefinitionBloc(
+                            const ServiceDefinitionEmptyState(),
+                            serviceDefinitionDataRepository: context.repository<
+                                ServiceDefinitionModel,
+                                ServiceDefinitionSearchModel>(),
+                          )..add(const ServiceDefinitionFetchEvent()),
+                        ),
+                        BlocProvider(
+                          create: (_) => HouseholdOverviewBloc(
+                              const HouseholdOverviewState(
+                                householdMemberWrapper:
+                                    HouseholdMemberWrapper(),
+                              ),
+                              individualRepository: individual,
+                              householdRepository: household,
+                              householdMemberRepository: householdMember,
+                              projectBeneficiaryRepository: projectBeneficiary,
+                              taskDataRepository: task,
+                              sideEffectDataRepository: sideEffect,
+                              referralDataRepository: referral,
+                              beneficiaryType: RegistrationDeliverySingleton()
+                                  .beneficiaryType!),
                         ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
