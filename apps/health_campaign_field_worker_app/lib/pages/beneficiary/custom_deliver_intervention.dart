@@ -44,6 +44,8 @@ class CustomDeliverInterventionPageState
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
+  static const _noOfRoomsSprayedKey = 'noOfRoomsSprayedKey';
+
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
@@ -506,6 +508,18 @@ class CustomDeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.headlineLarge,
                                                 ),
+                                                // todo : verify the localisation
+                                                DigitIntegerFormPicker(
+                                                  incrementer: true,
+                                                  formControlName:
+                                                      _noOfRoomsSprayedKey,
+                                                  form: form,
+                                                  label:
+                                                      localizations.translate(
+                                                    "DELIVERY_ROOMS_SPRAYED",
+                                                  ),
+                                                  minimum: 1,
+                                                ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
                                                       form: form,
@@ -613,7 +627,7 @@ class CustomDeliverInterventionPageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
-
+    final roomsSprayed = form.control(_noOfRoomsSprayedKey).value as int;
     // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
@@ -675,6 +689,7 @@ class CustomDeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          AdditionalField(_noOfRoomsSprayedKey, roomsSprayed),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),
@@ -715,6 +730,10 @@ class CustomDeliverInterventionPageState
       ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _noOfRoomsSprayedKey: FormControl<int>(
+        value: 0,
+        validators: [],
+      ),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
