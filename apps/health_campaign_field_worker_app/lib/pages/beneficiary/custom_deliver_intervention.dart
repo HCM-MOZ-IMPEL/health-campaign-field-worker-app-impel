@@ -42,7 +42,6 @@ class CustomDeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
   final clickedStatus = ValueNotifier<bool>(false);
@@ -535,58 +534,6 @@ class CustomDeliverInterventionPageState
                                                         });
                                                       },
                                                     )),
-                                                Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .resourceAddBeneficiary,
-                                                    ),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
