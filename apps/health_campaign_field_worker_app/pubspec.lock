@@ -328,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  closed_household:
+    dependency: transitive
+    description:
+      name: closed_household
+      sha256: "47d46553b034fceac6acda81e16f10b2d51a93cb509f5d596480a2bb6ff8aea3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.1"
   code_builder:
     dependency: transitive
     description:
@@ -475,18 +483,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: c9fb77852995d45d26e7bec9c945002f33c99d1399cfe30696a925d3ed3ae57d
+      sha256: "096170e72796a779331b1fec90ea2530932f19b1d0e4d24122298619e5cbee6b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+5"
+    version: "1.0.0+6"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "0e1ec8e4d2776fcc4a8118ac85043b8876466ec7399c14880f3d585ad3586ef6"
+      sha256: "1258b5e96c6f63d32ab042a1d739360c93cab302e2f230b416dc4c54021e5e55"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3-dev.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1501,10 +1509,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "8f3a5845ad900b391fe118071700f2fa0f8392d20430658830844b87a658fba6"
+      sha256: "44d363ae7b40ea6249eb84f94edd1ce14471d7be5f53592360a7f2297b35b5c1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.10"
+    version: "1.0.3-dev.1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

@@ -70,7 +70,22 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).maybePop();
+                  final overviewBloc = context.read<HouseholdOverviewBloc>();
+
+                  overviewBloc.add(
+                    HouseholdOverviewReloadEvent(
+                      projectId:
+                          RegistrationDeliverySingleton().projectId.toString(),
+                      projectBeneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType ??
+                              BeneficiaryType.household,
+                    ),
+                  );
+                  HouseholdMemberWrapper memberWrapper =
+                      overviewBloc.state.householdMemberWrapper;
+                  final route = router.parent() as StackRouter;
+                  route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
+                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
                 }
               },
             );
@@ -123,6 +138,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
+                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
