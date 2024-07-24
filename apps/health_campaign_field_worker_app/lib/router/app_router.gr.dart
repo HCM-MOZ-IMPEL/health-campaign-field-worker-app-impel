@@ -228,6 +228,28 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    CustomClosedHouseholdDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
+          orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomClosedHouseholdSummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
+          orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomDeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
           orElse: () => const CustomDeliverInterventionRouteArgs());
@@ -408,6 +430,7 @@ abstract class _$AppRouter extends RootStackRouter {
     },
     ...RegistrationDeliveryRoute().pagesMap,
     ...InventoryRoute().pagesMap,
+    ...ClosedHouseholdPackageRoute().pagesMap,
   };
 }
 
@@ -1145,6 +1168,84 @@ class ComplaintsRegistrationWrapperRouteArgs {
   @override
   String toString() {
     return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdDetailsPage]
+class CustomClosedHouseholdDetailsRoute
+    extends PageRouteInfo<CustomClosedHouseholdDetailsRouteArgs> {
+  CustomClosedHouseholdDetailsRoute({
+    Key? key,
+    ClosedHouseholdLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdDetailsRoute.name,
+          args: CustomClosedHouseholdDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdDetailsRoute';
+
+  static const PageInfo<CustomClosedHouseholdDetailsRouteArgs> page =
+      PageInfo<CustomClosedHouseholdDetailsRouteArgs>(name);
+}
+
+class CustomClosedHouseholdDetailsRouteArgs {
+  const CustomClosedHouseholdDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ClosedHouseholdLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdSummaryPage]
+class CustomClosedHouseholdSummaryRoute
+    extends PageRouteInfo<CustomClosedHouseholdSummaryRouteArgs> {
+  CustomClosedHouseholdSummaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdSummaryRoute.name,
+          args: CustomClosedHouseholdSummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdSummaryRoute';
+
+  static const PageInfo<CustomClosedHouseholdSummaryRouteArgs> page =
+      PageInfo<CustomClosedHouseholdSummaryRouteArgs>(name);
+}
+
+class CustomClosedHouseholdSummaryRouteArgs {
+  const CustomClosedHouseholdSummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
