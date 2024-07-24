@@ -97,4 +97,7 @@ class _HomePageShowcaseData {
   final db = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.db,
   );
+  final closedHouseHold = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.closedHouseHoldLabel,
+  );
 }

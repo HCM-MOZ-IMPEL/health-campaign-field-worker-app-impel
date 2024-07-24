@@ -1,3 +1,4 @@
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -308,6 +309,20 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIconSize: 48,
+          customIcon: Constants.closedHouseholdSvg,
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () {
+            context.router.push(ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
