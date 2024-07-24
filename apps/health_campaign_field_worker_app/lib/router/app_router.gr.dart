@@ -228,17 +228,17 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
-    CustomClosedHouseholdDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
-          orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomClosedHouseholdDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
+    // CustomClosedHouseholdDetailsRoute.name: (routeData) {
+    //   final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
+    //       orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
+    //   return AutoRoutePage<dynamic>(
+    //     routeData: routeData,
+    //     child: CustomClosedHouseholdDetailsPage(
+    //       key: args.key,
+    //       appLocalizations: args.appLocalizations,
+    //     ),
+    //   );
+    // },
     CustomDeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
           orElse: () => const CustomDeliverInterventionRouteArgs());
@@ -419,6 +419,7 @@ abstract class _$AppRouter extends RootStackRouter {
     },
     ...RegistrationDeliveryRoute().pagesMap,
     ...InventoryRoute().pagesMap,
+    ...ClosedHouseholdPackageRoute().pagesMap,
   };
 }
 
@@ -1159,44 +1160,44 @@ class ComplaintsRegistrationWrapperRouteArgs {
   }
 }
 
-/// generated route for
-/// [CustomClosedHouseholdDetailsPage]
-class CustomClosedHouseholdDetailsRoute
-    extends PageRouteInfo<CustomClosedHouseholdDetailsRouteArgs> {
-  CustomClosedHouseholdDetailsRoute({
-    Key? key,
-    ClosedHouseholdLocalization? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomClosedHouseholdDetailsRoute.name,
-          args: CustomClosedHouseholdDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
+// /// generated route for
+// /// [CustomClosedHouseholdDetailsPage]
+// class CustomClosedHouseholdDetailsRoute
+//     extends PageRouteInfo<CustomClosedHouseholdDetailsRouteArgs> {
+//   CustomClosedHouseholdDetailsRoute({
+//     Key? key,
+//     ClosedHouseholdLocalization? appLocalizations,
+//     List<PageRouteInfo>? children,
+//   }) : super(
+//           CustomClosedHouseholdDetailsRoute.name,
+//           args: CustomClosedHouseholdDetailsRouteArgs(
+//             key: key,
+//             appLocalizations: appLocalizations,
+//           ),
+//           initialChildren: children,
+//         );
 
-  static const String name = 'CustomClosedHouseholdDetailsRoute';
+//   static const String name = 'CustomClosedHouseholdDetailsRoute';
 
-  static const PageInfo<CustomClosedHouseholdDetailsRouteArgs> page =
-      PageInfo<CustomClosedHouseholdDetailsRouteArgs>(name);
-}
+//   static const PageInfo<CustomClosedHouseholdDetailsRouteArgs> page =
+//       PageInfo<CustomClosedHouseholdDetailsRouteArgs>(name);
+// }
 
-class CustomClosedHouseholdDetailsRouteArgs {
-  const CustomClosedHouseholdDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
+// class CustomClosedHouseholdDetailsRouteArgs {
+//   const CustomClosedHouseholdDetailsRouteArgs({
+//     this.key,
+//     this.appLocalizations,
+//   });
 
-  final Key? key;
+//   final Key? key;
 
-  final ClosedHouseholdLocalization? appLocalizations;
+//   final ClosedHouseholdLocalization? appLocalizations;
 
-  @override
-  String toString() {
-    return 'CustomClosedHouseholdDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
+//   @override
+//   String toString() {
+//     return 'CustomClosedHouseholdDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+//   }
+// }
 
 /// generated route for
 /// [CustomDeliverInterventionPage]
