@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:closed_household/data/repositories/local/user_action.dart';
 import 'package:closed_household/data/repositories/oplog/oplog.dart';
+import 'package:closed_household/data/repositories/remote/user_action.dart';
 import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
@@ -458,6 +459,11 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                   StockReconciliationSearchModel>>(
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.userAction)
+          RepositoryProvider<
+              RemoteRepository<UserActionModel, UserActionSearchModel>>(
+            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

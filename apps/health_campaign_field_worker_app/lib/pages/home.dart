@@ -534,6 +534,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -562,6 +565,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );

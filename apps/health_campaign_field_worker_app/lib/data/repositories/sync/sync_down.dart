@@ -1,3 +1,4 @@
+import 'package:closed_household/models/entities/user_action.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'dart:async';
@@ -606,6 +607,56 @@ class PerformSyncDown {
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+
+          case DataModelType.userAction:
+            responseEntities = await remote.search(UserActionSearchModel(
+              clientReferenceId: entities
+                  .whereType<UserActionModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final userActionModel = element.entity as UserActionModel;
+              var responseEntity = responseEntities
+                  .whereType<UserActionModel>()
+                  .firstWhereOrNull(
+                    (e) =>
+                        e.clientReferenceId ==
+                        userActionModel.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: userActionModel.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(userActionModel.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    userActionModel.copyWith(
                       nonRecoverableError: true,
                     ),
                     createOpLog: false,

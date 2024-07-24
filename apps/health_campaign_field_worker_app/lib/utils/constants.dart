@@ -1,5 +1,6 @@
 import 'package:closed_household/data/repositories/local/user_action.dart';
 import 'package:closed_household/data/repositories/oplog/oplog.dart';
+import 'package:closed_household/data/repositories/remote/user_action.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -196,6 +197,8 @@ class Constants {
           StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stockReconciliation)
           StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
