@@ -48,10 +48,7 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     closed_household_localization.ClosedHouseholdLocalization.getDelegate(
-      getLocalizationString(
-        isar,
-        selectedLocale,
-      ),
+      getLocalizationString(isar, selectedLocale),
       appConfig.languages!,
     ),
   ];

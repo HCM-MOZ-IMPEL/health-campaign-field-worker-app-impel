@@ -50,6 +50,9 @@ import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/custom_refused_delivery.dart';
+import '../pages/closed/custom_closed_household_details.dart';
+import 'package:closed_household/blocs/app_localization.dart';
+import '../pages/closed/custom_closed_household_summary.dart';
 
 part 'app_router.gr.dart';
 
@@ -310,11 +313,28 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: ClosedHouseholdDetailsRoute.page,
                 path: 'closed-household-details',
-                initial: true,
               ),
               AutoRoute(
-                  page: ClosedHouseholdSummaryRoute.page,
-                  path: 'closed-household-summary'),
+                page: CustomClosedHouseholdDetailsRoute.page,
+                path: 'custom-closed-household-details',
+                initial: true,
+              ),
+              RedirectRoute(
+                path: 'closed-household-details',
+                redirectTo: 'custom-closed-household-details',
+              ),
+              AutoRoute(
+                page: ClosedHouseholdSummaryRoute.page,
+                path: 'closed-household-summary',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdSummaryRoute.page,
+                path: 'custom-closed-household-summary',
+              ),
+              RedirectRoute(
+                path: 'closed-household-summary',
+                redirectTo: 'custom-closed-household-summary',
+              ),
               AutoRoute(
                   page: ClosedHouseholdAcknowledgementRoute.page,
                   path: 'closed-household-acknowledgement'),
