@@ -4,6 +4,8 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -11,6 +13,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../localized.dart';
 import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
@@ -19,9 +22,6 @@ class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdMemberWrapper householdMember;
   final VoidCallback? onOpenPressed;
   final double? distance;
-  final int? childCount;
-  final int? pregnantWomenCount;
-  final int? noOfRooms;
 
   const CustomViewBeneficiaryCard({
     super.key,
@@ -29,9 +29,6 @@ class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
     required this.householdMember,
     this.onOpenPressed,
     this.distance,
-    this.childCount,
-    this.pregnantWomenCount,
-    this.noOfRooms,
   });
 
   @override
@@ -95,6 +92,13 @@ class _CustomViewBeneficiaryCardState
                   (e.endDate) > DateTime.now().millisecondsSinceEpoch,
               // Return null when no matching cycle is found
             );
+    final household = householdMember.household;
+    final childCount =
+        getValueForTheKey(AdditionalFieldsType.children.toValue(), household);
+    final pregnantWomenCount = getValueForTheKey(
+        AdditionalFieldsType.pregnantWomen.toValue(), household);
+    final noOfRooms =
+        getValueForTheKey(AdditionalFieldsType.noOfRooms.toValue(), household);
 
     final tableData = householdMember.members?.map(
       (e) {
@@ -296,9 +300,12 @@ class _CustomViewBeneficiaryCardState
                     householdMember.household?.address?.city,
                     householdMember.household?.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
-                  subtitle: widget.distance != null
-                      ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                      : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
+                  subtitle:
+                      '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
+                      '${childCount != null ? ' | $childCount ${localizations.translate(i18Local.beneficiaryDetails.childrenLabel)}' : ''}'
+                      '${pregnantWomenCount != null ? ' | $pregnantWomenCount ${localizations.translate(i18Local.beneficiaryDetails.pregnantWomenLabel)}' : ''}'
+                      '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
+                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
                       tasks ?? [],
                       householdMember.projectBeneficiaries!.where((element) {
@@ -327,8 +334,7 @@ class _CustomViewBeneficiaryCardState
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                  label: localizations.translate("BUTTON"),
                   onPressed: widget.onOpenPressed,
                 ),
               ),
@@ -425,6 +431,19 @@ class _CustomViewBeneficiaryCardState
     } else {
       return Status.notRegistered.toValue();
     }
+  }
+
+  dynamic getValueForTheKey(String key, HouseholdModel? householdModel) {
+    if (householdModel == null ||
+        householdModel.additionalFields == null ||
+        householdModel.additionalFields!.fields.isEmpty) {
+      return null;
+    }
+    final object = householdModel.additionalFields!.fields
+        .where((element) => element.key == key)
+        .firstOrNull;
+
+    return object == null ? object : object.value;
   }
 
   Status getTaskStatus(Iterable<TaskModel> tasks) {

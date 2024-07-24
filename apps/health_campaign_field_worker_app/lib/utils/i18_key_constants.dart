@@ -1015,6 +1015,10 @@ class BeneficiaryDetails {
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
+  String get pregnantWomenLabel => 'PREGNANT_WOMAN_LABEL';
+  String get roomsLabel => 'ROOMS_LABEL';
+  String get childrenLabel => 'CHILDREN_LABEL';
+
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
   String get dataFound => 'DATA_FOUND';
