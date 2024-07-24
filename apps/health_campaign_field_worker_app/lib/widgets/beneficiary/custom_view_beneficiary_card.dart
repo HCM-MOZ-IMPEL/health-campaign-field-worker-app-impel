@@ -334,7 +334,8 @@ class _CustomViewBeneficiaryCardState
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  label: localizations.translate("BUTTON"),
+                  label:
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,
                 ),
               ),
