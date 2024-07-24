@@ -329,7 +329,7 @@ packages:
     source: hosted
     version: "1.1.1"
   closed_household:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: closed_household
       sha256: "47d46553b034fceac6acda81e16f10b2d51a93cb509f5d596480a2bb6ff8aea3"

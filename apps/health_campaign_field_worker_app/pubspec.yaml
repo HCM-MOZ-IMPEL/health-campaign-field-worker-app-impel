@@ -68,6 +68,7 @@ dependencies:
   digit_data_model: ^1.0.2
   registration_delivery: ^1.0.3-dev.2
   inventory_management: ^0.0.0-dev.10
+  closed_household: ^0.0.0-dev.1
   digit_scanner: ^1.0.2
 
 dev_dependencies:
