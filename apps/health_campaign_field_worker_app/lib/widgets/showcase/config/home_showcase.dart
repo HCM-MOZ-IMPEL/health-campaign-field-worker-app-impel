@@ -23,7 +23,8 @@ class _HomePageShowcaseData {
         supervisorComplaints,
         supervisorSyncData,
         deleteAll,
-        db
+        db,
+        closedHouseHold,
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
