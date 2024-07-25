@@ -54,6 +54,8 @@ import '../pages/closed/custom_closed_household_details.dart';
 import 'package:closed_household/blocs/app_localization.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
+import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
+import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 part 'app_router.gr.dart';
