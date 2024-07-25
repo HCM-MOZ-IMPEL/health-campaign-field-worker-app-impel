@@ -91,6 +91,7 @@ class _CustomBeneficiaryChecklistPageState
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
                   header: const Column(children: [
+                    // TODO: fix back instead of hiding
                     BackNavigationHelpHeaderWidget(
                       showHelp: false,
                       showBackNavigation: false,
