@@ -53,6 +53,8 @@ import '../pages/beneficiary/custom_refused_delivery.dart';
 import '../pages/closed/custom_closed_household_details.dart';
 import 'package:closed_household/blocs/app_localization.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
+import '../pages/beneficiary_registration/custom_household_wrapper.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 part 'app_router.gr.dart';
 
@@ -216,16 +218,29 @@ class AppRouter extends _$AppRouter {
                     path: 'beneficiary-acknowledgement',
                   ),
                   AutoRoute(
+                    page: CustomBeneficiaryAcknowledgementRoute.page,
+                    path: 'custom-beneficiary-acknowledgement',
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-acknowledgement',
+                    redirectTo: 'custom-beneficiary-acknowledgement',
+                  ),
+                  AutoRoute(
                       page: HouseDetailsRoute.page, path: 'house-details'),
                   AutoRoute(
                     page: SummaryRoute.page,
                     path: 'beneficiary-summary',
                   ),
+                  AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                 ],
               ),
               AutoRoute(
-                page: BeneficiaryWrapperRoute.page,
-                path: 'beneficiary',
+                page: CustomHouseholdWrapperRoute.page,
+                path: 'household',
                 children: [
                   AutoRoute(
                     page: HouseholdOverviewRoute.page,
@@ -240,9 +255,16 @@ class AppRouter extends _$AppRouter {
                     path: 'overview',
                     redirectTo: 'custom-overview',
                   ),
+                ],
+              ),
+              AutoRoute(
+                page: BeneficiaryWrapperRoute.page,
+                path: 'beneficiary',
+                children: [
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
+                    initial: true,
                   ),
                   AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
@@ -299,6 +321,14 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdAcknowledgementRoute.page,
+                    path: 'custom-household-acknowledgement',
+                  ),
+                  RedirectRoute(
+                    path: 'household-acknowledgement',
+                    redirectTo: 'custom-household-acknowledgement',
                   ),
                   AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                 ],

@@ -21,6 +21,8 @@ import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
 import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
 
+import '../../router/app_router.dart';
+
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
   const CustomSearchBeneficiaryPage({
@@ -374,7 +376,7 @@ class _CustomSearchBeneficiaryPageState
                                 );
 
                                 await context.router.push(
-                                  BeneficiaryWrapperRoute(
+                                  CustomHouseholdWrapperRoute(
                                     wrapper: i,
                                   ),
                                 );
@@ -409,17 +411,29 @@ class _CustomSearchBeneficiaryPageState
                   DigitElevatedButton(
                     onPressed: searchHouseholdsState.searchQuery != null &&
                             searchHouseholdsState.searchQuery!.isNotEmpty
-                        ? () {
+                        ? () async {
                             FocusManager.instance.primaryFocus?.unfocus();
                             context.read<DigitScannerBloc>().add(
                                   const DigitScannerEvent.handleScanner(),
                                 );
-                            context.router
+                            await context.router
                                 .push(BeneficiaryRegistrationWrapperRoute(
                               initialState: BeneficiaryRegistrationCreateState(
                                 searchQuery: searchHouseholdsState.searchQuery,
                               ),
                             ));
+
+                            // final householdMemberWrapper =
+                            //     searchHouseholdsState.householdMembers.first;
+                            final searchBlocState =
+                                context.read<SearchHouseholdsBloc>().state;
+                            if (searchBlocState.householdMembers.isNotEmpty) {
+                              await context.router.push(BeneficiaryWrapperRoute(
+                                wrapper: searchHouseholdsState
+                                    .householdMembers.first,
+                              ));
+                            }
+
                             searchController.clear();
                             blocWrapper.clearEvent();
                           }

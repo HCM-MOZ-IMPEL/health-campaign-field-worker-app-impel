@@ -11,6 +11,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -60,6 +61,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
     final router = context.router;
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
+    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -173,20 +175,69 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                                 ),
                               );
                             } else {
-                              clickedStatus.value = true;
-                              final scannerBloc =
-                                  context.read<DigitScannerBloc>();
-                              bloc.add(
-                                BeneficiaryRegistrationSummaryEvent(
-                                  projectId: projectId!,
-                                  userUuid: userId!,
-                                  boundary: boundary!,
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
-                                      : null,
+                              final submit = await DigitDialog.show<bool>(
+                                context,
+                                options: DigitDialogOptions(
+                                  titleText: localizations.translate(
+                                    i18.deliverIntervention.dialogTitle,
+                                  ),
+                                  contentText: localizations.translate(
+                                    i18.deliverIntervention.dialogContent,
+                                  ),
+                                  primaryAction: DigitDialogActions(
+                                    label: localizations.translate(
+                                      i18.common.coreCommonSubmit,
+                                    ),
+                                    action: (context) {
+                                      clickedStatus.value = true;
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop(true);
+                                    },
+                                  ),
+                                  secondaryAction: DigitDialogActions(
+                                    label: localizations.translate(
+                                      i18.common.coreCommonCancel,
+                                    ),
+                                    action: (context) => Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop(false),
+                                  ),
                                 ),
                               );
-                              router.push(SummaryRoute());
+
+                              if (context.mounted) {
+                                if (submit ?? false) {
+                                  clickedStatus.value = true;
+                                  final scannerBloc =
+                                      context.read<DigitScannerBloc>();
+                                  bloc.add(
+                                    BeneficiaryRegistrationSummaryEvent(
+                                      projectId: projectId!,
+                                      userUuid: userId!,
+                                      boundary: boundary!,
+                                      tag: scannerBloc.state.qrCodes.isNotEmpty
+                                          ? scannerBloc.state.qrCodes.first
+                                          : null,
+                                    ),
+                                  );
+                                  // router.push(SummaryRoute());
+
+                                  bloc.add(
+                                    BeneficiaryRegistrationCreateEvent(
+                                        projectId: projectId,
+                                        userUuid: userId,
+                                        boundary: boundary,
+                                        tag: scannerBloc
+                                                .state.qrCodes.isNotEmpty
+                                            ? scannerBloc.state.qrCodes.first
+                                            : null,
+                                        navigateToSummary: false),
+                                  );
+                                }
+                              }
                             }
                           },
                           editIndividual: (
