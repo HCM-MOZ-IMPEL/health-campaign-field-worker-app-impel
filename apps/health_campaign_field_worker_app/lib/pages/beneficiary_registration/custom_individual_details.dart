@@ -26,7 +26,6 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
-import '../../blocs/beneficiary_registration/custom_search_households_bloc.dart';
 import '../../widgets/custom_digit_dob_picker.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
@@ -73,68 +72,22 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).maybePop();
-                } else {
-                  // router.popUntil((route) =>
-                  //     route.settings.name == CustomSearchBeneficiaryRoute.name);
+                  final overviewBloc = context.read<HouseholdOverviewBloc>();
 
-                  Future.delayed(
-                    const Duration(
-                      milliseconds: 1000,
+                  overviewBloc.add(
+                    HouseholdOverviewReloadEvent(
+                      projectId:
+                          RegistrationDeliverySingleton().projectId.toString(),
+                      projectBeneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType ??
+                              BeneficiaryType.household,
                     ),
-                    () {
-                      context.read<SearchHouseholdsBloc>().add(
-                            SearchHouseholdsEvent.searchByHousehold(
-                              householdModel: value.householdModel,
-                              projectId:
-                                  RegistrationDeliverySingleton().projectId!,
-                              isProximityEnabled: false,
-                            ),
-                          );
-                    },
-                  ).then(
-                    (value) {
-                      final overviewBloc =
-                          context.read<HouseholdOverviewBloc>();
-
-                      Future.delayed(
-                        const Duration(
-                          milliseconds: 1000,
-                        ),
-                        () {
-                          overviewBloc.add(
-                            HouseholdOverviewReloadEvent(
-                              projectId:
-                                  RegistrationDeliverySingleton().projectId!,
-                              projectBeneficiaryType: beneficiaryType,
-                            ),
-                          );
-                        },
-                      ).then(
-                        (value) {
-                          (router.parent() as StackRouter).maybePop();
-                        },
-                      );
-                    },
                   );
-
-                  // context.read<CustomSearchHouseholdsBloc>().add(
-                  //   SearchHouseholdsSetBeneficiaryWrapperEvent(value.)
-                  // );
-
-                  // router.push(BeneficiaryChecklistRoute());
-
-                  // router.replaceAll([
-                  //   HomeRoute(),
-                  //   BeneficiaryWrapperRoute(
-                  //     wrapper: context
-                  //         .read<SearchBlocWrapper>()
-                  //         .searchHouseholdsBloc
-                  //         .state
-                  //         .householdMembers
-                  //         .first,
-                  //   ),
-                  // ]);
+                  HouseholdMemberWrapper memberWrapper =
+                      overviewBloc.state.householdMemberWrapper;
+                  final route = router.parent() as StackRouter;
+                  route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
+                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
                 }
               },
             );
@@ -187,6 +140,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
+                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {

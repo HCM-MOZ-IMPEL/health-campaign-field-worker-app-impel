@@ -1,3 +1,5 @@
+import 'package:closed_household/blocs/closed_household.dart';
+import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
 import 'package:digit_components/digit_components.dart';
@@ -23,7 +25,6 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'blocs/beneficiary_registration/custom_search_households_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -349,6 +350,16 @@ class MainApplicationState extends State<MainApplication>
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
                           ),
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return ClosedHouseholdBloc(
+                              const ClosedHouseholdState(),
+                              closedHouseholdRepository: context.repository<
+                                  UserActionModel, UserActionSearchModel>(),
+                            );
+                          },
+                          lazy: false,
                         ),
                         BlocProvider(
                           create: (_) => ServiceDefinitionBloc(

@@ -1,3 +1,5 @@
+import 'package:closed_household/router/closed_household_router.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -46,6 +48,11 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
+import '../pages/beneficiary/custom_deliver_intervention.dart';
+import '../pages/beneficiary/custom_refused_delivery.dart';
+import '../pages/closed/custom_closed_household_details.dart';
+import 'package:closed_household/blocs/app_localization.dart';
+import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
@@ -56,6 +63,7 @@ part 'app_router.gr.dart';
   modules: [
     RegistrationDeliveryRoute,
     InventoryRoute,
+    ClosedHouseholdPackageRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -267,8 +275,24 @@ class AppRouter extends _$AppRouter {
                     path: 'deliver-intervention',
                   ),
                   AutoRoute(
+                    page: CustomDeliverInterventionRoute.page,
+                    path: 'custom-deliver-intervention',
+                  ),
+                  RedirectRoute(
+                    path: 'deliver-intervention',
+                    redirectTo: 'custom-deliver-intervention',
+                  ),
+                  AutoRoute(
                     page: RefusedDeliveryRoute.page,
                     path: 'refused-delivery',
+                  ),
+                  AutoRoute(
+                    page: CustomRefusedDeliveryRoute.page,
+                    path: 'custom-refused-delivery',
+                  ),
+                  RedirectRoute(
+                    path: 'refused-delivery',
+                    redirectTo: 'custom-refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,
@@ -309,6 +333,41 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                 ],
               ),
+            ]),
+
+        /// close household
+        AutoRoute(
+            page: ClosedHouseholdWrapperRoute.page,
+            path: 'closed-household-wrapper',
+            children: [
+              AutoRoute(
+                page: ClosedHouseholdDetailsRoute.page,
+                path: 'closed-household-details',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdDetailsRoute.page,
+                path: 'custom-closed-household-details',
+                initial: true,
+              ),
+              RedirectRoute(
+                path: 'closed-household-details',
+                redirectTo: 'custom-closed-household-details',
+              ),
+              AutoRoute(
+                page: ClosedHouseholdSummaryRoute.page,
+                path: 'closed-household-summary',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdSummaryRoute.page,
+                path: 'custom-closed-household-summary',
+              ),
+              RedirectRoute(
+                path: 'closed-household-summary',
+                redirectTo: 'custom-closed-household-summary',
+              ),
+              AutoRoute(
+                  page: ClosedHouseholdAcknowledgementRoute.page,
+                  path: 'closed-household-acknowledgement'),
             ]),
 
         AutoRoute(

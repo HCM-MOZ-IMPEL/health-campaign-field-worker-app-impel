@@ -4,6 +4,8 @@ import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:closed_household/closed_household.dart'
+    as closed_household_mappers;
 // import 'package:attendance_management/attendance_management.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
@@ -379,6 +381,7 @@ initializeAllMappers() async {
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
+    Future(() => closed_household_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

@@ -124,6 +124,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
+  String get locationCapturing => 'CAPTURING_LOCATION';
 }
 
 class HomeShowcase {
@@ -592,6 +594,7 @@ class Home {
   String get db => 'HOME_DB_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -1012,6 +1015,10 @@ class BeneficiaryDetails {
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+
+  String get pregnantWomenLabel => 'PREGNANT_WOMAN_LABEL';
+  String get roomsLabel => 'ROOMS_LABEL';
+  String get childrenLabel => 'CHILDREN_LABEL';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
