@@ -75,13 +75,25 @@ class _CustomHouseholdLocationPageState
           form: () => buildForm(bloc.state),
           builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
             listener: (context, locationState) {
-              final lat = locationState.latitude;
-              final lng = locationState.longitude;
-              final accuracy = locationState.accuracy;
+              registrationState.maybeMap(
+                  orElse: () => false,
+                  create: (value) {
+                    if (locationState.accuracy != null) {
+                      //Hide the dialog after 1 seconds
+                      Future.delayed(const Duration(seconds: 1), () {
+                        DigitComponentsUtils().hideLocationDialog(context);
+                      });
+                    }
+                  });
+              if (locationState.accuracy != null) {
+                final lat = locationState.latitude;
+                final lng = locationState.longitude;
+                final accuracy = locationState.accuracy;
 
-              form.control(_latKey).value ??= lat;
-              form.control(_lngKey).value ??= lng;
-              form.control(_accuracyKey).value ??= accuracy;
+                form.control(_latKey).value ??= lat;
+                form.control(_lngKey).value ??= lng;
+                form.control(_accuracyKey).value ??= accuracy;
+              }
             },
             listenWhen: (previous, current) {
               final lat = form.control(_latKey).value;
