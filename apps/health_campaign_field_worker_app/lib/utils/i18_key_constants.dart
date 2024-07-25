@@ -263,6 +263,10 @@ class StockDetailsReceiptShowcase {
     return 'STOCK_DETAILS_RECEIPT_SHOWCASE_DRIVER_NAME';
   }
 
+  String get driverNameMinMaxLengthValidation =>
+      'DRIVER_NAME_MIN_MAX_VALIDATION';
+  String get driverNameValidation => 'STOCK_DETAILS_DRIVER_NAME_VALIDATION';
+
   String get comments {
     return 'STOCK_DETAILS_RECEIPT_SHOWCASE_COMMENTS';
   }
