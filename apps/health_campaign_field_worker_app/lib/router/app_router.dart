@@ -56,6 +56,7 @@ import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
+import '../pages/beneficiary/custom_beneficiary_checklist.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
@@ -267,7 +268,15 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
+                    page: CustomBeneficiaryChecklistRoute.page,
+                    path: 'custom-beneficiary-checklist',
                     initial: true,
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-checklist',
+                    redirectTo: 'custom-beneficiary-checklist',
                   ),
                   AutoRoute(
                     page: BeneficiaryDetailsRoute.page,

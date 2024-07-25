@@ -429,8 +429,7 @@ class _CustomSearchBeneficiaryPageState
                             //     context.read<SearchHouseholdsBloc>().state;
                             // if (searchBlocState.householdMembers.isNotEmpty) {
                             //   await context.router.push(BeneficiaryWrapperRoute(
-                            //     wrapper: searchHouseholdsState
-                            //         .householdMembers.first,
+                            //     wrapper: searchBlocState.householdMembers.first,
                             //   ));
                             // }
 

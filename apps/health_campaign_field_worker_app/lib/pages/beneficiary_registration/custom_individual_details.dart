@@ -72,22 +72,59 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
             state.mapOrNull(
               persisted: (value) {
                 // if (value.navigateToRoot) {
-                final overviewBloc = context.read<HouseholdOverviewBloc>();
-
-                overviewBloc.add(
-                  HouseholdOverviewReloadEvent(
-                    projectId:
-                        RegistrationDeliverySingleton().projectId.toString(),
-                    projectBeneficiaryType:
-                        RegistrationDeliverySingleton().beneficiaryType ??
-                            BeneficiaryType.household,
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 200,
                   ),
+                  () {
+                    context.read<SearchHouseholdsBloc>().add(
+                          SearchHouseholdsEvent.searchByHousehold(
+                            householdModel: value.householdModel,
+                            projectId:
+                                RegistrationDeliverySingleton().projectId!,
+                            isProximityEnabled: false,
+                          ),
+                        );
+                  },
+                ).then(
+                  (value) {
+                    final overviewBloc = context.read<HouseholdOverviewBloc>();
+
+                    Future.delayed(
+                      const Duration(
+                        milliseconds: 200,
+                      ),
+                      () {
+                        overviewBloc.add(
+                          HouseholdOverviewReloadEvent(
+                            projectId:
+                                RegistrationDeliverySingleton().projectId!,
+                            projectBeneficiaryType: beneficiaryType,
+                          ),
+                        );
+                      },
+                    ).then(
+                      (value) {
+                        // (router.parent() as StackRouter).maybePop();
+                        final parent = context.router.parent() as StackRouter;
+
+                        final searchBlocState =
+                            context.read<SearchHouseholdsBloc>().state;
+                        if (searchBlocState.householdMembers.isNotEmpty) {
+                          // parent.replaceAll([
+                          //   HomeRoute(),
+                          //   const RegistrationDeliveryWrapperRoute(),
+                          //   BeneficiaryWrapperRoute(
+                          //       wrapper: searchBlocState.householdMembers.first)
+                          // ]);
+                          parent.push(BeneficiaryWrapperRoute(
+                              wrapper: searchBlocState.householdMembers.first));
+                        }
+                      },
+                    );
+                  },
                 );
-                HouseholdMemberWrapper memberWrapper =
-                    overviewBloc.state.householdMemberWrapper;
-                final route = router.parent() as StackRouter;
-                route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
-                route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
+
                 // }
               },
             );
