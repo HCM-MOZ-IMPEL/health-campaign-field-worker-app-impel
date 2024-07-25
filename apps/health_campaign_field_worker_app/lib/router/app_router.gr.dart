@@ -286,18 +286,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CustomHouseholdAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomHouseholdAcknowledgementRouteArgs>(
-          orElse: () => const CustomHouseholdAcknowledgementRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomHouseholdAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          enableViewHousehold: args.enableViewHousehold,
-        ),
-      );
-    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -317,6 +305,18 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEligible: args.isEligible,
+        ),
+      );
+    },
+    CustomHouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdAcknowledgementRouteArgs>(
+          orElse: () => const CustomHouseholdAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -362,6 +362,7 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
+          isEligible: args.isEligible,
         ),
       );
     },
@@ -404,6 +405,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomSearchBeneficiaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomStockDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
+          orElse: () => const CustomStockDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -1462,50 +1474,6 @@ class CustomDeliverInterventionRouteArgs {
 }
 
 /// generated route for
-/// [CustomHouseholdAcknowledgementPage]
-class CustomHouseholdAcknowledgementRoute
-    extends PageRouteInfo<CustomHouseholdAcknowledgementRouteArgs> {
-  CustomHouseholdAcknowledgementRoute({
-    Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
-    bool? enableViewHousehold,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomHouseholdAcknowledgementRoute.name,
-          args: CustomHouseholdAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            enableViewHousehold: enableViewHousehold,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomHouseholdAcknowledgementRoute';
-
-  static const PageInfo<CustomHouseholdAcknowledgementRouteArgs> page =
-      PageInfo<CustomHouseholdAcknowledgementRouteArgs>(name);
-}
-
-class CustomHouseholdAcknowledgementRouteArgs {
-  const CustomHouseholdAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.enableViewHousehold,
-  });
-
-  final Key? key;
-
-  final RegistrationDeliveryLocalization? appLocalizations;
-
-  final bool? enableViewHousehold;
-
-  @override
-  String toString() {
-    return 'CustomHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
-  }
-}
-
-/// generated route for
 /// [CustomHouseDetailsPage]
 class CustomHouseDetailsRoute
     extends PageRouteInfo<CustomHouseDetailsRouteArgs> {
@@ -1585,6 +1553,50 @@ class CustomHouseHoldDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomHouseHoldDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdAcknowledgementPage]
+class CustomHouseholdAcknowledgementRoute
+    extends PageRouteInfo<CustomHouseholdAcknowledgementRouteArgs> {
+  CustomHouseholdAcknowledgementRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdAcknowledgementRoute.name,
+          args: CustomHouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdAcknowledgementRoute';
+
+  static const PageInfo<CustomHouseholdAcknowledgementRouteArgs> page =
+      PageInfo<CustomHouseholdAcknowledgementRouteArgs>(name);
+}
+
+class CustomHouseholdAcknowledgementRouteArgs {
+  const CustomHouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 
@@ -1716,8 +1728,9 @@ class CustomIndividualDetailsRoute
     extends PageRouteInfo<CustomIndividualDetailsRouteArgs> {
   CustomIndividualDetailsRoute({
     Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
+    AppLocalizations? appLocalizations,
     bool isHeadOfHousehold = true,
+    bool isEligible = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomIndividualDetailsRoute.name,
@@ -1725,6 +1738,7 @@ class CustomIndividualDetailsRoute
             key: key,
             appLocalizations: appLocalizations,
             isHeadOfHousehold: isHeadOfHousehold,
+            isEligible: isEligible,
           ),
           initialChildren: children,
         );
@@ -1740,17 +1754,20 @@ class CustomIndividualDetailsRouteArgs {
     this.key,
     this.appLocalizations,
     this.isHeadOfHousehold = true,
+    this.isEligible = true,
   });
 
   final Key? key;
 
-  final RegistrationDeliveryLocalization? appLocalizations;
+  final AppLocalizations? appLocalizations;
 
   final bool isHeadOfHousehold;
 
+  final bool isEligible;
+
   @override
   String toString() {
-    return 'CustomIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
+    return 'CustomIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isEligible: $isEligible}';
   }
 }
 
@@ -1907,6 +1924,45 @@ class CustomSearchBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'CustomSearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomStockDetailsPage]
+class CustomStockDetailsRoute
+    extends PageRouteInfo<CustomStockDetailsRouteArgs> {
+  CustomStockDetailsRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsRoute.name,
+          args: CustomStockDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsRoute';
+
+  static const PageInfo<CustomStockDetailsRouteArgs> page =
+      PageInfo<CustomStockDetailsRouteArgs>(name);
+}
+
+class CustomStockDetailsRouteArgs {
+  const CustomStockDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -124,6 +127,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                   projectBeneficiaryModel,
                                   registrationDate,
                                   addressModel,
+                                  selectedClosedHouseholdID,
                                   loading,
                                   isHeadOfHousehold,
                                 ) async {
@@ -172,15 +176,14 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
-                                      //todo need to verify this
-                                      context.router.popUntilRouteWithName(
-                                        BeneficiaryWrapperRoute.name,
-                                      );
-                                      context.router.push(
-                                        SplashAcknowledgementRoute(
-                                          enableBackToSearch: false,
-                                        ),
-                                      );
+                                      if (selectedClosedHouseholdID != null &&
+                                          householdModel != null) {
+                                        context.read<ClosedHouseholdBloc>().add(
+                                            ClosedHouseholdEvent.handleUpdate(
+                                                selectedClosedHouseholdID,
+                                                householdModel
+                                                    .clientReferenceId));
+                                      }
                                     }
                                   }
                                 },
@@ -320,6 +323,93 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                   isInline: true),
                             ]),
                       ),
+                      if (widget.isEligible)
+                        DigitCard(
+                          child: LabelValueList(
+                              heading: localizations.translate(i18
+                                  .individualDetails
+                                  .individualsDetailsLabelText),
+                              withDivider: true,
+                              items: [
+                                LabelValuePair(
+                                  label: localizations.translate(
+                                      i18.individualDetails.nameLabelText),
+                                  value: householdState.maybeWhen(
+                                      orElse: () => localizations
+                                          .translate(i18.common.coreCommonNA),
+                                      summary: (
+                                        navigateToRoot,
+                                        householdModel,
+                                        individualModel,
+                                        projectBeneficiaryModel,
+                                        registrationDate,
+                                        addressModel,
+                                        selectedClosedHouseholdID,
+                                        loading,
+                                        isHeadOfHousehold,
+                                      ) =>
+                                          individualModel?.name?.givenName ??
+                                          localizations.translate(
+                                              i18.common.coreCommonNA)),
+                                ),
+                                LabelValuePair(
+                                  label: localizations.translate(
+                                      i18.individualDetails.dobLabelText),
+                                  value: householdState.maybeWhen(
+                                      orElse: () => localizations
+                                          .translate(i18.common.coreCommonNA),
+                                      summary: (
+                                        navigateToRoot,
+                                        householdModel,
+                                        individualModel,
+                                        projectBeneficiaryModel,
+                                        registrationDate,
+                                        addressModel,
+                                        selectedClosedHouseholdID,
+                                        loading,
+                                        isHeadOfHousehold,
+                                      ) =>
+                                          individualModel?.dateOfBirth != null
+                                              ? DigitDateUtils.getFilteredDate(
+                                                      DigitDateUtils
+                                                              .getFormattedDateToDateTime(
+                                                                  individualModel
+                                                                          ?.dateOfBirth ??
+                                                                      '')
+                                                          .toString(),
+                                                      dateFormat: Constants()
+                                                          .dateMonthYearFormat)
+                                                  .toString()
+                                              : localizations.translate(
+                                                  i18.common.coreCommonNA)),
+                                ),
+                                LabelValuePair(
+                                  label: localizations.translate(
+                                      i18.individualDetails.genderLabelText),
+                                  value: householdState.maybeWhen(
+                                      orElse: () => localizations
+                                          .translate(i18.common.coreCommonNA),
+                                      summary: (
+                                        navigateToRoot,
+                                        householdModel,
+                                        individualModel,
+                                        projectBeneficiaryModel,
+                                        registrationDate,
+                                        addressModel,
+                                        selectedClosedHouseholdID,
+                                        loading,
+                                        isHeadOfHousehold,
+                                      ) =>
+                                          individualModel?.gender != null
+                                              ? localizations.translate(
+                                                  individualModel?.gender?.name
+                                                          .toUpperCase() ??
+                                                      '')
+                                              : localizations.translate(
+                                                  i18.common.coreCommonNA)),
+                                ),
+                              ]),
+                        ),
                     ],
                   ),
                 )

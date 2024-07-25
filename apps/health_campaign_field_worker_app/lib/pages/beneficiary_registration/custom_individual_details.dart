@@ -27,25 +27,29 @@ import 'package:registration_delivery/widgets/showcase/config/showcase_constants
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../widgets/custom_digit_dob_picker.dart';
+import '../../widgets/localized.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 
 @RoutePage()
-class CustomIndividualDetailsPage extends IndividualDetailsPage {
+class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final bool isEligible;
 
   const CustomIndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = true,
+    this.isEligible = true,
   });
 
   @override
-  State<IndividualDetailsPage> createState() =>
+  State<CustomIndividualDetailsPage> createState() =>
       CustomIndividualDetailsPageState();
 }
 
-class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
+class CustomIndividualDetailsPageState
+    extends LocalizedState<CustomIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
@@ -496,7 +500,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                               left: 5,
                             ),
                             child: SelectionBox<String>(
-                              isRequired: true,
+                              isRequired: widget.isEligible,
                               title: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
