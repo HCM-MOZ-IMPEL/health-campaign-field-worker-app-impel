@@ -71,24 +71,24 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
           listener: (context, state) {
             state.mapOrNull(
               persisted: (value) {
-                if (value.navigateToRoot) {
-                  final overviewBloc = context.read<HouseholdOverviewBloc>();
+                // if (value.navigateToRoot) {
+                final overviewBloc = context.read<HouseholdOverviewBloc>();
 
-                  overviewBloc.add(
-                    HouseholdOverviewReloadEvent(
-                      projectId:
-                          RegistrationDeliverySingleton().projectId.toString(),
-                      projectBeneficiaryType:
-                          RegistrationDeliverySingleton().beneficiaryType ??
-                              BeneficiaryType.household,
-                    ),
-                  );
-                  HouseholdMemberWrapper memberWrapper =
-                      overviewBloc.state.householdMemberWrapper;
-                  final route = router.parent() as StackRouter;
-                  route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
-                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
-                }
+                overviewBloc.add(
+                  HouseholdOverviewReloadEvent(
+                    projectId:
+                        RegistrationDeliverySingleton().projectId.toString(),
+                    projectBeneficiaryType:
+                        RegistrationDeliverySingleton().beneficiaryType ??
+                            BeneficiaryType.household,
+                  ),
+                );
+                HouseholdMemberWrapper memberWrapper =
+                    overviewBloc.state.householdMemberWrapper;
+                final route = router.parent() as StackRouter;
+                route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
+                route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
+                // }
               },
             );
           },
