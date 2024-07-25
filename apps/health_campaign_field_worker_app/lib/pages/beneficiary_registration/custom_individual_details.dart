@@ -14,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -76,6 +78,75 @@ class CustomIndividualDetailsPageState
             state.mapOrNull(
               persisted: (value) {
                 // if (value.navigateToRoot) {
+                if (widget.isEligible) {
+                  final householdOverviewBloc =
+                      context.read<HouseholdOverviewBloc>();
+                  final registrationState = householdOverviewBloc.state;
+                  final projectBeneficiary =
+                      RegistrationDeliverySingleton().beneficiaryType !=
+                              BeneficiaryType.individual
+                          ? [
+                              registrationState.householdMemberWrapper
+                                  .projectBeneficiaries?.first
+                            ]
+                          : registrationState
+                              .householdMemberWrapper.projectBeneficiaries
+                              ?.where(
+                                (element) =>
+                                    element.beneficiaryClientReferenceId ==
+                                    registrationState
+                                        .selectedIndividual?.clientReferenceId,
+                              )
+                              .toList();
+
+                  context.read<DeliverInterventionBloc>().add(
+                        DeliverInterventionSubmitEvent(
+                          navigateToSummary: true,
+                          householdMemberWrapper:
+                              registrationState.householdMemberWrapper,
+                          task: TaskModel(
+                            projectBeneficiaryClientReferenceId: projectBeneficiary
+                                ?.first
+                                ?.clientReferenceId, //TODO: need to check for individual based campaign
+                            clientReferenceId: IdGen.i.identifier,
+                            tenantId: RegistrationDeliverySingleton().tenantId,
+                            rowVersion: 1,
+                            auditDetails: AuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context.millisecondsSinceEpoch(),
+                            ),
+                            projectId:
+                                RegistrationDeliverySingleton().projectId,
+                            status: Status.administeredFailed.toValue(),
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid,
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                            ),
+                            additionalFields: TaskAdditionalFields(
+                              version: 1,
+                              fields: [
+                                // todo correct the refusalReason here
+                                AdditionalField(
+                                  AdditionalFieldsType.reasonOfRefusal
+                                      .toValue(),
+                                  "INCOMPATIBLE",
+                                ),
+                              ],
+                            ),
+                          ),
+                          isEditing: false,
+                          boundaryModel:
+                              RegistrationDeliverySingleton().boundary!,
+                        ),
+                      );
+                  context.router.push(DeliverySummaryRoute());
+                }
                 Future.delayed(
                   const Duration(
                     milliseconds: 200,
