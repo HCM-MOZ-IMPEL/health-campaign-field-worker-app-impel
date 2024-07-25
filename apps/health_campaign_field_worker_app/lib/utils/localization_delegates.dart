@@ -1,3 +1,5 @@
+import 'package:closed_household/blocs/app_localization.dart'
+    as closed_household_localization;
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
@@ -23,7 +25,7 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
-        scanner_localization.ScannerLocalization.getDelegate(
+    scanner_localization.ScannerLocalization.getDelegate(
       getLocalizationString(
         isar,
         selectedLocale,
@@ -43,6 +45,10 @@ getAppLocalizationDelegates({
         isar,
         selectedLocale,
       ),
+      appConfig.languages!,
+    ),
+    closed_household_localization.ClosedHouseholdLocalization.getDelegate(
+      getLocalizationString(isar, selectedLocale),
       appConfig.languages!,
     ),
   ];

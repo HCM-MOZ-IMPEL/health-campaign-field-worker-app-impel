@@ -19,6 +19,8 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
+
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
   const CustomSearchBeneficiaryPage({
@@ -41,8 +43,6 @@ class _CustomSearchBeneficiaryPageState
   double lat = 0.0;
   double long = 0.0;
   List<String> selectedFilters = [];
-
-  bool isFilterOpen = false;
 
   SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
     loading: false,
@@ -221,7 +221,7 @@ class _CustomSearchBeneficiaryPageState
                                 child: DigitIconButton(
                                   iconText: getFilterIconNLabel()['label'],
                                   icon: getFilterIconNLabel()['icon'],
-                                  onPressed: onFilterClick,
+                                  onPressed: () => showFilterDialog(),
                                 ),
                               ),
                               selectedFilters.isNotEmpty
@@ -362,7 +362,7 @@ class _CustomSearchBeneficiaryPageState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCard(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
@@ -399,7 +399,7 @@ class _CustomSearchBeneficiaryPageState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: isFilterOpen ? 70 : 130,
+          height: 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
@@ -430,33 +430,6 @@ class _CustomSearchBeneficiaryPageState
                       )),
                     ),
                   ),
-                  Offstage(
-                    offstage: isFilterOpen,
-                    child: DigitOutlineIconButton(
-                      buttonStyle: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                      onPressed: () {
-                        blocWrapper.clearEvent();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const DigitScannerPage(
-                              quantity: 1,
-                              isGS1code: false,
-                              singleValue: true,
-                            ),
-                            settings: const RouteSettings(name: '/qr-scanner'),
-                          ),
-                        );
-                      },
-                      icon: Icons.qr_code,
-                      label: localizations.translate(
-                        i18.deliverIntervention.scannerLabel,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -473,13 +446,6 @@ class _CustomSearchBeneficiaryPageState
       ),
       'icon': Icons.filter_alt
     };
-  }
-
-  void onFilterClick() {
-    setState(() {
-      isFilterOpen = true;
-    });
-    showFilterDialog();
   }
 
   showFilterDialog() async {
@@ -505,14 +471,8 @@ class _CustomSearchBeneficiaryPageState
         }
       }
       triggerGlobalSearchEvent();
-      setState(() {
-        isFilterOpen = false;
-      });
     } else {
       blocWrapper.clearEvent();
-      setState(() {
-        isFilterOpen = false;
-      });
     }
   }
 
@@ -569,7 +529,6 @@ class _CustomSearchBeneficiaryPageState
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closed.toValue(): Status.closed,
       Status.registered.toValue(): Status.registered,
       Status.notRegistered.toValue(): Status.notRegistered,
     };
