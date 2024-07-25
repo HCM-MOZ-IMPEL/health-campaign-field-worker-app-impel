@@ -90,14 +90,10 @@ class _CustomBeneficiaryChecklistPageState
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  header: Column(children: [
+                  header: const Column(children: [
                     BackNavigationHelpHeaderWidget(
                       showHelp: false,
-                      handleBack: () {
-                        //TODO: direct go back is not working, need to check
-                        // Navigator.pop(context);
-                        context.router.maybePop();
-                      },
+                      showBackNavigation: false,
                     ),
                   ]),
                   enableFixedButton: true,
