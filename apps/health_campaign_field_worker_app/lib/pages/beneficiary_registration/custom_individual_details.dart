@@ -105,7 +105,21 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                       },
                     ).then(
                       (value) {
-                        (router.parent() as StackRouter).maybePop();
+                        // (router.parent() as StackRouter).maybePop();
+                        final parent = context.router.parent() as StackRouter;
+
+                        final searchBlocState =
+                            context.read<SearchHouseholdsBloc>().state;
+                        if (searchBlocState.householdMembers.isNotEmpty) {
+                          // parent.replaceAll([
+                          //   HomeRoute(),
+                          //   const RegistrationDeliveryWrapperRoute(),
+                          //   BeneficiaryWrapperRoute(
+                          //       wrapper: searchBlocState.householdMembers.first)
+                          // ]);
+                          parent.push(BeneficiaryWrapperRoute(
+                              wrapper: searchBlocState.householdMembers.first));
+                        }
                       },
                     );
                   },

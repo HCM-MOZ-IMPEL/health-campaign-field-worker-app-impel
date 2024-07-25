@@ -240,6 +240,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryChecklistRouteArgs>(
+          orElse: () => const CustomBeneficiaryChecklistRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryChecklistPage(
+          key: args.key,
+          beneficiaryClientRefId: args.beneficiaryClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
           orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
@@ -1247,6 +1259,50 @@ class CustomBeneficiaryAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'CustomBeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomBeneficiaryChecklistPage]
+class CustomBeneficiaryChecklistRoute
+    extends PageRouteInfo<CustomBeneficiaryChecklistRouteArgs> {
+  CustomBeneficiaryChecklistRoute({
+    Key? key,
+    String? beneficiaryClientRefId,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryChecklistRoute.name,
+          args: CustomBeneficiaryChecklistRouteArgs(
+            key: key,
+            beneficiaryClientRefId: beneficiaryClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryChecklistRoute';
+
+  static const PageInfo<CustomBeneficiaryChecklistRouteArgs> page =
+      PageInfo<CustomBeneficiaryChecklistRouteArgs>(name);
+}
+
+class CustomBeneficiaryChecklistRouteArgs {
+  const CustomBeneficiaryChecklistRouteArgs({
+    this.key,
+    this.beneficiaryClientRefId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? beneficiaryClientRefId;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
   }
 }
 
