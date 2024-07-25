@@ -42,9 +42,10 @@ class CustomDeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
+  static const _noOfRoomsSprayedKey = 'noOfRoomsSprayedKey';
+
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
@@ -70,112 +71,29 @@ class CustomDeliverInterventionPageState
       FormGroup form,
       HouseholdMemberWrapper householdMember,
       ProjectBeneficiaryModel projectBeneficiary) async {
-    if (shouldSubmit == false) {
-      await DigitSyncDialog.show(context,
-          type: DigitSyncDialogType.complete,
-          label: localizations.translate(i18.common.locationCaptured),
-          primaryAction: DigitDialogActions(
-            label: localizations.translate(
-              i18.beneficiaryDetails.ctaProceed,
-            ),
-            action: (ctx) async {
-              DigitComponentsUtils().hideLocationDialog(context);
-              final lat = locationState.latitude;
-              final long = locationState.longitude;
-              shouldSubmit = await DigitDialog.show<bool>(
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    context.read<DeliverInterventionBloc>().add(
+          DeliverInterventionSubmitEvent(
+              task: _getTaskModel(
                 context,
-                options: DigitDialogOptions(
-                  titleText: localizations
-                      .translate(i18.deliverIntervention.dialogTitle),
-                  contentText: localizations
-                      .translate(i18.deliverIntervention.dialogContent),
-                  primaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonSubmit),
-                    action: (ctx) {
-                      clickedStatus.value = true;
-                      Navigator.of(context, rootNavigator: true).pop(true);
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonCancel),
-                    action: (context) =>
-                        Navigator.of(context, rootNavigator: true).pop(false),
-                  ),
-                ),
-              );
-              if (shouldSubmit ?? false) {
-                if (context.mounted) {
-                  context.read<DeliverInterventionBloc>().add(
-                        DeliverInterventionSubmitEvent(
-                          task: _getTaskModel(
-                            context,
-                            form: form,
-                            oldTask: null,
-                            projectBeneficiaryClientReferenceId:
-                                projectBeneficiary.clientReferenceId,
-                            dose: deliverInterventionState.dose,
-                            cycle: deliverInterventionState.cycle,
-                            deliveryStrategy:
-                                DeliverStrategyType.direct.toValue(),
-                            address:
-                                householdMember.members?.first.address?.first,
-                            latitude: lat,
-                            longitude: long,
-                          ),
-                          isEditing: false,
-                          boundaryModel:
-                              RegistrationDeliverySingleton().boundary!,
-                        ),
-                      );
-
-                  if (deliverInterventionState.futureDeliveries != null &&
-                      deliverInterventionState.futureDeliveries!.isNotEmpty &&
-                      RegistrationDeliverySingleton()
-                              .projectType
-                              ?.cycles
-                              ?.isNotEmpty ==
-                          true) {
-                    context.router.popUntilRouteWithName(
-                      BeneficiaryWrapperRoute.name,
-                    );
-                    context.router.push(
-                      SplashAcknowledgementRoute(
-                        enableBackToSearch: false,
-                      ),
-                    );
-                  } else {
-                    final reloadState = context.read<HouseholdOverviewBloc>();
-
-                    Future.delayed(
-                      const Duration(
-                        milliseconds: 1000,
-                      ),
-                      () {
-                        reloadState.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            projectBeneficiaryType:
-                                RegistrationDeliverySingleton()
-                                    .beneficiaryType!,
-                          ),
-                        );
-                      },
-                    ).then(
-                      (value) {
-                        context.router.popAndPush(
-                          HouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ),
-                        );
-                      },
-                    );
-                  }
-                }
-              }
-            },
-          ));
-    }
+                form: form,
+                oldTask: null,
+                projectBeneficiaryClientReferenceId:
+                    projectBeneficiary.clientReferenceId,
+                dose: deliverInterventionState.dose,
+                cycle: deliverInterventionState.cycle,
+                deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                address: householdMember.members?.first.address?.first,
+                latitude: lat,
+                longitude: long,
+              ),
+              isEditing: false,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              navigateToSummary: true,
+              householdMemberWrapper: householdMember),
+        );
+    context.router.push(DeliverySummaryRoute());
   }
 
   void handleLocationState(
@@ -507,6 +425,18 @@ class CustomDeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.headlineLarge,
                                                 ),
+                                                // todo : verify the localisation
+                                                DigitIntegerFormPicker(
+                                                  incrementer: true,
+                                                  formControlName:
+                                                      _noOfRoomsSprayedKey,
+                                                  form: form,
+                                                  label:
+                                                      localizations.translate(
+                                                    "DELIVERY_ROOMS_SPRAYED",
+                                                  ),
+                                                  minimum: 1,
+                                                ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
                                                       form: form,
@@ -535,58 +465,6 @@ class CustomDeliverInterventionPageState
                                                         });
                                                       },
                                                     )),
-                                                Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .resourceAddBeneficiary,
-                                                    ),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
@@ -666,7 +544,7 @@ class CustomDeliverInterventionPageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
-
+    final roomsSprayed = form.control(_noOfRoomsSprayedKey).value as int;
     // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
@@ -728,6 +606,7 @@ class CustomDeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          AdditionalField(_noOfRoomsSprayedKey, roomsSprayed),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),
@@ -768,6 +647,10 @@ class CustomDeliverInterventionPageState
       ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _noOfRoomsSprayedKey: FormControl<int>(
+        value: 0,
+        validators: [],
+      ),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(

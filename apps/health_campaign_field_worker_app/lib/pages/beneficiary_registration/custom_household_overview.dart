@@ -114,8 +114,14 @@ class _CustomHouseholdOverviewPageState
                                             ),
                                           );
 
-                                          await context.router.push(
-                                              BeneficiaryChecklistRoute());
+                                          // await context.router.push(
+                                          //     BeneficiaryChecklistRoute());
+
+                                          await context.router
+                                              .push(BeneficiaryWrapperRoute(
+                                            wrapper:
+                                                state.householdMemberWrapper,
+                                          ));
                                         },
                                   child: Center(
                                     child: Text(
@@ -622,22 +628,22 @@ class _CustomHouseholdOverviewPageState
                               const SizedBox(
                                 height: kPadding,
                               ),
-                              Center(
-                                child: DigitIconButton(
-                                  onPressed: () => addIndividual(
-                                    context,
-                                    state.householdMemberWrapper.household!,
-                                  ),
-                                  iconText: localizations.translate(
-                                    i18.householdOverView
-                                        .householdOverViewAddActionText,
-                                  ),
-                                  icon: Icons.add_circle,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: kPadding,
-                              ),
+                              // Center(
+                              //   child: DigitIconButton(
+                              //     onPressed: () => addIndividual(
+                              //       context,
+                              //       state.householdMemberWrapper.household!,
+                              //     ),
+                              //     iconText: localizations.translate(
+                              //       i18.householdOverView
+                              //           .householdOverViewAddActionText,
+                              //     ),
+                              //     icon: Icons.add_circle,
+                              //   ),
+                              // ),
+                              // const SizedBox(
+                              //   height: kPadding,
+                              // ),
                             ],
                           ),
                         ),

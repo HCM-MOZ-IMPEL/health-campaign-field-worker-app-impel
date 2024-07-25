@@ -19,6 +19,10 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
+
+import '../../router/app_router.dart';
+
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
   const CustomSearchBeneficiaryPage({
@@ -360,7 +364,7 @@ class _CustomSearchBeneficiaryPageState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCard(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
@@ -372,7 +376,7 @@ class _CustomSearchBeneficiaryPageState
                                 );
 
                                 await context.router.push(
-                                  BeneficiaryWrapperRoute(
+                                  CustomHouseholdWrapperRoute(
                                     wrapper: i,
                                   ),
                                 );
@@ -418,6 +422,17 @@ class _CustomSearchBeneficiaryPageState
                                 searchQuery: searchHouseholdsState.searchQuery,
                               ),
                             ));
+
+                            // final householdMemberWrapper =
+                            //     searchHouseholdsState.householdMembers.first;
+                            // final searchBlocState =
+                            //     context.read<SearchHouseholdsBloc>().state;
+                            // if (searchBlocState.householdMembers.isNotEmpty) {
+                            //   await context.router.push(BeneficiaryWrapperRoute(
+                            //     wrapper: searchBlocState.householdMembers.first,
+                            //   ));
+                            // }
+
                             searchController.clear();
                             blocWrapper.clearEvent();
                           }
@@ -527,7 +542,6 @@ class _CustomSearchBeneficiaryPageState
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closed.toValue(): Status.closed,
       Status.registered.toValue(): Status.registered,
       Status.notRegistered.toValue(): Status.notRegistered,
     };
