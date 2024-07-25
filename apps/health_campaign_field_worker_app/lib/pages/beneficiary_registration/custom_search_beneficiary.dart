@@ -411,12 +411,12 @@ class _CustomSearchBeneficiaryPageState
                   DigitElevatedButton(
                     onPressed: searchHouseholdsState.searchQuery != null &&
                             searchHouseholdsState.searchQuery!.isNotEmpty
-                        ? () async {
+                        ? () {
                             FocusManager.instance.primaryFocus?.unfocus();
                             context.read<DigitScannerBloc>().add(
                                   const DigitScannerEvent.handleScanner(),
                                 );
-                            await context.router
+                            context.router
                                 .push(BeneficiaryRegistrationWrapperRoute(
                               initialState: BeneficiaryRegistrationCreateState(
                                 searchQuery: searchHouseholdsState.searchQuery,
@@ -425,14 +425,14 @@ class _CustomSearchBeneficiaryPageState
 
                             // final householdMemberWrapper =
                             //     searchHouseholdsState.householdMembers.first;
-                            final searchBlocState =
-                                context.read<SearchHouseholdsBloc>().state;
-                            if (searchBlocState.householdMembers.isNotEmpty) {
-                              await context.router.push(BeneficiaryWrapperRoute(
-                                wrapper: searchHouseholdsState
-                                    .householdMembers.first,
-                              ));
-                            }
+                            // final searchBlocState =
+                            //     context.read<SearchHouseholdsBloc>().state;
+                            // if (searchBlocState.householdMembers.isNotEmpty) {
+                            //   await context.router.push(BeneficiaryWrapperRoute(
+                            //     wrapper: searchHouseholdsState
+                            //         .householdMembers.first,
+                            //   ));
+                            // }
 
                             searchController.clear();
                             blocWrapper.clearEvent();
