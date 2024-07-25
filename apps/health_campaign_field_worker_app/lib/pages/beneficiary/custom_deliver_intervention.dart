@@ -71,112 +71,29 @@ class CustomDeliverInterventionPageState
       FormGroup form,
       HouseholdMemberWrapper householdMember,
       ProjectBeneficiaryModel projectBeneficiary) async {
-    if (shouldSubmit == false) {
-      await DigitSyncDialog.show(context,
-          type: DigitSyncDialogType.complete,
-          label: localizations.translate(i18.common.locationCaptured),
-          primaryAction: DigitDialogActions(
-            label: localizations.translate(
-              i18.beneficiaryDetails.ctaProceed,
-            ),
-            action: (ctx) async {
-              DigitComponentsUtils().hideLocationDialog(context);
-              final lat = locationState.latitude;
-              final long = locationState.longitude;
-              shouldSubmit = await DigitDialog.show<bool>(
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    context.read<DeliverInterventionBloc>().add(
+          DeliverInterventionSubmitEvent(
+              task: _getTaskModel(
                 context,
-                options: DigitDialogOptions(
-                  titleText: localizations
-                      .translate(i18.deliverIntervention.dialogTitle),
-                  contentText: localizations
-                      .translate(i18.deliverIntervention.dialogContent),
-                  primaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonSubmit),
-                    action: (ctx) {
-                      clickedStatus.value = true;
-                      Navigator.of(context, rootNavigator: true).pop(true);
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonCancel),
-                    action: (context) =>
-                        Navigator.of(context, rootNavigator: true).pop(false),
-                  ),
-                ),
-              );
-              if (shouldSubmit ?? false) {
-                if (context.mounted) {
-                  context.read<DeliverInterventionBloc>().add(
-                        DeliverInterventionSubmitEvent(
-                          task: _getTaskModel(
-                            context,
-                            form: form,
-                            oldTask: null,
-                            projectBeneficiaryClientReferenceId:
-                                projectBeneficiary.clientReferenceId,
-                            dose: deliverInterventionState.dose,
-                            cycle: deliverInterventionState.cycle,
-                            deliveryStrategy:
-                                DeliverStrategyType.direct.toValue(),
-                            address:
-                                householdMember.members?.first.address?.first,
-                            latitude: lat,
-                            longitude: long,
-                          ),
-                          isEditing: false,
-                          boundaryModel:
-                              RegistrationDeliverySingleton().boundary!,
-                        ),
-                      );
-
-                  if (deliverInterventionState.futureDeliveries != null &&
-                      deliverInterventionState.futureDeliveries!.isNotEmpty &&
-                      RegistrationDeliverySingleton()
-                              .projectType
-                              ?.cycles
-                              ?.isNotEmpty ==
-                          true) {
-                    context.router.popUntilRouteWithName(
-                      BeneficiaryWrapperRoute.name,
-                    );
-                    context.router.push(
-                      SplashAcknowledgementRoute(
-                        enableBackToSearch: false,
-                      ),
-                    );
-                  } else {
-                    final reloadState = context.read<HouseholdOverviewBloc>();
-
-                    Future.delayed(
-                      const Duration(
-                        milliseconds: 1000,
-                      ),
-                      () {
-                        reloadState.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            projectBeneficiaryType:
-                                RegistrationDeliverySingleton()
-                                    .beneficiaryType!,
-                          ),
-                        );
-                      },
-                    ).then(
-                      (value) {
-                        context.router.popAndPush(
-                          HouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ),
-                        );
-                      },
-                    );
-                  }
-                }
-              }
-            },
-          ));
-    }
+                form: form,
+                oldTask: null,
+                projectBeneficiaryClientReferenceId:
+                    projectBeneficiary.clientReferenceId,
+                dose: deliverInterventionState.dose,
+                cycle: deliverInterventionState.cycle,
+                deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                address: householdMember.members?.first.address?.first,
+                latitude: lat,
+                longitude: long,
+              ),
+              isEditing: false,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              navigateToSummary: true,
+              householdMemberWrapper: householdMember),
+        );
+    context.router.push(DeliverySummaryRoute());
   }
 
   void handleLocationState(
