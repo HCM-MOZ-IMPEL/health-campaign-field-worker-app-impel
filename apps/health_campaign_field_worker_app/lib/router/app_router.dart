@@ -62,6 +62,8 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/custom_summary_page.dart';
+import '../pages/inventory/custom_stock_details.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
 
 part 'app_router.gr.dart';
 
