@@ -16,6 +16,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
@@ -433,7 +434,8 @@ class CustomDeliverInterventionPageState
                                                   form: form,
                                                   label:
                                                       localizations.translate(
-                                                    "DELIVERY_ROOMS_SPRAYED",
+                                                    i18Local.beneficiaryDetails
+                                                        .noOfRoomsSprayed,
                                                   ),
                                                   minimum: 1,
                                                 ),

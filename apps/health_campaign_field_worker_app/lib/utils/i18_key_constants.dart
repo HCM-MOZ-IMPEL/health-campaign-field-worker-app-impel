@@ -1024,6 +1024,8 @@ class BeneficiaryDetails {
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
 
+  String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
   String get dataFound => 'DATA_FOUND';

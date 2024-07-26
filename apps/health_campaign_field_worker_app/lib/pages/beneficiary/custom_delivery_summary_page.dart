@@ -17,6 +17,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
 class CustomDeliverySummaryPage extends LocalizedStatefulWidget {
@@ -33,6 +34,7 @@ class CustomDeliverySummaryPage extends LocalizedStatefulWidget {
 class CustomDeliverySummaryPageState
     extends LocalizedState<CustomDeliverySummaryPage> {
   final clickedStatus = ValueNotifier<bool>(false);
+  static const _noOfRoomsSprayedKey = 'noOfRoomsSprayedKey';
 
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
@@ -314,6 +316,20 @@ class CustomDeliverySummaryPageState
                                   '${RegistrationDeliverySingleton().selectedProject?.name}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                               withDivider: true,
                               items: [
+                                if (deliverState.oldTask?.status ==
+                                    Status.administeredSuccess.toValue())
+                                  LabelValuePair(
+                                    label: localizations.translate(i18Local
+                                        .beneficiaryDetails.noOfRoomsSprayed),
+                                    value: deliverState
+                                            .oldTask?.additionalFields?.fields
+                                            .where((d) =>
+                                                d.key == _noOfRoomsSprayedKey)
+                                            .firstOrNull
+                                            ?.value ??
+                                        localizations
+                                            .translate(i18.common.coreCommonNA),
+                                  ),
                                 LabelValuePair(
                                   label: localizations.translate(deliverState
                                               .oldTask?.status ==
