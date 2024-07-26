@@ -326,7 +326,8 @@ class CustomDeliverySummaryPageState
                                             .where((d) =>
                                                 d.key == _noOfRoomsSprayedKey)
                                             .firstOrNull
-                                            ?.value ??
+                                            ?.value
+                                            .toString() ??
                                         localizations
                                             .translate(i18.common.coreCommonNA),
                                   ),
