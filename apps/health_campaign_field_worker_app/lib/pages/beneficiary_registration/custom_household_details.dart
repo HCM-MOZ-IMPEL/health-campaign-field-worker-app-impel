@@ -55,8 +55,12 @@ class CustomHouseHoldDetailsPageState
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
         builder: (context, form, child) {
-          int pregnantWomen = form.control(_pregnantWomenCountKey).value;
-          int children = form.control(_childrenCountKey).value;
+          int pregnantWomen = widget.isEligible
+              ? form.control(_pregnantWomenCountKey).value as int
+              : 0;
+          int children = widget.isEligible
+              ? form.control(_childrenCountKey).value as int
+              : 0;
           int memberCount = form.control(_memberCountKey).value;
           return BlocBuilder<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
@@ -90,12 +94,12 @@ class CustomHouseHoldDetailsPageState
                           .value as DateTime;
 
                       //[TODO: Use pregnant women form value based on project config
-                      final pregnantWomen = widget.isEligible
-                          ? form.control(_pregnantWomenCountKey).value as int
-                          : 0;
-                      final children = widget.isEligible
-                          ? form.control(_childrenCountKey).value as int
-                          : 0;
+                      // final pregnantWomen = widget.isEligible
+                      //     ? form.control(_pregnantWomenCountKey).value as int
+                      //     : 0;
+                      // final children = widget.isEligible
+                      //     ? form.control(_childrenCountKey).value as int
+                      //     : 0;
 
                       if (widget.isEligible &&
                           (memberCount < (pregnantWomen + children))) {

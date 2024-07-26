@@ -432,17 +432,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CustomSummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomSummaryRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomSummaryPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEligible: args.isEligible,
-        ),
-      );
-    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -451,6 +440,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: HomePage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    IneligibleSummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<IneligibleSummaryRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: IneligibleSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEligible: args.isEligible,
         ),
       );
     },
@@ -2006,49 +2006,6 @@ class CustomStockReconciliationRouteArgs {
 }
 
 /// generated route for
-/// [CustomSummaryPage]
-class CustomSummaryRoute extends PageRouteInfo<CustomSummaryRouteArgs> {
-  CustomSummaryRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    required bool isEligible,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomSummaryRoute.name,
-          args: CustomSummaryRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEligible: isEligible,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomSummaryRoute';
-
-  static const PageInfo<CustomSummaryRouteArgs> page =
-      PageInfo<CustomSummaryRouteArgs>(name);
-}
-
-class CustomSummaryRouteArgs {
-  const CustomSummaryRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.isEligible,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEligible;
-
-  @override
-  String toString() {
-    return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
-  }
-}
-
-/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
@@ -2082,6 +2039,49 @@ class HomeRouteArgs {
   @override
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [IneligibleSummaryPage]
+class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
+  IneligibleSummaryRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required bool isEligible,
+    List<PageRouteInfo>? children,
+  }) : super(
+          IneligibleSummaryRoute.name,
+          args: IneligibleSummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEligible: isEligible,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'IneligibleSummaryRoute';
+
+  static const PageInfo<IneligibleSummaryRouteArgs> page =
+      PageInfo<IneligibleSummaryRouteArgs>(name);
+}
+
+class IneligibleSummaryRouteArgs {
+  const IneligibleSummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.isEligible,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEligible;
+
+  @override
+  String toString() {
+    return 'IneligibleSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
   }
 }
 

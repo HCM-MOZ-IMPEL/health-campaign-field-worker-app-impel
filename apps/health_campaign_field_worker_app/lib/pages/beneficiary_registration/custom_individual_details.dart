@@ -78,75 +78,7 @@ class CustomIndividualDetailsPageState
             state.mapOrNull(
               persisted: (value) {
                 // if (value.navigateToRoot) {
-                if (widget.isEligible) {
-                  final householdOverviewBloc =
-                      context.read<HouseholdOverviewBloc>();
-                  final registrationState = householdOverviewBloc.state;
-                  final projectBeneficiary =
-                      RegistrationDeliverySingleton().beneficiaryType !=
-                              BeneficiaryType.individual
-                          ? [
-                              registrationState.householdMemberWrapper
-                                  .projectBeneficiaries?.first
-                            ]
-                          : registrationState
-                              .householdMemberWrapper.projectBeneficiaries
-                              ?.where(
-                                (element) =>
-                                    element.beneficiaryClientReferenceId ==
-                                    registrationState
-                                        .selectedIndividual?.clientReferenceId,
-                              )
-                              .toList();
 
-                  context.read<DeliverInterventionBloc>().add(
-                        DeliverInterventionSubmitEvent(
-                          navigateToSummary: true,
-                          householdMemberWrapper:
-                              registrationState.householdMemberWrapper,
-                          task: TaskModel(
-                            projectBeneficiaryClientReferenceId: projectBeneficiary
-                                ?.first
-                                ?.clientReferenceId, //TODO: need to check for individual based campaign
-                            clientReferenceId: IdGen.i.identifier,
-                            tenantId: RegistrationDeliverySingleton().tenantId,
-                            rowVersion: 1,
-                            auditDetails: AuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                            ),
-                            projectId:
-                                RegistrationDeliverySingleton().projectId,
-                            status: Status.administeredFailed.toValue(),
-                            clientAuditDetails: ClientAuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                              lastModifiedBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid,
-                              lastModifiedTime:
-                                  context.millisecondsSinceEpoch(),
-                            ),
-                            additionalFields: TaskAdditionalFields(
-                              version: 1,
-                              fields: [
-                                // todo correct the refusalReason here
-                                AdditionalField(
-                                  AdditionalFieldsType.reasonOfRefusal
-                                      .toValue(),
-                                  "INCOMPATIBLE",
-                                ),
-                              ],
-                            ),
-                          ),
-                          isEditing: false,
-                          boundaryModel:
-                              RegistrationDeliverySingleton().boundary!,
-                        ),
-                      );
-                  context.router.push(DeliverySummaryRoute());
-                }
                 Future.delayed(
                   const Duration(
                     milliseconds: 200,
@@ -186,6 +118,82 @@ class CustomIndividualDetailsPageState
                         final searchBlocState =
                             context.read<SearchHouseholdsBloc>().state;
                         if (searchBlocState.householdMembers.isNotEmpty) {
+                          if (!widget.isEligible) {
+                            final householdMemberWrapper =
+                                searchBlocState.householdMembers;
+                            // todo verify this how to get Individual
+                            final individual =
+                                _getIndividualModel(context, form: form);
+                            final projectBeneficiary =
+                                RegistrationDeliverySingleton()
+                                            .beneficiaryType !=
+                                        BeneficiaryType.individual
+                                    ? [
+                                        householdMemberWrapper
+                                            .first.projectBeneficiaries?.first
+                                      ]
+                                    : householdMemberWrapper
+                                        .first.projectBeneficiaries
+                                        ?.where(
+                                          (element) =>
+                                              element
+                                                  .beneficiaryClientReferenceId ==
+                                              individual?.clientReferenceId,
+                                        )
+                                        .toList();
+
+                            context.read<DeliverInterventionBloc>().add(
+                                  DeliverInterventionSubmitEvent(
+                                    task: TaskModel(
+                                      projectBeneficiaryClientReferenceId:
+                                          projectBeneficiary?.first
+                                              ?.clientReferenceId, //TODO: need to check for individual based campaign
+                                      clientReferenceId: IdGen.i.identifier,
+                                      tenantId: RegistrationDeliverySingleton()
+                                          .tenantId,
+                                      rowVersion: 1,
+                                      auditDetails: AuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      projectId: RegistrationDeliverySingleton()
+                                          .projectId,
+                                      status:
+                                          Status.administeredFailed.toValue(),
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      additionalFields: TaskAdditionalFields(
+                                        version: 1,
+                                        fields: [
+                                          const AdditionalField(
+                                            'taskStatus',
+                                            "INCOMPATIBLE",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    isEditing: false,
+                                    boundaryModel:
+                                        RegistrationDeliverySingleton()
+                                            .boundary!,
+                                  ),
+                                );
+                            context.router.push(IneligibleSummaryRoute(
+                                isEligible: widget.isEligible));
+                          }
                           // parent.replaceAll([
                           //   HomeRoute(),
                           //   const RegistrationDeliveryWrapperRoute(),
@@ -199,7 +207,6 @@ class CustomIndividualDetailsPageState
                     );
                   },
                 );
-
                 // }
               },
             );
@@ -228,7 +235,8 @@ class CustomIndividualDetailsPageState
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
                         }
-                        if (form.control(_genderKey).value == null) {
+                        if (widget.isEligible &&
+                            form.control(_genderKey).value == null) {
                           setState(() {
                             form.control(_genderKey).setErrors({'': true});
                           });
@@ -592,7 +600,7 @@ class CustomIndividualDetailsPageState
                                   if (value.isNotEmpty) {
                                     form.control(_genderKey).value =
                                         value.first;
-                                  } else {
+                                  } else if (widget.isEligible) {
                                     form.control(_genderKey).value = null;
                                     setState(() {
                                       form
