@@ -56,14 +56,17 @@ import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
+
 import '../pages/beneficiary/custom_beneficiary_checklist.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/ineligible_summary_page.dart';
 import '../pages/inventory/custom_stock_details.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
+import '../pages/beneficiary/custom_delivery_summary_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -374,7 +377,22 @@ class AppRouter extends _$AppRouter {
                     path: 'household-acknowledgement',
                     redirectTo: 'custom-household-acknowledgement',
                   ),
-                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                  AutoRoute(
+                    page: ChecklistViewRoute.page,
+                    path: 'view',
+                  ),
+                  AutoRoute(
+                    page: DeliverySummaryRoute.page,
+                    path: 'delivery-summary',
+                  ),
+                  AutoRoute(
+                    page: CustomDeliverySummaryRoute.page,
+                    path: 'custom-delivery-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'delivery-summary',
+                    redirectTo: 'custom-delivery-summary',
+                  ),
                 ],
               ),
             ]),

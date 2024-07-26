@@ -119,7 +119,7 @@ class CustomIndividualDetailsPageState
                             context.read<SearchHouseholdsBloc>().state;
                         if (searchBlocState.householdMembers.isNotEmpty) {
                           if (!widget.isEligible) {
-                            final householdMemberWrapper =
+                            final householdMemberWrapperList =
                                 searchBlocState.householdMembers;
                             // todo verify this how to get Individual
                             final individual =
@@ -129,10 +129,10 @@ class CustomIndividualDetailsPageState
                                             .beneficiaryType !=
                                         BeneficiaryType.individual
                                     ? [
-                                        householdMemberWrapper
+                                        householdMemberWrapperList
                                             .first.projectBeneficiaries?.first
                                       ]
-                                    : householdMemberWrapper
+                                    : householdMemberWrapperList
                                         .first.projectBeneficiaries
                                         ?.where(
                                           (element) =>
@@ -144,6 +144,9 @@ class CustomIndividualDetailsPageState
 
                             context.read<DeliverInterventionBloc>().add(
                                   DeliverInterventionSubmitEvent(
+                                    navigateToSummary: true,
+                                    householdMemberWrapper:
+                                        householdMemberWrapperList.first,
                                     task: TaskModel(
                                       projectBeneficiaryClientReferenceId:
                                           projectBeneficiary?.first
@@ -191,7 +194,7 @@ class CustomIndividualDetailsPageState
                                             .boundary!,
                                   ),
                                 );
-                            context.router.push(IneligibleSummaryRoute(
+                            parent.push(IneligibleSummaryRoute(
                                 isEligible: widget.isEligible));
                           }
                           // parent.replaceAll([
@@ -200,8 +203,11 @@ class CustomIndividualDetailsPageState
                           //   BeneficiaryWrapperRoute(
                           //       wrapper: searchBlocState.householdMembers.first)
                           // ]);
-                          parent.push(BeneficiaryWrapperRoute(
-                              wrapper: searchBlocState.householdMembers.first));
+                          else {
+                            parent.push(BeneficiaryWrapperRoute(
+                                wrapper:
+                                    searchBlocState.householdMembers.first));
+                          }
                         }
                       },
                     );

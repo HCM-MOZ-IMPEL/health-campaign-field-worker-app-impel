@@ -286,6 +286,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverySummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverySummaryRouteArgs>(
+          orElse: () => const CustomDeliverySummaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverySummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -1470,6 +1481,45 @@ class CustomDeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverySummaryPage]
+class CustomDeliverySummaryRoute
+    extends PageRouteInfo<CustomDeliverySummaryRouteArgs> {
+  CustomDeliverySummaryRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverySummaryRoute.name,
+          args: CustomDeliverySummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverySummaryRoute';
+
+  static const PageInfo<CustomDeliverySummaryRouteArgs> page =
+      PageInfo<CustomDeliverySummaryRouteArgs>(name);
+}
+
+class CustomDeliverySummaryRouteArgs {
+  const CustomDeliverySummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomDeliverySummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

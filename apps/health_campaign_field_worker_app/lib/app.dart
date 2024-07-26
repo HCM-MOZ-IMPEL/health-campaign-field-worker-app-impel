@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
@@ -140,6 +141,14 @@ class MainApplicationState extends State<MainApplication>
                           context.read<IndividualGlobalSearchRepository>(),
                       houseHoldGlobalSearchRepository:
                           context.read<HouseHoldGlobalSearchRepository>());
+                },
+              ),
+              BlocProvider(
+                create: (context) {
+                  return DeliverInterventionBloc(
+                      const DeliverInterventionState(),
+                      taskRepository:
+                          context.repository<TaskModel, TaskSearchModel>());
                 },
               ),
               // BlocProvider(

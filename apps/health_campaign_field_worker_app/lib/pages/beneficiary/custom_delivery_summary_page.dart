@@ -18,23 +18,20 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
-import '../router/app_router.dart';
-
 @RoutePage()
-class IneligibleSummaryPage extends LocalizedStatefulWidget {
-  final bool isEligible;
-
-  const IneligibleSummaryPage({
+class CustomDeliverySummaryPage extends LocalizedStatefulWidget {
+  const CustomDeliverySummaryPage({
     super.key,
     super.appLocalizations,
-    required this.isEligible,
   });
 
   @override
-  State<IneligibleSummaryPage> createState() => IneligibleSummaryPageState();
+  State<CustomDeliverySummaryPage> createState() =>
+      CustomDeliverySummaryPageState();
 }
 
-class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
+class CustomDeliverySummaryPageState
+    extends LocalizedState<CustomDeliverySummaryPage> {
   final clickedStatus = ValueNotifier<bool>(false);
 
   String getLocalizedMessage(String code) {
@@ -157,10 +154,11 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                       },
                                     ).then(
                                       (value) {
-                                        context.router.push(
-                                            CustomBeneficiaryAcknowledgementRoute(
-                                          enableViewHousehold: true,
-                                        ));
+                                        context.router.popAndPush(
+                                          HouseholdAcknowledgementRoute(
+                                            enableViewHousehold: true,
+                                          ),
+                                        );
                                       },
                                     );
                                   }
@@ -221,45 +219,36 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                           .toString() ??
                                       '0',
                                   isInline: true),
-                              if (widget.isEligible)
-                                LabelValuePair(
-                                    label: localizations.translate(i18
-                                        .householdDetails
-                                        .noOfPregnantWomenCountLabel),
-                                    value: deliverState
-                                            .householdMemberWrapper
-                                            ?.household
-                                            ?.additionalFields
-                                            ?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType
-                                                    .pregnantWomen
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true),
-                              if (widget.isEligible)
-                                LabelValuePair(
-                                    label: localizations.translate(i18
-                                        .householdDetails
-                                        .noOfChildrenBelow5YearsLabel),
-                                    value: deliverState
-                                            .householdMemberWrapper
-                                            ?.household
-                                            ?.additionalFields
-                                            ?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.children
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true),
+                              LabelValuePair(
+                                  label: localizations.translate(i18
+                                      .householdDetails
+                                      .noOfPregnantWomenCountLabel),
+                                  value: deliverState.householdMemberWrapper
+                                          ?.household?.additionalFields?.fields
+                                          .where((h) =>
+                                              h.key ==
+                                              AdditionalFieldsType.pregnantWomen
+                                                  .toValue())
+                                          .firstOrNull
+                                          ?.value
+                                          .toString() ??
+                                      '0',
+                                  isInline: true),
+                              LabelValuePair(
+                                  label: localizations.translate(i18
+                                      .householdDetails
+                                      .noOfChildrenBelow5YearsLabel),
+                                  value: deliverState.householdMemberWrapper
+                                          ?.household?.additionalFields?.fields
+                                          .where((h) =>
+                                              h.key ==
+                                              AdditionalFieldsType.children
+                                                  .toValue())
+                                          .firstOrNull
+                                          ?.value
+                                          .toString() ??
+                                      '0',
+                                  isInline: true),
                             ]),
                       ),
                       DigitCard(
