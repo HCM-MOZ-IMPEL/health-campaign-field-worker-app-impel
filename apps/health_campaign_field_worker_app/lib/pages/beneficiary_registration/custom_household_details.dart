@@ -89,12 +89,12 @@ class CustomHouseHoldDetailsPageState
                           .value as DateTime;
 
                       //[TODO: Use pregnant women form value based on project config
-                      // final pregnantWomen = widget.isEligible
-                      //     ? form.control(_pregnantWomenCountKey).value as int
-                      //     : 0;
-                      // final children = widget.isEligible
-                      //     ? form.control(_childrenCountKey).value as int
-                      //     : 0;
+                      final pregnantWomen = widget.isEligible
+                          ? form.control(_pregnantWomenCountKey).value as int
+                          : 0;
+                      final children = widget.isEligible
+                          ? form.control(_childrenCountKey).value as int
+                          : 0;
 
                       if (widget.isEligible &&
                           (memberCount < (pregnantWomen + children))) {
