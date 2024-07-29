@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/widgets/beneficiary/custom_beneficiary_card.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -290,8 +291,8 @@ class _CustomViewBeneficiaryCardState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: BeneficiaryCard(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: CustomBeneficiaryCard(
                   description: [
                     householdMember.household?.address?.doorNo,
                     householdMember.household?.address?.addressLine1,

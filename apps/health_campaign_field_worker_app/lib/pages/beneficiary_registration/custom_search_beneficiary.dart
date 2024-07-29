@@ -360,7 +360,7 @@ class _CustomSearchBeneficiaryPageState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCard(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
