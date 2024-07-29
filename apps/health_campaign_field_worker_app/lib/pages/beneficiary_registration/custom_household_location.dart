@@ -137,7 +137,6 @@ class _CustomHouseholdLocationPageState
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) {

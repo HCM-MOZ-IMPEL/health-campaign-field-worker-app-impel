@@ -251,7 +251,6 @@ class CustomIndividualDetailsPageState
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
@@ -715,9 +714,10 @@ class CustomIndividualDetailsPageState
       ),
     );
 
+    String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
-        givenName: form.control(_individualNameKey).value,
+        givenName: individualName?.trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -767,7 +767,7 @@ class CustomIndividualDetailsPageState
           CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery,
+        value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

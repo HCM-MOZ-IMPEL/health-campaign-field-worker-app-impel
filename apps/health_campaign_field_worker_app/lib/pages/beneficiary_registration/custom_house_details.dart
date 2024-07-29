@@ -102,7 +102,6 @@ class CustomHouseDetailsPageState
                               registrationDate,
                               searchQuery,
                               loading,
-                              selectedClosedHouseholdID,
                               isHeadOfHousehold,
                             ) {
                               var houseModel = HouseholdModel(

@@ -116,7 +116,6 @@ class CustomHouseHoldDetailsPageState
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) {

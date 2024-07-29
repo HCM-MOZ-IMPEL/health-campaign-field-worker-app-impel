@@ -308,21 +308,15 @@ class _CustomViewBeneficiaryCardState
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
                       tasks ?? [],
-                      householdMember.projectBeneficiaries!.where((element) {
-                        if (RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.individual) {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember
-                                  .headOfHousehold?.clientReferenceId;
-                        } else {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember.household?.clientReferenceId;
-                        }
-                      }).toList(),
-                      isNotEligible,
+                      householdMember.projectBeneficiaries ?? [],
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual
+                          ? isNotEligible
+                          : false,
                       isBeneficiaryRefused),
                   title: [
-                    householdMember.headOfHousehold?.name?.givenName,
+                    householdMember.headOfHousehold?.name?.givenName ??
+                        localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
                   ].whereNotNull().join(''),
                 ),

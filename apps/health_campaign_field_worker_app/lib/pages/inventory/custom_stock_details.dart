@@ -313,7 +313,7 @@ class CustomStockDetailsPageState
                                         DigitComponentsUtils()
                                             .showLocationCapturingDialog(
                                                 context,
-                                                localizations.translate(i18
+                                                localizations.translate(i18Local
                                                     .common.locationCapturing),
                                                 DigitSyncDialogType.inProgress);
                                         Future.delayed(

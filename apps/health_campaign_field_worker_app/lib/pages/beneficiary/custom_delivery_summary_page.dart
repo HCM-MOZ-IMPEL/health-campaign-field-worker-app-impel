@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
-import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -313,7 +313,7 @@ class CustomDeliverySummaryPageState
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
-                                  '${RegistrationDeliverySingleton().selectedProject?.name}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                               withDivider: true,
                               items: [
                                 if (deliverState.oldTask?.status ==

@@ -64,14 +64,7 @@ class _CustomHouseholdOverviewPageState
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : ScrollableContent(
-                    header: BackNavigationHelpHeaderWidget(
-                      handleBack: () {
-                        context
-                            .read<SearchBlocWrapper>()
-                            .searchHouseholdsBloc
-                            .add(const SearchHouseholdsClearEvent());
-                      },
-                    ),
+                    header: const BackNavigationHelpHeaderWidget(),
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual,
@@ -376,20 +369,24 @@ class _CustomHouseholdOverviewPageState
                                                 taskData.last.clientReferenceId)
                                             .toList()
                                         : null;
-                                    final ageInYears =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).years;
-                                    final ageInMonths =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).months;
+                                    final ageInYears = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).years
+                                        : 0;
+                                    final ageInMonths = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).months
+                                        : 0;
                                     final currentCycle =
                                         RegistrationDeliverySingleton()
                                             .projectType
@@ -537,10 +534,6 @@ class _CustomHouseholdOverviewPageState
                                                       ),
                                                     );
 
-                                                context.router
-                                                    .popUntilRouteWithName(
-                                                  SearchBeneficiaryRoute.name,
-                                                );
                                                 context.router.push(
                                                   ReasonForDeletionRoute(
                                                     isHousholdDelete: false,

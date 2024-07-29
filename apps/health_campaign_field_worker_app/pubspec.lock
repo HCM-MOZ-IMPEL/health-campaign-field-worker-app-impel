@@ -332,10 +332,10 @@ packages:
     dependency: "direct main"
     description:
       name: closed_household
-      sha256: "47d46553b034fceac6acda81e16f10b2d51a93cb509f5d596480a2bb6ff8aea3"
+      sha256: b78799c4edb0181594cb1908ebdb2bbb2583865515a36e06979e19ea246e9ee0
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "0.0.0-dev.2"
   code_builder:
     dependency: transitive
     description:
@@ -483,18 +483,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "5c4702cfa2d05aa98756c1ecdae2593ad5cc4254a47341588b3269e004a22525"
+      sha256: "86ea75e325beb0ff8dff70e8734c9626597b49cc91c5d6fa960274f271dfb1a7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+7"
+    version: "1.0.0+8"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "1258b5e96c6f63d32ab042a1d739360c93cab302e2f230b416dc4c54021e5e55"
+      sha256: c708c6474b7a67e3cdedcbb82265c201e61390360109344ebedfa2cc1ded0440
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3-dev.1"
+    version: "1.0.3-dev.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -526,6 +526,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.3+1"
+  disable_battery_optimization:
+    dependency: "direct main"
+    description:
+      name: disable_battery_optimization
+      sha256: "6b2ba802f984af141faf1b6b5fb956d5ef01f9cd555597c35b9cc335a03185ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   disk_space:
     dependency: "direct main"
     description:
@@ -1093,10 +1101,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "21ff5173eac11186907522c6a3f10693e34b6af400c77b1ab9d62b139859b07d"
+      sha256: "2be2d09552432266bef3c11f2cd6d12ce83f39339c925d350aeda764c2acfef9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.10"
+    version: "1.0.2"
   io:
     dependency: transitive
     description:
@@ -1509,10 +1517,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: f585fefa762ac708358455d76c43476a66df236b5855ffcc87a18840acf9666c
+      sha256: f8f2d085fe064c3c755fcfea324f01287763fcc5e9a5b37bd658116dd8afcffa
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3-dev.2"
+    version: "1.0.3-dev.4"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

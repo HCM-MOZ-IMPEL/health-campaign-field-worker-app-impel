@@ -1,5 +1,4 @@
 import 'package:closed_household/blocs/closed_household.dart';
-import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
 import 'package:digit_components/digit_components.dart';
@@ -364,8 +363,18 @@ class MainApplicationState extends State<MainApplication>
                           create: (_) {
                             return ClosedHouseholdBloc(
                               const ClosedHouseholdState(),
-                              closedHouseholdRepository: context.repository<
-                                  UserActionModel, UserActionSearchModel>(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
                             );
                           },
                           lazy: false,

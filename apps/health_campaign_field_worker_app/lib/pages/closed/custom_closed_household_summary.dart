@@ -1,15 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/closed_household.dart';
-import 'package:closed_household/models/entities/action.dart';
-import 'package:closed_household/models/entities/status.dart';
-import 'package:closed_household/models/entities/user_action.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/extensions/extensions.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:closed_household/models/entities/action.dart' as action;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -69,37 +63,18 @@ class CustomClosedHouseholdSummaryPageState
                     children: [
                       DigitElevatedButton(
                         onPressed: () {
-                          final userAction = UserActionModel(
-                            action: action.Actions.closeHousehold.toValue(),
-                            projectId: ClosedHouseholdSingleton().projectId,
-                            status: Status.closeHousehold.toValue(),
-                            tenantId: ClosedHouseholdSingleton().tenantId,
-                            clientReferenceId: IdGen.i.identifier,
-                            latitude: householdState.summary?.latitude,
-                            longitude: householdState.summary?.longitude,
-                            boundaryCode:
-                                ClosedHouseholdSingleton().boundary?.code,
-                            locationAccuracy:
-                                householdState.summary?.locationAccuracy,
-                            additionalFields:
-                                householdState.summary?.additionalFields,
-                            beneficiaryTag: scannerState.qrCodes.isNotEmpty
-                                ? scannerState.qrCodes.first
-                                : null,
-                            clientAuditDetails: ClientAuditDetails(
-                              createdBy:
-                                  ClosedHouseholdSingleton().loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                            ),
-                            auditDetails: AuditDetails(
-                              createdBy:
-                                  ClosedHouseholdSingleton().loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                            ),
-                          );
                           context.read<ClosedHouseholdBloc>().add(
                               ClosedHouseholdEvent.handleSubmit(
-                                  userAction, false));
+                                  context: context,
+                                  householdHeadName:
+                                      householdState.householdHeadName,
+                                  locationAccuracy:
+                                      householdState.locationAccuracy,
+                                  longitude: householdState.longitude,
+                                  latitude: householdState.latitude,
+                                  tag: scannerState.qrCodes.isNotEmpty
+                                      ? scannerState.qrCodes.first
+                                      : null));
 
                           ///clear the scanner
                           context.router
@@ -145,20 +120,15 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdHeadName),
-                            value: householdState
-                                    .summary?.additionalFields?.fields
-                                    .where((h) => h.key == 'householdHead')
-                                    .firstOrNull
-                                    ?.value ??
+                            value: householdState.householdHeadName ??
                                 localizations
                                     .translate(i18.common.coreCommonNA),
                           ),
                           LabelValuePair(
                             label: localizations.translate(i18
                                 .closeHousehold.closeHouseholdGpsAccuracyLabel),
-                            value: householdState.summary?.locationAccuracy !=
-                                    null
-                                ? '${householdState.summary?.locationAccuracy?.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}'
+                            value: householdState.locationAccuracy != null
+                                ? '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}'
                                 : localizations
                                     .translate(i18.common.coreCommonNA),
                           ),
