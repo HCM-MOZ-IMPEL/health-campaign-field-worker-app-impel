@@ -83,23 +83,10 @@ class CustomRefusedDeliveryPageState
                           final reasonOfRefusal =
                               form.control(_reasonOfRefusal).value;
 
-                          final projectBeneficiary =
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? [
-                                      registrationState.householdMemberWrapper
-                                          .projectBeneficiaries?.first
-                                    ]
-                                  : registrationState.householdMemberWrapper
-                                      .projectBeneficiaries
-                                      ?.where(
-                                        (element) =>
-                                            element
-                                                .beneficiaryClientReferenceId ==
-                                            registrationState.selectedIndividual
-                                                ?.clientReferenceId,
-                                      )
-                                      .toList();
+                          final projectBeneficiary = [
+                            registrationState.householdMemberWrapper
+                                .projectBeneficiaries?.first
+                          ];
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(

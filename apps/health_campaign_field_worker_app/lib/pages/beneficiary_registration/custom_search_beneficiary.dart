@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
+import 'package:registration_delivery/pages/beneficiary/widgets/view_closed_household.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -265,7 +266,7 @@ class _CustomSearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            '(${selectedFilters.contains(Status.closeHousehold.name) ? searchHouseholdsState.closedHouseholds.length : searchHouseholdsState.householdMembers.length})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -280,6 +281,7 @@ class _CustomSearchBeneficiaryPageState
                                                             });
                                                             blocWrapper
                                                                 .clearEvent();
+                                                            triggerGlobalSearchEvent();
                                                           },
                                                           child: Container(
                                                             decoration:
@@ -346,54 +348,158 @@ class _CustomSearchBeneficiaryPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
-                              .elementAt(index);
-                          final distance = calculateDistance(
-                            Coordinate(
-                              lat,
-                              long,
-                            ),
-                            Coordinate(
-                              i.household?.address?.latitude,
-                              i.household?.address?.longitude,
-                            ),
-                          );
+                    return searchHouseholdsState.closedHouseholds.isNotEmpty
+                        ? SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.closedHouseholds
+                                    .elementAt(index);
 
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: kPadding),
-                            child: CustomViewBeneficiaryCard(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-
-                                scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-
-                                await context.router.push(
-                                  CustomHouseholdWrapperRoute(
-                                    wrapper: i,
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.latitude,
+                                    i.longitude,
                                   ),
                                 );
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
-                                selectedFilters.clear();
-                                blocWrapper.clearEvent();
+
+                                return ViewClosedHouseholdCard(
+                                  userAction: i,
+                                  onOpenPressed: () async {
+                                    setState(() {
+                                      selectedFilters = [];
+                                    });
+                                    blocWrapper.clearEvent();
+                                    await context.router.push(
+                                      BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                            BeneficiaryRegistrationCreateState(
+                                          searchQuery: i
+                                              .additionalFields?.fields
+                                              .where((h) =>
+                                                  h.key == 'householdHead')
+                                              .firstOrNull
+                                              ?.value,
+                                          selectedClosedHouseholdID:
+                                              i.clientReferenceId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  distance:
+                                      isProximityEnabled ? distance : null,
+                                );
                               },
+                              childCount:
+                                  searchHouseholdsState.closedHouseholds.length,
+                            ),
+                          )
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.householdMembers
+                                    .elementAt(index);
+                                final projectBeneficiaries =
+                                    i.projectBeneficiaries?.where((element) {
+                                  if (RegistrationDeliverySingleton()
+                                          .beneficiaryType ==
+                                      BeneficiaryType.individual) {
+                                    return element
+                                            .beneficiaryClientReferenceId ==
+                                        i.household?.clientReferenceId;
+                                  } else {
+                                    return element
+                                            .beneficiaryClientReferenceId ==
+                                        i.household!.clientReferenceId;
+                                  }
+                                }).toList();
+                                final taskData = (projectBeneficiaries ?? [])
+                                            .isNotEmpty &&
+                                        i.tasks != null
+                                    ? i.tasks
+                                        ?.where((element) =>
+                                            element
+                                                .projectBeneficiaryClientReferenceId ==
+                                            projectBeneficiaries
+                                                ?.first.clientReferenceId)
+                                        .toList()
+                                    : null;
+                                final referralData = (projectBeneficiaries ??
+                                            [])
+                                        .isNotEmpty
+                                    ? i.referrals
+                                        ?.where((element) =>
+                                            element
+                                                .projectBeneficiaryClientReferenceId ==
+                                            projectBeneficiaries
+                                                ?.first.clientReferenceId)
+                                        .toList()
+                                    : null;
+                                final sideEffects =
+                                    taskData != null && taskData.isNotEmpty
+                                        ? i.sideEffects
+                                            ?.where((element) =>
+                                                element.taskClientReferenceId ==
+                                                taskData.last.clientReferenceId)
+                                            .toList()
+                                        : null;
+                                final memberWrapper = HouseholdMemberWrapper(
+                                  household: i.household,
+                                  headOfHousehold: i.headOfHousehold,
+                                  members: i.members,
+                                  projectBeneficiaries: projectBeneficiaries,
+                                  tasks: taskData,
+                                  sideEffects: sideEffects,
+                                  referrals: referralData,
+                                );
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    memberWrapper.household?.address?.latitude,
+                                    memberWrapper.household?.address?.longitude,
+                                  ),
+                                );
+
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.only(bottom: kPadding),
+                                  child: ViewBeneficiaryCard(
+                                    distance:
+                                        isProximityEnabled ? distance : null,
+                                    householdMember: memberWrapper,
+                                    onOpenPressed: () async {
+                                      final scannerBloc =
+                                          context.read<DigitScannerBloc>();
+
+                                      scannerBloc.add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+
+                                      await context.router.push(
+                                        BeneficiaryWrapperRoute(
+                                          wrapper: memberWrapper,
+                                        ),
+                                      );
+                                      setState(() {
+                                        isProximityEnabled = false;
+                                      });
+                                      searchController.clear();
+                                      selectedFilters.clear();
+                                      blocWrapper.clearEvent();
+                                    },
+                                  ),
+                                );
+                              },
+                              childCount:
+                                  searchHouseholdsState.householdMembers.length,
                             ),
                           );
-                        },
-                        childCount:
-                            searchHouseholdsState.householdMembers.length,
-                      ),
-                    );
                   },
                 ),
               ),

@@ -121,26 +121,11 @@ class CustomIndividualDetailsPageState
                           if (!widget.isEligible) {
                             final householdMemberWrapperList =
                                 searchBlocState.householdMembers;
-                            // todo verify this how to get Individual
-                            final individual =
-                                _getIndividualModel(context, form: form);
-                            final projectBeneficiary =
-                                RegistrationDeliverySingleton()
-                                            .beneficiaryType !=
-                                        BeneficiaryType.individual
-                                    ? [
-                                        householdMemberWrapperList
-                                            .first.projectBeneficiaries?.first
-                                      ]
-                                    : householdMemberWrapperList
-                                        .first.projectBeneficiaries
-                                        ?.where(
-                                          (element) =>
-                                              element
-                                                  .beneficiaryClientReferenceId ==
-                                              individual?.clientReferenceId,
-                                        )
-                                        .toList();
+
+                            final projectBeneficiary = [
+                              householdMemberWrapperList
+                                  .first.projectBeneficiaries?.first
+                            ];
 
                             context.read<DeliverInterventionBloc>().add(
                                   DeliverInterventionSubmitEvent(

@@ -116,6 +116,7 @@ class CustomHouseDetailsPageState
                                     createdTime:
                                         context.millisecondsSinceEpoch(),
                                   ),
+                                  memberCount: householdModel?.memberCount,
                                   clientAuditDetails: ClientAuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
                                         .loggedInUserUuid!,

@@ -78,11 +78,6 @@ class CustomHouseHoldDetailsPageState
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () {
-                      final userId =
-                          RegistrationDeliverySingleton().loggedInUserUuid;
-                      final projectId =
-                          RegistrationDeliverySingleton().projectId;
-                      final boundary = RegistrationDeliverySingleton().boundary;
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
@@ -105,9 +100,8 @@ class CustomHouseHoldDetailsPageState
                           (memberCount < (pregnantWomen + children))) {
                         DigitToast.show(context,
                             options: DigitToastOptions(
-                                // localizations.translate(
-                                //     i18.householdDetails.memberCountError),
-                                "ERROR",
+                                localizations.translate(
+                                    i18.householdDetails.memberCountError),
                                 true,
                                 theme));
                       } else {
@@ -529,41 +523,46 @@ class CustomHouseHoldDetailsPageState
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
-      _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
+      _memberCountKey: FormControl<int>(
+        value: household?.memberCount ?? 1,
+        validators: [Validators.max<int>(20)],
+      ),
       if (widget.isEligible)
         _pregnantWomenCountKey: FormControl<int>(
-            value: household?.additionalFields?.fields
-                        .where((h) =>
-                            h.key ==
-                            AdditionalFieldsType.pregnantWomen.toValue())
-                        .firstOrNull
-                        ?.value !=
-                    null
-                ? int.tryParse(household?.additionalFields?.fields
-                        .where((h) =>
-                            h.key ==
-                            AdditionalFieldsType.pregnantWomen.toValue())
-                        .firstOrNull
-                        ?.value
-                        .toString() ??
-                    '0')
-                : 0),
+          value: household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                      .firstOrNull
+                      ?.value !=
+                  null
+              ? int.tryParse(household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '0')
+              : 0,
+          validators: [Validators.max<int>(20)],
+        ),
       if (widget.isEligible)
         _childrenCountKey: FormControl<int>(
-            value: household?.additionalFields?.fields
-                        .where((h) =>
-                            h.key == AdditionalFieldsType.children.toValue())
-                        .firstOrNull
-                        ?.value !=
-                    null
-                ? int.tryParse(household?.additionalFields?.fields
-                        .where((h) =>
-                            h.key == AdditionalFieldsType.children.toValue())
-                        .firstOrNull
-                        ?.value
-                        .toString() ??
-                    '0')
-                : 0)
+          value: household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.children.toValue())
+                      .firstOrNull
+                      ?.value !=
+                  null
+              ? int.tryParse(household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.children.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '0')
+              : 0,
+          validators: [Validators.max<int>(20)],
+        )
     });
   }
 }
