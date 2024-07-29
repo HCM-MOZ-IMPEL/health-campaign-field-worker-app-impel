@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -157,7 +158,7 @@ class CustomDeliverySummaryPageState
                                     ).then(
                                       (value) {
                                         context.router.popAndPush(
-                                          HouseholdAcknowledgementRoute(
+                                          CustomHouseholdAcknowledgementRoute(
                                             enableViewHousehold: true,
                                           ),
                                         );
