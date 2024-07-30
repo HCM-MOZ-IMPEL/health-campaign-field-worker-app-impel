@@ -166,8 +166,9 @@ class CustomIndividualDetailsPageState
                                       additionalFields: TaskAdditionalFields(
                                         version: 1,
                                         fields: [
-                                          const AdditionalField(
-                                            'taskStatus',
+                                          AdditionalField(
+                                            AdditionalFieldsType.reasonOfRefusal
+                                                .toValue(),
                                             "INCOMPATIBLE",
                                           ),
                                         ],
