@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -134,7 +135,7 @@ class CustomRefusedDeliveryPageState
                                 ),
                               );
                           context.router
-                              .popAndPush(HouseholdAcknowledgementRoute(
+                              .popAndPush(CustomHouseholdAcknowledgementRoute(
                             enableViewHousehold: true,
                           ));
                         },

@@ -395,7 +395,7 @@ class _CustomSearchBeneficiaryPageState
                                   );
                                 } else {
                                   await context.router.push(
-                                    BeneficiaryWrapperRoute(
+                                    CustomHouseholdWrapperRoute(
                                       wrapper: i,
                                     ),
                                   );

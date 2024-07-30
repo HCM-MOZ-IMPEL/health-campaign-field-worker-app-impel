@@ -76,15 +76,7 @@ class _CustomHouseholdOverviewPageState
                               kPadding, 0, kPadding, 0),
                           child: deliverInterventionState.tasks?.first.status ==
                                   Status.administeredSuccess.toValue()
-                              ? DigitOutLineButton(
-                                  label: localizations.translate(
-                                    i18.memberCard.deliverDetailsUpdateLabel,
-                                  ),
-                                  onPressed: () async {
-                                    await context.router
-                                        .push(BeneficiaryChecklistRoute());
-                                  },
-                                )
+                              ? const Offstage()
                               : DigitElevatedButton(
                                   onPressed: (state.householdMemberWrapper
                                                   .projectBeneficiaries ??
