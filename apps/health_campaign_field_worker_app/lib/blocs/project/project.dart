@@ -31,7 +31,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final Isar isar;
   final MdmsRepository mdmsRepository;
 
-
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
       projectStaffRemoteRepository;
@@ -198,7 +197,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-  
         }
 
         staffProjects = await projectRemoteRepository.search(
@@ -246,16 +244,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           state.copyWith(
             loading: false,
             syncError: ProjectSyncErrorType.productVariants,
-          ),
-        );
-      }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
       }
