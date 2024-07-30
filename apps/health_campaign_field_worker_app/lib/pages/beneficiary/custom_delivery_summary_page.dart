@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import 'package:health_campaign_field_worker_app/utils/constants.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -12,6 +13,7 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -304,9 +306,19 @@ class CustomDeliverySummaryPageState
                           fetched: (productVariants) {
                             final resourcesDelivered = deliverState
                                 .oldTask?.resources
-                                ?.map((e) => productVariants
-                                    .where((p) => p.id == e.productVariantId)
-                                    .first)
+                                ?.map((e) => TaskResourceInfo(
+                                    productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.sku ??
+                                        productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.variation ??
+                                        i18.common.coreCommonNA,
+                                    e.quantity ?? '0'))
                                 .toList();
                             return resourcesDelivered;
                           },
@@ -333,35 +345,36 @@ class CustomDeliverySummaryPageState
                                             .translate(i18.common.coreCommonNA),
                                   ),
                                 LabelValuePair(
-                                  label: localizations.translate(deliverState
-                                              .oldTask?.status ==
-                                          Status.administeredFailed.toValue()
-                                      ? i18.deliverIntervention
-                                          .reasonForRefusalLabel
-                                      : i18.deliverIntervention
-                                          .typeOfInsecticideUsed),
+                                  label: localizations.translate(
+                                      deliverState.oldTask?.status ==
+                                                  Status.administeredSuccess
+                                                      .toValue() ||
+                                              deliverState.oldTask?.status ==
+                                                  Status.delivered.toValue()
+                                          ? i18.deliverIntervention
+                                              .typeOfInsecticideUsed
+                                          : i18.deliverIntervention
+                                              .reasonForRefusalLabel),
                                   value: deliverState.oldTask?.status ==
-                                          Status.administeredFailed.toValue()
-                                      ? deliverState.oldTask?.additionalFields?.fields
-                                              .where((d) =>
-                                                  d.key ==
-                                                  AdditionalFieldsType
-                                                      .reasonOfRefusal
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value ??
+                                              Status.administeredSuccess
+                                                  .toValue() ||
+                                          deliverState.oldTask?.status ==
+                                              Status.delivered.toValue()
+                                      ? variants
+                                              ?.map((e) =>
+                                                  '${localizations.translate(e.productName)} : ${e.quantityDelivered}')
+                                              .toList()
+                                              .join('\n') ??
                                           localizations.translate(
                                               i18.common.coreCommonNA)
-                                      : variants
-                                              ?.map((e) =>
-                                                  localizations.translate(e.sku ??
-                                                      e.variation.toString()))
-                                              .toList()
-                                              .join(', ')
-                                              .toString() ??
-                                          localizations
-                                              .translate(i18.common.coreCommonNA),
-                                ),
+                                      : localizations.translate(deliverState
+                                              .oldTask?.additionalFields?.fields
+                                              .where((d) =>
+                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
+                                              .firstOrNull
+                                              ?.value ??
+                                          i18.common.coreCommonNA),
+                                )
                               ]),
                         );
                       }),

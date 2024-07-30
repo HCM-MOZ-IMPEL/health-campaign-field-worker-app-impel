@@ -310,3 +310,13 @@ class DownloadBeneficiary {
     this.suffixLabel,
   });
 }
+
+class TaskResourceInfo {
+  String productName;
+  String quantityDelivered;
+
+  TaskResourceInfo(
+    this.productName,
+    this.quantityDelivered,
+  );
+}

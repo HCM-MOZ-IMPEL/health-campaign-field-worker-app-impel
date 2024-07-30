@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/utils/constants.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -312,9 +313,19 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                           fetched: (productVariants) {
                             final resourcesDelivered = deliverState
                                 .oldTask?.resources
-                                ?.map((e) => productVariants
-                                    .where((p) => p.id == e.productVariantId)
-                                    .first)
+                                ?.map((e) => TaskResourceInfo(
+                                    productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.sku ??
+                                        productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.variation ??
+                                        i18.common.coreCommonNA,
+                                    e.quantity ?? '0'))
                                 .toList();
                             return resourcesDelivered;
                           },
@@ -326,35 +337,36 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                               withDivider: true,
                               items: [
                                 LabelValuePair(
-                                  label: localizations.translate(deliverState
-                                              .oldTask?.status ==
-                                          Status.administeredFailed.toValue()
-                                      ? i18.deliverIntervention
-                                          .reasonForRefusalLabel
-                                      : i18.deliverIntervention
-                                          .typeOfInsecticideUsed),
+                                  label: localizations.translate(
+                                      deliverState.oldTask?.status ==
+                                                  Status.administeredSuccess
+                                                      .toValue() ||
+                                              deliverState.oldTask?.status ==
+                                                  Status.delivered.toValue()
+                                          ? i18.deliverIntervention
+                                              .typeOfInsecticideUsed
+                                          : i18.deliverIntervention
+                                              .reasonForRefusalLabel),
                                   value: deliverState.oldTask?.status ==
-                                          Status.administeredFailed.toValue()
-                                      ? deliverState.oldTask?.additionalFields?.fields
-                                              .where((d) =>
-                                                  d.key ==
-                                                  AdditionalFieldsType
-                                                      .reasonOfRefusal
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value ??
+                                              Status.administeredSuccess
+                                                  .toValue() ||
+                                          deliverState.oldTask?.status ==
+                                              Status.delivered.toValue()
+                                      ? variants
+                                              ?.map((e) =>
+                                                  '${localizations.translate(e.productName)} : ${e.quantityDelivered}')
+                                              .toList()
+                                              .join('\n') ??
                                           localizations.translate(
                                               i18.common.coreCommonNA)
-                                      : variants
-                                              ?.map((e) =>
-                                                  localizations.translate(e.sku ??
-                                                      e.variation.toString()))
-                                              .toList()
-                                              .join(', ')
-                                              .toString() ??
-                                          localizations
-                                              .translate(i18.common.coreCommonNA),
-                                ),
+                                      : localizations.translate(deliverState
+                                              .oldTask?.additionalFields?.fields
+                                              .where((d) =>
+                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
+                                              .firstOrNull
+                                              ?.value ??
+                                          i18.common.coreCommonNA),
+                                )
                               ]),
                         );
                       }),
