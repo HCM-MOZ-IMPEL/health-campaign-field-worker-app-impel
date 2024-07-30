@@ -508,6 +508,12 @@ class CustomStockDetailsPageState
                                                           'deliveryTeam',
                                                           deliveryTeamName,
                                                         ),
+                                                      if (driverName != null &&
+                                                          driverName.isNotEmpty)
+                                                        AdditionalField(
+                                                          'driver_name',
+                                                          driverName,
+                                                        ),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
                                                           'lat',
