@@ -714,8 +714,19 @@ class CustomDeliverInterventionPageState
 
     // Add controllers for each product variant to the _controllers list.
 
-    _controllers
-        .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
+    if ((bloc.tasks?.last.resources ?? []).isNotEmpty) {
+      _controllers.addAll(bloc.tasks!.last.resources!.mapIndexed((e, i) => i));
+    } else {
+      var groupedVariants = <String, List<ProductVariantModel>>{};
+      variants?.forEach((variant) {
+        if (!groupedVariants.containsKey(variant.productId)) {
+          groupedVariants[variant.productId!] = [];
+        }
+        groupedVariants[variant.productId]!.add(variant);
+      });
+
+      _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+    }
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
