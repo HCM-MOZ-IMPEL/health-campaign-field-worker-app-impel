@@ -222,10 +222,12 @@ class CustomIndividualDetailsPageState
                         final age = DigitDateUtils.calculateAge(
                           form.control(_dobKey).value as DateTime?,
                         );
-                        if ((age.years == 0 && age.months == 0) ||
+                        if (widget.isEligible &&
+                                (age.years == 0 && age.months == 0) ||
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
                         }
+
                         if (widget.isEligible &&
                             form.control(_genderKey).value == null) {
                           setState(() {
@@ -545,9 +547,9 @@ class CustomIndividualDetailsPageState
                             onChangeOfFormControl: (formControl) {
                               // Handle changes to the control's value here
                               final value = formControl.value;
-                              if (value == null) {
+                              if (widget.isEligible && value == null) {
                                 formControl.setErrors({'': true});
-                              } else {
+                              } else if (widget.isEligible) {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
                                 if ((age.years == 0 && age.months == 0) ||
@@ -648,7 +650,9 @@ class CustomIndividualDetailsPageState
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
-    final dob = form.control(_dobKey).value as DateTime?;
+    final dob = form.control(_dobKey).value == null
+        ? null
+        : form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
       dobString = DateFormat(Constants().dateFormat).format(dob);
