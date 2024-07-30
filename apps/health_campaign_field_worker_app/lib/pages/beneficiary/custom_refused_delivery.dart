@@ -91,6 +91,9 @@ class CustomRefusedDeliveryPageState
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
+                                  navigateToSummary: true,
+                                  householdMemberWrapper:
+                                      registrationState.householdMemberWrapper,
                                   task: TaskModel(
                                     projectBeneficiaryClientReferenceId:
                                         projectBeneficiary?.first
