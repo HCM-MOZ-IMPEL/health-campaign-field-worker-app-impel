@@ -333,7 +333,7 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
-                                  '${RegistrationDeliverySingleton().selectedProject?.name}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                               withDivider: true,
                               items: [
                                 LabelValuePair(
