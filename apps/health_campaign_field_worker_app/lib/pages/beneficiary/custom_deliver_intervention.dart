@@ -8,12 +8,12 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
-import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18Local;
@@ -154,6 +154,13 @@ class CustomDeliverInterventionPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
+          final household = householdMemberWrapper.household;
+          final roomsInHousehold = household?.additionalFields?.fields
+              .where((element) =>
+                  element.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull;
+          final noOfRoomsInHouseholdValue =
+              roomsInHousehold == null ? 0 : roomsInHousehold.value as int;
 
           return Scaffold(
             body: state.loading
@@ -282,12 +289,14 @@ class CustomDeliverInterventionPageState
                                                               ),
                                                             );
                                                           } else if ((((form
-                                                                          .control(
+                                                                              .control(
                                                                     _quantityDistributedKey,
-                                                                  ) as FormArray)
+                                                                  )
+                                                                          as FormArray)
                                                                       .value) ??
                                                                   [])
-                                                              .any((e) => e == 0)) {
+                                                              .any((e) =>
+                                                                  e == 0)) {
                                                             await DigitToast
                                                                 .show(
                                                               context,
@@ -297,6 +306,23 @@ class CustomDeliverInterventionPageState
                                                                     .translate(i18
                                                                         .deliverIntervention
                                                                         .resourceCannotBeZero),
+                                                                true,
+                                                                theme,
+                                                              ),
+                                                            );
+                                                          } else if (noOfRoomsInHouseholdValue <
+                                                              (form
+                                                                  .control(
+                                                                      _noOfRoomsSprayedKey)
+                                                                  .value as int)) {
+                                                            await DigitToast
+                                                                .show(
+                                                              context,
+                                                              options:
+                                                                  DigitToastOptions(
+                                                                localizations
+                                                                    .translate(
+                                                                        "ROOMS_SPRAYED_CANNOT_BE_GREATER_THAN_NO_OF_ROOMS_IN_HOUSE"),
                                                                 true,
                                                                 theme,
                                                               ),
