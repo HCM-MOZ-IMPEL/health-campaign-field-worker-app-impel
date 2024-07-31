@@ -52,12 +52,6 @@ class CustomDigitDobPicker extends StatelessWidget {
           right: 8,
           bottom: 8,
         ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-              color: Colors.grey, style: BorderStyle.solid, width: 1.0),
-        ),
         child: Column(
           children: [
             Row(

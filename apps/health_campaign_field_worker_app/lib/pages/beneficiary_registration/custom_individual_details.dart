@@ -526,8 +526,10 @@ class CustomIndividualDetailsPageState
                               value: widget.isHeadOfHousehold,
                             ),
                           ),
-                          individualDetailsShowcaseData.dateOfBirth.buildWith(
-                              child: CustomDigitDobPicker(
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomDigitDobPicker(
                             isEligible: widget.isEligible,
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
@@ -567,7 +569,7 @@ class CustomIndividualDetailsPageState
                                 .translate(i18.common.coreCommonCancel),
                             confirmText: localizations
                                 .translate(i18.common.coreCommonOk),
-                          )),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 5,
