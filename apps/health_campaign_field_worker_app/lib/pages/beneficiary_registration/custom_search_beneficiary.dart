@@ -175,6 +175,7 @@ class _CustomSearchBeneficiaryPageState
                                               triggerGlobalSearchEvent();
                                             } else {
                                               blocWrapper.clearEvent();
+                                              triggerGlobalSearchEvent();
                                             }
                                           },
                                         ),
@@ -212,10 +213,15 @@ class _CustomSearchBeneficiaryPageState
                               ),
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: DigitIconButton(
-                                  iconText: getFilterIconNLabel()['label'],
-                                  icon: getFilterIconNLabel()['icon'],
-                                  onPressed: () => showFilterDialog(),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: kPadding),
+                                  child: DigitIconButton(
+                                    textDirection: TextDirection.rtl,
+                                    iconText: getFilterIconNLabel()['label'],
+                                    icon: getFilterIconNLabel()['icon'],
+                                    onPressed: () => showFilterDialog(),
+                                  ),
                                 ),
                               ),
                               selectedFilters.isNotEmpty
@@ -504,17 +510,12 @@ class _CustomSearchBeneficiaryPageState
       });
       triggerGlobalSearchEvent();
     } else {
+      setState(() {
+        selectedFilters = [];
+      });
       blocWrapper.clearEvent();
+      triggerGlobalSearchEvent();
     }
-  }
-
-  triggerClearEvent() {
-    blocWrapper.clearEvent();
-    setState(() {
-      isProximityEnabled = false;
-      searchController.clear();
-      selectedFilters = [];
-    });
   }
 
   void triggerGlobalSearchEvent() {
