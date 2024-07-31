@@ -618,7 +618,7 @@ class CustomIndividualDetailsPageState
                           child: DigitTextFormField(
                             keyboardType: TextInputType.number,
                             formControlName: _mobileNumberKey,
-                            maxLength: 10,
+                            maxLength: 9,
                             label: localizations.translate(
                               i18.individualDetails.mobileNumberLabelText,
                             ),
