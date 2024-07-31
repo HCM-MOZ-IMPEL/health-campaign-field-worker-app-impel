@@ -299,6 +299,7 @@ class CustomHouseDetailsPageState
                                 houseShowcaseData.noOfRooms.buildWith(
                                   child: DigitIntegerFormPicker(
                                     minimum: 1,
+                                    maximum: 20,
                                     form: form,
                                     formControlName: _noOfRoomsKey,
                                     label: localizations.translate(
