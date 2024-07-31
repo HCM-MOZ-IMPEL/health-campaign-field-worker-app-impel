@@ -313,6 +313,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.home,
           enableCustomIcon: true,
+          customIcon: Constants.closedHouseholdSvg,
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
