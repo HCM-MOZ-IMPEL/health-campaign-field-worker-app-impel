@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/widgets/beneficiary/custom_beneficiary_card.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -290,8 +291,8 @@ class _CustomViewBeneficiaryCardState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: BeneficiaryCard(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: CustomBeneficiaryCard(
                   description: [
                     householdMember.household?.address?.doorNo,
                     householdMember.household?.address?.addressLine1,
@@ -308,21 +309,15 @@ class _CustomViewBeneficiaryCardState
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
                       tasks ?? [],
-                      householdMember.projectBeneficiaries!.where((element) {
-                        if (RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.individual) {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember
-                                  .headOfHousehold?.clientReferenceId;
-                        } else {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember.household?.clientReferenceId;
-                        }
-                      }).toList(),
-                      isNotEligible,
+                      householdMember.projectBeneficiaries ?? [],
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual
+                          ? isNotEligible
+                          : false,
                       isBeneficiaryRefused),
                   title: [
-                    householdMember.headOfHousehold?.name?.givenName,
+                    householdMember.headOfHousehold?.name?.givenName ??
+                        localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
                   ].whereNotNull().join(''),
                 ),

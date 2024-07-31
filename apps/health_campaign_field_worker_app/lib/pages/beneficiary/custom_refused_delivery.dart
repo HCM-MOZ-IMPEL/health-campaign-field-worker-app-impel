@@ -4,7 +4,9 @@ import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -83,26 +85,16 @@ class CustomRefusedDeliveryPageState
                           final reasonOfRefusal =
                               form.control(_reasonOfRefusal).value;
 
-                          final projectBeneficiary =
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? [
-                                      registrationState.householdMemberWrapper
-                                          .projectBeneficiaries?.first
-                                    ]
-                                  : registrationState.householdMemberWrapper
-                                      .projectBeneficiaries
-                                      ?.where(
-                                        (element) =>
-                                            element
-                                                .beneficiaryClientReferenceId ==
-                                            registrationState.selectedIndividual
-                                                ?.clientReferenceId,
-                                      )
-                                      .toList();
+                          final projectBeneficiary = [
+                            registrationState.householdMemberWrapper
+                                .projectBeneficiaries?.first
+                          ];
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
+                                  navigateToSummary: true,
+                                  householdMemberWrapper:
+                                      registrationState.householdMemberWrapper,
                                   task: TaskModel(
                                     projectBeneficiaryClientReferenceId:
                                         projectBeneficiary?.first
@@ -135,7 +127,8 @@ class CustomRefusedDeliveryPageState
                                       version: 1,
                                       fields: [
                                         AdditionalField(
-                                          'taskStatus',
+                                          AdditionalFieldsType.reasonOfRefusal
+                                              .toValue(),
                                           reasonOfRefusal,
                                         ),
                                       ],
@@ -147,7 +140,7 @@ class CustomRefusedDeliveryPageState
                                 ),
                               );
                           context.router
-                              .popAndPush(HouseholdAcknowledgementRoute(
+                              .popAndPush(CustomHouseholdAcknowledgementRoute(
                             enableViewHousehold: true,
                           ));
                         },

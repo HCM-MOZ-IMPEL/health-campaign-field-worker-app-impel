@@ -13,6 +13,8 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
@@ -135,7 +137,6 @@ class _CustomHouseholdLocationPageState
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) {
@@ -256,14 +257,15 @@ class _CustomHouseholdLocationPageState
                               },
                             ),
                           ),
-                          CustomDigitTextFormField(
-                            formControlName: _accuracyKey,
-                            label: localizations.translate(i18Local
-                                .householdLocation
-                                .householdLocationAccuracyText),
-                            colorCondition: (value) =>
-                                value != null && value > 5,
-                          )
+                          householdLocationShowcaseData.gpsAccuracy.buildWith(
+                            child: CustomDigitTextFormField(
+                              formControlName: _accuracyKey,
+                              label: localizations.translate(
+                                  i18.householdLocation.gpsAccuracyLabel),
+                              colorCondition: (value) =>
+                                  value != null && value > 5,
+                            ),
+                          ),
                         ]),
                       ],
                     ),

@@ -56,9 +56,17 @@ import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
+
 import '../pages/beneficiary/custom_beneficiary_checklist.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+
+import '../pages/beneficiary_registration/custom_house_details.dart';
+import '../pages/beneficiary_registration/custom_household_details.dart';
+import '../pages/ineligible_summary_page.dart';
+import '../pages/inventory/custom_stock_details.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
+import '../pages/beneficiary/custom_delivery_summary_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -202,8 +210,17 @@ class AppRouter extends _$AppRouter {
                     redirectTo: 'custom-individual-details',
                   ),
                   AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
+                    page: HouseHoldDetailsRoute.page,
+                    path: 'household-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseHoldDetailsRoute.page,
+                    path: 'custom-household-details',
+                  ),
+                  RedirectRoute(
+                    path: 'household-details',
+                    redirectTo: 'custom-household-details',
+                  ),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
@@ -230,7 +247,17 @@ class AppRouter extends _$AppRouter {
                     redirectTo: 'custom-beneficiary-acknowledgement',
                   ),
                   AutoRoute(
-                      page: HouseDetailsRoute.page, path: 'house-details'),
+                    page: HouseDetailsRoute.page,
+                    path: 'house-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseDetailsRoute.page,
+                    path: 'custom-house-details',
+                  ),
+                  RedirectRoute(
+                    path: 'house-details',
+                    redirectTo: 'custom-house-details',
+                  ),
                   AutoRoute(
                     page: SummaryRoute.page,
                     path: 'beneficiary-summary',
@@ -240,6 +267,14 @@ class AppRouter extends _$AppRouter {
                     path: 'beneficiary-checklist',
                   ),
                   AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                  AutoRoute(
+                    page: IneligibleSummaryRoute.page,
+                    path: 'ineligible-beneficiary-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-summary',
+                    redirectTo: 'ineligible-beneficiary-summary',
+                  )
                 ],
               ),
               AutoRoute(
@@ -342,7 +377,22 @@ class AppRouter extends _$AppRouter {
                     path: 'household-acknowledgement',
                     redirectTo: 'custom-household-acknowledgement',
                   ),
-                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                  AutoRoute(
+                    page: ChecklistViewRoute.page,
+                    path: 'view',
+                  ),
+                  AutoRoute(
+                    page: DeliverySummaryRoute.page,
+                    path: 'delivery-summary',
+                  ),
+                  AutoRoute(
+                    page: CustomDeliverySummaryRoute.page,
+                    path: 'custom-delivery-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'delivery-summary',
+                    redirectTo: 'custom-delivery-summary',
+                  ),
                 ],
               ),
             ]),

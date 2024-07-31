@@ -1,8 +1,5 @@
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
-import 'package:closed_household/models/entities/user_action.dart';
-import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -31,14 +28,12 @@ import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
 import '../utils/i18_key_constants.dart' as i18;
-import '../utils/environment_config.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
-import '../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -321,7 +316,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
-            await context.router.push(ClosedHouseholdWrapperRoute());
+            await context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),
@@ -534,9 +529,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -565,8 +557,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -640,6 +630,7 @@ void setPackagesSingleton(BuildContext context) {
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
       });
 }

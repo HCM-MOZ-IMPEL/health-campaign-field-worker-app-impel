@@ -263,6 +263,10 @@ class StockDetailsReceiptShowcase {
     return 'STOCK_DETAILS_RECEIPT_SHOWCASE_DRIVER_NAME';
   }
 
+  String get driverNameMinMaxLengthValidation =>
+      'DRIVER_NAME_MIN_MAX_VALIDATION';
+  String get driverNameValidation => 'STOCK_DETAILS_DRIVER_NAME_VALIDATION';
+
   String get comments {
     return 'STOCK_DETAILS_RECEIPT_SHOWCASE_COMMENTS';
   }
@@ -1019,6 +1023,8 @@ class BeneficiaryDetails {
   String get pregnantWomenLabel => 'PREGNANT_WOMAN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
+
+  String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';

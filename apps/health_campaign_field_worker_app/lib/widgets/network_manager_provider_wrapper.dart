@@ -1,9 +1,5 @@
 import 'dart:io';
 
-import 'package:closed_household/data/repositories/local/user_action.dart';
-import 'package:closed_household/data/repositories/oplog/oplog.dart';
-import 'package:closed_household/data/repositories/remote/user_action.dart';
-import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -18,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/custom_task.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -215,6 +212,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           TaskOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => CustomTaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
         create: (_) => ReferralLocalRepository(
           sql,
@@ -246,13 +249,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => StockReconciliationLocalRepository(
           sql,
           StockReconciliationOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<UserActionModel, UserActionSearchModel>>(
-        create: (_) => ClosedHouseholdLocalRepository(
-          sql,
-          ClosedHouseholdOpLogManager(isar),
         ),
       ),
     ];
@@ -459,11 +455,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                   StockReconciliationSearchModel>>(
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
-          ),
-        if (value == DataModelType.userAction)
-          RepositoryProvider<
-              RemoteRepository<UserActionModel, UserActionSearchModel>>(
-            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

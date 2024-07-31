@@ -381,7 +381,6 @@ initializeAllMappers() async {
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
-    Future(() => closed_household_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

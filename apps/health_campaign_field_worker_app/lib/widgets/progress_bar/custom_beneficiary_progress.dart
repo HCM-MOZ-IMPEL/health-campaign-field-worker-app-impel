@@ -8,7 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import '../../data/repositories/custom_task.dart';
 import '../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {
@@ -37,6 +40,13 @@ class CustomBeneficiaryProgressBarState
                 ProjectBeneficiarySearchModel>>()
         as ProjectBeneficiaryLocalRepository;
 
+    final taskRepository =
+        context.read<LocalRepository<TaskModel, TaskSearchModel>>()
+            as CustomTaskLocalRepository;
+
+    final projectId = RegistrationDeliverySingleton().projectId;
+    final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
+
     final now = DateTime.now();
     final gte = DateTime(
       now.year,
@@ -54,19 +64,18 @@ class CustomBeneficiaryProgressBarState
       999,
     );
 
-    repository.listenToChanges(
-      query: ProjectBeneficiarySearchModel(
-        projectId: [RegistrationDeliverySingleton().projectId.toString()],
+    taskRepository.listenToChanges(
+      query: TaskSearchModel(
+        projectId: projectId,
+        createdBy: loggedInUserUuid,
+        status: Status.administeredSuccess.toValue(),
+        plannedEndDate: lte.millisecondsSinceEpoch,
+        plannedStartDate: gte.millisecondsSinceEpoch,
       ),
       listener: (data) {
         if (mounted) {
           setState(() {
-            current = data
-                .where((element) =>
-                    element.dateOfRegistrationTime.isAfter(gte) &&
-                    (element.isDeleted == false || element.isDeleted == null) &&
-                    element.dateOfRegistrationTime.isBefore(lte))
-                .length;
+            current = data.length;
           });
         }
       },
@@ -76,12 +85,12 @@ class CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    final selectedProject = RegistrationDeliverySingleton().selectedProject!;
-    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
+    // final selectedProject = RegistrationDeliverySingleton().selectedProject!;
+    // final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
 
-    final targetModel = selectedProject.targets?.firstWhereOrNull(
-      (element) => element.beneficiaryType == beneficiaryType,
-    );
+    // final targetModel = selectedProject.targets?.firstWhereOrNull(
+    //   (element) => element.beneficiaryType == beneficiaryType,
+    // );
 
     // final target = targetModel?.targetNo ?? 8.0;
 

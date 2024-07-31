@@ -14,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -27,25 +29,29 @@ import 'package:registration_delivery/widgets/showcase/config/showcase_constants
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../widgets/custom_digit_dob_picker.dart';
+import '../../widgets/localized.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 
 @RoutePage()
-class CustomIndividualDetailsPage extends IndividualDetailsPage {
+class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final bool isEligible;
 
   const CustomIndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = true,
+    this.isEligible = true,
   });
 
   @override
-  State<IndividualDetailsPage> createState() =>
+  State<CustomIndividualDetailsPage> createState() =>
       CustomIndividualDetailsPageState();
 }
 
-class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
+class CustomIndividualDetailsPageState
+    extends LocalizedState<CustomIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
@@ -72,6 +78,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
             state.mapOrNull(
               persisted: (value) {
                 // if (value.navigateToRoot) {
+
                 Future.delayed(
                   const Duration(
                     milliseconds: 200,
@@ -111,20 +118,87 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                         final searchBlocState =
                             context.read<SearchHouseholdsBloc>().state;
                         if (searchBlocState.householdMembers.isNotEmpty) {
+                          if (!widget.isEligible) {
+                            final householdMemberWrapperList =
+                                searchBlocState.householdMembers;
+
+                            final projectBeneficiary = [
+                              householdMemberWrapperList
+                                  .first.projectBeneficiaries?.first
+                            ];
+
+                            context.read<DeliverInterventionBloc>().add(
+                                  DeliverInterventionSubmitEvent(
+                                    navigateToSummary: true,
+                                    householdMemberWrapper:
+                                        householdMemberWrapperList.first,
+                                    task: TaskModel(
+                                      projectBeneficiaryClientReferenceId:
+                                          projectBeneficiary?.first
+                                              ?.clientReferenceId, //TODO: need to check for individual based campaign
+                                      clientReferenceId: IdGen.i.identifier,
+                                      tenantId: RegistrationDeliverySingleton()
+                                          .tenantId,
+                                      rowVersion: 1,
+                                      auditDetails: AuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      projectId: RegistrationDeliverySingleton()
+                                          .projectId,
+                                      status:
+                                          Status.administeredFailed.toValue(),
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      additionalFields: TaskAdditionalFields(
+                                        version: 1,
+                                        fields: [
+                                          AdditionalField(
+                                            AdditionalFieldsType.reasonOfRefusal
+                                                .toValue(),
+                                            "INCOMPATIBLE",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    isEditing: false,
+                                    boundaryModel:
+                                        RegistrationDeliverySingleton()
+                                            .boundary!,
+                                  ),
+                                );
+                            parent.push(IneligibleSummaryRoute(
+                                isEligible: widget.isEligible));
+                          }
                           // parent.replaceAll([
                           //   HomeRoute(),
                           //   const RegistrationDeliveryWrapperRoute(),
                           //   BeneficiaryWrapperRoute(
                           //       wrapper: searchBlocState.householdMembers.first)
                           // ]);
-                          parent.push(BeneficiaryWrapperRoute(
-                              wrapper: searchBlocState.householdMembers.first));
+                          else {
+                            parent.push(BeneficiaryWrapperRoute(
+                                wrapper:
+                                    searchBlocState.householdMembers.first));
+                          }
                         }
                       },
                     );
                   },
                 );
-
                 // }
               },
             );
@@ -149,11 +223,14 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                         final age = DigitDateUtils.calculateAge(
                           form.control(_dobKey).value as DateTime?,
                         );
-                        if ((age.years == 0 && age.months == 0) ||
+                        if (widget.isEligible &&
+                                (age.years == 0 && age.months == 0) ||
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
                         }
-                        if (form.control(_genderKey).value == null) {
+
+                        if (widget.isEligible &&
+                            form.control(_genderKey).value == null) {
                           setState(() {
                             form.control(_genderKey).setErrors({'': true});
                           });
@@ -177,7 +254,6 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
@@ -472,9 +548,9 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                             onChangeOfFormControl: (formControl) {
                               // Handle changes to the control's value here
                               final value = formControl.value;
-                              if (value == null) {
+                              if (widget.isEligible && value == null) {
                                 formControl.setErrors({'': true});
-                              } else {
+                              } else if (widget.isEligible) {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
                                 if ((age.years == 0 && age.months == 0) ||
@@ -496,7 +572,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                               left: 5,
                             ),
                             child: SelectionBox<String>(
-                              isRequired: true,
+                              isRequired: widget.isEligible,
                               title: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
@@ -517,7 +593,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
                                   if (value.isNotEmpty) {
                                     form.control(_genderKey).value =
                                         value.first;
-                                  } else {
+                                  } else if (widget.isEligible) {
                                     form.control(_genderKey).value = null;
                                     setState(() {
                                       form
@@ -575,7 +651,9 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
-    final dob = form.control(_dobKey).value as DateTime?;
+    final dob = form.control(_dobKey).value == null
+        ? null
+        : form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
       dobString = DateFormat(Constants().dateFormat).format(dob);
@@ -641,9 +719,10 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
       ),
     );
 
+    String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
-        givenName: form.control(_individualNameKey).value,
+        givenName: individualName?.trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -693,7 +772,7 @@ class CustomIndividualDetailsPageState extends IndividualDetailsPageState {
           CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery,
+        value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
