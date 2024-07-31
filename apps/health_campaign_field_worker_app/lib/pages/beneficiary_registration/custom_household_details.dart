@@ -347,8 +347,8 @@ class CustomHouseHoldDetailsPageState
                                 overviewBloc.state.householdMemberWrapper;
                             final route = router.parent() as StackRouter;
                             route.popUntilRouteWithName(
-                                SearchBeneficiaryRoute.name);
-                            route.push(BeneficiaryWrapperRoute(
+                                CustomSearchBeneficiaryRoute.name);
+                            route.push(CustomHouseholdWrapperRoute(
                                 wrapper: memberWrapper));
                           },
                         );
