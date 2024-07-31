@@ -528,6 +528,7 @@ class CustomIndividualDetailsPageState
                           ),
                           individualDetailsShowcaseData.dateOfBirth.buildWith(
                               child: CustomDigitDobPicker(
+                            isEligible: widget.isEligible,
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
