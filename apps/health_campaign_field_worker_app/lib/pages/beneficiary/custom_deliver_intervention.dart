@@ -159,8 +159,11 @@ class CustomDeliverInterventionPageState
               .where((element) =>
                   element.key == AdditionalFieldsType.noOfRooms.toValue())
               .firstOrNull;
-          final noOfRoomsInHouseholdValue =
-              roomsInHousehold == null ? 0 : roomsInHousehold.value as int;
+          final noOfRoomsInHouseholdValue = roomsInHousehold == null
+              ? 0
+              : roomsInHousehold.value is String
+                  ? int.parse(roomsInHousehold.value)
+                  : roomsInHousehold.value as int;
 
           return Scaffold(
             body: state.loading
@@ -493,58 +496,6 @@ class CustomDeliverInterventionPageState
                                                         });
                                                       },
                                                     )),
-                                                Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .resourceAddBeneficiary,
-                                                    ),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
