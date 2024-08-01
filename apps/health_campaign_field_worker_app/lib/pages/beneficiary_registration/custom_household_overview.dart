@@ -71,53 +71,53 @@ class _CustomHouseholdOverviewPageState
                       child: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (ctx, deliverInterventionState) => DigitCard(
-                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: deliverInterventionState.tasks?.first.status ==
-                                  Status.administeredSuccess.toValue()
-                              ? const Offstage()
-                              : DigitElevatedButton(
-                                  onPressed: (state.householdMemberWrapper
-                                                  .projectBeneficiaries ??
-                                              [])
-                                          .isEmpty
-                                      ? null
-                                      : () async {
-                                          final bloc =
-                                              ctx.read<HouseholdOverviewBloc>();
+                            margin:
+                                const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: deliverInterventionState.tasks?.isEmpty ??
+                                    true
+                                ? DigitElevatedButton(
+                                    onPressed: (state.householdMemberWrapper
+                                                    .projectBeneficiaries ??
+                                                [])
+                                            .isEmpty
+                                        ? null
+                                        : () async {
+                                            final bloc = ctx
+                                                .read<HouseholdOverviewBloc>();
 
-                                          final projectId =
-                                              RegistrationDeliverySingleton()
-                                                  .projectId!;
+                                            final projectId =
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!;
 
-                                          bloc.add(
-                                            HouseholdOverviewReloadEvent(
-                                              projectId: projectId,
-                                              projectBeneficiaryType:
-                                                  beneficiaryType,
-                                            ),
-                                          );
+                                            bloc.add(
+                                              HouseholdOverviewReloadEvent(
+                                                projectId: projectId,
+                                                projectBeneficiaryType:
+                                                    beneficiaryType,
+                                              ),
+                                            );
 
-                                          // await context.router.push(
-                                          //     BeneficiaryChecklistRoute());
+                                            // await context.router.push(
+                                            //     BeneficiaryChecklistRoute());
 
-                                          await context.router
-                                              .push(BeneficiaryWrapperRoute(
-                                            wrapper:
-                                                state.householdMemberWrapper,
-                                          ));
-                                        },
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdOverView
-                                            .householdOverViewActionText,
+                                            await context.router
+                                                .push(BeneficiaryWrapperRoute(
+                                              wrapper:
+                                                  state.householdMemberWrapper,
+                                            ));
+                                          },
+                                    child: Center(
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.householdOverView
+                                              .householdOverViewActionText,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                        ),
+                                  )
+                                : const Offstage()),
                       ),
                     ),
                     slivers: [
