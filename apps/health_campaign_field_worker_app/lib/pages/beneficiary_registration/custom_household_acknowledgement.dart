@@ -46,9 +46,13 @@ class CustomHouseholdAcknowledgementPageState
                     .state
                     .householdMemberWrapper;
 
+                final parent = context.router.parent() as StackRouter;
+
                 context.router.popAndPush(
                   CustomHouseholdWrapperRoute(wrapper: wrapper),
                 );
+                // Pop twice to navigate back to the previous screen
+                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
               },
               enableViewHousehold: widget.enableViewHousehold ?? false,
               secondaryLabel: localizations.translate(

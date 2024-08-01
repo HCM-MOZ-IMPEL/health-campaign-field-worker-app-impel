@@ -526,8 +526,11 @@ class CustomIndividualDetailsPageState
                               value: widget.isHeadOfHousehold,
                             ),
                           ),
-                          individualDetailsShowcaseData.dateOfBirth.buildWith(
-                              child: CustomDigitDobPicker(
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomDigitDobPicker(
+                            isEligible: widget.isEligible,
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
@@ -566,7 +569,7 @@ class CustomIndividualDetailsPageState
                                 .translate(i18.common.coreCommonCancel),
                             confirmText: localizations
                                 .translate(i18.common.coreCommonOk),
-                          )),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 5,
@@ -617,7 +620,7 @@ class CustomIndividualDetailsPageState
                           child: DigitTextFormField(
                             keyboardType: TextInputType.number,
                             formControlName: _mobileNumberKey,
-                            maxLength: 10,
+                            maxLength: 9,
                             label: localizations.translate(
                               i18.individualDetails.mobileNumberLabelText,
                             ),
@@ -782,12 +785,12 @@ class CustomIndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey:
-          FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
-        CustomValidator.minPhoneNumValidation,
-        Validators.maxLength(10)
-      ]),
+      _mobileNumberKey: FormControl<String>(
+          value: individual?.mobileNumber,
+          validators: [
+            CustomValidator.validMobileNumber,
+            Validators.maxLength(9)
+          ]),
     });
   }
 

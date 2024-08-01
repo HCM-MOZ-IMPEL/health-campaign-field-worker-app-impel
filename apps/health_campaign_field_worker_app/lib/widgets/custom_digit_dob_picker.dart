@@ -18,6 +18,7 @@ class CustomDigitDobPicker extends StatelessWidget {
   final String confirmText;
   final DateTime? initialDate;
   final void Function(FormControl<dynamic>)? onChangeOfFormControl;
+  final bool isEligible;
 
   const CustomDigitDobPicker({
     super.key,
@@ -33,6 +34,7 @@ class CustomDigitDobPicker extends StatelessWidget {
     this.confirmText = 'OK',
     this.cancelText = 'Cancel',
     this.onChangeOfFormControl,
+    this.isEligible = true,
   });
 
   @override
@@ -50,12 +52,6 @@ class CustomDigitDobPicker extends StatelessWidget {
           right: 8,
           bottom: 8,
         ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-              color: Colors.grey, style: BorderStyle.solid, width: 1.0),
-        ),
         child: Column(
           children: [
             Row(
@@ -64,6 +60,7 @@ class CustomDigitDobPicker extends StatelessWidget {
                   // Text form field for entering the age in years
                   child: DigitTextFormField(
                       padding: EdgeInsets.zero,
+                      isRequired: isEligible,
                       maxLength: 3,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
