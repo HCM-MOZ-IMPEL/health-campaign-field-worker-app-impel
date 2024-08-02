@@ -209,7 +209,6 @@ class CustomIndividualDetailsPageState
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
               ]),
               footer: DigitCard(
@@ -570,50 +569,44 @@ class CustomIndividualDetailsPageState
                             confirmText: localizations
                                 .translate(i18.common.coreCommonOk),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 5,
+                          SelectionBox<String>(
+                            isRequired: widget.isEligible,
+                            title: localizations.translate(
+                              i18.individualDetails.genderLabelText,
                             ),
-                            child: SelectionBox<String>(
-                              isRequired: widget.isEligible,
-                              title: localizations.translate(
-                                i18.individualDetails.genderLabelText,
-                              ),
-                              allowMultipleSelection: false,
-                              width: 148,
-                              initialSelection:
-                                  form.control(_genderKey).value != null
-                                      ? [form.control(_genderKey).value]
-                                      : [],
-                              options: RegistrationDeliverySingleton()
-                                  .genderOptions!
-                                  .map(
-                                    (e) => e,
-                                  )
-                                  .toList(),
-                              onSelectionChanged: (value) {
-                                setState(() {
-                                  if (value.isNotEmpty) {
-                                    form.control(_genderKey).value =
-                                        value.first;
-                                  } else if (widget.isEligible) {
-                                    form.control(_genderKey).value = null;
-                                    setState(() {
-                                      form
-                                          .control(_genderKey)
-                                          .setErrors({'': true});
-                                    });
-                                  }
-                                });
-                              },
-                              valueMapper: (value) {
-                                return localizations.translate(value);
-                              },
-                              errorMessage: form.control(_genderKey).hasErrors
-                                  ? localizations
-                                      .translate(i18.common.corecommonRequired)
-                                  : null,
-                            ),
+                            allowMultipleSelection: false,
+                            width: 148,
+                            initialSelection:
+                                form.control(_genderKey).value != null
+                                    ? [form.control(_genderKey).value]
+                                    : [],
+                            options: RegistrationDeliverySingleton()
+                                .genderOptions!
+                                .map(
+                                  (e) => e,
+                                )
+                                .toList(),
+                            onSelectionChanged: (value) {
+                              setState(() {
+                                if (value.isNotEmpty) {
+                                  form.control(_genderKey).value = value.first;
+                                } else if (widget.isEligible) {
+                                  form.control(_genderKey).value = null;
+                                  setState(() {
+                                    form
+                                        .control(_genderKey)
+                                        .setErrors({'': true});
+                                  });
+                                }
+                              });
+                            },
+                            valueMapper: (value) {
+                              return localizations.translate(value);
+                            },
+                            errorMessage: form.control(_genderKey).hasErrors
+                                ? localizations
+                                    .translate(i18.common.corecommonRequired)
+                                : null,
                           ),
                         ]),
                         individualDetailsShowcaseData.mobile.buildWith(

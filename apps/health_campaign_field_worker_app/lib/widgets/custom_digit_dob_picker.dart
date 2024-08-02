@@ -44,13 +44,11 @@ class CustomDigitDobPicker extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         top: 8,
-        bottom: 8,
       ),
       child: Container(
         padding: const EdgeInsets.only(
           left: 8,
           right: 8,
-          bottom: 8,
         ),
         child: Column(
           children: [
