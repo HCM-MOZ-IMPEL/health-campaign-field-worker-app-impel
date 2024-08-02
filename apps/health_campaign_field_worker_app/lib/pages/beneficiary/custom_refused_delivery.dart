@@ -139,10 +139,7 @@ class CustomRefusedDeliveryPageState
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
                               );
-                          context.router
-                              .popAndPush(CustomHouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ));
+                          context.router.popAndPush(DeliverySummaryRoute());
                         },
                         child: Center(
                           child: Text(

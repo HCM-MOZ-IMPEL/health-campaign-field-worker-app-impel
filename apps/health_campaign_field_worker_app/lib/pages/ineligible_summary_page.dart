@@ -198,14 +198,6 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.landmarkFormLabel),
-                                  value: deliverState.householdMemberWrapper
-                                          ?.household?.address?.landmark ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
                             ]),
                       ),
                       DigitCard(
