@@ -196,7 +196,7 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                               ? getMultiValueString(e
                                                                   .value
                                                                   .toString()
-                                                                  .split('^'))
+                                                                  .split('.'))
                                                               : e.dataType ==
                                                                       'SingleValueList'
                                                                   ? localizations

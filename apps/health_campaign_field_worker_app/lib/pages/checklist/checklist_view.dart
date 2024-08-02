@@ -43,7 +43,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   String othersText = "OTHERS";
   String yesText = "DONT_SHOW";
-  String multiSelectionSeparator = "^";
+  String multiSelectionSeparator = ".";
 
   @override
   void initState() {
@@ -172,7 +172,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 .text
                                                 .toString()
                                                 .substring(1)
-                                            : null
+                                            : i18.checklist.notSelectedKey
                                         : attribute?[i].dataType !=
                                                 'SingleValueList'
                                             ? controller[i]
@@ -395,6 +395,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   builder: (context, state) {
                                     return Column(
                                       children: e.values!
+                                          .where((e) =>
+                                              e != i18.checklist.notSelectedKey)
+                                          .toList()
                                           .map((e) => DigitCheckboxTile(
                                                 label: localizations.translate(
                                                   'CORE_COMMON_$e',
@@ -801,6 +804,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             builder: (context, state) {
               return Column(
                 children: item.values!
+                    .where((e) => e != i18.checklist.notSelectedKey)
+                    .toList()
                     .map((e) => DigitCheckboxTile(
                           label: localizations.translate('CORE_COMMON_$e'),
                           value: controller[index]
