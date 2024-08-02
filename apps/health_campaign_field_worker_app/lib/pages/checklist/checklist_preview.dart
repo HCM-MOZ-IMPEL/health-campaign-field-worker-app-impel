@@ -60,92 +60,73 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (serviceList, selectedService, loading) {
-                return selectedService == null
-                    ? serviceList.isNotEmpty
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ...serviceList
-                                  .map((e) => e.serviceDefId != null
-                                      ? DigitCard(
-                                          child: Column(
+              serviceSearch: (value1, value2, value3) {
+                return value2 == null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ...value1
+                              .map((e) => e.serviceDefId != null
+                                  ? DigitCard(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              DateFormat('dd MMMM yyyy').format(
+                                                DateFormat('dd/MM/yyyy').parse(
+                                                  e.createdAt.toString(),
+                                                ),
+                                              ),
+                                              style: theme
+                                                  .textTheme.headlineMedium,
+                                            ),
+                                          ),
+                                          Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
+                                              SizedBox(
                                                 child: Text(
-                                                  DateFormat(Constants
-                                                          .checklistPreviewDateFormat)
-                                                      .format(
-                                                    DateFormat(Constants
-                                                            .defaultDateFormat)
-                                                        .parse(
-                                                      e.createdAt.toString(),
-                                                    ),
+                                                  localizations.translate(
+                                                    '',
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineMedium,
                                                 ),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        '${e.tenantId}',
-                                                      ),
-                                                    ),
+                                              DigitOutLineButton(
+                                                label: localizations.translate(
+                                                  i18.searchBeneficiary
+                                                      .iconLabel,
+                                                ),
+                                                onPressed: () {
+                                                  context
+                                                      .read<ServiceBloc>()
+                                                      .add(
+                                                        ServiceSelectionEvent(
+                                                          service: e,
+                                                        ),
+                                                      );
+                                                },
+                                                buttonStyle:
+                                                    OutlinedButton.styleFrom(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.zero,
                                                   ),
-                                                  DigitOutLineButton(
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.searchBeneficiary
-                                                          .iconLabel,
-                                                    ),
-                                                    onPressed: () {
-                                                      context
-                                                          .read<ServiceBloc>()
-                                                          .add(
-                                                            ServiceSelectionEvent(
-                                                              service: e,
-                                                            ),
-                                                          );
-                                                    },
-                                                    buttonStyle: OutlinedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.zero,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        )
-                                      : const Offstage())
-                                  .toList(),
-                            ],
-                          )
-                        : Expanded(
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: NoResultCard(
-                                  align: Alignment.center,
-                                  label: localizations.translate(
-                                      i18.checklist.noChecklistFound),
-                                ),
-                              ),
-                            ),
-                          )
+                                        ],
+                                      ),
+                                    )
+                                  : const Offstage())
+                              .toList(),
+                        ],
+                      )
                     : BlocBuilder<ServiceDefinitionBloc,
                         ServiceDefinitionState>(builder: (context, state) {
                         return state.maybeWhen(
@@ -173,7 +154,7 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                 theme.textTheme.displayMedium,
                                           ),
                                         ),
-                                        ...(selectedService.attributes ?? [])
+                                        ...(value2.attributes ?? [])
                                             .where((a) =>
                                                 a.value !=
                                                     i18.checklist
@@ -209,13 +190,21 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         alignment: Alignment
                                                             .centerLeft,
                                                         child: Text(
-                                                          e.dataType ==
-                                                                  'SingleValueList'
-                                                              ? localizations
-                                                                  .translate(
-                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                                )
-                                                              : e.value ?? "",
+                                                          e.value != null &&
+                                                                  e.dataType ==
+                                                                      'MultiValueList'
+                                                              ? getMultiValueString(e
+                                                                  .value
+                                                                  .toString()
+                                                                  .split('^'))
+                                                              : e.dataType ==
+                                                                      'SingleValueList'
+                                                                  ? localizations
+                                                                      .translate(
+                                                                      'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                                    )
+                                                                  : e.value ??
+                                                                      "",
                                                         ),
                                                       ),
                                                     ),
@@ -279,5 +268,16 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
         ],
       ),
     );
+  }
+
+  String getMultiValueString(List<String> list) {
+    String multiValueText = '';
+
+    for (var i = 0; i < list.length; i++) {
+      multiValueText =
+          '$multiValueText${localizations.translate('CORE_COMMON_${list[i].toUpperCase()}')},';
+    }
+
+    return multiValueText;
   }
 }
