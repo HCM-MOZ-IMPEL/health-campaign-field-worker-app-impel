@@ -571,6 +571,7 @@ class _CustomSearchBeneficiaryPageState
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
       Status.registered.toValue(): Status.registered,
       Status.notRegistered.toValue(): Status.notRegistered,
     };
