@@ -142,7 +142,7 @@ class CustomDeliverySummaryPageState
 
                                     Future.delayed(
                                       const Duration(
-                                        milliseconds: 1000,
+                                        milliseconds: 100,
                                       ),
                                       () {
                                         reloadState.add(
