@@ -320,7 +320,8 @@ class CustomHouseDetailsPageState
   }
 
   bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
-    if (selectedHouseStructureTypes.contains("METAL_OR_GLASS")) {
+    if (selectedHouseStructureTypes.contains("METAL") ||
+        selectedHouseStructureTypes.contains("GLASS")) {
       return false;
     }
     return true;
