@@ -69,7 +69,6 @@ class CustomHouseHoldDetailsPageState
                 header: const Column(children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
-                    showcaseButton: ShowcaseButton(),
                   ),
                 ]),
                 enableFixedButton: true,

@@ -59,7 +59,6 @@ class CustomRefusedDeliveryPageState
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
                           showHelp: false,
                         ),
                       ],
@@ -139,10 +138,7 @@ class CustomRefusedDeliveryPageState
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
                               );
-                          context.router
-                              .popAndPush(CustomHouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ));
+                          context.router.popAndPush(DeliverySummaryRoute());
                         },
                         child: Center(
                           child: Text(

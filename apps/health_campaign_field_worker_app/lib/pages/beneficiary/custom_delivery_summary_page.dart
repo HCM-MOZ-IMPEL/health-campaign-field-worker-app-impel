@@ -57,7 +57,6 @@ class CustomDeliverySummaryPageState
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
                 Padding(
                   padding:
@@ -197,14 +196,6 @@ class CustomDeliverySummaryPageState
                                           .split('_')
                                           .last
                                           .titleCase ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.landmarkFormLabel),
-                                  value: deliverState.householdMemberWrapper
-                                          ?.household?.address?.landmark ??
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),

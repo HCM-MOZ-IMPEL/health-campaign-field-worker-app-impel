@@ -20,6 +20,7 @@ import '../../widgets/action_card/action_card.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
+import '../../widgets/custom_member_card.dart';
 
 @RoutePage()
 class CustomHouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -495,7 +496,7 @@ class _CustomHouseholdOverviewPageState
                                       currentCycle,
                                     );
 
-                                    return MemberCard(
+                                    return CustomMemberCard(
                                       isHead: isHead,
                                       individual: e,
                                       projectBeneficiaries:
@@ -560,82 +561,6 @@ class _CustomHouseholdOverviewPageState
                                                 isHeadOfHousehold: isHead,
                                               ),
                                             ],
-                                          ),
-                                        );
-                                      },
-                                      setAsHeadAction: () {
-                                        ctx.read<HouseholdOverviewBloc>().add(
-                                              HouseholdOverviewSetAsHeadEvent(
-                                                individualModel: e,
-                                                projectId:
-                                                    RegistrationDeliverySingleton()
-                                                        .projectId!,
-                                                householdModel: state
-                                                    .householdMemberWrapper
-                                                    .household!,
-                                                projectBeneficiaryType:
-                                                    beneficiaryType,
-                                              ),
-                                            );
-
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
-                                      },
-                                      deleteMemberAction: () {
-                                        DigitDialog.show(
-                                          context,
-                                          options: DigitDialogOptions(
-                                            titlePadding:
-                                                const EdgeInsets.fromLTRB(
-                                              kPadding * 2,
-                                              kPadding * 2,
-                                              kPadding * 2,
-                                              kPadding / 2,
-                                            ),
-                                            titleText: localizations.translate(i18
-                                                .householdOverView
-                                                .householdOverViewActionCardTitle),
-                                            primaryAction: DigitDialogActions(
-                                              label: localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewPrimaryActionLabel),
-                                              action: (ctx) {
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                )
-                                                  ..pop()
-                                                  ..pop();
-                                                context
-                                                    .read<
-                                                        HouseholdOverviewBloc>()
-                                                    .add(
-                                                      HouseholdOverviewEvent
-                                                          .selectedIndividual(
-                                                        individualModel: e,
-                                                      ),
-                                                    );
-
-                                                context.router.push(
-                                                  ReasonForDeletionRoute(
-                                                    isHousholdDelete: false,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            secondaryAction: DigitDialogActions(
-                                              label: localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewSecondaryActionLabel),
-                                              action: (context) {
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop();
-                                              },
-                                            ),
                                           ),
                                         );
                                       },

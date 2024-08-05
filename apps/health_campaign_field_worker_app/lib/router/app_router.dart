@@ -130,7 +130,18 @@ class AppRouter extends _$AppRouter {
               path: 'warehouse-details',
               initial: true,
             ),
-            AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+            AutoRoute(
+              page: StockDetailsRoute.page,
+              path: 'details',
+            ),
+            AutoRoute(
+              page: CustomStockDetailsRoute.page,
+              path: 'custom-details',
+            ),
+            RedirectRoute(
+              path: 'details',
+              redirectTo: 'custom-details',
+            ),
           ],
         ),
         AutoRoute(

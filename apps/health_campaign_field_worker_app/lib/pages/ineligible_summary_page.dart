@@ -56,7 +56,6 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
                 Padding(
                   padding:
@@ -195,14 +194,6 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                           .split('_')
                                           .last
                                           .titleCase ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.landmarkFormLabel),
-                                  value: deliverState.householdMemberWrapper
-                                          ?.household?.address?.landmark ??
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),

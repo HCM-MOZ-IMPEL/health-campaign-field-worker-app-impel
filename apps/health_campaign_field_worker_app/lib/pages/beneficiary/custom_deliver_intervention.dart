@@ -23,6 +23,8 @@ import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_c
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
+import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
+
 @RoutePage()
 class CustomDeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
@@ -469,7 +471,7 @@ class CustomDeliverInterventionPageState
                                                   minimum: 1,
                                                 ),
                                                 ..._controllers.map((e) =>
-                                                    ResourceBeneficiaryCard(
+                                                    CustomResourceBeneficiaryCard(
                                                       form: form,
                                                       cardIndex: _controllers
                                                           .indexOf(e),
@@ -689,7 +691,7 @@ class CustomDeliverInterventionPageState
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _noOfRoomsSprayedKey: FormControl<int>(
-        value: 0,
+        value: 1,
         validators: [],
       ),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
@@ -717,7 +719,7 @@ class CustomDeliverInterventionPageState
                     bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
                   )
                 : 0,
-            validators: [Validators.min(1)],
+            validators: [Validators.min(0), Validators.max(3)],
           ),
         ),
       ]),
