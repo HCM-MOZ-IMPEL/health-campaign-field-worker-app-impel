@@ -522,8 +522,8 @@ class CustomDeliverInterventionPageState
   addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
-    (form.control(_quantityDistributedKey) as FormArray)
-        .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
+    (form.control(_quantityDistributedKey) as FormArray).add(FormControl<int>(
+        value: 0, validators: [Validators.min(0), Validators.max(3)]));
   }
 
   bool hasDuplicatesOrEmptyResource(
