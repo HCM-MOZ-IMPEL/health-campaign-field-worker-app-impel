@@ -56,5 +56,7 @@ pubspec_overrides.yaml
 
 apps/health_campaign_field_worker_app/.env
 apps/health_campaign_field_worker_app/.env-qa
+apps/health_campaign_field_worker_app/.env-training
+apps/health_campaign_field_worker_app/.env-prod
 apps/health_campaign_field_worker_app/libisar.dylib
 *.properties
