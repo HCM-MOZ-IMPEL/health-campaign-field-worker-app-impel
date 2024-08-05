@@ -291,18 +291,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
-      ProjectFacilitySearchModel(
-        projectId: projects.map((e) => e.id).toList(),
-      ),
-    );
+        ProjectFacilitySearchModel(
+          projectId: projects.map((e) => e.id).toList(),
+        ),
+        limit: 1000);
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
     final facilities = await facilityRemoteRepository.search(
-      FacilitySearchModel(
-        id: null,
-      ),
-    );
+        FacilitySearchModel(
+          id: null,
+        ),
+        limit: 1000);
 
     await facilityLocalRepository.bulkCreate(facilities);
   }
