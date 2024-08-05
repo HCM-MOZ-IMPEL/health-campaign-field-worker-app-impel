@@ -31,7 +31,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final Isar isar;
   final MdmsRepository mdmsRepository;
 
-
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
       projectStaffRemoteRepository;
@@ -198,7 +197,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-  
         }
 
         staffProjects = await projectRemoteRepository.search(
@@ -259,16 +257,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
-          ),
-        );
-      }
     }
 
     emit(ProjectState(
@@ -303,18 +291,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
-      ProjectFacilitySearchModel(
-        projectId: projects.map((e) => e.id).toList(),
-      ),
-    );
+        ProjectFacilitySearchModel(
+          projectId: projects.map((e) => e.id).toList(),
+        ),
+        limit: 1000);
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
     final facilities = await facilityRemoteRepository.search(
-      FacilitySearchModel(
-        id: null,
-      ),
-    );
+        FacilitySearchModel(
+          id: null,
+        ),
+        limit: 1000);
 
     await facilityLocalRepository.bulkCreate(facilities);
   }
