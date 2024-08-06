@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:digit_dss/digit_dss.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
@@ -104,6 +105,13 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+              BlocProvider(
+                create: (_) {
+                  return LocationBloc(location: Location())
+                    ..add(const LoadLocationEvent());
+                },
+                lazy: false,
+              ),
               BlocProvider(
                 create: (_) {
                   return DigitScannerBloc(
@@ -223,7 +231,7 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
+                    firstLanguage = appConfig.languages?.lastOrNull?.value;
                     final selectedLocale =
                         AppSharedPreferences().getSelectedLocale ??
                             firstLanguage;
@@ -339,6 +347,12 @@ class MainApplicationState extends State<MainApplication>
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<StockModel,
+                                    StockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<StockModel,
+                                    StockSearchModel>>(),
                             context: context,
                             // Info can any package here
                           ),

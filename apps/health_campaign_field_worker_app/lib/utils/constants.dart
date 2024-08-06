@@ -1,3 +1,4 @@
+import 'package:closed_household/utils/utils.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -234,7 +235,7 @@ class Constants {
         hierarchyType: envConfig.variables.hierarchyType);
 
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
-
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
