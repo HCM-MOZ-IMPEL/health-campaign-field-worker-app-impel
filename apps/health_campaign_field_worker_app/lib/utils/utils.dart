@@ -1,5 +1,6 @@
 library app_utils;
 
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
@@ -9,6 +10,8 @@ import 'package:closed_household/closed_household.dart'
 // import 'package:attendance_management/attendance_management.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -251,7 +254,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.maybePop();
             }
           },
         ),
@@ -259,7 +262,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       );
@@ -328,8 +331,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -381,6 +383,7 @@ initializeAllMappers() async {
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
+    Future(() => dss_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -408,4 +411,54 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+Future<void> requestDisableBatteryOptimization() async {
+  bool isIgnoringBatteryOptimizations =
+      await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
+
+  if (!isIgnoringBatteryOptimizations) {
+    await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+  }
+}
+
+class LocalizationParams {
+  static final LocalizationParams _singleton = LocalizationParams._internal();
+
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+  LocalizationParams._internal();
+
+  List<String>? _code;
+  String? _module;
+  Locale? _locale;
+  bool? _exclude = true;
+
+  void setCode(List<String>? code) {
+    _code = code;
+  }
+
+  void setModule(String? module, bool? exclude) {
+    _module = module;
+    _exclude = exclude;
+  }
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+  List<String>? get code => _code;
+
+  String? get module => _module;
+
+  Locale? get locale => _locale;
+
+  bool? get exclude => _exclude;
 }

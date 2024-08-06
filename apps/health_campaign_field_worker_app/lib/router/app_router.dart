@@ -4,6 +4,8 @@ import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:digit_dss/router/dashboard_router.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -76,6 +78,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     InventoryRoute,
     ClosedHouseholdPackageRoute,
+    DashboardRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -179,6 +182,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: InventoryAcknowledgementRoute.page,
           path: 'inventory-acknowledgement',
+        ),
+
+        // DSS Dashboard Routes
+        AutoRoute(
+          page: UserDashboardRoute.page,
+          path: 'dashboard',
         ),
 
         AutoRoute(

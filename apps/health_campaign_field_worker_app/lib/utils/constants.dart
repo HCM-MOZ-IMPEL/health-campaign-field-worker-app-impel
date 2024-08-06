@@ -6,6 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -54,6 +57,8 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
+          DashboardConfigSchemaSchema,
+          DashboardResponseSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -200,12 +205,12 @@ class Constants {
   }
 
   static String getEndPoint({
-    required AppInitialized state,
+    required List<ServiceRegistry> serviceRegistry,
     required String service,
     required String action,
     required String entityName,
   }) {
-    final actionResult = state.serviceRegistryList
+    final actionResult = serviceRegistry
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)

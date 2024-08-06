@@ -98,6 +98,11 @@ class _HomePageShowcaseData {
   final db = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.db,
   );
+
+  final dashBoard = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.dashboard,
+  );
+
   final closedHouseHold = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.closedHouseHoldLabel,
   );
