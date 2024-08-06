@@ -77,7 +77,9 @@ class _ComplaintsDetailsPageState
                 enableFixedButton: true,
                 header: const Column(
                   children: [
-                    BackNavigationHelpHeaderWidget(),
+                    BackNavigationHelpHeaderWidget(
+                      showHelp: false,
+                    ),
                   ],
                 ),
                 footer: SizedBox(
@@ -369,7 +371,7 @@ class _ComplaintsDetailsPageState
                                       'maxLength': (object) => localizations
                                           .translate(
                                               i18.common.maxCharsRequired)
-                                          .replaceAll('{}', '10'),
+                                          .replaceAll('{}', '9'),
                                     },
                                   ),
                                 ],
@@ -473,8 +475,8 @@ class _ComplaintsDetailsPageState
         validators: [
           Validators.required,
           CustomValidator.validMobileNumber,
-          Validators.minLength(10),
-          Validators.maxLength(10)
+          Validators.minLength(9),
+          Validators.maxLength(9)
         ],
       ),
       _supervisorName: FormControl<String>(
@@ -487,8 +489,8 @@ class _ComplaintsDetailsPageState
         disabled: shouldDisableForm,
         validators: [
           CustomValidator.validMobileNumber,
-          Validators.maxLength(10),
-          Validators.minLength(10),
+          Validators.maxLength(9),
+          Validators.minLength(9),
         ],
       ),
       _complaintDescription: FormControl<String>(
