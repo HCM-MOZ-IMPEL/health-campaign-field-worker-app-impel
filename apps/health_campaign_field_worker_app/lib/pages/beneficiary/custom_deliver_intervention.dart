@@ -81,7 +81,10 @@ class CustomDeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household
+                    ? deliverInterventionState.tasks?.last
+                    : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,
@@ -91,7 +94,11 @@ class CustomDeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing: false,
+              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.household
+                  ? true
+                  : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
@@ -614,6 +621,11 @@ class CustomDeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
+          // todo enums are not yet pushed into registration package
+          // AdditionalField(
+          //   RegistrationDeliveryEnums.name.toValue(),
+          //   RegistrationDeliverySingleton().loggedInUser?.name,
+          // ),
           AdditionalField(
             AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),

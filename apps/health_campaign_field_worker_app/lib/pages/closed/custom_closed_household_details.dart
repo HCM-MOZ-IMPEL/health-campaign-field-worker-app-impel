@@ -115,7 +115,7 @@ class CustomClosedHouseholdDetailsPageState
                                 longitude: locationState.longitude!,
                                 locationAccuracy: locationState.accuracy!,
                                 householdHeadName: householdHeadName != null &&
-                                        householdHeadName.isNotEmpty
+                                        householdHeadName.trim().isNotEmpty
                                     ? householdHeadName
                                     : null,
                               ),
