@@ -1,3 +1,4 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -127,6 +128,14 @@ class Constants {
         sql,
         StockReconciliationOpLogManager(isar),
       ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
+      ),
     ];
   }
 
@@ -199,6 +208,10 @@ class Constants {
           StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stockReconciliation)
           StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -237,6 +250,7 @@ class Constants {
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

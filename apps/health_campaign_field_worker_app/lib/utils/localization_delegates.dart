@@ -1,3 +1,5 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'dart:ui';
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
@@ -49,6 +51,10 @@ getAppLocalizationDelegates({
     digit_dss_localization.DashboardLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
-    )
+    ),
+    attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
   ];
 }

@@ -1,3 +1,6 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
+
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
@@ -325,6 +328,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       // INFO : Need to add home items of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
@@ -467,6 +480,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       // INFO : Need to add showcase keys of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.showcaseKey,
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
@@ -488,6 +504,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.manageAttendanceLabel,
+
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
@@ -538,6 +556,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
                 context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     LocalRepository<StockReconciliationModel,
@@ -566,6 +588,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
                 context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     RemoteRepository<StockReconciliationModel,
@@ -609,6 +635,12 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId!,
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
               .where(
