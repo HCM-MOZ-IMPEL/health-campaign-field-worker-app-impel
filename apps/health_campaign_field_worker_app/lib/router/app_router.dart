@@ -1,3 +1,5 @@
+import 'package:attendance_management/router/attendance_router.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/router/inventory_router.dart';
@@ -79,6 +81,7 @@ part 'app_router.gr.dart';
     InventoryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
+    AttendanceRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -111,6 +114,24 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        // Attendance Route
+        AutoRoute(
+          page: ManageAttendanceRoute.page,
+          path: 'manage-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceDateSessionSelectionRoute.page,
+          path: 'attendance-date-session-selection',
+        ),
+        AutoRoute(
+          page: MarkAttendanceRoute.page,
+          path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceAcknowledgementRoute.page,
+          path: 'attendance-acknowledgement',
+        ),
+
         // Inventory Route
         AutoRoute(
           page: ManageStocksRoute.page,

@@ -1,5 +1,8 @@
 library app_utils;
 
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
+
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
@@ -385,6 +388,7 @@ initializeAllMappers() async {
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
