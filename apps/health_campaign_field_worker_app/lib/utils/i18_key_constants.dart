@@ -1030,6 +1030,10 @@ class BeneficiaryDetails {
   String get childrenLabel => 'CHILDREN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+  String get roomsVsSprayedValidation =>
+      'SPRAYED_ROOMS_CANNOT_EXCEED_TOTAL_ROOMS';
+
+  String get typeOfResourceUsedHeading => 'TYPE_OF_RESOURCE_USED';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';

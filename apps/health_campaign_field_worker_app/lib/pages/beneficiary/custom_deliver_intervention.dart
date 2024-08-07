@@ -333,8 +333,9 @@ class CustomDeliverInterventionPageState
                                                               options:
                                                                   DigitToastOptions(
                                                                 localizations
-                                                                    .translate(
-                                                                        "ROOMS_SPRAYED_CANNOT_BE_GREATER_THAN_NO_OF_ROOMS_IN_HOUSE"),
+                                                                    .translate(i18Local
+                                                                        .beneficiaryDetails
+                                                                        .roomsVsSprayedValidation),
                                                                 true,
                                                                 theme,
                                                               ),
@@ -477,6 +478,19 @@ class CustomDeliverInterventionPageState
                                                   ),
                                                   minimum: 1,
                                                 ),
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(
+                                                        0, kPadding * 2, 0, 2),
+                                                    child: Text(
+                                                      localizations.translate(
+                                                        i18Local
+                                                            .beneficiaryDetails
+                                                            .typeOfResourceUsedHeading,
+                                                      ),
+                                                      style: theme
+                                                          .textTheme.bodyLarge,
+                                                    )),
                                                 ..._controllers.map((e) =>
                                                     CustomResourceBeneficiaryCard(
                                                       form: form,
