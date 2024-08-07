@@ -42,7 +42,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   String othersText = "OTHERS";
-  String yesText = "DONT_SHOW";
+  String yesText = "YES";
   String multiSelectionSeparator = ".";
 
   @override
