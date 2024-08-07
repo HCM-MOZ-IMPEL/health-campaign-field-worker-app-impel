@@ -29,7 +29,9 @@ class _ChecklistBoundaryViewPageState
     return Scaffold(
       body: ScrollableContent(
         header: const Column(children: [
-          BackNavigationHelpHeaderWidget(),
+          BackNavigationHelpHeaderWidget(
+            showHelp: false,
+          ),
         ]),
         footer: DigitCard(
           child: DigitElevatedButton(

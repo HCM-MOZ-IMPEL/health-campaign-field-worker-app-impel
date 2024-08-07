@@ -42,7 +42,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   String othersText = "OTHERS";
-  String yesText = "DONT_SHOW";
+  String yesText = "YES";
   String multiSelectionSeparator = ".";
 
   @override
@@ -98,7 +98,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                   header: Column(children: [
                     if (!(isHealthFacilityWorker &&
                         widget.referralClientRefId != null))
-                      const BackNavigationHelpHeaderWidget(),
+                      const BackNavigationHelpHeaderWidget(
+                        showHelp: false,
+                      ),
                   ]),
                   enableFixedButton: true,
                   footer: DigitCard(
@@ -748,9 +750,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
 
             return null;
           },
-          label: '${localizations.translate(
+          label: localizations
+              .translate(
                 '${selectedServiceDefinition?.code}.${item.code}',
-              ).trim()} ${item.required == true ? '*' : ''}',
+              )
+              .trim(),
         ),
       );
     } else if (item.dataType == 'Number') {
