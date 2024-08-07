@@ -33,7 +33,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
     return Scaffold(
       body: ScrollableContent(
         header: const Column(children: [
-          BackNavigationHelpHeaderWidget(),
+          BackNavigationHelpHeaderWidget(
+            showHelp: false,
+          ),
         ]),
         children: [
           BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(

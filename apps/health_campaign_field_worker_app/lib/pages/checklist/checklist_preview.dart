@@ -31,7 +31,9 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
     return Scaffold(
       body: ScrollableContent(
         header: const Column(children: [
-          BackNavigationHelpHeaderWidget(),
+          BackNavigationHelpHeaderWidget(
+            showHelp: false,
+          ),
         ]),
         footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
