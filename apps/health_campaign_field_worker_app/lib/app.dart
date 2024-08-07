@@ -1,5 +1,3 @@
-import 'package:attendance_management/models/entities/attendance_log.dart';
-import 'package:attendance_management/models/entities/attendance_register.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
@@ -318,12 +316,6 @@ class MainApplicationState extends State<MainApplication>
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            attendanceLocalRepository: ctx.read<
-                                LocalRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
                             serviceDefinitionRemoteRepository: ctx.read<
                                 RemoteRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
@@ -343,12 +335,6 @@ class MainApplicationState extends State<MainApplication>
                             productVariantRemoteRepository: ctx.read<
                                 RemoteRepository<ProductVariantModel,
                                     ProductVariantSearchModel>>(),
-                            attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
                             projectResourceLocalRepository: ctx.read<
                                 LocalRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
