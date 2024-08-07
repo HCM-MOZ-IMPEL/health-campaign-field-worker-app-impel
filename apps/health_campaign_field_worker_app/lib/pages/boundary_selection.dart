@@ -45,6 +45,7 @@ class _BoundarySelectionPageState
   StreamController<double> downloadProgress = StreamController<double>();
 
   Map<String, TextEditingController> dropdownControllers = {};
+  final String setLocale = "pt_MZ";
 
   @override
   void initState() {
@@ -115,8 +116,7 @@ class _BoundarySelectionPageState
                                           element.value ==
                                           AppSharedPreferences()
                                               .getSelectedLocale),
-                                  code: AppSharedPreferences()
-                                      .getSelectedLocale!));
+                                  code: setLocale));
                         }
                       },
                       child: ReactiveFormBuilder(
@@ -213,8 +213,7 @@ class _BoundarySelectionPageState
                                                 element.value ==
                                                 AppSharedPreferences()
                                                     .getSelectedLocale),
-                                        code: AppSharedPreferences()
-                                            .getSelectedLocale!));
+                                        code: setLocale));
                                 downSyncState.maybeWhen(
                                   orElse: () => false,
                                   loading: (isPop) => {
@@ -599,16 +598,16 @@ class _BoundarySelectionPageState
                                                       LocalizationParams()
                                                           .setModule(
                                                               'boundary', true);
-                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
-                                                          index: appConfiguration
-                                                              .languages!
-                                                              .indexWhere((element) =>
-                                                                  element
-                                                                      .value ==
-                                                                  AppSharedPreferences()
-                                                                      .getSelectedLocale),
-                                                          code: AppSharedPreferences()
-                                                              .getSelectedLocale!));
+                                                      context.read<LocalizationBloc>().add(
+                                                          LocalizationEvent.onUpdateLocalizationIndex(
+                                                              index: appConfiguration
+                                                                  .languages!
+                                                                  .indexWhere((element) =>
+                                                                      element
+                                                                          .value ==
+                                                                      AppSharedPreferences()
+                                                                          .getSelectedLocale),
+                                                              code: setLocale));
                                                     }
                                                   }
                                                 },
@@ -659,7 +658,7 @@ class _BoundarySelectionPageState
           LocalizationEvent.onUpdateLocalizationIndex(
               index: appConfiguration.languages!.indexWhere((element) =>
                   element.value == AppSharedPreferences().getSelectedLocale),
-              code: AppSharedPreferences().getSelectedLocale!));
+              code: setLocale));
     }
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(

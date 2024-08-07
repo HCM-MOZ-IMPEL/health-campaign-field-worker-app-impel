@@ -635,11 +635,13 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
-        AttendanceSingleton().setInitialData(
-            projectId: context.projectId,
-            loggedInIndividualId: context.loggedInIndividualId!,
-            loggedInUserUuid: context.loggedInUserUuid,
-            appVersion: Constants().version);
+        // TODO: uncomment once package is implemented
+
+        // AttendanceSingleton().setInitialData(
+        //     projectId: context.projectId,
+        //     loggedInIndividualId: context.loggedInIndividualId!,
+        //     loggedInUserUuid: context.loggedInUserUuid,
+        //     appVersion: Constants().version);
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
@@ -724,7 +726,7 @@ void loadLocalization(
       LocalizationEvent.onUpdateLocalizationIndex(
           index: appConfiguration.languages!.indexWhere((element) =>
               element.value == AppSharedPreferences().getSelectedLocale),
-          code: AppSharedPreferences().getSelectedLocale!));
+          code: "pt_MZ"));
 }
 
 class _HomeItemDataModel {
