@@ -166,7 +166,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showcaseButton: null,
                 ),
                 skipProgressBar
-                    ? const Offstage()
+                    ? const SizedBox.shrink()
                     : CustomBeneficiaryProgressBar(
                         label: localizations.translate(
                           i18.home.progressIndicatorTitle,
