@@ -320,15 +320,16 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
-      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-        child: HomeItemCard(
-          icon: Icons.bar_chart_sharp,
-          label: i18.home.dashboard,
-          onPressed: () {
-            context.router.push(const UserDashboardRoute());
-          },
-        ),
-      ),
+      // todo : enable once integrated completely
+      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.bar_chart_sharp,
+      //     label: i18.home.dashboard,
+      //     onPressed: () {
+      //       context.router.push(const UserDashboardRoute());
+      //     },
+      //   ),
+      // ),
       // INFO : Need to add home items of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
