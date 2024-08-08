@@ -165,14 +165,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showHelp: false,
                   showcaseButton: null,
                 ),
-                CustomBeneficiaryProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
-                  ),
-                  prefixLabel: localizations.translate(
-                    i18.home.progressIndicatorPrefixLabel,
-                  ),
-                ),
+                skipProgressBar
+                    ? const Offstage()
+                    : CustomBeneficiaryProgressBar(
+                        label: localizations.translate(
+                          i18.home.progressIndicatorTitle,
+                        ),
+                        prefixLabel: localizations.translate(
+                          i18.home.progressIndicatorPrefixLabel,
+                        ),
+                      ),
               ],
             ),
             footer: PoweredByDigit(
