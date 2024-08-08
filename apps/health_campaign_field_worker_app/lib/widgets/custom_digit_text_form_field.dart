@@ -11,6 +11,7 @@ class CustomDigitTextFormField extends StatelessWidget {
   final String? hint;
   final String? hintText;
   final Widget? suffix;
+  final String? suffixString;
   final bool isRequired;
   final int minLines;
   final int maxLines;
@@ -41,6 +42,7 @@ class CustomDigitTextFormField extends StatelessWidget {
     required this.formControlName,
     this.hint,
     this.suffix,
+    this.suffixString,
     this.minLines = 1,
     this.maxLines = 1,
     this.valueAccessor,
@@ -115,13 +117,23 @@ class CustomDigitTextFormField extends StatelessWidget {
                               .instance.inputDecorationTheme.disabledBorder,
                           focusColor: DigitTheme.instance.colors.cloudGray,
                           enabled: false,
-                          suffixIcon: suffix == null
+                          suffixIcon: suffixString == null
                               ? null
                               : Padding(
                                   padding: const EdgeInsets.all(kPadding * 2),
                                   child: InkWell(
                                     onTap: onTap,
-                                    child: suffix,
+                                    child: Text(
+                                      suffixString!,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: formControl.value != null &&
+                                                formControl.value as double > 5
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                    ),
                                   )),
                           prefixIconConstraints:
                               const BoxConstraints(minWidth: 0, minHeight: 0),
@@ -196,11 +208,21 @@ class CustomDigitTextFormField extends StatelessWidget {
                                         ),
                                       ),
                                     )),
-                          suffixIcon: suffix == null
+                          suffixIcon: suffixString == null
                               ? null
                               : InkWell(
                                   onTap: onTap,
-                                  child: suffix,
+                                  child: Text(
+                                    suffixString!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: formControl.value != null &&
+                                              formControl.value as int > 5
+                                          ? Colors.red
+                                          : Colors.green,
+                                    ),
+                                  ),
                                 ),
                         ));
             },
