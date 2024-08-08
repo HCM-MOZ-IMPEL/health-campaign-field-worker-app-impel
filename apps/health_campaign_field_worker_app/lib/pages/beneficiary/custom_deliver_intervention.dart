@@ -300,28 +300,6 @@ class CustomDeliverInterventionPageState
                                                                 theme,
                                                               ),
                                                             );
-                                                          } else if ((((form
-                                                                              .control(
-                                                                    _quantityDistributedKey,
-                                                                  )
-                                                                          as FormArray)
-                                                                      .value) ??
-                                                                  [])
-                                                              .any((e) =>
-                                                                  e == 0)) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceCannotBeZero),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
                                                           } else if (noOfRoomsInHouseholdValue <
                                                               (form
                                                                   .control(
