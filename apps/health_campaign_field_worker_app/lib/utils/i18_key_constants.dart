@@ -1030,7 +1030,7 @@ class BeneficiaryDetails {
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get pregnantWomenLabel => 'PREGNANT_WOMAN_LABEL';
+  String get pregnantWomenLabel => 'PREGNANT_WOMEN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
 
