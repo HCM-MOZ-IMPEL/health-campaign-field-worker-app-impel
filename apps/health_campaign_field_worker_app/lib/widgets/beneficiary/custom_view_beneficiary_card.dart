@@ -291,7 +291,7 @@ class _CustomViewBeneficiaryCardState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 1.5,
+                width: MediaQuery.of(context).size.width / 1.7,
                 child: CustomBeneficiaryCard(
                   description: [
                     householdMember.household?.address?.doorNo,
