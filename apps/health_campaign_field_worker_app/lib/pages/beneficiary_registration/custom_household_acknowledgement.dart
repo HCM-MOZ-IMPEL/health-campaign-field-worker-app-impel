@@ -38,7 +38,7 @@ class CustomHouseholdAcknowledgementPageState
               action: () {
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
-                parent.popUntilRoot();
+                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
               },
               secondaryAction: () {
                 final wrapper = context

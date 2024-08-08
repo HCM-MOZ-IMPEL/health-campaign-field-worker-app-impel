@@ -516,15 +516,16 @@ class CustomIndividualDetailsPageState
                               },
                             ),
                           ),
-                          Offstage(
-                            offstage: !widget.isHeadOfHousehold,
-                            child: DigitCheckbox(
-                              label: localizations.translate(
-                                i18.individualDetails.checkboxLabelText,
-                              ),
-                              value: widget.isHeadOfHousehold,
-                            ),
-                          ),
+                          // solution customisation
+                          // Offstage(
+                          //   offstage: !widget.isHeadOfHousehold,
+                          //   child: DigitCheckbox(
+                          //     label: localizations.translate(
+                          //       i18.individualDetails.checkboxLabelText,
+                          //     ),
+                          //     value: widget.isHeadOfHousehold,
+                          //   ),
+                          // ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -569,65 +570,76 @@ class CustomIndividualDetailsPageState
                             confirmText: localizations
                                 .translate(i18.common.coreCommonOk),
                           ),
-                          SelectionBox<String>(
-                            isRequired: widget.isEligible,
-                            title: localizations.translate(
-                              i18.individualDetails.genderLabelText,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: SelectionBox<String>(
+                              isRequired: widget.isEligible,
+                              title: localizations.translate(
+                                i18.individualDetails.genderLabelText,
+                              ),
+                              allowMultipleSelection: false,
+                              width: 148,
+                              initialSelection:
+                                  form.control(_genderKey).value != null
+                                      ? [form.control(_genderKey).value]
+                                      : [],
+                              options: RegistrationDeliverySingleton()
+                                  .genderOptions!
+                                  .map(
+                                    (e) => e,
+                                  )
+                                  .toList(),
+                              onSelectionChanged: (value) {
+                                setState(() {
+                                  if (value.isNotEmpty) {
+                                    form.control(_genderKey).value =
+                                        value.first;
+                                  } else if (widget.isEligible) {
+                                    form.control(_genderKey).value = null;
+                                    setState(() {
+                                      form
+                                          .control(_genderKey)
+                                          .setErrors({'': true});
+                                    });
+                                  }
+                                });
+                              },
+                              valueMapper: (value) {
+                                return localizations.translate(value);
+                              },
+                              errorMessage: form.control(_genderKey).hasErrors
+                                  ? localizations
+                                      .translate(i18.common.corecommonRequired)
+                                  : null,
                             ),
-                            allowMultipleSelection: false,
-                            width: 148,
-                            initialSelection:
-                                form.control(_genderKey).value != null
-                                    ? [form.control(_genderKey).value]
-                                    : [],
-                            options: RegistrationDeliverySingleton()
-                                .genderOptions!
-                                .map(
-                                  (e) => e,
-                                )
-                                .toList(),
-                            onSelectionChanged: (value) {
-                              setState(() {
-                                if (value.isNotEmpty) {
-                                  form.control(_genderKey).value = value.first;
-                                } else if (widget.isEligible) {
-                                  form.control(_genderKey).value = null;
-                                  setState(() {
-                                    form
-                                        .control(_genderKey)
-                                        .setErrors({'': true});
-                                  });
-                                }
-                              });
-                            },
-                            valueMapper: (value) {
-                              return localizations.translate(value);
-                            },
-                            errorMessage: form.control(_genderKey).hasErrors
-                                ? localizations
-                                    .translate(i18.common.corecommonRequired)
-                                : null,
                           ),
                         ]),
-                        individualDetailsShowcaseData.mobile.buildWith(
-                          child: DigitTextFormField(
-                            keyboardType: TextInputType.number,
-                            formControlName: _mobileNumberKey,
-                            maxLength: 9,
-                            label: localizations.translate(
-                              i18.individualDetails.mobileNumberLabelText,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              kPadding - 4, 0, kPadding - 4, 0),
+                          child: individualDetailsShowcaseData.mobile.buildWith(
+                            child: DigitTextFormField(
+                              keyboardType: TextInputType.number,
+                              formControlName: _mobileNumberKey,
+                              maxLength: 9,
+                              label: localizations.translate(
+                                i18.individualDetails.mobileNumberLabelText,
+                              ),
+                              validationMessages: {
+                                'maxLength': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberLengthValidationMessage),
+                                'minLength': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberLengthValidationMessage),
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                             ),
-                            validationMessages: {
-                              'maxLength': (object) => localizations.translate(
-                                  i18.individualDetails
-                                      .mobileNumberLengthValidationMessage),
-                              'minLength': (object) => localizations.translate(
-                                  i18.individualDetails
-                                      .mobileNumberLengthValidationMessage),
-                            },
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
                           ),
                         ),
                       ],
