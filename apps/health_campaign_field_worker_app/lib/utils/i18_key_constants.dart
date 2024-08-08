@@ -725,6 +725,8 @@ class Complaints {
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
   String get validationMinLengthError =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get mobilenumberValidationMaxLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
   String get raisedForAnotherUser => 'COMPLAINTS_RAISED_FOR_ANOTHER_USER';
 

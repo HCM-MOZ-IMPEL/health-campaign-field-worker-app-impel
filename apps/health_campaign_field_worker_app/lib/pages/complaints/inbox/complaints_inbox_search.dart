@@ -145,7 +145,7 @@ class _ComplaintsInboxSearchPageState
                                   label: localizations.translate(
                                     i18.common.coreCommonMobileNumber,
                                   ),
-                                  maxLength: 10,
+                                  maxLength: 9,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly,

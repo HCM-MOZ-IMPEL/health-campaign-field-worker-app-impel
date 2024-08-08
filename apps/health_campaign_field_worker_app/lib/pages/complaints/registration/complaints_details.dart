@@ -369,8 +369,8 @@ class _ComplaintsDetailsPageState
                                           localizations.translate(i18.complaints
                                               .validationMinLengthError),
                                       'maxLength': (object) => localizations
-                                          .translate(
-                                              i18.common.maxCharsRequired)
+                                          .translate(i18.complaints
+                                              .mobilenumberValidationMaxLengthError)
                                           .replaceAll('{}', '9'),
                                     },
                                   ),
@@ -407,8 +407,9 @@ class _ComplaintsDetailsPageState
                               'minLength': (object) => localizations.translate(
                                   i18.complaints.validationMinLengthError),
                               'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '10'),
+                                  .translate(i18.complaints
+                                      .mobilenumberValidationMaxLengthError)
+                                  .replaceAll('{}', '9'),
                             },
                           ),
                           DigitTextFormField(
