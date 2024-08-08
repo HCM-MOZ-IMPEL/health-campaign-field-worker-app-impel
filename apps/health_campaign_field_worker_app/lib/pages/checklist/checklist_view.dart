@@ -194,8 +194,45 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 : i18.checklist.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
-                                    additionalDetails: attribute?[i].dataType ==
-                                            'MultiValueList'
+                                    additionalDetails: ((attribute?[i]
+                                                        .values
+                                                        ?.firstWhereOrNull(
+                                                          (element) =>
+                                                              element ==
+                                                              yesText,
+                                                        ) !=
+                                                    null &&
+                                                controller[i].text ==
+                                                    attribute?[i]
+                                                        .values?[1]
+                                                        .trim()) ||
+                                            (attribute?[i]
+                                                        .values
+                                                        ?.firstWhereOrNull(
+                                                          (element) =>
+                                                              localizations
+                                                                  .translate(
+                                                                    'CORE_COMMON_$element',
+                                                                  )
+                                                                  .toUpperCase() ==
+                                                              othersText,
+                                                        ) !=
+                                                    null &&
+                                                controller[i]
+                                                        .text
+                                                        .split(
+                                                          multiSelectionSeparator,
+                                                        )
+                                                        .firstWhereOrNull(
+                                                          (element) =>
+                                                              localizations
+                                                                  .translate(
+                                                                    'CORE_COMMON_$element',
+                                                                  )
+                                                                  .toUpperCase() ==
+                                                              othersText,
+                                                        ) !=
+                                                    null))
                                         ? additionalController[i]
                                                 .text
                                                 .toString()
