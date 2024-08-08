@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
+import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/utils/constants.dart';
@@ -112,7 +113,13 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: false,
+                                          isEditing: (deliverState.tasks ?? [])
+                                                      .isNotEmpty &&
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ==
+                                                      BeneficiaryType.household
+                                              ? true
+                                              : false,
                                           boundaryModel:
                                               RegistrationDeliverySingleton()
                                                   .boundary!,
@@ -141,7 +148,7 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
 
                                     Future.delayed(
                                       const Duration(
-                                        milliseconds: 1000,
+                                        milliseconds: 100,
                                       ),
                                       () {
                                         reloadState.add(
@@ -330,34 +337,41 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                 LabelValuePair(
                                   label: localizations.translate(
                                       deliverState.oldTask?.status ==
-                                                  Status.administeredSuccess
+                                                  Status.administeredFailed
                                                       .toValue() ||
                                               deliverState.oldTask?.status ==
-                                                  Status.delivered.toValue()
+                                                  Status.beneficiaryRefused
+                                                      .toValue()
                                           ? i18.deliverIntervention
-                                              .typeOfInsecticideUsed
+                                              .reasonForRefusalLabel
                                           : i18.deliverIntervention
-                                              .reasonForRefusalLabel),
+                                              .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
-                                              Status.administeredSuccess
+                                              Status.administeredFailed
                                                   .toValue() ||
                                           deliverState.oldTask?.status ==
-                                              Status.delivered.toValue()
-                                      ? variants
+                                              Status.beneficiaryRefused
+                                                  .toValue()
+                                      ? getLocalizedMessage(deliverState
+                                              .oldTask?.additionalFields?.fields
+                                              .where(
+                                                (d) =>
+                                                    d.key ==
+                                                    AdditionalFieldsType
+                                                        .reasonOfRefusal
+                                                        .toValue(),
+                                              )
+                                              .firstOrNull
+                                              ?.value ??
+                                          i18.common.coreCommonNA)
+                                      : variants
                                               ?.map((e) =>
-                                                  '${localizations.translate(e.productName)} : ${e.quantityDelivered}')
+                                                  '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
                                               .toList()
                                               .join('\n') ??
                                           localizations.translate(
-                                              i18.common.coreCommonNA)
-                                      : localizations.translate(deliverState
-                                              .oldTask?.additionalFields?.fields
-                                              .where((d) =>
-                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
-                                              .firstOrNull
-                                              ?.value ??
-                                          i18.common.coreCommonNA),
-                                )
+                                              i18.common.coreCommonNA),
+                                ),
                               ]),
                         );
                       }),

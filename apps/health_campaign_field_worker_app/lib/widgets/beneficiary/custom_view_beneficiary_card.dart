@@ -291,7 +291,7 @@ class _CustomViewBeneficiaryCardState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 1.5,
+                width: MediaQuery.of(context).size.width / 1.7,
                 child: CustomBeneficiaryCard(
                   description: [
                     householdMember.household?.address?.doorNo,
@@ -454,6 +454,7 @@ class _CustomViewBeneficiaryCardState
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
     };
 
     for (var task in tasks) {

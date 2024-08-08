@@ -68,7 +68,11 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _genderKey: FormControl<String>(
           value: context.read<AppInitializationBloc>().state.maybeWhen(
                 orElse: () => null,
-                initialized: (appConfiguration, serviceRegistryList) {
+                initialized: (
+                  appConfiguration,
+                  serviceRegistryList,
+                  _,
+                ) {
                   return appConfiguration.genderOptions
                       ?.map((e) => e.code)
                       .firstWhereOrNull((element) => element == user?.gender);
@@ -240,7 +244,11 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                 AppInitializationState>(
                               builder: (context, state) => state.maybeWhen(
                                 orElse: () => const Offstage(),
-                                initialized: (appConfiguration, _) {
+                                initialized: (
+                                  appConfiguration,
+                                  _,
+                                  __,
+                                ) {
                                   return Column(
                                     children: [
                                       Row(

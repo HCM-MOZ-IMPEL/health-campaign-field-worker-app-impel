@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:digit_dss/digit_dss.dart';
 
 part 'app_configuration.g.dart';
 

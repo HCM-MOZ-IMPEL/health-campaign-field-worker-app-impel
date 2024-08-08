@@ -49,7 +49,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
           builder: (context, state) {
             return ScrollableContent(
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
+                BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                ),
               ]),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
@@ -128,8 +130,11 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           builder: (context, state) {
                             return state.maybeWhen(
                               orElse: () => const Offstage(),
-                              initialized:
-                                  (appConfiguration, serviceRegistryList) {
+                              initialized: (
+                                appConfiguration,
+                                serviceRegistryList,
+                                _,
+                              ) {
                                 var complaintTypes = appConfiguration
                                     .complaintTypes
                                     ?.map((e) => e.code)

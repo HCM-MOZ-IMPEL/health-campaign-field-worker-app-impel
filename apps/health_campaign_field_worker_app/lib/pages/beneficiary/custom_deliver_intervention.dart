@@ -81,7 +81,10 @@ class CustomDeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household
+                    ? deliverInterventionState.tasks?.last
+                    : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,
@@ -91,7 +94,11 @@ class CustomDeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing: false,
+              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.household
+                  ? true
+                  : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
@@ -293,28 +300,6 @@ class CustomDeliverInterventionPageState
                                                                 theme,
                                                               ),
                                                             );
-                                                          } else if ((((form
-                                                                              .control(
-                                                                    _quantityDistributedKey,
-                                                                  )
-                                                                          as FormArray)
-                                                                      .value) ??
-                                                                  [])
-                                                              .any((e) =>
-                                                                  e == 0)) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceCannotBeZero),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
                                                           } else if (noOfRoomsInHouseholdValue <
                                                               (form
                                                                   .control(
@@ -326,8 +311,9 @@ class CustomDeliverInterventionPageState
                                                               options:
                                                                   DigitToastOptions(
                                                                 localizations
-                                                                    .translate(
-                                                                        "ROOMS_SPRAYED_CANNOT_BE_GREATER_THAN_NO_OF_ROOMS_IN_HOUSE"),
+                                                                    .translate(i18Local
+                                                                        .beneficiaryDetails
+                                                                        .roomsVsSprayedValidation),
                                                                 true,
                                                                 theme,
                                                               ),
@@ -470,6 +456,19 @@ class CustomDeliverInterventionPageState
                                                   ),
                                                   minimum: 1,
                                                 ),
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(
+                                                        0, kPadding * 2, 0, 2),
+                                                    child: Text(
+                                                      localizations.translate(
+                                                        i18Local
+                                                            .beneficiaryDetails
+                                                            .typeOfResourceUsedHeading,
+                                                      ),
+                                                      style: theme
+                                                          .textTheme.bodyLarge,
+                                                    )),
                                                 ..._controllers.map((e) =>
                                                     CustomResourceBeneficiaryCard(
                                                       form: form,
@@ -614,6 +613,11 @@ class CustomDeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
+          // todo enums are not yet pushed into registration package
+          // AdditionalField(
+          //   RegistrationDeliveryEnums.name.toValue(),
+          //   RegistrationDeliverySingleton().loggedInUser?.name,
+          // ),
           AdditionalField(
             AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),

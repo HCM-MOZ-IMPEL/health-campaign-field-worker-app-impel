@@ -258,6 +258,9 @@ class _CustomHouseholdLocationPageState
                           ),
                           householdLocationShowcaseData.gpsAccuracy.buildWith(
                             child: CustomDigitTextFormField(
+                              suffixString: localizations.translate(
+                                i18Local.common.metersLabel,
+                              ),
                               readOnly: true,
                               formControlName: _accuracyKey,
                               label: localizations.translate(

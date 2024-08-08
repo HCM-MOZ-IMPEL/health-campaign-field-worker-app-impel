@@ -5,7 +5,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:digit_dss/digit_dss.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
@@ -61,6 +64,13 @@ class MainApplication extends StatefulWidget {
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
+  void initState() {
+    LocalizationParams().setModule('boundary', true);
+    super.initState();
+    requestDisableBatteryOptimization();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
@@ -83,6 +93,7 @@ class MainApplicationState extends State<MainApplication>
         create: (context) => AppInitializationBloc(
           isar: widget.isar,
           mdmsRepository: MdmsRepository(widget.client),
+          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
         )..add(const AppInitializationSetupEvent()),
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
@@ -94,6 +105,13 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+              BlocProvider(
+                create: (_) {
+                  return LocationBloc(location: Location())
+                    ..add(const LoadLocationEvent());
+                },
+                lazy: false,
+              ),
               BlocProvider(
                 create: (_) {
                   return DigitScannerBloc(
@@ -213,7 +231,12 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
+                    firstLanguage = appConfig.languages?.lastOrNull?.value;
+                    final selectedLocale =
+                        AppSharedPreferences().getSelectedLocale ??
+                            firstLanguage;
+                    AppSharedPreferences().setSelectedLocale("pt_MZ");
+                    LocalizationParams().setLocale(Locale(selectedLocale));
                     final languages = appConfig.languages;
 
                     final task =
@@ -241,39 +264,35 @@ class MainApplicationState extends State<MainApplication>
                           create: (localizationModulesList != null &&
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
-                                  )..add(
-                                      LocalizationEvent.onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
-                                        tenantId: appConfig.tenantId.toString(),
-                                        locale: firstLanguage,
-                                        path: Constants.localizationApiPath,
-                                      ),
-                                    )
-                              : (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql)
+                                ..add(
+                                  LocalizationEvent.onLoadLocalization(
+                                    module: localizationModulesList.interfaces
+                                        .where((element) =>
+                                            element.type ==
+                                            Modules.localizationModule)
+                                        .map((e) => e.name.toString())
+                                        .join(',')
+                                        .toString(),
+                                    tenantId: appConfig.tenantId.toString(),
+                                    locale: firstLanguage,
+                                    path: Constants.localizationApiPath,
                                   ),
+                                )
+                              : (context) => LocalizationBloc(
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
                             mdmsRepository: MdmsRepository(widget.client),
+                            dashboardRemoteRepository:
+                                DashboardRemoteRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
@@ -329,10 +348,23 @@ class MainApplicationState extends State<MainApplication>
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<StockModel,
+                                    StockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<StockModel,
+                                    StockSearchModel>>(),
                             context: context,
                             // Info can any package here
                           ),
                         ),
+                        BlocProvider(
+                            create: (ctx) => DashboardBloc(
+                                  const DashboardState.initialState(),
+                                  isar: widget.isar,
+                                  dashboardRemoteRepo:
+                                      DashboardRemoteRepository(widget.client),
+                                )),
                         BlocProvider(
                           create: (context) => FacilityBloc(
                             facilityDataRepository: context.repository<
@@ -444,9 +476,12 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              isar: widget.isar,
+                              sql: widget.sql,
                               appConfig: appConfig,
-                              selectedLocale: selectedLocale,
+                              selectedLocale: Locale(
+                                selectedLocale!.split("_").first,
+                                selectedLocale.split("_").last,
+                              ),
                             ),
                             locale: languages != null
                                 ? Locale(

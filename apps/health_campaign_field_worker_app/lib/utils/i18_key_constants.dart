@@ -11,6 +11,7 @@ const checklist = Checklist();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
+const dashBoard = Dashboard();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -106,6 +107,8 @@ class Common {
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
+  String get maxCharsRequiredValidation => 'MAX_CHARS_ALLOWED_VALIDATION';
+  String get minCharsRequiredValidation => 'MIN_CHARS_ALLOWED_VALIDATION';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
   String get minValue => 'MIN_VALUE_ALLOWED';
@@ -126,6 +129,7 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get metersLabel => 'CORE_COMMON_METERS';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
 }
@@ -598,6 +602,8 @@ class Home {
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get dashboard => 'HOME_DASHBOARD_LABEL';
+
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
@@ -720,6 +726,8 @@ class Complaints {
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
   String get validationMinLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get mobilenumberValidationMaxLengthError =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
   String get raisedForAnotherUser => 'COMPLAINTS_RAISED_FOR_ANOTHER_USER';
@@ -1022,11 +1030,15 @@ class BeneficiaryDetails {
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
-  String get pregnantWomenLabel => 'PREGNANT_WOMAN_LABEL';
+  String get pregnantWomenLabel => 'PREGNANT_WOMEN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+  String get roomsVsSprayedValidation =>
+      'SPRAYED_ROOMS_CANNOT_EXCEED_TOTAL_ROOMS';
+
+  String get typeOfResourceUsedHeading => 'TYPE_OF_RESOURCE_USED';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
@@ -1050,4 +1062,10 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+}
+
+class Dashboard {
+  const Dashboard();
+
+  String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
 }

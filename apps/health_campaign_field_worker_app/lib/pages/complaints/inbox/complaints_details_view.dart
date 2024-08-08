@@ -30,7 +30,9 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
         enableFixedButton: true,
         header: Column(
           children: [
-            const BackNavigationHelpHeaderWidget(),
+            const BackNavigationHelpHeaderWidget(
+              showHelp: false,
+            ),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(

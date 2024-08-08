@@ -1,13 +1,22 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
+
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
+import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import '../blocs/localization/localization.dart';
+import '../data/local_store/app_shared_preferences.dart';
 
 import 'dart:async';
-
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_dss/models/entities/dashboard_response_model.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_dss/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -16,6 +25,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -154,14 +165,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                   showHelp: false,
                   showcaseButton: null,
                 ),
-                CustomBeneficiaryProgressBar(
-                  label: localizations.translate(
-                    i18.home.progressIndicatorTitle,
-                  ),
-                  prefixLabel: localizations.translate(
-                    i18.home.progressIndicatorPrefixLabel,
-                  ),
-                ),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : CustomBeneficiaryProgressBar(
+                        label: localizations.translate(
+                          i18.home.progressIndicatorTitle,
+                        ),
+                        prefixLabel: localizations.translate(
+                          i18.home.progressIndicatorPrefixLabel,
+                        ),
+                      ),
               ],
             ),
             footer: PoweredByDigit(
@@ -307,7 +320,27 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
+      // todo : enable once integrated completely
+      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.bar_chart_sharp,
+      //     label: i18.home.dashboard,
+      //     onPressed: () {
+      //       context.router.push(const UserDashboardRoute());
+      //     },
+      //   ),
+      // ),
       // INFO : Need to add home items of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
 
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
@@ -330,7 +363,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(ManageStocksRoute());
                   },
                 );
@@ -432,7 +469,23 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       // INFO : Need to add showcase keys of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.showcaseKey,
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
@@ -449,10 +502,13 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.manageAttendanceLabel,
+
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
@@ -464,26 +520,19 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.db,
+      // i18.home.dashboard, TODO
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element == i18.home.db ||
-            element ==
-                i18.home
-                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element)) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
         .where((f) =>
-            f != i18.home.db &&
-            f !=
-                i18.home
-                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
+            f != i18.home.db) // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -505,6 +554,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
                 context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     LocalRepository<StockReconciliationModel,
@@ -533,6 +586,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
                 context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     RemoteRepository<StockReconciliationModel,
@@ -569,8 +626,21 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration, _) {
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
+        loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        // TODO: uncomment once package is implemented
+
+        // AttendanceSingleton().setInitialData(
+        //     projectId: context.projectId,
+        //     loggedInIndividualId: context.loggedInIndividualId!,
+        //     loggedInUserUuid: context.loggedInUserUuid,
+        //     appVersion: Constants().version);
+
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
               .where(
@@ -591,6 +661,18 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: dashboardConfigSchema,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
 
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -634,6 +716,15 @@ void setPackagesSingleton(BuildContext context) {
           beneficiaryType: context.beneficiaryType,
         );
       });
+}
+
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: "pt_MZ"));
 }
 
 class _HomeItemDataModel {

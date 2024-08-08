@@ -1,3 +1,5 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/utils/utils.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -6,6 +8,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -54,6 +59,8 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
+          DashboardConfigSchemaSchema,
+          DashboardResponseSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -120,6 +127,14 @@ class Constants {
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),
+      ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
       ),
     ];
   }
@@ -193,6 +208,10 @@ class Constants {
           StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stockReconciliation)
           StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -200,12 +219,12 @@ class Constants {
   }
 
   static String getEndPoint({
-    required AppInitialized state,
+    required List<ServiceRegistry> serviceRegistry,
     required String service,
     required String action,
     required String entityName,
   }) {
-    final actionResult = state.serviceRegistryList
+    final actionResult = serviceRegistry
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)
@@ -229,8 +248,10 @@ class Constants {
         hierarchyType: envConfig.variables.hierarchyType);
 
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
-
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

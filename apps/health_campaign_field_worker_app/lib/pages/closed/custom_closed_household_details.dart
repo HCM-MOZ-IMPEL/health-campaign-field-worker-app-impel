@@ -12,6 +12,8 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
+
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
@@ -115,7 +117,7 @@ class CustomClosedHouseholdDetailsPageState
                                 longitude: locationState.longitude!,
                                 locationAccuracy: locationState.accuracy!,
                                 householdHeadName: householdHeadName != null &&
-                                        householdHeadName.isNotEmpty
+                                        householdHeadName.trim().isNotEmpty
                                     ? householdHeadName
                                     : null,
                               ),
@@ -159,6 +161,9 @@ class CustomClosedHouseholdDetailsPageState
                             readOnly: true,
                           ),
                           CustomDigitTextFormField(
+                            suffixString: localizations.translate(
+                              i18Local.common.metersLabel,
+                            ),
                             readOnly: true,
                             formControlName: _accuracyKey,
                             colorCondition: (value) =>

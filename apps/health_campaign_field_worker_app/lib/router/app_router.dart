@@ -1,9 +1,13 @@
+import 'package:attendance_management/router/attendance_router.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:digit_dss/router/dashboard_router.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -76,6 +80,8 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     InventoryRoute,
     ClosedHouseholdPackageRoute,
+    DashboardRoute,
+    AttendanceRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -108,6 +114,24 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        // Attendance Route
+        AutoRoute(
+          page: ManageAttendanceRoute.page,
+          path: 'manage-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceDateSessionSelectionRoute.page,
+          path: 'attendance-date-session-selection',
+        ),
+        AutoRoute(
+          page: MarkAttendanceRoute.page,
+          path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceAcknowledgementRoute.page,
+          path: 'attendance-acknowledgement',
+        ),
+
         // Inventory Route
         AutoRoute(
           page: ManageStocksRoute.page,
@@ -179,6 +203,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: InventoryAcknowledgementRoute.page,
           path: 'inventory-acknowledgement',
+        ),
+
+        // DSS Dashboard Routes
+        AutoRoute(
+          page: UserDashboardRoute.page,
+          path: 'dashboard',
         ),
 
         AutoRoute(

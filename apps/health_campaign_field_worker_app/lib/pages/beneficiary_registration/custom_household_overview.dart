@@ -138,8 +138,8 @@ class _CustomHouseholdOverviewPageState
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                          left: kPadding,
-                                          right: kPadding,
+                                          left: kPadding - 8,
+                                          right: kPadding - 8,
                                         ),
                                         child: Text(
                                           localizations.translate(i18
@@ -149,7 +149,7 @@ class _CustomHouseholdOverviewPageState
                                         ),
                                       ),
                                       Align(
-                                        alignment: Alignment.centerRight,
+                                        alignment: Alignment.centerLeft,
                                         child: DigitIconButton(
                                           onPressed: () {
                                             final projectId =

@@ -13,7 +13,6 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -113,7 +112,13 @@ class CustomDeliverySummaryPageState
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: false,
+                                          isEditing: (deliverState.tasks ?? [])
+                                                      .isNotEmpty &&
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ==
+                                                      BeneficiaryType.household
+                                              ? true
+                                              : false,
                                           boundaryModel:
                                               RegistrationDeliverySingleton()
                                                   .boundary!,
@@ -142,7 +147,7 @@ class CustomDeliverySummaryPageState
 
                                     Future.delayed(
                                       const Duration(
-                                        milliseconds: 1000,
+                                        milliseconds: 100,
                                       ),
                                       () {
                                         reloadState.add(
@@ -338,34 +343,41 @@ class CustomDeliverySummaryPageState
                                 LabelValuePair(
                                   label: localizations.translate(
                                       deliverState.oldTask?.status ==
-                                                  Status.administeredSuccess
+                                                  Status.administeredFailed
                                                       .toValue() ||
                                               deliverState.oldTask?.status ==
-                                                  Status.delivered.toValue()
+                                                  Status.beneficiaryRefused
+                                                      .toValue()
                                           ? i18.deliverIntervention
-                                              .typeOfInsecticideUsed
+                                              .reasonForRefusalLabel
                                           : i18.deliverIntervention
-                                              .reasonForRefusalLabel),
+                                              .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
-                                              Status.administeredSuccess
+                                              Status.administeredFailed
                                                   .toValue() ||
                                           deliverState.oldTask?.status ==
-                                              Status.delivered.toValue()
-                                      ? variants
+                                              Status.beneficiaryRefused
+                                                  .toValue()
+                                      ? getLocalizedMessage(deliverState
+                                              .oldTask?.additionalFields?.fields
+                                              .where(
+                                                (d) =>
+                                                    d.key ==
+                                                    AdditionalFieldsType
+                                                        .reasonOfRefusal
+                                                        .toValue(),
+                                              )
+                                              .firstOrNull
+                                              ?.value ??
+                                          i18.common.coreCommonNA)
+                                      : variants
                                               ?.map((e) =>
-                                                  '${localizations.translate(e.productName)} : ${e.quantityDelivered}')
+                                                  '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
                                               .toList()
                                               .join('\n') ??
                                           localizations.translate(
-                                              i18.common.coreCommonNA)
-                                      : localizations.translate(deliverState
-                                              .oldTask?.additionalFields?.fields
-                                              .where((d) =>
-                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
-                                              .firstOrNull
-                                              ?.value ??
-                                          i18.common.coreCommonNA),
-                                )
+                                              i18.common.coreCommonNA),
+                                ),
                               ]),
                         );
                       }),

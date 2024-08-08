@@ -54,10 +54,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 if (selectedBoundary == null) {
                                   return const SizedBox.shrink();
                                 } else {
+                                  LocalizationParams()
+                                      .setCode([selectedBoundary.code!]);
                                   final boundaryName =
                                       AppLocalizations.of(context).translate(
-                                    selectedBoundary.name ??
-                                        selectedBoundary.code ??
+                                    selectedBoundary.code ??
                                         i18.projectSelection.onProjectMapped,
                                   );
 
