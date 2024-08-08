@@ -117,10 +117,12 @@ class CustomDigitTextFormField extends StatelessWidget {
                           enabled: false,
                           suffixIcon: suffix == null
                               ? null
-                              : InkWell(
-                                  onTap: onTap,
-                                  child: suffix,
-                                ),
+                              : Padding(
+                                  padding: const EdgeInsets.all(kPadding * 2),
+                                  child: InkWell(
+                                    onTap: onTap,
+                                    child: suffix,
+                                  )),
                           prefixIconConstraints:
                               const BoxConstraints(minWidth: 0, minHeight: 0),
                           labelStyle: TextStyle(

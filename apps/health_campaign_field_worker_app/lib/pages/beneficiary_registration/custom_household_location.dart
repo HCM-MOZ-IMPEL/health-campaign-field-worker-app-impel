@@ -258,6 +258,20 @@ class _CustomHouseholdLocationPageState
                           ),
                           householdLocationShowcaseData.gpsAccuracy.buildWith(
                             child: CustomDigitTextFormField(
+                              suffix: Text(
+                                localizations.translate(
+                                  i18Local.common.metersLabel,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: form.control(_accuracyKey).value !=
+                                              null &&
+                                          form.control(_accuracyKey).value > 5
+                                      ? Colors.red
+                                      : Colors.green,
+                                ),
+                              ),
                               readOnly: true,
                               formControlName: _accuracyKey,
                               label: localizations.translate(

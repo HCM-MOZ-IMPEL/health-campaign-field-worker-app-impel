@@ -12,6 +12,8 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
+
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
@@ -159,6 +161,20 @@ class CustomClosedHouseholdDetailsPageState
                             readOnly: true,
                           ),
                           CustomDigitTextFormField(
+                            suffix: Text(
+                              localizations.translate(
+                                i18Local.common.metersLabel,
+                              ),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color:
+                                    form.control(_accuracyKey).value != null &&
+                                            form.control(_accuracyKey).value > 5
+                                        ? Colors.red
+                                        : Colors.green,
+                              ),
+                            ),
                             readOnly: true,
                             formControlName: _accuracyKey,
                             colorCondition: (value) =>
