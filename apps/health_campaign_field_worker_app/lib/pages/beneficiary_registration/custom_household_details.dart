@@ -8,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -330,25 +333,92 @@ class CustomHouseHoldDetailsPageState
                             );
                             final overviewBloc =
                                 context.read<HouseholdOverviewBloc>();
-
-                            overviewBloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: RegistrationDeliverySingleton()
-                                    .projectId
-                                    .toString(),
-                                projectBeneficiaryType:
-                                    RegistrationDeliverySingleton()
-                                            .beneficiaryType ??
-                                        BeneficiaryType.household,
-                              ),
-                            );
                             HouseholdMemberWrapper memberWrapper =
                                 overviewBloc.state.householdMemberWrapper;
-                            final route = router.parent() as StackRouter;
-                            route.popUntilRouteWithName(
-                                CustomSearchBeneficiaryRoute.name);
-                            route.push(CustomHouseholdWrapperRoute(
-                                wrapper: memberWrapper));
+
+                            if (!widget.isEligible) {
+                              final projectBeneficiary = [
+                                memberWrapper.projectBeneficiaries?.first
+                              ];
+                              final parent =
+                                  context.router.parent() as StackRouter;
+
+                              context.read<DeliverInterventionBloc>().add(
+                                    DeliverInterventionSubmitEvent(
+                                      navigateToSummary: true,
+                                      householdMemberWrapper: memberWrapper,
+                                      task: TaskModel(
+                                        projectBeneficiaryClientReferenceId:
+                                            projectBeneficiary?.first
+                                                ?.clientReferenceId, //TODO: need to check for individual based campaign
+                                        clientReferenceId: IdGen.i.identifier,
+                                        tenantId:
+                                            RegistrationDeliverySingleton()
+                                                .tenantId,
+                                        rowVersion: 1,
+                                        auditDetails: AuditDetails(
+                                          createdBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid!,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId,
+                                        status:
+                                            Status.administeredFailed.toValue(),
+                                        clientAuditDetails: ClientAuditDetails(
+                                          createdBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid!,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        additionalFields: TaskAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            AdditionalField(
+                                              AdditionalFieldsType
+                                                  .reasonOfRefusal
+                                                  .toValue(),
+                                              "INCOMPATIBLE",
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      isEditing: false,
+                                      boundaryModel:
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
+                                    ),
+                                  );
+                              parent.push(IneligibleSummaryRoute(
+                                  isEligible: widget.isEligible));
+                            } else {
+                              overviewBloc.add(
+                                HouseholdOverviewReloadEvent(
+                                  projectId: RegistrationDeliverySingleton()
+                                      .projectId
+                                      .toString(),
+                                  projectBeneficiaryType:
+                                      RegistrationDeliverySingleton()
+                                              .beneficiaryType ??
+                                          BeneficiaryType.household,
+                                ),
+                              );
+
+                              final route = router.parent() as StackRouter;
+                              route.popUntilRouteWithName(
+                                  CustomSearchBeneficiaryRoute.name);
+                              route.push(CustomHouseholdWrapperRoute(
+                                  wrapper: memberWrapper));
+                            }
                           },
                         );
                       }
