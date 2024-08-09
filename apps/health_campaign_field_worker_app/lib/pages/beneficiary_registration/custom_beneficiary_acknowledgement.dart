@@ -33,7 +33,9 @@ class CustomBeneficiaryAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          context.router.maybePop();
+          final parent = context.router.parent() as StackRouter;
+          // Pop twice to navigate back to the previous screen
+          parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
         },
         secondaryAction: () {
           final searchBlocState = context.read<SearchHouseholdsBloc>().state;

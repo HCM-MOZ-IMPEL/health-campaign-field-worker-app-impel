@@ -9,6 +9,7 @@ import 'package:health_campaign_field_worker_app/utils/constants.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -150,20 +151,28 @@ class CustomDeliverySummaryPageState
                                         milliseconds: 100,
                                       ),
                                       () {
-                                        reloadState.add(
-                                          HouseholdOverviewReloadEvent(
-                                            projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                            projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                    .beneficiaryType!,
-                                          ),
-                                        );
+                                        if (deliverState.householdMemberWrapper
+                                                ?.household !=
+                                            null) {
+                                          context
+                                              .read<SearchHouseholdsBloc>()
+                                              .add(
+                                                SearchHouseholdsEvent
+                                                    .searchByHousehold(
+                                                  householdModel: deliverState
+                                                      .householdMemberWrapper!
+                                                      .household!,
+                                                  projectId:
+                                                      RegistrationDeliverySingleton()
+                                                          .projectId!,
+                                                  isProximityEnabled: false,
+                                                ),
+                                              );
+                                        }
                                       },
                                     ).then(
                                       (value) {
-                                        context.router.popAndPush(
+                                        context.router.push(
                                           CustomHouseholdAcknowledgementRoute(
                                             enableViewHousehold: true,
                                           ),

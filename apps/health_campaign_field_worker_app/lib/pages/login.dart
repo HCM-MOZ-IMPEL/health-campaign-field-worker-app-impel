@@ -27,6 +27,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   static const _password = 'password';
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -198,12 +203,10 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'irs-us-dis-1',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: 'egov@1234',
         ),
       });
 }
