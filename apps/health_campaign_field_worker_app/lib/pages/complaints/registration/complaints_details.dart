@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:remove_emoji_input_formatter/remove_emoji_input_formatter.dart';
 
 import '../../../blocs/auth/auth.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
@@ -334,6 +335,9 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantName,
                                     ),
+                                    inputFormatters: [
+                                      RemoveEmojiInputFormatter(),
+                                    ],
                                     readOnly: isRaisedForSelf,
                                     isRequired: true,
                                     validationMessages: {
@@ -383,6 +387,9 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.complaints.supervisorName,
                             ),
+                            inputFormatters: [
+                              RemoveEmojiInputFormatter(),
+                            ],
                             validationMessages: {
                               'maxLength': (object) => localizations
                                   .translate(
@@ -492,7 +499,6 @@ class _ComplaintsDetailsPageState
         validators: [
           CustomValidator.validMobileNumber,
           Validators.maxLength(9),
-          Validators.minLength(9),
         ],
       ),
       _complaintDescription: FormControl<String>(

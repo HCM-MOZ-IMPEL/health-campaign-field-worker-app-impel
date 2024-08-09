@@ -73,6 +73,7 @@ dependencies:
   digit_scanner: ^1.0.2
   digit_dss: ^0.0.1-dev.1
   attendance_management: ^1.0.1
+  remove_emoji_input_formatter: ^0.0.1
 
 dev_dependencies:
   flutter_test:
