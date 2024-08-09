@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/localized.dart';
@@ -35,11 +36,10 @@ class CustomBeneficiaryAcknowledgementPageState
           context.router.maybePop();
         },
         secondaryAction: () {
-          final bloc = context.read<SearchBlocWrapper>();
-
+          final searchBlocState = context.read<SearchHouseholdsBloc>().state;
           context.router.popAndPush(
             CustomHouseholdWrapperRoute(
-              wrapper: bloc.state.householdMembers.first,
+              wrapper: searchBlocState.householdMembers.first,
             ),
           );
         },
