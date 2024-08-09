@@ -12,6 +12,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
@@ -47,9 +48,17 @@ class _CustomHouseholdLocationPageState
   void initState() {
     final regState = context.read<BeneficiaryRegistrationBloc>().state;
     context.read<LocationBloc>().add(const LoadLocationEvent());
+    final router = context.router;
+
     regState.maybeMap(
         orElse: () => false,
         editHousehold: (value) => false,
+        editIndividual: (value) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            router.push(CustomIndividualDetailsRoute());
+          });
+          return true;
+        },
         create: (value) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             // Show the dialog after the first frame is built
@@ -125,88 +134,82 @@ class _CustomHouseholdLocationPageState
                         form.markAllAsTouched();
                         if (!form.valid) return;
 
-                        registrationState.maybeWhen(
-                          orElse: () {
-                            return;
-                          },
-                          create: (
-                            addressModel,
-                            householdModel,
-                            individualModel,
-                            projectBeneficiaryModel,
-                            registrationDate,
-                            searchQuery,
-                            loading,
-                            isHeadOfHousehold,
-                          ) {
-                            var addressModel = AddressModel(
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value ??
-                                  locationState.latitude,
-                              longitude: form.control(_lngKey).value ??
-                                  locationState.longitude,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value ??
-                                      locationState.accuracy,
-                              locality: LocalityModel(
-                                code: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .code!,
-                                name: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .name,
-                              ),
-                              tenantId:
-                                  RegistrationDeliverySingleton().tenantId,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              clientAuditDetails: ClientAuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                                lastModifiedBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid,
-                                lastModifiedTime:
-                                    context.millisecondsSinceEpoch(),
-                              ),
-                            );
+                        registrationState.maybeWhen(orElse: () {
+                          return;
+                        }, create: (
+                          addressModel,
+                          householdModel,
+                          individualModel,
+                          projectBeneficiaryModel,
+                          registrationDate,
+                          searchQuery,
+                          loading,
+                          isHeadOfHousehold,
+                        ) {
+                          var addressModel = AddressModel(
+                            type: AddressType.correspondence,
+                            latitude: form.control(_latKey).value ??
+                                locationState.latitude,
+                            longitude: form.control(_lngKey).value ??
+                                locationState.longitude,
+                            locationAccuracy:
+                                form.control(_accuracyKey).value ??
+                                    locationState.accuracy,
+                            locality: LocalityModel(
+                              code: RegistrationDeliverySingleton()
+                                  .boundary!
+                                  .code!,
+                              name: RegistrationDeliverySingleton()
+                                  .boundary!
+                                  .name,
+                            ),
+                            tenantId: RegistrationDeliverySingleton().tenantId,
+                            rowVersion: 1,
+                            auditDetails: AuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context.millisecondsSinceEpoch(),
+                            ),
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid,
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                            ),
+                          );
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(HouseDetailsRoute());
-                          },
-                          editHousehold: (
-                            address,
-                            householdModel,
-                            individuals,
-                            registrationDate,
-                            projectBeneficiaryModel,
-                            loading,
-                          ) {
-                            var addressModel = address.copyWith(
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value,
-                              longitude: form.control(_lngKey).value,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value,
-                            );
-                            // TODO [Linking of Voucher for Household based project  need to be handled]
+                          bloc.add(
+                            BeneficiaryRegistrationSaveAddressEvent(
+                              addressModel,
+                            ),
+                          );
+                          router.push(HouseDetailsRoute());
+                        }, editHousehold: (
+                          address,
+                          householdModel,
+                          individuals,
+                          registrationDate,
+                          projectBeneficiaryModel,
+                          loading,
+                        ) {
+                          var addressModel = address.copyWith(
+                            type: AddressType.correspondence,
+                            latitude: form.control(_latKey).value,
+                            longitude: form.control(_lngKey).value,
+                            locationAccuracy: form.control(_accuracyKey).value,
+                          );
+                          // TODO [Linking of Voucher for Household based project  need to be handled]
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(HouseDetailsRoute());
-                          },
-                        );
+                          bloc.add(
+                            BeneficiaryRegistrationSaveAddressEvent(
+                              addressModel,
+                            ),
+                          );
+                          router.push(HouseDetailsRoute());
+                        });
                       },
                       child: Center(
                         child: Text(

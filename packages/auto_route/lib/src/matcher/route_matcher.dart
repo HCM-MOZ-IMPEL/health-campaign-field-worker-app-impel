@@ -184,9 +184,9 @@ class RouteMatcher {
     var routeName = route.routeName
         .split('Route')[0]
         .replaceAllMapped(
-      RegExp(r'(?<=[a-z])(?=[A-Z])'),
+          RegExp(r'(?<=[a-z])(?=[A-Z])'),
           (match) => '-',
-    )
+        )
         .toLowerCase();
     var config = routes['Redirect#$routeName'];
 
@@ -219,6 +219,18 @@ class RouteMatcher {
             Uri(path: config.changePath(config.redirectTo).path), routes);
         if (defaultMatches != null) {
           return defaultMatches.first;
+        }
+      }
+    } else {
+      if (route.hasChildren) {
+        final subRoutes = routes.subCollectionOf(route.routeName);
+        for (var childRoute in route.initialChildren!) {
+          var match = _matchByRoute(childRoute, subRoutes);
+          if (match == null) {
+            return null;
+          } else {
+            childMatches.add(match);
+          }
         }
       }
     }

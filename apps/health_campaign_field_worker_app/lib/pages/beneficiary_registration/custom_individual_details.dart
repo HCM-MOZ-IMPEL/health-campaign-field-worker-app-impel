@@ -60,6 +60,7 @@ class CustomIndividualDetailsPageState
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
+  bool isEditIndividual = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class CustomIndividualDetailsPageState
                         );
                   },
                 ).then(
-                  (value) {
+                  (valueOne) {
                     final overviewBloc = context.read<HouseholdOverviewBloc>();
 
                     Future.delayed(
@@ -111,7 +112,7 @@ class CustomIndividualDetailsPageState
                         );
                       },
                     ).then(
-                      (value) {
+                      (valueTwo) {
                         // (router.parent() as StackRouter).maybePop();
                         final parent = context.router.parent() as StackRouter;
 
@@ -182,17 +183,18 @@ class CustomIndividualDetailsPageState
                                 );
                             parent.push(IneligibleSummaryRoute(
                                 isEligible: widget.isEligible));
-                          }
-                          // parent.replaceAll([
-                          //   HomeRoute(),
-                          //   const RegistrationDeliveryWrapperRoute(),
-                          //   BeneficiaryWrapperRoute(
-                          //       wrapper: searchBlocState.householdMembers.first)
-                          // ]);
-                          else {
-                            parent.push(BeneficiaryWrapperRoute(
-                                wrapper:
-                                    searchBlocState.householdMembers.first));
+                          } else {
+                            if (isEditIndividual) {
+                              parent.popUntilRouteWithName(
+                                  CustomSearchBeneficiaryRoute.name);
+                              parent.push(CustomHouseholdWrapperRoute(
+                                  wrapper:
+                                      searchBlocState.householdMembers.first));
+                            } else {
+                              parent.push(BeneficiaryWrapperRoute(
+                                  wrapper:
+                                      searchBlocState.householdMembers.first));
+                            }
                           }
                         }
                       },
@@ -261,7 +263,7 @@ class CustomIndividualDetailsPageState
                               form: form,
                               oldIndividual: null,
                             );
-
+                            isEditIndividual = false;
                             final boundary =
                                 RegistrationDeliverySingleton().boundary;
 
@@ -359,6 +361,7 @@ class CustomIndividualDetailsPageState
                             projectBeneficiaryModel,
                             loading,
                           ) {
+                            isEditIndividual = true;
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
                             final individual = _getIndividualModel(

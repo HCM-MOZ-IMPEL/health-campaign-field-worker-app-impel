@@ -96,7 +96,8 @@ class CustomDeliverInterventionPageState
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.household
+                          BeneficiaryType.household &&
+                      isSuccessfulOrEligible(deliverInterventionState)
                   ? true
                   : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
@@ -658,6 +659,30 @@ class CustomDeliverInterventionPageState
     );
 
     return task;
+  }
+
+  bool isSuccessfulOrEligible(
+      DeliverInterventionState deliverInterventionState) {
+    if (deliverInterventionState.tasks == null ||
+        (deliverInterventionState.tasks?.isEmpty ?? true)) {
+      return false;
+    }
+    final lastTask = deliverInterventionState.tasks?.last;
+    final status = lastTask?.status;
+
+    if (status == Status.administeredSuccess.toValue()) {
+      return true;
+    }
+
+    if (status == Status.administeredFailed.toValue()) {
+      final reasonField = lastTask?.additionalFields?.fields.firstWhereOrNull(
+          (field) =>
+              field.key == AdditionalFieldsType.reasonOfRefusal.toValue());
+
+      return reasonField?.value == "INCOMPATIBLE";
+    }
+
+    return false;
   }
 
 // This method builds a form used for delivering interventions.
