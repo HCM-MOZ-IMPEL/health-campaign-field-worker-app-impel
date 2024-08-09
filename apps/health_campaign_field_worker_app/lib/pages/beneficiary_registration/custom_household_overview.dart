@@ -17,6 +17,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
+import '../../router/app_router.dart';
 import '../../widgets/action_card/action_card.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
@@ -562,7 +563,7 @@ class _CustomHouseholdOverviewPageState
                                               ),
                                             ),
                                             children: [
-                                              IndividualDetailsRoute(
+                                              CustomIndividualDetailsRoute(
                                                 isHeadOfHousehold: isHead,
                                               ),
                                             ],
