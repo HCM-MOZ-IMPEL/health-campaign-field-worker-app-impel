@@ -2,8 +2,8 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:attendance_management/models/entities/attendance_log.dart';
-import 'package:attendance_management/models/entities/attendance_register.dart';
+import 'package:attendance_management/attendance_management.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';

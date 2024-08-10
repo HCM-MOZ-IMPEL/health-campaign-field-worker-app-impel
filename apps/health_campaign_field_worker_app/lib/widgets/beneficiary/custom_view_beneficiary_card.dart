@@ -464,6 +464,6 @@ class _CustomViewBeneficiaryCardState
       }
     }
 
-    return Status.registered.toValue();
+    return Status.registered;
   }
 }

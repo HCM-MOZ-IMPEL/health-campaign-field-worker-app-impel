@@ -13,6 +13,8 @@ import 'package:registration_delivery/blocs/search_households/search_bloc_common
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -723,7 +725,7 @@ class _CustomHouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(deliverInterventionState.tasks ?? []).toValue()
+          ? getTaskStatusEnum(deliverInterventionState.tasks ?? []).toValue()
           : Status.registered.toValue();
 
       color = deliverInterventionState.tasks?.isNotEmpty ?? false
@@ -746,5 +748,29 @@ class _CustomHouseholdOverviewPageState
     }
 
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
+  }
+
+  Status getTaskStatusEnum(Iterable<TaskModel> tasks) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
+    };
+
+    for (var task in tasks) {
+      final mappedStatus = statusMap[task.status];
+      if (mappedStatus != null) {
+        return mappedStatus;
+      }
+    }
+
+    return Status.registered;
   }
 }

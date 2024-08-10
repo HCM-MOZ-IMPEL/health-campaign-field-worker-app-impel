@@ -10,11 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
-import '../../models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';

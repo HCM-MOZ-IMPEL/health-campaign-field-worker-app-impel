@@ -1,5 +1,4 @@
-import 'package:attendance_management/models/entities/attendance_log.dart';
-import 'package:attendance_management/models/entities/attendance_register.dart';
+import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
