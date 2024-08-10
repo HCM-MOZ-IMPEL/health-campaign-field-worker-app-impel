@@ -20,6 +20,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 
 import '../router/app_router.dart';
 
@@ -350,7 +351,7 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                                       .toValue()
                                           ? i18.deliverIntervention
                                               .reasonForRefusalLabel
-                                          : i18.deliverIntervention
+                                          : i18Local.beneficiaryDetails
                                               .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
                                               Status.administeredFailed

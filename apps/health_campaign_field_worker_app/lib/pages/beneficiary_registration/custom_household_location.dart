@@ -194,6 +194,7 @@ class _CustomHouseholdLocationPageState
                           registrationDate,
                           projectBeneficiaryModel,
                           loading,
+                          headOfHousehold,
                         ) {
                           var addressModel = address.copyWith(
                             type: AddressType.correspondence,

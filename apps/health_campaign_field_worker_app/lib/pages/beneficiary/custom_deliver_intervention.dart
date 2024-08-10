@@ -189,18 +189,21 @@ class CustomDeliverInterventionPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
+                              // todo verify this from product, addition of householdModel here
                               ? (fetchProductVariant(
-                                  RegistrationDeliverySingleton()
-                                          .selectedProject
-                                          ?.additionalDetails
-                                          ?.projectType
-                                          ?.cycles![deliveryInterventionState
-                                                  .cycle -
-                                              1]
-                                          .deliveries?[
-                                      deliveryInterventionState.dose - 1],
-                                  state.selectedIndividual,
-                                )?.productVariants)
+                                      RegistrationDeliverySingleton()
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles![
+                                                  deliveryInterventionState
+                                                          .cycle -
+                                                      1]
+                                              .deliveries?[
+                                          deliveryInterventionState.dose - 1],
+                                      state.selectedIndividual,
+                                      state.householdMemberWrapper.household)
+                                  ?.productVariants)
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -444,7 +447,6 @@ class CustomDeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.headlineLarge,
                                                 ),
-                                                // todo : verify the localisation
                                                 DigitIntegerFormPicker(
                                                   incrementer: true,
                                                   formControlName:
@@ -614,11 +616,10 @@ class CustomDeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
-          // todo enums are not yet pushed into registration package
-          // AdditionalField(
-          //   RegistrationDeliveryEnums.name.toValue(),
-          //   RegistrationDeliverySingleton().loggedInUser?.name,
-          // ),
+          AdditionalField(
+            RegistrationDeliveryEnums.name.toValue(),
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
           AdditionalField(
             AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),

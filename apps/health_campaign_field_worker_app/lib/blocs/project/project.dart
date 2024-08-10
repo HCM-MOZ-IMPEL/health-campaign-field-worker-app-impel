@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:attendance_management/models/entities/attendance_log.dart';
+import 'package:attendance_management/models/entities/attendance_register.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -47,6 +49,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       projectRemoteRepository;
   final LocalRepository<ProjectModel, ProjectSearchModel>
       projectLocalRepository;
+
+  // Attendance Repositories
+  final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+      attendanceRemoteRepository;
+  final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+      attendanceLocalRepository;
+  final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
+      attendanceLogLocalRepository;
+  final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
+      attendanceLogRemoteRepository;
 
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
@@ -118,8 +130,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
     required this.mdmsRepository,
+    required this.attendanceLocalRepository,
+    required this.attendanceRemoteRepository,
     required this.individualLocalRepository,
     required this.individualRemoteRepository,
+    required this.attendanceLogLocalRepository,
+    required this.attendanceLogRemoteRepository,
     required this.dashboardRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
@@ -212,42 +228,42 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-          // final attendanceRegisters = await attendanceRemoteRepository.search(
-          //   AttendanceRegisterSearchModel(
-          //     staffId: individual.first.id,
-          //     referenceId: projectStaff.projectId,
-          //   ),
-          // );
-          // await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+          final attendanceRegisters = await attendanceRemoteRepository.search(
+            AttendanceRegisterSearchModel(
+              staffId: individual.first.id,
+              referenceId: projectStaff.projectId,
+            ),
+          );
+          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
-          // for (final register in attendanceRegisters) {
-          //   if (register.attendees != null &&
-          //       (register.attendees ?? []).isNotEmpty) {
-          //     try {
-          //       final individuals = await individualRemoteRepository.search(
-          //         IndividualSearchModel(
-          //           id: register.attendees!
-          //               .map((e) => e.individualId!)
-          //               .toList(),
-          //         ),
-          //       );
-          //       await individualLocalRepository.bulkCreate(individuals);
-          //       final logs = await attendanceLogRemoteRepository.search(
-          //         AttendanceLogSearchModel(
-          //           registerId: register.id,
-          //         ),
-          //       );
-          //       await attendanceLogLocalRepository.bulkCreate(logs);
-          //     } catch (_) {
-          //       emit(state.copyWith(
-          //         loading: false,
-          //         syncError: ProjectSyncErrorType.project,
-          //       ));
+          for (final register in attendanceRegisters) {
+            if (register.attendees != null &&
+                (register.attendees ?? []).isNotEmpty) {
+              try {
+                final individuals = await individualRemoteRepository.search(
+                  IndividualSearchModel(
+                    id: register.attendees!
+                        .map((e) => e.individualId!)
+                        .toList(),
+                  ),
+                );
+                await individualLocalRepository.bulkCreate(individuals);
+                final logs = await attendanceLogRemoteRepository.search(
+                  AttendanceLogSearchModel(
+                    registerId: register.id,
+                  ),
+                );
+                await attendanceLogLocalRepository.bulkCreate(logs);
+              } catch (_) {
+                emit(state.copyWith(
+                  loading: false,
+                  syncError: ProjectSyncErrorType.project,
+                ));
 
-          //       return;
-          //     }
-          //   }
-          // }
+                return;
+              }
+            }
+          }
         }
 
         staffProjects = await projectRemoteRepository.search(
@@ -446,6 +462,27 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         if (dashboardConfig.isNotEmpty &&
             dashboardConfig.first.enableDashboard == true &&
             dashboardConfig.first.charts != null) {
+          final loggedInIndividualId = await localSecureStore.userIndividualId;
+          final registers = await attendanceLocalRepository.search(
+            AttendanceRegisterSearchModel(
+              staffId: loggedInIndividualId,
+              referenceId: event.model.id,
+            ),
+          );
+          List<String> attendeesIndividualIds = [];
+          registers.map((r) =>
+              r.attendees?.where((a) => a.individualId != null).map((att) {
+                attendeesIndividualIds.add(att.individualId.toString());
+              }));
+          final individuals =
+              await individualLocalRepository.search(IndividualSearchModel(
+            id: attendeesIndividualIds,
+          ));
+          final userUUIDList = individuals
+              .where((ind) => ind.userUuid != null)
+              .map((i) => i.userUuid.toString())
+              .toList();
+
           await processDashboardConfig(
             dashboardConfig.first.charts ?? [],
             startDate,
@@ -458,6 +495,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
+            userUUIDList,
           );
         }
       } catch (e) {

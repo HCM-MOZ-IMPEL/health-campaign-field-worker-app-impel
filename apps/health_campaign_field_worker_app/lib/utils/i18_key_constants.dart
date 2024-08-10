@@ -1029,6 +1029,8 @@ class BeneficiaryDetails {
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+  String get typeOfInsecticideUsed =>
+      'DELIVER_INTERVENTION_TYPE_OF_INSECTICIDE_USED';
 
   String get pregnantWomenLabel => 'PREGNANT_WOMEN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';

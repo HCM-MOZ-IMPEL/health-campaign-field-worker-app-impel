@@ -359,7 +359,7 @@ class CustomDeliverySummaryPageState
                                                       .toValue()
                                           ? i18.deliverIntervention
                                               .reasonForRefusalLabel
-                                          : i18.deliverIntervention
+                                          : i18Local.beneficiaryDetails
                                               .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
                                               Status.administeredFailed

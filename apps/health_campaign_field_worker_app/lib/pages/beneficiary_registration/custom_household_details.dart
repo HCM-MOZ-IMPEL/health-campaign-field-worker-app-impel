@@ -231,6 +231,7 @@ class CustomHouseHoldDetailsPageState
                             registrationDate,
                             projectBeneficiaryModel,
                             loading,
+                            isHeadOfHousehold,
                           ) {
                             var household = householdModel.copyWith(
                                 memberCount: memberCount,
