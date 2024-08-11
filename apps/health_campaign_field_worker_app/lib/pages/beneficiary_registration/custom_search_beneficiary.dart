@@ -493,11 +493,12 @@ class _CustomSearchBeneficiaryPageState
         options: DigitDialogOptions(
           isCloseIcon: true,
           barrierDismissible: true,
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
-              color: const DigitColors().burningOrange),
-          titleText: getFilterIconNLabel()['label'],
           content: StatusFilter(
             selectedFilters: selectedFilters,
+            titleIcon: Icon(getFilterIconNLabel()['icon'],
+                color: const DigitColors().burningOrange),
+            titleText: getFilterIconNLabel()['label'],
+            isCloseIcon: true,
           ),
         ));
 

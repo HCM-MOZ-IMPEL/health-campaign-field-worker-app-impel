@@ -52,6 +52,8 @@ class CustomStockDetailsPageState
   List<InventoryTransportTypes> transportTypes = [];
 
   List<GS1Barcode> scannedResources = [];
+  List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+      driverNameValidations = [];
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -71,11 +73,7 @@ class CustomStockDetailsPageState
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(200),
-        ],
+        validators: driverNameValidations,
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
@@ -97,6 +95,15 @@ class CustomStockDetailsPageState
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    if (isWareHouseMgr) {
+      driverNameValidations = [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ];
+    } else {
+      driverNameValidations = [];
+    }
     final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
