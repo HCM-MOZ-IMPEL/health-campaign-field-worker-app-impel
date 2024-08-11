@@ -320,16 +320,15 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
-      // todo : enable once integrated completely
-      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.bar_chart_sharp,
-      //     label: i18.home.dashboard,
-      //     onPressed: () {
-      //       context.router.push(const UserDashboardRoute());
-      //     },
-      //   ),
-      // ),
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
       // INFO : Need to add home items of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
@@ -520,7 +519,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.db,
-      // i18.home.dashboard, TODO
+      i18.home.dashboard,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -635,14 +634,13 @@ void setPackagesSingleton(BuildContext context) {
         DashboardConfigSchema? dashboardConfigSchema,
       ) {
         loadLocalization(context, appConfiguration);
-        // INFO : Need to add singleton of package Here
-        // TODO: uncomment once package is implemented
 
-        // AttendanceSingleton().setInitialData(
-        //     projectId: context.projectId,
-        //     loggedInIndividualId: context.loggedInIndividualId!,
-        //     loggedInUserUuid: context.loggedInUserUuid,
-        //     appVersion: Constants().version);
+        // INFO : Need to add singleton of package Here
+        AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId ?? '',
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
@@ -678,6 +676,7 @@ void setPackagesSingleton(BuildContext context) {
             ));
 
         RegistrationDeliverySingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,

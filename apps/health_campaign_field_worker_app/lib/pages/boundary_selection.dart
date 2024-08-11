@@ -101,7 +101,6 @@ class _BoundarySelectionPageState
 
                   return initState.maybeWhen(
                     orElse: () => const Offstage(),
-                    // todo verify this addition of paramter
                     initialized: (appConfiguration, _, __) =>
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {

@@ -1,3 +1,4 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
@@ -342,12 +343,24 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
                             individualLocalRepository: ctx.read<
                                 LocalRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
                             stockLocalRepository: ctx.read<
                                 LocalRepository<StockModel,
                                     StockSearchModel>>(),
@@ -364,6 +377,11 @@ class MainApplicationState extends State<MainApplication>
                                   isar: widget.isar,
                                   dashboardRemoteRepo:
                                       DashboardRemoteRepository(widget.client),
+                                  attendanceDataRepository: context.repository<
+                                      AttendanceRegisterModel,
+                                      AttendanceRegisterSearchModel>(),
+                                  individualDataRepository: context.repository<
+                                      IndividualModel, IndividualSearchModel>(),
                                 )),
                         BlocProvider(
                           create: (context) => FacilityBloc(

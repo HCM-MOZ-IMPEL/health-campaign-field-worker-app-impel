@@ -170,6 +170,7 @@ class CustomHouseDetailsPageState
                               registrationDate,
                               projectBeneficiaryModel,
                               loading,
+                              headOfHousehold,
                             ) {
                               var houseModel = householdModel.copyWith(
                                   additionalFields: HouseholdAdditionalFields(

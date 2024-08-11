@@ -515,10 +515,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: "8ed54ec97185993912c8f94e9f045fb94eefd2847fc0e40cd712343848f4ca54"
+      sha256: "72365e1ce0d1358efc09ac29a78a9bf478cd5b5168d5a5fb38260af3ecc52e6f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1541,10 +1541,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: c4bc83d994d8006a3f1a3c5a90cd6d4f07873b01c14a16fdc06e83d99946face
+      sha256: "8bc6836d62038bf54f149579dad01e0481dbc5bb0740f56f14c7efa8a29fad28"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3-dev.5"
+    version: "1.0.3-dev.10"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:

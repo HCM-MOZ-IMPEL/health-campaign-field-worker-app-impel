@@ -441,11 +441,11 @@ class _CustomViewBeneficiaryCardState
 
     return object == null ? object : object.value;
   }
+  // todo verify this , not_delivered removed check from product
 
   Status getTaskStatus(Iterable<TaskModel> tasks) {
     final statusMap = {
       Status.delivered.toValue(): Status.delivered,
-      Status.notDelivered.toValue(): Status.notDelivered,
       Status.visited.toValue(): Status.visited,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
@@ -464,6 +464,6 @@ class _CustomViewBeneficiaryCardState
       }
     }
 
-    return Status.registered.toValue();
+    return Status.registered;
   }
 }
