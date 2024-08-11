@@ -88,51 +88,35 @@ class CustomRefusedDeliveryPageState
                             registrationState.householdMemberWrapper
                                 .projectBeneficiaries?.first
                           ];
+                          // Determine the status based on the reason of refusal
+
+                          String status;
+
+                          if (reasonOfRefusal ==
+                              Status.beneficiaryRefused.toValue()) {
+                            status = Status.beneficiaryRefused.toValue();
+                          } else {
+                            status = Status.administeredFailed.toValue();
+                          }
+
+                          final oldTask =
+                              RegistrationDeliverySingleton().beneficiaryType !=
+                                      BeneficiaryType.individual
+                                  ? registrationState
+                                      .householdMemberWrapper.tasks?.last
+                                  : null;
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
                                   navigateToSummary: true,
                                   householdMemberWrapper:
                                       registrationState.householdMemberWrapper,
-                                  task: TaskModel(
-                                    projectBeneficiaryClientReferenceId:
-                                        projectBeneficiary?.first
-                                            ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                    clientReferenceId: IdGen.i.identifier,
-                                    tenantId: RegistrationDeliverySingleton()
-                                        .tenantId,
-                                    rowVersion: 1,
-                                    auditDetails: AuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    projectId: RegistrationDeliverySingleton()
-                                        .projectId,
-                                    status: Status.administeredFailed.toValue(),
-                                    clientAuditDetails: ClientAuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                      lastModifiedBy:
-                                          RegistrationDeliverySingleton()
-                                              .loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    additionalFields: TaskAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                        AdditionalField(
-                                          AdditionalFieldsType.reasonOfRefusal
-                                              .toValue(),
-                                          reasonOfRefusal,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  task: _getTaskModel(
+                                      oldTask,
+                                      projectBeneficiary
+                                          ?.first?.clientReferenceId,
+                                      status,
+                                      reasonOfRefusal),
                                   isEditing: false,
                                   boundaryModel:
                                       RegistrationDeliverySingleton().boundary!,
@@ -201,7 +185,8 @@ class CustomRefusedDeliveryPageState
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(
-                                      width: 122,
+                                      width: MediaQuery.of(context).size.width *
+                                          .36,
                                       allowMultipleSelection: false,
                                       options: RegistrationDeliverySingleton()
                                               .refusalReasons ??
@@ -253,6 +238,46 @@ class CustomRefusedDeliveryPageState
                 },
               )),
     );
+  }
+
+  _getTaskModel(TaskModel? oldTask, String? projectBeneficiaryClientReferenceId,
+      String status, String? reasonOfRefusal) {
+    var task = oldTask;
+
+    var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
+
+    task ??= TaskModel(
+      projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
+      clientReferenceId: clientReferenceId,
+      tenantId: RegistrationDeliverySingleton().tenantId,
+      rowVersion: 1,
+      auditDetails: AuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      projectId: RegistrationDeliverySingleton().projectId,
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
+      ),
+    );
+
+    task = task.copyWith(
+      status: status,
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            AdditionalFieldsType.reasonOfRefusal.toValue(),
+            reasonOfRefusal,
+          ),
+        ],
+      ),
+    );
+
+    return task;
   }
 
   FormGroup buildForm() {

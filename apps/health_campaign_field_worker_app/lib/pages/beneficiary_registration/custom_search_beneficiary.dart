@@ -86,34 +86,7 @@ class _CustomSearchBeneficiaryPageState
             if (scrollNotification is ScrollUpdateNotification) {
               final metrics = scrollNotification.metrics;
               if (metrics.atEdge && metrics.pixels != 0) {
-                if (RegistrationDeliverySingleton().beneficiaryType ==
-                    BeneficiaryType.individual) {
-                  blocWrapper.individualGlobalSearchBloc
-                      .add(SearchHouseholdsEvent.individualGlobalSearch(
-                          globalSearchParams: GlobalSearchParameters(
-                    isProximityEnabled: isProximityEnabled,
-                    latitude: lat,
-                    longitude: long,
-                    maxRadius: RegistrationDeliverySingleton().maxRadius,
-                    nameSearch: searchController.text,
-                    filter: selectedFilters,
-                    offset: blocWrapper.individualGlobalSearchBloc.state.offset,
-                    limit: blocWrapper.individualGlobalSearchBloc.state.limit,
-                  )));
-                } else {
-                  blocWrapper.houseHoldGlobalSearchBloc
-                      .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-                          globalSearchParams: GlobalSearchParameters(
-                    isProximityEnabled: isProximityEnabled,
-                    latitude: lat,
-                    longitude: long,
-                    maxRadius: RegistrationDeliverySingleton().maxRadius,
-                    nameSearch: searchController.text,
-                    filter: selectedFilters,
-                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset,
-                    limit: blocWrapper.houseHoldGlobalSearchBloc.state.limit,
-                  )));
-                }
+                triggerGlobalSearchEvent(isPagination: true);
               }
             }
             return true;
@@ -263,7 +236,7 @@ class _CustomSearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            ' (${searchHouseholdsState.totalResults})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -377,10 +350,11 @@ class _CustomSearchBeneficiaryPageState
                                   const DigitScannerEvent.handleScanner(),
                                 );
 
-                                if (i.tasks != null &&
-                                    i.tasks!.last.status ==
-                                        Status.closeHousehold.name &&
-                                    i.tasks!.isNotEmpty) {
+                                if ((i.tasks != null &&
+                                        i.tasks?.last.status ==
+                                            Status.closeHousehold.toValue() &&
+                                        (i.tasks ?? []).isNotEmpty) ||
+                                    (i.projectBeneficiaries ?? []).isEmpty) {
                                   setState(() {
                                     selectedFilters = [];
                                   });
@@ -389,14 +363,19 @@ class _CustomSearchBeneficiaryPageState
                                     BeneficiaryRegistrationWrapperRoute(
                                       initialState: BeneficiaryRegistrationState
                                           .editHousehold(
-                                        householdModel: i.household!,
-                                        individualModel: i.members!,
-                                        registrationDate: DateTime.now(),
-                                        projectBeneficiaryModel:
-                                            i.projectBeneficiaries!.last,
-                                        addressModel:
-                                            i.headOfHousehold!.address!.last,
-                                      ),
+                                              householdModel: i.household!,
+                                              individualModel: i.members!,
+                                              registrationDate: DateTime.now(),
+                                              projectBeneficiaryModel:
+                                                  (i.projectBeneficiaries ?? [])
+                                                          .isNotEmpty
+                                                      ? i.projectBeneficiaries
+                                                          ?.last
+                                                      : null,
+                                              addressModel: i.headOfHousehold!
+                                                  .address!.last,
+                                              headOfHousehold:
+                                                  i.headOfHousehold),
                                     ),
                                   );
                                 } else {
@@ -491,13 +470,16 @@ class _CustomSearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
-          isCloseIcon: true,
+          titlePadding: EdgeInsets.zero,
+          dialogPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
-              color: const DigitColors().burningOrange),
-          titleText: getFilterIconNLabel()['label'],
           content: StatusFilter(
             selectedFilters: selectedFilters,
+            titleIcon: Icon(getFilterIconNLabel()['icon'],
+                color: const DigitColors().burningOrange),
+            titleText: getFilterIconNLabel()['label'],
+            isCloseIcon: true,
           ),
         ));
 
@@ -518,14 +500,15 @@ class _CustomSearchBeneficiaryPageState
     }
   }
 
-  void triggerGlobalSearchEvent() {
-    blocWrapper.clearEvent();
+  void triggerGlobalSearchEvent({bool isPagination = false}) {
+    if (!isPagination) {
+      blocWrapper.clearEvent();
+    }
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty ||
-          searchController.text.length > 2) {
+          searchController.text.isNotEmpty) {
         blocWrapper.individualGlobalSearchBloc
             .add(SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -533,10 +516,16 @@ class _CustomSearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-          offset: offset,
-          limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     } else {
@@ -550,10 +539,16 @@ class _CustomSearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim(),
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-          offset: offset,
-          limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     }

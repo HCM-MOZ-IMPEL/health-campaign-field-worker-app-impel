@@ -86,9 +86,12 @@ class _CustomHouseholdOverviewPageState
                                 ? const Offstage()
                                 : DigitElevatedButton(
                                     onPressed: (state.householdMemberWrapper
-                                                    .projectBeneficiaries ??
-                                                [])
-                                            .isEmpty
+                                                        .projectBeneficiaries ??
+                                                    [])
+                                                .isEmpty ||
+                                            state.householdMemberWrapper.tasks
+                                                    ?.last.status ==
+                                                Status.closeHousehold.toValue()
                                         ? null
                                         : () async {
                                             final bloc = ctx

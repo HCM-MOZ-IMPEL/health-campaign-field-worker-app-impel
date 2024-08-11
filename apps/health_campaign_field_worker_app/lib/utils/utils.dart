@@ -94,8 +94,7 @@ performBackgroundService({
   if (stopService) {
     if (isRunning) {
       if (!isBackground && context != null) {
-        if (context != null && context.mounted) {
-          requestDisableBatteryOptimization();
+        if (context.mounted) {
           DigitToast.show(
             context,
             options: DigitToastOptions(
@@ -110,7 +109,8 @@ performBackgroundService({
   } else {
     if (!isRunning && isOnline) {
       service.startService();
-      if (context != null) {
+      if (context != null && context.mounted) {
+        requestDisableBatteryOptimization();
         DigitToast.show(
           context,
           options: DigitToastOptions(
