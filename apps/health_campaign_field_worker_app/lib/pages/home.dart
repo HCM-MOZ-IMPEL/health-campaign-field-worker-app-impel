@@ -654,6 +654,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes

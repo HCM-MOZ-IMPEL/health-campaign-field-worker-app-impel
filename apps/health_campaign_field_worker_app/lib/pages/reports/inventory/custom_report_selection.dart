@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../router/app_router.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 
@@ -34,7 +34,9 @@ class _CustomInventoryReportSelectionPageState
     return Scaffold(
       body: ScrollableContent(
         header: const Column(children: [
-          BackNavigationHelpHeaderWidget(),
+          BackNavigationHelpHeaderWidget(
+            showHelp: false,
+          ),
         ]),
         children: [
           Column(
@@ -64,7 +66,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsRoute(
                       reportType: InventoryReportType.receipt,
                     ),
                   ),
@@ -79,7 +81,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsRoute(
                       reportType: InventoryReportType.dispatch,
                     ),
                   ),
@@ -94,7 +96,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsRoute(
                       reportType: InventoryReportType.returned,
                     ),
                   ),
@@ -111,7 +113,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsRoute(
                       reportType: InventoryReportType.reconciliation,
                     ),
                   ),

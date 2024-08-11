@@ -45,7 +45,9 @@ import '../pages/unauthenticated.dart';
 export 'package:auto_route/auto_route.dart';
 import '../pages/inventory/custom_manage_stocks.dart';
 import '../pages/inventory/custom_stock_reconciliation.dart';
+import '../pages/inventory/custom_warehouse_details.dart';
 import '../pages/reports/inventory/custom_report_selection.dart';
+import '../pages/reports/inventory/custom_report_details.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
@@ -71,6 +73,7 @@ import '../pages/ineligible_summary_page.dart';
 import '../pages/inventory/custom_stock_details.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
+import 'package:inventory_management/blocs/inventory_report.dart';
 
 part 'app_router.gr.dart';
 
@@ -152,6 +155,11 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: WarehouseDetailsRoute.page,
               path: 'warehouse-details',
+              // initial: true,
+            ),
+            AutoRoute(
+              page: CustomWarehouseDetailsRoute.page,
+              path: 'custom-warehouse-details',
               initial: true,
             ),
             AutoRoute(
@@ -199,6 +207,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: InventoryReportDetailsRoute.page,
           path: 'inventory-report-details',
+        ),
+        AutoRoute(
+          page: CustomInventoryReportDetailsRoute.page,
+          path: 'custom-inventory-report-details',
+        ),
+        RedirectRoute(
+          path: 'inventory-report-details',
+          redirectTo: 'custom-inventory-report-details',
         ),
         AutoRoute(
           page: InventoryAcknowledgementRoute.page,

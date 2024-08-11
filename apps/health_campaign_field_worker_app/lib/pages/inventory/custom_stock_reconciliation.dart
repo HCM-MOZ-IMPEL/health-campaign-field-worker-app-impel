@@ -387,7 +387,7 @@ class _CustomStockReconciliationPageState
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
-                                                    .productLabel,
+                                                    .insecticideLabel,
                                               ),
                                               form: form,
                                               menuItems: productVariants,

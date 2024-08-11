@@ -8,6 +8,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -20,10 +21,6 @@ import '../../widgets/localized.dart';
 import '../../router/app_router.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/models/entities/inventory_transport_type.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
 @RoutePage()
@@ -34,10 +31,10 @@ class CustomStockDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<CustomStockDetailsPage> createState() => _CustomStockDetailsPageState();
+  State<CustomStockDetailsPage> createState() => CustomStockDetailsPageState();
 }
 
-class _CustomStockDetailsPageState
+class CustomStockDetailsPageState
     extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
@@ -314,7 +311,7 @@ class _CustomStockDetailsPageState
                                         DigitComponentsUtils()
                                             .showLocationCapturingDialog(
                                                 context,
-                                                localizations.translate(i18Local
+                                                localizations.translate(i18
                                                     .common.locationCapturing),
                                                 DigitSyncDialogType.inProgress);
                                         Future.delayed(
@@ -468,12 +465,21 @@ class _CustomStockDetailsPageState
                                                       waybillQuantity,
                                                       vehicleNumber,
                                                       comments,
+                                                      driverName
                                                     ].any((element) =>
                                                         element != null) ||
                                                     hasLocationData
                                                 ? StockAdditionalFields(
                                                     version: 1,
                                                     fields: [
+                                                      AdditionalField(
+                                                        InventoryManagementEnums
+                                                            .name
+                                                            .toValue(),
+                                                        InventorySingleton()
+                                                            .loggedInUser
+                                                            ?.name,
+                                                      ),
                                                       if (waybillQuantity !=
                                                               null &&
                                                           waybillQuantity
@@ -1028,7 +1034,7 @@ class _CustomStockDetailsPageState
                                 //                   .elements.values.first.data
                                 //                   .toString()),
                                 //             ))
-                                //       ]),
+                                //       ])
                               ],
                             ),
                           ),
