@@ -297,7 +297,11 @@ class _ComplaintsInboxFilterPageState
                                   formControlName: _complaintType,
                                   valueMapper: (value) {
                                     return localizations.translate(
-                                      value.snakeCase.toUpperCase().trim(),
+                                      value
+                                          .toString()
+                                          .trim()
+                                          .snakeCase
+                                          .toUpperCase(),
                                     );
                                   },
                                   emptyText: localizations
