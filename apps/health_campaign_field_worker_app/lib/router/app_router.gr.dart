@@ -1985,7 +1985,7 @@ class CustomStockDetailsRoute
     extends PageRouteInfo<CustomStockDetailsRouteArgs> {
   CustomStockDetailsRoute({
     Key? key,
-    InventoryLocalization? appLocalizations,
+    AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomStockDetailsRoute.name,
@@ -2010,7 +2010,7 @@ class CustomStockDetailsRouteArgs {
 
   final Key? key;
 
-  final InventoryLocalization? appLocalizations;
+  final AppLocalizations? appLocalizations;
 
   @override
   String toString() {
