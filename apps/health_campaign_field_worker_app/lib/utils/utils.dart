@@ -439,6 +439,15 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
+bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
+  if (selectedHouseStructureTypes.contains("METAL") ||
+      selectedHouseStructureTypes.contains("GLASS") ||
+      selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
+    return false;
+  }
+  return true;
+}
+
 Future<void> requestDisableBatteryOptimization() async {
   bool isIgnoringBatteryOptimizations =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;

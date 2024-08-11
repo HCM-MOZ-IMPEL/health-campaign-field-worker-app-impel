@@ -8,13 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
+// import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import '../../router/app_router.dart';
+import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -318,15 +319,6 @@ class CustomHouseDetailsPageState
                 },
               )),
     );
-  }
-
-  bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
-    if (selectedHouseStructureTypes.contains("METAL") ||
-        selectedHouseStructureTypes.contains("GLASS") ||
-        selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
-      return false;
-    }
-    return true;
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
