@@ -307,14 +307,14 @@ class _CustomViewBeneficiaryCardState
                       '${pregnantWomenCount != null ? ' | $pregnantWomenCount ${localizations.translate(i18Local.beneficiaryDetails.pregnantWomenLabel)}' : ''}'
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
-                  status: localizations.translate(getStatus(
+                  status: getStatus(
                       tasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
                       RegistrationDeliverySingleton().beneficiaryType ==
                               BeneficiaryType.individual
                           ? isNotEligible
                           : false,
-                      isBeneficiaryRefused)),
+                      isBeneficiaryRefused),
                   title: [
                     householdMember.headOfHousehold?.name?.givenName ??
                         localizations.translate(i18.common.coreCommonNA),
