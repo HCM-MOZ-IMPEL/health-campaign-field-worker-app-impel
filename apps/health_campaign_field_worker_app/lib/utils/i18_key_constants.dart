@@ -18,6 +18,7 @@ const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
+const stockReconciliationDetails = StockReconciliationDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -1064,6 +1065,11 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+}
+
+class StockReconciliationDetails {
+  const StockReconciliationDetails();
+  String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
 }
 
 class Dashboard {

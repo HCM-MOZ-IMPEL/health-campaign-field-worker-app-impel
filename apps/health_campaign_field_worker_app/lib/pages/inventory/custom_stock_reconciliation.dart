@@ -18,6 +18,8 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
+
 import '../../../widgets/localized.dart';
 
 @RoutePage()
@@ -386,7 +388,8 @@ class _CustomStockReconciliationPageState
                                               key:
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
-                                                i18.stockReconciliationDetails
+                                                i18Local
+                                                    .stockReconciliationDetails
                                                     .insecticideLabel,
                                               ),
                                               form: form,
