@@ -336,7 +336,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(const ManageAttendanceRoute());
+            context.router.push(const CustomManageAttendanceRoute());
           },
         ),
       ),

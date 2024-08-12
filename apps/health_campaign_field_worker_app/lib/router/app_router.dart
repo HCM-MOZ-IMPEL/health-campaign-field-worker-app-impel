@@ -74,6 +74,10 @@ import '../pages/inventory/custom_stock_details.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
+import '../pages/attendance/custom_manage_attendance.dart';
+import '../pages/attendance/custom_mark_attendance.dart';
+import '../pages/attendance/custom_session_select.dart';
+import 'package:attendance_management/attendance_management.dart';
 
 part 'app_router.gr.dart';
 
@@ -123,12 +127,24 @@ class AppRouter extends _$AppRouter {
           path: 'manage-attendance',
         ),
         AutoRoute(
+          page: CustomManageAttendanceRoute.page,
+          path: 'custom-manage-attendance',
+        ),
+        AutoRoute(
           page: AttendanceDateSessionSelectionRoute.page,
           path: 'attendance-date-session-selection',
         ),
         AutoRoute(
+          page: CustomAttendanceDateSessionSelectionRoute.page,
+          path: 'custom-attendance-date-session-selection',
+        ),
+        AutoRoute(
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: CustomMarkAttendanceRoute.page,
+          path: 'custom-mark-attendance',
         ),
         AutoRoute(
           page: AttendanceAcknowledgementRoute.page,
