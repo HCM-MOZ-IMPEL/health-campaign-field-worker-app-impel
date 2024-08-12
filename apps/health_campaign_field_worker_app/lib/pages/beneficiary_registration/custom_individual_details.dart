@@ -660,6 +660,10 @@ class CustomIndividualDetailsPageState
                                 i18.individualDetails.mobileNumberLabelText,
                               ),
                               validationMessages: {
+                                'mobileNumber': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberInvalidFormatValidationMessage),
                                 'maxLength': (object) =>
                                     localizations.translate(i18
                                         .individualDetails
