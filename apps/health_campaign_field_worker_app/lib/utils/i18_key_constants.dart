@@ -40,6 +40,9 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
 
+  String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+  String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';

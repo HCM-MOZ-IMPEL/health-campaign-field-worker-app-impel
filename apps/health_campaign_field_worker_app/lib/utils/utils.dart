@@ -467,7 +467,7 @@ class LocalizationParams {
   LocalizationParams._internal();
 
   List<String>? _code;
-  String? _module;
+  List<String>? _module;
   Locale? _locale;
   bool? _exclude = true;
 
@@ -475,7 +475,7 @@ class LocalizationParams {
     _code = code;
   }
 
-  void setModule(String? module, bool? exclude) {
+  void setModule(List<String>? module, bool? exclude) {
     _module = module;
     _exclude = exclude;
   }
@@ -491,7 +491,7 @@ class LocalizationParams {
 
   List<String>? get code => _code;
 
-  String? get module => _module;
+  List<String>? get module => _module;
 
   Locale? get locale => _locale;
 

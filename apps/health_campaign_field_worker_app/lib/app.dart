@@ -66,7 +66,7 @@ class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    LocalizationParams().setModule('boundary', true);
+    LocalizationParams().setModule(['boundary'], true);
     super.initState();
     requestDisableBatteryOptimization();
   }
