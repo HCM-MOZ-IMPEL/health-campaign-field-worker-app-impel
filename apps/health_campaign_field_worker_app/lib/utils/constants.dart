@@ -1,5 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
+import 'package:digit_components/utils/app_logger.dart';
+import 'package:health_campaign_field_worker_app/firebase_options.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -148,6 +150,15 @@ class Constants {
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
+
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
