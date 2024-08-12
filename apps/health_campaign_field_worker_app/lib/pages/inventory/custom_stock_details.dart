@@ -8,6 +8,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -16,13 +17,10 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18Local;
 
 import 'package:inventory_management/utils/utils.dart';
-import 'package:inventory_management/widgets/localized.dart';
+import '../../widgets/localized.dart';
+import '../../router/app_router.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/models/entities/inventory_transport_type.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
 @RoutePage()
@@ -54,6 +52,8 @@ class CustomStockDetailsPageState
   List<InventoryTransportTypes> transportTypes = [];
 
   List<GS1Barcode> scannedResources = [];
+  List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+      driverNameValidations = [];
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -73,11 +73,7 @@ class CustomStockDetailsPageState
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(200),
-        ],
+        validators: driverNameValidations,
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
@@ -99,6 +95,15 @@ class CustomStockDetailsPageState
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    if (isWareHouseMgr) {
+      driverNameValidations = [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ];
+    } else {
+      driverNameValidations = [];
+    }
     final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
@@ -313,7 +318,7 @@ class CustomStockDetailsPageState
                                         DigitComponentsUtils()
                                             .showLocationCapturingDialog(
                                                 context,
-                                                localizations.translate(i18Local
+                                                localizations.translate(i18
                                                     .common.locationCapturing),
                                                 DigitSyncDialogType.inProgress);
                                         Future.delayed(
@@ -467,12 +472,21 @@ class CustomStockDetailsPageState
                                                       waybillQuantity,
                                                       vehicleNumber,
                                                       comments,
+                                                      driverName
                                                     ].any((element) =>
                                                         element != null) ||
                                                     hasLocationData
                                                 ? StockAdditionalFields(
                                                     version: 1,
                                                     fields: [
+                                                      AdditionalField(
+                                                        InventoryManagementEnums
+                                                            .name
+                                                            .toValue(),
+                                                        InventorySingleton()
+                                                            .loggedInUser
+                                                            ?.name,
+                                                      ),
                                                       if (waybillQuantity !=
                                                               null &&
                                                           waybillQuantity
@@ -945,89 +959,89 @@ class CustomStockDetailsPageState
                                   maxLines: 3,
                                   formControlName: _commentsKey,
                                 ),
-                                scannerState.barCodes.isEmpty
-                                    ? DigitOutlineIconButton(
-                                        buttonStyle: OutlinedButton.styleFrom(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.zero,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          //[TODO: Add route to auto_route]
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DigitScannerPage(
-                                                quantity: 5,
-                                                isGS1code: true,
-                                                singleValue: false,
-                                              ),
-                                              settings: const RouteSettings(
-                                                  name: '/qr-scanner'),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icons.qr_code,
-                                        label: localizations.translate(
-                                          i18.common.scanBales,
-                                        ),
-                                      )
-                                    : Column(children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                localizations.translate(i18
-                                                    .stockDetails
-                                                    .scannedResources),
-                                                style: DigitTheme
-                                                    .instance
-                                                    .mobileTheme
-                                                    .textTheme
-                                                    .labelSmall,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: kPadding * 2,
-                                              ),
-                                              child: IconButton(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                color:
-                                                    theme.colorScheme.secondary,
-                                                icon: const Icon(Icons.edit),
-                                                onPressed: () {
-                                                  //[TODO: Add route to auto_route]
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const DigitScannerPage(
-                                                        quantity: 5,
-                                                        isGS1code: true,
-                                                        singleValue: false,
-                                                      ),
-                                                      settings:
-                                                          const RouteSettings(
-                                                              name:
-                                                                  '/qr-scanner'),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        ...scannedResources.map((e) => Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(e
-                                                  .elements.values.first.data
-                                                  .toString()),
-                                            ))
-                                      ])
+                                // scannerState.barCodes.isEmpty
+                                //     ? DigitOutlineIconButton(
+                                //         buttonStyle: OutlinedButton.styleFrom(
+                                //           shape: const RoundedRectangleBorder(
+                                //             borderRadius: BorderRadius.zero,
+                                //           ),
+                                //         ),
+                                //         onPressed: () {
+                                //           //[TODO: Add route to auto_route]
+                                //           Navigator.of(context).push(
+                                //             MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   const DigitScannerPage(
+                                //                 quantity: 5,
+                                //                 isGS1code: true,
+                                //                 singleValue: false,
+                                //               ),
+                                //               settings: const RouteSettings(
+                                //                   name: '/qr-scanner'),
+                                //             ),
+                                //           );
+                                //         },
+                                //         icon: Icons.qr_code,
+                                //         label: localizations.translate(
+                                //           i18.common.scanBales,
+                                //         ),
+                                //       )
+                                //     : Column(children: [
+                                //         Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.spaceBetween,
+                                //           children: [
+                                //             Align(
+                                //               alignment: Alignment.centerLeft,
+                                //               child: Text(
+                                //                 localizations.translate(i18
+                                //                     .stockDetails
+                                //                     .scannedResources),
+                                //                 style: DigitTheme
+                                //                     .instance
+                                //                     .mobileTheme
+                                //                     .textTheme
+                                //                     .labelSmall,
+                                //               ),
+                                //             ),
+                                //             Padding(
+                                //               padding: const EdgeInsets.only(
+                                //                 bottom: kPadding * 2,
+                                //               ),
+                                //               child: IconButton(
+                                //                 alignment:
+                                //                     Alignment.centerRight,
+                                //                 color:
+                                //                     theme.colorScheme.secondary,
+                                //                 icon: const Icon(Icons.edit),
+                                //                 onPressed: () {
+                                //                   //[TODO: Add route to auto_route]
+                                //                   Navigator.of(context).push(
+                                //                     MaterialPageRoute(
+                                //                       builder: (context) =>
+                                //                           const DigitScannerPage(
+                                //                         quantity: 5,
+                                //                         isGS1code: true,
+                                //                         singleValue: false,
+                                //                       ),
+                                //                       settings:
+                                //                           const RouteSettings(
+                                //                               name:
+                                //                                   '/qr-scanner'),
+                                //                     ),
+                                //                   );
+                                //                 },
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //         ...scannedResources.map((e) => Align(
+                                //               alignment: Alignment.centerLeft,
+                                //               child: Text(e
+                                //                   .elements.values.first.data
+                                //                   .toString()),
+                                //             ))
+                                //       ])
                               ],
                             ),
                           ),

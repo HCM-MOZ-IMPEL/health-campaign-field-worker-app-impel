@@ -169,19 +169,11 @@ class _CustomSearchBeneficiaryPageState
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
-                                  if (value.isEmpty) {
-                                    blocWrapper.clearEvent();
+                                  blocWrapper.clearEvent();
+                                  if (value.isEmpty ||
+                                      value.trim().length > 2) {
                                     triggerGlobalSearchEvent();
                                   }
-                                  if (value.trim().length < 2 &&
-                                      !isProximityEnabled) {
-                                    blocWrapper.clearEvent();
-                                  } else {
-                                    blocWrapper.searchHouseholdsBloc.add(
-                                      const SearchHouseholdsClearEvent(),
-                                    );
-                                  }
-                                  triggerGlobalSearchEvent();
                                 },
                               ),
                               Align(
@@ -203,7 +195,7 @@ class _CustomSearchBeneficiaryPageState
                                       child: SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.05,
+                                                0.06,
                                         child: ListView.builder(
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
@@ -427,17 +419,6 @@ class _CustomSearchBeneficiaryPageState
                                 searchQuery: searchHouseholdsState.searchQuery,
                               ),
                             ));
-
-                            // final householdMemberWrapper =
-                            //     searchHouseholdsState.householdMembers.first;
-                            // final searchBlocState =
-                            //     context.read<SearchHouseholdsBloc>().state;
-                            // if (searchBlocState.householdMembers.isNotEmpty) {
-                            //   await context.router.push(BeneficiaryWrapperRoute(
-                            //     wrapper: searchBlocState.householdMembers.first,
-                            //   ));
-                            // }
-
                             searchController.clear();
                             selectedFilters = [];
                             blocWrapper.clearEvent();
@@ -535,6 +516,7 @@ class _CustomSearchBeneficiaryPageState
         blocWrapper.houseHoldGlobalSearchBloc
             .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
+          projectId: RegistrationDeliverySingleton().projectId,
           isProximityEnabled: isProximityEnabled,
           latitude: lat,
           longitude: long,
@@ -557,6 +539,7 @@ class _CustomSearchBeneficiaryPageState
   String getStatus(String selectedFilter) {
     final statusMap = {
       Status.delivered.toValue(): Status.delivered,
+      // Status.notDelivered.toValue(): Status.notDelivered,
       Status.visited.toValue(): Status.visited,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,

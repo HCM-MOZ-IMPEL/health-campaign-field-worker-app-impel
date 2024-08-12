@@ -18,11 +18,11 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
+// import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import 'package:registration_delivery/utils/utils.dart';
+import '../../utils/utils.dart' hide Constants;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 // import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
@@ -69,6 +69,7 @@ class CustomIndividualDetailsPageState
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
+    bool isEligible = widget.isEligible;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -119,70 +120,81 @@ class CustomIndividualDetailsPageState
                         final searchBlocState =
                             context.read<SearchHouseholdsBloc>().state;
                         if (searchBlocState.householdMembers.isNotEmpty) {
-                          if (!widget.isEligible) {
-                            final householdMemberWrapperList =
-                                searchBlocState.householdMembers;
+                          if (!isEligible) {
+                            if (isEditIndividual) {
+                              parent.popUntilRouteWithName(
+                                  CustomSearchBeneficiaryRoute.name);
+                              parent.push(CustomHouseholdWrapperRoute(
+                                  wrapper:
+                                      searchBlocState.householdMembers.first));
+                            } else {
+                              final householdMemberWrapperList =
+                                  searchBlocState.householdMembers;
 
-                            final projectBeneficiary = [
-                              householdMemberWrapperList
-                                  .first.projectBeneficiaries?.first
-                            ];
+                              final projectBeneficiary = [
+                                householdMemberWrapperList
+                                    .first.projectBeneficiaries?.first
+                              ];
 
-                            context.read<DeliverInterventionBloc>().add(
-                                  DeliverInterventionSubmitEvent(
-                                    navigateToSummary: true,
-                                    householdMemberWrapper:
-                                        householdMemberWrapperList.first,
-                                    task: TaskModel(
-                                      projectBeneficiaryClientReferenceId:
-                                          projectBeneficiary?.first
-                                              ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                      clientReferenceId: IdGen.i.identifier,
-                                      tenantId: RegistrationDeliverySingleton()
-                                          .tenantId,
-                                      rowVersion: 1,
-                                      auditDetails: AuditDetails(
-                                        createdBy:
+                              context.read<DeliverInterventionBloc>().add(
+                                    DeliverInterventionSubmitEvent(
+                                      navigateToSummary: true,
+                                      householdMemberWrapper:
+                                          householdMemberWrapperList.first,
+                                      task: TaskModel(
+                                        projectBeneficiaryClientReferenceId:
+                                            projectBeneficiary?.first
+                                                ?.clientReferenceId, //TODO: need to check for individual based campaign
+                                        clientReferenceId: IdGen.i.identifier,
+                                        tenantId:
                                             RegistrationDeliverySingleton()
-                                                .loggedInUserUuid!,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                      ),
-                                      projectId: RegistrationDeliverySingleton()
-                                          .projectId,
-                                      status:
-                                          Status.administeredFailed.toValue(),
-                                      clientAuditDetails: ClientAuditDetails(
-                                        createdBy:
+                                                .tenantId,
+                                        rowVersion: 1,
+                                        auditDetails: AuditDetails(
+                                          createdBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid!,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        projectId:
                                             RegistrationDeliverySingleton()
-                                                .loggedInUserUuid!,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                        lastModifiedBy:
-                                            RegistrationDeliverySingleton()
-                                                .loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
+                                                .projectId,
+                                        status:
+                                            Status.administeredFailed.toValue(),
+                                        clientAuditDetails: ClientAuditDetails(
+                                          createdBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid!,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        additionalFields: TaskAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            AdditionalField(
+                                              AdditionalFieldsType
+                                                  .reasonOfRefusal
+                                                  .toValue(),
+                                              "INCOMPATIBLE",
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      additionalFields: TaskAdditionalFields(
-                                        version: 1,
-                                        fields: [
-                                          AdditionalField(
-                                            AdditionalFieldsType.reasonOfRefusal
-                                                .toValue(),
-                                            "INCOMPATIBLE",
-                                          ),
-                                        ],
-                                      ),
+                                      isEditing: false,
+                                      boundaryModel:
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
                                     ),
-                                    isEditing: false,
-                                    boundaryModel:
-                                        RegistrationDeliverySingleton()
-                                            .boundary!,
-                                  ),
-                                );
-                            parent.push(IneligibleSummaryRoute(
-                                isEligible: widget.isEligible));
+                                  );
+                              parent.push(IneligibleSummaryRoute(
+                                  isEligible: isEligible));
+                            }
                           } else {
                             if (isEditIndividual) {
                               parent.popUntilRouteWithName(
@@ -206,11 +218,30 @@ class CustomIndividualDetailsPageState
             );
           },
           builder: (context, state) {
+            final selectedHouseStructureTypes = state
+                    .householdModel?.additionalFields?.fields
+                    .firstWhereOrNull((element) =>
+                        element.key ==
+                        AdditionalFieldsType.houseStructureTypes.toValue())
+                    ?.value
+                    ?.toString() ??
+                '';
+            isEligible = widget.isEligible &&
+                checkEligibilityForHouseType([selectedHouseStructureTypes]);
+
             return ScrollableContent(
               enableFixedButton: true,
-              header: const Column(children: [
+              header: Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
+                  handleBack: () {
+                    if (isEditIndividual) {
+                      final parent = context.router.parent() as StackRouter;
+                      parent.maybePop();
+                    } else {
+                      context.router.maybePop();
+                    }
+                  },
                 ),
               ]),
               footer: DigitCard(
@@ -224,13 +255,12 @@ class CustomIndividualDetailsPageState
                         final age = DigitDateUtils.calculateAge(
                           form.control(_dobKey).value as DateTime?,
                         );
-                        if (widget.isEligible &&
-                                (age.years == 0 && age.months == 0) ||
+                        if (isEligible && (age.years == 0 && age.months == 0) ||
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
                         }
 
-                        if (widget.isEligible &&
+                        if (isEligible &&
                             form.control(_genderKey).value == null) {
                           setState(() {
                             form.control(_genderKey).setErrors({'': true});
@@ -533,7 +563,7 @@ class CustomIndividualDetailsPageState
                             height: 10,
                           ),
                           CustomDigitDobPicker(
-                            isEligible: widget.isEligible,
+                            isEligible: isEligible,
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
@@ -554,9 +584,9 @@ class CustomIndividualDetailsPageState
                             onChangeOfFormControl: (formControl) {
                               // Handle changes to the control's value here
                               final value = formControl.value;
-                              if (widget.isEligible && value == null) {
+                              if (isEligible && value == null) {
                                 formControl.setErrors({'': true});
-                              } else if (widget.isEligible) {
+                              } else if (isEligible) {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
                                 if ((age.years == 0 && age.months == 0) ||
@@ -577,7 +607,7 @@ class CustomIndividualDetailsPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: SelectionBox<String>(
-                              isRequired: widget.isEligible,
+                              isRequired: isEligible,
                               title: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
@@ -598,7 +628,7 @@ class CustomIndividualDetailsPageState
                                   if (value.isNotEmpty) {
                                     form.control(_genderKey).value =
                                         value.first;
-                                  } else if (widget.isEligible) {
+                                  } else if (isEligible) {
                                     form.control(_genderKey).value = null;
                                     setState(() {
                                       form
@@ -755,6 +785,7 @@ class CustomIndividualDetailsPageState
   FormGroup buildForm(BeneficiaryRegistrationState state) {
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
+        isEditIndividual = true;
         if (value.projectBeneficiaryModel?.tag != null) {
           context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
               barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));

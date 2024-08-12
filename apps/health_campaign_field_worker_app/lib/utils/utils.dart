@@ -64,11 +64,13 @@ class CustomValidator {
       return null;
     }
 
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+    const pattern = r'[0-9]';
+
+    if (control.value.toString().length != 9) {
+      return {'mobileNumber': true};
+    }
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 9) return {'mobileNumber': true};
 
     return {'mobileNumber': true};
   }
@@ -435,6 +437,15 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
+  if (selectedHouseStructureTypes.contains("METAL") ||
+      selectedHouseStructureTypes.contains("GLASS") ||
+      selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
+    return false;
+  }
+  return true;
 }
 
 Future<void> requestDisableBatteryOptimization() async {
