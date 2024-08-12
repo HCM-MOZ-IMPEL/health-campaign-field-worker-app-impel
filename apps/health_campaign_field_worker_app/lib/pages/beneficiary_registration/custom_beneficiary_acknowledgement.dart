@@ -34,12 +34,14 @@ class CustomBeneficiaryAcknowledgementPageState
       body: DigitAcknowledgement.success(
         action: () {
           final parent = context.router.parent() as StackRouter;
-          // Pop twice to navigate back to the previous screen
           parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
         },
         secondaryAction: () {
+          final parent = context.router.parent() as StackRouter;
           final searchBlocState = context.read<SearchHouseholdsBloc>().state;
-          context.router.popAndPush(
+
+          parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+          parent.push(
             CustomHouseholdWrapperRoute(
               wrapper: searchBlocState.householdMembers.first,
             ),

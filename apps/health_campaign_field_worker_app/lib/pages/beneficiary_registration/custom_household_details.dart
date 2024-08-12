@@ -334,6 +334,18 @@ class CustomHouseHoldDetailsPageState
                             );
                             final overviewBloc =
                                 context.read<HouseholdOverviewBloc>();
+                            overviewBloc.add(
+                              HouseholdOverviewReloadEvent(
+                                projectId: RegistrationDeliverySingleton()
+                                    .projectId
+                                    .toString(),
+                                projectBeneficiaryType:
+                                    RegistrationDeliverySingleton()
+                                            .beneficiaryType ??
+                                        BeneficiaryType.household,
+                              ),
+                            );
+
                             HouseholdMemberWrapper memberWrapper =
                                 overviewBloc.state.householdMemberWrapper;
 
@@ -402,18 +414,6 @@ class CustomHouseHoldDetailsPageState
                               parent.push(IneligibleSummaryRoute(
                                   isEligible: widget.isEligible));
                             } else {
-                              overviewBloc.add(
-                                HouseholdOverviewReloadEvent(
-                                  projectId: RegistrationDeliverySingleton()
-                                      .projectId
-                                      .toString(),
-                                  projectBeneficiaryType:
-                                      RegistrationDeliverySingleton()
-                                              .beneficiaryType ??
-                                          BeneficiaryType.household,
-                                ),
-                              );
-
                               final route = router.parent() as StackRouter;
                               route.popUntilRouteWithName(
                                   CustomSearchBeneficiaryRoute.name);
@@ -596,42 +596,42 @@ class CustomHouseHoldDetailsPageState
         value: household?.memberCount ?? 1,
         validators: [Validators.max<int>(20)],
       ),
-      if (widget.isEligible)
-        _pregnantWomenCountKey: FormControl<int>(
-          value: household?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
-                      .firstOrNull
-                      ?.value !=
-                  null
-              ? int.tryParse(household?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
-                      .firstOrNull
-                      ?.value
-                      .toString() ??
-                  '0')
-              : 0,
-          validators: [Validators.max<int>(20)],
-        ),
-      if (widget.isEligible)
-        _childrenCountKey: FormControl<int>(
-          value: household?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.children.toValue())
-                      .firstOrNull
-                      ?.value !=
-                  null
-              ? int.tryParse(household?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.children.toValue())
-                      .firstOrNull
-                      ?.value
-                      .toString() ??
-                  '0')
-              : 0,
-          validators: [Validators.max<int>(20)],
-        )
+      // if (widget.isEligible)
+      _pregnantWomenCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
+        validators: [Validators.max<int>(20)],
+      ),
+      // if (widget.isEligible)
+      _childrenCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where(
+                        (h) => h.key == AdditionalFieldsType.children.toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where(
+                        (h) => h.key == AdditionalFieldsType.children.toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
+        validators: [Validators.max<int>(20)],
+      )
     });
   }
 }
