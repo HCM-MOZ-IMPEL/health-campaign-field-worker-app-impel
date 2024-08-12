@@ -80,209 +80,217 @@ class _CustomHouseholdLocationPageState
     final router = context.router;
 
     return Scaffold(
-      body: BlocBuilder<BeneficiaryRegistrationBloc,
-          BeneficiaryRegistrationState>(builder: (context, registrationState) {
-        return ReactiveFormBuilder(
-          form: () => buildForm(bloc.state),
-          builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
-            listener: (context, locationState) {
-              registrationState.maybeMap(
-                  orElse: () => false,
-                  create: (value) {
-                    if (locationState.accuracy != null) {
-                      //Hide the dialog after 1 seconds
-                      Future.delayed(const Duration(seconds: 1), () {
-                        DigitComponentsUtils().hideLocationDialog(context);
-                      });
-                    }
-                  });
-              if (locationState.accuracy != null) {
-                final lat = locationState.latitude;
-                final lng = locationState.longitude;
-                final accuracy = locationState.accuracy;
+      body: bloc.state.maybeWhen(
+        orElse: () => BlocBuilder<BeneficiaryRegistrationBloc,
+                BeneficiaryRegistrationState>(
+            builder: (context, registrationState) {
+          return ReactiveFormBuilder(
+            form: () => buildForm(bloc.state),
+            builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
+              listener: (context, locationState) {
+                registrationState.maybeMap(
+                    orElse: () => false,
+                    create: (value) {
+                      if (locationState.accuracy != null) {
+                        //Hide the dialog after 1 seconds
+                        Future.delayed(const Duration(seconds: 1), () {
+                          DigitComponentsUtils().hideLocationDialog(context);
+                        });
+                      }
+                    });
+                if (locationState.accuracy != null) {
+                  final lat = locationState.latitude;
+                  final lng = locationState.longitude;
+                  final accuracy = locationState.accuracy;
 
-                form.control(_latKey).value ??= lat;
-                form.control(_lngKey).value ??= lng;
-                form.control(_accuracyKey).value ??= accuracy;
-              }
-            },
-            listenWhen: (previous, current) {
-              final lat = form.control(_latKey).value;
-              final lng = form.control(_lngKey).value;
-              final accuracy = form.control(_accuracyKey).value;
+                  form.control(_latKey).value ??= lat;
+                  form.control(_lngKey).value ??= lng;
+                  form.control(_accuracyKey).value ??= accuracy;
+                }
+              },
+              listenWhen: (previous, current) {
+                final lat = form.control(_latKey).value;
+                final lng = form.control(_lngKey).value;
+                final accuracy = form.control(_accuracyKey).value;
 
-              return lat != null || lng != null || accuracy != null
-                  ? false
-                  : true;
-            },
-            child: ScrollableContent(
-              enableFixedButton: true,
-              header: const Column(
-                children: [
-                  BackNavigationHelpHeaderWidget(
-                    showHelp: false,
+                return lat != null || lng != null || accuracy != null
+                    ? false
+                    : true;
+              },
+              child: ScrollableContent(
+                enableFixedButton: true,
+                header: const Column(
+                  children: [
+                    BackNavigationHelpHeaderWidget(
+                      showHelp: false,
+                    ),
+                  ],
+                ),
+                footer: DigitCard(
+                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                  child: BlocBuilder<LocationBloc, LocationState>(
+                    builder: (context, locationState) {
+                      return DigitElevatedButton(
+                        onPressed: () {
+                          form.markAllAsTouched();
+                          if (!form.valid) return;
+
+                          registrationState.maybeWhen(orElse: () {
+                            return;
+                          }, create: (
+                            addressModel,
+                            householdModel,
+                            individualModel,
+                            projectBeneficiaryModel,
+                            registrationDate,
+                            searchQuery,
+                            loading,
+                            isHeadOfHousehold,
+                          ) {
+                            var addressModel = AddressModel(
+                              type: AddressType.correspondence,
+                              latitude: form.control(_latKey).value ??
+                                  locationState.latitude,
+                              longitude: form.control(_lngKey).value ??
+                                  locationState.longitude,
+                              locationAccuracy:
+                                  form.control(_accuracyKey).value ??
+                                      locationState.accuracy,
+                              locality: LocalityModel(
+                                code: RegistrationDeliverySingleton()
+                                    .boundary!
+                                    .code!,
+                                name: RegistrationDeliverySingleton()
+                                    .boundary!
+                                    .name,
+                              ),
+                              tenantId:
+                                  RegistrationDeliverySingleton().tenantId,
+                              rowVersion: 1,
+                              auditDetails: AuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                createdTime: context.millisecondsSinceEpoch(),
+                              ),
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid,
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
+                              ),
+                            );
+
+                            bloc.add(
+                              BeneficiaryRegistrationSaveAddressEvent(
+                                addressModel,
+                              ),
+                            );
+                            router.push(HouseDetailsRoute());
+                          }, editHousehold: (
+                            address,
+                            householdModel,
+                            individuals,
+                            registrationDate,
+                            projectBeneficiaryModel,
+                            loading,
+                            headOfHousehold,
+                          ) {
+                            var addressModel = address.copyWith(
+                              type: AddressType.correspondence,
+                              latitude: form.control(_latKey).value,
+                              longitude: form.control(_lngKey).value,
+                              locationAccuracy:
+                                  form.control(_accuracyKey).value,
+                            );
+                            // TODO [Linking of Voucher for Household based project  need to be handled]
+
+                            bloc.add(
+                              BeneficiaryRegistrationSaveAddressEvent(
+                                addressModel,
+                              ),
+                            );
+                            router.push(HouseDetailsRoute());
+                          });
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18Local.householdLocation.actionLabel,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: DigitCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextBlock(
+                              padding: const EdgeInsets.only(top: kPadding),
+                              heading: localizations.translate(
+                                i18Local.householdLocation
+                                    .householdLocationLabelText,
+                              ),
+                              headingStyle: theme.textTheme.displayMedium,
+                              body: localizations.translate(
+                                i18Local.householdLocation
+                                    .householdLocationDescriptionText,
+                              )),
+                          Column(children: [
+                            householdLocationShowcaseData.administrativeArea
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _administrationAreaKey,
+                                label: localizations.translate(
+                                  i18Local.householdLocation
+                                      .administrationAreaFormLabel,
+                                ),
+                                readOnly: true,
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18Local.householdLocation
+                                            .administrationAreaRequiredValidation,
+                                      ),
+                                },
+                              ),
+                            ),
+                            householdLocationShowcaseData.gpsAccuracy.buildWith(
+                              child: CustomDigitTextFormField(
+                                suffixString: localizations.translate(
+                                  i18Local.common.metersLabel,
+                                ),
+                                readOnly: true,
+                                formControlName: _accuracyKey,
+                                label: localizations.translate(
+                                    i18.householdLocation.gpsAccuracyLabel),
+                                colorCondition: (value) =>
+                                    value != null && value > 5,
+                              ),
+                            ),
+                          ]),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
-              footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, locationState) {
-                    return DigitElevatedButton(
-                      onPressed: () {
-                        form.markAllAsTouched();
-                        if (!form.valid) return;
-
-                        registrationState.maybeWhen(orElse: () {
-                          return;
-                        }, create: (
-                          addressModel,
-                          householdModel,
-                          individualModel,
-                          projectBeneficiaryModel,
-                          registrationDate,
-                          searchQuery,
-                          loading,
-                          isHeadOfHousehold,
-                        ) {
-                          var addressModel = AddressModel(
-                            type: AddressType.correspondence,
-                            latitude: form.control(_latKey).value ??
-                                locationState.latitude,
-                            longitude: form.control(_lngKey).value ??
-                                locationState.longitude,
-                            locationAccuracy:
-                                form.control(_accuracyKey).value ??
-                                    locationState.accuracy,
-                            locality: LocalityModel(
-                              code: RegistrationDeliverySingleton()
-                                  .boundary!
-                                  .code!,
-                              name: RegistrationDeliverySingleton()
-                                  .boundary!
-                                  .name,
-                            ),
-                            tenantId: RegistrationDeliverySingleton().tenantId,
-                            rowVersion: 1,
-                            auditDetails: AuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                            ),
-                            clientAuditDetails: ClientAuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                              lastModifiedBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid,
-                              lastModifiedTime:
-                                  context.millisecondsSinceEpoch(),
-                            ),
-                          );
-
-                          bloc.add(
-                            BeneficiaryRegistrationSaveAddressEvent(
-                              addressModel,
-                            ),
-                          );
-                          router.push(HouseDetailsRoute());
-                        }, editHousehold: (
-                          address,
-                          householdModel,
-                          individuals,
-                          registrationDate,
-                          projectBeneficiaryModel,
-                          loading,
-                          headOfHousehold,
-                        ) {
-                          var addressModel = address.copyWith(
-                            type: AddressType.correspondence,
-                            latitude: form.control(_latKey).value,
-                            longitude: form.control(_lngKey).value,
-                            locationAccuracy: form.control(_accuracyKey).value,
-                          );
-                          // TODO [Linking of Voucher for Household based project  need to be handled]
-
-                          bloc.add(
-                            BeneficiaryRegistrationSaveAddressEvent(
-                              addressModel,
-                            ),
-                          );
-                          router.push(HouseDetailsRoute());
-                        });
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(
-                            i18Local.householdLocation.actionLabel,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextBlock(
-                            padding: const EdgeInsets.only(top: kPadding),
-                            heading: localizations.translate(
-                              i18Local
-                                  .householdLocation.householdLocationLabelText,
-                            ),
-                            headingStyle: theme.textTheme.displayMedium,
-                            body: localizations.translate(
-                              i18Local.householdLocation
-                                  .householdLocationDescriptionText,
-                            )),
-                        Column(children: [
-                          householdLocationShowcaseData.administrativeArea
-                              .buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _administrationAreaKey,
-                              label: localizations.translate(
-                                i18Local.householdLocation
-                                    .administrationAreaFormLabel,
-                              ),
-                              readOnly: true,
-                              isRequired: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18Local.householdLocation
-                                          .administrationAreaRequiredValidation,
-                                    ),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.gpsAccuracy.buildWith(
-                            child: CustomDigitTextFormField(
-                              suffixString: localizations.translate(
-                                i18Local.common.metersLabel,
-                              ),
-                              readOnly: true,
-                              formControlName: _accuracyKey,
-                              label: localizations.translate(
-                                  i18.householdLocation.gpsAccuracyLabel),
-                              colorCondition: (value) =>
-                                  value != null && value > 5,
-                            ),
-                          ),
-                        ]),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
-          ),
-        );
-      }),
+          );
+        }),
+        editIndividual: (householdModel, individualModel, addressModel,
+                projectBeneficiaryModel, loading) =>
+            const CircularProgressIndicator(),
+      ),
     );
   }
 
