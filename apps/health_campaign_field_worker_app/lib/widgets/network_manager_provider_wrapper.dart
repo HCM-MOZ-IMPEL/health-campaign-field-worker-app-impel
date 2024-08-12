@@ -22,6 +22,7 @@ import '../models/downsync/downsync.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/attendance_management.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
