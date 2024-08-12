@@ -201,7 +201,8 @@ class CustomRefusedDeliveryPageState
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(
-                                      width: 122,
+                                      width: MediaQuery.of(context).size.width *
+                                          .36,
                                       allowMultipleSelection: false,
                                       options: RegistrationDeliverySingleton()
                                               .refusalReasons ??
