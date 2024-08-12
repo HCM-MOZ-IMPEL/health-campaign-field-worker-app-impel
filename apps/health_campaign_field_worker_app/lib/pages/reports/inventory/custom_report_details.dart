@@ -193,131 +193,127 @@ class CustomInventoryReportDetailsPageState
                                     DigitCard(
                                       child: Column(
                                         children: [
-                                          if (isWareHouseManager)
-                                            BlocConsumer<FacilityBloc,
-                                                FacilityState>(
-                                              listener: (context, state) =>
-                                                  state.whenOrNull(
-                                                empty: () =>
-                                                    NoFacilitiesAssignedDialog
-                                                        .show(
-                                                  context,
-                                                  localizations,
-                                                ),
+                                          // if (isWareHouseManager)
+                                          BlocConsumer<FacilityBloc,
+                                              FacilityState>(
+                                            listener: (context, state) =>
+                                                state.whenOrNull(
+                                              empty: () =>
+                                                  NoFacilitiesAssignedDialog
+                                                      .show(
+                                                context,
+                                                localizations,
                                               ),
-                                              builder: (context, state) {
-                                                final facilities =
-                                                    state.whenOrNull(
-                                                          fetched: (facilities,
-                                                                  allFacilities) =>
-                                                              facilities,
-                                                        ) ??
-                                                        [];
-
-                                                return InkWell(
-                                                  onTap: () async {
-                                                    final stockReconciliationBloc =
-                                                        context.read<
-                                                            StockReconciliationBloc>();
-
-                                                    final facility = await context
-                                                            .router
-                                                            .push(InventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
-
-                                                    if (facility == null)
-                                                      return;
-                                                    form
-                                                            .control(_facilityKey)
-                                                            .value =
-                                                        localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    );
-
-                                                    setState(() {
-                                                      selectedFacilityId =
-                                                          facility.id;
-                                                    });
-                                                    stockReconciliationBloc.add(
-                                                      StockReconciliationSelectFacilityEvent(
-                                                        facility,
-                                                      ),
-                                                    );
-
-                                                    handleSelection(
-                                                        form,
-                                                        context.read<
-                                                            InventoryReportBloc>());
-                                                  },
-                                                  child: IgnorePointer(
-                                                    child: DigitTextFormField(
-                                                      key: const Key(
-                                                          _facilityKey),
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.stockReconciliationDetails
-                                                            .facilityLabel,
-                                                      ),
-                                                      suffix: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child:
-                                                            Icon(Icons.search),
-                                                      ),
-                                                      formControlName:
-                                                          _facilityKey,
-                                                      readOnly: false,
-                                                      isRequired: true,
-                                                      onTap: () async {
-                                                        final stockReconciliationBloc =
-                                                            context.read<
-                                                                StockReconciliationBloc>();
-
-                                                        final facility = await context
-                                                                .router
-                                                                .push(InventoryFacilitySelectionRoute(
-                                                                    facilities:
-                                                                        facilities))
-                                                            as FacilityModel?;
-
-                                                        if (facility == null)
-                                                          return;
-                                                        form
-                                                                .control(
-                                                                    _facilityKey)
-                                                                .value =
-                                                            localizations
-                                                                .translate(
-                                                          'FAC_${facility.id}',
-                                                        );
-
-                                                        setState(() {
-                                                          selectedFacilityId =
-                                                              facility.id;
-                                                        });
-                                                        form
-                                                            .control(
-                                                                _facilityKey)
-                                                            .value = facility;
-                                                        stockReconciliationBloc
-                                                            .add(
-                                                          StockReconciliationSelectFacilityEvent(
-                                                            facility,
-                                                          ),
-                                                        );
-
-                                                        handleSelection(
-                                                            form,
-                                                            context.read<
-                                                                InventoryReportBloc>());
-                                                      },
-                                                    ),
-                                                  ),
-                                                );
-                                              },
                                             ),
+                                            builder: (context, state) {
+                                              final facilities =
+                                                  state.whenOrNull(
+                                                        fetched: (facilities,
+                                                                allFacilities) =>
+                                                            facilities,
+                                                      ) ??
+                                                      [];
+
+                                              return InkWell(
+                                                onTap: () async {
+                                                  final stockReconciliationBloc =
+                                                      context.read<
+                                                          StockReconciliationBloc>();
+
+                                                  final facility = await context
+                                                          .router
+                                                          .push(InventoryFacilitySelectionRoute(
+                                                              facilities:
+                                                                  facilities))
+                                                      as FacilityModel?;
+
+                                                  if (facility == null) return;
+                                                  form
+                                                          .control(_facilityKey)
+                                                          .value =
+                                                      localizations.translate(
+                                                    'FAC_${facility.id}',
+                                                  );
+
+                                                  setState(() {
+                                                    selectedFacilityId =
+                                                        facility.id;
+                                                  });
+                                                  stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                      facility,
+                                                    ),
+                                                  );
+
+                                                  handleSelection(
+                                                      form,
+                                                      context.read<
+                                                          InventoryReportBloc>());
+                                                },
+                                                child: IgnorePointer(
+                                                  child: DigitTextFormField(
+                                                    key:
+                                                        const Key(_facilityKey),
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.stockReconciliationDetails
+                                                          .facilityLabel,
+                                                    ),
+                                                    suffix: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.search),
+                                                    ),
+                                                    formControlName:
+                                                        _facilityKey,
+                                                    readOnly: false,
+                                                    isRequired: true,
+                                                    onTap: () async {
+                                                      final stockReconciliationBloc =
+                                                          context.read<
+                                                              StockReconciliationBloc>();
+
+                                                      final facility = await context
+                                                              .router
+                                                              .push(InventoryFacilitySelectionRoute(
+                                                                  facilities:
+                                                                      facilities))
+                                                          as FacilityModel?;
+
+                                                      if (facility == null)
+                                                        return;
+                                                      form
+                                                              .control(_facilityKey)
+                                                              .value =
+                                                          localizations
+                                                              .translate(
+                                                        'FAC_${facility.id}',
+                                                      );
+
+                                                      setState(() {
+                                                        selectedFacilityId =
+                                                            facility.id;
+                                                      });
+                                                      form
+                                                          .control(_facilityKey)
+                                                          .value = facility;
+                                                      stockReconciliationBloc
+                                                          .add(
+                                                        StockReconciliationSelectFacilityEvent(
+                                                          facility,
+                                                        ),
+                                                      );
+
+                                                      handleSelection(
+                                                          form,
+                                                          context.read<
+                                                              InventoryReportBloc>());
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                           BlocBuilder<
                                               InventoryProductVariantBloc,
                                               InventoryProductVariantState>(

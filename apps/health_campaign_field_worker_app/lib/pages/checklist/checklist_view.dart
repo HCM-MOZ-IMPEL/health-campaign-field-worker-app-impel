@@ -384,12 +384,21 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   autoValidation:
                                       AutovalidateMode.onUserInteraction,
                                   textStyle: theme.textTheme.headlineMedium,
-                                  textInputType: TextInputType.number,
+                                  // textInputType: TextInputType.number,
+                                  // inputFormatter: [
+                                  //   FilteringTextInputFormatter.allow(
+                                  //     RegExp(r'[0-9]'),
+                                  //   ),
+                                  //   LengthLimitingTextInputFormatter(9),
+                                  // ],
+                                  textInputType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
                                   inputFormatter: [
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]'),
+                                    DecimalTextInputFormatter(
+                                      maxDigitsBeforeDecimal: 8,
+                                      maxDigitsAfterDecimal: 2,
                                     ),
-                                    LengthLimitingTextInputFormatter(9),
                                   ],
                                   validator: (value) {
                                     if (((value == null || value == '') &&
@@ -799,10 +808,17 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return CustomDigitTextField(
         autoValidation: AutovalidateMode.onUserInteraction,
         textStyle: theme.textTheme.headlineMedium,
-        textInputType: TextInputType.number,
+        // textInputType: TextInputType.number,
+        // inputFormatter: [
+        //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        //   LengthLimitingTextInputFormatter(9),
+        // ],
+        textInputType: const TextInputType.numberWithOptions(decimal: true),
         inputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          LengthLimitingTextInputFormatter(9),
+          DecimalTextInputFormatter(
+            maxDigitsBeforeDecimal: 8,
+            maxDigitsAfterDecimal: 2,
+          ),
         ],
         validator: (value) {
           if (((value == null || value == '') && item.required == true)) {
@@ -1046,5 +1062,38 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     );
 
     return shouldNavigateBack ?? false;
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  final int maxDigitsBeforeDecimal;
+  final int maxDigitsAfterDecimal;
+
+  DecimalTextInputFormatter({
+    required this.maxDigitsBeforeDecimal,
+    required this.maxDigitsAfterDecimal,
+  });
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    // Check if the new value matches the pattern
+    final regex = RegExp(r'^\d{0,' +
+        maxDigitsBeforeDecimal.toString() +
+        r'}(\.\d{0,' +
+        maxDigitsAfterDecimal.toString() +
+        r'})?$');
+
+    if (regex.hasMatch(text)) {
+      // If it matches, return the new value
+      return newValue;
+    } else {
+      // If it doesn't match, return the old value (i.e., reject the new input)
+      return oldValue;
+    }
   }
 }
