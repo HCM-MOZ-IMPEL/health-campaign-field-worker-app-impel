@@ -18,6 +18,7 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 
 import '../../../widgets/localized.dart';
@@ -179,6 +180,24 @@ class _CustomStockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
+                                              auditDetails: AuditDetails(
+                                                createdBy: InventorySingleton()
+                                                    .loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy: InventorySingleton()
+                                                    .loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    InventorySingleton()
+                                                        .loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                             );
 
                                             final submit =
