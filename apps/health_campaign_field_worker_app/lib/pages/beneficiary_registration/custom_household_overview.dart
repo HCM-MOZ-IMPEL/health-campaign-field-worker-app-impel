@@ -81,7 +81,7 @@ class _CustomHouseholdOverviewPageState
                                 const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
-                            child: isSuccessfulOrEligible(
+                            child: isSuccessfulOrInEligible(
                                     state, deliverInterventionState)
                                 ? const Offstage()
                                 : DigitElevatedButton(
@@ -156,7 +156,7 @@ class _CustomHouseholdOverviewPageState
                                           style: theme.textTheme.displayMedium,
                                         ),
                                       ),
-                                      if (!isSuccessfulOrEligible(
+                                      if (!isSuccessfulOrInEligible(
                                           state, deliverState))
                                         Align(
                                           alignment: Alignment.centerLeft,
@@ -695,7 +695,7 @@ class _CustomHouseholdOverviewPageState
     );
   }
 
-  bool isSuccessfulOrEligible(HouseholdOverviewState state,
+  bool isSuccessfulOrInEligible(HouseholdOverviewState state,
       DeliverInterventionState deliverInterventionState) {
     if (deliverInterventionState.tasks == null ||
         (deliverInterventionState.tasks?.isEmpty ?? true)) {
