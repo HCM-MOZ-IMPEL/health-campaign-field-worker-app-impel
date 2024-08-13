@@ -384,22 +384,22 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   autoValidation:
                                       AutovalidateMode.onUserInteraction,
                                   textStyle: theme.textTheme.headlineMedium,
-                                  // textInputType: TextInputType.number,
-                                  // inputFormatter: [
-                                  //   FilteringTextInputFormatter.allow(
-                                  //     RegExp(r'[0-9]'),
-                                  //   ),
-                                  //   LengthLimitingTextInputFormatter(9),
-                                  // ],
-                                  textInputType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                  textInputType: TextInputType.number,
                                   inputFormatter: [
-                                    DecimalTextInputFormatter(
-                                      maxDigitsBeforeDecimal: 8,
-                                      maxDigitsAfterDecimal: 2,
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]'),
                                     ),
+                                    LengthLimitingTextInputFormatter(9),
                                   ],
+                                  // textInputType:
+                                  //     const TextInputType.numberWithOptions(
+                                  //         decimal: true),
+                                  // inputFormatter: [
+                                  //   DecimalTextInputFormatter(
+                                  //     maxDigitsBeforeDecimal: 8,
+                                  //     maxDigitsAfterDecimal: 2,
+                                  //   ),
+                                  // ],
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
@@ -808,18 +808,18 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return CustomDigitTextField(
         autoValidation: AutovalidateMode.onUserInteraction,
         textStyle: theme.textTheme.headlineMedium,
-        // textInputType: TextInputType.number,
-        // inputFormatter: [
-        //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-        //   LengthLimitingTextInputFormatter(9),
-        // ],
-        textInputType: const TextInputType.numberWithOptions(decimal: true),
+        textInputType: TextInputType.number,
         inputFormatter: [
-          DecimalTextInputFormatter(
-            maxDigitsBeforeDecimal: 8,
-            maxDigitsAfterDecimal: 2,
-          ),
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          LengthLimitingTextInputFormatter(9),
         ],
+        // textInputType: const TextInputType.numberWithOptions(decimal: true),
+        // inputFormatter: [
+        //   DecimalTextInputFormatter(
+        //     maxDigitsBeforeDecimal: 8,
+        //     maxDigitsAfterDecimal: 2,
+        //   ),
+        // ],
         validator: (value) {
           if (((value == null || value == '') && item.required == true)) {
             return localizations.translate(
