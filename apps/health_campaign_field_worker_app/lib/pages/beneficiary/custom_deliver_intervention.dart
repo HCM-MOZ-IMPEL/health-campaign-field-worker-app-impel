@@ -726,16 +726,7 @@ class CustomDeliverInterventionPageState
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
-                value: variants != null &&
-                        _controllers.indexOf(e) < variants.length
-                    ? variants.firstWhereOrNull(
-                        (element) =>
-                            element.id ==
-                            productVariants
-                                ?.elementAt(_controllers.indexOf(e))
-                                .productVariantId,
-                      )
-                    : null,
+                value: null,
               )),
         ],
       ),
