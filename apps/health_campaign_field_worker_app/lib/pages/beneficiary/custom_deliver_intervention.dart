@@ -82,8 +82,7 @@ class CustomDeliverInterventionPageState
                 context,
                 form: form,
                 oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.household &&
-                        isSuccessfulOrInEligible(deliverInterventionState)
+                        BeneficiaryType.household
                     ? deliverInterventionState.tasks?.last
                     : null,
                 projectBeneficiaryClientReferenceId:
@@ -97,8 +96,7 @@ class CustomDeliverInterventionPageState
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.household &&
-                      isSuccessfulOrInEligible(deliverInterventionState)
+                          BeneficiaryType.household
                   ? true
                   : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
