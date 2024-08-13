@@ -115,7 +115,10 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: (deliverState.tasks ?? [])
+                                          isEditing: (deliverState
+                                                              .householdMemberWrapper
+                                                              ?.tasks ??
+                                                          [])
                                                       .isNotEmpty &&
                                                   RegistrationDeliverySingleton()
                                                           .beneficiaryType ==

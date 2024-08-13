@@ -107,7 +107,13 @@ class CustomHouseHoldDetailsPageState
                               projectBeneficiaryClientReferenceId:
                                   projectBeneficiary?.first
                                       ?.clientReferenceId, //TODO: need to check for individual based campaign
-                              clientReferenceId: IdGen.i.identifier,
+                              clientReferenceId: RegistrationDeliverySingleton()
+                                          .beneficiaryType ==
+                                      BeneficiaryType.household
+                                  ? memberWrapper
+                                          .tasks?.last.clientReferenceId ??
+                                      IdGen.i.identifier
+                                  : IdGen.i.identifier,
                               tenantId:
                                   RegistrationDeliverySingleton().tenantId,
                               rowVersion: 1,
@@ -139,7 +145,12 @@ class CustomHouseHoldDetailsPageState
                                 ],
                               ),
                             ),
-                            isEditing: false,
+                            isEditing: (memberWrapper.tasks ?? []).isNotEmpty &&
+                                    RegistrationDeliverySingleton()
+                                            .beneficiaryType ==
+                                        BeneficiaryType.household
+                                ? true
+                                : false,
                             boundaryModel:
                                 RegistrationDeliverySingleton().boundary!,
                           ),
