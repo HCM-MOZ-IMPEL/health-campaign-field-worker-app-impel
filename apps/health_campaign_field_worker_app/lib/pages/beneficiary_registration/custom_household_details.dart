@@ -71,78 +71,89 @@ class CustomHouseHoldDetailsPageState
               if (state is BeneficiaryRegistrationPersistedState &&
                   state.isEdit) {
                 final overviewBloc = context.read<HouseholdOverviewBloc>();
-                overviewBloc.add(
-                  HouseholdOverviewReloadEvent(
-                    projectId:
-                        RegistrationDeliverySingleton().projectId.toString(),
-                    projectBeneficiaryType:
-                        RegistrationDeliverySingleton().beneficiaryType ??
-                            BeneficiaryType.household,
-                  ),
-                );
 
                 HouseholdMemberWrapper memberWrapper =
                     overviewBloc.state.householdMemberWrapper;
 
-                if (!widget.isEligible) {
-                  final projectBeneficiary = [
-                    memberWrapper.projectBeneficiaries?.first
-                  ];
-                  final parent = context.router.parent() as StackRouter;
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 1000,
+                  ),
+                  () {
+                    overviewBloc.add(
+                      HouseholdOverviewReloadEvent(
+                        projectId: RegistrationDeliverySingleton()
+                            .projectId
+                            .toString(),
+                        projectBeneficiaryType:
+                            RegistrationDeliverySingleton().beneficiaryType ??
+                                BeneficiaryType.household,
+                      ),
+                    );
+                    memberWrapper = overviewBloc.state.householdMemberWrapper;
+                  },
+                ).then((valueOne) {
+                  if (!widget.isEligible) {
+                    final projectBeneficiary = [
+                      memberWrapper.projectBeneficiaries?.first
+                    ];
+                    final parent = context.router.parent() as StackRouter;
 
-                  context.read<DeliverInterventionBloc>().add(
-                        DeliverInterventionSubmitEvent(
-                          navigateToSummary: true,
-                          householdMemberWrapper: memberWrapper,
-                          task: TaskModel(
-                            projectBeneficiaryClientReferenceId: projectBeneficiary
-                                ?.first
-                                ?.clientReferenceId, //TODO: need to check for individual based campaign
-                            clientReferenceId: IdGen.i.identifier,
-                            tenantId: RegistrationDeliverySingleton().tenantId,
-                            rowVersion: 1,
-                            auditDetails: AuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
+                    context.read<DeliverInterventionBloc>().add(
+                          DeliverInterventionSubmitEvent(
+                            navigateToSummary: true,
+                            householdMemberWrapper: memberWrapper,
+                            task: TaskModel(
+                              projectBeneficiaryClientReferenceId:
+                                  projectBeneficiary?.first
+                                      ?.clientReferenceId, //TODO: need to check for individual based campaign
+                              clientReferenceId: IdGen.i.identifier,
+                              tenantId:
+                                  RegistrationDeliverySingleton().tenantId,
+                              rowVersion: 1,
+                              auditDetails: AuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                createdTime: context.millisecondsSinceEpoch(),
+                              ),
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId,
+                              status: Status.administeredFailed.toValue(),
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid,
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
+                              ),
+                              additionalFields: TaskAdditionalFields(
+                                version: 1,
+                                fields: [
+                                  AdditionalField(
+                                    AdditionalFieldsType.reasonOfRefusal
+                                        .toValue(),
+                                    "INCOMPATIBLE",
+                                  ),
+                                ],
+                              ),
                             ),
-                            projectId:
-                                RegistrationDeliverySingleton().projectId,
-                            status: Status.administeredFailed.toValue(),
-                            clientAuditDetails: ClientAuditDetails(
-                              createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid!,
-                              createdTime: context.millisecondsSinceEpoch(),
-                              lastModifiedBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid,
-                              lastModifiedTime:
-                                  context.millisecondsSinceEpoch(),
-                            ),
-                            additionalFields: TaskAdditionalFields(
-                              version: 1,
-                              fields: [
-                                AdditionalField(
-                                  AdditionalFieldsType.reasonOfRefusal
-                                      .toValue(),
-                                  "INCOMPATIBLE",
-                                ),
-                              ],
-                            ),
+                            isEditing: false,
+                            boundaryModel:
+                                RegistrationDeliverySingleton().boundary!,
                           ),
-                          isEditing: false,
-                          boundaryModel:
-                              RegistrationDeliverySingleton().boundary!,
-                        ),
-                      );
-                  parent.push(
-                      IneligibleSummaryRoute(isEligible: widget.isEligible));
-                } else {
-                  final route = router.parent() as StackRouter;
-                  route
-                      .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
-                  route.push(
-                      CustomHouseholdWrapperRoute(wrapper: memberWrapper));
-                }
+                        );
+                    parent.push(
+                        IneligibleSummaryRoute(isEligible: widget.isEligible));
+                  } else {
+                    final route = router.parent() as StackRouter;
+                    route.popUntilRouteWithName(
+                        CustomSearchBeneficiaryRoute.name);
+                    route.push(
+                        CustomHouseholdWrapperRoute(wrapper: memberWrapper));
+                  }
+                });
               }
             },
             builder: (context, registrationState) {
@@ -367,26 +378,36 @@ class CustomHouseHoldDetailsPageState
                             bloc.add(
                               BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
                                 household: household.copyWith(
-                                  clientAuditDetails: (addressModel
-                                                  .clientAuditDetails
-                                                  ?.createdBy !=
-                                              null &&
-                                          addressModel.clientAuditDetails
-                                                  ?.createdTime !=
-                                              null)
-                                      ? ClientAuditDetails(
-                                          createdBy: addressModel
-                                              .clientAuditDetails!.createdBy,
-                                          createdTime: addressModel
-                                              .clientAuditDetails!.createdTime,
-                                          lastModifiedBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        )
-                                      : null,
-                                ),
+                                    clientAuditDetails: (addressModel
+                                                    .clientAuditDetails
+                                                    ?.createdBy !=
+                                                null &&
+                                            addressModel.clientAuditDetails
+                                                    ?.createdTime !=
+                                                null)
+                                        ? ClientAuditDetails(
+                                            createdBy: addressModel
+                                                .clientAuditDetails!.createdBy,
+                                            createdTime: addressModel
+                                                .clientAuditDetails!
+                                                .createdTime,
+                                            lastModifiedBy:
+                                                RegistrationDeliverySingleton()
+                                                    .loggedInUserUuid,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
+                                          )
+                                        : null,
+                                    additionalFields:
+                                        household.additionalFields == null
+                                            ? null
+                                            : HouseholdAdditionalFields(
+                                                version: household
+                                                        .additionalFields
+                                                        ?.version ??
+                                                    1,
+                                                fields: household
+                                                    .additionalFields!.fields)),
                                 addressModel: addressModel.copyWith(
                                   clientAuditDetails: (addressModel
                                                   .clientAuditDetails

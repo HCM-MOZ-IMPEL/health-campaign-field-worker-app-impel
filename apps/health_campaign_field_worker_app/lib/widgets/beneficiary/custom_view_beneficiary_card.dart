@@ -457,12 +457,19 @@ class _CustomViewBeneficiaryCardState
       Status.closeHousehold.toValue(): Status.closeHousehold,
     };
 
-    for (var task in tasks) {
-      final mappedStatus = statusMap[task.status];
+    if (tasks.isNotEmpty) {
+      final mappedStatus = statusMap[tasks.last.status];
       if (mappedStatus != null) {
         return mappedStatus;
       }
     }
+
+    // for (var task in tasks) {
+    //   final mappedStatus = statusMap[task.status];
+    //   if (mappedStatus != null) {
+    //     return mappedStatus;
+    //   }
+    // }
 
     return Status.registered;
   }
