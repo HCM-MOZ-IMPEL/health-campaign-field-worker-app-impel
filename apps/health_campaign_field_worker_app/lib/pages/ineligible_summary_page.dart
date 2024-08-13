@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
@@ -21,17 +23,20 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18Local;
+import 'package:collection/collection.dart';
 
 import '../router/app_router.dart';
 
 @RoutePage()
 class IneligibleSummaryPage extends LocalizedStatefulWidget {
   final bool isEligible;
+  final HouseholdMemberWrapper? previousWrapper;
 
   const IneligibleSummaryPage({
     super.key,
     super.appLocalizations,
     required this.isEligible,
+    this.previousWrapper,
   });
 
   @override
@@ -57,8 +62,33 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
           return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
-                const BackNavigationHelpHeaderWidget(
+                BackNavigationHelpHeaderWidget(
                   showHelp: false,
+                  handleBack: () {
+                    if (deliverState.householdMemberWrapper?.household !=
+                        null) {
+                      context.read<SearchHouseholdsBloc>().add(
+                            SearchHouseholdsEvent.searchByHousehold(
+                              householdModel: deliverState
+                                  .householdMemberWrapper!.household!,
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                              isProximityEnabled: false,
+                            ),
+                          );
+                    }
+                    if ((widget.previousWrapper?.tasks ?? []).firstWhereOrNull(
+                            (element) =>
+                                element.status ==
+                                Status.closeHousehold.toValue()) !=
+                        null) {
+                      final parent = context.router.parent() as StackRouter;
+                      parent.popUntilRouteWithName(
+                          CustomSearchBeneficiaryRoute.name);
+                    } else {
+                      context.router.maybePop();
+                    }
+                  },
                 ),
                 Padding(
                   padding:

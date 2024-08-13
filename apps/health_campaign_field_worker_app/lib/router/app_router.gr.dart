@@ -520,6 +520,7 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEligible: args.isEligible,
+          previousWrapper: args.previousWrapper,
         ),
       );
     },
@@ -2379,6 +2380,7 @@ class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
     Key? key,
     RegistrationDeliveryLocalization? appLocalizations,
     required bool isEligible,
+    HouseholdMemberWrapper? previousWrapper,
     List<PageRouteInfo>? children,
   }) : super(
           IneligibleSummaryRoute.name,
@@ -2386,6 +2388,7 @@ class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
             key: key,
             appLocalizations: appLocalizations,
             isEligible: isEligible,
+            previousWrapper: previousWrapper,
           ),
           initialChildren: children,
         );
@@ -2401,6 +2404,7 @@ class IneligibleSummaryRouteArgs {
     this.key,
     this.appLocalizations,
     required this.isEligible,
+    this.previousWrapper,
   });
 
   final Key? key;
@@ -2409,9 +2413,11 @@ class IneligibleSummaryRouteArgs {
 
   final bool isEligible;
 
+  final HouseholdMemberWrapper? previousWrapper;
+
   @override
   String toString() {
-    return 'IneligibleSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
+    return 'IneligibleSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible, previousWrapper: $previousWrapper}';
   }
 }
 
