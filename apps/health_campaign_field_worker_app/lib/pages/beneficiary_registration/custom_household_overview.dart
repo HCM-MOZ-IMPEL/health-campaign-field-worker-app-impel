@@ -82,7 +82,8 @@ class _CustomHouseholdOverviewPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: isSuccessfulOrInEligible(
-                                    state, deliverInterventionState)
+                                        state, deliverInterventionState) ||
+                                    isIneligibleHouseStructure(state)
                                 ? const Offstage()
                                 : DigitElevatedButton(
                                     onPressed: (state.householdMemberWrapper
@@ -716,6 +717,23 @@ class _CustomHouseholdOverviewPageState
       return reasonField?.value == "INCOMPATIBLE";
     }
 
+    return false;
+  }
+
+  bool isIneligibleHouseStructure(HouseholdOverviewState state) {
+    final selectedHouseStructureTypes = state
+            .householdMemberWrapper.household?.additionalFields?.fields
+            .firstWhereOrNull((element) =>
+                element.key ==
+                AdditionalFieldsType.houseStructureTypes.toValue())
+            ?.value
+            ?.toString() ??
+        '';
+    if (selectedHouseStructureTypes.contains("METAL") ||
+        selectedHouseStructureTypes.contains("GLASS") ||
+        selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
+      return true;
+    }
     return false;
   }
 
