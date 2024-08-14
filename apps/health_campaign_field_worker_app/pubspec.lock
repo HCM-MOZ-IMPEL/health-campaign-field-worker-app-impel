@@ -507,18 +507,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "5559c3e652a24f3d24f324d275399f6e864ca5671285386516b94fdf9fe8724c"
+      sha256: "671c79189c328394bf126f441d9afadc969d28c9bab95a6961e544179e3e817d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3-dev.3"
+    version: "1.0.3-dev.4"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: "72365e1ce0d1358efc09ac29a78a9bf478cd5b5168d5a5fb38260af3ecc52e6f"
+      sha256: "7ac0ef7c04d758a98b37d425fe79271b13824a6c17c61b37f3341af28c3c8952"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.2"
+    version: "0.0.1-dev.4"
   digit_firebase_services:
     dependency: "direct main"
     description:
