@@ -75,17 +75,9 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                             ),
                           );
                     }
-                    if ((widget.previousWrapper?.tasks ?? []).firstWhereOrNull(
-                            (element) =>
-                                element.status ==
-                                Status.closeHousehold.toValue()) !=
-                        null) {
-                      final parent = context.router.parent() as StackRouter;
-                      parent.popUntilRouteWithName(
-                          CustomSearchBeneficiaryRoute.name);
-                    } else {
-                      context.router.maybePop();
-                    }
+                    final parent = context.router.parent() as StackRouter;
+                    parent.popUntilRouteWithName(
+                        CustomSearchBeneficiaryRoute.name);
                   },
                 ),
                 Padding(
