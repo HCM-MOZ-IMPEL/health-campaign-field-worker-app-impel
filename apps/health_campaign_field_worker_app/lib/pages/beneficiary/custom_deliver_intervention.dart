@@ -608,6 +608,8 @@ class CustomDeliverInterventionPageState
               ))
           .toList(),
       address: address?.copyWith(
+        latitude: latitude ?? address.latitude,
+        longitude: longitude ?? address.longitude,
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),

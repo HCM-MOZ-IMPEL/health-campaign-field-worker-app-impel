@@ -146,6 +146,7 @@ class CustomHouseHoldDetailsPageState
                                   ),
                                 ],
                               ),
+                              address: memberWrapper.household?.address,
                             ),
                             isEditing: (memberWrapper.tasks ?? []).isNotEmpty &&
                                     RegistrationDeliverySingleton()

@@ -185,6 +185,8 @@ class CustomIndividualDetailsPageState
                                             ),
                                           ],
                                         ),
+                                        address: householdMemberWrapperList
+                                            .first.household?.address,
                                       ),
                                       isEditing: false,
                                       boundaryModel:
