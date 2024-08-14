@@ -72,7 +72,7 @@ dependencies:
   closed_household: ^0.0.0-dev.4
   digit_scanner: ^1.0.3-dev.1
   digit_dss: ^0.0.1-dev.2
-  attendance_management: ^1.0.2-dev.1
+  attendance_management: ^1.0.2-dev.2
   remove_emoji_input_formatter: ^0.0.1
 
 dev_dependencies:
