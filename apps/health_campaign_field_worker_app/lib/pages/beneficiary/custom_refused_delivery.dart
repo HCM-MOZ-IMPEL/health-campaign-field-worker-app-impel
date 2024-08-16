@@ -110,12 +110,15 @@ class CustomRefusedDeliveryPageState
                                   householdMemberWrapper:
                                       registrationState.householdMemberWrapper,
                                   task: _getTaskModel(
-                                      oldTask,
-                                      projectBeneficiary
-                                          ?.first?.clientReferenceId,
-                                      status,
-                                      reasonOfRefusal,
-                                      null),
+                                    oldTask,
+                                    projectBeneficiary
+                                        ?.first?.clientReferenceId,
+                                    status,
+                                    reasonOfRefusal,
+                                    null,
+                                    registrationState.householdMemberWrapper
+                                        .members?.first.address?.first,
+                                  ),
                                   isEditing: (registrationState
                                                       .householdMemberWrapper
                                                       .tasks ??
@@ -257,13 +260,22 @@ class CustomRefusedDeliveryPageState
     });
   }
 
-  _getTaskModel(TaskModel? oldTask, String? projectBeneficiaryClientReferenceId,
-      String status, String? reasonOfRefusal, String? refusalComment) {
+  _getTaskModel(
+      TaskModel? oldTask,
+      String? projectBeneficiaryClientReferenceId,
+      String status,
+      String? reasonOfRefusal,
+      String? refusalComment,
+      AddressModel? address) {
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
     task ??= TaskModel(
       projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
       clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
@@ -281,6 +293,10 @@ class CustomRefusedDeliveryPageState
 
     task = task.copyWith(
       status: status,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
       additionalFields: TaskAdditionalFields(
         version: 1,
         fields: [
