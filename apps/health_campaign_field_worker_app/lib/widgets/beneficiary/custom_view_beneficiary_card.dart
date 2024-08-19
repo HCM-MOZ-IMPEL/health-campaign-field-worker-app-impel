@@ -446,6 +446,7 @@ class _CustomViewBeneficiaryCardState
   Status getTaskStatus(Iterable<TaskModel> tasks) {
     final statusMap = {
       Status.delivered.toValue(): Status.delivered,
+      Status.notAdministered.toValue(): Status.notAdministered,
       Status.visited.toValue(): Status.visited,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,

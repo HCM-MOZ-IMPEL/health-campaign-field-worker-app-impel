@@ -446,7 +446,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final endDate = DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day, 11, 59)
+                DateTime.now().day, 23, 59)
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
@@ -472,10 +472,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           List<String> attendeesIndividualIds = [];
-          registers.map((r) =>
-              r.attendees?.where((a) => a.individualId != null).map((att) {
-                attendeesIndividualIds.add(att.individualId.toString());
-              }));
+          for (var r in registers) {
+            r.attendees?.where((a) => a.individualId != null).forEach((att) {
+              attendeesIndividualIds.add(att.individualId.toString());
+            });
+          }
           final individuals =
               await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,

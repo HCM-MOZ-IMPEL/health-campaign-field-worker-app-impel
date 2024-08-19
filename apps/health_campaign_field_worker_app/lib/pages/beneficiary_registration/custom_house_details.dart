@@ -268,17 +268,17 @@ class CustomHouseDetailsPageState
                                         form
                                             .control(_householdStructureKey)
                                             .value = null;
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .setErrors({'': true});
-                                        });
+                                        // setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .setErrors({'': true});
+                                        // });
                                       } else {
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .value = values;
-                                        });
+                                        // setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .value = values;
+                                        // });
                                       }
                                     },
                                     valueMapper: (value) {
