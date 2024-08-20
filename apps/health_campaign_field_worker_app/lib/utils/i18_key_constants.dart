@@ -976,6 +976,8 @@ class IndividualDetails {
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+
+  String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
 }
 
 class BeneficiaryDetails {
@@ -1068,6 +1070,17 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get noOfRoomsValidation => 'ROOMS_VALIDATION';
+
+  String get noOfRoomsAlertTitle => 'ROOMS_ALERT_TITLE';
+  String get noOfRoomsAlertContent => 'ROOMS_ALERT_CONTENT';
+  String get noOfRoomsAlertYes => 'ROOMS_ALERT_YES';
+  String get noOfRoomsAlertNo => 'ROOMS_ALERT_NO';
+
+  String get noOfMembersAlertTitle => 'MEMBERS_ALERT_TITLE';
+  String get noOfMembersAlertContent => 'MEMBERS_ALERT_CONTENT';
+  String get noOfMembersAlertYes => 'MEMBERS_ALERT_YES';
+  String get noOfMembersAlertNo => 'MEMBERS_ALERT_NO';
 }
 
 class StockReconciliationDetails {

@@ -48,11 +48,23 @@ class CustomHouseholdAcknowledgementPageState
 
                 final parent = context.router.parent() as StackRouter;
 
-                context.router.popAndPush(
+                context.read<SearchHouseholdsBloc>().add(
+                      SearchHouseholdsEvent.searchByHousehold(
+                        householdModel: wrapper.household!,
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        isProximityEnabled: false,
+                      ),
+                    );
+
+                final searchBlocState =
+                    context.read<SearchHouseholdsBloc>().state;
+
+                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+
+                context.router.push(
                   CustomHouseholdWrapperRoute(wrapper: wrapper),
                 );
                 // Pop twice to navigate back to the previous screen
-                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
               },
               enableViewHousehold: widget.enableViewHousehold ?? false,
               secondaryLabel: localizations.translate(

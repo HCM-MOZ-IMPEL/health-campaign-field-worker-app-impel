@@ -222,7 +222,10 @@ class _CustomViewBeneficiaryCardState
             cellKey: 'age',
           ),
           TableData(
-            e.gender?.name ?? '--',
+            e.gender?.name != null
+                ? localizations
+                    .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}')
+                : ' -- ',
             cellKey: 'gender',
           ),
         ];

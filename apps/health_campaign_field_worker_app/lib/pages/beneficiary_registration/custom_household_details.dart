@@ -20,6 +20,7 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import '../../router/app_router.dart';
@@ -184,7 +185,7 @@ class CustomHouseHoldDetailsPageState
                   margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
@@ -212,6 +213,48 @@ class CustomHouseHoldDetailsPageState
                                 true,
                                 theme));
                       } else {
+                        if (memberCount > 10) {
+                          final shouldSubmit = await DigitDialog.show<bool>(
+                            context,
+                            options: DigitDialogOptions(
+                              titleText: localizations.translate(
+                                i18_local
+                                    .beneficiaryDetails.noOfMembersAlertTitle,
+                              ),
+                              contentText: localizations.translate(
+                                i18_local
+                                    .beneficiaryDetails.noOfMembersAlertContent,
+                              ),
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfMembersAlertYes,
+                                ),
+                                action: (ctx) {
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).pop(true);
+                                },
+                              ),
+                              secondaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfMembersAlertNo,
+                                ),
+                                action: (context) => Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(false),
+                              ),
+                            ),
+                          );
+
+                          if (!(shouldSubmit ?? false)) {
+                            return;
+                          }
+                        }
+
                         registrationState.maybeWhen(
                           orElse: () {
                             return;

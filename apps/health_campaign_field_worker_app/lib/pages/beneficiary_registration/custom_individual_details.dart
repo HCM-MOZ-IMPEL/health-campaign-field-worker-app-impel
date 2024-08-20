@@ -22,6 +22,7 @@ import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/utils.dart' hide Constants;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 // import 'package:registration_delivery/widgets/localized.dart';
@@ -210,6 +211,9 @@ class CustomIndividualDetailsPageState
                                       searchBlocState.householdMembers.first));
                             }
                           }
+                        } else {
+                          parent.popUntilRouteWithName(
+                              CustomSearchBeneficiaryRoute.name);
                         }
                       },
                     );
@@ -275,6 +279,20 @@ class CustomIndividualDetailsPageState
                         form.markAllAsTouched();
                         if (!form.valid) return;
                         FocusManager.instance.primaryFocus?.unfocus();
+
+                        if (age.years < 18 && widget.isHeadOfHousehold) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(i18_local
+                                  .individualDetails.headAgeValidError),
+                              true,
+                              theme,
+                            ),
+                          );
+
+                          return;
+                        }
 
                         state.maybeWhen(
                           orElse: () {
