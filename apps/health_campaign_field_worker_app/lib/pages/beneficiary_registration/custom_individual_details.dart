@@ -347,7 +347,7 @@ class CustomIndividualDetailsPageState
                             loading,
                             isHeadOfHousehold,
                           ) {
-                            clickedStatus.value = true;
+                            // clickedStatus.value = true;
                             final individual = _getIndividualModel(
                               context,
                               form: form,
@@ -414,7 +414,7 @@ class CustomIndividualDetailsPageState
                             projectBeneficiaryModel,
                             loading,
                           ) {
-                            clickedStatus.value = true;
+                            // clickedStatus.value = true;
                             isEditIndividual = true;
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
@@ -480,7 +480,7 @@ class CustomIndividualDetailsPageState
                             householdModel,
                             loading,
                           ) {
-                            clickedStatus.value = true;
+                            // clickedStatus.value = true;
                             final individual = _getIndividualModel(
                               context,
                               form: form,
