@@ -731,6 +731,8 @@ class _CustomHouseholdOverviewPageState
         '';
     if (selectedHouseStructureTypes.contains("METAL") ||
         selectedHouseStructureTypes.contains("GLASS") ||
+        selectedHouseStructureTypes.contains("PAPER") ||
+        selectedHouseStructureTypes.contains("PLASTIC") ||
         selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
       return true;
     }
