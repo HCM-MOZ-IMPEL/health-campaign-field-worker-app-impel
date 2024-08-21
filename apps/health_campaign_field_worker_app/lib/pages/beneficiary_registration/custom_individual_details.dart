@@ -280,7 +280,9 @@ class CustomIndividualDetailsPageState
                         if (!form.valid) return;
                         FocusManager.instance.primaryFocus?.unfocus();
 
-                        if (age.years < 18 && widget.isHeadOfHousehold) {
+                        if (age.years < 18 &&
+                            widget.isHeadOfHousehold &&
+                            isEligible) {
                           await DigitToast.show(
                             context,
                             options: DigitToastOptions(
@@ -291,6 +293,43 @@ class CustomIndividualDetailsPageState
                             ),
                           );
 
+                          return;
+                        }
+
+                        final submit = await DigitDialog.show<bool>(
+                          context,
+                          options: DigitDialogOptions(
+                            titleText: localizations.translate(
+                              i18.deliverIntervention.dialogTitle,
+                            ),
+                            contentText: localizations.translate(
+                              i18.deliverIntervention.dialogContent,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.common.coreCommonSubmit,
+                              ),
+                              action: (context) {
+                                clickedStatus.value = true;
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                            ),
+                            secondaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.common.coreCommonCancel,
+                              ),
+                              action: (context) => Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(false),
+                            ),
+                          ),
+                        );
+
+                        if (!(submit ?? false)) {
                           return;
                         }
 
@@ -307,7 +346,8 @@ class CustomIndividualDetailsPageState
                             searchQuery,
                             loading,
                             isHeadOfHousehold,
-                          ) async {
+                          ) {
+                            clickedStatus.value = true;
                             final individual = _getIndividualModel(
                               context,
                               form: form,
@@ -339,68 +379,31 @@ class CustomIndividualDetailsPageState
                                 ),
                               );
                             } else {
-                              final submit = await DigitDialog.show<bool>(
-                                context,
-                                options: DigitDialogOptions(
-                                  titleText: localizations.translate(
-                                    i18.deliverIntervention.dialogTitle,
-                                  ),
-                                  contentText: localizations.translate(
-                                    i18.deliverIntervention.dialogContent,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
-                                    ),
-                                    action: (context) {
-                                      clickedStatus.value = true;
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    action: (context) => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false),
-                                  ),
-                                ),
-                              );
-
                               if (context.mounted) {
-                                if (submit ?? false) {
-                                  clickedStatus.value = true;
-                                  final scannerBloc =
-                                      context.read<DigitScannerBloc>();
-                                  bloc.add(
-                                    BeneficiaryRegistrationSummaryEvent(
-                                      projectId: projectId!,
-                                      userUuid: userId!,
-                                      boundary: boundary!,
+                                final scannerBloc =
+                                    context.read<DigitScannerBloc>();
+                                bloc.add(
+                                  BeneficiaryRegistrationSummaryEvent(
+                                    projectId: projectId!,
+                                    userUuid: userId!,
+                                    boundary: boundary!,
+                                    tag: scannerBloc.state.qrCodes.isNotEmpty
+                                        ? scannerBloc.state.qrCodes.first
+                                        : null,
+                                  ),
+                                );
+                                // router.push(SummaryRoute());
+
+                                bloc.add(
+                                  BeneficiaryRegistrationCreateEvent(
+                                      projectId: projectId,
+                                      userUuid: userId,
+                                      boundary: boundary,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
-                                    ),
-                                  );
-                                  // router.push(SummaryRoute());
-
-                                  bloc.add(
-                                    BeneficiaryRegistrationCreateEvent(
-                                        projectId: projectId,
-                                        userUuid: userId,
-                                        boundary: boundary,
-                                        tag: scannerBloc
-                                                .state.qrCodes.isNotEmpty
-                                            ? scannerBloc.state.qrCodes.first
-                                            : null,
-                                        navigateToSummary: false),
-                                  );
-                                }
+                                      navigateToSummary: false),
+                                );
                               }
                             }
                           },
@@ -411,6 +414,7 @@ class CustomIndividualDetailsPageState
                             projectBeneficiaryModel,
                             loading,
                           ) {
+                            clickedStatus.value = true;
                             isEditIndividual = true;
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
@@ -476,6 +480,7 @@ class CustomIndividualDetailsPageState
                             householdModel,
                             loading,
                           ) {
+                            clickedStatus.value = true;
                             final individual = _getIndividualModel(
                               context,
                               form: form,
