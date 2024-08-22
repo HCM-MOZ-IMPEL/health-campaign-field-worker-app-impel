@@ -221,6 +221,19 @@ class CustomIndividualDetailsPageState
                 );
                 // }
               },
+              // summary: (value) {
+              //   if (context.mounted) {
+              //     bloc.add(
+              //       BeneficiaryRegistrationCreateEvent(
+              //           projectId: value.projectBeneficiaryModel!.projectId!,
+              //           userUuid: value
+              //               .projectBeneficiaryModel!.auditDetails!.createdBy,
+              //           boundary: RegistrationDeliverySingleton().boundary!,
+              //           tag: value.projectBeneficiaryModel?.tag,
+              //           navigateToSummary: false),
+              //     );
+              //   }
+              // },
             );
           },
           builder: (context, state) {
