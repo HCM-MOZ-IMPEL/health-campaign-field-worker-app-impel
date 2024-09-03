@@ -81,8 +81,9 @@ class _CustomHouseholdOverviewPageState
                                 const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
-                            child: isSuccessfulOrEligible(
-                                    state, deliverInterventionState)
+                            child: isSuccessfulOrInEligible(
+                                        state, deliverInterventionState) ||
+                                    isIneligibleHouseStructure(state)
                                 ? const Offstage()
                                 : DigitElevatedButton(
                                     onPressed: (state.householdMemberWrapper
@@ -156,7 +157,7 @@ class _CustomHouseholdOverviewPageState
                                           style: theme.textTheme.displayMedium,
                                         ),
                                       ),
-                                      if (!isSuccessfulOrEligible(
+                                      if (!isSuccessfulOrInEligible(
                                           state, deliverState))
                                         Align(
                                           alignment: Alignment.centerLeft,
@@ -695,7 +696,7 @@ class _CustomHouseholdOverviewPageState
     );
   }
 
-  bool isSuccessfulOrEligible(HouseholdOverviewState state,
+  bool isSuccessfulOrInEligible(HouseholdOverviewState state,
       DeliverInterventionState deliverInterventionState) {
     if (deliverInterventionState.tasks == null ||
         (deliverInterventionState.tasks?.isEmpty ?? true)) {
@@ -719,6 +720,25 @@ class _CustomHouseholdOverviewPageState
     return false;
   }
 
+  bool isIneligibleHouseStructure(HouseholdOverviewState state) {
+    final selectedHouseStructureTypes = state
+            .householdMemberWrapper.household?.additionalFields?.fields
+            .firstWhereOrNull((element) =>
+                element.key ==
+                AdditionalFieldsType.houseStructureTypes.toValue())
+            ?.value
+            ?.toString() ??
+        '';
+    if (selectedHouseStructureTypes.contains("METAL") ||
+        selectedHouseStructureTypes.contains("GLASS") ||
+        selectedHouseStructureTypes.contains("PAPER") ||
+        selectedHouseStructureTypes.contains("PLASTIC") ||
+        selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
+      return true;
+    }
+    return false;
+  }
+
   getStatusAttributes(HouseholdOverviewState state,
       DeliverInterventionState deliverInterventionState) {
     var textLabel =
@@ -727,19 +747,19 @@ class _CustomHouseholdOverviewPageState
     var icon = Icons.info_rounded;
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
-      textLabel = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? getTaskStatusEnum(deliverInterventionState.tasks ?? []).toValue()
+      textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
           : Status.registered.toValue();
 
-      color = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.last.status ==
+      color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
-      icon = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.last.status ==
+      icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)

@@ -184,6 +184,23 @@ class _CustomBeneficiaryChecklistPageState
                                       RegistrationDeliverySingleton()
                                           .boundary
                                           ?.code,
+                                  auditDetails: AuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  ),
+                                  clientAuditDetails: ClientAuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                    lastModifiedBy:
+                                        RegistrationDeliverySingleton()
+                                            .loggedInUserUuid!,
+                                    lastModifiedTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  ),
                                 ),
                               ),
                             );

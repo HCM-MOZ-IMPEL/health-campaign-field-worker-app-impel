@@ -89,51 +89,46 @@ class CustomRefusedDeliveryPageState
                                 .projectBeneficiaries?.first
                           ];
 
+                          String status;
+                          if (reasonOfRefusal ==
+                              Status.beneficiaryRefused.toValue()) {
+                            status = Status.beneficiaryRefused.toValue();
+                          } else {
+                            status = Status.administeredFailed.toValue();
+                          }
+
+                          final oldTask =
+                              RegistrationDeliverySingleton().beneficiaryType !=
+                                      BeneficiaryType.individual
+                                  ? registrationState
+                                      .householdMemberWrapper.tasks?.last
+                                  : null;
+
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
                                   navigateToSummary: true,
                                   householdMemberWrapper:
                                       registrationState.householdMemberWrapper,
-                                  task: TaskModel(
-                                    projectBeneficiaryClientReferenceId:
-                                        projectBeneficiary?.first
-                                            ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                    clientReferenceId: IdGen.i.identifier,
-                                    tenantId: RegistrationDeliverySingleton()
-                                        .tenantId,
-                                    rowVersion: 1,
-                                    auditDetails: AuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    projectId: RegistrationDeliverySingleton()
-                                        .projectId,
-                                    status: Status.administeredFailed.toValue(),
-                                    clientAuditDetails: ClientAuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                      lastModifiedBy:
-                                          RegistrationDeliverySingleton()
-                                              .loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    additionalFields: TaskAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                        AdditionalField(
-                                          AdditionalFieldsType.reasonOfRefusal
-                                              .toValue(),
-                                          reasonOfRefusal,
-                                        ),
-                                      ],
-                                    ),
+                                  task: _getTaskModel(
+                                    oldTask,
+                                    projectBeneficiary
+                                        ?.first?.clientReferenceId,
+                                    status,
+                                    reasonOfRefusal,
+                                    null,
+                                    registrationState.householdMemberWrapper
+                                        .members?.first.address?.first,
                                   ),
-                                  isEditing: false,
+                                  isEditing: (registrationState
+                                                      .householdMemberWrapper
+                                                      .tasks ??
+                                                  [])
+                                              .isNotEmpty &&
+                                          RegistrationDeliverySingleton()
+                                                  .beneficiaryType ==
+                                              BeneficiaryType.household
+                                      ? true
+                                      : false,
                                   boundaryModel:
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
@@ -263,5 +258,61 @@ class CustomRefusedDeliveryPageState
       _reasonOfRefusal:
           FormControl<String>(value: null, validators: [Validators.required]),
     });
+  }
+
+  _getTaskModel(
+      TaskModel? oldTask,
+      String? projectBeneficiaryClientReferenceId,
+      String status,
+      String? reasonOfRefusal,
+      String? refusalComment,
+      AddressModel? address) {
+    var task = oldTask;
+    var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
+    task ??= TaskModel(
+      projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
+      clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
+      tenantId: RegistrationDeliverySingleton().tenantId,
+      rowVersion: 1,
+      auditDetails: AuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      projectId: RegistrationDeliverySingleton().projectId,
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
+      ),
+    );
+
+    task = task.copyWith(
+      status: status,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            AdditionalFieldsType.reasonOfRefusal.toValue(),
+            reasonOfRefusal,
+          ),
+          if (refusalComment != null)
+            AdditionalField(
+              AdditionalFieldsType.deliveryComment.toValue(),
+              refusalComment,
+            ),
+        ],
+      ),
+    );
+
+    return task;
   }
 }

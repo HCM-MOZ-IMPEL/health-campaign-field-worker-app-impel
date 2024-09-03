@@ -96,8 +96,7 @@ class CustomDeliverInterventionPageState
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.household &&
-                      isSuccessfulOrEligible(deliverInterventionState)
+                          BeneficiaryType.household
                   ? true
                   : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
@@ -567,6 +566,9 @@ class CustomDeliverInterventionPageState
     task ??= TaskModel(
       projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
       clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+      ),
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
@@ -609,6 +611,8 @@ class CustomDeliverInterventionPageState
               ))
           .toList(),
       address: address?.copyWith(
+        latitude: latitude ?? address.latitude,
+        longitude: longitude ?? address.longitude,
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
@@ -662,7 +666,7 @@ class CustomDeliverInterventionPageState
     return task;
   }
 
-  bool isSuccessfulOrEligible(
+  bool isSuccessfulOrInEligible(
       DeliverInterventionState deliverInterventionState) {
     if (deliverInterventionState.tasks == null ||
         (deliverInterventionState.tasks?.isEmpty ?? true)) {
@@ -727,16 +731,7 @@ class CustomDeliverInterventionPageState
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
-                value: variants != null &&
-                        _controllers.indexOf(e) < variants.length
-                    ? variants.firstWhereOrNull(
-                        (element) =>
-                            element.id ==
-                            productVariants
-                                ?.elementAt(_controllers.indexOf(e))
-                                .productVariantId,
-                      )
-                    : null,
+                value: null,
               )),
         ],
       ),

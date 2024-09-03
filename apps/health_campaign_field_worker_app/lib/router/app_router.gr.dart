@@ -228,6 +228,19 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    CustomAttendanceDateSessionSelectionRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomAttendanceDateSessionSelectionRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomAttendanceDateSessionSelectionPage(
+          registers: args.registers,
+          registerID: args.registerID,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomBeneficiaryAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<CustomBeneficiaryAcknowledgementRouteArgs>(
           orElse: () => const CustomBeneficiaryAcknowledgementRouteArgs());
@@ -399,12 +412,35 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomManageAttendanceRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomManageAttendancePage(),
+      );
+    },
     CustomManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<CustomManageStocksRouteArgs>(
           orElse: () => const CustomManageStocksRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomManageStocksPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomMarkAttendanceRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomMarkAttendanceRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomMarkAttendancePage(
+          exitTime: args.exitTime,
+          entryTime: args.entryTime,
+          dateTime: args.dateTime,
+          attendees: args.attendees,
+          registerId: args.registerId,
+          tenantId: args.tenantId,
+          session: args.session,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -484,6 +520,7 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEligible: args.isEligible,
+          previousWrapper: args.previousWrapper,
         ),
       );
     },
@@ -1299,6 +1336,55 @@ class ComplaintsRegistrationWrapperRouteArgs {
 }
 
 /// generated route for
+/// [CustomAttendanceDateSessionSelectionPage]
+class CustomAttendanceDateSessionSelectionRoute
+    extends PageRouteInfo<CustomAttendanceDateSessionSelectionRouteArgs> {
+  CustomAttendanceDateSessionSelectionRoute({
+    required List<AttendanceRegisterModel> registers,
+    required String registerID,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomAttendanceDateSessionSelectionRoute.name,
+          args: CustomAttendanceDateSessionSelectionRouteArgs(
+            registers: registers,
+            registerID: registerID,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomAttendanceDateSessionSelectionRoute';
+
+  static const PageInfo<CustomAttendanceDateSessionSelectionRouteArgs> page =
+      PageInfo<CustomAttendanceDateSessionSelectionRouteArgs>(name);
+}
+
+class CustomAttendanceDateSessionSelectionRouteArgs {
+  const CustomAttendanceDateSessionSelectionRouteArgs({
+    required this.registers,
+    required this.registerID,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final List<AttendanceRegisterModel> registers;
+
+  final String registerID;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomAttendanceDateSessionSelectionRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomBeneficiaryAcknowledgementPage]
 class CustomBeneficiaryAcknowledgementRoute
     extends PageRouteInfo<CustomBeneficiaryAcknowledgementRouteArgs> {
@@ -1929,6 +2015,20 @@ class CustomInventoryReportSelectionRouteArgs {
 }
 
 /// generated route for
+/// [CustomManageAttendancePage]
+class CustomManageAttendanceRoute extends PageRouteInfo<void> {
+  const CustomManageAttendanceRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomManageAttendanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageAttendanceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [CustomManageStocksPage]
 class CustomManageStocksRoute
     extends PageRouteInfo<CustomManageStocksRouteArgs> {
@@ -1964,6 +2064,80 @@ class CustomManageStocksRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomMarkAttendancePage]
+class CustomMarkAttendanceRoute
+    extends PageRouteInfo<CustomMarkAttendanceRouteArgs> {
+  CustomMarkAttendanceRoute({
+    required int exitTime,
+    required int entryTime,
+    required DateTime dateTime,
+    required List<AttendeeModel> attendees,
+    required String registerId,
+    required String tenantId,
+    int? session,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomMarkAttendanceRoute.name,
+          args: CustomMarkAttendanceRouteArgs(
+            exitTime: exitTime,
+            entryTime: entryTime,
+            dateTime: dateTime,
+            attendees: attendees,
+            registerId: registerId,
+            tenantId: tenantId,
+            session: session,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomMarkAttendanceRoute';
+
+  static const PageInfo<CustomMarkAttendanceRouteArgs> page =
+      PageInfo<CustomMarkAttendanceRouteArgs>(name);
+}
+
+class CustomMarkAttendanceRouteArgs {
+  const CustomMarkAttendanceRouteArgs({
+    required this.exitTime,
+    required this.entryTime,
+    required this.dateTime,
+    required this.attendees,
+    required this.registerId,
+    required this.tenantId,
+    this.session,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final int exitTime;
+
+  final int entryTime;
+
+  final DateTime dateTime;
+
+  final List<AttendeeModel> attendees;
+
+  final String registerId;
+
+  final String tenantId;
+
+  final int? session;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomMarkAttendanceRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2206,6 +2380,7 @@ class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
     Key? key,
     RegistrationDeliveryLocalization? appLocalizations,
     required bool isEligible,
+    HouseholdMemberWrapper? previousWrapper,
     List<PageRouteInfo>? children,
   }) : super(
           IneligibleSummaryRoute.name,
@@ -2213,6 +2388,7 @@ class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
             key: key,
             appLocalizations: appLocalizations,
             isEligible: isEligible,
+            previousWrapper: previousWrapper,
           ),
           initialChildren: children,
         );
@@ -2228,6 +2404,7 @@ class IneligibleSummaryRouteArgs {
     this.key,
     this.appLocalizations,
     required this.isEligible,
+    this.previousWrapper,
   });
 
   final Key? key;
@@ -2236,9 +2413,11 @@ class IneligibleSummaryRouteArgs {
 
   final bool isEligible;
 
+  final HouseholdMemberWrapper? previousWrapper;
+
   @override
   String toString() {
-    return 'IneligibleSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
+    return 'IneligibleSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible, previousWrapper: $previousWrapper}';
   }
 }
 

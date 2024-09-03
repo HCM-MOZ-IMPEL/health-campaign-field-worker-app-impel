@@ -318,9 +318,12 @@ void showDownloadDialog(
           secondaryAction: model.secondaryButtonLabel != null
               ? DigitDialogActions(
                   label: model.secondaryButtonLabel ?? '',
-                  action: (ctx) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  action: (ctx) async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.popUntilRouteWithName(HomeRoute.name);
+                    }
                   },
                 )
               : null,
@@ -442,6 +445,8 @@ int getSyncCount(List<OpLog> oplogs) {
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   if (selectedHouseStructureTypes.contains("METAL") ||
       selectedHouseStructureTypes.contains("GLASS") ||
+      selectedHouseStructureTypes.contains("PAPER") ||
+      selectedHouseStructureTypes.contains("PLASTIC") ||
       selectedHouseStructureTypes.contains("UNDER_CONSTRUCTION")) {
     return false;
   }
@@ -467,7 +472,7 @@ class LocalizationParams {
   LocalizationParams._internal();
 
   List<String>? _code;
-  String? _module;
+  List<String>? _module;
   Locale? _locale;
   bool? _exclude = true;
 
@@ -475,7 +480,7 @@ class LocalizationParams {
     _code = code;
   }
 
-  void setModule(String? module, bool? exclude) {
+  void setModule(List<String>? module, bool? exclude) {
     _module = module;
     _exclude = exclude;
   }
@@ -491,7 +496,7 @@ class LocalizationParams {
 
   List<String>? get code => _code;
 
-  String? get module => _module;
+  List<String>? get module => _module;
 
   Locale? get locale => _locale;
 

@@ -1,3 +1,4 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/entities/attendance_log.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';
 import 'package:digit_data_model/data_model.dart';

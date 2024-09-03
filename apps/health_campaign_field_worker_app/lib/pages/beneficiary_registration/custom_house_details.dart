@@ -12,6 +12,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import '../../router/app_router.dart';
@@ -72,7 +73,7 @@ class CustomHouseDetailsPageState
                       padding:
                           const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                       child: DigitElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           form.markAllAsTouched();
                           if (form.control(_householdStructureKey).value ==
                               null) {
@@ -90,6 +91,59 @@ class CustomHouseDetailsPageState
                               selectedHouseStructureTypes!);
                           final noOfRooms =
                               form.control(_noOfRoomsKey).value as int;
+
+                          if (noOfRooms <= 0) {
+                            DigitToast.show(
+                              context,
+                              options: DigitToastOptions(
+                                localizations.translate(i18_local
+                                    .beneficiaryDetails.noOfRoomsValidation),
+                                true,
+                                Theme.of(context),
+                              ),
+                            );
+                            return;
+                          } else if (noOfRooms > 10) {
+                            final shouldSubmit = await DigitDialog.show<bool>(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfRoomsAlertTitle,
+                                ),
+                                contentText: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfRoomsAlertContent,
+                                ),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18_local
+                                        .beneficiaryDetails.noOfRoomsAlertYes,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop(true);
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18_local
+                                        .beneficiaryDetails.noOfRoomsAlertNo,
+                                  ),
+                                  action: (context) => Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).pop(false),
+                                ),
+                              ),
+                            );
+
+                            if (!(shouldSubmit ?? false)) {
+                              return;
+                            }
+                          }
                           registrationState.maybeWhen(
                             orElse: () {
                               return;
@@ -268,17 +322,17 @@ class CustomHouseDetailsPageState
                                         form
                                             .control(_householdStructureKey)
                                             .value = null;
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .setErrors({'': true});
-                                        });
+                                        // setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .setErrors({'': true});
+                                        // });
                                       } else {
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .value = values;
-                                        });
+                                        // setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .value = values;
+                                        // });
                                       }
                                     },
                                     valueMapper: (value) {
@@ -299,7 +353,7 @@ class CustomHouseDetailsPageState
                                 ),
                                 houseShowcaseData.noOfRooms.buildWith(
                                   child: DigitIntegerFormPicker(
-                                    minimum: 1,
+                                    minimum: 0,
                                     maximum: 20,
                                     form: form,
                                     formControlName: _noOfRoomsKey,
@@ -336,8 +390,8 @@ class CustomHouseDetailsPageState
                       .firstOrNull
                       ?.value
                       .toString() ??
-                  '1')
-              : 1),
+                  '0')
+              : 0),
       _householdStructureKey: FormControl<List<String>>(
         value: state.householdModel?.additionalFields?.fields
             .where((e) =>

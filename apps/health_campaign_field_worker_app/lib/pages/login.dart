@@ -6,6 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
 import '../router/app_router.dart';
+import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -71,6 +72,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           );
         },
         child: ScrollableContent(
+          footer: PoweredByDigit(
+            version: Constants().version,
+          ),
           children: [
             ReactiveFormBuilder(
               form: buildForm,

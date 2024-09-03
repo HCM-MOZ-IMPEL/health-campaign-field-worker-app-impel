@@ -17,16 +17,9 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
     required void Function(List<TaskModel> data) listener,
   }) async {
     return retryLocalCallOperation(() async {
-      final select = sql.select(sql.task).join([
-        leftOuterJoin(
-          sql.taskResource,
-          sql.taskResource.taskclientReferenceId.equalsExp(
-            sql.task.clientReferenceId,
-          ),
-        ),
-      ])
+      final select = sql.select(sql.task)
         ..where(
-          buildAnd([
+          (tbl) => buildAnd([
             if (query.projectId != null)
               sql.task.projectId.equals(
                 query.projectId!,
@@ -50,10 +43,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
       select.watch().listen((results) {
         final data = results
             .map((e) {
-              final task = e.readTableOrNull(sql.task);
-              final resources = e.readTableOrNull(sql.taskResource);
-              if (task == null) return null;
-
+              final task = e;
               return TaskModel(
                 id: task.id,
                 createdBy: task.createdBy,
@@ -65,21 +55,6 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 projectBeneficiaryId: task.projectBeneficiaryId,
                 createdDate: task.createdDate,
                 status: task.status,
-                resources: resources == null
-                    ? null
-                    : [
-                        TaskResourceModel(
-                          taskclientReferenceId:
-                              resources.taskclientReferenceId,
-                          clientReferenceId: resources.clientReferenceId,
-                          id: resources.id,
-                          productVariantId: resources.productVariantId,
-                          taskId: resources.taskId,
-                          deliveryComment: resources.deliveryComment,
-                          quantity: resources.quantity,
-                          rowVersion: resources.rowVersion,
-                        ),
-                      ],
               );
             })
             .whereNotNull()
