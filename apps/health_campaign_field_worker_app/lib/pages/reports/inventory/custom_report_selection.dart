@@ -87,21 +87,22 @@ class _CustomInventoryReportSelectionPageState
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations.translate(i18
-                      .inventoryReportSelection.inventoryReportReturnedLabel),
-                  description: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportReturnedDescription,
-                  ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
-                      reportType: InventoryReportType.returned,
+                if (!InventorySingleton().isDistributor)
+                  DigitListView(
+                    title: localizations.translate(i18
+                        .inventoryReportSelection.inventoryReportReturnedLabel),
+                    description: localizations.translate(
+                      i18.inventoryReportSelection
+                          .inventoryReportReturnedDescription,
+                    ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      CustomInventoryReportDetailsRoute(
+                        reportType: InventoryReportType.returned,
+                      ),
                     ),
                   ),
-                ),
                 if (InventorySingleton().isWareHouseMgr)
                   DigitListView(
                     title: localizations.translate(
