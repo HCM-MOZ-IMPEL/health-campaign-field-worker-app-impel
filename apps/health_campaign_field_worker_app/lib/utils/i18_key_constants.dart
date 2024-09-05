@@ -1097,6 +1097,7 @@ class StockDetails {
 class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
+  String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
 class Dashboard {
