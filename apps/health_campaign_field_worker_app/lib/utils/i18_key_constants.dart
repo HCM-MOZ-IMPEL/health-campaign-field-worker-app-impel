@@ -1082,6 +1082,9 @@ class BeneficiaryDetails {
   String get noOfMembersAlertContent => 'MEMBERS_ALERT_CONTENT';
   String get noOfMembersAlertYes => 'MEMBERS_ALERT_YES';
   String get noOfMembersAlertNo => 'MEMBERS_ALERT_NO';
+
+  String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
+  String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
 }
 
 class StockDetails {
