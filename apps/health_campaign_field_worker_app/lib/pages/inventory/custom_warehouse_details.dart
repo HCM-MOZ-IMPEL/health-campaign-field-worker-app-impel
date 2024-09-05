@@ -57,11 +57,13 @@ class CustomWarehouseDetailsPageState
           value: localizations.translate(InventorySingleton().boundaryName),
         ),
         _warehouseKey: FormControl<String>(
-          validators: [Validators.required],
+          validators: isDistributor ? [] : [Validators.required],
         ),
         _teamCodeKey: FormControl<String>(
-          value: stockState.primaryId ?? '',
-          validators: deliveryTeamSelected ? [Validators.required] : [],
+          value: isDistributor
+              ? InventorySingleton().loggedInUserUuid
+              : stockState.primaryId,
+          validators: isDistributor ? [Validators.required] : [],
         ),
       });
 
@@ -111,14 +113,12 @@ class CustomWarehouseDetailsPageState
                     builder: (context, scannerState) {
                       return ReactiveFormBuilder(
                         form: () => buildForm(
-                            InventorySingleton().isDistributor! &&
-                                !InventorySingleton().isWareHouseMgr!,
-                            stockState),
+                            !InventorySingleton().isWareHouseMgr!, stockState),
                         builder: (context, form, child) {
-                          form.control(_teamCodeKey).value =
-                              scannerState.qrCodes.isNotEmpty
-                                  ? scannerState.qrCodes.last
-                                  : '';
+                          // form.control(_teamCodeKey).value =
+                          //     scannerState.qrCodes.isNotEmpty
+                          //         ? scannerState.qrCodes.last
+                          //         : '';
 
                           return ScrollableContent(
                             header: const Column(children: [
@@ -174,7 +174,9 @@ class CustomWarehouseDetailsPageState
                                                         qrCode: [],
                                                         barCode: []),
                                                   );
-                                              if (facility == null) {
+                                              if (InventorySingleton()
+                                                      .isWareHouseMgr &&
+                                                  facility == null) {
                                                 DigitToast.show(
                                                   context,
                                                   options: DigitToastOptions(
@@ -186,7 +188,8 @@ class CustomWarehouseDetailsPageState
                                                     theme,
                                                   ),
                                                 );
-                                              } else if (deliveryTeamSelected &&
+                                              } else if (!InventorySingleton()
+                                                      .isWareHouseMgr &&
                                                   (teamCode == null ||
                                                       teamCode
                                                           .trim()
@@ -206,27 +209,25 @@ class CustomWarehouseDetailsPageState
                                                 recordStockBloc.add(
                                                   RecordStockSaveTransactionDetailsEvent(
                                                     dateOfRecord: dateOfRecord,
-                                                    facilityModel: InventorySingleton()
-                                                                .isDistributor! &&
-                                                            !InventorySingleton()
+                                                    facilityModel:
+                                                        !InventorySingleton()
                                                                 .isWareHouseMgr!
-                                                        ? FacilityModel(
-                                                            id: teamCode
-                                                                .toString(),
-                                                          )
-                                                        : facility,
-                                                    primaryId: facility.id ==
-                                                            "Delivery Team"
-                                                        ? teamCode ?? ''
-                                                        : facility.id,
-                                                    primaryType: (InventorySingleton()
-                                                                    .isDistributor! &&
-                                                                !InventorySingleton()
-                                                                    .isWareHouseMgr! &&
-                                                                deliveryTeamSelected) ||
-                                                            deliveryTeamSelected
-                                                        ? "STAFF"
-                                                        : "WAREHOUSE",
+                                                            ? FacilityModel(
+                                                                id: teamCode
+                                                                    .toString(),
+                                                              )
+                                                            : facility,
+                                                    primaryId:
+                                                        !InventorySingleton()
+                                                                .isWareHouseMgr!
+                                                            ? teamCode ?? ''
+                                                            : facility?.id ??
+                                                                '',
+                                                    primaryType:
+                                                        !InventorySingleton()
+                                                                .isWareHouseMgr!
+                                                            ? "STAFF"
+                                                            : "WAREHOUSE",
                                                   ),
                                                 );
                                                 context.router.push(
@@ -291,113 +292,118 @@ class CustomWarehouseDetailsPageState
                                         ),
                                       ),
                                     ]),
-                                    InkWell(
-                                      onTap: () async {
-                                        clearQRCodes();
-                                        form.control(_teamCodeKey).value = '';
+                                    if (InventorySingleton().isWareHouseMgr)
+                                      InkWell(
+                                        onTap: () async {
+                                          clearQRCodes();
+                                          form.control(_teamCodeKey).value = '';
 
-                                        final facility =
-                                            await Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InventoryFacilitySelectionPage(
-                                              facilities: facilities,
-                                            ),
-                                          ),
-                                        );
-
-                                        if (facility == null) return;
-                                        form.control(_warehouseKey).value =
-                                            localizations.translate(
-                                                'FAC_${facility.id}');
-
-                                        setState(() {
-                                          selectedFacilityId = facility.id;
-                                        });
-                                        if (facility.id == 'Delivery Team') {
-                                          setState(() {
-                                            deliveryTeamSelected = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            deliveryTeamSelected = false;
-                                          });
-                                        }
-                                      },
-                                      child: IgnorePointer(
-                                        child: DigitTextFormField(
-                                          hideKeyboard: true,
-                                          padding: const EdgeInsets.only(
-                                            bottom: kPadding,
-                                          ),
-                                          isRequired: true,
-                                          label: localizations.translate(
-                                            i18.stockReconciliationDetails
-                                                .facilityLabel,
-                                          ),
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                localizations.translate(
-                                                  '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                ),
-                                          },
-                                          suffix: const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(Icons.search),
-                                          ),
-                                          formControlName: _warehouseKey,
-                                          readOnly: true,
-                                          onTap: () async {
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  const DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [],
-                                                  ),
-                                                );
-                                            form.control(_teamCodeKey).value =
-                                                '';
-                                            final facility =
-                                                await Navigator.of(context)
-                                                    .push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InventoryFacilitySelectionPage(
-                                                  facilities: facilities,
-                                                ),
+                                          final facility =
+                                              await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InventoryFacilitySelectionPage(
+                                                facilities: facilities,
                                               ),
-                                            );
+                                            ),
+                                          );
 
-                                            if (facility == null) return;
-                                            form.control(_warehouseKey).value =
-                                                localizations.translate(
-                                                    'FAC_${facility.id}');
+                                          if (facility == null) return;
+                                          form.control(_warehouseKey).value =
+                                              localizations.translate(
+                                                  'FAC_${facility.id}');
 
+                                          setState(() {
+                                            selectedFacilityId = facility.id;
+                                          });
+                                          if (facility.id == 'Delivery Team') {
                                             setState(() {
-                                              selectedFacilityId = facility.id;
+                                              deliveryTeamSelected = true;
                                             });
-                                            if (facility.id ==
-                                                'Delivery Team') {
+                                          } else {
+                                            setState(() {
+                                              deliveryTeamSelected = false;
+                                            });
+                                          }
+                                        },
+                                        child: IgnorePointer(
+                                          child: DigitTextFormField(
+                                            hideKeyboard: true,
+                                            padding: const EdgeInsets.only(
+                                              bottom: kPadding,
+                                            ),
+                                            isRequired: true,
+                                            label: localizations.translate(
+                                              i18.stockReconciliationDetails
+                                                  .facilityLabel,
+                                            ),
+                                            validationMessages: {
+                                              'required': (object) =>
+                                                  localizations.translate(
+                                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                  ),
+                                            },
+                                            suffix: const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Icon(Icons.search),
+                                            ),
+                                            formControlName: _warehouseKey,
+                                            readOnly: true,
+                                            onTap: () async {
+                                              context
+                                                  .read<DigitScannerBloc>()
+                                                  .add(
+                                                    const DigitScannerEvent
+                                                        .handleScanner(
+                                                      barCode: [],
+                                                      qrCode: [],
+                                                    ),
+                                                  );
+                                              form.control(_teamCodeKey).value =
+                                                  '';
+                                              final facility =
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      InventoryFacilitySelectionPage(
+                                                    facilities: facilities,
+                                                  ),
+                                                ),
+                                              );
+
+                                              if (facility == null) return;
+                                              form
+                                                      .control(_warehouseKey)
+                                                      .value =
+                                                  localizations.translate(
+                                                      'FAC_${facility.id}');
+
                                               setState(() {
-                                                deliveryTeamSelected = true;
+                                                selectedFacilityId =
+                                                    facility.id;
                                               });
-                                            } else {
-                                              setState(() {
-                                                deliveryTeamSelected = false;
-                                              });
-                                            }
-                                          },
+                                              if (facility.id ==
+                                                  'Delivery Team') {
+                                                setState(() {
+                                                  deliveryTeamSelected = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  deliveryTeamSelected = false;
+                                                });
+                                              }
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    if (deliveryTeamSelected)
+                                    if (!InventorySingleton().isWareHouseMgr)
                                       DigitTextFormField(
                                         label: localizations.translate(
                                           i18.stockReconciliationDetails
                                               .teamCodeLabel,
                                         ),
+                                        readOnly: true,
                                         formControlName: _teamCodeKey,
                                         onChanged: (val) {
                                           String? value = val as String?;
@@ -417,27 +423,27 @@ class CustomWarehouseDetailsPageState
                                           }
                                         },
                                         isRequired: true,
-                                        suffix: IconButton(
-                                          onPressed: () {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: false,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.qr_code_2,
-                                            color: theme.colorScheme.secondary,
-                                          ),
-                                        ),
+                                        // suffix: IconButton(
+                                        //   onPressed: () {
+                                        //     //[TODO: Add route to auto_route]
+                                        //     Navigator.of(context).push(
+                                        //       MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             const DigitScannerPage(
+                                        //           quantity: 1,
+                                        //           isGS1code: false,
+                                        //           singleValue: false,
+                                        //         ),
+                                        //         settings: const RouteSettings(
+                                        //             name: '/qr-scanner'),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        //   icon: Icon(
+                                        //     Icons.qr_code_2,
+                                        //     color: theme.colorScheme.secondary,
+                                        //   ),
+                                        // ),
                                       ),
                                   ],
                                 ),

@@ -18,6 +18,7 @@ const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
+const stockDetails = StockDetails();
 const stockReconciliationDetails = StockReconciliationDetails();
 
 const selectStockShowcase = SelectStockShowcase();
@@ -1081,6 +1082,13 @@ class BeneficiaryDetails {
   String get noOfMembersAlertContent => 'MEMBERS_ALERT_CONTENT';
   String get noOfMembersAlertYes => 'MEMBERS_ALERT_YES';
   String get noOfMembersAlertNo => 'MEMBERS_ALERT_NO';
+}
+
+class StockDetails {
+  const StockDetails();
+  String get supervisorCodeRequired =>
+      'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
+  String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 }
 
 class StockReconciliationDetails {

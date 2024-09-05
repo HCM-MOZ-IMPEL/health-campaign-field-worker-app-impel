@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
+import 'package:inventory_management/inventory_management.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
@@ -101,23 +102,24 @@ class _CustomInventoryReportSelectionPageState
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportReconciliationLabel,
-                  ),
-                  description: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportReconciliationDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
-                      reportType: InventoryReportType.reconciliation,
+                if (InventorySingleton().isWareHouseMgr)
+                  DigitListView(
+                    title: localizations.translate(
+                      i18.inventoryReportSelection
+                          .inventoryReportReconciliationLabel,
+                    ),
+                    description: localizations.translate(
+                      i18.inventoryReportSelection
+                          .inventoryReportReconciliationDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      CustomInventoryReportDetailsRoute(
+                        reportType: InventoryReportType.reconciliation,
+                      ),
                     ),
                   ),
-                ),
               ]),
               const SizedBox(height: 16),
             ],
