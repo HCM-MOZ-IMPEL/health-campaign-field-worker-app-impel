@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -78,19 +79,20 @@ class _CustomManageStocksPageState
                             type: StockRecordEntryType.dispatch,
                           ),
                         )),
-                DigitListView(
-                    title: localizations
-                        .translate(i18.manageStock.recordStockReturnedLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockReturnedDescription,
-                    ),
-                    prefixIcon: Icons.settings_backup_restore,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => context.router.push(
-                          RecordStockWrapperRoute(
-                            type: StockRecordEntryType.returned,
-                          ),
-                        ))
+                if (!InventorySingleton().isDistributor)
+                  DigitListView(
+                      title: localizations
+                          .translate(i18.manageStock.recordStockReturnedLabel),
+                      description: localizations.translate(
+                        i18.manageStock.recordStockReturnedDescription,
+                      ),
+                      prefixIcon: Icons.settings_backup_restore,
+                      sufixIcon: Icons.arrow_circle_right,
+                      onPressed: () => context.router.push(
+                            RecordStockWrapperRoute(
+                              type: StockRecordEntryType.returned,
+                            ),
+                          ))
               ]),
               const SizedBox(height: 16),
             ],
