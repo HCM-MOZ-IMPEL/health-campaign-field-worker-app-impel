@@ -165,7 +165,7 @@ class CustomRefusedDeliveryPageState
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
                               );
-                          context.router.popAndPush(DeliverySummaryRoute());
+                          context.router.push(DeliverySummaryRoute());
                         },
                         child: Center(
                           child: Text(
