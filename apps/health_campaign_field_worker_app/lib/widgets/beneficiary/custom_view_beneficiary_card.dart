@@ -40,6 +40,8 @@ class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
 class _CustomViewBeneficiaryCardState
     extends LocalizedState<CustomViewBeneficiaryCard> {
   late HouseholdMemberWrapper householdMember;
+  static const _menCountKey = 'menCount';
+  static const _womenCountKey = 'womenCount';
 
   @override
   void initState() {
@@ -98,6 +100,8 @@ class _CustomViewBeneficiaryCardState
         getValueForTheKey(AdditionalFieldsType.children.toValue(), household);
     final pregnantWomenCount = getValueForTheKey(
         AdditionalFieldsType.pregnantWomen.toValue(), household);
+    final menCount = getValueForTheKey(_menCountKey, household);
+    final womenCount = getValueForTheKey(_womenCountKey, household);
     final noOfRooms =
         getValueForTheKey(AdditionalFieldsType.noOfRooms.toValue(), household);
 
@@ -308,6 +312,8 @@ class _CustomViewBeneficiaryCardState
                       '${householdMember.household?.memberCount ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
                       '${childCount != null ? ' | $childCount ${localizations.translate(i18Local.beneficiaryDetails.childrenLabel)}' : ''}'
                       '${pregnantWomenCount != null ? ' | $pregnantWomenCount ${localizations.translate(i18Local.beneficiaryDetails.pregnantWomenLabel)}' : ''}'
+                      '${menCount != null ? ' | $menCount ${localizations.translate(i18Local.beneficiaryDetails.menLabel)}' : ''}'
+                      '${womenCount != null ? ' | $womenCount ${localizations.translate(i18Local.beneficiaryDetails.womenLabel)}' : ''}'
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(

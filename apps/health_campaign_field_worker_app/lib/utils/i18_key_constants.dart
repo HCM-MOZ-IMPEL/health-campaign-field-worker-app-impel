@@ -1042,6 +1042,8 @@ class BeneficiaryDetails {
   String get pregnantWomenLabel => 'PREGNANT_WOMEN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
+  String get womenLabel => 'WOMEN_LABEL';
+  String get menLabel => 'MEN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
   String get roomsVsSprayedValidation =>
@@ -1082,6 +1084,9 @@ class BeneficiaryDetails {
   String get noOfMembersAlertContent => 'MEMBERS_ALERT_CONTENT';
   String get noOfMembersAlertYes => 'MEMBERS_ALERT_YES';
   String get noOfMembersAlertNo => 'MEMBERS_ALERT_NO';
+
+  String get noOfWomenCountLabel => 'NO_OF_WOMEN_LABEL';
+  String get noOfMenCountLabel => 'NO_OF_MEN_LABEL';
 
   String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
