@@ -481,18 +481,18 @@ class CustomInventoryReportDetailsPageState
                                                                             .receipt ||
                                                                     widget.reportType ==
                                                                         InventoryReportType
-                                                                            .dispatch ||
+                                                                            .returned ||
                                                                     widget.reportType ==
                                                                         InventoryReportType
                                                                             .loss ||
                                                                     widget.reportType ==
                                                                         InventoryReportType
                                                                             .damage
-                                                                ? model.receiverId ??
+                                                                ? model.senderId ??
                                                                     model
-                                                                        .receiverType ??
+                                                                        .senderType ??
                                                                     ''
-                                                                : model.senderId ??
+                                                                : model.receiverId ??
                                                                     model
                                                                         .receiverType ??
                                                                     '',

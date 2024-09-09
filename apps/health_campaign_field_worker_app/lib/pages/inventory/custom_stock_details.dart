@@ -801,17 +801,48 @@ class CustomStockDetailsPageState
                                                 setState(() {
                                                   deliveryTeamSelected = true;
                                                   supervisorSelected = false;
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
                                                 });
                                               } else if (facility.id ==
                                                   'Supervisor') {
                                                 setState(() {
                                                   supervisorSelected = true;
                                                   deliveryTeamSelected = false;
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
                                                 });
                                               } else {
                                                 setState(() {
                                                   deliveryTeamSelected = false;
                                                   supervisorSelected = false;
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.required,
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
                                                 });
                                               }
                                             },
@@ -869,6 +900,15 @@ class CustomStockDetailsPageState
                                                           true;
                                                       supervisorSelected =
                                                           false;
+                                                      form
+                                                          .control(
+                                                        _driverNameKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
                                                     });
                                                   } else if (facility.id ==
                                                       'Supervisor') {
@@ -876,6 +916,15 @@ class CustomStockDetailsPageState
                                                       supervisorSelected = true;
                                                       deliveryTeamSelected =
                                                           false;
+                                                      form
+                                                          .control(
+                                                        _driverNameKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
                                                     });
                                                   } else {
                                                     setState(() {
@@ -883,6 +932,21 @@ class CustomStockDetailsPageState
                                                           false;
                                                       supervisorSelected =
                                                           false;
+                                                      form
+                                                          .control(
+                                                        _driverNameKey,
+                                                      )
+                                                          .setValidators(
+                                                        [
+                                                          Validators.required,
+                                                          Validators.minLength(
+                                                              2),
+                                                          Validators.maxLength(
+                                                              200),
+                                                        ],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
                                                     });
                                                   }
                                                 },
@@ -1081,7 +1145,9 @@ class CustomStockDetailsPageState
                                       i18_local.stockDetailsReceiptShowcase
                                           .driverName,
                                     ),
-                                    isRequired: true,
+                                    isRequired: isWareHouseMgr &&
+                                        !supervisorSelected &&
+                                        !deliveryTeamSelected,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
