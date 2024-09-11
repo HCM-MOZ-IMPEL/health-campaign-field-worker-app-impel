@@ -79,19 +79,19 @@ class CustomStockDetailsPageState
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
-        validators: !InventorySingleton().isDistributor &&
-                !InventorySingleton().isWareHouseMgr &&
-                deliveryTeamSelected
-            ? [Validators.required]
-            : [],
-      ),
+          // validators: !InventorySingleton().isDistributor &&
+          //         !InventorySingleton().isWareHouseMgr &&
+          //         deliveryTeamSelected
+          //     ? [Validators.required]
+          //     : [],
+          ),
       _supervisorKey: FormControl<String>(
-        validators: (InventorySingleton().isWareHouseMgr ||
-                    InventorySingleton().isDistributor) &&
-                supervisorSelected
-            ? [Validators.required]
-            : [],
-      ),
+          // validators: (InventorySingleton().isWareHouseMgr ||
+          //             InventorySingleton().isDistributor) &&
+          //         supervisorSelected
+          //     ? [Validators.required]
+          //     : [],
+          ),
     });
   }
 
@@ -810,6 +810,32 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
+
+                                                  form
+                                                      .control(
+                                                    _deliveryTeamKey,
+                                                  )
+                                                      .setValidators(
+                                                    [Validators.required],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                      .touched;
+
+                                                  form
+                                                      .control(
+                                                    _supervisorKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
                                                 });
                                               } else if (facility.id ==
                                                   'Supervisor') {
@@ -825,25 +851,78 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
+                                                  form
+                                                      .control(
+                                                    _deliveryTeamKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                    _supervisorKey,
+                                                  )
+                                                      .setValidators(
+                                                    [Validators.required],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                        _supervisorKey,
+                                                      )
+                                                      .touched;
                                                 });
                                               } else {
                                                 setState(() {
                                                   deliveryTeamSelected = false;
                                                   supervisorSelected = false;
-                                                  form
-                                                      .control(
-                                                    _driverNameKey,
-                                                  )
-                                                      .setValidators(
-                                                    [
-                                                      Validators.required,
-                                                      Validators.minLength(2),
-                                                      Validators.maxLength(200),
-                                                    ],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+
+                                                  if (isWareHouseMgr) {
+                                                    form
+                                                        .control(
+                                                      _driverNameKey,
+                                                    )
+                                                        .setValidators(
+                                                      [
+                                                        Validators.required,
+                                                        Validators.minLength(2),
+                                                        Validators.maxLength(
+                                                            200),
+                                                      ],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
+                                                  }
                                                 });
+                                                form
+                                                    .control(
+                                                      _driverNameKey,
+                                                    )
+                                                    .touched;
+                                                form
+                                                    .control(
+                                                  _deliveryTeamKey,
+                                                )
+                                                    .setValidators(
+                                                  [],
+                                                  updateParent: true,
+                                                  autoValidate: true,
+                                                );
+
+                                                form
+                                                    .control(
+                                                  _supervisorKey,
+                                                )
+                                                    .setValidators(
+                                                  [],
+                                                  updateParent: true,
+                                                  autoValidate: true,
+                                                );
                                               }
                                             },
                                             child: IgnorePointer(
@@ -909,6 +988,32 @@ class CustomStockDetailsPageState
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
+
+                                                      form
+                                                          .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                          .setValidators(
+                                                        [Validators.required],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                            _deliveryTeamKey,
+                                                          )
+                                                          .touched;
+
+                                                      form
+                                                          .control(
+                                                        _supervisorKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
                                                     });
                                                   } else if (facility.id ==
                                                       'Supervisor') {
@@ -925,6 +1030,31 @@ class CustomStockDetailsPageState
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
+                                                      form
+                                                          .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                        _supervisorKey,
+                                                      )
+                                                          .setValidators(
+                                                        [Validators.required],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                            _supervisorKey,
+                                                          )
+                                                          .touched;
                                                     });
                                                   } else {
                                                     setState(() {
@@ -932,22 +1062,48 @@ class CustomStockDetailsPageState
                                                           false;
                                                       supervisorSelected =
                                                           false;
-                                                      form
-                                                          .control(
-                                                        _driverNameKey,
-                                                      )
-                                                          .setValidators(
-                                                        [
-                                                          Validators.required,
-                                                          Validators.minLength(
-                                                              2),
-                                                          Validators.maxLength(
-                                                              200),
-                                                        ],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+                                                      if (isWareHouseMgr) {
+                                                        form
+                                                            .control(
+                                                          _driverNameKey,
+                                                        )
+                                                            .setValidators(
+                                                          [
+                                                            Validators.required,
+                                                            Validators
+                                                                .minLength(2),
+                                                            Validators
+                                                                .maxLength(200),
+                                                          ],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
+                                                      }
                                                     });
+                                                    form
+                                                        .control(
+                                                          _driverNameKey,
+                                                        )
+                                                        .touched;
+                                                    form
+                                                        .control(
+                                                      _deliveryTeamKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
+
+                                                    form
+                                                        .control(
+                                                      _supervisorKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
                                                   }
                                                 },
                                               ),
