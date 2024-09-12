@@ -378,7 +378,7 @@ class CustomStockDetailsPageState
                                             const Duration(seconds: 2),
                                             () async {
                                           DigitComponentsUtils()
-                                              .hideLocationDialog(context);
+                                              .hideDialog(context);
                                           final bloc =
                                               context.read<RecordStockBloc>();
 
@@ -510,7 +510,7 @@ class CustomStockDetailsPageState
                                             referenceId: stockState.projectId,
                                             referenceIdType: 'PROJECT',
                                             quantity: quantity.toString(),
-                                            waybillNumber: waybillNumber,
+                                            wayBillNumber: waybillNumber,
                                             receiverId: receiverId,
                                             receiverType: receiverType,
                                             senderId: senderId,

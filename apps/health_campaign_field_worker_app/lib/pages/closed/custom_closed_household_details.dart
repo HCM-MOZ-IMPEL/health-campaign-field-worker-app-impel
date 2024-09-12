@@ -70,7 +70,7 @@ class CustomClosedHouseholdDetailsPageState
             if (locationState.accuracy != null) {
               //Hide the dialog after 1 seconds
               Future.delayed(const Duration(seconds: 1), () {
-                DigitComponentsUtils().hideLocationDialog(context);
+                DigitComponentsUtils().hideDialog(context);
               });
             }
             final lat = locationState.latitude;
