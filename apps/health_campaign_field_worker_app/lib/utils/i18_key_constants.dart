@@ -18,6 +18,7 @@ const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
+const stockDetails = StockDetails();
 const stockReconciliationDetails = StockReconciliationDetails();
 
 const selectStockShowcase = SelectStockShowcase();
@@ -1041,6 +1042,8 @@ class BeneficiaryDetails {
   String get pregnantWomenLabel => 'PREGNANT_WOMEN_LABEL';
   String get roomsLabel => 'ROOMS_LABEL';
   String get childrenLabel => 'CHILDREN_LABEL';
+  String get womenLabel => 'WOMEN_LABEL';
+  String get menLabel => 'MEN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
   String get roomsVsSprayedValidation =>
@@ -1081,11 +1084,25 @@ class BeneficiaryDetails {
   String get noOfMembersAlertContent => 'MEMBERS_ALERT_CONTENT';
   String get noOfMembersAlertYes => 'MEMBERS_ALERT_YES';
   String get noOfMembersAlertNo => 'MEMBERS_ALERT_NO';
+
+  String get noOfWomenCountLabel => 'NO_OF_WOMEN_LABEL';
+  String get noOfMenCountLabel => 'NO_OF_MEN_LABEL';
+
+  String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
+  String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
+}
+
+class StockDetails {
+  const StockDetails();
+  String get supervisorCodeRequired =>
+      'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
+  String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 }
 
 class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
+  String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
 class Dashboard {

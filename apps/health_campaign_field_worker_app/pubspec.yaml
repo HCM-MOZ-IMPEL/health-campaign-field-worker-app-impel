@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.4.20+21
+version: 1.4.23+24
 
 environment:
   sdk: ">=3.0.0 <=4.0.0"
@@ -66,13 +66,13 @@ dependencies:
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
   digit_data_model: ^1.0.4-dev.3
-  registration_delivery: ^1.0.3
+  registration_delivery: ^1.0.3+1
   disable_battery_optimization: ^1.1.1
-  inventory_management: ^1.0.3+1
-  closed_household: ^1.0.1
-  digit_scanner: ^1.0.3
-  digit_dss: ^1.0.0
-  attendance_management: ^1.0.2
+  inventory_management: ^1.0.3+3
+  closed_household: ^1.0.1+1
+  digit_scanner: ^1.0.3+1
+  digit_dss: ^1.0.1
+  attendance_management: ^1.0.2+1
   remove_emoji_input_formatter: ^0.0.1
 
 dev_dependencies:

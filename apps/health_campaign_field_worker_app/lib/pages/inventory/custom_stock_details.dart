@@ -14,7 +14,7 @@ import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 import 'package:inventory_management/utils/utils.dart';
 import '../../widgets/localized.dart';
@@ -22,6 +22,8 @@ import '../../router/app_router.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+
+import '../custom_digit_scanner.dart';
 
 @RoutePage()
 class CustomStockDetailsPage extends LocalizedStatefulWidget {
@@ -47,7 +49,9 @@ class CustomStockDetailsPageState
   static const _driverNameKey = 'driverName';
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
+  static const _supervisorKey = 'supervisor';
   bool deliveryTeamSelected = false;
+  bool supervisorSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
 
@@ -64,7 +68,7 @@ class CustomStockDetailsPageState
       _transactionQuantityKey: FormControl<int>(validators: [
         Validators.number,
         Validators.required,
-        Validators.min(0),
+        Validators.min(1),
         Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<String>(),
@@ -77,8 +81,19 @@ class CustomStockDetailsPageState
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
-        validators: deliveryTeamSelected ? [Validators.required] : [],
-      ),
+          // validators: !InventorySingleton().isDistributor &&
+          //         !InventorySingleton().isWareHouseMgr &&
+          //         deliveryTeamSelected
+          //     ? [Validators.required]
+          //     : [],
+          ),
+      _supervisorKey: FormControl<String>(
+          // validators: (InventorySingleton().isWareHouseMgr ||
+          //             InventorySingleton().isDistributor) &&
+          //         supervisorSelected
+          //     ? [Validators.required]
+          //     : [],
+          ),
     });
   }
 
@@ -237,18 +252,36 @@ class CustomStockDetailsPageState
                           ),
                           child: ReactiveFormConsumer(
                               builder: (context, form, child) {
-                            if (form
-                                    .control(_deliveryTeamKey)
-                                    .value
-                                    .toString()
-                                    .isEmpty ||
-                                form.control(_deliveryTeamKey).value == null ||
-                                scannerState.qrCodes.isNotEmpty) {
-                              form.control(_deliveryTeamKey).value =
-                                  scannerState.qrCodes.isNotEmpty
-                                      ? scannerState.qrCodes.last
-                                      : '';
+                            if (!InventorySingleton().isDistributor &&
+                                !isWareHouseMgr) {
+                              if (form
+                                      .control(_deliveryTeamKey)
+                                      .value
+                                      .toString()
+                                      .isEmpty ||
+                                  form.control(_deliveryTeamKey).value ==
+                                      null ||
+                                  scannerState.qrCodes.isNotEmpty) {
+                                form.control(_deliveryTeamKey).value =
+                                    scannerState.qrCodes.isNotEmpty
+                                        ? scannerState.qrCodes.last
+                                        : '';
+                              }
+                            } else {
+                              if (form
+                                      .control(_supervisorKey)
+                                      .value
+                                      .toString()
+                                      .isEmpty ||
+                                  form.control(_supervisorKey).value == null ||
+                                  scannerState.qrCodes.isNotEmpty) {
+                                form.control(_supervisorKey).value =
+                                    scannerState.qrCodes.isNotEmpty
+                                        ? scannerState.qrCodes.last
+                                        : '';
+                              }
                             }
+
                             return DigitElevatedButton(
                               onPressed: !form.valid
                                   ? null
@@ -268,9 +301,6 @@ class CustomStockDetailsPageState
                                                       .toString(),
                                                 )
                                               : null;
-                                      final deliveryTeamName = form
-                                          .control(_deliveryTeamKey)
-                                          .value as String?;
 
                                       if (deliveryTeamSelected &&
                                           (form
@@ -295,9 +325,32 @@ class CustomStockDetailsPageState
                                             theme,
                                           ),
                                         );
+                                      } else if (supervisorSelected &&
+                                          (form
+                                                      .control(
+                                                        _supervisorKey,
+                                                      )
+                                                      .value ==
+                                                  null ||
+                                              form
+                                                  .control(_supervisorKey)
+                                                  .value
+                                                  .toString()
+                                                  .trim()
+                                                  .isEmpty)) {
+                                        DigitToast.show(
+                                          context,
+                                          options: DigitToastOptions(
+                                            localizations.translate(
+                                              i18_local.stockDetails
+                                                  .supervisorCodeRequired,
+                                            ),
+                                            true,
+                                            theme,
+                                          ),
+                                        );
                                       } else if ((primaryId ==
-                                              secondaryParty?.id) ||
-                                          (primaryId == deliveryTeamName)) {
+                                          secondaryParty?.id)) {
                                         DigitToast.show(
                                           context,
                                           options: DigitToastOptions(
@@ -325,7 +378,7 @@ class CustomStockDetailsPageState
                                             const Duration(seconds: 2),
                                             () async {
                                           DigitComponentsUtils()
-                                              .hideLocationDialog(context);
+                                              .hideDialog(context);
                                           final bloc =
                                               context.read<RecordStockBloc>();
 
@@ -391,6 +444,10 @@ class CustomStockDetailsPageState
                                               .control(_deliveryTeamKey)
                                               .value as String?;
 
+                                          final supervisor = form
+                                              .control(_supervisorKey)
+                                              .value as String?;
+
                                           String? senderId;
                                           String? senderType;
                                           String? receiverId;
@@ -410,8 +467,12 @@ class CustomStockDetailsPageState
                                             case StockRecordEntryType.receipt:
                                             case StockRecordEntryType.loss:
                                             case StockRecordEntryType.damaged:
-                                              if (deliveryTeamSelected) {
-                                                senderId = deliveryTeamName;
+                                            case StockRecordEntryType.returned:
+                                              if (deliveryTeamSelected ||
+                                                  supervisorSelected) {
+                                                senderId = deliveryTeamSelected
+                                                    ? deliveryTeamName
+                                                    : supervisor;
                                                 senderType = "STAFF";
                                               } else {
                                                 senderId = secondaryParty?.id;
@@ -422,9 +483,13 @@ class CustomStockDetailsPageState
 
                                               break;
                                             case StockRecordEntryType.dispatch:
-                                            case StockRecordEntryType.returned:
-                                              if (deliveryTeamSelected) {
-                                                receiverId = deliveryTeamName;
+                                              if (deliveryTeamSelected ||
+                                                  supervisorSelected) {
+                                                receiverId =
+                                                    deliveryTeamSelected
+                                                        ? deliveryTeamName
+                                                        : supervisor;
+                                                ;
                                                 receiverType = "STAFF";
                                               } else {
                                                 receiverId = secondaryParty?.id;
@@ -445,7 +510,7 @@ class CustomStockDetailsPageState
                                             referenceId: stockState.projectId,
                                             referenceIdType: 'PROJECT',
                                             quantity: quantity.toString(),
-                                            waybillNumber: waybillNumber,
+                                            wayBillNumber: waybillNumber,
                                             receiverId: receiverId,
                                             receiverType: receiverType,
                                             senderId: senderId,
@@ -679,7 +744,34 @@ class CustomStockDetailsPageState
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                        fetched: (facilities, allFacilities) {
+                                        fetched: (facilities, allFacilities1) {
+                                          List<FacilityModel> allFacilities =
+                                              [];
+                                          if (InventorySingleton()
+                                                  .isDistributor ||
+                                              isWareHouseMgr) {
+                                            allFacilities.add(
+                                              FacilityModel(
+                                                id: 'Supervisor',
+                                                additionalFields:
+                                                    FacilityAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    const AdditionalField(
+                                                        'type', 'Supervisor')
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                            allFacilities.addAll(allFacilities1
+                                                .where((element) =>
+                                                    element.id !=
+                                                    'Delivery Team')
+                                                .toList());
+                                          } else {
+                                            allFacilities
+                                                .addAll(allFacilities1);
+                                          }
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
@@ -710,11 +802,129 @@ class CustomStockDetailsPageState
                                                   'Delivery Team') {
                                                 setState(() {
                                                   deliveryTeamSelected = true;
+                                                  supervisorSelected = false;
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                    _deliveryTeamKey,
+                                                  )
+                                                      .setValidators(
+                                                    [Validators.required],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                      .touched;
+
+                                                  form
+                                                      .control(
+                                                    _supervisorKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                });
+                                              } else if (facility.id ==
+                                                  'Supervisor') {
+                                                setState(() {
+                                                  supervisorSelected = true;
+                                                  deliveryTeamSelected = false;
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                    _deliveryTeamKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                    _supervisorKey,
+                                                  )
+                                                      .setValidators(
+                                                    [Validators.required],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                        _supervisorKey,
+                                                      )
+                                                      .touched;
                                                 });
                                               } else {
                                                 setState(() {
                                                   deliveryTeamSelected = false;
+                                                  supervisorSelected = false;
+
+                                                  if (isWareHouseMgr) {
+                                                    form
+                                                        .control(
+                                                      _driverNameKey,
+                                                    )
+                                                        .setValidators(
+                                                      [
+                                                        Validators.required,
+                                                        Validators.minLength(2),
+                                                        Validators.maxLength(
+                                                            200),
+                                                      ],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
+                                                  }
                                                 });
+                                                form
+                                                    .control(
+                                                      _driverNameKey,
+                                                    )
+                                                    .touched;
+                                                form
+                                                    .control(
+                                                  _deliveryTeamKey,
+                                                )
+                                                    .setValidators(
+                                                  [],
+                                                  updateParent: true,
+                                                  autoValidate: true,
+                                                );
+
+                                                form
+                                                    .control(
+                                                  _supervisorKey,
+                                                )
+                                                    .setValidators(
+                                                  [],
+                                                  updateParent: true,
+                                                  autoValidate: true,
+                                                );
                                               }
                                             },
                                             child: IgnorePointer(
@@ -769,12 +979,133 @@ class CustomStockDetailsPageState
                                                     setState(() {
                                                       deliveryTeamSelected =
                                                           true;
+                                                      supervisorSelected =
+                                                          false;
+                                                      form
+                                                          .control(
+                                                        _driverNameKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                          .setValidators(
+                                                        [Validators.required],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                            _deliveryTeamKey,
+                                                          )
+                                                          .touched;
+
+                                                      form
+                                                          .control(
+                                                        _supervisorKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+                                                    });
+                                                  } else if (facility.id ==
+                                                      'Supervisor') {
+                                                    setState(() {
+                                                      supervisorSelected = true;
+                                                      deliveryTeamSelected =
+                                                          false;
+                                                      form
+                                                          .control(
+                                                        _driverNameKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+                                                      form
+                                                          .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                          .setValidators(
+                                                        [],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                        _supervisorKey,
+                                                      )
+                                                          .setValidators(
+                                                        [Validators.required],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
+
+                                                      form
+                                                          .control(
+                                                            _supervisorKey,
+                                                          )
+                                                          .touched;
                                                     });
                                                   } else {
                                                     setState(() {
                                                       deliveryTeamSelected =
                                                           false;
+                                                      supervisorSelected =
+                                                          false;
+                                                      if (isWareHouseMgr) {
+                                                        form
+                                                            .control(
+                                                          _driverNameKey,
+                                                        )
+                                                            .setValidators(
+                                                          [
+                                                            Validators.required,
+                                                            Validators
+                                                                .minLength(2),
+                                                            Validators
+                                                                .maxLength(200),
+                                                          ],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
+                                                      }
                                                     });
+                                                    form
+                                                        .control(
+                                                          _driverNameKey,
+                                                        )
+                                                        .touched;
+                                                    form
+                                                        .control(
+                                                      _deliveryTeamKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
+
+                                                    form
+                                                        .control(
+                                                      _supervisorKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
                                                   }
                                                 },
                                               ),
@@ -785,50 +1116,140 @@ class CustomStockDetailsPageState
                                 ),
                                 Visibility(
                                   visible: deliveryTeamSelected,
-                                  child: DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18.stockReconciliationDetails
-                                          .teamCodeLabel,
-                                    ),
-                                    onChanged: (val) {
-                                      String? value = val.value as String?;
-                                      if (value != null &&
-                                          value.trim().isNotEmpty) {
-                                        context.read<DigitScannerBloc>().add(
-                                              DigitScannerEvent.handleScanner(
-                                                barCode: [],
-                                                qrCode: [value],
-                                                manualCode: value,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CustomDigitScannerPage(
+                                            quantity: 1,
+                                            isGS1code: false,
+                                            singleValue: true,
+                                          ),
+                                          settings: const RouteSettings(
+                                              name: '/custom-qr-scanner'),
+                                        ),
+                                      );
+                                    },
+                                    child: IgnorePointer(
+                                      child: DigitTextFormField(
+                                        label: localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .teamCodeLabel,
+                                        ),
+                                        onChanged: (val) {
+                                          String? value = val.value as String?;
+                                          if (value != null &&
+                                              value.trim().isNotEmpty) {
+                                            context
+                                                .read<DigitScannerBloc>()
+                                                .add(
+                                                  DigitScannerEvent
+                                                      .handleScanner(
+                                                    barCode: [],
+                                                    qrCode: [value],
+                                                    manualCode: value,
+                                                  ),
+                                                );
+                                          } else {
+                                            clearQRCodes();
+                                          }
+                                        },
+                                        suffix: IconButton(
+                                          onPressed: () {
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CustomDigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/custom-qr-scanner'),
                                               ),
                                             );
-                                      } else {
-                                        clearQRCodes();
-                                      }
-                                    },
-                                    suffix: IconButton(
-                                      onPressed: () {
-                                        //[TODO: Add route to auto_route]
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 5,
-                                              isGS1code: false,
-                                              singleValue: false,
-                                            ),
-                                            settings: const RouteSettings(
-                                                name: '/qr-scanner'),
+                                          },
+                                          icon: Icon(
+                                            Icons.qr_code_2,
+                                            color: theme.colorScheme.secondary,
                                           ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.qr_code_2,
-                                        color: theme.colorScheme.secondary,
+                                        ),
+                                        isRequired: deliveryTeamSelected,
+                                        maxLines: 3,
+                                        formControlName: _deliveryTeamKey,
                                       ),
                                     ),
-                                    isRequired: deliveryTeamSelected,
-                                    maxLines: 3,
-                                    formControlName: _deliveryTeamKey,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: supervisorSelected,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CustomDigitScannerPage(
+                                            quantity: 1,
+                                            isGS1code: false,
+                                            singleValue: true,
+                                          ),
+                                          settings: const RouteSettings(
+                                              name: '/custom-qr-scanner'),
+                                        ),
+                                      );
+                                    },
+                                    child: IgnorePointer(
+                                      child: DigitTextFormField(
+                                        label: localizations.translate(
+                                          i18_local
+                                              .stockDetails.supervisorCodeLabel,
+                                        ),
+                                        onChanged: (val) {
+                                          String? value = val.value as String?;
+                                          if (value != null &&
+                                              value.trim().isNotEmpty) {
+                                            context
+                                                .read<DigitScannerBloc>()
+                                                .add(
+                                                  DigitScannerEvent
+                                                      .handleScanner(
+                                                    barCode: [],
+                                                    qrCode: [value],
+                                                    manualCode: value,
+                                                  ),
+                                                );
+                                          } else {
+                                            clearQRCodes();
+                                          }
+                                        },
+                                        suffix: IconButton(
+                                          onPressed: () {
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CustomDigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/custom-qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.qr_code_2,
+                                            color: theme.colorScheme.secondary,
+                                          ),
+                                        ),
+                                        isRequired: supervisorSelected,
+                                        maxLines: 3,
+                                        formControlName: _supervisorKey,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 DigitTextFormField(
@@ -921,25 +1342,30 @@ class CustomStockDetailsPageState
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
                                     label: localizations.translate(
-                                      i18Local.stockDetailsReceiptShowcase
+                                      i18_local.stockDetailsReceiptShowcase
                                           .driverName,
                                     ),
-                                    isRequired: true,
+                                    isRequired: isWareHouseMgr &&
+                                        !supervisorSelected &&
+                                        !deliveryTeamSelected,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
                                           localizations.translate(
-                                            i18Local.stockDetailsReceiptShowcase
+                                            i18_local
+                                                .stockDetailsReceiptShowcase
                                                 .driverNameValidation,
                                           ),
                                       'minLength': (object) =>
                                           localizations.translate(
-                                            i18Local.stockDetailsReceiptShowcase
+                                            i18_local
+                                                .stockDetailsReceiptShowcase
                                                 .driverNameMinMaxLengthValidation,
                                           ),
                                       'maxLength': (object) =>
                                           localizations.translate(
-                                            i18Local.stockDetailsReceiptShowcase
+                                            i18_local
+                                                .stockDetailsReceiptShowcase
                                                 .driverNameMinMaxLengthValidation,
                                           ),
                                     },

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +20,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/extensions/extensions.dart';
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../widgets/localized.dart';
 
@@ -160,6 +161,27 @@ class _CustomStockReconciliationPageState
                                                   _reconciliationCommentsKey,
                                                 )
                                                 .value as String?;
+
+                                            if (stockState.stockInHand !=
+                                                    int.parse(
+                                                        calculatedCount) &&
+                                                (comments == null ||
+                                                    comments.trim().length <
+                                                        2)) {
+                                              DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                    i18_local
+                                                        .stockReconciliationDetails
+                                                        .commentsRequired,
+                                                  ),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+                                              return;
+                                            }
 
                                             final model =
                                                 StockReconciliationModel(
@@ -405,7 +427,7 @@ class _CustomStockReconciliationPageState
                                               key:
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
-                                                i18Local
+                                                i18_local
                                                     .stockReconciliationDetails
                                                     .insecticideLabel,
                                               ),

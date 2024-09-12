@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
@@ -34,6 +36,7 @@ class CustomRefusedDeliveryPageState
     extends LocalizedState<CustomRefusedDeliveryPage> {
   static const _dataOfRefusalKey = 'dateOfAdministration';
   static const _reasonOfRefusal = 'reasonOfRefusal';
+  static const _deliveryCommentKey = 'deliveryComment';
 
   @override
   void initState() {
@@ -54,6 +57,14 @@ class CustomRefusedDeliveryPageState
           builder: (_, form, __) =>
               BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
                 builder: (context, registrationState) {
+                  List<String> reasons =
+                      (RegistrationDeliverySingleton().refusalReasons ?? []);
+                  reasons.sort((a, b) {
+                    if (a == "OTHERS") return 1; // Keep 'Others' at the end
+                    if (b == "OTHERS") return -1; // Keep 'Others' at the end
+                    return a.compareTo(b); // Normal alphabetical sort
+                  });
+
                   return ScrollableContent(
                     enableFixedButton: true,
                     header: const Column(
@@ -83,6 +94,27 @@ class CustomRefusedDeliveryPageState
 
                           final reasonOfRefusal =
                               form.control(_reasonOfRefusal).value;
+
+                          final refusalComment = form
+                              .control(_deliveryCommentKey)
+                              .value as String?;
+
+                          if (reasonOfRefusal == 'OTHERS' &&
+                              (refusalComment == null ||
+                                  refusalComment.trim().length < 2)) {
+                            DigitToast.show(
+                              context,
+                              options: DigitToastOptions(
+                                localizations.translate(
+                                  i18_local.beneficiaryDetails
+                                      .refusalCommentsRequried,
+                                ),
+                                true,
+                                theme,
+                              ),
+                            );
+                            return;
+                          }
 
                           final projectBeneficiary = [
                             registrationState.householdMemberWrapper
@@ -115,7 +147,7 @@ class CustomRefusedDeliveryPageState
                                         ?.first?.clientReferenceId,
                                     status,
                                     reasonOfRefusal,
-                                    null,
+                                    refusalComment,
                                     registrationState.householdMemberWrapper
                                         .members?.first.address?.first,
                                   ),
@@ -133,7 +165,7 @@ class CustomRefusedDeliveryPageState
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
                               );
-                          context.router.popAndPush(DeliverySummaryRoute());
+                          context.router.push(DeliverySummaryRoute());
                         },
                         child: Center(
                           child: Text(
@@ -199,9 +231,7 @@ class CustomRefusedDeliveryPageState
                                       width: MediaQuery.of(context).size.width *
                                           .36,
                                       allowMultipleSelection: false,
-                                      options: RegistrationDeliverySingleton()
-                                              .refusalReasons ??
-                                          [],
+                                      options: reasons,
                                       onSelectionChanged: (value) {
                                         form
                                             .control(_reasonOfRefusal)
@@ -239,6 +269,14 @@ class CustomRefusedDeliveryPageState
                                     ),
                                   ),
                                 ),
+                                refusedDeliveryShowcaseData.comments.buildWith(
+                                  child: DigitTextFormField(
+                                    formControlName: _deliveryCommentKey,
+                                    label: localizations.translate(i18
+                                        .deliverIntervention
+                                        .reasonForRefusalCommentLabel),
+                                  ),
+                                ),
                               ]),
                             ],
                           ),
@@ -257,6 +295,7 @@ class CustomRefusedDeliveryPageState
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _reasonOfRefusal:
           FormControl<String>(value: null, validators: [Validators.required]),
+      _deliveryCommentKey: FormControl<String>(value: null),
     });
   }
 
