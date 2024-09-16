@@ -72,10 +72,10 @@ class CustomStockDetailsPageState
         Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<String>(),
-      _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(
+      _waybillNumberKey: FormControl<String>(
         validators: [CustomValidator.requiredMin2, Validators.maxLength(200)],
       ),
+      _waybillQuantityKey: FormControl<String>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
@@ -1290,6 +1290,16 @@ class CustomStockDetailsPageState
                                         const TextInputType.numberWithOptions(
                                       decimal: true,
                                     ),
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '200'),
+                                      'min2': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', ''),
+                                    },
                                   ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
@@ -1298,16 +1308,6 @@ class CustomStockDetailsPageState
                                             .quantityOfProductIndicatedOnWaybillLabel,
                                       ),
                                       formControlName: _waybillQuantityKey,
-                                      validationMessages: {
-                                        'maxLength': (object) => localizations
-                                            .translate(
-                                                i18.common.maxCharsRequired)
-                                            .replaceAll('{}', '200'),
-                                        'min2': (object) => localizations
-                                            .translate(
-                                                i18.common.min2CharsRequired)
-                                            .replaceAll('{}', ''),
-                                      },
                                       onChanged: (val) {
                                         if (val.toString().isEmpty ||
                                             val.value == null) {
