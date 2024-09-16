@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 import 'package:attendance_management/utils/i18_key_constants.dart' as i18;
+import '../../router/app_router.dart';
 import '../../widgets/localized.dart';
 import 'package:attendance_management/blocs/attendance_individual_bloc.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -547,7 +548,8 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
         secondaryLabel:
             localizations.translate(i18.attendance.goToAttendanceRegisters),
         secondaryAction: () {
-          context.router.popUntilRouteWithName(ManageAttendanceRoute.name);
+          context.router
+              .popUntilRouteWithName(CustomManageAttendanceRoute.name);
         },
       ),
     );

@@ -4,11 +4,11 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/inventory_management.dart'
+    hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -16,7 +16,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18_local;
 
-import 'package:inventory_management/utils/utils.dart';
+import '../../utils/utils.dart' show CustomValidator;
 import '../../widgets/localized.dart';
 import '../../router/app_router.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
@@ -73,7 +73,9 @@ class CustomStockDetailsPageState
       ]),
       _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(),
+      _waybillQuantityKey: FormControl<String>(
+        validators: [CustomValidator.requiredMin2, Validators.maxLength(200)],
+      ),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
@@ -510,7 +512,14 @@ class CustomStockDetailsPageState
                                             referenceId: stockState.projectId,
                                             referenceIdType: 'PROJECT',
                                             quantity: quantity.toString(),
-                                            wayBillNumber: waybillNumber,
+                                            wayBillNumber: waybillNumber
+                                                    .toString()
+                                                    .trim()
+                                                    .isEmpty
+                                                ? null
+                                                : waybillNumber
+                                                    .toString()
+                                                    .trim(),
                                             receiverId: receiverId,
                                             receiverType: receiverType,
                                             senderId: senderId,
@@ -533,84 +542,69 @@ class CustomStockDetailsPageState
                                               lastModifiedTime: context
                                                   .millisecondsSinceEpoch(),
                                             ),
-                                            additionalFields: [
-                                                      waybillQuantity,
-                                                      vehicleNumber,
-                                                      comments,
-                                                      driverName
-                                                    ].any((element) =>
-                                                        element != null) ||
-                                                    hasLocationData
-                                                ? StockAdditionalFields(
-                                                    version: 1,
-                                                    fields: [
-                                                      AdditionalField(
-                                                        InventoryManagementEnums
-                                                            .name
-                                                            .toValue(),
-                                                        InventorySingleton()
-                                                            .loggedInUser
-                                                            ?.name,
-                                                      ),
-                                                      if (waybillQuantity !=
-                                                              null &&
-                                                          waybillQuantity
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'waybill_quantity',
-                                                          waybillQuantity,
-                                                        ),
-                                                      if (vehicleNumber !=
-                                                              null &&
-                                                          vehicleNumber
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'vehicle_number',
-                                                          vehicleNumber,
-                                                        ),
-                                                      if (comments != null &&
-                                                          comments
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'comments',
-                                                          comments,
-                                                        ),
-                                                      if (deliveryTeamName !=
-                                                              null &&
-                                                          deliveryTeamName
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'deliveryTeam',
-                                                          deliveryTeamName,
-                                                        ),
-                                                      if (driverName != null &&
-                                                          driverName.isNotEmpty)
-                                                        AdditionalField(
-                                                          'driver_name',
-                                                          driverName,
-                                                        ),
-                                                      if (hasLocationData) ...[
-                                                        AdditionalField(
-                                                          'lat',
-                                                          lat,
-                                                        ),
-                                                        AdditionalField(
-                                                          'lng',
-                                                          lng,
-                                                        ),
-                                                      ],
-                                                      if (scannerState
-                                                          .barCodes.isNotEmpty)
-                                                        addBarCodesToFields(
-                                                            scannerState
-                                                                .barCodes),
-                                                    ],
-                                                  )
-                                                : null,
+                                            additionalFields:
+                                                StockAdditionalFields(
+                                              version: 1,
+                                              fields: [
+                                                AdditionalField(
+                                                  InventoryManagementEnums.name
+                                                      .toValue(),
+                                                  InventorySingleton()
+                                                      .loggedInUser
+                                                      ?.name,
+                                                ),
+                                                if (waybillQuantity != null &&
+                                                    waybillQuantity
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    'waybill_quantity',
+                                                    waybillQuantity,
+                                                  ),
+                                                if (vehicleNumber != null &&
+                                                    vehicleNumber
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    'vehicle_number',
+                                                    vehicleNumber,
+                                                  ),
+                                                if (comments != null &&
+                                                    comments.trim().isNotEmpty)
+                                                  AdditionalField(
+                                                    'comments',
+                                                    comments,
+                                                  ),
+                                                if (deliveryTeamName != null &&
+                                                    deliveryTeamName
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    'deliveryTeam',
+                                                    deliveryTeamName,
+                                                  ),
+                                                if (driverName != null &&
+                                                    driverName.isNotEmpty)
+                                                  AdditionalField(
+                                                    'driver_name',
+                                                    driverName,
+                                                  ),
+                                                if (hasLocationData) ...[
+                                                  AdditionalField(
+                                                    'lat',
+                                                    lat,
+                                                  ),
+                                                  AdditionalField(
+                                                    'lng',
+                                                    lng,
+                                                  ),
+                                                ],
+                                                if (scannerState
+                                                    .barCodes.isNotEmpty)
+                                                  addBarCodesToFields(
+                                                      scannerState.barCodes),
+                                              ],
+                                            ),
                                           );
 
                                           bloc.add(
@@ -1304,6 +1298,16 @@ class CustomStockDetailsPageState
                                             .quantityOfProductIndicatedOnWaybillLabel,
                                       ),
                                       formControlName: _waybillQuantityKey,
+                                      validationMessages: {
+                                        'maxLength': (object) => localizations
+                                            .translate(
+                                                i18.common.maxCharsRequired)
+                                            .replaceAll('{}', '200'),
+                                        'min2': (object) => localizations
+                                            .translate(
+                                                i18.common.min2CharsRequired)
+                                            .replaceAll('{}', ''),
+                                      },
                                       onChanged: (val) {
                                         if (val.toString().isEmpty ||
                                             val.value == null) {
