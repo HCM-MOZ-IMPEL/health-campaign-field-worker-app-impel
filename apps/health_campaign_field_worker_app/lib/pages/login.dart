@@ -147,16 +147,31 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             .control(_privacyCheck)
                             .setValidators([Validators.requiredTrue]);
                         form.control(_privacyCheck).updateValueAndValidity();
-                        return PrivacyComponent(
-                          privacyPolicy:
-                              convertToPrivacyPolicyModel(privacyPolicyJson),
-                          formControlName: _privacyCheck,
-                          text: localizations
-                              .translate(i18.privacyPolicy.privacyNoticeText),
-                          linkText: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyLinkText),
-                          validationMessage: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyValidationText),
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                kPadding / 4,
+                                0,
+                                0,
+                                0,
+                              ),
+                              child: PrivacyComponent(
+                                privacyPolicy: convertToPrivacyPolicyModel(
+                                    privacyPolicyJson),
+                                formControlName: _privacyCheck,
+                                text: localizations.translate(
+                                    i18.privacyPolicy.privacyNoticeText),
+                                linkText: localizations.translate(
+                                    i18.privacyPolicy.privacyPolicyLinkText),
+                                validationMessage: localizations.translate(i18
+                                    .privacyPolicy.privacyPolicyValidationText),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: kPadding * 2,
+                            ),
+                          ],
                         );
                       }),
                       BlocBuilder<AuthBloc, AuthState>(
