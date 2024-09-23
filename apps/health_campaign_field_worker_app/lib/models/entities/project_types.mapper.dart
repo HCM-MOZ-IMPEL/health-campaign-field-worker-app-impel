@@ -27,7 +27,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
     switch (value) {
       case "IRS":
         return ProjectTypes.irs;
-      case "SMC":
+      case "MR-DN":
         return ProjectTypes.smc;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -40,7 +40,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
       case ProjectTypes.irs:
         return "IRS";
       case ProjectTypes.smc:
-        return "SMC";
+        return "MR-DN";
     }
   }
 }
