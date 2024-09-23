@@ -24,6 +24,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedProject;
   }
 
+  String? get projectTypeCode {
+    final projectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType.code;
+  }
+
   String get projectId => selectedProject.id;
 
   ProjectCycle? get selectedCycle {
