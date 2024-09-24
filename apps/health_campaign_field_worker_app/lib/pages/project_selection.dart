@@ -8,8 +8,10 @@ import 'package:digit_data_model/data_model.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
+import '../models/entities/project_types.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -142,7 +144,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  navigateToBoundary(boundary);
+                  navigateToBoundary(boundary, context);
                 } else {
                   DigitToast.show(
                     context,
@@ -225,14 +227,20 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     );
   }
 
-  void navigateToBoundary(String boundary) async {
+  void navigateToBoundary(String boundary, BuildContext context) async {
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
+      print(context.selectedProject.additionalDetails?.projectType?.code);
+
+      print("-----------------");
       context.router.replaceAll([
-        HomeRoute(),
+        (_selectedProject?.additionalDetails?.projectType?.code)!
+                .contains(ProjectTypes.smc.toValue())
+            ? SMCWrapperRoute()
+            : IRSWrapperRoute(),
         BoundarySelectionRoute(),
       ]);
     } catch (e) {

@@ -36,6 +36,7 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/data_model.init.dart';
+import '../models/entities/project_types.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -303,7 +304,11 @@ void showDownloadDialog(
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.router.popUntilRouteWithName(HomeRoute.name);
+                // context.router.popUntilRouteWithName(Home.name);
+                // (context.projectTypeCode == ProjectTypes.smc.toValue())
+                //     ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
+                //     : context.router
+                //         .popUntilRouteWithName(IRSWrapperRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -332,7 +337,12 @@ void showDownloadDialog(
                     await LocalSecureStore.instance.setManualSyncTrigger(false);
                     if (context.mounted) {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.router.popUntilRouteWithName(HomeRoute.name);
+                      Navigator.pop(context);
+                      // (context.projectTypeCode == ProjectTypes.smc.toValue())
+                      //     ? context.router
+                      //         .popUntilRouteWithName(SMCWrapperRoute.name)
+                      //     : context.router
+                      //         .popUntilRouteWithName(IRSWrapperRoute.name);
                     }
                   },
                 )

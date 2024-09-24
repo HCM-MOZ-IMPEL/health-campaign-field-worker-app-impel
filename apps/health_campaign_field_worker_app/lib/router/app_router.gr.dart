@@ -512,6 +512,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    IRSWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const IRSWrapperPage(),
+      );
+    },
     IneligibleSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<IneligibleSummaryRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -571,6 +577,12 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
+      );
+    },
+    SMCWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SMCWrapperPage(),
       );
     },
     UnauthenticatedRouteWrapper.name: (routeData) {
@@ -2374,6 +2386,20 @@ class HomeRouteArgs {
 }
 
 /// generated route for
+/// [IRSWrapperPage]
+class IRSWrapperRoute extends PageRouteInfo<void> {
+  const IRSWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          IRSWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'IRSWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [IneligibleSummaryPage]
 class IneligibleSummaryRoute extends PageRouteInfo<IneligibleSummaryRouteArgs> {
   IneligibleSummaryRoute({
@@ -2585,6 +2611,20 @@ class ProjectSelectionRouteArgs {
   String toString() {
     return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [SMCWrapperPage]
+class SMCWrapperRoute extends PageRouteInfo<void> {
+  const SMCWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          SMCWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SMCWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

@@ -11,6 +11,7 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -93,7 +94,11 @@ class SideBar extends StatelessWidget {
             icon: Icons.home,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([HomeRoute()]);
+              context.router.replaceAll([
+                context.projectTypeCode == ProjectTypes.smc.toValue()
+                    ? SMCWrapperRoute()
+                    : IRSWrapperRoute(),
+              ]);
             },
           ),
           if (isDistributor)
