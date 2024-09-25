@@ -216,6 +216,33 @@ class MdmsRepository {
       return genderOption;
     }).toList();
 
+    final privacyPolicyConfig = commonMasters?.privacyPolicyConfig;
+
+    final privacyPolicy = PrivacyPolicy()
+      ..header = privacyPolicyConfig?.first.header ?? ''
+      ..module = privacyPolicyConfig?.first.module ?? ''
+      ..active = privacyPolicyConfig?.first.active
+      ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
+        final content = Content()
+          ..header = cont.header
+          ..descriptions = (cont.descriptions ?? []).map((d) {
+            final description = Description()
+              ..text = d.text
+              ..type = d.type
+              ..isBold = d.isBold
+              ..subDescriptions = (d.subDescriptions ?? []).map((sd) {
+                final subDescription = SubDescription()
+                  ..text = sd.text
+                  ..type = sd.type
+                  ..isBold = sd.isBold
+                  ..isSpaceRequired = sd.isSpaceRequired;
+                return subDescription;
+              }).toList();
+            return description;
+          }).toList();
+        return content;
+      }).toList();
+
     final List<IdTypeOptions>? idTypeOptions =
         element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
@@ -276,6 +303,7 @@ class MdmsRepository {
     final backendInterface = BackendInterface()
       ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
+    appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.householdDeletionReasonOptions =
