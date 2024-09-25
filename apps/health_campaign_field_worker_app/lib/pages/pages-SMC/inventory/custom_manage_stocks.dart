@@ -7,7 +7,8 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+
+import '../../../widgets/localized.dart';
 
 @RoutePage()
 class CustomManageStocksPage extends LocalizedStatefulWidget {

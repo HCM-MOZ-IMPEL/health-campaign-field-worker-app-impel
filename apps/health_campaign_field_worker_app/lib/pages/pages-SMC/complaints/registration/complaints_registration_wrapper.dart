@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-import '../../../models/complaints/complaints.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/boundary_selection_wrapper.dart';
+import '../../../../blocs/complaints_registration/complaints_registration.dart';
+import '../../../../models/complaints/complaints.dart';
+import '../../../../utils/extensions/extensions.dart';
+import '../../../../widgets/boundary_selection_wrapper.dart';
 
 @RoutePage()
 class ComplaintsRegistrationWrapperPage extends StatelessWidget

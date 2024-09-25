@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/localized.dart';
 import 'package:flutter/services.dart';
+
+import '../../../../blocs/complaints_inbox/complaints_inbox.dart';
+import '../../../../router/app_router.dart';
+import '../../../../utils/extensions/extensions.dart';
+import '../../../../utils/utils.dart';
+import '../../../../widgets/localized.dart';
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {

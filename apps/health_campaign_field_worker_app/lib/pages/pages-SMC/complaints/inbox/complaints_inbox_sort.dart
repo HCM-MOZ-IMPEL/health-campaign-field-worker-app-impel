@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../widgets/localized.dart';
+import '../../../../blocs/complaints_inbox/complaints_inbox.dart';
+import '../../../../router/app_router.dart';
+import '../../../../widgets/localized.dart';
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class ComplaintsInboxSortPage extends LocalizedStatefulWidget {
@@ -84,7 +84,8 @@ class _ComplaintsInboxSortPageState
                     footer: SizedBox(
                       child: DigitCard(
                         margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                        padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                        padding:
+                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,

@@ -12,14 +12,14 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/localized.dart';
 
-import '../../widgets/custom_digit_text_form_field.dart';
+import '../../../widgets/widgets_smc/custom_digit_text_form_field.dart';
 
 @RoutePage()
 class CustomClosedHouseholdDetailsPage extends LocalizedStatefulWidget {

@@ -3,16 +3,16 @@ import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../utils/constants.dart';
+import '../../../utils/constants.dart';
 import 'package:recase/recase.dart';
 
-import '../../blocs/auth/auth.dart';
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/action_card/action_card.dart';
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
-import '../../widgets/no_result_card/no_result_card.dart';
+import '../../../blocs/auth/auth.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
+import '../../../widgets/action_card/action_card.dart';
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
+import '../../../widgets/no_result_card/no_result_card.dart';
 
 @RoutePage()
 class ChecklistPage extends LocalizedStatefulWidget {

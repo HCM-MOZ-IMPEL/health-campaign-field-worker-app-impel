@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../blocs/auth/auth.dart';
-import '../router/app_router.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/utils.dart';
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/localized.dart';
+import '../../blocs/auth/auth.dart';
+import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
+import '../../utils/utils_smc/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class UserQRDetailsPage extends LocalizedStatefulWidget {
