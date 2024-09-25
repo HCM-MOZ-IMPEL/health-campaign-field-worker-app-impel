@@ -83,7 +83,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                           )
                                           .isNegative &&
                                       !item.code!.contains(Constants
-                                          .healthFacilityChecklistPrefix));
+                                          .healthFacilityChecklistPrefix) &&
+                                      !item.code!.contains(
+                                          Constants.specialCasesChecklist));
 
                               if (values.isEmpty) {
                                 return Column(

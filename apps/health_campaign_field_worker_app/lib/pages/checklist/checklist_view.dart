@@ -44,6 +44,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   String othersText = "OTHERS";
   String yesText = "YES";
   String multiSelectionSeparator = ".";
+  int maxStringChar = 8000;
 
   @override
   void initState() {
@@ -365,11 +366,22 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         i18.common.corecommonRequired,
                                       );
                                     }
-                                    if (e.regex != null) {
+                                    if (e.regex != null &&
+                                        value != null &&
+                                        value != '') {
                                       return (RegExp(e.regex!).hasMatch(value!))
                                           ? null
                                           : localizations
                                               .translate("${e.code}_REGEX");
+                                    }
+                                    if (value != null &&
+                                        value.length > maxStringChar) {
+                                      return localizations
+                                          .translate(
+                                            i18.common.maxCharsRequired,
+                                          )
+                                          .replaceAll(
+                                              '{}', maxStringChar.toString());
                                     }
 
                                     return null;
@@ -789,10 +801,18 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 i18.common.corecommonRequired,
               );
             }
-            if (item.regex != null) {
+            if (item.regex != null && value != null && value != '') {
               return (RegExp(item.regex!).hasMatch(value!))
                   ? null
                   : localizations.translate("${item.code}_REGEX");
+            }
+
+            if (value != null && value.length > maxStringChar) {
+              return localizations
+                  .translate(
+                    i18.common.maxCharsRequired,
+                  )
+                  .replaceAll('{}', maxStringChar.toString());
             }
 
             return null;

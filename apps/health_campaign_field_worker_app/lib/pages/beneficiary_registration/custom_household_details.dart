@@ -566,6 +566,52 @@ class CustomHouseHoldDetailsPageState
                             ),
                             //[TODO: Use pregnant women form value based on project config
                             if (widget.isEligible)
+                              DigitIntegerFormPicker(
+                                minimum: 0,
+                                maximum: 20,
+                                onChange: () {
+                                  int men = form.control(_menCountKey).value;
+                                  int women =
+                                      form.control(_womenCountKey).value;
+                                  int memberCount =
+                                      form.control(_memberCountKey).value;
+                                  form.control(_memberCountKey).value =
+                                      memberCount < (men + women)
+                                          ? men + women
+                                          : memberCount;
+                                },
+                                form: form,
+                                formControlName: _menCountKey,
+                                label: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfMenCountLabel,
+                                ),
+                                incrementer: true,
+                              ),
+                            if (widget.isEligible)
+                              DigitIntegerFormPicker(
+                                minimum: 0,
+                                maximum: 20,
+                                onChange: () {
+                                  int men = form.control(_menCountKey).value;
+                                  int women =
+                                      form.control(_womenCountKey).value;
+                                  int memberCount =
+                                      form.control(_memberCountKey).value;
+                                  form.control(_memberCountKey).value =
+                                      memberCount < (men + women)
+                                          ? men + women
+                                          : memberCount;
+                                },
+                                form: form,
+                                formControlName: _womenCountKey,
+                                label: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.noOfWomenCountLabel,
+                                ),
+                                incrementer: true,
+                              ),
+                            if (widget.isEligible)
                               householdDetailsShowcaseData
                                   .numberOfPregnantWomenInHousehold
                                   .buildWith(
@@ -621,53 +667,6 @@ class CustomHouseHoldDetailsPageState
                                   ),
                                   incrementer: true,
                                 ),
-                              ),
-
-                            if (widget.isEligible)
-                              DigitIntegerFormPicker(
-                                minimum: 0,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
-                                  form.control(_memberCountKey).value =
-                                      memberCount < (men + women)
-                                          ? men + women
-                                          : memberCount;
-                                },
-                                form: form,
-                                formControlName: _menCountKey,
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfMenCountLabel,
-                                ),
-                                incrementer: true,
-                              ),
-                            if (widget.isEligible)
-                              DigitIntegerFormPicker(
-                                minimum: 0,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
-                                  form.control(_memberCountKey).value =
-                                      memberCount < (men + women)
-                                          ? men + women
-                                          : memberCount;
-                                },
-                                form: form,
-                                formControlName: _womenCountKey,
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfWomenCountLabel,
-                                ),
-                                incrementer: true,
                               ),
                             householdDetailsShowcaseData
                                 .numberOfMembersLivingInHousehold
