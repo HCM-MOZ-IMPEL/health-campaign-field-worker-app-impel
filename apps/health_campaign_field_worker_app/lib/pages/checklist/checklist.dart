@@ -85,7 +85,7 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                       !item.code!.contains(Constants
                                           .healthFacilityChecklistPrefix) &&
                                       !item.code!.contains(
-                                          Constants.specialCasesChecklist));
+                                          Constants.beneficiaryChecklist));
 
                               if (values.isEmpty) {
                                 return Column(
