@@ -9,13 +9,6 @@ class IRSWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "IRS Page",
-            style: TextStyle(color: Colors.amber),
-          ),
-        ),
-        body: Text("IRS BODY"));
+    return const AutoRouter();
   }
 }

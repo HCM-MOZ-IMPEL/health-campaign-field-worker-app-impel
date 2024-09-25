@@ -135,6 +135,7 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: HomeRoute.page,
                 path: 'home',
+                initial: true,
               ),
               AutoRoute(page: ProfileRoute.page, path: 'profile'),
               AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),

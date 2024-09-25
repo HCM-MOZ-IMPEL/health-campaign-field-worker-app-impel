@@ -9,14 +9,6 @@ class SMCWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "SMC Page",
-            style: TextStyle(color: Colors.amber),
-          ),
-        ),
-        body: Text("SMC BODY"));
-    ;
+    return const AutoRouter();
   }
 }
