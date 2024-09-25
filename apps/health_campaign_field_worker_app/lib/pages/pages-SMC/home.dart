@@ -9,8 +9,8 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import '../blocs/localization/localization.dart';
-import '../data/local_store/app_shared_preferences.dart';
+import '../../blocs/localization/localization.dart';
+import '../../data/local_store/app_shared_preferences.dart';
 
 import 'dart:async';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -30,21 +30,21 @@ import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/auth/auth.dart';
-import '../blocs/sync/sync.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/local_store/secure_store/secure_store.dart';
-import '../models/entities/roles_type.dart';
-import '../router/app_router.dart';
-import '../utils/debound.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/utils.dart';
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/home/home_item_card.dart';
-import '../widgets/localized.dart';
-import '../widgets/progress_bar/custom_beneficiary_progress.dart';
-import '../widgets/showcase/config/showcase_constants.dart';
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/auth/auth.dart';
+import '../../blocs/sync/sync.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/entities/roles_type.dart';
+import '../../router/app_router.dart';
+import '../../utils/debound.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/home/home_item_card.dart';
+import '../../widgets/localized.dart';
+import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
+import '../../widgets/showcase/config/showcase_constants.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {

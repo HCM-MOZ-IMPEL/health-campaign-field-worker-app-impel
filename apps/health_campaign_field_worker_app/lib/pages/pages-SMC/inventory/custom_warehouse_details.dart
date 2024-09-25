@@ -17,7 +17,7 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
 
-import '../../router/app_router.dart';
+import '../../../router/app_router.dart';
 
 @RoutePage()
 class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {

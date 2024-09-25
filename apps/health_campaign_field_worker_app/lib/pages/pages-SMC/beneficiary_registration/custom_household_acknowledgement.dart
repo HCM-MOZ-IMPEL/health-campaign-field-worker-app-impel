@@ -8,7 +8,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../router/app_router.dart';
+import '../../../router/app_router.dart';
 
 @RoutePage()
 class CustomHouseholdAcknowledgementPage extends LocalizedStatefulWidget {

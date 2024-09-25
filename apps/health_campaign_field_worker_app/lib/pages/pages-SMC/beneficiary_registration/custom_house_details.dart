@@ -12,12 +12,12 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import '../../router/app_router.dart';
-import '../../utils/utils.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/utils.dart';
+import '../../../widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 

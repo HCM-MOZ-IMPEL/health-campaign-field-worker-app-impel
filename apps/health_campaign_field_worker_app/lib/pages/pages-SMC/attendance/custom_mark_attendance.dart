@@ -14,8 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 import 'package:attendance_management/utils/i18_key_constants.dart' as i18;
-import '../../router/app_router.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../widgets/localized.dart';
 import 'package:attendance_management/blocs/attendance_individual_bloc.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';

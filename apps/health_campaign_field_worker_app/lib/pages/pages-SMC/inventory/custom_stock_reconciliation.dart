@@ -20,9 +20,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/extensions/extensions.dart';
-import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/i18_key_constants.dart' as i18_local;
 
-import '../../../widgets/localized.dart';
+import '../../../../widgets/localized.dart';
 
 @RoutePage()
 class CustomStockReconciliationPage extends LocalizedStatefulWidget {

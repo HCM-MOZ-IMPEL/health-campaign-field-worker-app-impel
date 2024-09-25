@@ -5,6 +5,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
+import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -22,24 +23,24 @@ import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import '../../utils/utils.dart' hide Constants;
+import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/utils.dart' hide Constants;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 // import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
-import '../../widgets/custom_digit_dob_picker.dart';
-import '../../widgets/localized.dart';
+import '../../../widgets/custom_digit_dob_picker.dart';
+import '../../../widgets/localized.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 
 @RoutePage()
-class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
+class CustomIndividualDetailsSMCPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
   final bool isEligible;
 
-  const CustomIndividualDetailsPage({
+  const CustomIndividualDetailsSMCPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = true,
@@ -47,13 +48,14 @@ class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<CustomIndividualDetailsPage> createState() =>
-      CustomIndividualDetailsPageState();
+  State<CustomIndividualDetailsSMCPage> createState() =>
+      CustomIndividualDetailsSMCPageState();
 }
 
-class CustomIndividualDetailsPageState
-    extends LocalizedState<CustomIndividualDetailsPage> {
+class CustomIndividualDetailsSMCPageState
+    extends LocalizedState<CustomIndividualDetailsSMCPage> {
   static const _individualNameKey = 'individualName';
+  static const _individualLastNameKey = 'individualLastName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
@@ -602,6 +604,32 @@ class CustomIndividualDetailsPageState
                               },
                             ),
                           ),
+                          DigitTextFormField(
+                            formControlName: _individualLastNameKey,
+                            label: localizations.translate(
+                              widget.isHeadOfHousehold
+                                  ? i18.individualDetails.lastNameHeadLabelText
+                                  : i18
+                                      .individualDetails.childLastNameLabelText,
+                            ),
+                            maxLength: 200,
+                            isRequired: true,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    i18.individualDetails
+                                        .lastNameIsRequiredError,
+                                  ),
+                              'minLength': (object) => localizations.translate(
+                                    i18.individualDetails.lastNameLengthError,
+                                  ),
+                              'maxLength': (object) => localizations.translate(
+                                    i18.individualDetails.lastNameLengthError,
+                                  ),
+                              "min3": (object) => localizations.translate(
+                                    i18.common.min3CharsRequired,
+                                  ),
+                            },
+                          ),
                           // solution customisation
                           // Offstage(
                           //   offstage: !widget.isHeadOfHousehold,
@@ -615,8 +643,7 @@ class CustomIndividualDetailsPageState
                           const SizedBox(
                             height: 10,
                           ),
-                          CustomDigitDobPicker(
-                            isEligible: isEligible,
+                          DigitDobPicker(
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
@@ -627,6 +654,9 @@ class CustomIndividualDetailsPageState
                             yearsHintLabel: localizations.translate(
                               i18.individualDetails.yearsHintText,
                             ),
+                            monthsHintLabel: localizations.translate(
+                              i18.individualDetails.monthsHintText,
+                            ),
                             separatorLabel: localizations.translate(
                               i18.individualDetails.separatorLabelText,
                             ),
@@ -634,28 +664,32 @@ class CustomIndividualDetailsPageState
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
                             initialDate: before150Years,
+                            confirmText: localizations.translate(
+                              i18.common.coreCommonOk,
+                            ),
+                            cancelText: localizations.translate(
+                              i18.common.coreCommonCancel,
+                            ),
                             onChangeOfFormControl: (formControl) {
                               // Handle changes to the control's value here
                               final value = formControl.value;
-                              if (isEligible && value == null) {
+                              if (value == null) {
                                 formControl.setErrors({'': true});
-                              } else if (isEligible) {
+                              } else {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
                                 if ((age.years == 0 && age.months == 0) ||
                                     age.months > 11 ||
-                                    (age.years >= 150 && age.months >= 0)) {
+                                    (age.years > 150 ||
+                                        (age.years == 150 && age.months > 0))) {
                                   formControl.setErrors({'': true});
                                 } else {
                                   formControl.removeError('');
                                 }
                               }
                             },
-                            cancelText: localizations
-                                .translate(i18.common.coreCommonCancel),
-                            confirmText: localizations
-                                .translate(i18.common.coreCommonOk),
                           ),
+
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
@@ -821,6 +855,8 @@ class CustomIndividualDetailsPageState
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
+        familyName:
+            (form.control(_individualLastNameKey).value as String).trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -872,6 +908,14 @@ class CustomIndividualDetailsPageState
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
+      ),
+      _individualLastNameKey: FormControl<String>(
+        validators: [
+          Validators.required,
+          CustomValidator.requiredMin,
+          Validators.maxLength(200),
+        ],
+        value: individual?.name?.familyName ?? '',
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

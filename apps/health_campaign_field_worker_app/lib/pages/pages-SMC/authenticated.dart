@@ -15,18 +15,18 @@ import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
-import '../blocs/localization/app_localization.dart';
-import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
-import '../data/remote_client.dart';
-import '../data/repositories/remote/bandwidth_check.dart';
-import '../models/downsync/downsync.dart';
-import '../router/app_router.dart';
-import '../router/authenticated_route_observer.dart';
-import '../utils/environment_config.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/utils.dart';
-import '../widgets/sidebar/side_bar.dart';
+import '../../blocs/localization/app_localization.dart';
+import '../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../../blocs/sync/sync.dart';
+import '../../data/remote_client.dart';
+import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../models/downsync/downsync.dart';
+import '../../router/app_router.dart';
+import '../../router/authenticated_route_observer.dart';
+import '../../utils/environment_config.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
+import '../../widgets/sidebar/side_bar.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/localization/app_localization.dart';
-import '../blocs/localization/localization.dart';
-import '../router/app_router.dart';
-import '../utils/utils.dart';
-import '../utils/i18_key_constants.dart' as i18;
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/localization/app_localization.dart';
+import '../../blocs/localization/localization.dart';
+import '../../router/app_router.dart';
+import '../../utils/utils.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class LanguageSelectionPage extends StatelessWidget {

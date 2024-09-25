@@ -5,9 +5,9 @@ import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/inventory_management.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../../router/app_router.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
+import '../../../../router/app_router.dart';
+import '../../../../widgets/header/back_navigation_help_header.dart';
+import '../../../../widgets/localized.dart';
 
 @RoutePage()
 class CustomInventoryReportSelectionPage extends LocalizedStatefulWidget {

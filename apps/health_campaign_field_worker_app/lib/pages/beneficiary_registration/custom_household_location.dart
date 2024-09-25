@@ -186,8 +186,8 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          if (context.projectTypeCode ==
-                              ProjectTypes.smc.toValue()) {
+                          if (context.projectTypeCode!
+                              .contains(ProjectTypes.smc.toValue())) {
                             // Todd : set the variable accordingly
                             router.push(
                                 CustomHouseHoldDetailsRoute(isEligible: false));
@@ -216,8 +216,8 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          if (context.projectTypeCode ==
-                              ProjectTypes.smc.toValue()) {
+                          if (context.projectTypeCode!
+                              .contains(ProjectTypes.smc.toValue())) {
                             // Todd : set the variable accordingly
                             router.push(
                                 CustomHouseHoldDetailsRoute(isEligible: false));

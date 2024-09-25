@@ -1,9 +1,9 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../router/app_router.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/localized.dart';
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class ComplaintsAcknowledgementPage extends LocalizedStatefulWidget {

@@ -9,7 +9,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
-import '../../router/app_router.dart';
+import '../../../router/app_router.dart';
 
 @RoutePage()
 class CustomBeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
