@@ -25,17 +25,16 @@ extension ContextUtilityExtensions on BuildContext {
   }
 
   String? get projectTypeCode {
-    final projectBloc = _get<ProjectBloc>();
+    final projectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
 
-    final projectState = projectBloc.state;
-    final projectTypeCode =
-        projectState.selectedProject?.additionalDetails?.projectType?.code;
-
-    if (projectTypeCode == null) {
+    if (projectType == null) {
       return "";
     }
 
-    return projectTypeCode;
+    return projectType.code;
   }
 
   String get projectId => selectedProject.id;

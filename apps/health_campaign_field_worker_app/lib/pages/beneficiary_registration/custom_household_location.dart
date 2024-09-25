@@ -216,6 +216,7 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
+                          print("BBBBBBBBBBBB ${context.projectTypeCode}");
                           if (context.projectTypeCode!
                               .contains(ProjectTypes.smc.toValue())) {
                             // Todd : set the variable accordingly
