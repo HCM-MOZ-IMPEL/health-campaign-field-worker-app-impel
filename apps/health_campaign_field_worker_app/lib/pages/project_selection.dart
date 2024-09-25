@@ -235,10 +235,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           .firstWhere((element) => element.boundaryList.isNotEmpty);
       print(context.selectedProject.additionalDetails?.projectType?.code);
 
-      print("-----------------");
+      print(
+          "Hiii Yash : ${context.selectedProject.additionalDetails?.projectType?.code}");
       context.router.replaceAll([
-        (_selectedProject?.additionalDetails?.projectType?.code)!
-                .contains(ProjectTypes.smc.toValue())
+        context.selectedProject.additionalDetails?.projectType?.code ==
+                ProjectTypes.smc.toValue()
             ? SMCWrapperRoute()
             : IRSWrapperRoute(),
         BoundarySelectionRoute(),

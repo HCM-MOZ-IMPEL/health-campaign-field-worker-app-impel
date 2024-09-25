@@ -305,10 +305,11 @@ void showDownloadDialog(
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
                 // context.router.popUntilRouteWithName(Home.name);
-                // (context.projectTypeCode == ProjectTypes.smc.toValue())
-                //     ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
-                //     : context.router
-                //         .popUntilRouteWithName(IRSWrapperRoute.name);
+                (context.selectedProject.additionalDetails?.projectType?.code ==
+                        ProjectTypes.smc.toValue())
+                    ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
+                    : context.router
+                        .popUntilRouteWithName(IRSWrapperRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -337,12 +338,16 @@ void showDownloadDialog(
                     await LocalSecureStore.instance.setManualSyncTrigger(false);
                     if (context.mounted) {
                       Navigator.of(context, rootNavigator: true).pop();
-                      Navigator.pop(context);
-                      // (context.projectTypeCode == ProjectTypes.smc.toValue())
-                      //     ? context.router
-                      //         .popUntilRouteWithName(SMCWrapperRoute.name)
-                      //     : context.router
-                      //         .popUntilRouteWithName(IRSWrapperRoute.name);
+                      print("Hey Bro :${context.projectTypeCode} ");
+                      (context.selectedProject.additionalDetails?.projectType
+                                  ?.code ==
+                              (ProjectTypes.smc.toValue()))
+                          ? context.router
+                              .popUntilRouteWithName(SMCWrapperRoute.name)
+                          : context.router
+                              .popUntilRouteWithName(IRSWrapperRoute.name);
+                      // context.router
+                      //     .popUntilRouteWithName(SMCWrapperRoute.name);
                     }
                   },
                 )
