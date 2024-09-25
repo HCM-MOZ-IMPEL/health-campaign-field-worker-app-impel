@@ -19,9 +19,8 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
-import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
-
-import '../../router/app_router.dart';
+import '../../../router/app_router.dart';
+import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {

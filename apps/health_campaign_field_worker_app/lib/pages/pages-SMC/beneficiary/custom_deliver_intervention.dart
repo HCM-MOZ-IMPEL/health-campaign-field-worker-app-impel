@@ -16,14 +16,14 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
+import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card.dart';
 
 @RoutePage()
 class CustomDeliverInterventionPage extends LocalizedStatefulWidget {

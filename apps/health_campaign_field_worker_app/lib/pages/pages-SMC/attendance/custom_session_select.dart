@@ -11,7 +11,7 @@ import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:attendance_management/utils/i18_key_constants.dart' as i18;
-import '../../widgets/localized.dart';
+import '../../../widgets/localized.dart';
 import 'package:attendance_management/blocs/app_localization.dart';
 import 'package:attendance_management/blocs/attendance_individual_bloc.dart';
 import 'package:attendance_management/models/entities/attendance_log.dart';

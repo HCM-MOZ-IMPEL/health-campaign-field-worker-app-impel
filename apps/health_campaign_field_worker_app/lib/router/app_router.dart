@@ -1,4 +1,3 @@
-import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
@@ -17,7 +16,6 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
-import '../pages/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';

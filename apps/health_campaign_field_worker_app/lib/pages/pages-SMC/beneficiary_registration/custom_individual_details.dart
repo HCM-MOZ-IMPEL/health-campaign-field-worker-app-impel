@@ -22,15 +22,15 @@ import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import '../../utils/utils.dart' hide Constants;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+import '../../../utils/utils.dart' hide Constants;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 // import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
-import '../../widgets/custom_digit_dob_picker.dart';
-import '../../widgets/localized.dart';
+import '../../../widgets/localized.dart';
+import '../../../widgets/widgets_smc/custom_digit_dob_picker.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 

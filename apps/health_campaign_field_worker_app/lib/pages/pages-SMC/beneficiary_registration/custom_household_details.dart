@@ -20,11 +20,11 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import '../../router/app_router.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import 'package:collection/collection.dart';

@@ -20,7 +20,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
 class CustomDeliverySummaryPage extends LocalizedStatefulWidget {

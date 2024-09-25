@@ -13,7 +13,7 @@ import 'package:attendance_management/utils/i18_key_constants.dart' as i18;
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
-import '../../widgets/localized.dart';
+import '../../../widgets/localized.dart';
 import 'package:attendance_management/widgets/no_result_card.dart';
 
 @RoutePage()
