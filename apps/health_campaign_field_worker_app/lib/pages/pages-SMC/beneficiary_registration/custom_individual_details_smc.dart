@@ -735,34 +735,38 @@ class CustomIndividualDetailsSMCPageState
                             ),
                           ),
                         ]),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding - 4, 0, kPadding - 4, 0),
-                          child: individualDetailsShowcaseData.mobile.buildWith(
-                            child: DigitTextFormField(
-                              keyboardType: TextInputType.number,
-                              formControlName: _mobileNumberKey,
-                              maxLength: 9,
-                              label: localizations.translate(
-                                i18.individualDetails.mobileNumberLabelText,
+                        Offstage(
+                          offstage: !widget.isHeadOfHousehold,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding - 4, 0, kPadding - 4, 0),
+                            child:
+                                individualDetailsShowcaseData.mobile.buildWith(
+                              child: DigitTextFormField(
+                                keyboardType: TextInputType.number,
+                                formControlName: _mobileNumberKey,
+                                maxLength: 9,
+                                label: localizations.translate(
+                                  i18.individualDetails.mobileNumberLabelText,
+                                ),
+                                validationMessages: {
+                                  'mobileNumber': (object) =>
+                                      localizations.translate(i18
+                                          .individualDetails
+                                          .mobileNumberInvalidFormatValidationMessage),
+                                  'maxLength': (object) =>
+                                      localizations.translate(i18
+                                          .individualDetails
+                                          .mobileNumberLengthValidationMessage),
+                                  'minLength': (object) =>
+                                      localizations.translate(i18
+                                          .individualDetails
+                                          .mobileNumberLengthValidationMessage),
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                               ),
-                              validationMessages: {
-                                'mobileNumber': (object) =>
-                                    localizations.translate(i18
-                                        .individualDetails
-                                        .mobileNumberInvalidFormatValidationMessage),
-                                'maxLength': (object) =>
-                                    localizations.translate(i18
-                                        .individualDetails
-                                        .mobileNumberLengthValidationMessage),
-                                'minLength': (object) =>
-                                    localizations.translate(i18
-                                        .individualDetails
-                                        .mobileNumberLengthValidationMessage),
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
                             ),
                           ),
                         ),
