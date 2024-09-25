@@ -49,6 +49,7 @@ import '../pages/inventory/custom_warehouse_details.dart';
 import '../pages/reports/inventory/custom_report_selection.dart';
 import '../pages/reports/inventory/custom_report_details.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
@@ -606,6 +607,233 @@ class AppRouter extends _$AppRouter {
 
         AutoRoute(page: SMCWrapperRoute.page, path: 'smc', children: [
           AutoRoute(page: HomeRoute.page, path: 'home', initial: true),
+          AutoRoute(
+              page: RegistrationDeliveryWrapperRoute.page,
+              path: 'registration-delivery-wrapper',
+              children: [
+                AutoRoute(
+                  page: SearchBeneficiaryRoute.page,
+                  path: 'search-beneficiary',
+                ),
+                AutoRoute(
+                  initial: true,
+                  page: CustomSearchBeneficiaryRoute.page,
+                  path: 'custom-search-beneficiary',
+                ),
+                RedirectRoute(
+                  path: 'search-beneficiary',
+                  redirectTo: 'custom-search-beneficiary',
+                ),
+
+                AutoRoute(
+                  page: FacilitySelectionRoute.page,
+                  path: 'select-facilities',
+                ),
+
+                /// Beneficiary Registration
+                AutoRoute(
+                  page: BeneficiaryRegistrationWrapperRoute.page,
+                  path: 'beneficiary-registration',
+                  children: [
+                    AutoRoute(
+                      page: IndividualDetailsRoute.page,
+                      path: 'individual-details',
+                    ),
+                    AutoRoute(
+                      page: CustomIndividualDetailsSMCRoute.page,
+                      path: 'custom-individual-details-smc',
+                    ),
+                    RedirectRoute(
+                      path: 'individual-details',
+                      redirectTo: 'custom-individual-details-smc',
+                    ),
+                    AutoRoute(
+                      page: HouseHoldDetailsRoute.page,
+                      path: 'household-details',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseHoldDetailsRoute.page,
+                      path: 'custom-household-details',
+                    ),
+                    RedirectRoute(
+                      path: 'household-details',
+                      redirectTo: 'custom-household-details',
+                    ),
+                    AutoRoute(
+                      page: HouseholdLocationRoute.page,
+                      path: 'household-location',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdLocationRoute.page,
+                      path: 'custom-household-location',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'household-location',
+                      redirectTo: 'custom-household-location',
+                    ),
+                    AutoRoute(
+                      page: BeneficiaryAcknowledgementRoute.page,
+                      path: 'beneficiary-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: CustomBeneficiaryAcknowledgementRoute.page,
+                      path: 'custom-beneficiary-acknowledgement',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-acknowledgement',
+                      redirectTo: 'custom-beneficiary-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: HouseDetailsRoute.page,
+                      path: 'house-details',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseDetailsRoute.page,
+                      path: 'custom-house-details',
+                    ),
+                    RedirectRoute(
+                      path: 'house-details',
+                      redirectTo: 'custom-house-details',
+                    ),
+                    AutoRoute(
+                      page: SummaryRoute.page,
+                      path: 'beneficiary-summary',
+                    ),
+                    AutoRoute(
+                      page: BeneficiaryChecklistRoute.page,
+                      path: 'beneficiary-checklist',
+                    ),
+                    AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                    AutoRoute(
+                      page: IneligibleSummaryRoute.page,
+                      path: 'ineligible-beneficiary-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-summary',
+                      redirectTo: 'ineligible-beneficiary-summary',
+                    )
+                  ],
+                ),
+                AutoRoute(
+                  page: CustomHouseholdWrapperRoute.page,
+                  path: 'household',
+                  children: [
+                    AutoRoute(
+                      page: HouseholdOverviewRoute.page,
+                      path: 'overview',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdOverviewRoute.page,
+                      path: 'custom-overview',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'overview',
+                      redirectTo: 'custom-overview',
+                    ),
+                  ],
+                ),
+                AutoRoute(
+                  page: BeneficiaryWrapperRoute.page,
+                  path: 'beneficiary',
+                  children: [
+                    AutoRoute(
+                      page: BeneficiaryChecklistRoute.page,
+                      path: 'beneficiary-checklist',
+                    ),
+                    AutoRoute(
+                      page: CustomBeneficiaryChecklistRoute.page,
+                      path: 'custom-beneficiary-checklist',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-checklist',
+                      redirectTo: 'custom-beneficiary-checklist',
+                    ),
+                    AutoRoute(
+                      page: BeneficiaryDetailsRoute.page,
+                      path: 'beneficiary-details',
+                    ),
+                    AutoRoute(
+                      page: DeliverInterventionRoute.page,
+                      path: 'deliver-intervention',
+                    ),
+                    AutoRoute(
+                      page: CustomDeliverInterventionRoute.page,
+                      path: 'custom-deliver-intervention',
+                    ),
+                    RedirectRoute(
+                      path: 'deliver-intervention',
+                      redirectTo: 'custom-deliver-intervention',
+                    ),
+                    AutoRoute(
+                      page: RefusedDeliveryRoute.page,
+                      path: 'refused-delivery',
+                    ),
+                    AutoRoute(
+                      page: CustomRefusedDeliveryRoute.page,
+                      path: 'custom-refused-delivery',
+                    ),
+                    RedirectRoute(
+                      path: 'refused-delivery',
+                      redirectTo: 'custom-refused-delivery',
+                    ),
+                    AutoRoute(
+                      page: SideEffectsRoute.page,
+                      path: 'side-effects',
+                    ),
+                    AutoRoute(
+                      page: ReferBeneficiaryRoute.page,
+                      path: 'refer-beneficiary',
+                    ),
+                    AutoRoute(
+                      page: DoseAdministeredRoute.page,
+                      path: 'dose-administered',
+                    ),
+                    AutoRoute(
+                      page: SplashAcknowledgementRoute.page,
+                      path: 'splash-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: ReasonForDeletionRoute.page,
+                      path: 'reason-for-deletion',
+                    ),
+                    AutoRoute(
+                      page: RecordPastDeliveryDetailsRoute.page,
+                      path: 'record-past-delivery-details',
+                    ),
+                    AutoRoute(
+                      page: HouseholdAcknowledgementRoute.page,
+                      path: 'household-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdAcknowledgementRoute.page,
+                      path: 'custom-household-acknowledgement',
+                    ),
+                    RedirectRoute(
+                      path: 'household-acknowledgement',
+                      redirectTo: 'custom-household-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: ChecklistViewRoute.page,
+                      path: 'view',
+                    ),
+                    AutoRoute(
+                      page: DeliverySummaryRoute.page,
+                      path: 'delivery-summary',
+                    ),
+                    AutoRoute(
+                      page: CustomDeliverySummaryRoute.page,
+                      path: 'custom-delivery-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'delivery-summary',
+                      redirectTo: 'custom-delivery-summary',
+                    ),
+                  ],
+                ),
+              ]),
         ]),
       ],
     ),

@@ -11,6 +11,8 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
+import '../../blocs/localization/localization.dart';
+import '../../data/local_store/app_shared_preferences.dart';
 
 import 'dart:async';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';

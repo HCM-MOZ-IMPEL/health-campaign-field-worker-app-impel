@@ -20,6 +20,8 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../blocs/project/project.dart';
+import '../../models/entities/project_types.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -387,13 +389,26 @@ class CustomHouseHoldDetailsPageState
                                 registrationDate: dateOfRegistration,
                               ),
                             );
-
-                            context.router.push(
-                              CustomIndividualDetailsRoute(
-                                isHeadOfHousehold: true,
-                                isEligible: widget.isEligible,
-                              ),
-                            );
+                            final projectBloc = context.read<ProjectBloc>();
+                            final projectState = projectBloc.state;
+                            final projectTypeCode = projectState.selectedProject
+                                ?.additionalDetails?.projectType?.code;
+                            if (projectTypeCode!
+                                .contains(ProjectTypes.smc.toValue())) {
+                              context.router.push(
+                                CustomIndividualDetailsSMCRoute(
+                                  isHeadOfHousehold: true,
+                                  isEligible: widget.isEligible,
+                                ),
+                              );
+                            } else {
+                              context.router.push(
+                                CustomIndividualDetailsRoute(
+                                  isHeadOfHousehold: true,
+                                  isEligible: widget.isEligible,
+                                ),
+                              );
+                            }
                           },
                           editHousehold: (
                             addressModel,

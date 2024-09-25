@@ -390,6 +390,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomIndividualDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomIndividualDetailsSMCRouteArgs>(
+          orElse: () => const CustomIndividualDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomIndividualDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isHeadOfHousehold: args.isHeadOfHousehold,
+          isEligible: args.isEligible,
+        ),
+      );
+    },
     CustomInventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1940,6 +1953,55 @@ class CustomIndividualDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isEligible: $isEligible}';
+  }
+}
+
+/// generated route for
+/// [CustomIndividualDetailsSMCPage]
+class CustomIndividualDetailsSMCRoute
+    extends PageRouteInfo<CustomIndividualDetailsSMCRouteArgs> {
+  CustomIndividualDetailsSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isHeadOfHousehold = true,
+    bool isEligible = true,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomIndividualDetailsSMCRoute.name,
+          args: CustomIndividualDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isHeadOfHousehold: isHeadOfHousehold,
+            isEligible: isEligible,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomIndividualDetailsSMCRoute';
+
+  static const PageInfo<CustomIndividualDetailsSMCRouteArgs> page =
+      PageInfo<CustomIndividualDetailsSMCRouteArgs>(name);
+}
+
+class CustomIndividualDetailsSMCRouteArgs {
+  const CustomIndividualDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isHeadOfHousehold = true,
+    this.isEligible = true,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isHeadOfHousehold;
+
+  final bool isEligible;
+
+  @override
+  String toString() {
+    return 'CustomIndividualDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isEligible: $isEligible}';
   }
 }
 
