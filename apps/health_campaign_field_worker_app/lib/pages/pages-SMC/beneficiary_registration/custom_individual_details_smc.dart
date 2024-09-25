@@ -608,25 +608,28 @@ class CustomIndividualDetailsSMCPageState
                             formControlName: _individualLastNameKey,
                             label: localizations.translate(
                               widget.isHeadOfHousehold
-                                  ? i18.individualDetails.lastNameHeadLabelText
-                                  : i18
+                                  ? i18_local
+                                      .individualDetails.lastNameHeadLabelText
+                                  : i18_local
                                       .individualDetails.childLastNameLabelText,
                             ),
                             maxLength: 200,
                             isRequired: true,
                             validationMessages: {
                               'required': (object) => localizations.translate(
-                                    i18.individualDetails
+                                    i18_local.individualDetails
                                         .lastNameIsRequiredError,
                                   ),
                               'minLength': (object) => localizations.translate(
-                                    i18.individualDetails.lastNameLengthError,
+                                    i18_local
+                                        .individualDetails.lastNameLengthError,
                                   ),
                               'maxLength': (object) => localizations.translate(
-                                    i18.individualDetails.lastNameLengthError,
+                                    i18_local
+                                        .individualDetails.lastNameLengthError,
                                   ),
                               "min3": (object) => localizations.translate(
-                                    i18.common.min3CharsRequired,
+                                    i18_local.common.min3CharsRequired,
                                   ),
                             },
                           ),

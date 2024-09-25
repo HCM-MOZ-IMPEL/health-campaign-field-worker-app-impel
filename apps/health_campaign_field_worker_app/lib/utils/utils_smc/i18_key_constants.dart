@@ -49,6 +49,7 @@ class Common {
   String get coreCommonName => 'CORE_COMMON_NAME';
 
   String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
@@ -979,6 +980,16 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelText =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 }
 
 class BeneficiaryDetails {
