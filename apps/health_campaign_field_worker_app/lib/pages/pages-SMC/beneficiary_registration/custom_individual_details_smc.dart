@@ -274,7 +274,8 @@ class CustomIndividualDetailsSMCPageState
                                       );
                                       router.push(
                                           CustomBeneficiaryAcknowledgementRoute(
-                                              enableViewHousehold: true));
+                                              enableViewHousehold:
+                                                  widget.isHeadOfHousehold));
                                     }
                                   }
                                 },
