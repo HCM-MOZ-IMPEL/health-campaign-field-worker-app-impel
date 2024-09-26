@@ -80,163 +80,7 @@ class CustomIndividualDetailsSMCPageState
         builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
-            state.mapOrNull(
-              persisted: (value) {
-                // if (value.navigateToRoot) {
-
-                Future.delayed(
-                  const Duration(
-                    milliseconds: 200,
-                  ),
-                  () {
-                    context.read<SearchHouseholdsBloc>().add(
-                          SearchHouseholdsEvent.searchByHousehold(
-                            householdModel: value.householdModel,
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            isProximityEnabled: false,
-                          ),
-                        );
-                  },
-                ).then(
-                  (valueOne) {
-                    final overviewBloc = context.read<HouseholdOverviewBloc>();
-
-                    Future.delayed(
-                      const Duration(
-                        milliseconds: 200,
-                      ),
-                      () {
-                        overviewBloc.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            projectBeneficiaryType: beneficiaryType,
-                          ),
-                        );
-                      },
-                    ).then(
-                      (valueTwo) {
-                        // (router.parent() as StackRouter).maybePop();
-                        final parent = context.router.parent() as StackRouter;
-
-                        final searchBlocState =
-                            context.read<SearchHouseholdsBloc>().state;
-                        if (searchBlocState.householdMembers.isNotEmpty) {
-                          if (!isEligible) {
-                            if (isEditIndividual) {
-                              parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryRoute.name);
-                              parent.push(CustomHouseholdWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            } else {
-                              final householdMemberWrapperList =
-                                  searchBlocState.householdMembers;
-
-                              final projectBeneficiary = [
-                                householdMemberWrapperList
-                                    .first.projectBeneficiaries?.first
-                              ];
-
-                              context.read<DeliverInterventionBloc>().add(
-                                    DeliverInterventionSubmitEvent(
-                                      navigateToSummary: true,
-                                      householdMemberWrapper:
-                                          householdMemberWrapperList.first,
-                                      task: TaskModel(
-                                        projectBeneficiaryClientReferenceId:
-                                            projectBeneficiary?.first
-                                                ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                        clientReferenceId: IdGen.i.identifier,
-                                        tenantId:
-                                            RegistrationDeliverySingleton()
-                                                .tenantId,
-                                        rowVersion: 1,
-                                        auditDetails: AuditDetails(
-                                          createdBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId,
-                                        status:
-                                            Status.administeredFailed.toValue(),
-                                        clientAuditDetails: ClientAuditDetails(
-                                          createdBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                          lastModifiedBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        additionalFields: TaskAdditionalFields(
-                                          version: 1,
-                                          fields: [
-                                            AdditionalField(
-                                              AdditionalFieldsType
-                                                  .reasonOfRefusal
-                                                  .toValue(),
-                                              "INCOMPATIBLE",
-                                            ),
-                                          ],
-                                        ),
-                                        address: householdMemberWrapperList
-                                            .first.household?.address,
-                                      ),
-                                      isEditing: false,
-                                      boundaryModel:
-                                          RegistrationDeliverySingleton()
-                                              .boundary!,
-                                    ),
-                                  );
-                              parent.push(IneligibleSummaryRoute(
-                                  isEligible: isEligible));
-                            }
-                          } else {
-                            if (isEditIndividual) {
-                              parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryRoute.name);
-                              parent.push(CustomHouseholdWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            } else {
-                              parent.push(BeneficiaryWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            }
-                          }
-                        } else {
-                          parent.popUntilRouteWithName(
-                              CustomSearchBeneficiaryRoute.name);
-                        }
-                      },
-                    );
-                  },
-                );
-                // }
-              },
-              // summary: (value) {
-              //   if (context.mounted) {
-              //     bloc.add(
-              //       BeneficiaryRegistrationCreateEvent(
-              //           projectId: value.projectBeneficiaryModel!.projectId!,
-              //           userUuid: value
-              //               .projectBeneficiaryModel!.auditDetails!.createdBy,
-              //           boundary: RegistrationDeliverySingleton().boundary!,
-              //           tag: value.projectBeneficiaryModel?.tag,
-              //           navigateToSummary: false),
-              //     );
-              //   }
-              // },
-            );
+            // state.mapOrNull(persisted: (value) {});
           },
           builder: (context, state) {
             final selectedHouseStructureTypes = state
@@ -428,6 +272,9 @@ class CustomIndividualDetailsSMCPageState
                                                 : null,
                                             navigateToSummary: false),
                                       );
+                                      router.push(
+                                          CustomBeneficiaryAcknowledgementRoute(
+                                              enableViewHousehold: true));
                                     }
                                   }
                                 },
