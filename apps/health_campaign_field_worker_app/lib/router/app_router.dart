@@ -16,6 +16,7 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -79,6 +80,7 @@ import '../pages/attendance/custom_manage_attendance.dart';
 import '../pages/attendance/custom_mark_attendance.dart';
 import '../pages/attendance/custom_session_select.dart';
 import 'package:attendance_management/attendance_management.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 
 part 'app_router.gr.dart';
 
