@@ -50,9 +50,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   void initState() {
     context.read<ProjectBloc>().add(const ProjectInitializeEvent());
     super.initState();
-
-    //// Function to set initial Data required for the packages to run
-    setPackagesSingleton(context);
   }
 
   @override
@@ -157,6 +154,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final selectedProject = state.selectedProject;
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
+                //// Function to set initial Data required for the packages to run
+                setPackagesSingleton(context);
 
                 if (boundary != null) {
                   navigateToBoundary(boundary, context);
