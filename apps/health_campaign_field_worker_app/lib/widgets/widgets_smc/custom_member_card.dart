@@ -17,6 +17,8 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/action_card/action_card.dart';
 
+import '../../router/app_router.dart';
+
 class CustomMemberCard extends StatelessWidget {
   final String name;
   final String? gender;
@@ -234,22 +236,13 @@ class CustomMemberCard extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      final futureTaskList = tasks
-                                          ?.where((task) =>
-                                              task.status ==
-                                              Status.delivered.toValue())
-                                          .toList();
-
-                                      if ((futureTaskList ?? []).isNotEmpty) {
-                                        context.router.push(
-                                          RecordPastDeliveryDetailsRoute(
-                                            tasks: tasks,
-                                          ),
-                                        );
-                                      } else {
-                                        context.router
-                                            .push(BeneficiaryDetailsRoute());
-                                      }
+                                      context.router.push(
+                                        EligibilityChecklistViewRoute(
+                                          projectBeneficiaryClientReferenceId:
+                                              projectBeneficiaryClientReferenceId,
+                                          individual: individual,
+                                        ),
+                                      );
                                     },
                               child: Center(
                                 child: Text(

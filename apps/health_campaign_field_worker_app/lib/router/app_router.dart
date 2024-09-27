@@ -80,7 +80,8 @@ import '../pages/attendance/custom_manage_attendance.dart';
 import '../pages/attendance/custom_mark_attendance.dart';
 import '../pages/attendance/custom_session_select.dart';
 import 'package:attendance_management/attendance_management.dart';
-import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_refer_beneficiary_smc.dart';
+import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 
 part 'app_router.gr.dart';
 
@@ -770,6 +771,10 @@ class AppRouter extends _$AppRouter {
                       redirectTo: 'custom-deliver-intervention',
                     ),
                     AutoRoute(
+                      page: EligibilityChecklistViewRoute.page,
+                      path: 'eligibility-checklist',
+                    ),
+                    AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
                     ),
@@ -788,6 +793,10 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: ReferBeneficiaryRoute.page,
                       path: 'refer-beneficiary',
+                    ),
+                    AutoRoute(
+                      page: CustomReferBeneficiarySMCRoute.page,
+                      path: 'refer-beneficiary-smc',
                     ),
                     AutoRoute(
                       page: DoseAdministeredRoute.page,
