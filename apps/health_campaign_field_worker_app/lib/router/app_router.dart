@@ -85,6 +85,7 @@ import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -670,8 +671,8 @@ class AppRouter extends _$AppRouter {
                       path: 'household-location',
                     ),
                     AutoRoute(
-                      page: CustomHouseholdLocationRoute.page,
-                      path: 'custom-household-location',
+                      page: CustomHouseholdLocationSMCRoute.page,
+                      path: 'custom-household-location-smc',
                       initial: true,
                     ),
                     RedirectRoute(

@@ -369,6 +369,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseholdLocationSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdLocationSMCRouteArgs>(
+          orElse: () => const CustomHouseholdLocationSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdLocationSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseholdOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdOverviewRouteArgs>(
           orElse: () => const CustomHouseholdOverviewRouteArgs());
@@ -424,7 +435,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
-          isEligible: args.isEligible,
         ),
       );
     },
@@ -1937,6 +1947,45 @@ class CustomHouseholdLocationRouteArgs {
 }
 
 /// generated route for
+/// [CustomHouseholdLocationSMCPage]
+class CustomHouseholdLocationSMCRoute
+    extends PageRouteInfo<CustomHouseholdLocationSMCRouteArgs> {
+  CustomHouseholdLocationSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdLocationSMCRoute.name,
+          args: CustomHouseholdLocationSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdLocationSMCRoute';
+
+  static const PageInfo<CustomHouseholdLocationSMCRouteArgs> page =
+      PageInfo<CustomHouseholdLocationSMCRouteArgs>(name);
+}
+
+class CustomHouseholdLocationSMCRouteArgs {
+  const CustomHouseholdLocationSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdLocationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseholdOverviewPage]
 class CustomHouseholdOverviewRoute
     extends PageRouteInfo<CustomHouseholdOverviewRouteArgs> {
@@ -2115,7 +2164,6 @@ class CustomIndividualDetailsSMCRoute
     Key? key,
     AppLocalizations? appLocalizations,
     bool isHeadOfHousehold = true,
-    bool isEligible = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomIndividualDetailsSMCRoute.name,
@@ -2123,7 +2171,6 @@ class CustomIndividualDetailsSMCRoute
             key: key,
             appLocalizations: appLocalizations,
             isHeadOfHousehold: isHeadOfHousehold,
-            isEligible: isEligible,
           ),
           initialChildren: children,
         );
@@ -2139,7 +2186,6 @@ class CustomIndividualDetailsSMCRouteArgs {
     this.key,
     this.appLocalizations,
     this.isHeadOfHousehold = true,
-    this.isEligible = true,
   });
 
   final Key? key;
@@ -2148,11 +2194,9 @@ class CustomIndividualDetailsSMCRouteArgs {
 
   final bool isHeadOfHousehold;
 
-  final bool isEligible;
-
   @override
   String toString() {
-    return 'CustomIndividualDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isEligible: $isEligible}';
+    return 'CustomIndividualDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
   }
 }
 

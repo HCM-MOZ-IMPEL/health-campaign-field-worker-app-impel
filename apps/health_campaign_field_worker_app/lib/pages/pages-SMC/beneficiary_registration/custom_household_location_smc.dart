@@ -25,19 +25,19 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import '../../../widgets/widgets_smc/custom_digit_text_form_field.dart';
 
 @RoutePage()
-class CustomHouseholdLocationPage extends LocalizedStatefulWidget {
-  const CustomHouseholdLocationPage({
+class CustomHouseholdLocationSMCPage extends LocalizedStatefulWidget {
+  const CustomHouseholdLocationSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomHouseholdLocationPage> createState() =>
-      _CustomHouseholdLocationPageState();
+  State<CustomHouseholdLocationSMCPage> createState() =>
+      _CustomHouseholdLocationSMCPageState();
 }
 
-class _CustomHouseholdLocationPageState
-    extends LocalizedState<CustomHouseholdLocationPage> {
+class _CustomHouseholdLocationSMCPageState
+    extends LocalizedState<CustomHouseholdLocationSMCPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
@@ -51,25 +51,33 @@ class _CustomHouseholdLocationPageState
     final router = context.router;
 
     regState.maybeMap(
-        orElse: () => false,
-        editHousehold: (value) => false,
-        editIndividual: (value) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            router.push(CustomIndividualDetailsRoute());
-          });
-          return true;
-        },
-        create: (value) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            // Show the dialog after the first frame is built
-            DigitComponentsUtils().showLocationCapturingDialog(
-              context,
-              localizations.translate(i18Local.common.locationCapturing),
-              DigitSyncDialogType.inProgress,
-            );
-          });
-          return true;
+      orElse: () => false,
+      editHousehold: (value) => false,
+      editIndividual: (value) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          router.push(CustomIndividualDetailsSMCRoute());
         });
+        return true;
+      },
+      create: (value) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Show the dialog after the first frame is built
+          DigitComponentsUtils().showLocationCapturingDialog(
+            context,
+            localizations.translate(i18Local.common.locationCapturing),
+            DigitSyncDialogType.inProgress,
+          );
+        });
+        return true;
+      },
+      addMember: (value) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          router
+              .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
+        });
+        return true;
+      },
+    );
     super.initState();
   }
 
@@ -186,14 +194,10 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          if (context.projectTypeCode ==
-                              ProjectTypes.smc.toValue()) {
-                            // Todd : set the variable accordingly
-                            router.push(
-                                CustomHouseHoldDetailsRoute(isEligible: false));
-                          } else {
-                            router.push(HouseDetailsRoute());
-                          }
+
+                          // Todd : set the variable accordingly
+                          router.push(
+                              CustomHouseHoldDetailsRoute(isEligible: false));
                         }, editHousehold: (
                           address,
                           householdModel,
@@ -216,14 +220,8 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          if (context.projectTypeCode ==
-                              ProjectTypes.smc.toValue()) {
-                            // Todd : set the variable accordingly
-                            router.push(
-                                CustomHouseHoldDetailsRoute(isEligible: false));
-                          } else {
-                            router.push(HouseDetailsRoute());
-                          }
+                          router.push(
+                              CustomHouseHoldDetailsRoute(isEligible: false));
                         });
                       },
                       child: Center(
