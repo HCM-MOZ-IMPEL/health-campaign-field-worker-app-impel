@@ -22,6 +22,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
+import '../../../router/app_router.dart';
 import '../../../widgets/widgets_smc/custom_member_card.dart';
 
 @RoutePage()
@@ -633,7 +634,7 @@ class CustomHouseholdOverviewSMCPageState
           householdModel: household,
         ),
         children: [
-          IndividualDetailsRoute(),
+          CustomIndividualDetailsSMCRoute(),
         ],
       ),
     );
