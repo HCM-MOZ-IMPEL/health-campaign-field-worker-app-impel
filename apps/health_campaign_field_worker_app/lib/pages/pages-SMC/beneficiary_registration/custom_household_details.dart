@@ -166,14 +166,10 @@ class CustomHouseHoldDetailsPageState
                                 RegistrationDeliverySingleton().boundary!,
                           ),
                         );
-
-                    parent.push(IneligibleSummaryRoute(
-                        isEligible: widget.isEligible,
-                        previousWrapper: previousWrapper));
                   } else {
                     final route = router.parent() as StackRouter;
                     route.popUntilRouteWithName(
-                        CustomSearchBeneficiaryRoute.name);
+                        CustomSearchBeneficiarySMCRoute.name);
                     route.push(
                         CustomHouseholdWrapperRoute(wrapper: memberWrapper));
                   }
@@ -389,9 +385,8 @@ class CustomHouseHoldDetailsPageState
                             );
 
                             context.router.push(
-                              CustomIndividualDetailsRoute(
+                              CustomIndividualDetailsSMCRoute(
                                 isHeadOfHousehold: true,
-                                isEligible: widget.isEligible,
                               ),
                             );
                           },

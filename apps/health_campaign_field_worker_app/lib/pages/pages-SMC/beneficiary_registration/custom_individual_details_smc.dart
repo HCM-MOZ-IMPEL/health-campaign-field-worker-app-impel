@@ -353,43 +353,27 @@ class CustomIndividualDetailsSMCPageState
                                   );
 
                                   if (context.mounted) {
-                                    final scannerBloc =
-                                        context.read<DigitScannerBloc>();
-
-                                    if (scannerBloc.state.duplicate) {
-                                      DigitToast.show(
-                                        context,
-                                        options: DigitToastOptions(
-                                          localizations.translate(
-                                            i18.deliverIntervention
-                                                .resourceAlreadyScanned,
-                                          ),
-                                          true,
-                                          theme,
-                                        ),
-                                      );
-                                    } else {
-                                      bloc.add(
-                                        BeneficiaryRegistrationAddMemberEvent(
-                                          beneficiaryType:
-                                              RegistrationDeliverySingleton()
-                                                  .beneficiaryType!,
-                                          householdModel: householdModel,
-                                          individualModel: individual,
-                                          addressModel: addressModel,
-                                          userUuid:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          projectId:
-                                              RegistrationDeliverySingleton()
-                                                  .projectId!,
-                                          tag: scannerBloc
-                                                  .state.qrCodes.isNotEmpty
-                                              ? scannerBloc.state.qrCodes.first
-                                              : null,
-                                        ),
-                                      );
-                                    }
+                                    bloc.add(
+                                      BeneficiaryRegistrationAddMemberEvent(
+                                        beneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType!,
+                                        householdModel: householdModel,
+                                        individualModel: individual,
+                                        addressModel: addressModel,
+                                        userUuid:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        tag: null,
+                                      ),
+                                    );
+                                    router.push(
+                                        CustomBeneficiaryAcknowledgementSMCRoute(
+                                            enableViewHousehold:
+                                                widget.isHeadOfHousehold));
                                   }
                                 },
                               );
