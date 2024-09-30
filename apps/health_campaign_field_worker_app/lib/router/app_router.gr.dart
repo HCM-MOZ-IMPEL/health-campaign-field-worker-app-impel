@@ -253,6 +253,20 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryAcknowledgementSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomBeneficiaryAcknowledgementSMCRouteArgs>(
+              orElse: () =>
+                  const CustomBeneficiaryAcknowledgementSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryAcknowledgementSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
     CustomBeneficiaryChecklistRoute.name: (routeData) {
       final args = routeData.argsAs<CustomBeneficiaryChecklistRouteArgs>(
           orElse: () => const CustomBeneficiaryChecklistRouteArgs());
@@ -504,6 +518,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomSearchBeneficiaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomSearchBeneficiarySMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSearchBeneficiarySMCRouteArgs>(
+          orElse: () => const CustomSearchBeneficiarySMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSearchBeneficiarySMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -1497,6 +1522,50 @@ class CustomBeneficiaryAcknowledgementRouteArgs {
 }
 
 /// generated route for
+/// [CustomBeneficiaryAcknowledgementSMCPage]
+class CustomBeneficiaryAcknowledgementSMCRoute
+    extends PageRouteInfo<CustomBeneficiaryAcknowledgementSMCRouteArgs> {
+  CustomBeneficiaryAcknowledgementSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryAcknowledgementSMCRoute.name,
+          args: CustomBeneficiaryAcknowledgementSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryAcknowledgementSMCRoute';
+
+  static const PageInfo<CustomBeneficiaryAcknowledgementSMCRouteArgs> page =
+      PageInfo<CustomBeneficiaryAcknowledgementSMCRouteArgs>(name);
+}
+
+class CustomBeneficiaryAcknowledgementSMCRouteArgs {
+  const CustomBeneficiaryAcknowledgementSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryAcknowledgementSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
 /// [CustomBeneficiaryChecklistPage]
 class CustomBeneficiaryChecklistRoute
     extends PageRouteInfo<CustomBeneficiaryChecklistRouteArgs> {
@@ -2446,6 +2515,45 @@ class CustomSearchBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'CustomSearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSearchBeneficiarySMCPage]
+class CustomSearchBeneficiarySMCRoute
+    extends PageRouteInfo<CustomSearchBeneficiarySMCRouteArgs> {
+  CustomSearchBeneficiarySMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSearchBeneficiarySMCRoute.name,
+          args: CustomSearchBeneficiarySMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSearchBeneficiarySMCRoute';
+
+  static const PageInfo<CustomSearchBeneficiarySMCRouteArgs> page =
+      PageInfo<CustomSearchBeneficiarySMCRouteArgs>(name);
+}
+
+class CustomSearchBeneficiarySMCRouteArgs {
+  const CustomSearchBeneficiarySMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSearchBeneficiarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

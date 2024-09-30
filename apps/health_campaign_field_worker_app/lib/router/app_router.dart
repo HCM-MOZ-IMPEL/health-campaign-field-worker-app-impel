@@ -83,6 +83,8 @@ import 'package:attendance_management/attendance_management.dart';
 import '../pages/pages-SMC/beneficiary/custom_refer_beneficiary_smc.dart';
 import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -621,7 +623,7 @@ class AppRouter extends _$AppRouter {
                 ),
                 AutoRoute(
                   initial: true,
-                  page: CustomSearchBeneficiaryRoute.page,
+                  page: CustomSearchBeneficiarySMCRoute.page,
                   path: 'custom-search-beneficiary',
                 ),
                 RedirectRoute(
@@ -681,8 +683,8 @@ class AppRouter extends _$AppRouter {
                       path: 'beneficiary-acknowledgement',
                     ),
                     AutoRoute(
-                      page: CustomBeneficiaryAcknowledgementRoute.page,
-                      path: 'custom-beneficiary-acknowledgement',
+                      page: CustomBeneficiaryAcknowledgementSMCRoute.page,
+                      path: 'custom-beneficiary-acknowledgement-smc',
                     ),
                     RedirectRoute(
                       path: 'beneficiary-acknowledgement',

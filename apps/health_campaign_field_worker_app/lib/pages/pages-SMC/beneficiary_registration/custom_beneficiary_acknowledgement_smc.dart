@@ -12,35 +12,35 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import '../../../router/app_router.dart';
 
 @RoutePage()
-class CustomBeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
+class CustomBeneficiaryAcknowledgementSMCPage extends LocalizedStatefulWidget {
   final bool? enableViewHousehold;
 
-  const CustomBeneficiaryAcknowledgementPage({
+  const CustomBeneficiaryAcknowledgementSMCPage({
     super.key,
     super.appLocalizations,
     this.enableViewHousehold,
   });
 
   @override
-  State<CustomBeneficiaryAcknowledgementPage> createState() =>
-      CustomBeneficiaryAcknowledgementPageState();
+  State<CustomBeneficiaryAcknowledgementSMCPage> createState() =>
+      CustomBeneficiaryAcknowledgementSMCPageState();
 }
 
-class CustomBeneficiaryAcknowledgementPageState
-    extends LocalizedState<CustomBeneficiaryAcknowledgementPage> {
+class CustomBeneficiaryAcknowledgementSMCPageState
+    extends LocalizedState<CustomBeneficiaryAcknowledgementSMCPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
           final parent = context.router.parent() as StackRouter;
-          parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+          parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
         },
         secondaryAction: () {
           final parent = context.router.parent() as StackRouter;
           final searchBlocState = context.read<SearchHouseholdsBloc>().state;
 
-          parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+          parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
           parent.push(
             CustomHouseholdWrapperRoute(
               wrapper: searchBlocState.householdMembers.first,
