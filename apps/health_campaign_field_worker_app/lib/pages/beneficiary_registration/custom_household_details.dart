@@ -393,22 +393,13 @@ class CustomHouseHoldDetailsPageState
                             final projectState = projectBloc.state;
                             final projectTypeCode = projectState.selectedProject
                                 ?.additionalDetails?.projectType?.code;
-                            if (projectTypeCode!
-                                .contains(ProjectTypes.smc.toValue())) {
-                              context.router.push(
-                                CustomIndividualDetailsSMCRoute(
-                                  isHeadOfHousehold: true,
-                                  isEligible: widget.isEligible,
-                                ),
-                              );
-                            } else {
-                              context.router.push(
-                                CustomIndividualDetailsRoute(
-                                  isHeadOfHousehold: true,
-                                  isEligible: widget.isEligible,
-                                ),
-                              );
-                            }
+
+                            context.router.push(
+                              CustomIndividualDetailsRoute(
+                                isHeadOfHousehold: true,
+                                isEligible: widget.isEligible,
+                              ),
+                            );
                           },
                           editHousehold: (
                             addressModel,
