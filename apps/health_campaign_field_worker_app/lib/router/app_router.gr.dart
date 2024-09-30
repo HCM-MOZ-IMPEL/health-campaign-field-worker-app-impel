@@ -366,6 +366,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseholdOverviewSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdOverviewSMCRouteArgs>(
+          orElse: () => const CustomHouseholdOverviewSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdOverviewSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseholdWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdWrapperRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1892,6 +1903,45 @@ class CustomHouseholdOverviewRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdOverviewSMCPage]
+class CustomHouseholdOverviewSMCRoute
+    extends PageRouteInfo<CustomHouseholdOverviewSMCRouteArgs> {
+  CustomHouseholdOverviewSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdOverviewSMCRoute.name,
+          args: CustomHouseholdOverviewSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdOverviewSMCRoute';
+
+  static const PageInfo<CustomHouseholdOverviewSMCRouteArgs> page =
+      PageInfo<CustomHouseholdOverviewSMCRouteArgs>(name);
+}
+
+class CustomHouseholdOverviewSMCRouteArgs {
+  const CustomHouseholdOverviewSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdOverviewSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

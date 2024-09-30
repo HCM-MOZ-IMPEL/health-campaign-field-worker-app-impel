@@ -82,6 +82,7 @@ import '../pages/attendance/custom_session_select.dart';
 import 'package:attendance_management/attendance_management.dart';
 import '../pages/pages-SMC/beneficiary/custom_refer_beneficiary_smc.dart';
 import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -719,25 +720,6 @@ class AppRouter extends _$AppRouter {
                   ],
                 ),
                 AutoRoute(
-                  page: CustomHouseholdWrapperRoute.page,
-                  path: 'household',
-                  children: [
-                    AutoRoute(
-                      page: HouseholdOverviewRoute.page,
-                      path: 'overview',
-                    ),
-                    AutoRoute(
-                      page: CustomHouseholdOverviewRoute.page,
-                      path: 'custom-overview',
-                      initial: true,
-                    ),
-                    RedirectRoute(
-                      path: 'overview',
-                      redirectTo: 'custom-overview',
-                    ),
-                  ],
-                ),
-                AutoRoute(
                   page: BeneficiaryWrapperRoute.page,
                   path: 'beneficiary',
                   children: [
@@ -746,13 +728,17 @@ class AppRouter extends _$AppRouter {
                       path: 'beneficiary-checklist',
                     ),
                     AutoRoute(
-                      page: CustomBeneficiaryChecklistRoute.page,
-                      path: 'custom-beneficiary-checklist',
+                      page: HouseholdOverviewRoute.page,
+                      path: 'overview',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdOverviewSMCRoute.page,
+                      path: 'custom-overview-smc',
                       initial: true,
                     ),
                     RedirectRoute(
-                      path: 'beneficiary-checklist',
-                      redirectTo: 'custom-beneficiary-checklist',
+                      path: 'overview',
+                      redirectTo: 'custom-overview',
                     ),
                     AutoRoute(
                       page: BeneficiaryDetailsRoute.page,

@@ -15,21 +15,21 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/action_card/action_card.dart';
+import '../action_card/action_card.dart';
 
-import '../../router/app_router.dart';
-
-class CustomMemberCard extends StatelessWidget {
+class CustomMemberCardSMC extends StatelessWidget {
   final String name;
   final String? gender;
-  final int years;
-  final int months;
+  final int? years;
+  final int? months;
   final bool isHead;
   final IndividualModel individual;
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
   final bool isDelivered;
 
+  final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
+  final VoidCallback deleteMemberAction;
   final RegistrationDeliveryLocalization localizations;
   final List<TaskModel>? tasks;
   final List<SideEffectModel>? sideEffects;
@@ -38,17 +38,19 @@ class CustomMemberCard extends StatelessWidget {
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
 
-  const CustomMemberCard({
+  const CustomMemberCardSMC({
     super.key,
     required this.individual,
     required this.name,
     this.gender,
-    required this.years,
+    this.years,
     this.isHead = false,
-    this.months = 0,
+    this.months,
     required this.localizations,
     required this.isDelivered,
+    required this.setAsHeadAction,
     required this.editMemberAction,
+    required this.deleteMemberAction,
     this.projectBeneficiaries,
     this.tasks,
     this.isNotEligible = false,
@@ -111,11 +113,25 @@ class CustomMemberCard extends StatelessWidget {
                               widget: ActionCard(
                                 items: [
                                   ActionCardModel(
+                                    icon: Icons.person,
+                                    label: localizations.translate(
+                                      i18.memberCard.assignAsHouseholdhead,
+                                    ),
+                                    action: isHead ? null : setAsHeadAction,
+                                  ),
+                                  ActionCardModel(
                                     icon: Icons.edit,
                                     label: localizations.translate(
                                       i18.memberCard.editIndividualDetails,
                                     ),
                                     action: editMemberAction,
+                                  ),
+                                  ActionCardModel(
+                                    icon: Icons.delete,
+                                    label: localizations.translate(
+                                      i18.memberCard.deleteIndividualActionText,
+                                    ),
+                                    action: isHead ? null : deleteMemberAction,
                                   ),
                                 ],
                               ),
@@ -140,13 +156,15 @@ class CustomMemberCard extends StatelessWidget {
                     gender != null
                         ? localizations
                             .translate('CORE_COMMON_${gender?.toUpperCase()}')
-                        : ' - ',
+                        : ' -- ',
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
+                    years != null && months != null
+                        ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                        : "|   --",
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
@@ -236,13 +254,22 @@ class CustomMemberCard extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      context.router.push(
-                                        EligibilityChecklistViewRoute(
-                                          projectBeneficiaryClientReferenceId:
-                                              projectBeneficiaryClientReferenceId,
-                                          individual: individual,
-                                        ),
-                                      );
+                                      final futureTaskList = tasks
+                                          ?.where((task) =>
+                                              task.status ==
+                                              Status.delivered.toValue())
+                                          .toList();
+
+                                      if ((futureTaskList ?? []).isNotEmpty) {
+                                        context.router.push(
+                                          RecordPastDeliveryDetailsRoute(
+                                            tasks: tasks,
+                                          ),
+                                        );
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
                                     },
                               child: Center(
                                 child: Text(
