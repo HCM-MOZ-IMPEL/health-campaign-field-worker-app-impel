@@ -425,9 +425,13 @@ class CustomIndividualDetailsSMCPageState
                           individualDetailsShowcaseData.nameOfIndividual
                               .buildWith(
                             child: DigitTextFormField(
-                              formControlName: 'individualName',
+                              formControlName: _individualNameKey,
                               label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
+                                widget.isHeadOfHousehold
+                                    ? i18.individualDetails
+                                        .firstNameHeadLabelText
+                                    : i18.individualDetails
+                                        .childFirstNameLabelText,
                               ),
                               isRequired: true,
                               validationMessages: {
@@ -533,7 +537,7 @@ class CustomIndividualDetailsSMCPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: SelectionBox<String>(
-                              isRequired: false,
+                              isRequired: true,
                               title: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
