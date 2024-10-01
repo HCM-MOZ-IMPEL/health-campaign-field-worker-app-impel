@@ -19,6 +19,9 @@ const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 const stockDetails = StockDetails();
+const referBeneficiary = ReferBeneficiary();
+const householdDetails = HouseholdDetails();
+const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
 
 const selectStockShowcase = SelectStockShowcase();
@@ -540,6 +543,11 @@ class Checklist {
 
   String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
 
+  String get submitButtonDialogLabelText => 'CHECKLIST_DETAILS_SUBMIT';
+
+  String get checklistDialogDynamicDescription =>
+      'CHECKLIST_DIALOG_DYNAMIC_DESCRIPTION';
+
   String get checklistDialogSecondaryAction =>
       'CHECKLIST_DIALOG_SECONDARY_ACTION';
 
@@ -561,6 +569,30 @@ class Checklist {
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+}
+
+class HouseholdDetails {
+  const HouseholdDetails();
+
+  String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
+
+  String get dateOfRegistrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
+
+  String get dateOfAdministrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_ADMINISTRATION_LABEL';
+
+  String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get viewHouseHoldDetailsAction =>
+      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+
+  String get cardTitle => 'CONSENT_CARD_TITLE';
+  String get validationForSelection => 'CONSENT_SUBMIT_VALIDATION';
+  String get submitYes => 'SUBMIT_YES';
+  String get submitNo => 'SUBMIT_NO';
+  String get householdConsentLabel => 'HOUSEHOLD_CONSENT_LABEL';
 }
 
 class ForgotPassword {
@@ -615,6 +647,165 @@ class Home {
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 }
 
+class ReferBeneficiary {
+  const ReferBeneficiary();
+
+  String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get dateOfEvaluationLabel =>
+      'REFER_BENEFICIARY_DATE_OF_EVALUATION_LABEL';
+  String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
+  String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+  String get reasonForReferral => 'REASON_FOR_REFERRAL';
+  String get referralComments => 'REFERRAL_COMMENTS';
+  String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+  String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get facilityDetails => 'FACILITY_DETAILS_HEADER';
+  String get evaluationFacilityLabel => 'EVALUATION_FACILITY_LABEL';
+  String get nameOfHealthFacilityCoordinatorLabel =>
+      'NAME_OF_HEALTH_FACILITY_COORDINATOR';
+  String get healthFacilityCoordinatorLabel => 'NAME_OF_HF_COORDINATOR_LABEL';
+  String get nameOfTheChildLabel => 'REFERRAL_NAME_OF_CHILD_LABEL';
+  String get beneficiaryIdLabel => 'REFERRAL_BENEFICIARY_ID_LABEL';
+  String get referralCodeLabel => 'REFERRAL_CODE_LABEL';
+  String get reasonForReferralHeader => 'REASON_FOR_REFERRAL_HEADER';
+  String get searchReferralsHeader => 'SEARCH_REFERRALS_HEADER';
+  String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
+  String get selectCycle => 'REFERRAL_SELECT_CYCLE';
+  String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
+  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+  String get dialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_TITLE';
+  String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
+  String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';
+  String get dialogCancel => 'REFERRAL_CONFIRMATION_CANCEL_LABEL';
+  String get referredDialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_BOX_TITLE';
+  String get referredDialogContent =>
+      'REFERRAL_CONFIRMATION_DIALOG_BOX_CONTENT';
+  String get referAlertDialogTitle => 'REFERRAL_ALERT_DIALOG_TITLE';
+  String get referAlertDialogContent => 'REFERRAL_ALERT_DIALOG_CONTENT';
+  String get validationForReferralAge => 'REFERRAL_AGE_VALIDATION';
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+
+  String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+  String get recordRedoseLabel => 'DELIVER_INTERVENTION_RECORD_REDOSE_LABEL';
+
+  String get deliverInteventionAdministeredLabel =>
+      'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
+
+  String get deliverInterventionResourceLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_LABEL';
+
+  String get dateOfRegistrationLabel =>
+      'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
+
+  String get dateOfAdministrationLabel =>
+      'DELIVER_INTERVENTION_DATE_OF_ADMINISTRATION_LABEL';
+
+  String get resourceDeliveredLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ';
+
+  String get resourceDeliveredError =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
+
+  String get quantityDistributedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+
+  String get quantityWastedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
+
+  String get deliveryCommentLabel =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get reasonForRedoseLabel =>
+      'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
+  String get selectReasonForRedoseLabel =>
+      'DELIVER_INTERVENTION_SELECT_REASON_FOR_REDOSE_LABEL';
+  String get redoseQuantityLabel =>
+      'DELIVER_INTERVENTION_REDOSE_QUANTITY_LABEL';
+
+  String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
+
+  String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
+
+  String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
+
+  String get noOfResourcesForDelivery =>
+      'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY_SPAQ';
+
+  String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
+
+  String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+
+  String get wastedDialogTitle => 'DELIVER_INTERVENTION_WASTED_DIALOG_TITLE';
+
+  String get wastedDialogContent =>
+      'DELIVER_INTERVENTION_WASTED_DIALOG_CONTENT';
+
+  String get referDialogTitle => 'DELIVER_INTERVENTION_REFER_DIALOG_TITLE';
+
+  String get referDialogContent => 'DELIVER_INTERVENTION_REFER_DIALOG_CONTENT';
+
+  String get referDialogSubmit => 'DELIVER_INTERVENTION_REFER_DIALOG_SUBMIT';
+
+  String get didYouObserveAdvEventsTitle =>
+      'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+  String get didYouObservePreviousAdvEventsTitle =>
+      'DID_YOU_OBSERVE_PREVIOUS_ADVERSE_EVENTS_TITLE';
+
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+  String get resourceAddBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
+  String get resourceDeleteBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_RESOURCE';
+  String get resourceDeleteBeneficiaryDialogTitle =>
+      'DELIVER_INTERVENTION_RESOURCE_DIALOG_TITLE';
+  String get resourceDeleteBeneficiaryPrimaryActionLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get dose => 'DELIVER_INTERVENTION_DOSE';
+  String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
+  String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
+  String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+  String get cycle => 'DELIVERY_CYCLE';
+  String get recordCycle => 'RECORD_CYCLE';
+  String get recordPastDeliveryDeatils =>
+      'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
+  String get wasDosePastDeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
+  String get doseAdministeredBy => 'DELIVER_INTERVENTION_DOSE_ADMINISTERED_BY';
+  String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
+  String get infoWrittenInChildCard =>
+      'DELIVER_INTERVENTION_DOSE_INFO_IN_CHILD_CARD_ADDED';
+  String get healthTalkGivenOnSPAQ =>
+      'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
+
+  //[todo] need to change the 24
+  String get wasDosePastRecordDeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
+  String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
+
+  String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get wastedCountValidation => 'WASTED_COUNT_VALIDATION';
+
+  String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
+
+  // [new key added for record past delivery details]
+  String get wasDosePastDeliveryDetailPart2 =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS_2';
+  String get wasDosePastDeliveryDetailPart3 =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS_3';
+
+  // [new key added for SPAQ Redirection Screen Description]
+
+  String get beneficiaryIneligibleDescription => 'BENEFICIARY_INELIGIBLE_DESC';
+  String get beneficiaryReferralDescription => 'BENEFICIARY_REFERRAL_DESC';
+  String get spaqRedirectionScreenDescription => 'SPAQ_REDIRECTED_SCREEN_DESC';
+}
+
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
 
@@ -622,6 +813,8 @@ class AcknowledgementSuccess {
 
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get referAcknowledgementLabelText =>
+      'REFER_ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 

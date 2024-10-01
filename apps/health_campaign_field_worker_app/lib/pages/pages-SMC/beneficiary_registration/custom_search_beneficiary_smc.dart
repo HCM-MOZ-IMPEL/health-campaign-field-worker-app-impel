@@ -23,19 +23,19 @@ import '../../../router/app_router.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card.dart';
 
 @RoutePage()
-class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
-  const CustomSearchBeneficiaryPage({
+class CustomSearchBeneficiarySMCPage extends LocalizedStatefulWidget {
+  const CustomSearchBeneficiarySMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomSearchBeneficiaryPage> createState() =>
-      _CustomSearchBeneficiaryPageState();
+  State<CustomSearchBeneficiarySMCPage> createState() =>
+      _CustomSearchBeneficiarySMCPageState();
 }
 
-class _CustomSearchBeneficiaryPageState
-    extends LocalizedState<CustomSearchBeneficiaryPage> {
+class _CustomSearchBeneficiarySMCPageState
+    extends LocalizedState<CustomSearchBeneficiarySMCPage> {
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
   int offset = 0;
@@ -371,10 +371,7 @@ class _CustomSearchBeneficiaryPageState
                                   );
                                 } else {
                                   await context.router.push(
-                                    CustomHouseholdWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
+                                      BeneficiaryWrapperRoute(wrapper: i));
                                 }
                                 setState(() {
                                   isProximityEnabled = false;

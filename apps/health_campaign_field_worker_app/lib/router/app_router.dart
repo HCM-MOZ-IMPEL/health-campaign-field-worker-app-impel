@@ -18,6 +18,7 @@ import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-SMC/consent/household_consent.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
+import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -82,6 +83,13 @@ import '../pages/attendance/custom_manage_attendance.dart';
 import '../pages/attendance/custom_mark_attendance.dart';
 import '../pages/attendance/custom_session_select.dart';
 import 'package:attendance_management/attendance_management.dart';
+import '../pages/pages-SMC/beneficiary/custom_refer_beneficiary_smc.dart';
+import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -620,7 +628,7 @@ class AppRouter extends _$AppRouter {
                 ),
                 AutoRoute(
                   initial: true,
-                  page: CustomSearchBeneficiaryRoute.page,
+                  page: CustomSearchBeneficiarySMCRoute.page,
                   path: 'custom-search-beneficiary',
                 ),
                 RedirectRoute(
@@ -655,25 +663,25 @@ class AppRouter extends _$AppRouter {
                       path: 'household-details',
                     ),
                     AutoRoute(
-                      page: CustomHouseHoldDetailsRoute.page,
-                      path: 'custom-household-details',
+                      page: CustomHouseHoldDetailsSMCRoute.page,
+                      path: 'custom-household-details-smc',
                     ),
                     RedirectRoute(
                       path: 'household-details',
-                      redirectTo: 'custom-household-details',
+                      redirectTo: 'custom-household-details-smc',
                     ),
                     AutoRoute(
                       page: HouseholdLocationRoute.page,
                       path: 'household-location',
                     ),
                     AutoRoute(
-                      page: CustomHouseholdLocationRoute.page,
-                      path: 'custom-household-location',
+                      page: CustomHouseholdLocationSMCRoute.page,
+                      path: 'custom-household-location-smc',
                       initial: true,
                     ),
                     RedirectRoute(
                       path: 'household-location',
-                      redirectTo: 'custom-household-location',
+                      redirectTo: 'custom-household-location-smc',
                     ),
                     AutoRoute(
                         page: HouseHoldConsentRoute.page,
@@ -687,12 +695,12 @@ class AppRouter extends _$AppRouter {
                       path: 'beneficiary-acknowledgement',
                     ),
                     AutoRoute(
-                      page: CustomBeneficiaryAcknowledgementRoute.page,
-                      path: 'custom-beneficiary-acknowledgement',
+                      page: CustomBeneficiaryAcknowledgementSMCRoute.page,
+                      path: 'custom-beneficiary-acknowledgement-smc',
                     ),
                     RedirectRoute(
                       path: 'beneficiary-acknowledgement',
-                      redirectTo: 'custom-beneficiary-acknowledgement',
+                      redirectTo: 'custom-beneficiary-acknowledgement-smc',
                     ),
                     AutoRoute(
                       page: HouseDetailsRoute.page,
@@ -726,25 +734,6 @@ class AppRouter extends _$AppRouter {
                   ],
                 ),
                 AutoRoute(
-                  page: CustomHouseholdWrapperRoute.page,
-                  path: 'household',
-                  children: [
-                    AutoRoute(
-                      page: HouseholdOverviewRoute.page,
-                      path: 'overview',
-                    ),
-                    AutoRoute(
-                      page: CustomHouseholdOverviewRoute.page,
-                      path: 'custom-overview',
-                      initial: true,
-                    ),
-                    RedirectRoute(
-                      path: 'overview',
-                      redirectTo: 'custom-overview',
-                    ),
-                  ],
-                ),
-                AutoRoute(
                   page: BeneficiaryWrapperRoute.page,
                   path: 'beneficiary',
                   children: [
@@ -753,13 +742,17 @@ class AppRouter extends _$AppRouter {
                       path: 'beneficiary-checklist',
                     ),
                     AutoRoute(
-                      page: CustomBeneficiaryChecklistRoute.page,
-                      path: 'custom-beneficiary-checklist',
+                      page: HouseholdOverviewRoute.page,
+                      path: 'overview',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdOverviewSMCRoute.page,
+                      path: 'custom-overview-smc',
                       initial: true,
                     ),
                     RedirectRoute(
-                      path: 'beneficiary-checklist',
-                      redirectTo: 'custom-beneficiary-checklist',
+                      path: 'overview',
+                      redirectTo: 'custom-overview',
                     ),
                     AutoRoute(
                       page: BeneficiaryDetailsRoute.page,
@@ -776,6 +769,10 @@ class AppRouter extends _$AppRouter {
                     RedirectRoute(
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention',
+                    ),
+                    AutoRoute(
+                      page: EligibilityChecklistViewRoute.page,
+                      path: 'eligibility-checklist',
                     ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,
@@ -796,6 +793,10 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: ReferBeneficiaryRoute.page,
                       path: 'refer-beneficiary',
+                    ),
+                    AutoRoute(
+                      page: CustomReferBeneficiarySMCRoute.page,
+                      path: 'refer-beneficiary-smc',
                     ),
                     AutoRoute(
                       page: DoseAdministeredRoute.page,

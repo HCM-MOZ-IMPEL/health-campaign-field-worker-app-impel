@@ -79,6 +79,18 @@ class Constants {
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String reAdministeredKey = "reAdministered";
+  static const String pipeSeparator = ' || ';
+  static const String spaq1String = 'SPAQ 1';
+  static const String centralFacility = 'Central Facility';
+  static const String stateBoundaryLevel = 'State';
+  static const String stateFacility = 'State Facility';
+  static const String lgaBoundaryLevel = 'LGA';
+  static const String lgaFacility = 'LGA Facility';
+  static const String healthFacility = 'Health Facility';
+  static const String curlyBraces = '{}';
+  static const String smallBraces = '()';
+  static const String intTwo = '2';
   // todo added for testing
   static const String communityDistributor = 'COMMUNITY_DISTRIBUTOR';
 

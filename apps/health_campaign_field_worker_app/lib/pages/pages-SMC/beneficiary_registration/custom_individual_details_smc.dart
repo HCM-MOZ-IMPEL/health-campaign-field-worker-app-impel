@@ -38,13 +38,11 @@ import '../../../widgets/localized.dart';
 @RoutePage()
 class CustomIndividualDetailsSMCPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
-  final bool isEligible;
 
   const CustomIndividualDetailsSMCPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = true,
-    this.isEligible = true,
   });
 
   @override
@@ -72,7 +70,6 @@ class CustomIndividualDetailsSMCPageState
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
-    bool isEligible = widget.isEligible;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -91,8 +88,6 @@ class CustomIndividualDetailsSMCPageState
                     ?.value
                     ?.toString() ??
                 '';
-            isEligible = widget.isEligible &&
-                checkEligibilityForHouseType([selectedHouseStructureTypes]);
 
             return ScrollableContent(
               enableFixedButton: true,
@@ -122,14 +117,12 @@ class CustomIndividualDetailsSMCPageState
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
                               );
-                              if (isEligible &&
-                                      (age.years == 0 && age.months == 0) ||
+                              if ((age.years == 0 && age.months == 0) ||
                                   age.years >= 150 && age.months > 0) {
                                 form.control(_dobKey).setErrors({'': true});
                               }
 
-                              if (isEligible &&
-                                  form.control(_genderKey).value == null) {
+                              if (form.control(_genderKey).value == null) {
                                 setState(() {
                                   form
                                       .control(_genderKey)
@@ -144,9 +137,7 @@ class CustomIndividualDetailsSMCPageState
                               if (!form.valid) return;
                               FocusManager.instance.primaryFocus?.unfocus();
 
-                              if (age.years < 18 &&
-                                  widget.isHeadOfHousehold &&
-                                  isEligible) {
+                              if (age.years < 18 && widget.isHeadOfHousehold) {
                                 await DigitToast.show(
                                   context,
                                   options: DigitToastOptions(
@@ -273,7 +264,7 @@ class CustomIndividualDetailsSMCPageState
                                             navigateToSummary: false),
                                       );
                                       router.push(
-                                          CustomBeneficiaryAcknowledgementRoute(
+                                          CustomBeneficiaryAcknowledgementSMCRoute(
                                               enableViewHousehold:
                                                   widget.isHeadOfHousehold));
                                     }
@@ -362,43 +353,27 @@ class CustomIndividualDetailsSMCPageState
                                   );
 
                                   if (context.mounted) {
-                                    final scannerBloc =
-                                        context.read<DigitScannerBloc>();
-
-                                    if (scannerBloc.state.duplicate) {
-                                      DigitToast.show(
-                                        context,
-                                        options: DigitToastOptions(
-                                          localizations.translate(
-                                            i18.deliverIntervention
-                                                .resourceAlreadyScanned,
-                                          ),
-                                          true,
-                                          theme,
-                                        ),
-                                      );
-                                    } else {
-                                      bloc.add(
-                                        BeneficiaryRegistrationAddMemberEvent(
-                                          beneficiaryType:
-                                              RegistrationDeliverySingleton()
-                                                  .beneficiaryType!,
-                                          householdModel: householdModel,
-                                          individualModel: individual,
-                                          addressModel: addressModel,
-                                          userUuid:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          projectId:
-                                              RegistrationDeliverySingleton()
-                                                  .projectId!,
-                                          tag: scannerBloc
-                                                  .state.qrCodes.isNotEmpty
-                                              ? scannerBloc.state.qrCodes.first
-                                              : null,
-                                        ),
-                                      );
-                                    }
+                                    bloc.add(
+                                      BeneficiaryRegistrationAddMemberEvent(
+                                        beneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType!,
+                                        householdModel: householdModel,
+                                        individualModel: individual,
+                                        addressModel: addressModel,
+                                        userUuid:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        tag: null,
+                                      ),
+                                    );
+                                    router.push(
+                                        CustomBeneficiaryAcknowledgementSMCRoute(
+                                            enableViewHousehold:
+                                                widget.isHeadOfHousehold));
                                   }
                                 },
                               );
@@ -545,7 +520,7 @@ class CustomIndividualDetailsSMCPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: SelectionBox<String>(
-                              isRequired: isEligible,
+                              isRequired: false,
                               title: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
@@ -566,7 +541,8 @@ class CustomIndividualDetailsSMCPageState
                                   if (value.isNotEmpty) {
                                     form.control(_genderKey).value =
                                         value.first;
-                                  } else if (isEligible) {
+                                  } // todo verify this
+                                  else if (true) {
                                     form.control(_genderKey).value = null;
                                     setState(() {
                                       form

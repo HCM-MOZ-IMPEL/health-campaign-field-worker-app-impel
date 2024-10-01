@@ -2,6 +2,7 @@ library app_utils;
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:digit_components/utils/date_utils.dart';
 
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
@@ -234,6 +235,10 @@ Future<bool> getIsConnected() async {
   } on SocketException catch (_) {
     return false;
   }
+}
+
+int getAgeMonths(DigitDOBAge age) {
+  return (age.years * 12) + age.months;
 }
 
 void showDownloadDialog(
