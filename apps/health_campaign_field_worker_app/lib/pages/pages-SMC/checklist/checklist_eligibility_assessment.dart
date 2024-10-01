@@ -28,13 +28,14 @@ class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   final IndividualModel? individual;
   final String? projectBeneficiaryClientReferenceId;
+
   const EligibilityChecklistViewPage({
-    Key? key,
+    super.key,
     this.referralClientRefId,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
     super.appLocalizations,
-  }) : super(key: key);
+  });
 
   @override
   State<EligibilityChecklistViewPage> createState() =>
@@ -92,7 +93,7 @@ class _EligibilityChecklistViewPage
                     // todo: verify the checklist name
                     selectedServiceDefinition = value.serviceDefinitionList
                         .where((element) => element.code.toString().contains(
-                              'SMCKebbi.ELIGIBLITY_ASSESSMENT.COMMUNITY_DISTRIBUTOR',
+                              'SMC.ELIGIBLITY_ASSESSMENT.COMMUNITY_DISTRIBUTOR',
                             ))
                         .toList()
                         .first;
@@ -857,8 +858,8 @@ class _EligibilityChecklistViewPage
     bool ifAdministration,
   ) {
     var isIneligible = false;
-    var q3Key = "KBEA3";
-    var q5Key = "KBEA4";
+    var q3Key = "SEA3";
+    var q5Key = "SEA4";
     Map<String, String> keyVsReason = {
       q3Key: "NOT_ADMINISTERED_IN_PREVIOUS_CYCLE",
       q5Key: "CHILD_ON_MEDICATION_1",
@@ -910,9 +911,9 @@ class _EligibilityChecklistViewPage
     List<String?> referralReasons,
   ) {
     var isReferral = false;
-    var q1Key = "KBEA1";
-    var q2Key = "KBEA2";
-    var q4Key = "KBEA3.NO.ADT1";
+    var q1Key = "SEA1";
+    var q2Key = "SEA2";
+    var q4Key = "SEA3.NO.ADT1";
     Map<String, String> referralKeysVsCode = {
       q1Key: "SICK",
       q2Key: "FEVER",

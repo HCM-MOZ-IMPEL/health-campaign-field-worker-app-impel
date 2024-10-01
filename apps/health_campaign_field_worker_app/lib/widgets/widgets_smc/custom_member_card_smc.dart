@@ -15,6 +15,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
+import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 
 class CustomMemberCardSMC extends StatelessWidget {
@@ -268,7 +269,11 @@ class CustomMemberCardSMC extends StatelessWidget {
                                         );
                                       } else {
                                         context.router
-                                            .push(BeneficiaryDetailsRoute());
+                                            .push(EligibilityChecklistViewRoute(
+                                          projectBeneficiaryClientReferenceId:
+                                              projectBeneficiaryClientReferenceId,
+                                          individual: individual,
+                                        ));
                                       }
                                     },
                               child: Center(
