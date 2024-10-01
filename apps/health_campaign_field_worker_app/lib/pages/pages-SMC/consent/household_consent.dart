@@ -146,8 +146,9 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                               context.router
                                   .push(ConsentHouseholdAcknowledgementRoute());
                             } else {
-                              context.router.push(CustomHouseHoldDetailsRoute(
-                                  isEligible: false));
+                              context.router.push(
+                                  CustomHouseHoldDetailsSMCRoute(
+                                      isEligible: false));
                             }
                           },
                           editHousehold: (addressModel,
