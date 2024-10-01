@@ -77,18 +77,35 @@ class CustomIndividualDetailsSMCPageState
         builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
-            // state.mapOrNull(persisted: (value) {});
+            state.mapOrNull(
+              persisted: (value) {
+                if (value.navigateToRoot) {
+                  (router.parent() as StackRouter).pop();
+                } else {
+                  Future.delayed(
+                    const Duration(
+                      milliseconds: 200,
+                    ),
+                    () {
+                      context.read<SearchHouseholdsBloc>().add(
+                            SearchHouseholdsByHouseholdsEvent(
+                              householdModel: value.householdModel,
+                              projectId: context.projectId,
+                              isProximityEnabled: false,
+                            ),
+                          );
+                    },
+                  ).then((value) => {
+                        context.router
+                            .push(CustomBeneficiaryAcknowledgementSMCRoute(
+                          enableViewHousehold: true,
+                        )),
+                      });
+                }
+              },
+            );
           },
           builder: (context, state) {
-            final selectedHouseStructureTypes = state
-                    .householdModel?.additionalFields?.fields
-                    .firstWhereOrNull((element) =>
-                        element.key ==
-                        AdditionalFieldsType.houseStructureTypes.toValue())
-                    ?.value
-                    ?.toString() ??
-                '';
-
             return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
@@ -263,10 +280,6 @@ class CustomIndividualDetailsSMCPageState
                                                 : null,
                                             navigateToSummary: false),
                                       );
-                                      router.push(
-                                          CustomBeneficiaryAcknowledgementSMCRoute(
-                                              enableViewHousehold:
-                                                  widget.isHeadOfHousehold));
                                     }
                                   }
                                 },
