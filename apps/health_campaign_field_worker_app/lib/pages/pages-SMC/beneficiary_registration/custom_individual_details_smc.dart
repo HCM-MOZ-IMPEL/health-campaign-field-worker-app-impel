@@ -32,6 +32,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../../widgets/custom_digit_dob_picker.dart';
 import '../../../widgets/localized.dart';
+import '../../../widgets/widgets_smc/custom_digit_dob_picker_smc.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 
@@ -486,7 +487,7 @@ class CustomIndividualDetailsSMCPageState
                           const SizedBox(
                             height: 10,
                           ),
-                          DigitDobPicker(
+                          CustomDigitDobPickerSMC(
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
