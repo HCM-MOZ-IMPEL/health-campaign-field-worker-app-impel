@@ -42,7 +42,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
 
           parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
           parent.push(
-            CustomHouseholdWrapperRoute(
+            BeneficiaryWrapperRoute(
               wrapper: searchBlocState.householdMembers.first,
             ),
           );
