@@ -30,21 +30,21 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import 'package:collection/collection.dart';
 
 @RoutePage()
-class CustomHouseHoldDetailsPage extends LocalizedStatefulWidget {
+class CustomHouseHoldDetailsSMCPage extends LocalizedStatefulWidget {
   final bool isEligible;
-  const CustomHouseHoldDetailsPage({
+  const CustomHouseHoldDetailsSMCPage({
     super.key,
     super.appLocalizations,
     required this.isEligible,
   });
 
   @override
-  State<CustomHouseHoldDetailsPage> createState() =>
-      CustomHouseHoldDetailsPageState();
+  State<CustomHouseHoldDetailsSMCPage> createState() =>
+      CustomHouseHoldDetailsSMCPageState();
 }
 
-class CustomHouseHoldDetailsPageState
-    extends LocalizedState<CustomHouseHoldDetailsPage> {
+class CustomHouseHoldDetailsSMCPageState
+    extends LocalizedState<CustomHouseHoldDetailsSMCPage> {
   static const _dateOfRegistrationKey = 'dateOfRegistration';
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';

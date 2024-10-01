@@ -86,6 +86,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_sm
 import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -659,12 +660,12 @@ class AppRouter extends _$AppRouter {
                       path: 'household-details',
                     ),
                     AutoRoute(
-                      page: CustomHouseHoldDetailsRoute.page,
-                      path: 'custom-household-details',
+                      page: CustomHouseHoldDetailsSMCRoute.page,
+                      path: 'custom-household-details-smc',
                     ),
                     RedirectRoute(
                       path: 'household-details',
-                      redirectTo: 'custom-household-details',
+                      redirectTo: 'custom-household-details-smc',
                     ),
                     AutoRoute(
                       page: HouseholdLocationRoute.page,
@@ -677,7 +678,7 @@ class AppRouter extends _$AppRouter {
                     ),
                     RedirectRoute(
                       path: 'household-location',
-                      redirectTo: 'custom-household-location',
+                      redirectTo: 'custom-household-location-smc',
                     ),
                     AutoRoute(
                       page: BeneficiaryAcknowledgementRoute.page,
@@ -689,7 +690,7 @@ class AppRouter extends _$AppRouter {
                     ),
                     RedirectRoute(
                       path: 'beneficiary-acknowledgement',
-                      redirectTo: 'custom-beneficiary-acknowledgement',
+                      redirectTo: 'custom-beneficiary-acknowledgement-smc',
                     ),
                     AutoRoute(
                       page: HouseDetailsRoute.page,

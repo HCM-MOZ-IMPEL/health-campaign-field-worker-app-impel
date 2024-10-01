@@ -196,8 +196,8 @@ class _CustomHouseholdLocationSMCPageState
                           );
 
                           // Todd : set the variable accordingly
-                          router.push(
-                              CustomHouseHoldDetailsRoute(isEligible: false));
+                          router.push(CustomHouseHoldDetailsSMCRoute(
+                              isEligible: false));
                         }, editHousehold: (
                           address,
                           householdModel,
@@ -220,8 +220,8 @@ class _CustomHouseholdLocationSMCPageState
                               addressModel,
                             ),
                           );
-                          router.push(
-                              CustomHouseHoldDetailsRoute(isEligible: false));
+                          router.push(CustomHouseHoldDetailsSMCRoute(
+                              isEligible: false));
                         });
                       },
                       child: Center(

@@ -346,6 +346,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseHoldDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseHoldDetailsSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseHoldDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEligible: args.isEligible,
+        ),
+      );
+    },
     CustomHouseholdAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdAcknowledgementRouteArgs>(
           orElse: () => const CustomHouseholdAcknowledgementRouteArgs());
@@ -1860,6 +1871,50 @@ class CustomHouseHoldDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomHouseHoldDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseHoldDetailsSMCPage]
+class CustomHouseHoldDetailsSMCRoute
+    extends PageRouteInfo<CustomHouseHoldDetailsSMCRouteArgs> {
+  CustomHouseHoldDetailsSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required bool isEligible,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseHoldDetailsSMCRoute.name,
+          args: CustomHouseHoldDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEligible: isEligible,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseHoldDetailsSMCRoute';
+
+  static const PageInfo<CustomHouseHoldDetailsSMCRouteArgs> page =
+      PageInfo<CustomHouseHoldDetailsSMCRouteArgs>(name);
+}
+
+class CustomHouseHoldDetailsSMCRouteArgs {
+  const CustomHouseHoldDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.isEligible,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEligible;
+
+  @override
+  String toString() {
+    return 'CustomHouseHoldDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
   }
 }
 
