@@ -57,6 +57,21 @@ class _CustomSearchBeneficiarySMCPageState
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
+
+    isProximityEnabled = true;
+    // Listen to LocationBloc's state to ensure location is loaded before triggering search
+    context.read<LocationBloc>().stream.listen((locationState) {
+      if (!locationState.loading && isProximityEnabled == true) {
+        setState(() {
+          lat = locationState.latitude!;
+          long = locationState.longitude!;
+        });
+
+        // Trigger search after location is loaded
+        triggerGlobalSearchEvent();
+      }
+    });
+
     // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
@@ -71,6 +86,8 @@ class _CustomSearchBeneficiarySMCPageState
 
   @override
   void dispose() {
+    isProximityEnabled = false;
+    blocWrapper.clearEvent();
     super.dispose();
   }
 
@@ -312,6 +329,7 @@ class _CustomSearchBeneficiarySMCPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
+                    // #TODO : add circular progress bar till searchResults is not fetched
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {
