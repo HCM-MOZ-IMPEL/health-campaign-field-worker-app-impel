@@ -94,11 +94,7 @@ class SideBar extends StatelessWidget {
             icon: Icons.home,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.replaceAll([
-                context.projectTypeCode == ProjectTypes.smc.toValue()
-                    ? SMCWrapperRoute()
-                    : IRSWrapperRoute(),
-              ]);
+              context.router.replaceAll([HomeRoute()]);
             },
           ),
           if (isDistributor)

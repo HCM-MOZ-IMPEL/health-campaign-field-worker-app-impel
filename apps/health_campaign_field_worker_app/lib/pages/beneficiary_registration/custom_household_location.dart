@@ -189,8 +189,9 @@ class _CustomHouseholdLocationPageState
                           if (context.projectTypeCode!
                               .contains(ProjectTypes.smc.toValue())) {
                             // Todd : set the variable accordingly
-                            router.push(
-                                CustomHouseHoldDetailsRoute(isEligible: false));
+                            router.push(HouseHoldConsentRoute());
+                            // router.push(
+                            //     CustomHouseHoldDetailsRoute(isEligible: false));
                           } else {
                             router.push(HouseDetailsRoute());
                           }
@@ -216,7 +217,7 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          print("BBBBBBBBBBBB ${context.projectTypeCode}");
+
                           if (context.projectTypeCode!
                               .contains(ProjectTypes.smc.toValue())) {
                             // Todd : set the variable accordingly

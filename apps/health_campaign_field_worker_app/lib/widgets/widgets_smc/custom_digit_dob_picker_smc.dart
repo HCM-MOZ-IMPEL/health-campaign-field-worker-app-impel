@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class CustomDigitDobPicker extends StatelessWidget {
+class CustomDigitDobPickerSMC extends StatelessWidget {
   // Properties to hold the form control name, labels, and error messages for the components
   final String datePickerFormControl;
   final bool isVerified;
@@ -12,15 +12,15 @@ class CustomDigitDobPicker extends StatelessWidget {
   final String datePickerLabel;
   final String ageFieldLabel;
   final String yearsHintLabel;
+  final String monthsHintLabel;
   final String separatorLabel;
   final String yearsAndMonthsErrMsg;
   final String cancelText;
   final String confirmText;
   final DateTime? initialDate;
   final void Function(FormControl<dynamic>)? onChangeOfFormControl;
-  final bool isEligible;
 
-  const CustomDigitDobPicker({
+  const CustomDigitDobPickerSMC({
     super.key,
     required this.datePickerFormControl,
     this.isVerified = false,
@@ -28,13 +28,13 @@ class CustomDigitDobPicker extends StatelessWidget {
     required this.datePickerLabel,
     required this.ageFieldLabel,
     required this.yearsHintLabel,
+    required this.monthsHintLabel,
     required this.separatorLabel,
     required this.yearsAndMonthsErrMsg,
     this.initialDate,
-    this.confirmText = 'OK',
-    this.cancelText = 'Cancel',
+    required this.confirmText,
+    required this.cancelText,
     this.onChangeOfFormControl,
-    this.isEligible = true,
   });
 
   @override
@@ -44,21 +44,45 @@ class CustomDigitDobPicker extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         top: 8,
+        bottom: 8,
       ),
       child: Container(
         padding: const EdgeInsets.only(
           left: 8,
           right: 8,
+          bottom: 8,
+        ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+              color: Colors.grey, style: BorderStyle.solid, width: 1.0),
         ),
         child: Column(
           children: [
+            // Date picker component to select the date of birth
+            DigitDateFormPicker(
+              label: datePickerLabel,
+              isRequired: true,
+              start: initialDate,
+              formControlName: datePickerFormControl,
+              cancelText: cancelText,
+              confirmText: confirmText,
+              onChangeOfFormControl: onChangeOfFormControl,
+              end: DateTime.now(),
+            ),
+            const SizedBox(height: 16),
+            // Text widget to display a separator label between the date picker and age fields
+            Text(
+              separatorLabel,
+              style: theme.textTheme.bodyLarge,
+            ),
             Row(
               children: [
                 Expanded(
                   // Text form field for entering the age in years
                   child: DigitTextFormField(
                       padding: EdgeInsets.zero,
-                      isRequired: isEligible,
                       maxLength: 3,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -67,6 +91,7 @@ class CustomDigitDobPicker extends StatelessWidget {
                           DobValueAccessorYearsString(DobValueAccessor()),
                       formControlName: datePickerFormControl,
                       label: ageFieldLabel,
+                      isRequired: true,
                       keyboardType: TextInputType.number,
                       suffix: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -78,8 +103,35 @@ class CustomDigitDobPicker extends StatelessWidget {
                       readOnly: isVerified,
                       onChanged: onChangeOfFormControl),
                 ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  // Text form field for entering the age in months
+                  child: DigitTextFormField(
+                      padding: EdgeInsets.zero,
+                      maxLength: 2,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      valueAccessor:
+                          DobValueAccessorMonthString(DobValueAccessor()),
+                      formControlName: datePickerFormControl,
+                      label: '',
+                      keyboardType: TextInputType.number,
+                      suffix: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          monthsHintLabel,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      readOnly: isVerified,
+                      onChanged: onChangeOfFormControl),
+                ),
               ],
             ),
+            const SizedBox(height: 8.0),
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);
@@ -117,19 +169,10 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
     if (viewValue == null || (viewValue.years == 0 && viewValue.months == 0)) {
       return null;
     } else {
-      final months = viewValue.months;
-      final days = DigitDateUtils.yearsMonthsDaysToDays(
-          viewValue.years, viewValue.months, viewValue.days);
-
-      final calculatedDate = DateTime.now().subtract(Duration(days: days));
-
-      return (viewValue.years == 0 && months == 0) || months > 11
+      return (viewValue.years == 0 && viewValue.months == 0) ||
+              viewValue.months > 11
           ? null
-          : DateTime(
-              calculatedDate.year,
-              calculatedDate.month,
-              1,
-            );
+          : calculateDob(viewValue);
     }
   }
 }
@@ -162,7 +205,9 @@ class DobValueAccessorYearsString
     final years = int.tryParse(viewValue ?? '');
 
     final dobAge = DigitDOBAge(
-        years: years ?? 0, months: int.tryParse(existingMonth) ?? 0, days: 1);
+        years: years ?? 0,
+        months: int.tryParse(existingMonth) ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -180,7 +225,7 @@ class DobValueAccessorMonthString
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
 
-    if (dobAge == null || (dobAge.years == 0 && (dobAge.months == 0))) {
+    if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
       existingYear = '';
       existingDays = '';
       return null;
@@ -196,7 +241,33 @@ class DobValueAccessorMonthString
   DateTime? viewToModelValue(String? viewValue) {
     final months = int.tryParse(viewValue ?? '');
     final dobAge = DigitDOBAge(
-        years: int.tryParse(existingYear) ?? 0, months: months ?? 0, days: 1);
+        years: int.tryParse(existingYear) ?? 0,
+        months: months ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
+}
+
+DateTime calculateDob(DigitDOBAge givenDOBAge) {
+  DateTime currentDate = DateTime.now();
+  // Calculate the difference in years, months, and days
+  int birthYear = currentDate.year - givenDOBAge.years;
+  int birthMonth = currentDate.month - givenDOBAge.months;
+  int birthDay = currentDate.day - givenDOBAge.days;
+
+  // If the current day is earlier than the selected day in the same month,
+  // reduce the month count and adjust the days accordingly.
+  if (birthDay < 0) {
+    birthMonth--;
+    birthDay += DateTime(currentDate.year, currentDate.month + 1, 0).day;
+  }
+
+  // If the current month is earlier than the selected month, reduce the year count
+  // and adjust the month and day counts accordingly.
+  if (birthMonth < 0) {
+    birthYear--;
+    birthMonth += 12;
+  }
+
+  return DateTime(birthYear, birthMonth, birthDay);
 }
