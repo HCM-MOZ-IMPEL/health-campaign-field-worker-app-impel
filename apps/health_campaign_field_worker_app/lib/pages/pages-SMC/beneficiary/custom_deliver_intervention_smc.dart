@@ -6,54 +6,62 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
-import 'package:registration_delivery/utils/utils.dart';
+
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card.dart';
+import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 
 @RoutePage()
-class CustomDeliverInterventionPage extends LocalizedStatefulWidget {
+class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
   final bool isEditing;
 
-  const CustomDeliverInterventionPage({
+  const CustomDeliverInterventionSMCPage({
     super.key,
     super.appLocalizations,
     this.isEditing = false,
   });
 
   @override
-  State<CustomDeliverInterventionPage> createState() =>
-      CustomDeliverInterventionPageState();
+  State<CustomDeliverInterventionSMCPage> createState() =>
+      CustomDeliverInterventionSMCPageState();
 }
 
-class CustomDeliverInterventionPageState
-    extends LocalizedState<CustomDeliverInterventionPage> {
+class CustomDeliverInterventionSMCPageState
+    extends LocalizedState<CustomDeliverInterventionSMCPage> {
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
-  static const _noOfRoomsSprayedKey = 'noOfRoomsSprayedKey';
-
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
   // Variable to track dose administration status
   bool doseAdministered = false;
+
+  // toggle doseAdministered
+  void checkDoseAdministration(bool newValue) {
+    setState(() {
+      doseAdministered = newValue;
+    });
+  }
 
   // List of controllers for form elements
   final List _controllers = [];
@@ -163,16 +171,6 @@ class CustomDeliverInterventionPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
-          final household = householdMemberWrapper.household;
-          final roomsInHousehold = household?.additionalFields?.fields
-              .where((element) =>
-                  element.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull;
-          final noOfRoomsInHouseholdValue = roomsInHousehold == null
-              ? 0
-              : roomsInHousehold.value is String
-                  ? int.parse(roomsInHousehold.value)
-                  : roomsInHousehold.value as int;
 
           return Scaffold(
             body: state.loading
@@ -188,7 +186,6 @@ class CustomDeliverInterventionPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              // todo verify this from product, addition of householdModel here
                               ? (fetchProductVariant(
                                       RegistrationDeliverySingleton()
                                               .selectedProject
@@ -226,18 +223,20 @@ class CustomDeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty) {
-                        DigitToast.show(
-                          context,
-                          options: DigitToastOptions(
-                            localizations.translate(
-                              i18.deliverIntervention
-                                  .checkForProductVariantsConfig,
+                      if ((productVariants ?? []).isEmpty && context.mounted) {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18.deliverIntervention
+                                    .checkForProductVariantsConfig,
+                              ),
+                              true,
+                              theme,
                             ),
-                            true,
-                            theme,
-                          ),
-                        );
+                          );
+                        });
                       }
 
                       return BlocBuilder<ProductVariantBloc,
@@ -282,14 +281,23 @@ class CustomDeliverInterventionPageState
                                                       ? null
                                                       : () async {
                                                           final deliveredProducts =
-                                                              ((form.control(
-                                                            _resourceDeliveredKey,
-                                                          ) as FormArray)
+                                                              ((form.control(_resourceDeliveredKey)
+                                                                          as FormArray)
                                                                       .value
                                                                   as List<
                                                                       ProductVariantModel?>);
-                                                          if (hasDuplicatesOrEmptyResource(
-                                                              deliveredProducts)) {
+                                                          final hasEmptyResources =
+                                                              hasEmptyOrNullResources(
+                                                                  deliveredProducts);
+                                                          final hasZeroQuantity =
+                                                              hasEmptyOrZeroQuantity(
+                                                                  form);
+                                                          final hasDuplicates =
+                                                              hasDuplicateResources(
+                                                                  deliveredProducts,
+                                                                  form);
+
+                                                          if (hasEmptyResources) {
                                                             await DigitToast
                                                                 .show(
                                                               context,
@@ -303,11 +311,41 @@ class CustomDeliverInterventionPageState
                                                                 theme,
                                                               ),
                                                             );
-                                                          } else if (noOfRoomsInHouseholdValue <
-                                                              (form
-                                                                  .control(
-                                                                      _noOfRoomsSprayedKey)
-                                                                  .value as int)) {
+                                                          } else if (hasDuplicates) {
+                                                            await DigitToast
+                                                                .show(
+                                                              context,
+                                                              options:
+                                                                  DigitToastOptions(
+                                                                localizations
+                                                                    .translate(i18
+                                                                        .deliverIntervention
+                                                                        .resourceDuplicateValidation),
+                                                                true,
+                                                                theme,
+                                                              ),
+                                                            );
+                                                          } else if (hasZeroQuantity) {
+                                                            await DigitToast
+                                                                .show(
+                                                              context,
+                                                              options:
+                                                                  DigitToastOptions(
+                                                                localizations
+                                                                    .translate(i18
+                                                                        .deliverIntervention
+                                                                        .resourceCannotBeZero),
+                                                                true,
+                                                                theme,
+                                                              ),
+                                                            );
+                                                          } else if (doseAdministered &&
+                                                              form
+                                                                      .control(
+                                                                        _deliveryCommentKey,
+                                                                      )
+                                                                      .value ==
+                                                                  null) {
                                                             await DigitToast
                                                                 .show(
                                                               context,
@@ -315,8 +353,8 @@ class CustomDeliverInterventionPageState
                                                                   DigitToastOptions(
                                                                 localizations
                                                                     .translate(i18Local
-                                                                        .beneficiaryDetails
-                                                                        .roomsVsSprayedValidation),
+                                                                        .deliverIntervention
+                                                                        .deliveryCommentRequired),
                                                                 true,
                                                                 theme,
                                                               ),
@@ -328,13 +366,14 @@ class CustomDeliverInterventionPageState
                                                                 .add(
                                                                     const LoadLocationEvent());
                                                             handleLocationState(
-                                                                locationState,
-                                                                context,
-                                                                deliveryInterventionState,
-                                                                form,
-                                                                householdMemberWrapper,
-                                                                projectBeneficiary!
-                                                                    .first);
+                                                              locationState,
+                                                              context,
+                                                              deliveryInterventionState,
+                                                              form,
+                                                              householdMemberWrapper,
+                                                              projectBeneficiary!
+                                                                  .first,
+                                                            );
                                                           }
                                                         },
                                                   child: Center(
@@ -388,24 +427,25 @@ class CustomDeliverInterventionPageState
                                                             .deliverIntervention
                                                             .currentCycle),
                                                   ),
-                                                DigitStepper(
-                                                  activeStep:
-                                                      deliveryInterventionState
-                                                              .dose -
-                                                          1,
-                                                  stepRadius: 12.5,
-                                                  steps: steps,
-                                                  maxStepReached: 3,
-                                                  lineLength:
-                                                      (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                ),
+                                                if (numberOfDoses > 1)
+                                                  DigitStepper(
+                                                    activeStep:
+                                                        deliveryInterventionState
+                                                                .dose -
+                                                            1,
+                                                    stepRadius: 12.5,
+                                                    steps: steps,
+                                                    maxStepReached: 3,
+                                                    lineLength: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            12.5 *
+                                                                2 *
+                                                                steps.length -
+                                                            50) /
+                                                        (steps.length - 1),
+                                                  ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
                                                   formControlName:
@@ -446,38 +486,17 @@ class CustomDeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.headlineLarge,
                                                 ),
-                                                DigitIntegerFormPicker(
-                                                  incrementer: true,
-                                                  formControlName:
-                                                      _noOfRoomsSprayedKey,
-                                                  form: form,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18Local.beneficiaryDetails
-                                                        .noOfRoomsSprayed,
-                                                  ),
-                                                  minimum: 1,
-                                                ),
-                                                Padding(
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(
-                                                        0, kPadding * 2, 0, 2),
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        i18Local
-                                                            .beneficiaryDetails
-                                                            .typeOfResourceUsedHeading,
-                                                      ),
-                                                      style: theme
-                                                          .textTheme.bodyLarge,
-                                                    )),
                                                 ..._controllers.map((e) =>
-                                                    CustomResourceBeneficiaryCard(
+                                                    CustomResourceBeneficiaryCardSMC(
                                                       form: form,
                                                       cardIndex: _controllers
                                                           .indexOf(e),
                                                       totalItems:
                                                           _controllers.length,
+                                                      isAdministered:
+                                                          doseAdministered,
+                                                      checkDoseAdministration:
+                                                          checkDoseAdministration,
                                                       onDelete: (index) {
                                                         (form.control(
                                                           _resourceDeliveredKey,
@@ -499,6 +518,99 @@ class CustomDeliverInterventionPageState
                                                         });
                                                       },
                                                     )),
+                                                Center(
+                                                  child: DigitIconButton(
+                                                    onPressed: ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value ??
+                                                                    [])
+                                                                .length <
+                                                            (productVariants ??
+                                                                    [])
+                                                                .length
+                                                        ? () async {
+                                                            addController(form);
+                                                            setState(() {
+                                                              _controllers.add(
+                                                                _controllers
+                                                                    .length,
+                                                              );
+                                                            });
+                                                          }
+                                                        : null,
+                                                    icon: Icons.add_circle,
+                                                    iconColor: ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value ??
+                                                                    [])
+                                                                .length <
+                                                            (productVariants ??
+                                                                    [])
+                                                                .length
+                                                        ? theme.colorScheme
+                                                            .secondary
+                                                        : theme.colorScheme
+                                                            .outline,
+                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value ??
+                                                                    [])
+                                                                .length <
+                                                            (productVariants ??
+                                                                    [])
+                                                                .length
+                                                        ? theme.colorScheme
+                                                            .secondary
+                                                        : theme.colorScheme
+                                                            .outline,
+                                                    iconText:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .resourceAddBeneficiary,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          DigitCard(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliveryCommentHeading,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.headlineLarge,
+                                                ),
+                                                DigitReactiveSearchDropdown<
+                                                    String>(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliveryCommentLabel,
+                                                  ),
+                                                  form: form,
+                                                  menuItems:
+                                                      RegistrationDeliverySingleton()
+                                                          .deliveryCommentOptions!
+                                                          .map((e) {
+                                                    return localizations
+                                                        .translate(e);
+                                                  }).toList()
+                                                        ..sort((a, b) =>
+                                                            a.compareTo(b)),
+                                                  formControlName:
+                                                      _deliveryCommentKey,
+                                                  valueMapper: (value) => value,
+                                                  emptyText: localizations
+                                                      .translate(i18
+                                                          .common.noMatchFound),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -523,12 +635,20 @@ class CustomDeliverInterventionPageState
   addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
-    (form.control(_quantityDistributedKey) as FormArray).add(FormControl<int>(
-        value: 0, validators: [Validators.min(0), Validators.max(3)]));
+    (form.control(_quantityDistributedKey) as FormArray)
+        .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
   }
 
-  bool hasDuplicatesOrEmptyResource(
-      List<ProductVariantModel?> deliveredProducts) {
+  bool hasEmptyOrZeroQuantity(FormGroup form) {
+    final quantityDistributedArray =
+        form.control(_quantityDistributedKey) as FormArray;
+
+    // Check if any quantity is zero or null
+    return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
+        true;
+  }
+
+  bool hasEmptyOrNullResources(List<ProductVariantModel?> deliveredProducts) {
     final Map<String?, List<ProductVariantModel?>> groupedVariants = {};
     if (deliveredProducts.isNotEmpty) {
       for (final variant in deliveredProducts) {
@@ -545,6 +665,26 @@ class CustomDeliverInterventionPageState
     }
 
     return true;
+  }
+
+  bool hasDuplicateResources(
+      List<ProductVariantModel?> deliveredProducts, FormGroup form) {
+    final resourceDeliveredArray =
+        form.control(_resourceDeliveredKey) as FormArray;
+    final Set<String?> uniqueProductIds = {};
+
+    for (int i = 0; i < resourceDeliveredArray.value!.length; i++) {
+      final productId = deliveredProducts[i]?.id;
+      if (productId != null) {
+        if (uniqueProductIds.contains(productId)) {
+          // Duplicate found
+          return true;
+        } else {
+          uniqueProductIds.add(productId);
+        }
+      }
+    }
+    return false;
   }
 
   // ignore: long-parameter-list
@@ -580,11 +720,12 @@ class CustomDeliverInterventionPageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
-    final roomsSprayed = form.control(_noOfRoomsSprayedKey).value as int;
+
     // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
+    final deliveryComment = form.control(_deliveryCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -611,8 +752,6 @@ class CustomDeliverInterventionPageState
               ))
           .toList(),
       address: address?.copyWith(
-        latitude: latitude ?? address.latitude,
-        longitude: longitude ?? address.longitude,
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
@@ -648,7 +787,6 @@ class CustomDeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
-          AdditionalField(_noOfRoomsSprayedKey, roomsSprayed),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),
@@ -659,35 +797,17 @@ class CustomDeliverInterventionPageState
               AdditionalFieldsType.longitude.toValue(),
               longitude,
             ),
+          if (deliveryComment != null &&
+              deliveryComment.trim().toString().isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.deliveryComment.toValue(),
+              deliveryComment,
+            ),
         ],
       ),
     );
 
     return task;
-  }
-
-  bool isSuccessfulOrInEligible(
-      DeliverInterventionState deliverInterventionState) {
-    if (deliverInterventionState.tasks == null ||
-        (deliverInterventionState.tasks?.isEmpty ?? true)) {
-      return false;
-    }
-    final lastTask = deliverInterventionState.tasks?.last;
-    final status = lastTask?.status;
-
-    if (status == Status.administeredSuccess.toValue()) {
-      return true;
-    }
-
-    if (status == Status.administeredFailed.toValue()) {
-      final reasonField = lastTask?.additionalFields?.fields.firstWhereOrNull(
-          (field) =>
-              field.key == AdditionalFieldsType.reasonOfRefusal.toValue());
-
-      return reasonField?.value == "INCOMPATIBLE";
-    }
-
-    return false;
   }
 
 // This method builds a form used for delivering interventions.
@@ -698,21 +818,35 @@ class CustomDeliverInterventionPageState
     List<ProductVariantModel>? variants,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
+    final overViewbloc = context.read<HouseholdOverviewBloc>().state;
+    _controllers.forEachIndexed((index, element) {
+      _controllers.removeAt(index);
+    });
 
     // Add controllers for each product variant to the _controllers list.
+    if (_controllers.isEmpty) {
+      final int r = RegistrationDeliverySingleton()
+                  .selectedProject
+                  ?.additionalDetails
+                  ?.projectType
+                  ?.cycles ==
+              null
+          ? 1
+          : fetchProductVariant(
+                      RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.additionalDetails
+                          ?.projectType
+                          ?.cycles![bloc.cycle - 1]
+                          .deliveries?[bloc.dose - 1],
+                      overViewbloc.selectedIndividual,
+                      overViewbloc.householdMemberWrapper.household)!
+                  .productVariants
+                  ?.length ??
+              0;
 
-    if ((bloc.tasks?.last.resources ?? []).isNotEmpty) {
-      _controllers.addAll(bloc.tasks!.last.resources!.mapIndexed((e, i) => i));
-    } else {
-      var groupedVariants = <String, List<ProductVariantModel>>{};
-      variants?.forEach((variant) {
-        if (!groupedVariants.containsKey(variant.productId)) {
-          groupedVariants[variant.productId!] = [];
-        }
-        groupedVariants[variant.productId]!.add(variant);
-      });
-
-      _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+      _controllers.addAll(List.generate(r, (index) => index)
+          .mapIndexed((index, element) => index));
     }
 
     return fb.group(<String, Object>{
@@ -722,16 +856,42 @@ class CustomDeliverInterventionPageState
                 .toString(),
         validators: [],
       ),
-      _dateOfAdministrationKey:
-          FormControl<DateTime>(value: DateTime.now(), validators: []),
-      _noOfRoomsSprayedKey: FormControl<int>(
-        value: 1,
+      _deliveryCommentKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
         validators: [],
       ),
+      _dateOfAdministrationKey:
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
-                value: null,
+                value: variants != null && variants.length < _controllers.length
+                    ? variants.last
+                    : (variants != null &&
+                            _controllers.indexOf(e) < variants.length
+                        ? variants.firstWhereOrNull(
+                            (element) =>
+                                element.id ==
+                                productVariants
+                                    ?.elementAt(_controllers.indexOf(e))
+                                    .productVariantId,
+                          )
+                        : null),
               )),
         ],
       ),
@@ -744,7 +904,7 @@ class CustomDeliverInterventionPageState
                     bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
                   )
                 : 0,
-            validators: [Validators.min(0), Validators.max(3)],
+            validators: [Validators.min(1)],
           ),
         ),
       ]),

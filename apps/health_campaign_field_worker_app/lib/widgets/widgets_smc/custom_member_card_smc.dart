@@ -268,12 +268,14 @@ class CustomMemberCardSMC extends StatelessWidget {
                                           ),
                                         );
                                       } else {
-                                        context.router
-                                            .push(EligibilityChecklistViewRoute(
-                                          projectBeneficiaryClientReferenceId:
-                                              projectBeneficiaryClientReferenceId,
-                                          individual: individual,
-                                        ));
+                                        // context.router
+                                        //     .push(EligibilityChecklistViewRoute(
+                                        //   projectBeneficiaryClientReferenceId:
+                                        //       projectBeneficiaryClientReferenceId,
+                                        //   individual: individual,
+                                        // ));
+                                        context.router.push(
+                                            CustomDeliverInterventionSMCRoute());
                                       }
                                     },
                               child: Center(

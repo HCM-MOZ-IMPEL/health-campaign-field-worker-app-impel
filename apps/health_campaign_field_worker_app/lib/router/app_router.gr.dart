@@ -313,6 +313,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverInterventionSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionSMCRouteArgs>(
+          orElse: () => const CustomDeliverInterventionSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomDeliverySummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverySummaryRouteArgs>(
           orElse: () => const CustomDeliverySummaryRouteArgs());
@@ -1749,6 +1761,50 @@ class CustomDeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverInterventionSMCPage]
+class CustomDeliverInterventionSMCRoute
+    extends PageRouteInfo<CustomDeliverInterventionSMCRouteArgs> {
+  CustomDeliverInterventionSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionSMCRoute.name,
+          args: CustomDeliverInterventionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionSMCRoute';
+
+  static const PageInfo<CustomDeliverInterventionSMCRouteArgs> page =
+      PageInfo<CustomDeliverInterventionSMCRouteArgs>(name);
+}
+
+class CustomDeliverInterventionSMCRouteArgs {
+  const CustomDeliverInterventionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
