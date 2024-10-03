@@ -70,13 +70,13 @@ class _CustomHouseholdLocationSMCPageState
         });
         return true;
       },
-      addMember: (value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          router
-              .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
-        });
-        return true;
-      },
+      // addMember: (value) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     router
+      //         .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
+      //   });
+      //   return true;
+      // },
     );
     super.initState();
   }

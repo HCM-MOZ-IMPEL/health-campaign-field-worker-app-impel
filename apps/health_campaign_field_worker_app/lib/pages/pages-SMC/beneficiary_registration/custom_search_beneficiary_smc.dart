@@ -37,7 +37,7 @@ class CustomSearchBeneficiarySMCPage extends LocalizedStatefulWidget {
 class _CustomSearchBeneficiarySMCPageState
     extends LocalizedState<CustomSearchBeneficiarySMCPage> {
   final TextEditingController searchController = TextEditingController();
-  bool isProximityEnabled = false;
+  bool isProximityEnabled = true;
   int offset = 0;
   int limit = 10;
 

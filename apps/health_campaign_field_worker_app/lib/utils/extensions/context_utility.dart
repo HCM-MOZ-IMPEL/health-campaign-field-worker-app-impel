@@ -235,7 +235,8 @@ extension ContextUtilityExtensions on BuildContext {
   NetworkManager get networkManager => read<NetworkManager>();
 
   DataRepository<D, R>
-      repository<D extends EntityModel, R extends EntitySearchModel>() =>
+      repository<D extends EntityModel, R extends EntitySearchModel>(
+              [BuildContext? context]) =>
           networkManager.repository<D, R>(this);
 
   T _get<T extends BlocBase>() {

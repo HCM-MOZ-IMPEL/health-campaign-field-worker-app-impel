@@ -16,6 +16,7 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-SMC/beneficiary/beneficiary_wrapper_smc.dart';
 import '../pages/pages-SMC/consent/household_consent.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
@@ -90,6 +91,8 @@ import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_sm
 import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_registartion_wrapper_smc.dart';
+import '../pages/pages-SMC/beneficiary/beneficiary_wrapper_smc.dart';
 
 part 'app_router.gr.dart';
 
