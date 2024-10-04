@@ -18,6 +18,8 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../blocs/project/project.dart';
+import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -47,9 +49,12 @@ class CustomDeliverInterventionSMCPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
+  static const _defaultQuantity = 1;
+  static const _administeredQuantity = 2;
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
@@ -76,52 +81,117 @@ class CustomDeliverInterventionSMCPageState
   }
 
   Future<void> handleCapturedLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) async {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    IndividualModel? selectedIndividual,
+  ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
-    context.read<DeliverInterventionBloc>().add(
-          DeliverInterventionSubmitEvent(
-              task: _getTaskModel(
-                context,
-                form: form,
-                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                        BeneficiaryType.household
-                    ? deliverInterventionState.tasks?.last
-                    : null,
-                projectBeneficiaryClientReferenceId:
-                    projectBeneficiary.clientReferenceId,
-                dose: deliverInterventionState.dose,
-                cycle: deliverInterventionState.cycle,
-                deliveryStrategy: DeliverStrategyType.direct.toValue(),
-                address: householdMember.members?.first.address?.first,
-                latitude: lat,
-                longitude: long,
-              ),
-              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
-                      RegistrationDeliverySingleton().beneficiaryType ==
+    final projectBeneficiaryClientReferenceId =
+        projectBeneficiary.clientReferenceId;
+
+    bool isReferral = form
+                .control(
+                  _deliveryCommentKey,
+                )
+                .value !=
+            null &&
+        form
+                .control(
+                  _deliveryCommentKey,
+                )
+                .value ==
+            "ADMINISTRATION_NOT_SUCCESSFUL" &&
+        doseAdministered;
+
+    String? wastedCount =
+        (((form.control(_quantityWastedKey) as FormArray).value)?[0])
+            .toString();
+    if (isReferral) {
+      if (Navigator.canPop(
+        context,
+      )) {
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).pop(false);
+      }
+      // todo set other params as per old smc
+
+      context.router.push(
+        CustomReferBeneficiarySMCRoute(
+            projectBeneficiaryClientRefId:
+                projectBeneficiaryClientReferenceId ?? '',
+            individual: selectedIndividual!,
+            quantityWasted: wastedCount,
+            isReadministrationUnSuccessful: true,
+            productVariantId:
+                ((form.control(_resourceDeliveredKey) as FormArray).value
+                        as List<ProductVariantModel?>)
+                    .first
+                    ?.id),
+      );
+    } else {
+      context.read<DeliverInterventionBloc>().add(
+            DeliverInterventionSubmitEvent(
+                task: _getTaskModel(
+                  context,
+                  form: form,
+                  oldTask: RegistrationDeliverySingleton().beneficiaryType ==
                           BeneficiaryType.household
-                  ? true
-                  : false,
-              boundaryModel: RegistrationDeliverySingleton().boundary!,
-              navigateToSummary: true,
-              householdMemberWrapper: householdMember),
+                      ? deliverInterventionState.tasks?.last
+                      : null,
+                  projectBeneficiaryClientReferenceId:
+                      projectBeneficiary.clientReferenceId,
+                  dose: deliverInterventionState.dose,
+                  cycle: deliverInterventionState.cycle,
+                  deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                  address: householdMember.members?.first.address?.first,
+                  latitude: lat,
+                  longitude: long,
+                ),
+                isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                        RegistrationDeliverySingleton().beneficiaryType ==
+                            BeneficiaryType.household
+                    ? true
+                    : false,
+                boundaryModel: RegistrationDeliverySingleton().boundary!,
+                navigateToSummary: true,
+                householdMemberWrapper: householdMember),
+          );
+      if (deliverInterventionState.futureDeliveries != null &&
+          deliverInterventionState.futureDeliveries!.isNotEmpty &&
+          RegistrationDeliverySingleton().projectType?.cycles?.isNotEmpty ==
+              true) {
+        // context.router.push(
+        //   SplashAcknowledgementRoute(
+        //     doseAdministrationVerification: true,
+        //   ),
+        // );
+      } else {
+        context.router.push(
+          SplashAcknowledgementRoute(
+            enableBackToSearch: false,
+          ),
         );
-    context.router.push(DeliverySummaryRoute());
+      }
+    }
   }
 
   void handleLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) {
-    if (context.mounted) {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    IndividualModel? selectedIndividual,
+  ) {
+    if (context.mounted && selectedIndividual != null) {
       DigitComponentsUtils().showLocationCapturingDialog(
           context,
           localizations.translate(i18.common.locationCapturing),
@@ -131,12 +201,14 @@ class CustomDeliverInterventionSMCPageState
         // After delay, hide the initial dialog
         DigitComponentsUtils().hideDialog(context);
         handleCapturedLocationState(
-            locationState,
-            context,
-            deliverInterventionState,
-            form,
-            householdMember,
-            projectBeneficiary);
+          locationState,
+          context,
+          deliverInterventionState,
+          form,
+          householdMember,
+          projectBeneficiary,
+          selectedIndividual,
+        );
       });
     }
   }
@@ -171,6 +243,8 @@ class CustomDeliverInterventionSMCPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
+
+          final selectedIndividual = state.selectedIndividual;
 
           return Scaffold(
             body: state.loading
@@ -289,9 +363,9 @@ class CustomDeliverInterventionSMCPageState
                                                           final hasEmptyResources =
                                                               hasEmptyOrNullResources(
                                                                   deliveredProducts);
-                                                          final hasZeroQuantity =
-                                                              hasEmptyOrZeroQuantity(
-                                                                  form);
+                                                          // final hasZeroQuantity =
+                                                          //     hasEmptyOrZeroQuantity(
+                                                          //         form);
                                                           final hasDuplicates =
                                                               hasDuplicateResources(
                                                                   deliveredProducts,
@@ -325,21 +399,23 @@ class CustomDeliverInterventionSMCPageState
                                                                 theme,
                                                               ),
                                                             );
-                                                          } else if (hasZeroQuantity) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceCannotBeZero),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (doseAdministered &&
+                                                          }
+                                                          //  else if (hasZeroQuantity) {
+                                                          //   await DigitToast
+                                                          //       .show(
+                                                          //     context,
+                                                          //     options:
+                                                          //         DigitToastOptions(
+                                                          //       localizations
+                                                          //           .translate(i18
+                                                          //               .deliverIntervention
+                                                          //               .resourceCannotBeZero),
+                                                          //       true,
+                                                          //       theme,
+                                                          //     ),
+                                                          //   );
+                                                          // }
+                                                          else if (doseAdministered &&
                                                               form
                                                                       .control(
                                                                         _deliveryCommentKey,
@@ -373,6 +449,7 @@ class CustomDeliverInterventionSMCPageState
                                                               householdMemberWrapper,
                                                               projectBeneficiary!
                                                                   .first,
+                                                              selectedIndividual,
                                                             );
                                                           }
                                                         },
@@ -510,6 +587,12 @@ class CustomDeliverInterventionSMCPageState
                                                             .removeAt(
                                                           index,
                                                         );
+                                                        (form.control(
+                                                          _quantityWastedKey,
+                                                        ) as FormArray)
+                                                            .removeAt(
+                                                          index,
+                                                        );
                                                         _controllers.removeAt(
                                                           index,
                                                         );
@@ -518,58 +601,6 @@ class CustomDeliverInterventionSMCPageState
                                                         });
                                                       },
                                                     )),
-                                                Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .resourceAddBeneficiary,
-                                                    ),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
@@ -637,6 +668,8 @@ class CustomDeliverInterventionSMCPageState
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
         .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
+    (form.control(_quantityWastedKey) as FormArray)
+        .add(FormControl<String>(validators: [Validators.required]));
   }
 
   bool hasEmptyOrZeroQuantity(FormGroup form) {
@@ -731,25 +764,33 @@ class CustomDeliverInterventionSMCPageState
       projectId: RegistrationDeliverySingleton().projectId,
       resources: productvariantList
           .map((e) => TaskResourceModel(
-                taskclientReferenceId: clientReferenceId,
-                clientReferenceId: IdGen.i.identifier,
-                productVariantId: e?.id,
-                isDelivered: true,
-                taskId: task?.id,
-                tenantId: RegistrationDeliverySingleton().tenantId,
-                rowVersion: oldTask?.rowVersion ?? 1,
-                quantity: (((form.control(_quantityDistributedKey) as FormArray)
-                        .value)?[productvariantList.indexOf(e)])
-                    .toString(),
-                clientAuditDetails: ClientAuditDetails(
-                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-                  createdTime: context.millisecondsSinceEpoch(),
+              taskclientReferenceId: clientReferenceId,
+              clientReferenceId: IdGen.i.identifier,
+              productVariantId: e?.id,
+              isDelivered: true,
+              taskId: task?.id,
+              tenantId: RegistrationDeliverySingleton().tenantId,
+              rowVersion: oldTask?.rowVersion ?? 1,
+              quantity: doseAdministered
+                  ? _administeredQuantity.toString()
+                  : _defaultQuantity.toString(),
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+              ),
+              auditDetails: AuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+              ),
+              additionalFields:
+                  TaskResourceAdditionalFields(version: 1, fields: [
+                AdditionalField(
+                  _quantityWastedKey,
+                  (((form.control(_quantityWastedKey) as FormArray)
+                          .value)?[productvariantList.indexOf(e)])
+                      .toString(),
                 ),
-                auditDetails: AuditDetails(
-                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-                  createdTime: context.millisecondsSinceEpoch(),
-                ),
-              ))
+              ])))
           .toList(),
       address: address?.copyWith(
         relatedClientReferenceId: clientReferenceId,
@@ -906,6 +947,11 @@ class CustomDeliverInterventionSMCPageState
                 : 0,
             validators: [Validators.min(1)],
           ),
+        ),
+      ]),
+      _quantityWastedKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(),
         ),
       ]),
     });

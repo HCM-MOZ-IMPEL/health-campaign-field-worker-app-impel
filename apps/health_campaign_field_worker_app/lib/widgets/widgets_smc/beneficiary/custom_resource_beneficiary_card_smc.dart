@@ -11,6 +11,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import '../../localized.dart';
+import '../custom_digit_reactive_dropdown_smc.dart';
 
 class CustomResourceBeneficiaryCardSMC extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
@@ -65,54 +66,33 @@ class CustomResourceBeneficiaryCardSMCState
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
-                  return SelectionBox<ProductVariantModel>(
-                    width: 116,
-                    options: productVariants,
-                    onSelectionChanged: (selectedOptions) {
-                      if (selectedOptions.isNotEmpty) {
-                        var selectedOption = selectedOptions.first;
-                        widget.form
-                            .control('resourceDelivered.${widget.cardIndex}')
-                            .value = selectedOption;
-                      } else {
-                        widget.form
-                            .control('resourceDelivered.${widget.cardIndex}')
-                            .value = null;
-                      }
-                    },
-                    initialSelection: widget.form
-                                .control(
-                                    'resourceDelivered.${widget.cardIndex}')
-                                .value !=
-                            null
-                        ? [
-                            widget.form
-                                .control(
-                                    'resourceDelivered.${widget.cardIndex}')
-                                .value
-                          ]
-                        : [],
+                  return CustomDigitReactiveDropdownSMC(
+                    label: '${localizations.translate(
+                      i18.deliverIntervention.resourceDeliveredLabel,
+                    )}*',
+                    readOnly: true,
+                    menuItems: productVariants,
+                    formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {
                       return localizations.translate(
                         value.sku ?? value.id,
                       );
                     },
-                    allowMultipleSelection: false,
                   );
                 },
               );
             },
           ),
-          DigitIntegerFormPicker(
-            incrementer: true,
-            formControlName: 'quantityDistributed.${widget.cardIndex}',
-            form: widget.form,
-            label: localizations.translate(
-              i18.deliverIntervention.quantityDistributedLabel,
-            ),
-            minimum: 0,
-            maximum: 3,
-          ),
+          // DigitIntegerFormPicker(
+          //   incrementer: true,
+          //   formControlName: 'quantityDistributed.${widget.cardIndex}',
+          //   form: widget.form,
+          //   label: localizations.translate(
+          //     i18.deliverIntervention.quantityDistributedLabel,
+          //   ),
+          //   minimum: 0,
+          //   maximum: 3,
+          // ),
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,
