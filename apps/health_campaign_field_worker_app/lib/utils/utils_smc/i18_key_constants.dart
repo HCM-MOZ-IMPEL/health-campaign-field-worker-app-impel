@@ -1181,7 +1181,7 @@ class IndividualDetails {
       'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
   String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
   String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
-
+  String get firstNameHeadLabelText => 'FIRST_NAME_HEAD_LABEL_TEXT';
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 }
 
