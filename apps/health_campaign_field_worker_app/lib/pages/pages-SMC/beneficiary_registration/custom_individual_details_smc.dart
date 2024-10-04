@@ -81,7 +81,9 @@ class CustomIndividualDetailsSMCPageState
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).pop();
+                  context.router.push(CustomBeneficiaryAcknowledgementSMCRoute(
+                    enableViewHousehold: true,
+                  ));
                 } else {
                   Future.delayed(
                     const Duration(
@@ -366,9 +368,8 @@ class CustomIndividualDetailsSMCPageState
                                     form: form,
                                   );
 
-                                  if (context.mounted) {
-                                    bloc.add(
-                                      BeneficiaryRegistrationAddMemberEvent(
+                                  bloc.add(
+                                    BeneficiaryRegistrationAddMemberEvent(
                                         beneficiaryType:
                                             RegistrationDeliverySingleton()
                                                 .beneficiaryType!,
@@ -380,15 +381,8 @@ class CustomIndividualDetailsSMCPageState
                                                 .loggedInUserUuid!,
                                         projectId:
                                             RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        tag: null,
-                                      ),
-                                    );
-                                    router.push(
-                                        CustomBeneficiaryAcknowledgementSMCRoute(
-                                            enableViewHousehold:
-                                                widget.isHeadOfHousehold));
-                                  }
+                                                .projectId!),
+                                  );
                                 },
                               );
                             },
