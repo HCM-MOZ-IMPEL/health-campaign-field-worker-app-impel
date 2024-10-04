@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -38,12 +39,13 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         },
         secondaryAction: () {
           final parent = context.router.parent() as StackRouter;
-          final searchBlocState = context.read<SearchHouseholdsBloc>().state;
+          final houseHoldBlocState =
+              context.read<HouseholdOverviewBloc>().state;
 
           parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
           parent.push(
             BeneficiaryWrapperRoute(
-              wrapper: searchBlocState.householdMembers.first,
+              wrapper: houseHoldBlocState.householdMemberWrapper,
             ),
           );
         },
