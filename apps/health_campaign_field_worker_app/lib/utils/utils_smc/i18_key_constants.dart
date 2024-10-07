@@ -593,6 +593,8 @@ class HouseholdDetails {
   String get submitYes => 'SUBMIT_YES';
   String get submitNo => 'SUBMIT_NO';
   String get householdConsentLabel => 'HOUSEHOLD_CONSENT_LABEL';
+
+  String get reasonLabelText => 'REASON_LABEL_TEXT';
 }
 
 class ForgotPassword {

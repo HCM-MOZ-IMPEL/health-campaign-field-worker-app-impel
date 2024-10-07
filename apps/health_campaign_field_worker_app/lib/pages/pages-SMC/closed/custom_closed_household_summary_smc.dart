@@ -14,6 +14,7 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
 class CustomClosedHouseholdSummarySMCPage extends LocalizedStatefulWidget {
@@ -134,7 +135,8 @@ class CustomClosedHouseholdSummaryPageState
                                     .translate(i18.common.coreCommonNA),
                           ),
                           LabelValuePair(
-                            label: localizations.translate("Reason"),
+                            label: localizations.translate(
+                                i18Local.householdDetails.reasonLabelText),
                             value: widget.reason,
                           ),
                         ]),

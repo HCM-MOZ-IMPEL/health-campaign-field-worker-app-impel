@@ -113,7 +113,6 @@ class CustomClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
-                        print("Yashio - ${form.control(_reasonKey).value}");
                         final String? householdHeadName = form
                             .control(_householdHeadNameKey)
                             .value as String?;
@@ -188,9 +187,8 @@ class CustomClosedHouseholdDetailsPageState
                                 kPadding, 0, kPadding, 0),
                             child: SelectionBox<String>(
                               isRequired: true,
-                              title: localizations.translate("Reason"
-                                  // i18.individualDetails.reasonLabelText,
-                                  ),
+                              title: localizations.translate(
+                                  i18Local.householdDetails.reasonLabelText),
                               allowMultipleSelection: false,
                               width: 148,
                               initialSelection:
