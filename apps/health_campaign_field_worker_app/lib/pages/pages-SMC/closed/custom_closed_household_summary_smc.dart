@@ -14,21 +14,24 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
-class CustomClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
-  const CustomClosedHouseholdSummaryPage({
+class CustomClosedHouseholdSummarySMCPage extends LocalizedStatefulWidget {
+  final reason;
+  const CustomClosedHouseholdSummarySMCPage({
+    required this.reason,
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomClosedHouseholdSummaryPage> createState() =>
+  State<CustomClosedHouseholdSummarySMCPage> createState() =>
       CustomClosedHouseholdSummaryPageState();
 }
 
 class CustomClosedHouseholdSummaryPageState
-    extends LocalizedState<CustomClosedHouseholdSummaryPage> {
+    extends LocalizedState<CustomClosedHouseholdSummarySMCPage> {
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
   }
@@ -130,6 +133,11 @@ class CustomClosedHouseholdSummaryPageState
                                 ? '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}'
                                 : localizations
                                     .translate(i18.common.coreCommonNA),
+                          ),
+                          LabelValuePair(
+                            label: localizations.translate(
+                                i18Local.householdDetails.reasonLabelText),
+                            value: widget.reason,
                           ),
                         ]),
                   ),
