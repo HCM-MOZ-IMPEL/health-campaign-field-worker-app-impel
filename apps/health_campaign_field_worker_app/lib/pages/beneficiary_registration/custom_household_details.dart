@@ -690,7 +690,8 @@ class CustomHouseHoldDetailsPageState
                                 label: localizations.translate(
                                   i18.householdDetails.noOfMembersCountLabel,
                                 ),
-                                incrementer: true,
+                                incrementer: !widget.isEligible,
+                                readOnly: widget.isEligible,
                               ),
                             ),
                           ]),

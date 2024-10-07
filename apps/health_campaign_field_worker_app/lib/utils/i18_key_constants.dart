@@ -604,6 +604,8 @@ class Home {
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
 
+  String get specialCaseCheckList => 'SPECIAL_CASE_CHECK_LIST_LABEL';
+
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
