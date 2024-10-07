@@ -302,12 +302,34 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomClosedHouseholdDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdDetailsSMCRouteArgs>(
+          orElse: () => const CustomClosedHouseholdDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
           orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomClosedHouseholdSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomClosedHouseholdSummarySMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdSummarySMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdSummarySMCPage(
+          reason: args.reason,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -1737,6 +1759,45 @@ class CustomClosedHouseholdDetailsRouteArgs {
 }
 
 /// generated route for
+/// [CustomClosedHouseholdDetailsSMCPage]
+class CustomClosedHouseholdDetailsSMCRoute
+    extends PageRouteInfo<CustomClosedHouseholdDetailsSMCRouteArgs> {
+  CustomClosedHouseholdDetailsSMCRoute({
+    Key? key,
+    ClosedHouseholdLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdDetailsSMCRoute.name,
+          args: CustomClosedHouseholdDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdDetailsSMCRoute';
+
+  static const PageInfo<CustomClosedHouseholdDetailsSMCRouteArgs> page =
+      PageInfo<CustomClosedHouseholdDetailsSMCRouteArgs>(name);
+}
+
+class CustomClosedHouseholdDetailsSMCRouteArgs {
+  const CustomClosedHouseholdDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ClosedHouseholdLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomClosedHouseholdSummaryPage]
 class CustomClosedHouseholdSummaryRoute
     extends PageRouteInfo<CustomClosedHouseholdSummaryRouteArgs> {
@@ -1772,6 +1833,50 @@ class CustomClosedHouseholdSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdSummarySMCPage]
+class CustomClosedHouseholdSummarySMCRoute
+    extends PageRouteInfo<CustomClosedHouseholdSummarySMCRouteArgs> {
+  CustomClosedHouseholdSummarySMCRoute({
+    required dynamic reason,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdSummarySMCRoute.name,
+          args: CustomClosedHouseholdSummarySMCRouteArgs(
+            reason: reason,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdSummarySMCRoute';
+
+  static const PageInfo<CustomClosedHouseholdSummarySMCRouteArgs> page =
+      PageInfo<CustomClosedHouseholdSummarySMCRouteArgs>(name);
+}
+
+class CustomClosedHouseholdSummarySMCRouteArgs {
+  const CustomClosedHouseholdSummarySMCRouteArgs({
+    required this.reason,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final dynamic reason;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdSummarySMCRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

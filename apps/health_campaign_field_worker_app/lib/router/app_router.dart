@@ -56,14 +56,15 @@ import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_sm
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
-
+import '../pages/pages-SMC/closed/custom_closed_household_details_smc.dart';
+import '../pages/pages-SMC/closed/custom_closed_household_summary_smc.dart';
 import '../pages/beneficiary_registration/custom_household_overview.dart';
 import '../pages/beneficiary_registration/custom_search_beneficiary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/custom_refused_delivery.dart';
-import '../pages/closed/custom_closed_household_details.dart';
 import 'package:closed_household/blocs/app_localization.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
+import '../pages/closed/custom_closed_household_details.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
@@ -844,6 +845,41 @@ class AppRouter extends _$AppRouter {
                     ),
                   ],
                 ),
+              ]),
+
+          /// close household
+          AutoRoute(
+              page: ClosedHouseholdWrapperRoute.page,
+              path: 'closed-household-wrapper',
+              children: [
+                AutoRoute(
+                  page: ClosedHouseholdDetailsRoute.page,
+                  path: 'closed-household-details',
+                ),
+                AutoRoute(
+                  page: CustomClosedHouseholdDetailsSMCRoute.page,
+                  path: 'custom-closed-household-details-smc',
+                  initial: true,
+                ),
+                RedirectRoute(
+                  path: 'closed-household-details',
+                  redirectTo: 'custom-closed-household-details-smc',
+                ),
+                // AutoRoute(
+                //   page: ClosedHouseholdSummaryRoute.page,
+                //   path: 'closed-household-summary',
+                // ),
+                AutoRoute(
+                  page: CustomClosedHouseholdSummarySMCRoute.page,
+                  path: 'custom-closed-household-summary-smc',
+                ),
+                // RedirectRoute(
+                //   path: 'closed-household-summary',
+                //   redirectTo: 'custom-closed-household-summary-smc',
+                // ),
+                AutoRoute(
+                    page: ClosedHouseholdAcknowledgementRoute.page,
+                    path: 'closed-household-acknowledgement'),
               ]),
         ]),
       ],

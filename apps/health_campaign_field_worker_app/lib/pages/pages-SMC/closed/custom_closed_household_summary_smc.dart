@@ -16,19 +16,21 @@ import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
 
 @RoutePage()
-class CustomClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
-  const CustomClosedHouseholdSummaryPage({
+class CustomClosedHouseholdSummarySMCPage extends LocalizedStatefulWidget {
+  final reason;
+  const CustomClosedHouseholdSummarySMCPage({
+    required this.reason,
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomClosedHouseholdSummaryPage> createState() =>
+  State<CustomClosedHouseholdSummarySMCPage> createState() =>
       CustomClosedHouseholdSummaryPageState();
 }
 
 class CustomClosedHouseholdSummaryPageState
-    extends LocalizedState<CustomClosedHouseholdSummaryPage> {
+    extends LocalizedState<CustomClosedHouseholdSummarySMCPage> {
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
   }
@@ -130,6 +132,10 @@ class CustomClosedHouseholdSummaryPageState
                                 ? '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}'
                                 : localizations
                                     .translate(i18.common.coreCommonNA),
+                          ),
+                          LabelValuePair(
+                            label: localizations.translate("Reason"),
+                            value: widget.reason,
                           ),
                         ]),
                   ),

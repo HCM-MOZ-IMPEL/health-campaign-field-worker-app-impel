@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/utils/extensions/extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -12,6 +14,8 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/registration_delivery.dart';
+import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
@@ -22,24 +26,25 @@ import 'package:closed_household/widgets/localized.dart';
 import '../../../widgets/widgets_smc/custom_digit_text_form_field.dart';
 
 @RoutePage()
-class CustomClosedHouseholdDetailsPage extends LocalizedStatefulWidget {
-  const CustomClosedHouseholdDetailsPage({
+class CustomClosedHouseholdDetailsSMCPage extends LocalizedStatefulWidget {
+  const CustomClosedHouseholdDetailsSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomClosedHouseholdDetailsPage> createState() =>
+  State<CustomClosedHouseholdDetailsSMCPage> createState() =>
       CustomClosedHouseholdDetailsPageState();
 }
 
 class CustomClosedHouseholdDetailsPageState
-    extends LocalizedState<CustomClosedHouseholdDetailsPage> {
+    extends LocalizedState<CustomClosedHouseholdDetailsSMCPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _householdHeadNameKey = 'householdHeadName';
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
+  static const _reasonKey = 'reason';
   static const maxLength = 64;
 
   @override
@@ -61,6 +66,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
+    final opt = ["closed", "Refusal", "funeral"];
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -107,6 +113,7 @@ class CustomClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
+                        print("Yashio - ${form.control(_reasonKey).value}");
                         final String? householdHeadName = form
                             .control(_householdHeadNameKey)
                             .value as String?;
@@ -123,7 +130,11 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        context.router.push(ClosedHouseholdSummaryRoute());
+                        final reason = form.control(_reasonKey).value;
+
+                        context.router.push(
+                            CustomClosedHouseholdSummarySMCRoute(
+                                reason: reason));
                       },
                       child: Center(
                         child: Text(
@@ -172,6 +183,46 @@ class CustomClosedHouseholdDetailsPageState
                               i18.closeHousehold.accuracyLabel,
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: SelectionBox<String>(
+                              isRequired: true,
+                              title: localizations.translate("Reason"
+                                  // i18.individualDetails.reasonLabelText,
+                                  ),
+                              allowMultipleSelection: false,
+                              width: 148,
+                              initialSelection:
+                                  form.control(_reasonKey).value != null
+                                      ? [form.control(_reasonKey).value]
+                                      : [],
+                              options: opt.toList(),
+                              onSelectionChanged: (value) {
+                                setState(() {
+                                  if (value.isNotEmpty) {
+                                    form.control(_reasonKey).value =
+                                        value.first;
+                                  } // todo verify this
+                                  else if (true) {
+                                    form.control(_reasonKey).value = null;
+                                    setState(() {
+                                      form
+                                          .control(_reasonKey)
+                                          .setErrors({'': true});
+                                    });
+                                  }
+                                });
+                              },
+                              valueMapper: (value) {
+                                return localizations.translate(value);
+                              },
+                              errorMessage: form.control(_reasonKey).hasErrors
+                                  ? localizations
+                                      .translate(i18.common.corecommonRequired)
+                                  : null,
+                            ),
+                          ),
                           DigitTextFormField(
                             formControlName: _householdHeadNameKey,
                             label: localizations.translate(
@@ -210,6 +261,7 @@ class CustomClosedHouseholdDetailsPageState
           Validators.maxLength(200),
         ],
       ),
+      _reasonKey: FormControl<String>(),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),
