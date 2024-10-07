@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -14,6 +13,9 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
+import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+import '../../../utils/environment_config.dart';
+import '../../../utils/utils.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
@@ -46,8 +48,8 @@ class CustomClosedHouseholdSummaryPageState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
-        builder: (context, householdState) {
+    return BlocBuilder<custombloc.ClosedHouseholdBloc,
+        custombloc.ClosedHouseholdState>(builder: (context, householdState) {
       return Scaffold(
           body: ScrollableContent(
               enableFixedButton: true,
@@ -65,8 +67,15 @@ class CustomClosedHouseholdSummaryPageState
                     children: [
                       DigitElevatedButton(
                         onPressed: () {
-                          context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSubmit(
+                          context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSubmit(
+                                  context.boundary.code,
+                                  context.boundary.name,
+                                  context.loggedInUserUuid,
+                                  context.projectId,
+                                  envConfig.variables.tenantId,
+                                  context.beneficiaryType!.toString(),
+                                  reason: widget.reason,
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,

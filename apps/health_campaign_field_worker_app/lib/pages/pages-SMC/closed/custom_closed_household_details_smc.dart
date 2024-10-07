@@ -66,7 +66,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final opt = ["closed", "Refusal", "funeral"];
+    final reasonOptions = ["closed", "Refusal", "funeral"];
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -195,7 +195,7 @@ class CustomClosedHouseholdDetailsPageState
                                   form.control(_reasonKey).value != null
                                       ? [form.control(_reasonKey).value]
                                       : [],
-                              options: opt.toList(),
+                              options: reasonOptions.toList(),
                               onSelectionChanged: (value) {
                                 setState(() {
                                   if (value.isNotEmpty) {
