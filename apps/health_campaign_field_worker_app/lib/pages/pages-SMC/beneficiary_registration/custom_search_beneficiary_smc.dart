@@ -61,7 +61,10 @@ class _CustomSearchBeneficiarySMCPageState
     isProximityEnabled = true;
     // Listen to LocationBloc's state to ensure location is loaded before triggering search
     context.read<LocationBloc>().stream.listen((locationState) {
-      if (!locationState.loading && isProximityEnabled == true) {
+      if (!locationState.loading &&
+          isProximityEnabled == true &&
+          locationState.latitude != null &&
+          locationState.longitude != null) {
         setState(() {
           lat = locationState.latitude!;
           long = locationState.longitude!;
