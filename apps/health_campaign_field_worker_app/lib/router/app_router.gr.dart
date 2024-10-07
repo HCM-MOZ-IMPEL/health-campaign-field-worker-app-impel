@@ -393,6 +393,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseholdAcknowledgementSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdAcknowledgementSMCRouteArgs>(
+          orElse: () => const CustomHouseholdAcknowledgementSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdAcknowledgementSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+          isReferral: args.isReferral,
+        ),
+      );
+    },
     CustomHouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdLocationRouteArgs>(
           orElse: () => const CustomHouseholdLocationRouteArgs());
@@ -2082,6 +2095,55 @@ class CustomHouseholdAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdAcknowledgementSMCPage]
+class CustomHouseholdAcknowledgementSMCRoute
+    extends PageRouteInfo<CustomHouseholdAcknowledgementSMCRouteArgs> {
+  CustomHouseholdAcknowledgementSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+    bool? isReferral,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdAcknowledgementSMCRoute.name,
+          args: CustomHouseholdAcknowledgementSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+            isReferral: isReferral,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdAcknowledgementSMCRoute';
+
+  static const PageInfo<CustomHouseholdAcknowledgementSMCRouteArgs> page =
+      PageInfo<CustomHouseholdAcknowledgementSMCRouteArgs>(name);
+}
+
+class CustomHouseholdAcknowledgementSMCRouteArgs {
+  const CustomHouseholdAcknowledgementSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+    this.isReferral,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  final bool? isReferral;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdAcknowledgementSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold, isReferral: $isReferral}';
   }
 }
 
