@@ -167,15 +167,15 @@ class CustomDeliverInterventionSMCPageState
           deliverInterventionState.futureDeliveries!.isNotEmpty &&
           RegistrationDeliverySingleton().projectType?.cycles?.isNotEmpty ==
               true) {
-        // context.router.push(
-        //   SplashAcknowledgementRoute(
-        //     doseAdministrationVerification: true,
-        //   ),
-        // );
-      } else {
         context.router.push(
           SplashAcknowledgementRoute(
             enableBackToSearch: false,
+          ),
+        );
+      } else {
+        context.router.push(
+          SplashAcknowledgementRoute(
+            enableBackToSearch: true,
           ),
         );
       }

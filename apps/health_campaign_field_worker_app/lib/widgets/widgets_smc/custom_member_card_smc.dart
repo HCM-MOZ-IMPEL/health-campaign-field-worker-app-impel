@@ -229,7 +229,10 @@ class CustomMemberCardSMC extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  isNotEligible || isBeneficiaryRefused || isBeneficiaryReferred
+                  (isNotEligible ||
+                              isBeneficiaryRefused ||
+                              isBeneficiaryReferred) &&
+                          !checkStatus(tasks, context.selectedCycle)
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
@@ -268,14 +271,12 @@ class CustomMemberCardSMC extends StatelessWidget {
                                           ),
                                         );
                                       } else {
-                                        // context.router
-                                        //     .push(EligibilityChecklistViewRoute(
-                                        //   projectBeneficiaryClientReferenceId:
-                                        //       projectBeneficiaryClientReferenceId,
-                                        //   individual: individual,
-                                        // ));
-                                        context.router.push(
-                                            CustomDeliverInterventionSMCRoute());
+                                        context.router
+                                            .push(EligibilityChecklistViewRoute(
+                                          projectBeneficiaryClientReferenceId:
+                                              projectBeneficiaryClientReferenceId,
+                                          individual: individual,
+                                        ));
                                       }
                                     },
                               child: Center(
