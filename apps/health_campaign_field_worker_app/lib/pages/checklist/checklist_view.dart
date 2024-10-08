@@ -42,7 +42,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   String othersText = "OTHERS";
-  String yesText = "YES";
+  String yesText = "dummy";
   String multiSelectionSeparator = ".";
   int maxStringChar = 8000;
 
@@ -211,10 +211,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                         .values
                                                         ?.firstWhereOrNull(
                                                           (element) =>
-                                                              localizations
-                                                                  .translate(
-                                                                    'CORE_COMMON_$element',
-                                                                  )
+                                                              element
                                                                   .toUpperCase() ==
                                                               othersText,
                                                         ) !=
@@ -226,14 +223,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                         )
                                                         .firstWhereOrNull(
                                                           (element) =>
-                                                              localizations
-                                                                  .translate(
-                                                                    'CORE_COMMON_$element',
-                                                                  )
+                                                              element
                                                                   .toUpperCase() ==
                                                               othersText,
                                                         ) !=
-                                                    null))
+                                                    null &&
+                                                attribute?[i].dataType ==
+                                                    'MultiValueList'))
                                         ? additionalController[i]
                                                 .text
                                                 .toString()
@@ -514,10 +510,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     return controller[index]
                                                 .text
                                                 .split(multiSelectionSeparator)
-                                                .firstWhereOrNull(
-                                                  (element) =>
-                                                      element == e.values?.last,
-                                                ) !=
+                                                .firstWhereOrNull((element) =>
+                                                    element == othersText) !=
                                             null
                                         ? Padding(
                                             padding: const EdgeInsets.only(
@@ -702,25 +696,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   ) !=
                                   null &&
                               controller[index].text ==
-                                  item.values?[1].trim()) ||
-                          (item.values?.firstWhereOrNull(
-                                        (element) =>
-                                            localizations
-                                                .translate(
-                                                  'CORE_COMMON_$element',
-                                                )
-                                                .toUpperCase() ==
-                                            othersText,
-                                      ) !=
-                                      null &&
-                                  localizations
-                                          .translate(
-                                            'CORE_COMMON_${controller[index].text}',
-                                          )
-                                          .toUpperCase() ==
-                                      othersText) &&
-                              !(isHealthFacilityWorker &&
-                                  widget.referralClientRefId != null))
+                                  item.values?[1].trim()) &&
+                          !(isHealthFacilityWorker &&
+                              widget.referralClientRefId != null))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: 4.0,
@@ -928,7 +906,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           .text
                           .split(multiSelectionSeparator)
                           .firstWhereOrNull(
-                            (element) => element == item.values?.last,
+                            (element) => element == othersText,
                           ) !=
                       null
                   ? Padding(

@@ -1077,6 +1077,7 @@ class BeneficiaryDetails {
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
+  String get memberZeroError => 'MEMBER_ZERO_ERROR';
 
   String get noOfRoomsAlertTitle => 'ROOMS_ALERT_TITLE';
   String get noOfRoomsAlertContent => 'ROOMS_ALERT_CONTENT';
@@ -1093,6 +1094,7 @@ class BeneficiaryDetails {
 
   String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
+  String get genderOfInterviewee => 'GENDER_OF_INTERVIEWEE';
 }
 
 class StockDetails {

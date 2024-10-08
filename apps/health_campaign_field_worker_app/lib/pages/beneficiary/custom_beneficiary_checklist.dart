@@ -126,7 +126,9 @@ class _CustomBeneficiaryChecklistPageState
                         for (int i = 0; i < controller.length; i++) {
                           if (itemsAttributes?[i].required == true &&
                               ((itemsAttributes?[i].dataType == 'Boolean' &&
-                                  (controller[i].text == '')))) {
+                                  (controller[0].text == '' ||
+                                      (controller[1].text == '' &&
+                                          controller[0].text == 'true'))))) {
                             setState(() {
                               validFields = false;
                               validChecklist = false;
@@ -152,7 +154,7 @@ class _CustomBeneficiaryChecklistPageState
                                           .trim()
                                           .isNotEmpty
                                       ? controller[i].text.toString()
-                                      : ''
+                                      : 'false'
                                   : visibleChecklistIndexes.contains(i)
                                       ? controller[i].text.toString()
                                       : i18.checklist.notSelectedKey,
@@ -392,7 +394,9 @@ class _CustomBeneficiaryChecklistPageState
                                   },
                                 ),
                               ] else if (e.dataType == 'Boolean') ...[
-                                if (!(e.code ?? '').contains('.'))
+                                if (!(e.code ?? '').contains('.') &&
+                                    (!(e.code ?? '').contains('ATTR2') ||
+                                        controller[0].text == 'true'))
                                   DigitCard(
                                     child: Column(
                                       children: [
