@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:closed_household/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
@@ -49,7 +47,7 @@ class ClosedHouseholdBloc
     ClosedHouseholdSubmitEvent event,
     ClosedHouseholdEmitter emit,
   ) async {
-    print("Yash-io ${event.reason}");
+    // print("Yash-io ${event.reason}");
     emit(state.copyWith(loading: true));
 
     var locality =
@@ -288,7 +286,7 @@ class ClosedHouseholdBloc
 
       await taskRepository.create(task);
 
-      print("Task - ${task}");
+      // print("Task - ${task}");
 
       emit(state.copyWith(loading: false));
     } catch (error) {

@@ -15,6 +15,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
+import '../../models/entities/entities_smc/identifier_types.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 
@@ -85,64 +86,107 @@ class CustomMemberCardSMC extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.8,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: kPadding, top: kPadding),
-                      child: Text(
-                        name,
-                        style: theme.textTheme.headlineMedium,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: DigitIconButton(
-                    buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
-                    onPressed: (projectBeneficiaries ?? []).isEmpty
-                        ? null
-                        : () => DigitActionDialog.show(
-                              context,
-                              widget: ActionCard(
-                                items: [
-                                  ActionCardModel(
-                                    icon: Icons.person,
-                                    label: localizations.translate(
-                                      i18.memberCard.assignAsHouseholdhead,
-                                    ),
-                                    action: isHead ? null : setAsHeadAction,
+                  Row(
+                    children: [
+                      individual.identifiers != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(kPadding),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        DigitTheme.instance.colorScheme.primary,
                                   ),
-                                  ActionCardModel(
-                                    icon: Icons.edit,
-                                    label: localizations.translate(
-                                      i18.memberCard.editIndividualDetails,
-                                    ),
-                                    action: editMemberAction,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(kPadding),
                                   ),
-                                  ActionCardModel(
-                                    icon: Icons.delete,
-                                    label: localizations.translate(
-                                      i18.memberCard.deleteIndividualActionText,
-                                    ),
-                                    action: isHead ? null : deleteMemberAction,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(
+                                    kPadding,
                                   ),
-                                ],
+                                  child: Text(
+                                    // individual.identifiers!
+                                    //         .lastWhere(
+                                    //           (e) =>
+                                    //               e.identifierType ==
+                                    //               IdentifierTypes
+                                    //                   .uniqueBeneficiaryID
+                                    //                   .toValue(),
+                                    //         )
+                                    //         .identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                                    style: theme.textTheme.headlineSmall,
+                                  ),
+                                ),
                               ),
-                            ),
-                    iconText: localizations.translate(
-                      i18.memberCard.editDetails,
-                    ),
-                    icon: Icons.edit,
+                            )
+                          : const Offstage(),
+                    ],
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: kPadding, top: kPadding),
+                          child: Text(
+                            name,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Positioned(
+                  //   child: Align(
+                  //     alignment: Alignment.topRight,
+                  //     child: DigitIconButton(
+                  //       buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
+                  //       onPressed: (projectBeneficiaries ?? []).isEmpty
+                  //           ? null
+                  //           : () => DigitActionDialog.show(
+                  //                 context,
+                  //                 widget: ActionCard(
+                  //                   items: [
+                  //                     ActionCardModel(
+                  //                       icon: Icons.person,
+                  //                       label: localizations.translate(
+                  //                         i18.memberCard.assignAsHouseholdhead,
+                  //                       ),
+                  //                       action: isHead ? null : setAsHeadAction,
+                  //                     ),
+                  //                     ActionCardModel(
+                  //                       icon: Icons.edit,
+                  //                       label: localizations.translate(
+                  //                         i18.memberCard.editIndividualDetails,
+                  //                       ),
+                  //                       action: editMemberAction,
+                  //                     ),
+                  //                     ActionCardModel(
+                  //                       icon: Icons.delete,
+                  //                       label: localizations.translate(
+                  //                         i18.memberCard.deleteIndividualActionText,
+                  //                       ),
+                  //                       action: isHead ? null : deleteMemberAction,
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //       iconText: localizations.translate(
+                  //         i18.memberCard.editDetails,
+                  //       ),
+                  //       icon: Icons.edit,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
             ],
           ),
