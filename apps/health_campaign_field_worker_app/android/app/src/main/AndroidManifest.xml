@@ -24,7 +24,7 @@
    <application
         android:label="Salama"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_training"
         android:allowBackup="false"
         android:fullBackupOnly="false"
         android:fullBackupContent="false">

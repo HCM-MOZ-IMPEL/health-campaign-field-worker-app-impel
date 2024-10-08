@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:attendance_management/attendance_management.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
@@ -466,6 +469,41 @@ class MainApplicationState extends State<MainApplication>
                               final env = envConfig.variables.envType;
                               if (env == EnvType.prod) {
                                 return child ?? const SizedBox.shrink();
+                              }
+
+                              if (env == EnvType.training) {
+                                return Scaffold(
+                                  body: Stack(
+                                    children: [
+                                      Positioned.fill(
+                                          child:
+                                              child ?? const SizedBox.shrink()),
+                                      Positioned.fill(
+                                        child: IgnorePointer(
+                                          child: Transform.rotate(
+                                            angle: -pi / 4,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'Formação'.toUpperCase(),
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontSize: 50,
+                                                    color: Colors.black
+                                                        .withAlpha(25),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               }
 
                               return Banner(
