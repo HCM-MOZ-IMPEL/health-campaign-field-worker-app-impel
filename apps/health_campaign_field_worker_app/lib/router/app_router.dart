@@ -94,6 +94,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_location_sm
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
+import '../pages/pages-SMC/home_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -621,7 +622,12 @@ class AppRouter extends _$AppRouter {
             ]),
 
         AutoRoute(page: SMCWrapperRoute.page, path: 'smc', children: [
-          AutoRoute(page: HomeRoute.page, path: 'home', initial: true),
+          AutoRoute(page: HomeRoute.page, path: 'home'),
+          AutoRoute(page: HomeSMCRoute.page, path: 'home-smc', initial: true),
+          RedirectRoute(
+            path: 'home',
+            redirectTo: 'home-smc',
+          ),
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',

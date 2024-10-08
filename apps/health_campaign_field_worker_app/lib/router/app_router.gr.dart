@@ -673,6 +673,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HomeSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<HomeSMCRouteArgs>(
+          orElse: () => const HomeSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HomeSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HouseHoldConsentRoute.name: (routeData) {
       final args = routeData.argsAs<HouseHoldConsentRouteArgs>(
           orElse: () => const HouseHoldConsentRouteArgs());
@@ -3152,6 +3163,44 @@ class HomeRouteArgs {
   @override
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [HomeSMCPage]
+class HomeSMCRoute extends PageRouteInfo<HomeSMCRouteArgs> {
+  HomeSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HomeSMCRoute.name,
+          args: HomeSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeSMCRoute';
+
+  static const PageInfo<HomeSMCRouteArgs> page =
+      PageInfo<HomeSMCRouteArgs>(name);
+}
+
+class HomeSMCRouteArgs {
+  const HomeSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'HomeSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
