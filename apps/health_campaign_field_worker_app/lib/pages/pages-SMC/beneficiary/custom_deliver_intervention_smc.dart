@@ -165,22 +165,7 @@ class CustomDeliverInterventionSMCPageState
                 navigateToSummary: true,
                 householdMemberWrapper: householdMember),
           );
-      if (deliverInterventionState.futureDeliveries != null &&
-          deliverInterventionState.futureDeliveries!.isNotEmpty &&
-          RegistrationDeliverySingleton().projectType?.cycles?.isNotEmpty ==
-              true) {
-        context.router.push(
-          SplashAcknowledgementRoute(
-            enableBackToSearch: false,
-          ),
-        );
-      } else {
-        context.router.push(
-          SplashAcknowledgementRoute(
-            enableBackToSearch: true,
-          ),
-        );
-      }
+      context.router.push(DeliverySummaryRoute());
     }
   }
 

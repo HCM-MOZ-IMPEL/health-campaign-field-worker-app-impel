@@ -95,6 +95,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -845,12 +846,12 @@ class AppRouter extends _$AppRouter {
                       path: 'delivery-summary',
                     ),
                     AutoRoute(
-                      page: CustomDeliverySummaryRoute.page,
-                      path: 'custom-delivery-summary',
+                      page: CustomDeliverySummarySMCRoute.page,
+                      path: 'custom-delivery-summary-smc',
                     ),
                     RedirectRoute(
                       path: 'delivery-summary',
-                      redirectTo: 'custom-delivery-summary',
+                      redirectTo: 'custom-delivery-summary-smc',
                     ),
                   ],
                 ),
