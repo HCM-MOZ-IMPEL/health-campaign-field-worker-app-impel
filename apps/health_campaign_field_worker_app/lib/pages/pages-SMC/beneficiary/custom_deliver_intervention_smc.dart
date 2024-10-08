@@ -18,7 +18,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/project/project.dart';
+import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
@@ -613,35 +615,52 @@ class CustomDeliverInterventionSMCPageState
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
-                                                        .deliveryCommentHeading,
+                                                        .deliveryCommentLabel,
                                                   ),
                                                   style: theme
                                                       .textTheme.headlineLarge,
                                                 ),
-                                                DigitReactiveSearchDropdown<
-                                                    String>(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentLabel,
-                                                  ),
-                                                  form: form,
-                                                  menuItems:
-                                                      RegistrationDeliverySingleton()
-                                                          .deliveryCommentOptions!
-                                                          .map((e) {
-                                                    return localizations
-                                                        .translate(e);
-                                                  }).toList()
-                                                        ..sort((a, b) =>
-                                                            a.compareTo(b)),
-                                                  formControlName:
-                                                      _deliveryCommentKey,
-                                                  valueMapper: (value) => value,
-                                                  emptyText: localizations
-                                                      .translate(i18
-                                                          .common.noMatchFound),
-                                                )
+                                                BlocBuilder<
+                                                    AppInitializationBloc,
+                                                    AppInitializationState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is! AppInitialized) {
+                                                      return const Offstage();
+                                                    }
+
+                                                    final deliveryCommentOptionsSmc = state
+                                                            .appConfiguration
+                                                            .deliveryCommentOptionsSmc ??
+                                                        <DeliveryCommentOptions>[];
+
+                                                    return DigitReactiveSearchDropdown<
+                                                        String>(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.deliverIntervention
+                                                            .deliveryCommentLabel,
+                                                      ),
+                                                      form: form,
+                                                      menuItems:
+                                                          deliveryCommentOptionsSmc
+                                                              .map((e) {
+                                                        return e.code;
+                                                      }).toList(),
+                                                      formControlName:
+                                                          _deliveryCommentKey,
+                                                      isRequired: false,
+                                                      valueMapper: (value) =>
+                                                          localizations
+                                                              .translate(
+                                                        value,
+                                                      ),
+                                                      emptyText: localizations
+                                                          .translate(i18.common
+                                                              .noMatchFound),
+                                                    );
+                                                  },
+                                                ),
                                               ],
                                             ),
                                           ),
