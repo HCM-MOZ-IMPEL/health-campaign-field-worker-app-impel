@@ -24,10 +24,10 @@
    <application
         android:label="HCM"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:fullBackupOnly="false"
-        android:fullBackupContent="false"
+        android:fullBackupContent="false">
         <activity
             android:showWhenLocked="false"
             android:turnScreenOn="true"
