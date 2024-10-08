@@ -91,8 +91,6 @@ class Constants {
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
   static const String intTwo = '2';
-  // todo added for testing
-  static const String communityDistributor = 'COMMUNITY_DISTRIBUTOR';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
