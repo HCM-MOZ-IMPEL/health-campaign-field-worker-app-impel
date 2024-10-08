@@ -16,6 +16,7 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/consent/household_consent.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
@@ -91,6 +92,8 @@ import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_sm
 import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -764,12 +767,12 @@ class AppRouter extends _$AppRouter {
                       path: 'deliver-intervention',
                     ),
                     AutoRoute(
-                      page: CustomDeliverInterventionRoute.page,
-                      path: 'custom-deliver-intervention',
+                      page: CustomDeliverInterventionSMCRoute.page,
+                      path: 'custom-deliver-intervention-smc',
                     ),
                     RedirectRoute(
                       path: 'deliver-intervention',
-                      redirectTo: 'custom-deliver-intervention',
+                      redirectTo: 'custom-deliver-intervention-smc',
                     ),
                     AutoRoute(
                       page: EligibilityChecklistViewRoute.page,
@@ -820,12 +823,12 @@ class AppRouter extends _$AppRouter {
                       path: 'household-acknowledgement',
                     ),
                     AutoRoute(
-                      page: CustomHouseholdAcknowledgementRoute.page,
-                      path: 'custom-household-acknowledgement',
+                      page: CustomHouseholdAcknowledgementSMCRoute.page,
+                      path: 'custom-household-acknowledgement-smc',
                     ),
                     RedirectRoute(
                       path: 'household-acknowledgement',
-                      redirectTo: 'custom-household-acknowledgement',
+                      redirectTo: 'custom-household-acknowledgement-smc',
                     ),
                     AutoRoute(
                       page: ChecklistViewRoute.page,

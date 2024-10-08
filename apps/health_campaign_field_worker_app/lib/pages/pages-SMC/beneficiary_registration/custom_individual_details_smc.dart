@@ -87,7 +87,7 @@ class CustomIndividualDetailsSMCPageState
                 } else {
                   Future.delayed(
                     const Duration(
-                      milliseconds: 200,
+                      milliseconds: 500,
                     ),
                     () {
                       context.read<SearchHouseholdsBloc>().add(
@@ -101,7 +101,7 @@ class CustomIndividualDetailsSMCPageState
                   ).then((value) => {
                         context.router
                             .push(CustomBeneficiaryAcknowledgementSMCRoute(
-                          enableViewHousehold: true,
+                          enableViewHousehold: widget.isHeadOfHousehold,
                         )),
                       });
                 }
@@ -423,9 +423,9 @@ class CustomIndividualDetailsSMCPageState
                               formControlName: _individualNameKey,
                               label: localizations.translate(
                                 widget.isHeadOfHousehold
-                                    ? i18.individualDetails
+                                    ? i18_local.individualDetails
                                         .firstNameHeadLabelText
-                                    : i18.individualDetails
+                                    : i18_local.individualDetails
                                         .childFirstNameLabelText,
                               ),
                               isRequired: true,

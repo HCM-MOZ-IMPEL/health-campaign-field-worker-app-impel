@@ -347,6 +347,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverInterventionSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionSMCRouteArgs>(
+          orElse: () => const CustomDeliverInterventionSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomDeliverySummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverySummaryRouteArgs>(
           orElse: () => const CustomDeliverySummaryRouteArgs());
@@ -400,6 +412,19 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
+    CustomHouseholdAcknowledgementSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdAcknowledgementSMCRouteArgs>(
+          orElse: () => const CustomHouseholdAcknowledgementSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdAcknowledgementSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+          isReferral: args.isReferral,
         ),
       );
     },
@@ -1925,6 +1950,50 @@ class CustomDeliverInterventionRouteArgs {
 }
 
 /// generated route for
+/// [CustomDeliverInterventionSMCPage]
+class CustomDeliverInterventionSMCRoute
+    extends PageRouteInfo<CustomDeliverInterventionSMCRouteArgs> {
+  CustomDeliverInterventionSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionSMCRoute.name,
+          args: CustomDeliverInterventionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionSMCRoute';
+
+  static const PageInfo<CustomDeliverInterventionSMCRouteArgs> page =
+      PageInfo<CustomDeliverInterventionSMCRouteArgs>(name);
+}
+
+class CustomDeliverInterventionSMCRouteArgs {
+  const CustomDeliverInterventionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
 /// [CustomDeliverySummaryPage]
 class CustomDeliverySummaryRoute
     extends PageRouteInfo<CustomDeliverySummaryRouteArgs> {
@@ -2131,6 +2200,55 @@ class CustomHouseholdAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdAcknowledgementSMCPage]
+class CustomHouseholdAcknowledgementSMCRoute
+    extends PageRouteInfo<CustomHouseholdAcknowledgementSMCRouteArgs> {
+  CustomHouseholdAcknowledgementSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+    bool? isReferral,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdAcknowledgementSMCRoute.name,
+          args: CustomHouseholdAcknowledgementSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+            isReferral: isReferral,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdAcknowledgementSMCRoute';
+
+  static const PageInfo<CustomHouseholdAcknowledgementSMCRouteArgs> page =
+      PageInfo<CustomHouseholdAcknowledgementSMCRouteArgs>(name);
+}
+
+class CustomHouseholdAcknowledgementSMCRouteArgs {
+  const CustomHouseholdAcknowledgementSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+    this.isReferral,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  final bool? isReferral;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdAcknowledgementSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold, isReferral: $isReferral}';
   }
 }
 

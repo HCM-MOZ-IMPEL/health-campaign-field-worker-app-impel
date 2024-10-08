@@ -1,36 +1,46 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import '../../localized.dart';
+import '../custom_digit_reactive_dropdown_smc.dart';
 
-class CustomResourceBeneficiaryCard extends LocalizedStatefulWidget {
+class CustomResourceBeneficiaryCardSMC extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
+  final bool isAdministered;
+  final void Function(bool) checkDoseAdministration;
 
-  const CustomResourceBeneficiaryCard({
-    super.key,
-    super.appLocalizations,
-    required this.onDelete,
-    required this.cardIndex,
-    required this.form,
-    required this.totalItems,
-  });
+  const CustomResourceBeneficiaryCardSMC(
+      {super.key,
+      super.appLocalizations,
+      required this.onDelete,
+      required this.cardIndex,
+      required this.form,
+      required this.totalItems,
+      this.isAdministered = false,
+      required this.checkDoseAdministration});
 
   @override
-  State<CustomResourceBeneficiaryCard> createState() =>
-      CustomResourceBeneficiaryCardState();
+  State<CustomResourceBeneficiaryCardSMC> createState() =>
+      CustomResourceBeneficiaryCardSMCState();
 }
 
-class CustomResourceBeneficiaryCardState
-    extends LocalizedState<CustomResourceBeneficiaryCard> {
+class CustomResourceBeneficiaryCardSMCState
+    extends LocalizedState<CustomResourceBeneficiaryCardSMC> {
+  bool doseAdministered = false;
+  static const _deliveryCommentKey = 'deliveryComment';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,54 +66,33 @@ class CustomResourceBeneficiaryCardState
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
-                  return SelectionBox<ProductVariantModel>(
-                    width: 116,
-                    options: productVariants,
-                    onSelectionChanged: (selectedOptions) {
-                      if (selectedOptions.isNotEmpty) {
-                        var selectedOption = selectedOptions.first;
-                        widget.form
-                            .control('resourceDelivered.${widget.cardIndex}')
-                            .value = selectedOption;
-                      } else {
-                        widget.form
-                            .control('resourceDelivered.${widget.cardIndex}')
-                            .value = null;
-                      }
-                    },
-                    initialSelection: widget.form
-                                .control(
-                                    'resourceDelivered.${widget.cardIndex}')
-                                .value !=
-                            null
-                        ? [
-                            widget.form
-                                .control(
-                                    'resourceDelivered.${widget.cardIndex}')
-                                .value
-                          ]
-                        : [],
+                  return CustomDigitReactiveDropdownSMC(
+                    label: '${localizations.translate(
+                      i18.deliverIntervention.resourceDeliveredLabel,
+                    )}*',
+                    readOnly: true,
+                    menuItems: productVariants,
+                    formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {
                       return localizations.translate(
                         value.sku ?? value.id,
                       );
                     },
-                    allowMultipleSelection: false,
                   );
                 },
               );
             },
           ),
-          DigitIntegerFormPicker(
-            incrementer: true,
-            formControlName: 'quantityDistributed.${widget.cardIndex}',
-            form: widget.form,
-            label: localizations.translate(
-              i18.deliverIntervention.quantityDistributedLabel,
-            ),
-            minimum: 0,
-            maximum: 3,
-          ),
+          // DigitIntegerFormPicker(
+          //   incrementer: true,
+          //   formControlName: 'quantityDistributed.${widget.cardIndex}',
+          //   form: widget.form,
+          //   label: localizations.translate(
+          //     i18.deliverIntervention.quantityDistributedLabel,
+          //   ),
+          //   minimum: 0,
+          //   maximum: 3,
+          // ),
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,
@@ -153,6 +142,49 @@ class CustomResourceBeneficiaryCardState
                   : const Offstage(),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: DigitCheckbox(
+              label: localizations.translate(
+                i18Local
+                    .deliverIntervention.deliverInteventionAdministeredLabel,
+              ),
+              value: doseAdministered,
+              onChanged: (value) {
+                setState(() {
+                  doseAdministered = value!;
+                  widget.checkDoseAdministration(value);
+                  if (!value) {
+                    widget.form
+                        .control(
+                          _deliveryCommentKey,
+                        )
+                        .value = null;
+                  }
+                });
+              },
+            ),
+          ),
+          DigitTextFormField(
+            formControlName: 'quantityWasted.${widget.cardIndex}',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(3),
+              FilteringTextInputFormatter.allow(
+                RegExp(r'^(1000|[1-9][0-9]{0,2}|0)$'),
+              ),
+            ],
+            label: localizations.translate(
+              i18Local.deliverIntervention.quantityWastedLabel,
+            ),
+            validationMessages: {
+              "required": (control) {
+                return localizations.translate(
+                  i18.common.corecommonRequired,
+                );
+              },
+            },
+          )
         ],
       ),
     );

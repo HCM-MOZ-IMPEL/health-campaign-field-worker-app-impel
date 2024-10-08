@@ -8,6 +8,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 
+@RoutePage()
 class CustomHouseholdAcknowledgementSMCPage extends LocalizedStatefulWidget {
   final bool? enableViewHousehold;
   final bool? isReferral;
