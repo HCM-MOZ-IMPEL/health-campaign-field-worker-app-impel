@@ -858,43 +858,20 @@ class _EligibilityChecklistViewPage
     bool ifAdministration,
   ) {
     var isIneligible = false;
-    var q3Key = "SEA3";
-    var q5Key = "SEA4";
+    var q4Key = "SEA4";
     Map<String, String> keyVsReason = {
-      q3Key: "NOT_ADMINISTERED_IN_PREVIOUS_CYCLE",
-      q5Key: "CHILD_ON_MEDICATION_1",
+      q4Key: "CHILD_ON_MEDICATION_1",
     };
-    final individualModel = widget.individual;
 
     if (responses.isNotEmpty) {
-      if (responses.containsKey(q3Key) && responses[q3Key]!.isNotEmpty) {
-        isIneligible = responses[q3Key] == yes ? true : false;
-        if (individualModel != null && isIneligible) {
-          // added a try catch as a fallback
-          try {
-            final dateOfBirth = DateFormat("dd/MM/yyyy")
-                .parse(individualModel.dateOfBirth ?? '');
-            final age = DigitDateUtils.calculateAge(dateOfBirth);
-            final ageInMonths = getAgeMonths(age);
-            isIneligible = !(ageInMonths < 60);
-            if (!isIneligible) {
-              ifAdministration = true;
-            }
-          } catch (error) {
-            // if any error in parsing , will use fallback case
-            isIneligible = false;
-            ifAdministration = true;
-          }
-        }
-      }
       if (!isIneligible &&
-          (responses.containsKey(q5Key) && responses[q5Key]!.isNotEmpty)) {
-        isIneligible = responses[q5Key] == yes ? true : false;
+          (responses.containsKey(q4Key) && responses[q4Key]!.isNotEmpty)) {
+        isIneligible = responses[q4Key] == yes ? true : false;
       }
       // passing all the reasons which have response as true
       if (isIneligible) {
         for (var entry in responses.entries) {
-          if (entry.key == q3Key || entry.key == q5Key) {
+          if (entry.key == q4Key) {
             entry.value == yes
                 ? ineligibilityReasons.add(keyVsReason[entry.key])
                 : null;
@@ -913,11 +890,11 @@ class _EligibilityChecklistViewPage
     var isReferral = false;
     var q1Key = "SEA1";
     var q2Key = "SEA2";
-    var q4Key = "SEA3.NO.ADT1";
+    var q3Key = "SEA3";
     Map<String, String> referralKeysVsCode = {
       q1Key: "SICK",
       q2Key: "FEVER",
-      q4Key: "DRUG_SE_PC",
+      q3Key: "DRUG_SE_PC",
     };
     // TODO Configure the reasons ,verify hardcoded strings
 
@@ -930,8 +907,8 @@ class _EligibilityChecklistViewPage
         isReferral = responses[q2Key] == yes ? true : false;
       }
       if (!isReferral &&
-          (responses.containsKey(q4Key) && responses[q4Key]!.isNotEmpty)) {
-        isReferral = responses[q4Key] == yes ? true : false;
+          (responses.containsKey(q3Key) && responses[q3Key]!.isNotEmpty)) {
+        isReferral = responses[q3Key] == yes ? true : false;
       }
     }
     if (isReferral) {
