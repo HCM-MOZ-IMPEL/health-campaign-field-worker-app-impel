@@ -131,7 +131,7 @@ class CustomClosedHouseholdDetailsPageState
                             );
 
                         final reason = form.control(_reasonKey).value;
-
+                        if (!reason) return;
                         context.router.push(
                             CustomClosedHouseholdSummarySMCRoute(
                                 reason: reason));
@@ -260,7 +260,7 @@ class CustomClosedHouseholdDetailsPageState
           Validators.maxLength(200),
         ],
       ),
-      _reasonKey: FormControl<String>(),
+      _reasonKey: FormControl<String>(validators: []),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),
