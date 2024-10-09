@@ -66,7 +66,8 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final opt = ["closed", "Refusal", "funeral"];
+    final reasonOptions = ["closed", "Refusal", "funeral"];
+    //#TODO : Move To MDMS
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -130,7 +131,7 @@ class CustomClosedHouseholdDetailsPageState
                             );
 
                         final reason = form.control(_reasonKey).value;
-
+                        if (!reason) return;
                         context.router.push(
                             CustomClosedHouseholdSummarySMCRoute(
                                 reason: reason));
@@ -195,7 +196,7 @@ class CustomClosedHouseholdDetailsPageState
                                   form.control(_reasonKey).value != null
                                       ? [form.control(_reasonKey).value]
                                       : [],
-                              options: opt.toList(),
+                              options: reasonOptions.toList(),
                               onSelectionChanged: (value) {
                                 setState(() {
                                   if (value.isNotEmpty) {
@@ -259,7 +260,7 @@ class CustomClosedHouseholdDetailsPageState
           Validators.maxLength(200),
         ],
       ),
-      _reasonKey: FormControl<String>(),
+      _reasonKey: FormControl<String>(validators: []),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),

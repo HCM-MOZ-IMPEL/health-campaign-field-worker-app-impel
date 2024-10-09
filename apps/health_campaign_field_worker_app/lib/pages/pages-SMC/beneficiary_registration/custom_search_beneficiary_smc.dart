@@ -189,6 +189,7 @@ class _CustomSearchBeneficiarySMCPageState
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   blocWrapper.clearEvent();
+
                                   if (value.isEmpty ||
                                       value.trim().length > 2) {
                                     triggerGlobalSearchEvent();
@@ -519,10 +520,10 @@ class _CustomSearchBeneficiarySMCPageState
               : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
           offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              ? blocWrapper.individualGlobalSearchBloc.state.offset
               : offset,
           limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
         )));
       }
