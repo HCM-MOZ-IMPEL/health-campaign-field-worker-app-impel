@@ -87,46 +87,42 @@ class CustomMemberCardSMC extends StatelessWidget {
           Stack(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      individual.identifiers != null
-                          ? Padding(
-                              padding: const EdgeInsets.all(kPadding),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color:
-                                        DigitTheme.instance.colorScheme.primary,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(kPadding),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(
-                                    kPadding,
-                                  ),
-                                  child: Text(
-                                    // individual.identifiers!
-                                    //         .lastWhere(
-                                    //           (e) =>
-                                    //               e.identifierType ==
-                                    //               IdentifierTypes
-                                    //                   .uniqueBeneficiaryID
-                                    //                   .toValue(),
-                                    //         )
-                                    //         .identifierId ??
-                                    localizations
-                                        .translate(i18.common.noResultsFound),
-                                    style: theme.textTheme.headlineSmall,
-                                  ),
-                                ),
+                  individual.identifiers != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: DigitTheme.instance.colorScheme.primary,
                               ),
-                            )
-                          : const Offstage(),
-                    ],
-                  ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(kPadding),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                kPadding,
+                              ),
+                              child: Text(
+                                // individual.identifiers!
+                                //         .lastWhere(
+                                //           (e) =>
+                                //               e.identifierType ==
+                                //               IdentifierTypes
+                                //                   .uniqueBeneficiaryID
+                                //                   .toValue(),
+                                //         )
+                                //         .identifierId ??
+                                localizations
+                                    .translate(i18.common.noResultsFound),
+                                style: theme.textTheme.headlineSmall,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const Offstage(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,50 +140,46 @@ class CustomMemberCardSMC extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Positioned(
-                  //   child: Align(
-                  //     alignment: Alignment.topRight,
-                  //     child: DigitIconButton(
-                  //       buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
-                  //       onPressed: (projectBeneficiaries ?? []).isEmpty
-                  //           ? null
-                  //           : () => DigitActionDialog.show(
-                  //                 context,
-                  //                 widget: ActionCard(
-                  //                   items: [
-                  //                     ActionCardModel(
-                  //                       icon: Icons.person,
-                  //                       label: localizations.translate(
-                  //                         i18.memberCard.assignAsHouseholdhead,
-                  //                       ),
-                  //                       action: isHead ? null : setAsHeadAction,
-                  //                     ),
-                  //                     ActionCardModel(
-                  //                       icon: Icons.edit,
-                  //                       label: localizations.translate(
-                  //                         i18.memberCard.editIndividualDetails,
-                  //                       ),
-                  //                       action: editMemberAction,
-                  //                     ),
-                  //                     ActionCardModel(
-                  //                       icon: Icons.delete,
-                  //                       label: localizations.translate(
-                  //                         i18.memberCard.deleteIndividualActionText,
-                  //                       ),
-                  //                       action: isHead ? null : deleteMemberAction,
-                  //                     ),
-                  //                   ],
-                  //                 ),
-                  //               ),
-                  //       iconText: localizations.translate(
-                  //         i18.memberCard.editDetails,
-                  //       ),
-                  //       icon: Icons.edit,
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
+              (tasks ?? [])
+                          .where(
+                            (element) =>
+                                element.status ==
+                                Status.administeredSuccess.toValue(),
+                          )
+                          .lastOrNull ==
+                      null
+                  ? Positioned(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: DigitIconButton(
+                          buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
+                          onPressed: (projectBeneficiaries ?? []).isEmpty
+                              ? null
+                              : () => DigitActionDialog.show(
+                                    context,
+                                    widget: ActionCard(
+                                      items: [
+                                        ActionCardModel(
+                                          icon: Icons.edit,
+                                          label: localizations.translate(
+                                            i18.memberCard
+                                                .editIndividualDetails,
+                                          ),
+                                          action: editMemberAction,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                          iconText: localizations.translate(
+                            i18.memberCard.editDetails,
+                          ),
+                          icon: Icons.edit,
+                        ),
+                      ),
+                    )
+                  : const Offstage()
             ],
           ),
           SizedBox(
@@ -347,246 +339,6 @@ class CustomMemberCardSMC extends StatelessWidget {
                               ),
                             )
                           : const Offstage(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  (isNotEligible ||
-                          isBeneficiaryRefused ||
-                          isBeneficiaryReferred ||
-                          (allDosesDelivered(
-                                tasks,
-                                context.selectedCycle,
-                                sideEffects,
-                                individual,
-                              ) &&
-                              !checkStatus(tasks, context.selectedCycle)))
-                      ? const Offstage()
-                      : DigitOutLineButton(
-                          label: localizations.translate(
-                            i18.memberCard.unableToDeliverLabel,
-                          ),
-                          buttonStyle: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            backgroundColor: Colors.white,
-                            side: BorderSide(
-                              width: 1.0,
-                              color: theme.colorScheme.secondary,
-                            ),
-                            minimumSize: Size(
-                              MediaQuery.of(context).size.width / 1.15,
-                              50,
-                            ),
-                          ),
-                          onPressed: (projectBeneficiaries ?? []).isEmpty
-                              ? null
-                              : () async {
-                                  await DigitActionDialog.show(
-                                    context,
-                                    widget: Column(
-                                      children: [
-                                        DigitOutLineButton(
-                                          label: localizations.translate(
-                                            i18.memberCard
-                                                .beneficiaryRefusedLabel,
-                                          ),
-                                          buttonStyle: OutlinedButton.styleFrom(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.zero,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                            side: BorderSide(
-                                              width: 1.0,
-                                              color:
-                                                  theme.colorScheme.secondary,
-                                            ),
-                                            minimumSize: Size(
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1.25,
-                                              50,
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
-                                            context
-                                                .read<DeliverInterventionBloc>()
-                                                .add(
-                                                  DeliverInterventionSubmitEvent(
-                                                    task: TaskModel(
-                                                      projectBeneficiaryClientReferenceId:
-                                                          projectBeneficiaryClientReferenceId,
-                                                      clientReferenceId:
-                                                          IdGen.i.identifier,
-                                                      tenantId:
-                                                          RegistrationDeliverySingleton()
-                                                              .tenantId,
-                                                      rowVersion: 1,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy:
-                                                            RegistrationDeliverySingleton()
-                                                                .loggedInUserUuid!,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      projectId:
-                                                          RegistrationDeliverySingleton()
-                                                              .projectId,
-                                                      status: Status
-                                                          .beneficiaryRefused
-                                                          .toValue(),
-                                                      clientAuditDetails:
-                                                          ClientAuditDetails(
-                                                        createdBy:
-                                                            RegistrationDeliverySingleton()
-                                                                .loggedInUserUuid!,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                        lastModifiedBy:
-                                                            RegistrationDeliverySingleton()
-                                                                .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      additionalFields:
-                                                          TaskAdditionalFields(
-                                                        version: 1,
-                                                        fields: [
-                                                          AdditionalField(
-                                                            'taskStatus',
-                                                            Status
-                                                                .beneficiaryRefused
-                                                                .toValue(),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      address: individual
-                                                          .address?.first,
-                                                    ),
-                                                    isEditing: false,
-                                                    boundaryModel:
-                                                        RegistrationDeliverySingleton()
-                                                            .boundary!,
-                                                  ),
-                                                );
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
-                                            Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
-                                                reloadState.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                    projectId:
-                                                        RegistrationDeliverySingleton()
-                                                            .projectId!,
-                                                    projectBeneficiaryType:
-                                                        RegistrationDeliverySingleton()
-                                                            .beneficiaryType!,
-                                                  ),
-                                                );
-                                              },
-                                            ).then(
-                                              (value) => context.router.push(
-                                                HouseholdAcknowledgementRoute(
-                                                  enableViewHousehold: true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: kPadding * 2,
-                                        ),
-                                        DigitOutLineButton(
-                                          label: localizations.translate(
-                                            i18.memberCard
-                                                .referBeneficiaryLabel,
-                                          ),
-                                          buttonStyle: OutlinedButton.styleFrom(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.zero,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                            side: BorderSide(
-                                              width: 1.0,
-                                              color:
-                                                  theme.colorScheme.secondary,
-                                            ),
-                                            minimumSize: Size(
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1.25,
-                                              50,
-                                            ),
-                                          ),
-                                          onPressed: () async {
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop();
-                                            await context.router.push(
-                                              ReferBeneficiaryRoute(
-                                                projectBeneficiaryClientRefId:
-                                                    projectBeneficiaryClientReferenceId ??
-                                                        '',
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: kPadding * 2,
-                                        ),
-                                        DigitOutLineButton(
-                                          label: localizations.translate(
-                                            i18.memberCard
-                                                .recordAdverseEventsLabel,
-                                          ),
-                                          buttonStyle: OutlinedButton.styleFrom(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.zero,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                            side: BorderSide(
-                                              width: 1.0,
-                                              color: tasks != null &&
-                                                      (tasks ?? []).isNotEmpty
-                                                  ? theme.colorScheme.secondary
-                                                  : theme.colorScheme.outline,
-                                            ),
-                                            minimumSize: Size(
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  1.25,
-                                              50,
-                                            ),
-                                          ),
-                                          onPressed: tasks != null &&
-                                                  (tasks ?? []).isNotEmpty
-                                              ? () async {
-                                                  Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop();
-                                                  await context.router.push(
-                                                    SideEffectsRoute(
-                                                      tasks: tasks!,
-                                                    ),
-                                                  );
-                                                }
-                                              : null,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                        ),
                 ],
               ),
             ),
