@@ -168,44 +168,47 @@ class _DoseAdministeredVerificationPageState
                                                   createdTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
-                                                // resources: fetchProductVariant(
-                                                //   e,
-                                                //   overViewBloc
-                                                //       .selectedIndividual,
-                                                // )
-                                                //     ?.productVariants
-                                                //     ?.map((variant) =>
-                                                //         TaskResourceModel(
-                                                //           clientReferenceId:
-                                                //               IdGen
-                                                //                   .i.identifier,
-                                                //           tenantId: envConfig
-                                                //               .variables
-                                                //               .tenantId,
-                                                //           taskclientReferenceId:
-                                                //               clientReferenceId,
-                                                //           quantity: variant
-                                                //               .quantity
-                                                //               .toString(),
-                                                //           productVariantId: variant
-                                                //               .productVariantId,
-                                                //           isDelivered: true,
-                                                //           auditDetails:
-                                                //               AuditDetails(
-                                                //             createdBy: context
-                                                //                 .loggedInUserUuid,
-                                                //             createdTime: context
-                                                //                 .millisecondsSinceEpoch(),
-                                                //           ),
-                                                //           clientAuditDetails:
-                                                //               ClientAuditDetails(
-                                                //             createdBy: context
-                                                //                 .loggedInUserUuid,
-                                                //             createdTime: context
-                                                //                 .millisecondsSinceEpoch(),
-                                                //           ),
-                                                //         ))
-                                                //     .toList(),
+                                                resources: fetchProductVariant(
+                                                  e,
+                                                  overViewBloc
+                                                      .selectedIndividual,
+                                                  overViewBloc
+                                                      .householdMemberWrapper
+                                                      .household,
+                                                )
+                                                    ?.productVariants
+                                                    ?.map((variant) =>
+                                                        TaskResourceModel(
+                                                          clientReferenceId:
+                                                              IdGen
+                                                                  .i.identifier,
+                                                          tenantId: envConfig
+                                                              .variables
+                                                              .tenantId,
+                                                          taskclientReferenceId:
+                                                              clientReferenceId,
+                                                          quantity: variant
+                                                              .quantity
+                                                              .toString(),
+                                                          productVariantId: variant
+                                                              .productVariantId,
+                                                          isDelivered: true,
+                                                          auditDetails:
+                                                              AuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                          ),
+                                                          clientAuditDetails:
+                                                              ClientAuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                          ),
+                                                        ))
+                                                    .toList(),
                                                 additionalFields:
                                                     TaskAdditionalFields(
                                                   version: 1,
@@ -289,11 +292,8 @@ class _DoseAdministeredVerificationPageState
                                             );
                                           },
                                         ).then((value) => context.router
-                                            .popAndPush(DeliverySummaryRoute()
-                                                // HouseholdAcknowledgementRoute(
-                                                //   enableViewHousehold: true,
-                                                // ),
-                                                ));
+                                            .popAndPush(
+                                                DeliverySummaryRoute()));
                                       }
                                     },
                               child: Center(

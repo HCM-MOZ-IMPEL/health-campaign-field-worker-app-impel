@@ -94,7 +94,6 @@ import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
-import '../pages/pages-SMC/beneficiary/custom_dose_administered_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 
 part 'app_router.gr.dart';
@@ -805,14 +804,6 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: DoseAdministeredRoute.page,
                       path: 'dose-administered',
-                    ),
-                    AutoRoute(
-                      page: CustomDoseAdministeredSMCRoute.page,
-                      path: 'dose-administered-smc',
-                    ),
-                    RedirectRoute(
-                      path: 'dose-administered',
-                      redirectTo: 'dose-administered-smc',
                     ),
                     AutoRoute(
                       page: SplashAcknowledgementRoute.page,

@@ -135,8 +135,8 @@ class DeliverySummaryPageState
                                       BeneficiaryWrapperRoute.name,
                                     );
                                     context.router.push(
-                                      SplashAcknowledgementRoute(
-                                        enableBackToSearch: false,
+                                      HouseholdAcknowledgementRoute(
+                                        enableViewHousehold: true,
                                       ),
                                     );
                                   } else {
