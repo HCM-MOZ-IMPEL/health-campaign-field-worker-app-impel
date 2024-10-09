@@ -706,17 +706,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    HouseHoldConsentRoute.name: (routeData) {
-      final args = routeData.argsAs<HouseHoldConsentRouteArgs>(
-          orElse: () => const HouseHoldConsentRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: HouseHoldConsentPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     IRSWrapperRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -3301,44 +3290,6 @@ class HomeSMCRouteArgs {
   @override
   String toString() {
     return 'HomeSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [HouseHoldConsentPage]
-class HouseHoldConsentRoute extends PageRouteInfo<HouseHoldConsentRouteArgs> {
-  HouseHoldConsentRoute({
-    Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          HouseHoldConsentRoute.name,
-          args: HouseHoldConsentRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'HouseHoldConsentRoute';
-
-  static const PageInfo<HouseHoldConsentRouteArgs> page =
-      PageInfo<HouseHoldConsentRouteArgs>(name);
-}
-
-class HouseHoldConsentRouteArgs {
-  const HouseHoldConsentRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final RegistrationDeliveryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'HouseHoldConsentRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

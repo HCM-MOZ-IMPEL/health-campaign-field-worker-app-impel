@@ -186,15 +186,7 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-                          if (context.projectTypeCode!
-                              .contains(ProjectTypes.smc.toValue())) {
-                            // Todd : set the variable accordingly
-                            router.push(HouseHoldConsentRoute());
-                            // router.push(
-                            //     CustomHouseHoldDetailsRoute(isEligible: false));
-                          } else {
-                            router.push(HouseDetailsRoute());
-                          }
+                          router.push(HouseDetailsRoute());
                         }, editHousehold: (
                           address,
                           householdModel,
@@ -217,15 +209,7 @@ class _CustomHouseholdLocationPageState
                               addressModel,
                             ),
                           );
-
-                          if (context.projectTypeCode!
-                              .contains(ProjectTypes.smc.toValue())) {
-                            // Todd : set the variable accordingly
-                            router.push(
-                                CustomHouseHoldDetailsRoute(isEligible: false));
-                          } else {
-                            router.push(HouseDetailsRoute());
-                          }
+                          router.push(HouseDetailsRoute());
                         });
                       },
                       child: Center(

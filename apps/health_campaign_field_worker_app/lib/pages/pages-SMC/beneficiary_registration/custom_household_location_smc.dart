@@ -195,7 +195,6 @@ class _CustomHouseholdLocationSMCPageState
                             ),
                           );
 
-                          // router.push(HouseHoldConsentRoute());
                           router.push(CustomHouseHoldDetailsSMCRoute(
                               isEligible: false));
                         }, editHousehold: (

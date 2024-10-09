@@ -260,12 +260,6 @@ class HouseholdDetails {
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
-
-  String get cardTitle => 'CONSENT_CARD_TITLE';
-  String get validationForSelection => 'CONSENT_SUBMIT_VALIDATION';
-  String get submitYes => 'SUBMIT_YES';
-  String get submitNo => 'SUBMIT_NO';
-  String get householdConsentLabel => 'HOUSEHOLD_CONSENT_LABEL';
 }
 
 class StockDetailsReceiptShowcase {

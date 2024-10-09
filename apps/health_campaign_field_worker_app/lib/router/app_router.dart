@@ -17,7 +17,6 @@ import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
-import '../pages/pages-SMC/consent/household_consent.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -56,7 +55,6 @@ import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
-import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/closed/custom_closed_household_details_smc.dart';
 import '../pages/pages-SMC/closed/custom_closed_household_summary_smc.dart';
 import '../pages/beneficiary_registration/custom_household_overview.dart';
@@ -694,13 +692,6 @@ class AppRouter extends _$AppRouter {
                     RedirectRoute(
                       path: 'household-location',
                       redirectTo: 'custom-household-location-smc',
-                    ),
-                    AutoRoute(
-                        page: HouseHoldConsentRoute.page,
-                        path: 'household-consent'),
-                    AutoRoute(
-                      page: ConsentHouseholdAcknowledgementRoute.page,
-                      path: 'consent-household-acknowledgement',
                     ),
                     AutoRoute(
                       page: BeneficiaryAcknowledgementRoute.page,
