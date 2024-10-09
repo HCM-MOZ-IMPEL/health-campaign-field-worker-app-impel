@@ -381,6 +381,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDoseAdministeredSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDoseAdministeredSMCRouteArgs>(
+          orElse: () => const CustomDoseAdministeredSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDoseAdministeredSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -2090,6 +2101,45 @@ class CustomDeliverySummarySMCRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverySummarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomDoseAdministeredSMCPage]
+class CustomDoseAdministeredSMCRoute
+    extends PageRouteInfo<CustomDoseAdministeredSMCRouteArgs> {
+  CustomDoseAdministeredSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDoseAdministeredSMCRoute.name,
+          args: CustomDoseAdministeredSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDoseAdministeredSMCRoute';
+
+  static const PageInfo<CustomDoseAdministeredSMCRouteArgs> page =
+      PageInfo<CustomDoseAdministeredSMCRouteArgs>(name);
+}
+
+class CustomDoseAdministeredSMCRouteArgs {
+  const CustomDoseAdministeredSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomDoseAdministeredSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
