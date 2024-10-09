@@ -17,7 +17,6 @@ import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
-import '../pages/pages-SMC/consent/household_consent.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -56,7 +55,6 @@ import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
-import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/closed/custom_closed_household_details_smc.dart';
 import '../pages/pages-SMC/closed/custom_closed_household_summary_smc.dart';
 import '../pages/beneficiary_registration/custom_household_overview.dart';
@@ -96,6 +94,7 @@ import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_dose_administered_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -695,13 +694,6 @@ class AppRouter extends _$AppRouter {
                       redirectTo: 'custom-household-location-smc',
                     ),
                     AutoRoute(
-                        page: HouseHoldConsentRoute.page,
-                        path: 'household-consent'),
-                    AutoRoute(
-                      page: ConsentHouseholdAcknowledgementRoute.page,
-                      path: 'consent-household-acknowledgement',
-                    ),
-                    AutoRoute(
                       page: BeneficiaryAcknowledgementRoute.page,
                       path: 'beneficiary-acknowledgement',
                     ),
@@ -812,6 +804,14 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: DoseAdministeredRoute.page,
                       path: 'dose-administered',
+                    ),
+                    AutoRoute(
+                      page: CustomDoseAdministeredSMCRoute.page,
+                      path: 'dose-administered-smc',
+                    ),
+                    RedirectRoute(
+                      path: 'dose-administered',
+                      redirectTo: 'dose-administered-smc',
                     ),
                     AutoRoute(
                       page: SplashAcknowledgementRoute.page,

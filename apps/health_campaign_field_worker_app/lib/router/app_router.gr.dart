@@ -381,6 +381,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDoseAdministeredSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDoseAdministeredSMCRouteArgs>(
+          orElse: () => const CustomDoseAdministeredSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDoseAdministeredSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -690,17 +701,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HomeSMCPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    HouseHoldConsentRoute.name: (routeData) {
-      final args = routeData.argsAs<HouseHoldConsentRouteArgs>(
-          orElse: () => const HouseHoldConsentRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: HouseHoldConsentPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -2094,6 +2094,45 @@ class CustomDeliverySummarySMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomDoseAdministeredSMCPage]
+class CustomDoseAdministeredSMCRoute
+    extends PageRouteInfo<CustomDoseAdministeredSMCRouteArgs> {
+  CustomDoseAdministeredSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDoseAdministeredSMCRoute.name,
+          args: CustomDoseAdministeredSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDoseAdministeredSMCRoute';
+
+  static const PageInfo<CustomDoseAdministeredSMCRouteArgs> page =
+      PageInfo<CustomDoseAdministeredSMCRouteArgs>(name);
+}
+
+class CustomDoseAdministeredSMCRouteArgs {
+  const CustomDoseAdministeredSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomDoseAdministeredSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseDetailsPage]
 class CustomHouseDetailsRoute
     extends PageRouteInfo<CustomHouseDetailsRouteArgs> {
@@ -3251,44 +3290,6 @@ class HomeSMCRouteArgs {
   @override
   String toString() {
     return 'HomeSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [HouseHoldConsentPage]
-class HouseHoldConsentRoute extends PageRouteInfo<HouseHoldConsentRouteArgs> {
-  HouseHoldConsentRoute({
-    Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          HouseHoldConsentRoute.name,
-          args: HouseHoldConsentRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'HouseHoldConsentRoute';
-
-  static const PageInfo<HouseHoldConsentRouteArgs> page =
-      PageInfo<HouseHoldConsentRouteArgs>(name);
-}
-
-class HouseHoldConsentRouteArgs {
-  const HouseHoldConsentRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final RegistrationDeliveryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'HouseHoldConsentRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
