@@ -370,6 +370,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverySummarySMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverySummarySMCRouteArgs>(
+          orElse: () => const CustomDeliverySummarySMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverySummarySMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -668,6 +679,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HomePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    HomeSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<HomeSMCRouteArgs>(
+          orElse: () => const HomeSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HomeSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -2033,6 +2055,45 @@ class CustomDeliverySummaryRouteArgs {
 }
 
 /// generated route for
+/// [CustomDeliverySummarySMCPage]
+class CustomDeliverySummarySMCRoute
+    extends PageRouteInfo<CustomDeliverySummarySMCRouteArgs> {
+  CustomDeliverySummarySMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverySummarySMCRoute.name,
+          args: CustomDeliverySummarySMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverySummarySMCRoute';
+
+  static const PageInfo<CustomDeliverySummarySMCRouteArgs> page =
+      PageInfo<CustomDeliverySummarySMCRouteArgs>(name);
+}
+
+class CustomDeliverySummarySMCRouteArgs {
+  const CustomDeliverySummarySMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomDeliverySummarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseDetailsPage]
 class CustomHouseDetailsRoute
     extends PageRouteInfo<CustomHouseDetailsRouteArgs> {
@@ -3152,6 +3213,44 @@ class HomeRouteArgs {
   @override
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [HomeSMCPage]
+class HomeSMCRoute extends PageRouteInfo<HomeSMCRouteArgs> {
+  HomeSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HomeSMCRoute.name,
+          args: HomeSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeSMCRoute';
+
+  static const PageInfo<HomeSMCRouteArgs> page =
+      PageInfo<HomeSMCRouteArgs>(name);
+}
+
+class HomeSMCRouteArgs {
+  const HomeSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'HomeSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

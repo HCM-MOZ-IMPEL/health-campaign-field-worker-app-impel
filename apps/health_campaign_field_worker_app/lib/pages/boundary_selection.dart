@@ -77,7 +77,7 @@ class _BoundarySelectionPageState
         .where(
           (role) =>
               role.code == RolesType.distributor.toValue() ||
-              role.code == Constants.communityDistributor,
+              role.code == RolesType.communityDistributor.toValue(),
         )
         .toList()
         .isNotEmpty;

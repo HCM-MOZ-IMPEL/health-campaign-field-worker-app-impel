@@ -49,17 +49,17 @@ import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress.dart';
 
 @RoutePage()
-class HomePage extends LocalizedStatefulWidget {
-  const HomePage({
+class HomeSMCPage extends LocalizedStatefulWidget {
+  const HomeSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeSMCPage> createState() => HomeSMCPageState();
 }
 
-class _HomePageState extends LocalizedState<HomePage> {
+class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<ConnectivityResult> subscription;
@@ -105,10 +105,9 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     //[TODO: Add below roles to enum]
-    //todo added for testing
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()) ||
-        roles.first.contains(Constants.communityDistributor))) {
+        roles.contains(RolesType.communityDistributor.toValue()))) {
       skipProgressBar = true;
     }
 

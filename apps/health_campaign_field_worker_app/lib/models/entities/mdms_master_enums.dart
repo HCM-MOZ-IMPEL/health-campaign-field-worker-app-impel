@@ -31,6 +31,8 @@ enum MasterEnums {
   idTypes,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_POPULATOR")
   deliveryComments,
+  @MappableValue("DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR")
+  deliveryCommentsSMC,
   @MappableValue("BACKEND_INTERFACE")
   backendInterface,
   @MappableValue("CALL_SUPPORT")

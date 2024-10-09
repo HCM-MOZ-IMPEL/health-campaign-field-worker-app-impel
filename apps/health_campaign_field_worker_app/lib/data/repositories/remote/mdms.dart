@@ -252,6 +252,15 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
+    final List<DeliveryCommentOptions>? deliveryCommentOptionsSmc =
+        element?.deliveryCommentOptionsSmc.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return deliveryCommentOption;
+    }).toList();
+
     final List<Interfaces>? interfaceList =
         element?.backendInterface.first.interface.map((e) {
       final config = Config()..localStoreTTL = e.config.localStoreTTL;
@@ -278,6 +287,7 @@ class MdmsRepository {
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+    appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
     appConfiguration.householdMemberDeletionReasonOptions =
