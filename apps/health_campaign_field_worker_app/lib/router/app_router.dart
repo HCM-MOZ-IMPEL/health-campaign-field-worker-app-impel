@@ -95,6 +95,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledge
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_dose_administered_smc.dart';
+import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 
 part 'app_router.gr.dart';
 
@@ -852,6 +853,10 @@ class AppRouter extends _$AppRouter {
                     RedirectRoute(
                       path: 'delivery-summary',
                       redirectTo: 'custom-delivery-summary-smc',
+                    ),
+                    AutoRoute(
+                      page: DoseAdministeredVerificationRoute.page,
+                      path: 'dose-administered-verification',
                     ),
                   ],
                 ),

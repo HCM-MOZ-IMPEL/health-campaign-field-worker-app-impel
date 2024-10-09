@@ -657,6 +657,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DoseAdministeredVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredVerificationRouteArgs>(
+          orElse: () => const DoseAdministeredVerificationRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredVerificationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     EligibilityChecklistViewRoute.name: (routeData) {
       final args = routeData.argsAs<EligibilityChecklistViewRouteArgs>(
           orElse: () => const EligibilityChecklistViewRouteArgs());
@@ -3104,6 +3115,45 @@ class CustomWarehouseDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomWarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredVerificationPage]
+class DoseAdministeredVerificationRoute
+    extends PageRouteInfo<DoseAdministeredVerificationRouteArgs> {
+  DoseAdministeredVerificationRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DoseAdministeredVerificationRoute.name,
+          args: DoseAdministeredVerificationRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DoseAdministeredVerificationRoute';
+
+  static const PageInfo<DoseAdministeredVerificationRouteArgs> page =
+      PageInfo<DoseAdministeredVerificationRouteArgs>(name);
+}
+
+class DoseAdministeredVerificationRouteArgs {
+  const DoseAdministeredVerificationRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredVerificationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
