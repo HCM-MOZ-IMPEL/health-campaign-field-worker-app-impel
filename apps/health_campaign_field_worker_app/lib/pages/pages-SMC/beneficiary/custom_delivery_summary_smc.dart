@@ -16,6 +16,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
@@ -134,11 +135,13 @@ class DeliverySummaryPageState
                                     context.router.popUntilRouteWithName(
                                       BeneficiaryWrapperRoute.name,
                                     );
+                                    // context.router.push(
+                                    //   HouseholdAcknowledgementRoute(
+                                    //     enableViewHousehold: true,
+                                    //   ),
+                                    // );
                                     context.router.push(
-                                      HouseholdAcknowledgementRoute(
-                                        enableViewHousehold: true,
-                                      ),
-                                    );
+                                        DoseAdministeredVerificationRoute());
                                   } else {
                                     final reloadState =
                                         context.read<HouseholdOverviewBloc>();

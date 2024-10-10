@@ -165,7 +165,7 @@ class CustomDeliverInterventionSMCPageState
                 navigateToSummary: true,
                 householdMemberWrapper: householdMember),
           );
-      context.router.push(DoseAdministeredVerificationRoute());
+      context.router.push(DeliverySummaryRoute());
     }
   }
 

@@ -260,15 +260,23 @@ class _DoseAdministeredVerificationPageState
                                               ),
                                             );
                                           }
-
-                                          event.add(
-                                            DeliverInterventionSubmitEvent(
-                                                task:
-                                                    completedTask.last, //#todo
-                                                isEditing: false,
-                                                boundaryModel:
-                                                    context.boundary),
-                                          );
+                                          for (var element in completedTask) {
+                                            event.add(
+                                              DeliverInterventionSubmitEvent(
+                                                  task: element, //#todo
+                                                  isEditing: false,
+                                                  boundaryModel:
+                                                      context.boundary),
+                                            );
+                                          }
+                                          // event.add(
+                                          //   DeliverInterventionSubmitEvent(
+                                          //       task:
+                                          //           completedTask.last, //#todo
+                                          //       isEditing: false,
+                                          //       boundaryModel:
+                                          //           context.boundary),
+                                          // );
                                         }
 
                                         final reloadState = context
@@ -293,7 +301,9 @@ class _DoseAdministeredVerificationPageState
                                           },
                                         ).then((value) => context.router
                                             .popAndPush(
-                                                DeliverySummaryRoute()));
+                                                HouseholdAcknowledgementRoute(
+                                                    enableViewHousehold:
+                                                        true)));
                                       }
                                     },
                               child: Center(
