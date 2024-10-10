@@ -109,33 +109,34 @@ class CustomDeliverInterventionSMCPageState
                 .value ==
             "ADMINISTRATION_NOT_SUCCESSFUL" &&
         doseAdministered;
-
+// todo verify this how to handle this should pass default 00 or make user enter some value
     String? wastedCount =
-        (((form.control(_quantityWastedKey) as FormArray).value)?[0])
+        (((form.control(_quantityWastedKey) as FormArray).value)?[0] ?? "00")
             .toString();
     if (isReferral) {
-      if (Navigator.canPop(
-        context,
-      )) {
-        Navigator.of(
-          context,
-          rootNavigator: true,
-        ).pop(false);
-      }
+      // if (Navigator.canPop(
+      //   context,
+      // )) {
+      //   Navigator.of(
+      //     context,
+      //     rootNavigator: true,
+      //   ).pop(false);
+      // }
       // todo set other params as per old smc
+      final productVariantId =
+          ((form.control(_resourceDeliveredKey) as FormArray).value
+                  as List<ProductVariantModel?>)
+              .first
+              ?.id;
 
-      context.router.push(
+      context.router.popAndPush(
         CustomReferBeneficiarySMCRoute(
             projectBeneficiaryClientRefId:
                 projectBeneficiaryClientReferenceId ?? '',
             individual: selectedIndividual!,
             quantityWasted: wastedCount,
             isReadministrationUnSuccessful: true,
-            productVariantId:
-                ((form.control(_resourceDeliveredKey) as FormArray).value
-                        as List<ProductVariantModel?>)
-                    .first
-                    ?.id),
+            productVariantId: productVariantId),
       );
     } else {
       context.read<DeliverInterventionBloc>().add(

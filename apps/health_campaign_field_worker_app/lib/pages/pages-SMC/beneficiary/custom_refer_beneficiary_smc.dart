@@ -286,6 +286,12 @@ class CustomReferBeneficiarySMCPageState
                                               context.beneficiaryType,
                                         ));
                                       },
+                                    ).then(
+                                      (value) => context.router.popAndPush(
+                                        HouseholdAcknowledgementRoute(
+                                          enableViewHousehold: true,
+                                        ),
+                                      ),
                                     );
                                   }
                                 },
