@@ -51,8 +51,10 @@ class CustomBeneficiaryAcknowledgementSMCPageState
             () {
               final overviewBloc = context.read<HouseholdOverviewBloc>();
 
-              HouseholdMemberWrapper memberWrapper =
-                  searchBlocState.householdMembers.first;
+              HouseholdMemberWrapper? memberWrapper =
+                  searchBlocState.householdMembers.isEmpty
+                      ? null
+                      : searchBlocState.householdMembers.first;
               overviewBloc.add(
                 HouseholdOverviewReloadEvent(
                   projectId:
@@ -62,14 +64,18 @@ class CustomBeneficiaryAcknowledgementSMCPageState
                           BeneficiaryType.household,
                 ),
               );
-              memberWrapper = searchBlocState.householdMembers.first;
+              memberWrapper = searchBlocState.householdMembers.isEmpty
+                  ? overviewBloc.state.householdMemberWrapper
+                  : searchBlocState.householdMembers.first;
             },
           ).then((value) {
             final overviewBloc = context.read<HouseholdOverviewBloc>();
             parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
             parent.push(
               BeneficiaryWrapperRoute(
-                wrapper: searchBlocState.householdMembers.first,
+                wrapper: searchBlocState.householdMembers.isEmpty
+                    ? overviewBloc.state.householdMemberWrapper
+                    : searchBlocState.householdMembers.first,
               ),
             );
           });
