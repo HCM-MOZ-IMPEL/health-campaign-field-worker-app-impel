@@ -9,6 +9,7 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/utils.dart';
@@ -19,6 +20,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomDeliverySummarySMCPage extends LocalizedStatefulWidget {
@@ -236,6 +238,13 @@ class DeliverySummaryPageState
                             return resourcesDelivered;
                           },
                         );
+
+                        const deliveryCommentKey = 'deliveryComment';
+                        var deliveryComment = getDeliveryComment(
+                            deliverState.oldTask, deliveryCommentKey);
+                        var wastedQuantity =
+                            getWastedQuantity(deliverState.oldTask);
+
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
@@ -279,6 +288,33 @@ class DeliverySummaryPageState
                                           localizations.translate(
                                               i18.common.coreCommonNA),
                                 ),
+                                LabelValuePair(
+                                    label: localizations.translate(i18_local
+                                        .beneficiaryDetails
+                                        .commentSummaryLabel),
+                                    value: deliverState.oldTask?.status ==
+                                            Status.administeredSuccess.toValue()
+                                        ? deliveryComment.toString()
+                                        : "",
+                                    isInline: true),
+                                LabelValuePair(
+                                    label: localizations.translate(i18_local
+                                        .beneficiaryDetails
+                                        .commentSummaryLabel),
+                                    value: deliverState.oldTask?.status ==
+                                            Status.administeredSuccess.toValue()
+                                        ? deliveryComment.toString()
+                                        : "",
+                                    isInline: true),
+                                LabelValuePair(
+                                    label: localizations.translate(i18_local
+                                        .beneficiaryDetails
+                                        .wastedQuantityLabel),
+                                    value: deliverState.oldTask?.status ==
+                                            Status.administeredSuccess.toValue()
+                                        ? wastedQuantity.toString()
+                                        : "0",
+                                    isInline: true),
                               ]),
                         );
                       }),
@@ -290,4 +326,35 @@ class DeliverySummaryPageState
       )),
     );
   }
+}
+
+String? getDeliveryComment(
+  TaskModel? task,
+  String deliveryCommentKey,
+) {
+  if (task == null) {
+    return "";
+  }
+
+  return task?.additionalFields?.fields
+          ?.where((element) => element.key == deliveryCommentKey)
+          .first
+          .value ??
+      "";
+}
+
+String? getWastedQuantity(
+  TaskModel? task,
+) {
+  const quantityWastedKey = 'quantityWasted';
+
+  if (task == null) {
+    return "";
+  }
+
+  return task.resources?.first.additionalFields?.fields
+          .where((element) => element.key == quantityWastedKey)
+          .first
+          .value ??
+      "0";
 }
