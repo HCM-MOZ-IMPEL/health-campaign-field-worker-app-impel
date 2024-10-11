@@ -304,7 +304,8 @@ class DeliverySummaryPageState
                                     value: deliverState.oldTask?.status ==
                                             Status.administeredSuccess.toValue()
                                         ? deliveryComment.toString()
-                                        : "",
+                                        : localizations
+                                            .translate(i18.common.coreCommonNA),
                                     isInline: true),
                                 LabelValuePair(
                                     label: localizations.translate(i18_local
