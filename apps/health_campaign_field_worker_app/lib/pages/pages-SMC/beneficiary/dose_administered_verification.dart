@@ -145,8 +145,9 @@ class _DoseAdministeredVerificationPageState
                                                       clientReferenceId,
                                                   id: null,
                                                 ),
-                                                status:
-                                                    Status.delivered.toValue(),
+                                                status: Status
+                                                    .administeredSuccess
+                                                    .toValue(),
                                                 clientReferenceId:
                                                     clientReferenceId,
                                                 projectBeneficiaryClientReferenceId:

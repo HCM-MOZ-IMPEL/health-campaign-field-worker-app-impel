@@ -209,9 +209,22 @@ class DeliverySummaryPageState
                                   label: localizations.translate(
                                       i18.beneficiaryDetails.totalMembers),
                                   value: deliverState.householdMemberWrapper
+                                          ?.members?.length
+                                          .toString() ??
+                                      deliverState.householdMemberWrapper
                                           ?.household?.memberCount
                                           .toString() ??
                                       '0',
+                                  isInline: true),
+                              LabelValuePair(
+                                  label: localizations.translate(i18_local
+                                      .individualDetails
+                                      .firstNameHeadLabelText),
+                                  value:
+                                      ("${deliverState.householdMemberWrapper?.headOfHousehold?.name?.givenName} ${deliverState.householdMemberWrapper?.headOfHousehold?.name?.familyName}")
+                                              .toString() ??
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
                                   isInline: true),
                             ]),
                       ),
@@ -294,16 +307,8 @@ class DeliverySummaryPageState
                                         .commentSummaryLabel),
                                     value: deliverState.oldTask?.status ==
                                             Status.administeredSuccess.toValue()
-                                        ? deliveryComment.toString()
-                                        : "",
-                                    isInline: true),
-                                LabelValuePair(
-                                    label: localizations.translate(i18_local
-                                        .beneficiaryDetails
-                                        .commentSummaryLabel),
-                                    value: deliverState.oldTask?.status ==
-                                            Status.administeredSuccess.toValue()
-                                        ? deliveryComment.toString()
+                                        ? localizations.translate(
+                                            deliveryComment.toString())
                                         : localizations
                                             .translate(i18.common.coreCommonNA),
                                     isInline: true),
@@ -337,11 +342,11 @@ String? getDeliveryComment(
     return "";
   }
 
-  return task?.additionalFields?.fields
-          ?.where((element) => element.key == deliveryCommentKey)
-          .first
-          .value ??
-      "";
+  final comment = task.additionalFields?.fields
+      .where((element) => element.key == deliveryCommentKey)
+      .firstOrNull;
+
+  return comment == null ? i18.common.coreCommonNA : comment.value;
 }
 
 String? getWastedQuantity(
@@ -353,9 +358,9 @@ String? getWastedQuantity(
     return "";
   }
 
-  return task.resources?.first.additionalFields?.fields
-          .where((element) => element.key == quantityWastedKey)
-          .first
-          .value ??
-      "0";
+  final wastedQuantity = task.resources?.first.additionalFields?.fields
+      .where((element) => element.key == quantityWastedKey)
+      .firstOrNull;
+
+  return wastedQuantity == null ? "0" : wastedQuantity.value.toString();
 }

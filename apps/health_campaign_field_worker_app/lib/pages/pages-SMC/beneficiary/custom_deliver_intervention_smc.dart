@@ -7,6 +7,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
@@ -111,8 +112,7 @@ class CustomDeliverInterventionSMCPageState
         doseAdministered;
 // todo verify this how to handle this should pass default 00 or make user enter some value
     String? wastedCount =
-        (((form.control(_quantityWastedKey) as FormArray).value)?[0] ?? "00")
-            .toString();
+        ((form.control(_quantityWastedKey).value) ?? "00").toString();
     if (isReferral) {
       // if (Navigator.canPop(
       //   context,
@@ -575,12 +575,6 @@ class CustomDeliverInterventionSMCPageState
                                                             .removeAt(
                                                           index,
                                                         );
-                                                        (form.control(
-                                                          _quantityWastedKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
                                                         _controllers.removeAt(
                                                           index,
                                                         );
@@ -589,6 +583,36 @@ class CustomDeliverInterventionSMCPageState
                                                         });
                                                       },
                                                     )),
+                                                DigitTextFormField(
+                                                  formControlName:
+                                                      _quantityWastedKey,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                          .numberWithOptions(
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    LengthLimitingTextInputFormatter(
+                                                        1),
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                      RegExp(r'^[123]$'),
+                                                    ),
+                                                  ],
+                                                  label:
+                                                      localizations.translate(
+                                                    i18Local.deliverIntervention
+                                                        .quantityWastedLabel,
+                                                  ),
+                                                  validationMessages: {
+                                                    "required": (control) {
+                                                      return localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .corecommonRequired,
+                                                      );
+                                                    },
+                                                  },
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -673,8 +697,6 @@ class CustomDeliverInterventionSMCPageState
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
         .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
-    (form.control(_quantityWastedKey) as FormArray)
-        .add(FormControl<String>(validators: [Validators.required]));
   }
 
   bool hasEmptyOrZeroQuantity(FormGroup form) {
@@ -791,8 +813,7 @@ class CustomDeliverInterventionSMCPageState
                   TaskResourceAdditionalFields(version: 1, fields: [
                 AdditionalField(
                   _quantityWastedKey,
-                  (((form.control(_quantityWastedKey) as FormArray)
-                          .value)?[productvariantList.indexOf(e)])
+                  (((form.control(_quantityWastedKey)).value ?? "00"))
                       .toString(),
                 ),
               ])))
@@ -954,11 +975,7 @@ class CustomDeliverInterventionSMCPageState
           ),
         ),
       ]),
-      _quantityWastedKey: FormArray<String>([
-        ..._controllers.map(
-          (e) => FormControl<String>(),
-        ),
-      ]),
+      _quantityWastedKey: FormControl<String>(validators: []),
     });
   }
 }
