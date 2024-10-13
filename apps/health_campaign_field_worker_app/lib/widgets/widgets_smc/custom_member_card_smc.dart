@@ -15,7 +15,6 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import '../../models/entities/entities_smc/identifier_types.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 
@@ -106,17 +105,17 @@ class CustomMemberCardSMC extends StatelessWidget {
                                 kPadding,
                               ),
                               child: Text(
-                                // individual.identifiers!
-                                //         .lastWhere(
-                                //           (e) =>
-                                //               e.identifierType ==
-                                //               IdentifierTypes
-                                //                   .uniqueBeneficiaryID
-                                //                   .toValue(),
-                                //         )
-                                //         .identifierId ??
-                                localizations
-                                    .translate(i18.common.noResultsFound),
+                                individual.identifiers!
+                                        .lastWhere(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        .identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
                                 style: theme.textTheme.headlineSmall,
                               ),
                             ),
