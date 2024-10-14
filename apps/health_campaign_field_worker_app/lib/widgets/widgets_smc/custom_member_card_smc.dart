@@ -300,15 +300,13 @@ class CustomMemberCardSMC extends StatelessWidget {
                                       //         Status.delivered.toValue())
                                       //     .toList();
 
-                                      if (tasks == null) {
-                                        if (tasks!.isEmpty) {
-                                          context.router.push(
-                                              EligibilityChecklistViewRoute(
-                                            projectBeneficiaryClientReferenceId:
-                                                projectBeneficiaryClientReferenceId,
-                                            individual: individual,
-                                          ));
-                                        }
+                                      if ((tasks ?? []).isEmpty) {
+                                        context.router
+                                            .push(EligibilityChecklistViewRoute(
+                                          projectBeneficiaryClientReferenceId:
+                                              projectBeneficiaryClientReferenceId,
+                                          individual: individual,
+                                        ));
                                       } else {
                                         context.router
                                             .push(BeneficiaryDetailsRoute());

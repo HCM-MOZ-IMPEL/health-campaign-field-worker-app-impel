@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BoundarySelectionViewRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionViewRouteArgs>(
+          orElse: () => const BoundarySelectionViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BoundarySelectionViewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ChecklistBoundaryViewRoute.name: (routeData) {
       final args = routeData.argsAs<ChecklistBoundaryViewRouteArgs>(
           orElse: () => const ChecklistBoundaryViewRouteArgs());
@@ -929,6 +940,45 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [BoundarySelectionViewPage]
+class BoundarySelectionViewRoute
+    extends PageRouteInfo<BoundarySelectionViewRouteArgs> {
+  BoundarySelectionViewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BoundarySelectionViewRoute.name,
+          args: BoundarySelectionViewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BoundarySelectionViewRoute';
+
+  static const PageInfo<BoundarySelectionViewRouteArgs> page =
+      PageInfo<BoundarySelectionViewRouteArgs>(name);
+}
+
+class BoundarySelectionViewRouteArgs {
+  const BoundarySelectionViewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BoundarySelectionViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
