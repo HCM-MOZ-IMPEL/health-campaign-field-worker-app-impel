@@ -9,6 +9,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -43,6 +44,7 @@ class _CustomBeneficiaryChecklistPageState
   bool isControllersInitialized = false;
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
+  String? beneficiaryId;
 
   @override
   void initState() {
@@ -59,6 +61,12 @@ class _CustomBeneficiaryChecklistPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    HouseholdOverviewState householdOverviewState =
+        context.read<HouseholdOverviewBloc>().state;
+    beneficiaryId = widget.beneficiaryClientRefId ??
+        householdOverviewState
+            .householdMemberWrapper.household?.clientReferenceId;
 
     return PopScope(
       canPop: false,
@@ -146,7 +154,7 @@ class _CustomBeneficiaryChecklistPageState
                               attributeCode: '${attribute?[i].code}',
                               dataType: attribute?[i].dataType,
                               clientReferenceId: IdGen.i.identifier,
-                              referenceId: widget.beneficiaryClientRefId,
+                              referenceId: beneficiaryId,
                               value: attribute?[i].dataType != 'SingleValueList'
                                   ? controller[i]
                                           .text
@@ -175,8 +183,7 @@ class _CustomBeneficiaryChecklistPageState
                                         Constants.checklistViewDateFormat,
                                   ),
                                   tenantId: selectedServiceDefinition!.tenantId,
-                                  clientId:
-                                      widget.beneficiaryClientRefId.toString(),
+                                  clientId: beneficiaryId.toString(),
                                   serviceDefId: selectedServiceDefinition?.id,
                                   attributes: attributes,
                                   rowVersion: 1,

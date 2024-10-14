@@ -6,6 +6,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -71,6 +72,8 @@ class CustomWarehouseDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
+    final stockReconciliationBloc =
+        BlocProvider.of<StockReconciliationBloc>(context);
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -230,6 +233,18 @@ class CustomWarehouseDetailsPageState
                                                             : "WAREHOUSE",
                                                   ),
                                                 );
+                                                stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                        !InventorySingleton()
+                                                                .isWareHouseMgr!
+                                                            ? FacilityModel(
+                                                                id: teamCode
+                                                                    .toString(),
+                                                              )
+                                                            : facility ??
+                                                                FacilityModel(
+                                                                  id: '',
+                                                                )));
                                                 context.router.push(
                                                   CustomStockDetailsRoute(),
                                                 );

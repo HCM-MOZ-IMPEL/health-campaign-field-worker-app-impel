@@ -37,6 +37,7 @@ class CustomRefusedDeliveryPageState
   static const _dataOfRefusalKey = 'dateOfAdministration';
   static const _reasonOfRefusal = 'reasonOfRefusal';
   static const _deliveryCommentKey = 'deliveryComment';
+  static const othersText = "OTHERS";
 
   @override
   void initState() {
@@ -60,8 +61,8 @@ class CustomRefusedDeliveryPageState
                   List<String> reasons =
                       (RegistrationDeliverySingleton().refusalReasons ?? []);
                   reasons.sort((a, b) {
-                    if (a == "OTHERS") return 1; // Keep 'Others' at the end
-                    if (b == "OTHERS") return -1; // Keep 'Others' at the end
+                    if (a == othersText) return 1; // Keep 'Others' at the end
+                    if (b == othersText) return -1; // Keep 'Others' at the end
                     return a.compareTo(b); // Normal alphabetical sort
                   });
 
@@ -99,7 +100,7 @@ class CustomRefusedDeliveryPageState
                               .control(_deliveryCommentKey)
                               .value as String?;
 
-                          if (reasonOfRefusal == 'OTHERS' &&
+                          if (reasonOfRefusal == othersText &&
                               (refusalComment == null ||
                                   refusalComment.trim().length < 2)) {
                             DigitToast.show(

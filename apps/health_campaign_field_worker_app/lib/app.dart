@@ -12,7 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:digit_dss/digit_dss.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
@@ -410,6 +413,19 @@ class MainApplicationState extends State<MainApplication>
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => StockReconciliationBloc(
+                            StockReconciliationState(
+                              projectId: InventorySingleton().projectId,
+                              dateOfReconciliation: DateTime.now(),
+                            ),
+                            stockReconciliationRepository: context.repository<
+                                StockReconciliationModel,
+                                StockReconciliationSearchModel>(),
+                            stockRepository: context
+                                .repository<StockModel, StockSearchModel>(),
                           ),
                         ),
                         BlocProvider(
