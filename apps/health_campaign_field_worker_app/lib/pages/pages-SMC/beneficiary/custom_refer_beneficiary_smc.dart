@@ -79,7 +79,7 @@ class CustomReferBeneficiarySMCPageState
         final facilities = facilityState.whenOrNull(
               fetched: (
                 facilities,
-                _,
+                allFacilities,
               ) {
                 final projectFacilities = facilities
                     .where((e) => e.usage == Constants.healthFacility)
@@ -288,7 +288,7 @@ class CustomReferBeneficiarySMCPageState
                                       },
                                     ).then(
                                       (value) => context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
+                                        CustomHouseholdAcknowledgementSMCRoute(
                                           enableViewHousehold: true,
                                         ),
                                       ),
@@ -392,8 +392,7 @@ class CustomReferBeneficiarySMCPageState
                               onTap: () async {
                                 final parent =
                                     context.router.parent() as StackRouter;
-                                final facility =
-                                    await parent.push<FacilityModel>(
+                                final facility = await parent.push(
                                   FacilitySelectionRoute(
                                     facilities: facilities,
                                   ),
@@ -427,7 +426,7 @@ class CustomReferBeneficiarySMCPageState
       ),
       _referredToKey: FormControl<FacilityModel>(
         value:
-            healthFacilities.length > 1 ? null : healthFacilities.firstOrNull,
+            healthFacilities.length >= 1 ? null : healthFacilities.firstOrNull,
         validators: [
           Validators.required,
         ],
