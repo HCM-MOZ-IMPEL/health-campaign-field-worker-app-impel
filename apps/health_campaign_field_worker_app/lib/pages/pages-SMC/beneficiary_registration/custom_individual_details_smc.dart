@@ -160,8 +160,6 @@ class CustomIndividualDetailsSMCPageState
                                 returnCombinedIds: false,
                               );
 
-                              print("Beneficiary Id : ${beneId.toString()}");
-
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
                               );
@@ -327,7 +325,7 @@ class CustomIndividualDetailsSMCPageState
                                   var individual = _getIndividualModel(context,
                                       form: form,
                                       oldIndividual: individualModel,
-                                      beneId: "");
+                                      beneId: beneId!.first);
 
                                   final tag =
                                       scannerBloc.state.qrCodes.isNotEmpty
@@ -393,7 +391,7 @@ class CustomIndividualDetailsSMCPageState
                                   final individual = _getIndividualModel(
                                       context,
                                       form: form,
-                                      beneId: beneId);
+                                      beneId: beneId!.first);
 
                                   bloc.add(
                                     BeneficiaryRegistrationAddMemberEvent(
@@ -722,13 +720,11 @@ class CustomIndividualDetailsSMCPageState
       ),
     );
 
-    print("Yashoooo ${beneId.toString()}}");
-
     List<IdentifierModel>? identifiers = individual.identifiers;
 
     identifiers?.add(IdentifierModel(
       clientReferenceId: individual.clientReferenceId,
-      identifierId: beneId.toString(),
+      identifierId: beneId,
       identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
       clientAuditDetails: individual.clientAuditDetails,
       auditDetails: individual.auditDetails,
