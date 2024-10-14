@@ -114,14 +114,6 @@ class CustomDeliverInterventionSMCPageState
     String? wastedCount =
         ((form.control(_quantityWastedKey).value) ?? "00").toString();
     if (isReferral) {
-      // if (Navigator.canPop(
-      //   context,
-      // )) {
-      //   Navigator.of(
-      //     context,
-      //     rootNavigator: true,
-      //   ).pop(false);
-      // }
       // todo set other params as per old smc
       final productVariantId =
           ((form.control(_resourceDeliveredKey) as FormArray).value

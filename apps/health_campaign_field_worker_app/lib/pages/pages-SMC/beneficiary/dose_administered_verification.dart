@@ -14,6 +14,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/models/entities/task_resource.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -23,7 +24,6 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import '../../../blocs/localization/app_localization.dart';
 import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/entities_smc/identifier_types.dart';
-import '../../../models/entities/status.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
@@ -300,11 +300,9 @@ class _DoseAdministeredVerificationPageState
                                               ),
                                             );
                                           },
-                                        ).then((value) => context.router
-                                            .popAndPush(
-                                                HouseholdAcknowledgementRoute(
-                                                    enableViewHousehold:
-                                                        true)));
+                                        ).then((value) => context.router.popAndPush(
+                                            CustomHouseholdAcknowledgementSMCRoute(
+                                                enableViewHousehold: true)));
                                       }
                                     },
                               child: Center(
