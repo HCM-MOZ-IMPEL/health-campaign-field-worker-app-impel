@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 
 class CustomDigitTextField extends StatelessWidget {
   final String label;
+  final String? description;
+  final TextStyle? descriptionStyle;
   final TextEditingController? controller;
   final String prefixText;
   final int? maxLength;
@@ -30,6 +32,8 @@ class CustomDigitTextField extends StatelessWidget {
 
   const CustomDigitTextField({
     super.key,
+    this.description,
+    this.descriptionStyle,
     required this.label,
     this.prefixText = '',
     this.maxLength,
@@ -61,6 +65,8 @@ class CustomDigitTextField extends StatelessWidget {
 
     return LabeledField(
       labelStyle: Theme.of(context).textTheme.bodyLarge,
+      description: description,
+      descriptionStyle: descriptionStyle,
       label: isRequired ? "$label *" : label,
       textStyle: textStyle,
       child: TextFormField(

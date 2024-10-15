@@ -579,6 +579,8 @@ class Checklist {
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+
+  String get communityDistributorChecklist => 'COMMUNITY_DISTRIBUTOR_CHECKLIST';
 }
 
 class ForgotPassword {
