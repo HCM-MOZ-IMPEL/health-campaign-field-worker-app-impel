@@ -377,7 +377,6 @@ void showDownloadDialog(
                     await LocalSecureStore.instance.setManualSyncTrigger(false);
                     if (context.mounted) {
                       Navigator.of(context, rootNavigator: true).pop();
-                      print("Hey Bro :${context.projectTypeCode} ");
                       (context.selectedProject.additionalDetails?.projectType
                                   ?.code ==
                               (ProjectTypes.smc.toValue()))
@@ -385,8 +384,6 @@ void showDownloadDialog(
                               .popUntilRouteWithName(SMCWrapperRoute.name)
                           : context.router
                               .popUntilRouteWithName(IRSWrapperRoute.name);
-                      // context.router
-                      //     .popUntilRouteWithName(SMCWrapperRoute.name);
                     }
                   },
                 )

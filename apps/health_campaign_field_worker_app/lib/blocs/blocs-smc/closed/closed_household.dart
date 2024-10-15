@@ -47,7 +47,6 @@ class ClosedHouseholdBloc
     ClosedHouseholdSubmitEvent event,
     ClosedHouseholdEmitter emit,
   ) async {
-    // print("Yash-io ${event.reason}");
     emit(state.copyWith(loading: true));
 
     var locality =
@@ -285,8 +284,6 @@ class ClosedHouseholdBloc
       )));
 
       await taskRepository.create(task);
-
-      // print("Task - ${task}");
 
       emit(state.copyWith(loading: false));
     } catch (error) {
