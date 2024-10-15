@@ -1,3 +1,5 @@
+import 'package:digit_components/models/privacy_policy_model.dart';
+import 'package:digit_components/models/privacy_policy_model.dart';
 import 'package:isar/isar.dart';
 import 'package:digit_dss/digit_dss.dart';
 
@@ -82,6 +84,7 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
@@ -212,6 +215,36 @@ class ReferralReasons {
   late String code;
   late String name;
   late bool active;
+}
+
+@embedded
+class PrivacyPolicy {
+  late String header;
+  late String module;
+  late bool? active;
+  late List<Content>? contents;
+}
+
+@embedded
+class Content {
+  late String? header;
+  late List<Description>? descriptions;
+}
+
+@embedded
+class Description {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late List<SubDescription>? subDescriptions;
+}
+
+@embedded
+class SubDescription {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late bool? isSpaceRequired;
 }
 
 @embedded

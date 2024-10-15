@@ -91,6 +91,8 @@ class Constants {
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
   static const String intTwo = '2';
+  static const String beneficiaryChecklist =
+      'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
