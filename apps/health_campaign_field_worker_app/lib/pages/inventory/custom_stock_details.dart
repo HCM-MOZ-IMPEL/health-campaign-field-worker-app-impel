@@ -823,10 +823,8 @@ class CustomStockDetailsPageState
                                               StockReconciliationSelectProductEvent(
                                                 value.id,
                                                 isDistributor:
-                                                    InventorySingleton()
-                                                            .isDistributor! &&
-                                                        !InventorySingleton()
-                                                            .isWareHouseMgr!,
+                                                    !InventorySingleton()
+                                                        .isWareHouseMgr!,
                                               ),
                                             );
                                           },

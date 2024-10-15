@@ -253,7 +253,12 @@ class CustomWarehouseDetailsPageState
                                                                 .isWareHouseMgr!
                                                             ? FacilityModel(
                                                                 id: teamCode
-                                                                    .toString(),
+                                                                    .toString()
+                                                                    .split(
+                                                                      Constants
+                                                                          .pipeSeparator,
+                                                                    )
+                                                                    .last,
                                                               )
                                                             : facility ??
                                                                 FacilityModel(
