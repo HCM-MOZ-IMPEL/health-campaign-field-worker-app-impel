@@ -141,6 +141,7 @@ class Common {
   String get metersLabel => 'CORE_COMMON_METERS';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
+  String get coreCommonBeneficiaryId => 'CORE_COMMON_BENEFICIARY_ID';
 }
 
 class HomeShowcase {
