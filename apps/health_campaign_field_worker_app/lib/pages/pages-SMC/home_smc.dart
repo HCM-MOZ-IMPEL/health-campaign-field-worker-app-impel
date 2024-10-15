@@ -46,7 +46,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/home/home_item_card.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -167,7 +167,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBar(
+                    : CustomBeneficiaryProgressBarSMC(
                         label: localizations.translate(
                           i18.home.progressIndicatorTitle,
                         ),
