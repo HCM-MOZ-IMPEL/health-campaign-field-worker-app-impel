@@ -15,6 +15,7 @@ import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../utils/utils.dart' show CustomValidator;
@@ -445,13 +446,24 @@ class CustomStockDetailsPageState
                                                   .value as String?)
                                               ?.trim();
 
-                                          final deliveryTeamName = form
+                                          String? deliveryTeamName = form
                                               .control(_deliveryTeamKey)
                                               .value as String?;
+                                          if (deliveryTeamName != null) {
+                                            deliveryTeamName = deliveryTeamName
+                                                .split(Constants.pipeSeparator)
+                                                .last;
+                                          }
 
-                                          final supervisor = form
+                                          String? supervisor = form
                                               .control(_supervisorKey)
                                               .value as String?;
+
+                                          if (supervisor != null) {
+                                            supervisor = supervisor
+                                                .split(Constants.pipeSeparator)
+                                                .last;
+                                          }
 
                                           if (isWareHouseMgr &&
                                               !deliveryTeamSelected &&

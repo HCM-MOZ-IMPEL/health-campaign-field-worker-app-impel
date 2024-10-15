@@ -81,6 +81,7 @@ class Constants {
   static const String healthFacilityChecklistPrefix = 'HF_RF';
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
+  static const String pipeSeparator = ' || ';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

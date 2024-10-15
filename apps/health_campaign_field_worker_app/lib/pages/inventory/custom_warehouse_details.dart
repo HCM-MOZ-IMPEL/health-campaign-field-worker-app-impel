@@ -19,6 +19,7 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
 
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 
 @RoutePage()
 class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {
@@ -62,7 +63,9 @@ class CustomWarehouseDetailsPageState
         ),
         _teamCodeKey: FormControl<String>(
           value: isDistributor
-              ? InventorySingleton().loggedInUserUuid
+              ? InventorySingleton().loggedInUser!.userName.toString() +
+                  Constants.pipeSeparator +
+                  InventorySingleton().loggedInUserUuid
               : stockState.primaryId,
           validators: isDistributor ? [Validators.required] : [],
         ),
@@ -217,13 +220,24 @@ class CustomWarehouseDetailsPageState
                                                                 .isWareHouseMgr!
                                                             ? FacilityModel(
                                                                 id: teamCode
-                                                                    .toString(),
+                                                                    .toString()
+                                                                    .split(
+                                                                      Constants
+                                                                          .pipeSeparator,
+                                                                    )
+                                                                    .last,
                                                               )
                                                             : facility,
                                                     primaryId:
                                                         !InventorySingleton()
                                                                 .isWareHouseMgr!
-                                                            ? teamCode ?? ''
+                                                            ? teamCode
+                                                                .toString()
+                                                                .split(
+                                                                  Constants
+                                                                      .pipeSeparator,
+                                                                )
+                                                                .last
                                                             : facility?.id ??
                                                                 '',
                                                     primaryType:
