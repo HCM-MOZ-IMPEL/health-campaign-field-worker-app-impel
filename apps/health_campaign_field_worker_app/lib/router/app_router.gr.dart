@@ -290,6 +290,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryDetailsSMCRouteArgs>(
+          orElse: () => const CustomBeneficiaryDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
           orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
@@ -1757,6 +1768,45 @@ class CustomBeneficiaryChecklistRouteArgs {
   @override
   String toString() {
     return 'CustomBeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBeneficiaryDetailsSMCPage]
+class CustomBeneficiaryDetailsSMCRoute
+    extends PageRouteInfo<CustomBeneficiaryDetailsSMCRouteArgs> {
+  CustomBeneficiaryDetailsSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryDetailsSMCRoute.name,
+          args: CustomBeneficiaryDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryDetailsSMCRoute';
+
+  static const PageInfo<CustomBeneficiaryDetailsSMCRouteArgs> page =
+      PageInfo<CustomBeneficiaryDetailsSMCRouteArgs>(name);
+}
+
+class CustomBeneficiaryDetailsSMCRouteArgs {
+  const CustomBeneficiaryDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

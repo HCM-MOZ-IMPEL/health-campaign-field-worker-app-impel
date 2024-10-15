@@ -2,6 +2,7 @@ library app_utils;
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
@@ -46,6 +47,9 @@ import 'extensions/extensions.dart';
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
+
+String lessThanSymbol = '<';
+String greaterThanSymbol = '>';
 
 class CustomValidator {
   /// Validates that control's value must be `true`
@@ -239,6 +243,36 @@ Future<bool> getIsConnected() async {
 
 int getAgeMonths(DigitDOBAge age) {
   return (age.years * 12) + age.months;
+}
+
+// todo verify the else condition once
+
+String? getAgeConditionString(String condition) {
+  String? finalCondition;
+  final ageConditions =
+      condition.split('and').where((element) => element.contains('age'));
+  if (ageConditions.length == 2) {
+    String? lessThanCondition = ageConditions.firstWhereOrNull((element) {
+      return element.contains("<age");
+    });
+    String lessThanAge = lessThanCondition?.split(lessThanSymbol).first ?? '0';
+
+    String? greaterThanCondition =
+        ageConditions.firstWhereOrNull((element) => element.contains("age<"));
+
+    String greaterThanAge =
+        greaterThanCondition?.split(lessThanSymbol).last ?? '0';
+
+    finalCondition =
+        '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()} yrs';
+  } else {
+    if (ageConditions.first.contains(greaterThanSymbol)) {
+      String age = ageConditions.first.split(greaterThanSymbol).last;
+      finalCondition = '${(int.parse(age) / 12).round()} yrs and above';
+    }
+  }
+
+  return finalCondition;
 }
 
 void showDownloadDialog(
