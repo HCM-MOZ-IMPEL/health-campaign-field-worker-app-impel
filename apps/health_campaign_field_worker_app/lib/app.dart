@@ -172,12 +172,6 @@ class MainApplicationState extends State<MainApplication>
                           context.repository<TaskModel, TaskSearchModel>());
                 },
               ),
-              // BlocProvider(
-              //   create: (context) => CustomSearchHouseholdsBloc(
-              //     const CustomSearchHouseholdsState.newState(),
-              //     context.read<SearchHouseholdsBloc>(),
-              //   ),
-              // ),
 
               BlocProvider(
                 create: (_) {

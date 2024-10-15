@@ -247,10 +247,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
-      print(context.selectedProject.additionalDetails?.projectType?.code);
 
-      print(
-          "Hiii Yash : ${context.selectedProject.additionalDetails?.projectType?.code}");
       context.router.replaceAll([
         context.selectedProject.additionalDetails?.projectType?.code ==
                 ProjectTypes.smc.toValue()

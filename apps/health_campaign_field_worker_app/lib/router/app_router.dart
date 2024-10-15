@@ -95,6 +95,8 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledge
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
+import '../pages/boundary_selection_view.dart';
+import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -152,6 +154,9 @@ class AppRouter extends _$AppRouter {
                 path: 'home',
                 initial: true,
               ),
+              AutoRoute(
+                  page: BoundarySelectionViewRoute.page,
+                  path: 'boundary-selection-view'),
               AutoRoute(page: ProfileRoute.page, path: 'profile'),
               AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
               AutoRoute(
@@ -629,6 +634,9 @@ class AppRouter extends _$AppRouter {
             redirectTo: 'home-smc',
           ),
           AutoRoute(
+              page: BoundarySelectionViewRoute.page,
+              path: 'boundary-selection-view'),
+          AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',
               children: [
@@ -760,6 +768,14 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: BeneficiaryDetailsRoute.page,
                       path: 'beneficiary-details',
+                    ),
+                    AutoRoute(
+                      page: CustomBeneficiaryDetailsSMCRoute.page,
+                      path: 'custom-beneficiary-details-smc',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-details',
+                      redirectTo: 'custom-beneficiary-details-smc',
                     ),
                     AutoRoute(
                       page: DeliverInterventionRoute.page,

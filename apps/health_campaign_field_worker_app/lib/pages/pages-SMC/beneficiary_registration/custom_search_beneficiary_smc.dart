@@ -433,9 +433,8 @@ class _CustomSearchBeneficiarySMCPageState
                                 );
                             context.router
                                 .push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: searchHouseholdsState.searchQuery,
-                              ),
+                              initialState:
+                                  const BeneficiaryRegistrationCreateState(),
                             ));
                             searchController.clear();
                             selectedFilters = [];

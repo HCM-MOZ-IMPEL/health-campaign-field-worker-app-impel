@@ -234,13 +234,14 @@ class CustomHouseholdOverviewSMCPageState
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
-                                          ): state
-                                              .householdMemberWrapper
-                                              .headOfHousehold
-                                              ?.address
-                                              ?.first
-                                              .locality
-                                              ?.code,
+                                          ): localizations.translate(state
+                                                  .householdMemberWrapper
+                                                  .headOfHousehold
+                                                  ?.address
+                                                  ?.first
+                                                  .locality
+                                                  ?.code ??
+                                              i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.deliverIntervention
                                                 .memberCountText,
@@ -250,9 +251,10 @@ class CustomHouseholdOverviewSMCPageState
                                             localizations.translate(i18
                                                     .beneficiaryDetails.status):
                                                 localizations.translate(
-                                              getStatusAttributes(state,
-                                                      deliverInterventionState)[
-                                                  'textLabel'],
+                                              getStatusAttributes(
+                                                state,
+                                                deliverInterventionState,
+                                              )['textLabel'],
                                             )
                                         },
                                       ),

@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/inventory/no_facilities_assigned_dialog.dart';
 
-import '../../../models/entities/status.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -79,7 +79,7 @@ class CustomReferBeneficiarySMCPageState
         final facilities = facilityState.whenOrNull(
               fetched: (
                 facilities,
-                _,
+                allFacilities,
               ) {
                 final projectFacilities = facilities
                     .where((e) => e.usage == Constants.healthFacility)
@@ -288,7 +288,7 @@ class CustomReferBeneficiarySMCPageState
                                       },
                                     ).then(
                                       (value) => context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
+                                        CustomHouseholdAcknowledgementSMCRoute(
                                           enableViewHousehold: true,
                                         ),
                                       ),
@@ -392,8 +392,7 @@ class CustomReferBeneficiarySMCPageState
                               onTap: () async {
                                 final parent =
                                     context.router.parent() as StackRouter;
-                                final facility =
-                                    await parent.push<FacilityModel>(
+                                final facility = await parent.push(
                                   FacilitySelectionRoute(
                                     facilities: facilities,
                                   ),
@@ -427,7 +426,7 @@ class CustomReferBeneficiarySMCPageState
       ),
       _referredToKey: FormControl<FacilityModel>(
         value:
-            healthFacilities.length > 1 ? null : healthFacilities.firstOrNull,
+            healthFacilities.length >= 1 ? null : healthFacilities.firstOrNull,
         validators: [
           Validators.required,
         ],
