@@ -903,6 +903,80 @@ class AppRouter extends _$AppRouter {
                     page: ClosedHouseholdAcknowledgementRoute.page,
                     path: 'closed-household-acknowledgement'),
               ]),
+
+          AutoRoute(
+              page: ChecklistWrapperRoute.page,
+              path: 'checklist',
+              children: [
+                AutoRoute(
+                  page: ChecklistRoute.page,
+                  path: '',
+                ),
+                AutoRoute(
+                    page: ChecklistBoundaryViewRoute.page,
+                    path: 'view-boundary'),
+                AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+              ]),
+          AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
+          AutoRoute(
+            page: ComplaintsAcknowledgementRoute.page,
+            path: 'complaints-acknowledgement',
+          ),
+          AutoRoute(
+            page: ProjectFacilitySelectionRoute.page,
+            path: 'select-project-facilities',
+          ),
+
+          /// Complaints Inbox
+          AutoRoute(
+            page: ComplaintsInboxWrapperRoute.page,
+            path: 'complaints-inbox',
+            children: [
+              AutoRoute(
+                page: ComplaintsInboxRoute.page,
+                path: 'complaints-inbox-items',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsInboxFilterRoute.page,
+                path: 'complaints-inbox-filter',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSearchRoute.page,
+                path: 'complaints-inbox-search',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSortRoute.page,
+                path: 'complaints-inbox-sort',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsViewRoute.page,
+                path: 'complaints-inbox-view-details',
+              ),
+            ],
+          ),
+
+          /// Complaints registration
+          AutoRoute(
+            page: ComplaintsRegistrationWrapperRoute.page,
+            path: 'complaints-registration',
+            children: [
+              AutoRoute(
+                page: ComplaintTypeRoute.page,
+                path: 'complaints-type',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsLocationRoute.page,
+                path: 'complaints-location',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsRoute.page,
+                path: 'complaints-details',
+              ),
+            ],
+          ),
         ]),
       ],
     ),
