@@ -54,7 +54,7 @@ class CustomHouseholdAcknowledgementSMCPageState
               },
               enableViewHousehold: widget.enableViewHousehold ?? false,
               secondaryLabel: localizations.translate(
-                i18.householdDetails.viewHouseHoldDetailsAction,
+                i18.householdDetails.viewHouseHoldDetailsActionSMC,
               ),
               actionLabel: localizations
                   .translate(i18.acknowledgementSuccess.actionLabelText),

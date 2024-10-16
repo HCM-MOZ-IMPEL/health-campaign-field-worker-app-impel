@@ -15,6 +15,8 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/pages/beneficiary/widgets/record_delivery_cycle.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -211,7 +213,7 @@ class CustomBeneficiaryDetailsSMCPageState
                                           },
                                           child: Center(
                                             child: Text(
-                                              '${localizations.translate(i18.beneficiaryDetails.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
+                                              '${localizations.translate(i18_local.beneficiaryDetails.recordCycleSMC)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
                                             ),
                                           ),
                                         ),

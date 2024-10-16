@@ -23,7 +23,7 @@ import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/project/project.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
@@ -407,8 +407,8 @@ class CustomDeliverInterventionSMCPageState
                                                               context,
                                                               options:
                                                                   DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18Local
+                                                                localizations.translate(
+                                                                    i18_local
                                                                         .deliverIntervention
                                                                         .deliveryCommentRequired),
                                                                 true,
@@ -537,8 +537,9 @@ class CustomDeliverInterventionSMCPageState
                                               children: [
                                                 Text(
                                                   localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliverInterventionResourceLabel,
+                                                    i18_local
+                                                        .deliverIntervention
+                                                        .deliverInterventionResourceLabelSMC,
                                                   ),
                                                   style: theme
                                                       .textTheme.headlineLarge,
@@ -592,7 +593,8 @@ class CustomDeliverInterventionSMCPageState
                                                   ],
                                                   label:
                                                       localizations.translate(
-                                                    i18Local.deliverIntervention
+                                                    i18_local
+                                                        .deliverIntervention
                                                         .quantityWastedLabel,
                                                   ),
                                                   validationMessages: {
@@ -614,14 +616,6 @@ class CustomDeliverInterventionSMCPageState
                                                   CrossAxisAlignment.start,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
                                                 BlocBuilder<
                                                     AppInitializationBloc,
                                                     AppInitializationState>(
@@ -640,8 +634,9 @@ class CustomDeliverInterventionSMCPageState
                                                         String>(
                                                       label: localizations
                                                           .translate(
-                                                        i18.deliverIntervention
-                                                            .deliveryCommentLabel,
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentLabelSMC,
                                                       ),
                                                       form: form,
                                                       menuItems:

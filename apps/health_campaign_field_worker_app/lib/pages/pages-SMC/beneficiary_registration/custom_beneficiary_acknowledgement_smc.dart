@@ -9,6 +9,7 @@ import 'package:registration_delivery/blocs/household_overview/household_overvie
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
@@ -93,7 +94,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         },
         enableViewHousehold: widget.enableViewHousehold ?? false,
         secondaryLabel: localizations.translate(
-          i18.householdDetails.viewHouseHoldDetailsAction,
+          i18_local.householdDetails.viewHouseHoldDetailsActionSMC,
         ),
         subLabel: getSubText(wrapper),
         actionLabel:
