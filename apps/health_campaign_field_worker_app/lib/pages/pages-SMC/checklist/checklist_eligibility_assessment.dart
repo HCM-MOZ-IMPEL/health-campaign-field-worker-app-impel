@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import '../../../models/entities/roles_type.dart';
 import '../../../models/entities/status.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
@@ -55,6 +57,7 @@ class _EligibilityChecklistViewPage
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   Map<String?, String> responses = {};
   final String yes = "YES";
+  bool triggerLocalization = false;
 
   @override
   void initState() {
@@ -74,6 +77,11 @@ class _EligibilityChecklistViewPage
     var ifDeliver = false;
     var ifIneligible = false;
     var ifAdministration = false;
+
+    bool isHealthFacilityWorker = context.loggedInUserRoles
+        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
+        .toList()
+        .isNotEmpty;
 
     var projectBeneficiaryClientReferenceId =
         widget.projectBeneficiaryClientReferenceId;
@@ -123,66 +131,19 @@ class _EligibilityChecklistViewPage
                           const BackNavigationHelpHeaderWidget(),
                       ]),
                       enableFixedButton: true,
-                      footer: DigitCard(
-                        margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                        padding:
-                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                        child: DigitElevatedButton(
-                          onPressed: () async {
+                      footer: BlocListener<LocationBloc, LocationState>(
+                        listener: (context, state) async {
+                          if (state.accuracy != null && triggerLocalization) {
+                            triggerLocalization = false;
                             final router = context.router;
-                            submitTriggered = true;
+                            // close the location capturing `dialog`
+                            DigitComponentsUtils().hideDialog(context);
 
-                            context.read<ServiceBloc>().add(
-                                  const ServiceChecklistEvent(
-                                    value: '',
-                                    submitTriggered: true,
-                                  ),
-                                );
-                            final isValid =
-                                checklistFormKey.currentState?.validate();
-                            if (!isValid!) {
-                              return;
-                            }
-                            final itemsAttributes = initialAttributes;
-
-                            for (int i = 0; i < controller.length; i++) {
-                              if (itemsAttributes?[i].required == true &&
-                                  ((itemsAttributes?[i].dataType ==
-                                              'SingleValueList' &&
-                                          visibleChecklistIndexes
-                                              .any((e) => e == i) &&
-                                          (controller[i].text == '')) ||
-                                      (itemsAttributes?[i].dataType !=
-                                              'SingleValueList' &&
-                                          (controller[i].text == '' &&
-                                              !(context
-                                                      .isHealthFacilitySupervisor &&
-                                                  widget.referralClientRefId !=
-                                                      null))))) {
-                                return;
-                              }
-                            }
-                            for (int i = 0; i < controller.length; i++) {
-                              initialAttributes;
-                              var attributeCode =
-                                  '${initialAttributes?[i].code}';
-                              var value = initialAttributes?[i].dataType !=
-                                      'SingleValueList'
-                                  ? controller[i]
-                                          .text
-                                          .toString()
-                                          .trim()
-                                          .isNotEmpty
-                                      ? controller[i].text.toString()
-                                      : (initialAttributes?[i].dataType !=
-                                              'Number'
-                                          ? ''
-                                          : '0')
-                                  : visibleChecklistIndexes.contains(i)
-                                      ? controller[i].text.toString()
-                                      : i18.checklist.notSelectedKey;
-                              responses[attributeCode] = value;
-                            }
+                            // Wait for the location to be obtained
+                            final locationState =
+                                context.read<LocationBloc>().state;
+                            double? latitude = locationState.latitude;
+                            double? longitude = locationState.longitude;
 
                             List<String>? referralReasons = [];
                             List<String?> ineligibilityReasons = [];
@@ -240,6 +201,35 @@ class _EligibilityChecklistViewPage
                                         i < controller.length;
                                         i++) {
                                       final attribute = initialAttributes;
+
+                                      /// Conditionally add the 'reason' field if additionalDetails is present
+                                      final String? additionalDetailValue =
+                                          isHealthFacilityWorker &&
+                                                  widget.referralClientRefId !=
+                                                      null
+                                              ? null
+                                              : ((attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              2 ||
+                                                          attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              3) &&
+                                                      controller[i].text ==
+                                                          attribute?[i]
+                                                              .values?[1]
+                                                              .trim())
+                                                  ? additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                          .isNotEmpty
+                                                      ? additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                      : null
+                                                  : null;
+
                                       attributes.add(ServiceAttributesModel(
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
@@ -249,12 +239,11 @@ class _EligibilityChecklistViewPage
                                         attributeCode: '${attribute?[i].code}',
                                         dataType: attribute?[i].dataType,
                                         clientReferenceId: IdGen.i.identifier,
-                                        referenceId:
-                                            context.isHealthFacilitySupervisor &&
-                                                    widget.referralClientRefId !=
-                                                        null
-                                                ? widget.referralClientRefId
-                                                : referenceId,
+                                        referenceId: isHealthFacilityWorker &&
+                                                widget.referralClientRefId !=
+                                                    null
+                                            ? widget.referralClientRefId
+                                            : referenceId,
                                         value: attribute?[i].dataType !=
                                                 'SingleValueList'
                                             ? controller[i]
@@ -263,46 +252,83 @@ class _EligibilityChecklistViewPage
                                                     .trim()
                                                     .isNotEmpty
                                                 ? controller[i].text.toString()
-                                                : (attribute?[i].dataType !=
-                                                        'Number'
-                                                    ? ''
-                                                    : '0')
+                                                : ''
                                             : visibleChecklistIndexes
                                                     .contains(i)
                                                 ? controller[i].text.toString()
                                                 : i18.checklist.notSelectedKey,
                                         rowVersion: 1,
                                         tenantId: attribute?[i].tenantId,
-                                        additionalDetails: context
-                                                    .isHealthFacilitySupervisor &&
-                                                widget.referralClientRefId !=
-                                                    null
-                                            ? null
-                                            : ((attribute?[i].values?.length ==
-                                                            2 ||
-                                                        attribute?[i]
-                                                                .values
-                                                                ?.length ==
-                                                            3 ||
-                                                        attribute?[i]
-                                                                .values
-                                                                ?.length ==
-                                                            4) &&
-                                                    controller[i].text ==
-                                                        attribute?[i]
-                                                            .values?[1]
-                                                            .trim())
-                                                ? additionalController[i]
-                                                        .text
-                                                        .toString()
-                                                        .isEmpty
-                                                    ? null
-                                                    : additionalController[i]
-                                                        .text
-                                                        .toString()
-                                                : null,
+                                        additionalFields:
+                                            ServiceAttributesAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            AdditionalField(
+                                              'latitude',
+                                              latitude,
+                                            ),
+                                            AdditionalField(
+                                              'longitude',
+                                              longitude,
+                                            ),
+                                            if (additionalDetailValue != null)
+                                              AdditionalField(
+                                                'reason',
+                                                additionalDetailValue,
+                                              ),
+                                          ],
+                                        ),
                                       ));
                                     }
+
+                                    context.read<ServiceBloc>().add(
+                                          ServiceCreateEvent(
+                                            serviceModel: ServiceModel(
+                                              createdAt: DigitDateUtils
+                                                  .getDateFromTimestamp(
+                                                DateTime.now()
+                                                    .toLocal()
+                                                    .millisecondsSinceEpoch,
+                                                dateFormat: Constants
+                                                    .checklistViewDateFormat,
+                                              ),
+                                              tenantId:
+                                                  selectedServiceDefinition!
+                                                      .tenantId,
+                                              clientId: isHealthFacilityWorker &&
+                                                      widget.referralClientRefId !=
+                                                          null
+                                                  ? widget.referralClientRefId
+                                                      .toString()
+                                                  : referenceId,
+                                              serviceDefId: value
+                                                  .selectedServiceDefinition
+                                                  ?.id,
+                                              attributes: attributes,
+                                              rowVersion: 1,
+                                              accountId: context.projectId,
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: DateTime.now()
+                                                    .millisecondsSinceEpoch,
+                                              ),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              additionalDetails:
+                                                  context.boundary.code,
+                                            ),
+                                          ),
+                                        );
 
                                     Navigator.of(
                                       context,
@@ -417,10 +443,86 @@ class _EligibilityChecklistViewPage
                                 }
                               }
                             }
-                          },
-                          child: Text(
-                            localizations
-                                .translate(i18.common.coreCommonSubmit),
+                          }
+                        },
+                        child: DigitCard(
+                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(
+                              kPadding, 0, kPadding, 0),
+                          child: DigitElevatedButton(
+                            onPressed: () async {
+                              final router = context.router;
+                              submitTriggered = true;
+
+                              context.read<ServiceBloc>().add(
+                                    const ServiceChecklistEvent(
+                                      value: '',
+                                      submitTriggered: true,
+                                    ),
+                                  );
+                              final isValid =
+                                  checklistFormKey.currentState?.validate();
+                              if (!isValid!) {
+                                return;
+                              }
+                              final itemsAttributes = initialAttributes;
+
+                              for (int i = 0; i < controller.length; i++) {
+                                if (itemsAttributes?[i].required == true &&
+                                    ((itemsAttributes?[i].dataType ==
+                                                'SingleValueList' &&
+                                            visibleChecklistIndexes
+                                                .any((e) => e == i) &&
+                                            (controller[i].text == '')) ||
+                                        (itemsAttributes?[i].dataType !=
+                                                'SingleValueList' &&
+                                            (controller[i].text == '' &&
+                                                !(context
+                                                        .isHealthFacilitySupervisor &&
+                                                    widget.referralClientRefId !=
+                                                        null))))) {
+                                  return;
+                                }
+                              }
+                              for (int i = 0; i < controller.length; i++) {
+                                initialAttributes;
+                                var attributeCode =
+                                    '${initialAttributes?[i].code}';
+                                var value = initialAttributes?[i].dataType !=
+                                        'SingleValueList'
+                                    ? controller[i]
+                                            .text
+                                            .toString()
+                                            .trim()
+                                            .isNotEmpty
+                                        ? controller[i].text.toString()
+                                        : (initialAttributes?[i].dataType !=
+                                                'Number'
+                                            ? ''
+                                            : '0')
+                                    : visibleChecklistIndexes.contains(i)
+                                        ? controller[i].text.toString()
+                                        : i18.checklist.notSelectedKey;
+                                responses[attributeCode] = value;
+                              }
+                              triggerLocalization = true;
+
+                              // Request location from LocationBloc
+                              context
+                                  .read<LocationBloc>()
+                                  .add(const LocationEvent.load());
+                              DigitComponentsUtils()
+                                  .showLocationCapturingDialog(
+                                context,
+                                localizations
+                                    .translate(i18.common.locationCapturing),
+                                DigitSyncDialogType.inProgress,
+                              );
+                            },
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                            ),
                           ),
                         ),
                       ),
