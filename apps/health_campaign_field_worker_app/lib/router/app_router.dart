@@ -20,11 +20,11 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledge
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/checklist/checklist.dart';
-import '../pages/checklist/checklist_boundary_view.dart';
-import '../pages/checklist/checklist_preview.dart';
-import '../pages/checklist/checklist_view.dart';
-import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/pages-SMC/checklist/checklist.dart';
+import '../pages/pages-SMC/checklist/checklist_boundary_view.dart';
+import '../pages/pages-SMC/checklist/checklist_preview.dart';
+import '../pages/pages-SMC/checklist/checklist_view.dart';
+import '../pages/pages-SMC/checklist/checklist_wrapper.dart';
 import '../pages/complaints/inbox/complaints_details_view.dart';
 import '../pages/complaints/inbox/complaints_inbox.dart';
 import '../pages/complaints/inbox/complaints_inbox_filter.dart';
