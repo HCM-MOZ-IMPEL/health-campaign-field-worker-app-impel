@@ -26,7 +26,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../../utils/environment_config.dart';
-import '../../../utils/utils.dart' hide Constants;
+import '../../../utils/utils.dart' as utils;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
@@ -783,7 +783,7 @@ class CustomIndividualDetailsSMCPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          // CustomValidator.requiredMin,
+          CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
@@ -791,7 +791,7 @@ class CustomIndividualDetailsSMCPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          // CustomValidator.requiredMin,
+          CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
         value: individual?.name?.familyName ?? '',
@@ -804,11 +804,12 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey:
-          FormControl<String>(value: individual?.mobileNumber, validators: [
-        //  CustomValidator.validMobileNumber,
-        Validators.maxLength(9)
-      ]),
+      _mobileNumberKey: FormControl<String>(
+          value: individual?.mobileNumber,
+          validators: [
+            CustomValidator.validMobileNumber,
+            Validators.maxLength(9)
+          ]),
     });
   }
 

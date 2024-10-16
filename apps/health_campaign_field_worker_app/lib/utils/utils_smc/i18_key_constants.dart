@@ -141,6 +141,7 @@ class Common {
   String get metersLabel => 'CORE_COMMON_METERS';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
+  String get coreCommonBeneficiaryId => 'CORE_COMMON_BENEFICIARY_ID';
 }
 
 class HomeShowcase {
@@ -1290,6 +1291,8 @@ class BeneficiaryDetails {
 
   String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
+  String get commentSummaryLabel => 'SUMMARY_COMMENT_LABEL';
+  String get wastedQuantityLabel => 'SUMMARY_WASTED_QUANTITY_LABEL';
 }
 
 class StockDetails {

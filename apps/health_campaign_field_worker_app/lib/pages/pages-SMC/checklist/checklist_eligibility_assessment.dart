@@ -90,7 +90,7 @@ class _EligibilityChecklistViewPage
       onWillPop: context.isHealthFacilitySupervisor &&
               widget.referralClientRefId != null
           ? () async => false
-          : () async => _onBackPressed(context),
+          : () async => _onBackPressed(context, ifIneligible),
       child: Scaffold(
         body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
           builder: (context, householdOverviewState) {
@@ -360,62 +360,65 @@ class _EligibilityChecklistViewPage
                                   final clientReferenceId = IdGen.i.identifier;
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
-                                          task: TaskModel(
-                                            projectBeneficiaryClientReferenceId:
-                                                projectBeneficiaryClientReferenceId,
-                                            clientReferenceId:
-                                                clientReferenceId,
-                                            tenantId:
-                                                envConfig.variables.tenantId,
-                                            rowVersion: 1,
-                                            auditDetails: AuditDetails(
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            projectId: context.projectId,
-                                            status: Status.beneficiaryIneligible
-                                                .toValue(),
-                                            clientAuditDetails:
-                                                ClientAuditDetails(
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                              lastModifiedBy:
-                                                  context.loggedInUserUuid,
-                                              lastModifiedTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            additionalFields:
-                                                TaskAdditionalFields(
-                                              version: 1,
-                                              fields: [
-                                                AdditionalField(
-                                                  'taskStatus',
-                                                  Status.beneficiaryIneligible
-                                                      .toValue(),
-                                                ),
-                                                AdditionalField(
-                                                  'ineligibleReasons',
-                                                  ineligibilityReasons
-                                                      .join(","),
-                                                ),
-                                              ],
-                                            ),
-                                            address: widget
-                                                .individual!.address?.first
-                                                .copyWith(
-                                              relatedClientReferenceId:
+                                            task: TaskModel(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              clientReferenceId:
                                                   clientReferenceId,
-                                              id: null,
+                                              tenantId:
+                                                  envConfig.variables.tenantId,
+                                              rowVersion: 1,
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              projectId: context.projectId,
+                                              status: Status
+                                                  .beneficiaryIneligible
+                                                  .toValue(),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              additionalFields:
+                                                  TaskAdditionalFields(
+                                                version: 1,
+                                                fields: [
+                                                  AdditionalField(
+                                                    'taskStatus',
+                                                    Status.beneficiaryIneligible
+                                                        .toValue(),
+                                                  ),
+                                                  AdditionalField(
+                                                    'ineligibleReasons',
+                                                    ineligibilityReasons
+                                                        .join(","),
+                                                  ),
+                                                ],
+                                              ),
+                                              address: widget
+                                                  .individual!.address?.first
+                                                  .copyWith(
+                                                relatedClientReferenceId:
+                                                    clientReferenceId,
+                                                id: null,
+                                              ),
                                             ),
-                                          ),
-                                          isEditing: false,
-                                          boundaryModel: context.boundary,
-                                          navigateToSummary: false,
-                                        ),
+                                            isEditing: false,
+                                            boundaryModel: context.boundary,
+                                            navigateToSummary: false,
+                                            householdMemberWrapper:
+                                                householdOverviewState
+                                                    .householdMemberWrapper),
                                       );
                                   final searchBloc =
                                       context.read<SearchHouseholdsBloc>();
@@ -423,10 +426,9 @@ class _EligibilityChecklistViewPage
                                     const SearchHouseholdsClearEvent(),
                                   );
 
-                                  router.popAndPushAll(
-                                    [
-                                      AcknowledgementRoute(),
-                                    ],
+                                  router.push(
+                                    CustomHouseholdAcknowledgementSMCRoute(
+                                        enableViewHousehold: true),
                                   );
                                 } else if (ifReferral) {
                                   router.push(
@@ -1099,41 +1101,44 @@ class _EligibilityChecklistViewPage
     return dotCount;
   }
 
-  Future<bool> _onBackPressed(BuildContext context) async {
-    bool? shouldNavigateBack = await showDialog<bool>(
-      context: context,
-      builder: (context) => DigitDialog(
-        options: DigitDialogOptions(
-          titleText: localizations.translate(
-            i18.checklist.checklistBackDialogLabel,
-          ),
-          content: Text(localizations.translate(
-            i18.checklist.checklistBackDialogDescription,
-          )),
-          primaryAction: DigitDialogActions(
-            label: localizations
-                .translate(i18.checklist.checklistBackDialogPrimaryAction),
-            action: (ctx) {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pop(true);
-            },
-          ),
-          secondaryAction: DigitDialogActions(
-            label: localizations
-                .translate(i18.checklist.checklistBackDialogSecondaryAction),
-            action: (context) {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pop(false);
-            },
+  Future<bool> _onBackPressed(BuildContext context, bool isIneligible) async {
+    if (!isIneligible) {
+      bool? shouldNavigateBack = await showDialog<bool>(
+        context: context,
+        builder: (context) => DigitDialog(
+          options: DigitDialogOptions(
+            titleText: localizations.translate(
+              i18.checklist.checklistBackDialogLabel,
+            ),
+            content: Text(localizations.translate(
+              i18.checklist.checklistBackDialogDescription,
+            )),
+            primaryAction: DigitDialogActions(
+              label: localizations
+                  .translate(i18.checklist.checklistBackDialogPrimaryAction),
+              action: (ctx) {
+                Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).pop(true);
+              },
+            ),
+            secondaryAction: DigitDialogActions(
+              label: localizations
+                  .translate(i18.checklist.checklistBackDialogSecondaryAction),
+              action: (context) {
+                Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).pop(false);
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    return shouldNavigateBack ?? false;
+      return shouldNavigateBack ?? false;
+    }
+    return false;
   }
 }

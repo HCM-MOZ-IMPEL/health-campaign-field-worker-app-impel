@@ -6,9 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
-// import '../../../blocs/household_overview/household_overview.dart';
 import '../../../../utils/i18_key_constants.dart' as i18;
-// import '../../../widgets/localized.dart';
 
 @RoutePage()
 class ConsentHouseholdAcknowledgementPage extends LocalizedStatefulWidget {

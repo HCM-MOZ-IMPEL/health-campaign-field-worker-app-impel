@@ -20,7 +20,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
 import '../../../router/app_router.dart';
-import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card.dart';
+import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
 
 @RoutePage()
 class CustomSearchBeneficiarySMCPage extends LocalizedStatefulWidget {
@@ -352,7 +352,7 @@ class _CustomSearchBeneficiarySMCPageState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: CustomViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCardSMC(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
@@ -433,9 +433,8 @@ class _CustomSearchBeneficiarySMCPageState
                                 );
                             context.router
                                 .push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: searchHouseholdsState.searchQuery,
-                              ),
+                              initialState:
+                                  const BeneficiaryRegistrationCreateState(),
                             ));
                             searchController.clear();
                             selectedFilters = [];

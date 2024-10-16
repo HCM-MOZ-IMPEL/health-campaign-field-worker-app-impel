@@ -95,6 +95,8 @@ import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledge
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
+import '../pages/boundary_selection_view.dart';
+import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -152,6 +154,9 @@ class AppRouter extends _$AppRouter {
                 path: 'home',
                 initial: true,
               ),
+              AutoRoute(
+                  page: BoundarySelectionViewRoute.page,
+                  path: 'boundary-selection-view'),
               AutoRoute(page: ProfileRoute.page, path: 'profile'),
               AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
               AutoRoute(
@@ -629,6 +634,9 @@ class AppRouter extends _$AppRouter {
             redirectTo: 'home-smc',
           ),
           AutoRoute(
+              page: BoundarySelectionViewRoute.page,
+              path: 'boundary-selection-view'),
+          AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',
               children: [
@@ -762,6 +770,14 @@ class AppRouter extends _$AppRouter {
                       path: 'beneficiary-details',
                     ),
                     AutoRoute(
+                      page: CustomBeneficiaryDetailsSMCRoute.page,
+                      path: 'custom-beneficiary-details-smc',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-details',
+                      redirectTo: 'custom-beneficiary-details-smc',
+                    ),
+                    AutoRoute(
                       page: DeliverInterventionRoute.page,
                       path: 'deliver-intervention',
                     ),
@@ -887,6 +903,80 @@ class AppRouter extends _$AppRouter {
                     page: ClosedHouseholdAcknowledgementRoute.page,
                     path: 'closed-household-acknowledgement'),
               ]),
+
+          AutoRoute(
+              page: ChecklistWrapperRoute.page,
+              path: 'checklist',
+              children: [
+                AutoRoute(
+                  page: ChecklistRoute.page,
+                  path: '',
+                ),
+                AutoRoute(
+                    page: ChecklistBoundaryViewRoute.page,
+                    path: 'view-boundary'),
+                AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+              ]),
+          AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
+          AutoRoute(
+            page: ComplaintsAcknowledgementRoute.page,
+            path: 'complaints-acknowledgement',
+          ),
+          AutoRoute(
+            page: ProjectFacilitySelectionRoute.page,
+            path: 'select-project-facilities',
+          ),
+
+          /// Complaints Inbox
+          AutoRoute(
+            page: ComplaintsInboxWrapperRoute.page,
+            path: 'complaints-inbox',
+            children: [
+              AutoRoute(
+                page: ComplaintsInboxRoute.page,
+                path: 'complaints-inbox-items',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsInboxFilterRoute.page,
+                path: 'complaints-inbox-filter',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSearchRoute.page,
+                path: 'complaints-inbox-search',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSortRoute.page,
+                path: 'complaints-inbox-sort',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsViewRoute.page,
+                path: 'complaints-inbox-view-details',
+              ),
+            ],
+          ),
+
+          /// Complaints registration
+          AutoRoute(
+            page: ComplaintsRegistrationWrapperRoute.page,
+            path: 'complaints-registration',
+            children: [
+              AutoRoute(
+                page: ComplaintTypeRoute.page,
+                path: 'complaints-type',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsLocationRoute.page,
+                path: 'complaints-location',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsRoute.page,
+                path: 'complaints-details',
+              ),
+            ],
+          ),
         ]),
       ],
     ),

@@ -7,13 +7,13 @@ import 'package:digit_components/widgets/molecules/digit_table.dart';
 import 'package:digit_components/widgets/molecules/digit_table_card.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/models/entities/task_resource.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -22,8 +22,6 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 
 import '../../../blocs/localization/app_localization.dart';
 import '../../../models/entities/additional_fields_type.dart';
-import '../../../models/entities/entities_smc/identifier_types.dart';
-import '../../../models/entities/status.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
@@ -75,22 +73,21 @@ class _DoseAdministeredVerificationPageState
                   DeliverInterventionState>(
                 builder: (context, deliveryInterventionstate) {
                   var beneficiaryName =
-                      ('${state.selectedIndividual?.name?.givenName ?? "-"}'
+                      (' ${state.selectedIndividual?.name?.givenName ?? "-"}'
                               " "
                               '${state.selectedIndividual?.name?.familyName ?? "-"}')
                           .toString();
 
-                  var beneficiaryId = "";
-                  // state.selectedIndividual?.identifiers
-                  //         ?.lastWhere(
-                  //           (e) =>
-                  //               e.identifierType ==
-                  //               IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                  //         )
-                  //         .identifierId ??
-                  //     localizations.translate(
-                  //       i18.common.noResultsFound,
-                  //     );
+                  var beneficiaryId = state.selectedIndividual?.identifiers
+                          ?.lastWhere(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                          )
+                          .identifierId ??
+                      localizations.translate(
+                        i18.common.noResultsFound,
+                      );
 
                   return ReactiveFormBuilder(
                     form: () => buildForm(context),
@@ -145,8 +142,9 @@ class _DoseAdministeredVerificationPageState
                                                       clientReferenceId,
                                                   id: null,
                                                 ),
-                                                status:
-                                                    Status.delivered.toValue(),
+                                                status: Status
+                                                    .administeredSuccess
+                                                    .toValue(),
                                                 clientReferenceId:
                                                     clientReferenceId,
                                                 projectBeneficiaryClientReferenceId:
@@ -269,14 +267,6 @@ class _DoseAdministeredVerificationPageState
                                                       context.boundary),
                                             );
                                           }
-                                          // event.add(
-                                          //   DeliverInterventionSubmitEvent(
-                                          //       task:
-                                          //           completedTask.last, //#todo
-                                          //       isEditing: false,
-                                          //       boundaryModel:
-                                          //           context.boundary),
-                                          // );
                                         }
 
                                         final reloadState = context
@@ -299,11 +289,9 @@ class _DoseAdministeredVerificationPageState
                                               ),
                                             );
                                           },
-                                        ).then((value) => context.router
-                                            .popAndPush(
-                                                HouseholdAcknowledgementRoute(
-                                                    enableViewHousehold:
-                                                        true)));
+                                        ).then((value) => context.router.popAndPush(
+                                            CustomHouseholdAcknowledgementSMCRoute(
+                                                enableViewHousehold: true)));
                                       }
                                     },
                               child: Center(

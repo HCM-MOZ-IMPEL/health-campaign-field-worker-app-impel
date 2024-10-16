@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BoundarySelectionViewRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionViewRouteArgs>(
+          orElse: () => const BoundarySelectionViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BoundarySelectionViewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ChecklistBoundaryViewRoute.name: (routeData) {
       final args = routeData.argsAs<ChecklistBoundaryViewRouteArgs>(
           orElse: () => const ChecklistBoundaryViewRouteArgs());
@@ -275,6 +286,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CustomBeneficiaryChecklistPage(
           key: args.key,
           beneficiaryClientRefId: args.beneficiaryClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomBeneficiaryDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryDetailsSMCRouteArgs>(
+          orElse: () => const CustomBeneficiaryDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryDetailsSMCPage(
+          key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -929,6 +951,45 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [BoundarySelectionViewPage]
+class BoundarySelectionViewRoute
+    extends PageRouteInfo<BoundarySelectionViewRouteArgs> {
+  BoundarySelectionViewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BoundarySelectionViewRoute.name,
+          args: BoundarySelectionViewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BoundarySelectionViewRoute';
+
+  static const PageInfo<BoundarySelectionViewRouteArgs> page =
+      PageInfo<BoundarySelectionViewRouteArgs>(name);
+}
+
+class BoundarySelectionViewRouteArgs {
+  const BoundarySelectionViewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BoundarySelectionViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1707,6 +1768,45 @@ class CustomBeneficiaryChecklistRouteArgs {
   @override
   String toString() {
     return 'CustomBeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBeneficiaryDetailsSMCPage]
+class CustomBeneficiaryDetailsSMCRoute
+    extends PageRouteInfo<CustomBeneficiaryDetailsSMCRouteArgs> {
+  CustomBeneficiaryDetailsSMCRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryDetailsSMCRoute.name,
+          args: CustomBeneficiaryDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryDetailsSMCRoute';
+
+  static const PageInfo<CustomBeneficiaryDetailsSMCRouteArgs> page =
+      PageInfo<CustomBeneficiaryDetailsSMCRouteArgs>(name);
+}
+
+class CustomBeneficiaryDetailsSMCRouteArgs {
+  const CustomBeneficiaryDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

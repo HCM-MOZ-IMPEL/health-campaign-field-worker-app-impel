@@ -293,25 +293,16 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      final futureTaskList = tasks
-                                          ?.where((task) =>
-                                              task.status ==
-                                              Status.delivered.toValue())
-                                          .toList();
-
-                                      if ((futureTaskList ?? []).isNotEmpty) {
-                                        context.router.push(
-                                          RecordPastDeliveryDetailsRoute(
-                                            tasks: tasks,
-                                          ),
-                                        );
-                                      } else {
+                                      if ((tasks ?? []).isEmpty) {
                                         context.router
                                             .push(EligibilityChecklistViewRoute(
                                           projectBeneficiaryClientReferenceId:
                                               projectBeneficiaryClientReferenceId,
                                           individual: individual,
                                         ));
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
                                       }
                                     },
                               child: Center(
