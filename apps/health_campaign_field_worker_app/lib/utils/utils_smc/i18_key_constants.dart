@@ -600,6 +600,9 @@ class HouseholdOverView {
   const HouseholdOverView();
   String get householdOverViewHouseholderHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+
+  String get householdOverViewActionTextSMC =>
+      'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
 }
 
 class ForgotPassword {
@@ -1303,6 +1306,8 @@ class BeneficiaryDetails {
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
   String get commentSummaryLabel => 'SUMMARY_COMMENT_LABEL';
   String get wastedQuantityLabel => 'SUMMARY_WASTED_QUANTITY_LABEL';
+  String get householdMemberSingularSMC => 'BENEFICIARY_HOUSEHOLD_MEMBER_SMC';
+  String get householdMemberPluralSMC => 'BENEFICIARY_HOUSEHOLD_MEMBERS_SMC';
 }
 
 class StockDetails {

@@ -331,8 +331,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               .viewDeliveryLabel,
                                         )
                                       : localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewActionText,
+                                          i18_local.householdOverView
+                                              .householdOverViewActionTextSMC,
                                         ),
                                 ),
                               ),
