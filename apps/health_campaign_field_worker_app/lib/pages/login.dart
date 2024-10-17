@@ -1,10 +1,14 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/privacy_notice/privacy_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/environment_config.dart';
@@ -24,8 +28,10 @@ class LoginPage extends LocalizedStatefulWidget {
 
 class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
+  bool isPrivacyEnabled = false;
   static const _userId = 'userId';
   static const _password = 'password';
+  static const _privacyCheck = 'privacyCheck';
 
   @override
   void initState() {
@@ -125,6 +131,49 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         suffix: buildPasswordVisibility(),
                       ),
                       const SizedBox(height: 16),
+                      BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                          builder: (context, initState) {
+                        final privacyPolicyJson = initState.maybeWhen(
+                            initialized:
+                                (AppConfiguration appConfiguration, _, __) =>
+                                    appConfiguration.privacyPolicyConfig,
+                            orElse: () => null);
+                        if (privacyPolicyJson?.active == false) {
+                          return const SizedBox.shrink();
+                        }
+
+                        form
+                            .control(_privacyCheck)
+                            .setValidators([Validators.requiredTrue]);
+                        form.control(_privacyCheck).updateValueAndValidity();
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                kPadding / 4,
+                                0,
+                                0,
+                                0,
+                              ),
+                              child: PrivacyComponent(
+                                privacyPolicy: convertToPrivacyPolicyModel(
+                                    privacyPolicyJson),
+                                formControlName: _privacyCheck,
+                                text: localizations.translate(
+                                    i18.privacyPolicy.privacyNoticeText),
+                                linkText: localizations.translate(
+                                    i18.privacyPolicy.privacyPolicyLinkText),
+                                validationMessage: localizations.translate(i18
+                                    .privacyPolicy.privacyPolicyValidationText),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: kPadding * 2,
+                            ),
+                          ],
+                        );
+                      }),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
                           return DigitElevatedButton(
@@ -212,5 +261,38 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         _password: FormControl<String>(
           validators: [Validators.required],
         ),
+        _privacyCheck: FormControl<bool>(
+          value: false,
+        ),
       });
+}
+
+// convert to privacy notice model
+PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
+  return PrivacyNoticeModel(
+    header: privacyPolicy?.header ?? '',
+    module: privacyPolicy?.module ?? '',
+    active: privacyPolicy?.active,
+    contents: privacyPolicy?.contents
+        ?.map((content) => ContentNoticeModel(
+              header: content.header,
+              descriptions: content.descriptions
+                  ?.map((description) => DescriptionNoticeModel(
+                        text: description.text,
+                        type: description.type,
+                        isBold: description.isBold,
+                        subDescriptions: description.subDescriptions
+                            ?.map((subDescription) => SubDescriptionNoticeModel(
+                                  text: subDescription.text,
+                                  type: subDescription.type,
+                                  isBold: subDescription.isBold,
+                                  isSpaceRequired:
+                                      subDescription.isSpaceRequired,
+                                ))
+                            .toList(),
+                      ))
+                  .toList(),
+            ))
+        .toList(),
+  );
 }

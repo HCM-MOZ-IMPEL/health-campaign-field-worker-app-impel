@@ -23,6 +23,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
 import '../../../router/app_router.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
 @RoutePage()
@@ -370,6 +371,10 @@ class CustomHouseholdOverviewSMCPageState
                                       referralData,
                                       currentCycle,
                                     );
+                                    final isBeneficiaryIneligible =
+                                        checkIfBeneficiaryIneligible(
+                                      taskData,
+                                    );
 
                                     return CustomMemberCardSMC(
                                       isHead: isHead,
@@ -560,6 +565,8 @@ class CustomHouseholdOverviewSMCPageState
                                               ),
                                       isBeneficiaryReferred:
                                           isBeneficiaryReferred,
+                                      isBeneficiaryIneligible:
+                                          isBeneficiaryIneligible,
                                       isDelivered: taskData == null
                                           ? false
                                           : taskData.isNotEmpty &&

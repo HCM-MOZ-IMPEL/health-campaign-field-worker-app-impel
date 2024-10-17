@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -19,14 +20,14 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
-// import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
-import '../../../utils/utils.dart' hide Constants;
+import '../../../utils/environment_config.dart';
+import '../../../utils/utils.dart' as utils;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-// import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
@@ -63,6 +64,12 @@ class CustomIndividualDetailsSMCPageState
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
   bool isEditIndividual = false;
+  Set<String>? beneId;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +141,25 @@ class CustomIndividualDetailsSMCPageState
                       onPressed: isClicked
                           ? null
                           : () async {
+                              final boundaryBloc =
+                                  context.read<BoundaryBloc>().state;
+                              final code = boundaryBloc.boundaryList.first.code;
+                              final bname =
+                                  boundaryBloc.boundaryList.first.name;
+
+                              final locality = code == null || bname == null
+                                  ? null
+                                  : LocalityModel(code: code, name: bname);
+
+                              String localityCode = locality!.code;
+
+                              beneId =
+                                  await UniqueIdGeneration().generateUniqueId(
+                                localityCode: localityCode,
+                                loggedInUserId: context.loggedInUserUuid,
+                                returnCombinedIds: false,
+                              );
+
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
                               );
@@ -222,12 +248,11 @@ class CustomIndividualDetailsSMCPageState
                                   loading,
                                   isHeadOfHousehold,
                                 ) {
-                                  // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
-                                    context,
-                                    form: form,
-                                    oldIndividual: null,
-                                  );
+                                      context,
+                                      form: form,
+                                      oldIndividual: null,
+                                      beneId: beneId!.first);
                                   isEditIndividual = false;
                                   final boundary =
                                       RegistrationDeliverySingleton().boundary;
@@ -297,11 +322,11 @@ class CustomIndividualDetailsSMCPageState
                                   isEditIndividual = true;
                                   final scannerBloc =
                                       context.read<DigitScannerBloc>();
-                                  final individual = _getIndividualModel(
-                                    context,
-                                    form: form,
-                                    oldIndividual: individualModel,
-                                  );
+                                  var individual = _getIndividualModel(context,
+                                      form: form,
+                                      oldIndividual: individualModel,
+                                      beneId: beneId!.first);
+
                                   final tag =
                                       scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
@@ -364,9 +389,9 @@ class CustomIndividualDetailsSMCPageState
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
-                                    context,
-                                    form: form,
-                                  );
+                                      context,
+                                      form: form,
+                                      beneId: beneId!.first);
 
                                   bloc.add(
                                     BeneficiaryRegistrationAddMemberEvent(
@@ -411,7 +436,8 @@ class CustomIndividualDetailsSMCPageState
                           padding: const EdgeInsets.only(bottom: kPadding),
                           child: Text(
                             localizations.translate(
-                              i18.individualDetails.individualsDetailsLabelText,
+                              i18_local.individualDetails
+                                  .individualsDetailsLabelTextSMC,
                             ),
                             style: theme.textTheme.displayMedium,
                           ),
@@ -424,9 +450,9 @@ class CustomIndividualDetailsSMCPageState
                               label: localizations.translate(
                                 widget.isHeadOfHousehold
                                     ? i18_local.individualDetails
-                                        .firstNameHeadLabelText
+                                        .firstNameHeadLabelTextSMC
                                     : i18_local.individualDetails
-                                        .childFirstNameLabelText,
+                                        .childFirstNameLabelTextSMC,
                               ),
                               isRequired: true,
                               validationMessages: {
@@ -623,6 +649,7 @@ class CustomIndividualDetailsSMCPageState
 
   IndividualModel _getIndividualModel(
     BuildContext context, {
+    required final beneId,
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
@@ -694,6 +721,16 @@ class CustomIndividualDetailsSMCPageState
       ),
     );
 
+    List<IdentifierModel>? identifiers = individual.identifiers;
+
+    identifiers?.add(IdentifierModel(
+      clientReferenceId: individual.clientReferenceId,
+      identifierId: beneId,
+      identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+      clientAuditDetails: individual.clientAuditDetails,
+      auditDetails: individual.auditDetails,
+    ));
+
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
@@ -709,8 +746,8 @@ class CustomIndividualDetailsSMCPageState
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: "DEFAULT",
-          identifierType: "DEFAULT",
+          identifierId: beneId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
         ),
       ],
     );

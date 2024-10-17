@@ -14,8 +14,8 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
-import '../../models/entities/entities_smc/identifier_types.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 
@@ -38,6 +38,7 @@ class CustomMemberCardSMC extends StatelessWidget {
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
   final bool isBeneficiaryReferred;
+  final bool isBeneficiaryIneligible;
   final String? projectBeneficiaryClientReferenceId;
 
   const CustomMemberCardSMC({
@@ -59,6 +60,7 @@ class CustomMemberCardSMC extends StatelessWidget {
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
     this.isBeneficiaryReferred = false,
+    this.isBeneficiaryIneligible = false,
     this.sideEffects,
   });
 
@@ -106,17 +108,17 @@ class CustomMemberCardSMC extends StatelessWidget {
                                 kPadding,
                               ),
                               child: Text(
-                                // individual.identifiers!
-                                //         .lastWhere(
-                                //           (e) =>
-                                //               e.identifierType ==
-                                //               IdentifierTypes
-                                //                   .uniqueBeneficiaryID
-                                //                   .toValue(),
-                                //         )
-                                //         .identifierId ??
-                                localizations
-                                    .translate(i18.common.noResultsFound),
+                                individual.identifiers!
+                                        .lastWhere(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        .identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
                                 style: theme.textTheme.headlineSmall,
                               ),
                             ),
@@ -217,6 +219,7 @@ class CustomMemberCardSMC extends StatelessWidget {
               child: !isDelivered ||
                       isNotEligible ||
                       isBeneficiaryRefused ||
+                      isBeneficiaryIneligible ||
                       isBeneficiaryReferred
                   ? Align(
                       alignment: Alignment.centerLeft,
@@ -224,16 +227,19 @@ class CustomMemberCardSMC extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          isNotEligible
-                              ? i18.householdOverView
-                                  .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryReferred
+                          isHead
+                              ? i18_local.householdOverView
+                                  .householdOverViewHouseholderHeadLabel
+                              : (isNotEligible || isBeneficiaryIneligible)
                                   ? i18.householdOverView
-                                      .householdOverViewBeneficiaryReferredLabel
-                                  : isBeneficiaryRefused
-                                      ? Status.beneficiaryRefused.toValue()
-                                      : i18.householdOverView
-                                          .householdOverViewNotDeliveredIconLabel,
+                                      .householdOverViewNotEligibleIconLabel
+                                  : isBeneficiaryReferred
+                                      ? i18.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabel
+                                      : isBeneficiaryRefused
+                                          ? Status.beneficiaryRefused.toValue()
+                                          : i18.householdOverView
+                                              .householdOverViewNotDeliveredIconLabel,
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -260,6 +266,7 @@ class CustomMemberCardSMC extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual ||
                 isNotEligible ||
                 isBeneficiaryRefused ||
+                isBeneficiaryIneligible ||
                 isBeneficiaryReferred,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
@@ -267,6 +274,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                 children: [
                   (isNotEligible ||
                               isBeneficiaryRefused ||
+                              isBeneficiaryIneligible ||
                               isBeneficiaryReferred) &&
                           !checkStatus(tasks, context.selectedCycle)
                       ? const Offstage()
@@ -323,8 +331,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               .viewDeliveryLabel,
                                         )
                                       : localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewActionText,
+                                          i18_local.householdOverView
+                                              .householdOverViewActionTextSMC,
                                         ),
                                 ),
                               ),
