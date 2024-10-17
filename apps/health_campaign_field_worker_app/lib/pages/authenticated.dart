@@ -16,17 +16,20 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../blocs/localization/app_localization.dart';
+import '../blocs/project/project.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
+import '../models/entities/project_types.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
+import 'pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -72,10 +75,19 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                                   return GestureDetector(
                                     onTap: () {
-                                      ctx.router.replaceAll([
-                                        HomeRoute(),
-                                        BoundarySelectionRoute(),
-                                      ]);
+                                      if (ctx.selectedProject.additionalDetails
+                                              ?.projectType?.code ==
+                                          ProjectTypes.smc.toValue()) {
+                                        ctx.router.replaceAll([
+                                          SMCWrapperRoute(),
+                                          BoundarySelectionRoute()
+                                        ]);
+                                      } else {
+                                        ctx.router.replaceAll([
+                                          IRSWrapperRoute(),
+                                          BoundarySelectionRoute()
+                                        ]);
+                                      }
                                     },
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width -

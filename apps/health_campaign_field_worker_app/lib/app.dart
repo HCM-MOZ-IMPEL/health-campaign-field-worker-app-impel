@@ -1,5 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/blocs/closed_household.dart';
+import 'package:closed_household/blocs/closed_household.dart' as bloc;
 import 'package:digit_scanner/blocs/scanner.dart';
 
 import 'package:digit_components/digit_components.dart';
@@ -29,6 +29,8 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/blocs-smc/closed/closed_household.dart';
+import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -113,6 +115,7 @@ class MainApplicationState extends State<MainApplication>
                 },
                 lazy: false,
               ),
+
               BlocProvider(
                 create: (_) {
                   return DigitScannerBloc(
@@ -169,12 +172,6 @@ class MainApplicationState extends State<MainApplication>
                           context.repository<TaskModel, TaskSearchModel>());
                 },
               ),
-              // BlocProvider(
-              //   create: (context) => CustomSearchHouseholdsBloc(
-              //     const CustomSearchHouseholdsState.newState(),
-              //     context.read<SearchHouseholdsBloc>(),
-              //   ),
-              // ),
 
               BlocProvider(
                 create: (_) {
@@ -411,8 +408,28 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (_) {
-                            return ClosedHouseholdBloc(
-                              const ClosedHouseholdState(),
+                            return bloc.ClosedHouseholdBloc(
+                              const bloc.ClosedHouseholdState(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
+                            );
+                          },
+                          lazy: false,
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return custombloc.ClosedHouseholdBloc(
+                              const custombloc.ClosedHouseholdState(),
                               householdMemberRepository: context.repository<
                                   HouseholdMemberModel,
                                   HouseholdMemberSearchModel>(),
