@@ -8,6 +8,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:closed_household/closed_household.dart'
@@ -39,6 +40,7 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/data_model.init.dart';
 import '../models/entities/project_types.dart';
+import '../models/entities/status.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -512,6 +514,16 @@ bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
     return false;
   }
   return true;
+}
+
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
 }
 
 Future<void> requestDisableBatteryOptimization() async {

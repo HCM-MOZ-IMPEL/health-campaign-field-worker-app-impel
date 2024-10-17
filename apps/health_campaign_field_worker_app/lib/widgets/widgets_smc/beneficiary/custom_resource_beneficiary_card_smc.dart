@@ -8,7 +8,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import '../../localized.dart';
 import '../custom_digit_reactive_dropdown_smc.dart';
@@ -68,7 +68,7 @@ class CustomResourceBeneficiaryCardSMCState
                 fetched: (productVariants) {
                   return CustomDigitReactiveDropdownSMC(
                     label: '${localizations.translate(
-                      i18.deliverIntervention.resourceDeliveredLabel,
+                      i18_local.deliverIntervention.resourceDeliveredLabelSMC,
                     )}*',
                     readOnly: true,
                     menuItems: productVariants,
@@ -146,7 +146,7 @@ class CustomResourceBeneficiaryCardSMCState
             padding: const EdgeInsets.only(top: 16.0),
             child: DigitCheckbox(
               label: localizations.translate(
-                i18Local
+                i18_local
                     .deliverIntervention.deliverInteventionAdministeredLabel,
               ),
               value: doseAdministered,

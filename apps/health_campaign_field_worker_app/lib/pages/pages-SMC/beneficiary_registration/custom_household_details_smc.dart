@@ -538,7 +538,8 @@ class CustomHouseHoldDetailsSMCPageState
                             ),
                             headingStyle: theme.textTheme.displayMedium,
                             body: localizations.translate(
-                              i18.householdDetails.householdDetailsDescription,
+                              i18_local.householdDetails
+                                  .householdDetailsDescriptionSMC,
                             ),
                           ),
                           Column(children: [

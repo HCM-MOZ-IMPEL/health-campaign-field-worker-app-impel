@@ -21,6 +21,7 @@ const beneficiaryDetails = BeneficiaryDetails();
 const stockDetails = StockDetails();
 const referBeneficiary = ReferBeneficiary();
 const householdDetails = HouseholdDetails();
+const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
 
@@ -141,6 +142,8 @@ class Common {
   String get metersLabel => 'CORE_COMMON_METERS';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
+  String get coreCommonBeneficiaryId => 'CORE_COMMON_BENEFICIARY_ID';
+  String get coreCommonSummaryDetailsSMC => 'CORE_COMMON_SUMMARY_DETAILS_SMC';
 }
 
 class HomeShowcase {
@@ -585,10 +588,18 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_ADMINISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
-  String get viewHouseHoldDetailsAction =>
-      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+  String get viewHouseHoldDetailsActionSMC =>
+      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL_SMC';
 
   String get reasonLabelText => 'REASON_LABEL_TEXT';
+  String get householdDetailsDescriptionSMC =>
+      'HOUSEHOLD_DETAILS_DESCRIPTION_SMC';
+}
+
+class HouseholdOverView {
+  const HouseholdOverView();
+  String get householdOverViewHouseholderHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
 }
 
 class ForgotPassword {
@@ -692,8 +703,8 @@ class DeliverIntervention {
   String get deliverInteventionAdministeredLabel =>
       'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
 
-  String get deliverInterventionResourceLabel =>
-      'DELIVER_INTERVENTION_RESOURCE_LABEL';
+  String get deliverInterventionResourceLabelSMC =>
+      'DELIVER_INTERVENTION_RESOURCE_LABEL_SMC';
 
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
@@ -701,8 +712,8 @@ class DeliverIntervention {
   String get dateOfAdministrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_ADMINISTRATION_LABEL';
 
-  String get resourceDeliveredLabel =>
-      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ';
+  String get resourceDeliveredLabelSMC =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ_SMC';
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
@@ -713,8 +724,8 @@ class DeliverIntervention {
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
 
-  String get deliveryCommentLabel =>
-      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get deliveryCommentLabelSMC =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>
@@ -1126,7 +1137,7 @@ class SearchBeneficiary {
 class IndividualDetails {
   const IndividualDetails();
 
-  String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+  String get individualsDetailsLabelTextSMC => 'INDIVIDUAL_LABEL_TEXT_SMC';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
@@ -1173,11 +1184,11 @@ class IndividualDetails {
 
   String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
 
-  String get childFirstNameLabelText =>
-      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+  String get childFirstNameLabelTextSMC =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT_SMC';
   String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
   String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
-  String get firstNameHeadLabelText => 'FIRST_NAME_HEAD_LABEL_TEXT';
+  String get firstNameHeadLabelTextSMC => 'FIRST_NAME_HEAD_LABEL_TEXT_SMC';
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 }
 
@@ -1272,7 +1283,7 @@ class BeneficiaryDetails {
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
-  String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get recordCycleSMC => 'BENEFICIARY_DETAILS_RECORD_CYCLE_SMC';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
 
   String get noOfRoomsAlertTitle => 'ROOMS_ALERT_TITLE';

@@ -19,6 +19,9 @@ import 'package:registration_delivery/blocs/app_localization.dart'
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/repositories/local/localization.dart';
+import 'package:digit_components/blocs/localization.dart'
+    as component_localization;
+
 import 'utils.dart';
 
 getAppLocalizationDelegates({
@@ -53,6 +56,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    component_localization.ComponentLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

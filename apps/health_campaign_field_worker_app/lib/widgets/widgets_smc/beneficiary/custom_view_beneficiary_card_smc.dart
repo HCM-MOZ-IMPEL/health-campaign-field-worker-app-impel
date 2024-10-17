@@ -20,12 +20,12 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../localized.dart';
 import 'custom_beneficiary_card.dart';
 
-class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
+class CustomViewBeneficiaryCardSMC extends LocalizedStatefulWidget {
   final HouseholdMemberWrapper householdMember;
   final VoidCallback? onOpenPressed;
   final double? distance;
 
-  const CustomViewBeneficiaryCard({
+  const CustomViewBeneficiaryCardSMC({
     super.key,
     super.appLocalizations,
     required this.householdMember,
@@ -34,12 +34,12 @@ class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
   });
 
   @override
-  State<CustomViewBeneficiaryCard> createState() =>
-      _CustomViewBeneficiaryCardState();
+  State<CustomViewBeneficiaryCardSMC> createState() =>
+      _CustomViewBeneficiaryCardSMCState();
 }
 
-class _CustomViewBeneficiaryCardState
-    extends LocalizedState<CustomViewBeneficiaryCard> {
+class _CustomViewBeneficiaryCardSMCState
+    extends LocalizedState<CustomViewBeneficiaryCardSMC> {
   late HouseholdMemberWrapper householdMember;
   static const _menCountKey = 'menCount';
   static const _womenCountKey = 'womenCount';
@@ -51,7 +51,7 @@ class _CustomViewBeneficiaryCardState
   }
 
   @override
-  void didUpdateWidget(covariant CustomViewBeneficiaryCard oldWidget) {
+  void didUpdateWidget(covariant CustomViewBeneficiaryCardSMC oldWidget) {
     householdMember = widget.householdMember;
     super.didUpdateWidget(oldWidget);
   }
@@ -82,6 +82,12 @@ class _CustomViewBeneficiaryCardState
       TableHeader(
         localizations.translate(i18.common.coreCommonGender),
         cellKey: 'gender',
+      ),
+      TableHeader(
+        localizations.translate(
+          i18Local.common.coreCommonBeneficiaryId,
+        ),
+        cellKey: 'beneficiaryId',
       ),
     ];
     final filteredHeaderList = RegistrationDeliverySingleton()
@@ -158,6 +164,17 @@ class _CustomViewBeneficiaryCardState
               : DateTime.now(),
         ).months;
 
+        final beneficiaryId = e.identifiers
+                ?.lastWhere(
+                  (e) =>
+                      e.identifierType ==
+                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                )
+                .identifierId ??
+            localizations.translate(
+              i18.common.noResultsFound,
+            );
+
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
             years: ageInYears,
@@ -232,6 +249,10 @@ class _CustomViewBeneficiaryCardState
                     .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}')
                 : ' -- ',
             cellKey: 'gender',
+          ),
+          TableData(
+            beneficiaryId,
+            cellKey: 'beneficiaryId',
           ),
         ];
 
