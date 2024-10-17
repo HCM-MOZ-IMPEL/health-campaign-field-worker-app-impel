@@ -40,7 +40,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
   @override
   void initState() {
     super.initState();
-    final bloc = context.read<SearchHouseholdsBloc>();
+    final bloc = context.read<SearchBlocWrapper>();
     wrapper = bloc.state.householdMembers.lastOrNull;
   }
 
