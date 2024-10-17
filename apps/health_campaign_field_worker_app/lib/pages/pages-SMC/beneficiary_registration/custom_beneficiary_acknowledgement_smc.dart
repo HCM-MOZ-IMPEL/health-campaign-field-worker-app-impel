@@ -54,7 +54,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         },
         secondaryAction: () {
           final parent = context.router.parent() as StackRouter;
-          final searchBlocState = context.read<SearchHouseholdsBloc>().state;
+          final searchBlocState = context.read<SearchBlocWrapper>().state;
 
           Future.delayed(
             const Duration(
