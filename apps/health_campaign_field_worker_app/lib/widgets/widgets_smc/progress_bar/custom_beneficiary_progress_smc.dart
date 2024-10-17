@@ -90,7 +90,7 @@ class _CustomBeneficiaryProgressBarSMCState
 
   @override
   Widget build(BuildContext context) {
-    final target = 70;
+    final target = 65;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
