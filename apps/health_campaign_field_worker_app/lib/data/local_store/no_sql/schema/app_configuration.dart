@@ -81,6 +81,9 @@ class AppConfiguration {
   @Name('SEARCH_HOUSEHOLD_FILTERS')
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
 
+  @Name('SEARCH_HOUSEHOLD_FILTERS_SMC')
+  late List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC;
+
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;

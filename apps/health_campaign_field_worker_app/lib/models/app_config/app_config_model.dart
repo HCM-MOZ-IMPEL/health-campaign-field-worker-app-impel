@@ -92,6 +92,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
     @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
     List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+    @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+    List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')

@@ -251,14 +251,34 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       context.router.replaceAll([
         context.selectedProject.additionalDetails?.projectType?.code ==
                 ProjectTypes.smc.toValue()
-            ? SMCWrapperRoute()
-            : IRSWrapperRoute(),
+            ? const SMCWrapperRoute()
+            : const IRSWrapperRoute(),
         BoundarySelectionRoute(),
       ]);
     } catch (e) {
       debugPrint('error $e');
     }
   }
+}
+
+List<String> getHouseholdFiltersBasedOnProjectType(
+    AppConfiguration appConfiguration, BuildContext context) {
+  List<String> list = [];
+  if (context.selectedProject.additionalDetails?.projectType?.code ==
+      ProjectTypes.smc.toValue()) {
+    if (appConfiguration.searchHouseHoldFiltersSMC != null) {
+      list.addAll(appConfiguration.searchHouseHoldFiltersSMC!
+          .map((e) => e.code)
+          .toList());
+    }
+  } else {
+    if (appConfiguration.searchHouseHoldFilters != null) {
+      list.addAll(
+          appConfiguration.searchHouseHoldFilters!.map((e) => e.code).toList());
+    }
+  }
+
+  return list;
 }
 
 void setPackagesSingleton(BuildContext context) {
@@ -337,11 +357,8 @@ void setPackagesSingleton(BuildContext context) {
               .toList(),
           symptomsTypes:
               appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .map((e) => e.code)
-                  .toList()
-              : [],
+          searchHouseHoldFilter:
+              getHouseholdFiltersBasedOnProjectType(appConfiguration, context),
           referralReasons:
               appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:
