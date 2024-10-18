@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,7 @@ class ChecklistViewPage extends LocalizedStatefulWidget {
 class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  bool triggerLocalization = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
@@ -104,35 +106,20 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                       ),
                   ]),
                   enableFixedButton: true,
-                  footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                      onPressed: () async {
+                  footer: BlocListener<LocationBloc, LocationState>(
+                    listener: (context, state) async {
+                      if (state.accuracy != null && triggerLocalization) {
+                        if (!mounted) return;
+                        triggerLocalization = false;
                         final router = context.router;
-                        submitTriggered = true;
+                        // close the location capturing `dialog`
+                        DigitComponentsUtils().hideDialog(context);
 
-                        context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
-                                value: '',
-                                submitTriggered: true,
-                              ),
-                            );
-                        final isValid =
-                            checklistFormKey.currentState?.validate();
-                        if (!isValid!) {
-                          return;
-                        }
-                        final itemsAttributes = initialAttributes;
-
-                        for (int i = 0; i < controller.length; i++) {
-                          if (itemsAttributes?[i].required == true &&
-                              visibleChecklistIndexes.any((e) => e == i) &&
-                              controller[i].text == '') {
-                            return;
-                          }
-                        }
+                        // Wait for the location to be obtained
+                        final locationState =
+                            context.read<LocationBloc>().state;
+                        double? latitude = locationState.latitude;
+                        double? longitude = locationState.longitude;
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -281,8 +268,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
-                                          additionalDetails:
-                                              context.boundary.code,
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                context.boundary.code,
+                                            'lat': latitude,
+                                            'lng': longitude,
+                                          },
                                         ),
                                       ),
                                     );
@@ -307,17 +298,57 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          // if (isHealthFacilityWorker &&
-                          //     widget.referralClientRefId != null) {
-                          //   router.navigate(SearchReferralsRoute());
-                          // } else {
                           router.navigate(ChecklistRoute());
-                          // }
                           router.push(AcknowledgementRoute());
                         }
-                      },
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
+                      }
+                    },
+                    child: DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      child: DigitElevatedButton(
+                        onPressed: () async {
+                          final router = context.router;
+                          submitTriggered = true;
+
+                          context.read<ServiceBloc>().add(
+                                const ServiceChecklistEvent(
+                                  value: '',
+                                  submitTriggered: true,
+                                ),
+                              );
+                          final isValid =
+                              checklistFormKey.currentState?.validate();
+                          if (!isValid!) {
+                            return;
+                          }
+                          final itemsAttributes = initialAttributes;
+
+                          for (int i = 0; i < controller.length; i++) {
+                            if (itemsAttributes?[i].required == true &&
+                                visibleChecklistIndexes.any((e) => e == i) &&
+                                controller[i].text == '') {
+                              return;
+                            }
+                          }
+
+                          triggerLocalization = true;
+
+                          // Request location from LocationBloc
+                          context
+                              .read<LocationBloc>()
+                              .add(const LocationEvent.load());
+                          DigitComponentsUtils().showLocationCapturingDialog(
+                            context,
+                            localizations
+                                .translate(i18.common.locationCapturing),
+                            DigitSyncDialogType.inProgress,
+                          );
+                        },
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSubmit),
+                        ),
                       ),
                     ),
                   ),

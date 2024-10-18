@@ -771,28 +771,32 @@ class CustomHouseHoldDetailsPageState
                             householdDetailsShowcaseData
                                 .numberOfMembersLivingInHousehold
                                 .buildWith(
-                              child: DigitIntegerFormPicker(
-                                minimum: men + women != 0 ? men + women : 0,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
-                                  if (memberCount <= men + women) {
-                                    form.control(_memberCountKey).value =
-                                        (men + women);
-                                  }
-                                },
-                                form: form,
-                                formControlName: _memberCountKey,
-                                label: localizations.translate(
-                                  i18.householdDetails.noOfMembersCountLabel,
-                                ),
-                                incrementer: !widget.isEligible,
-                                readOnly: widget.isEligible,
-                              ),
+                              child: !widget.isEligible
+                                  ? DigitIntegerFormPicker(
+                                      minimum:
+                                          men + women != 0 ? men + women : 0,
+                                      maximum: 20,
+                                      form: form,
+                                      formControlName: _memberCountKey,
+                                      label: localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountLabel,
+                                      ),
+                                      incrementer: !widget.isEligible,
+                                      // readOnly: widget.isEligible,
+                                    )
+                                  : LabeledField(
+                                      padding: const EdgeInsets.only(
+                                          top: kPadding * 2),
+                                      label: localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountLabel,
+                                      ),
+                                      child: ReactiveTextField(
+                                        formControlName: _memberCountKey,
+                                        keyboardType: TextInputType.number,
+                                        readOnly: widget.isEligible,
+                                      )),
                             ),
                           ]),
                           const SizedBox(height: 16),
