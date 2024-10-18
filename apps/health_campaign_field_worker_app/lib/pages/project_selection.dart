@@ -269,8 +269,6 @@ void setPackagesSingleton(BuildContext context) {
         List<ServiceRegistry> serviceRegistry,
         DashboardConfigSchema? dashboardConfigSchema,
       ) {
-        loadLocalization(context, appConfiguration);
-
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,
