@@ -11,6 +11,7 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
