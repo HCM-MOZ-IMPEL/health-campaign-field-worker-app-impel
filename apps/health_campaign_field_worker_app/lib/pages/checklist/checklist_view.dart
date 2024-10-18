@@ -450,6 +450,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    visibleChecklistIndexes.add(index);
+
                                     return Column(
                                       children: e.values!
                                           .where((e) =>
@@ -838,6 +840,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             ).trim()} ${item.required == true ? '*' : ''}',
       );
     } else if (item.dataType == 'MultiValueList') {
+      visibleChecklistIndexes.add(index);
+
       return Column(
         children: [
           Align(

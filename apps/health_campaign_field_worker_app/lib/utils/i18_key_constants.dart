@@ -37,6 +37,8 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const attendance = Attendance();
+
 class Common {
   const Common();
 
@@ -1142,4 +1144,10 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class Attendance {
+  const Attendance();
+
+  String get comments => 'ATTENDANCE_COMMENTS_FIELD';
 }
