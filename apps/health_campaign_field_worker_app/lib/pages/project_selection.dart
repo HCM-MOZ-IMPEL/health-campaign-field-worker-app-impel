@@ -156,15 +156,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
                 //// Function to set initial Data required for the packages to run
 
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                );
                 setPackagesSingleton(context);
 
                 if (boundary != null) {
@@ -257,7 +248,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
-      DigitComponentsUtils().hideDialog(context);
+
       context.router.replaceAll([
         context.selectedProject.additionalDetails?.projectType?.code ==
                 ProjectTypes.smc.toValue()
