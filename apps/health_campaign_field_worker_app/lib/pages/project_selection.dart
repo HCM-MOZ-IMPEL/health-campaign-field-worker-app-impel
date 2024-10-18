@@ -155,6 +155,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
                 //// Function to set initial Data required for the packages to run
+
                 setPackagesSingleton(context);
 
                 if (boundary != null) {
@@ -269,8 +270,6 @@ void setPackagesSingleton(BuildContext context) {
         List<ServiceRegistry> serviceRegistry,
         DashboardConfigSchema? dashboardConfigSchema,
       ) {
-        loadLocalization(context, appConfiguration);
-
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,

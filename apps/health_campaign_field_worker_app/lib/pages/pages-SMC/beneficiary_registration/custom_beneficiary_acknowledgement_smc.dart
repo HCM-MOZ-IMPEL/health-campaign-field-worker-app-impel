@@ -40,7 +40,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
   @override
   void initState() {
     super.initState();
-    final bloc = context.read<SearchHouseholdsBloc>();
+    final bloc = context.read<SearchBlocWrapper>();
     wrapper = bloc.state.householdMembers.lastOrNull;
   }
 
@@ -54,7 +54,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         },
         secondaryAction: () {
           final parent = context.router.parent() as StackRouter;
-          final searchBlocState = context.read<SearchHouseholdsBloc>().state;
+          final searchBlocState = context.read<SearchBlocWrapper>().state;
 
           Future.delayed(
             const Duration(
