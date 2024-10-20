@@ -41,7 +41,10 @@ class CustomBeneficiaryAcknowledgementSMCPageState
   void initState() {
     super.initState();
     final bloc = context.read<SearchBlocWrapper>();
-    wrapper = bloc.state.householdMembers.lastOrNull;
+    final overviewBloc = context.read<HouseholdOverviewBloc>();
+    wrapper = bloc.state.householdMembers.isEmpty
+        ? overviewBloc.state.householdMemberWrapper
+        : bloc.state.householdMembers.lastOrNull;
   }
 
   @override
