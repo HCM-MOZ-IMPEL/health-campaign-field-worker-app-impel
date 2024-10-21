@@ -1,28 +1,17 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/closed_household.dart';
-import 'package:closed_household/utils/extensions/extensions.dart';
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
-import 'package:registration_delivery/registration_delivery.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
-
-import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/localized.dart';
-
 import '../../../widgets/widgets_smc/custom_digit_text_form_field.dart';
 
 @RoutePage()
@@ -130,8 +119,21 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        final reason = form.control(_reasonKey).value;
-                        if (!reason) return;
+                        final reason =
+                            form.control(_reasonKey).value as String?;
+
+                        if (reason == null || reason.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations
+                                    .translate(i18.common.corecommonRequired),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
                         context.router.push(
                             CustomClosedHouseholdSummarySMCRoute(
                                 reason: reason));

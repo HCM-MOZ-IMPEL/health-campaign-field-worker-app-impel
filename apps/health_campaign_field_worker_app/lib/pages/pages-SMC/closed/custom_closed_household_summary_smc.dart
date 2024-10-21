@@ -4,15 +4,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../widgets/localized.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
-import 'package:closed_household/widgets/showcase/showcase_button.dart';
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
