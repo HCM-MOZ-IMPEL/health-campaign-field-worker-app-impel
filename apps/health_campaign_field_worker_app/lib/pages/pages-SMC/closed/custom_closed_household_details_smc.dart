@@ -55,7 +55,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final reasonOptions = ["closed", "refusal", "funeral"];
+    final reasonOptions = ["closed", "refusal", "funeral", "others"];
     //#TODO : Move To MDMS
 
     return Scaffold(
