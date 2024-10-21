@@ -588,7 +588,7 @@ class CustomDeliverInterventionSMCPageState
                                                         1),
                                                     FilteringTextInputFormatter
                                                         .allow(
-                                                      RegExp("[1-2]"),
+                                                      RegExp(r'^[123]$'),
                                                     ),
                                                   ],
                                                   label:
