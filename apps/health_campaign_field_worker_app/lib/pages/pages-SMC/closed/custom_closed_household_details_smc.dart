@@ -66,7 +66,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final reasonOptions = ["closed", "Refusal", "funeral"];
+    final reasonOptions = ["closed", "refusal", "funeral"];
     //#TODO : Move To MDMS
 
     return Scaffold(
@@ -196,7 +196,9 @@ class CustomClosedHouseholdDetailsPageState
                                   form.control(_reasonKey).value != null
                                       ? [form.control(_reasonKey).value]
                                       : [],
-                              options: reasonOptions.toList(),
+                              options: reasonOptions
+                                  .map((e) => e.toUpperCase())
+                                  .toList(),
                               onSelectionChanged: (value) {
                                 setState(() {
                                   if (value.isNotEmpty) {
