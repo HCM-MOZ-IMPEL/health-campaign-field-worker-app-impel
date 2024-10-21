@@ -72,7 +72,8 @@ class CustomClosedHouseholdSummaryPageState
                                   context.projectId,
                                   envConfig.variables.tenantId,
                                   context.beneficiaryType!.toString(),
-                                  reason: widget.reason,
+                                  reason:
+                                      localizations.translate(widget.reason),
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,
@@ -143,7 +144,7 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18Local.householdDetails.reasonLabelText),
-                            value: widget.reason,
+                            value: localizations.translate(widget.reason),
                           ),
                         ]),
                   ),
