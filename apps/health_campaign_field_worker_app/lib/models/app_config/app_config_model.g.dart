@@ -124,6 +124,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryCommentOptionsSmc: (json['DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR']
+              as List<dynamic>)
+          .map(
+              (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
           .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -137,6 +142,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           ?.map((e) => SymptomsType.fromJson(e as Map<String, dynamic>))
           .toList(),
       searchHouseHoldFilters: (json['SEARCH_HOUSEHOLD_FILTERS']
+              as List<dynamic>?)
+          ?.map(
+              (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      searchHouseHoldFiltersSMC: (json['SEARCH_HOUSEHOLD_FILTERS_SMC']
               as List<dynamic>?)
           ?.map(
               (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
@@ -169,11 +179,14 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
+      'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
+          instance.deliveryCommentOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
       'SYMPTOM_TYPES': instance.symptomsTypeList,
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
+      'SEARCH_HOUSEHOLD_FILTERS_SMC': instance.searchHouseHoldFiltersSMC,
       'REFERRAL_REASONS': instance.referralReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
