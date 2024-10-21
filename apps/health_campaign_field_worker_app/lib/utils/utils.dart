@@ -266,7 +266,7 @@ String? getAgeConditionString(String condition) {
         greaterThanCondition?.split(lessThanSymbol).last ?? '0';
 
     finalCondition =
-        '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()} yrs';
+        '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()}';
   } else {
     if (ageConditions.first.contains(greaterThanSymbol)) {
       String age = ageConditions.first.split(greaterThanSymbol).last;

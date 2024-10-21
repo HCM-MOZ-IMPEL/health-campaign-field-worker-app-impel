@@ -80,9 +80,7 @@ Widget buildTableContent(
             ): fetchProductVariant(item, individualModel, householdModel)
                         ?.condition !=
                     null
-                ? localizations.translate(
-                    '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)?.condition}')}',
-                  )
+                ? '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)?.condition}')} ${localizations.translate(i18.individualDetails.yearsHintText)}'
                 : null,
           },
         ),
