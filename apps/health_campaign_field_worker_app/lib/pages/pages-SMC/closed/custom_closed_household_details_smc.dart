@@ -66,7 +66,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final reasonOptions = ["closed", "Refusal", "funeral"];
+    final reasonOptions = ["closed", "refusal", "funeral", "others"];
     //#TODO : Move To MDMS
 
     return Scaffold(
@@ -130,8 +130,20 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        final reason = form.control(_reasonKey).value;
-                        if (!reason) return;
+                        final reason =
+                            form.control(_reasonKey).value as String?;
+                        if (reason == null || reason.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations
+                                    .translate(i18.common.corecommonRequired),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
                         context.router.push(
                             CustomClosedHouseholdSummarySMCRoute(
                                 reason: reason));

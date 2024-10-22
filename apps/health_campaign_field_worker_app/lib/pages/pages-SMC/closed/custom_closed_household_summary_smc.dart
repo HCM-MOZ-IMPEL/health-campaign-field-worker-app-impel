@@ -146,7 +146,7 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18Local.householdDetails.reasonLabelText),
-                            value: widget.reason,
+                            value: localizations.translate(widget.reason),
                           ),
                         ]),
                   ),
