@@ -10,6 +10,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
+import '../../../data/repositories/custom_task.dart';
 import '../../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBarSMC extends StatefulWidget {
@@ -34,12 +35,30 @@ class _CustomBeneficiaryProgressBarSMCState
   void didChangeDependencies() {
     final taskRepository =
         context.read<LocalRepository<TaskModel, TaskSearchModel>>()
-            as TaskLocalRepository;
+            as CustomTaskLocalRepository;
+
     final projectId = RegistrationDeliverySingleton().projectId;
     final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
 
+    final now = DateTime.now();
+    final gte = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
+    final lte = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      23,
+      59,
+      59,
+      999,
+    );
+
     taskRepository.listenToChanges(
       query: TaskSearchModel(
+        status: Status.administeredSuccess.toValue(),
         projectId: projectId,
         createdBy: loggedInUserUuid,
         limit: 1,
@@ -62,7 +81,6 @@ class _CustomBeneficiaryProgressBarSMCState
             59,
             999,
           );
-
           TaskSearchModel taskSearchQuery = TaskSearchModel(
             status: Status.administeredSuccess.toValue(),
             createdBy: loggedInUserUuid,
@@ -70,8 +88,7 @@ class _CustomBeneficiaryProgressBarSMCState
             plannedStartDate: gte.millisecondsSinceEpoch,
           );
           List<TaskModel> results =
-              await taskRepository.search(taskSearchQuery);
-
+              await taskRepository.searchTask(taskSearchQuery);
           final groupedEntries = results.groupListsBy(
             (element) => element.projectBeneficiaryClientReferenceId,
           );
