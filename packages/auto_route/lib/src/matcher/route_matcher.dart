@@ -190,6 +190,7 @@ class RouteMatcher {
         .toLowerCase();
     var config = routes['Redirect#$routeName'];
 
+    config ??= routes[route.routeName];
     if (config == null) {
       return null;
     }
