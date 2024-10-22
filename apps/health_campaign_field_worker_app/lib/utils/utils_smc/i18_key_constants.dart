@@ -1193,6 +1193,8 @@ class IndividualDetails {
   String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
   String get firstNameHeadLabelTextSMC => 'FIRST_NAME_HEAD_LABEL_TEXT_SMC';
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+  String get mobileMinLengthValidationMessageSMC =>
+      'MOBILE_MIN_LENGTH_VALIDATION_SMC';
 }
 
 class BeneficiaryDetails {

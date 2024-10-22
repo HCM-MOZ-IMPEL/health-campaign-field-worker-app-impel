@@ -641,9 +641,9 @@ class CustomIndividualDetailsSMCPageState
                                           .individualDetails
                                           .mobileNumberLengthValidationMessage),
                                   'minLength': (object) =>
-                                      localizations.translate(i18
+                                      localizations.translate(i18_local
                                           .individualDetails
-                                          .mobileNumberLengthValidationMessage),
+                                          .mobileMinLengthValidationMessageSMC),
                                 },
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -825,12 +825,12 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey: FormControl<String>(
-          value: individual?.mobileNumber,
-          validators: [
-            CustomValidator.validMobileNumber,
-            Validators.maxLength(9)
-          ]),
+      _mobileNumberKey:
+          FormControl<String>(value: individual?.mobileNumber, validators: [
+        CustomValidator.validMobileNumber,
+        Validators.maxLength(9),
+        Validators.minLength(9),
+      ]),
     });
   }
 
