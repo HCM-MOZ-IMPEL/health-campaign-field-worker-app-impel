@@ -20,6 +20,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
 import '../../../router/app_router.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -59,21 +60,26 @@ class _CustomSearchBeneficiarySMCPageState
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
     isProximityEnabled = true;
-    // Listen to LocationBloc's state to ensure location is loaded before triggering search
-    context.read<LocationBloc>().stream.listen((locationState) {
-      if (!locationState.loading &&
-          isProximityEnabled == true &&
-          locationState.latitude != null &&
-          locationState.longitude != null) {
-        setState(() {
-          lat = locationState.latitude!;
-          long = locationState.longitude!;
-        });
-
-        // Trigger search after location is loaded
-        triggerGlobalSearchEvent();
-      }
-    });
+    var ifSearchTriggered = false;
+    if (!ifSearchTriggered) {
+      // Listen to LocationBloc's state to ensure location is loaded before triggering search
+      context.read<LocationBloc>().stream.listen((locationState) {
+        if (!locationState.loading &&
+            isProximityEnabled == true &&
+            locationState.latitude != null &&
+            locationState.longitude != null) {
+          setState(() {
+            lat = locationState.latitude!;
+            long = locationState.longitude!;
+          });
+          if (!ifSearchTriggered) {
+            ifSearchTriggered = true;
+            // Trigger search after location is loaded
+            triggerGlobalSearchEvent();
+          }
+        }
+      });
+    }
 
     // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
@@ -507,24 +513,24 @@ class _CustomSearchBeneficiarySMCPageState
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.individualGlobalSearchBloc
-            .add(SearchHouseholdsEvent.individualGlobalSearch(
+        blocWrapper.individualGlobalSearchBloc.add(
+            SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.limit
-              : limit,
-        )));
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text.trim().length > 2
+                        ? searchController.text.trim()
+                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+                    filter: selectedFilters,
+                    offset: isPagination
+                        ? blocWrapper.individualGlobalSearchBloc.state.offset
+                        : offset,
+                    limit: isPagination
+                        ? blocWrapper.individualGlobalSearchBloc.state.limit
+                        : limit,
+                    projectId: context.projectId)));
       }
     } else {
       if (isProximityEnabled ||
