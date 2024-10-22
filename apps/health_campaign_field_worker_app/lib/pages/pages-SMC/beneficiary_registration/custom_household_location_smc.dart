@@ -53,12 +53,12 @@ class _CustomHouseholdLocationSMCPageState
     regState.maybeMap(
       orElse: () => false,
       editHousehold: (value) => false,
-      editIndividual: (value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          router.push(CustomIndividualDetailsSMCRoute());
-        });
-        return true;
-      },
+      // editIndividual: (value) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     router.push(CustomIndividualDetailsSMCRoute());
+      //   });
+      //   return true;
+      // },
       create: (value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // Show the dialog after the first frame is built
@@ -70,13 +70,13 @@ class _CustomHouseholdLocationSMCPageState
         });
         return true;
       },
-      addMember: (value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          router
-              .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
-        });
-        return true;
-      },
+      // addMember: (value) {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     router
+      //         .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
+      //   });
+      //   return true;
+      // },
     );
     super.initState();
   }

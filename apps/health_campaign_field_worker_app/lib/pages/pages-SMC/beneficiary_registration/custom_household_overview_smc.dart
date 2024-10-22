@@ -437,7 +437,7 @@ class CustomHouseholdOverviewSMCPageState
                                               ),
                                             ),
                                             children: [
-                                              IndividualDetailsRoute(
+                                              CustomIndividualDetailsSMCRoute(
                                                 isHeadOfHousehold: isHead,
                                               ),
                                             ],
@@ -644,7 +644,7 @@ class CustomHouseholdOverviewSMCPageState
           householdModel: household,
         ),
         children: [
-          CustomIndividualDetailsSMCRoute(),
+          CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false),
         ],
       ),
     );
