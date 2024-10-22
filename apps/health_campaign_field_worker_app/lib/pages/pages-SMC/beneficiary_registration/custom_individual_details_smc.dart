@@ -338,10 +338,11 @@ class CustomIndividualDetailsSMCPageState
                                   isEditIndividual = true;
                                   final scannerBloc =
                                       context.read<DigitScannerBloc>();
-                                  var individual = _getIndividualModel(context,
-                                      form: form,
-                                      oldIndividual: individualModel,
-                                      beneId: beneId!.first);
+                                  var individual = _getIndividualModel(
+                                    context,
+                                    form: form,
+                                    oldIndividual: individualModel,
+                                  );
 
                                   final tag =
                                       scannerBloc.state.qrCodes.isNotEmpty
@@ -665,7 +666,7 @@ class CustomIndividualDetailsSMCPageState
 
   IndividualModel _getIndividualModel(
     BuildContext context, {
-    required final beneId,
+    final beneId,
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
@@ -738,14 +739,15 @@ class CustomIndividualDetailsSMCPageState
     );
 
     List<IdentifierModel>? identifiers = individual.identifiers;
-
-    identifiers?.add(IdentifierModel(
-      clientReferenceId: individual.clientReferenceId,
-      identifierId: beneId,
-      identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-      clientAuditDetails: individual.clientAuditDetails,
-      auditDetails: individual.auditDetails,
-    ));
+    if (isEditIndividual == false) {
+      identifiers?.add(IdentifierModel(
+        clientReferenceId: individual.clientReferenceId,
+        identifierId: beneId,
+        identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+        clientAuditDetails: individual.clientAuditDetails,
+        auditDetails: individual.auditDetails,
+      ));
+    }
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
@@ -760,12 +762,14 @@ class CustomIndividualDetailsSMCPageState
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
-      identifiers: [
-        identifier.copyWith(
-          identifierId: beneId,
-          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        ),
-      ],
+      identifiers: isEditIndividual
+          ? identifiers
+          : [
+              identifier.copyWith(
+                identifierId: beneId,
+                identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+              ),
+            ],
     );
 
     return individual;
