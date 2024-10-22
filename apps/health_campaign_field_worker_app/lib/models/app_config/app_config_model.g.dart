@@ -146,6 +146,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           ?.map(
               (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
           .toList(),
+      searchHouseHoldFiltersSMC: (json['SEARCH_HOUSEHOLD_FILTERS_SMC']
+              as List<dynamic>?)
+          ?.map(
+              (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
+          .toList(),
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -181,6 +186,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'TRANSPORT_TYPES': instance.transportTypes,
       'SYMPTOM_TYPES': instance.symptomsTypeList,
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
+      'SEARCH_HOUSEHOLD_FILTERS_SMC': instance.searchHouseHoldFiltersSMC,
       'REFERRAL_REASONS': instance.referralReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,

@@ -128,53 +128,59 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
-    r'SYNC_METHOD': PropertySchema(
+    r'SEARCH_HOUSEHOLD_FILTERS_SMC': PropertySchema(
       id: 19,
+      name: r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+      type: IsarType.objectList,
+      target: r'SearchHouseHoldFilters',
+    ),
+    r'SYNC_METHOD': PropertySchema(
+      id: 20,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -446,6 +452,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.searchHouseHoldFiltersSMC;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SearchHouseHoldFilters]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += SearchHouseHoldFiltersSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final value = object.syncMethod;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -649,41 +669,47 @@ void _appConfigurationSerialize(
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[19], object.syncMethod);
-  writer.writeString(offsets[20], object.syncTrigger);
-  writer.writeString(offsets[21], object.tenantId);
+  writer.writeObjectList<SearchHouseHoldFilters>(
+    offsets[19],
+    allOffsets,
+    SearchHouseHoldFiltersSchema.serialize,
+    object.searchHouseHoldFiltersSMC,
+  );
+  writer.writeString(offsets[20], object.syncMethod);
+  writer.writeString(offsets[21], object.syncTrigger);
+  writer.writeString(offsets[22], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -797,41 +823,48 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[19]);
-  object.syncTrigger = reader.readStringOrNull(offsets[20]);
-  object.tenantId = reader.readStringOrNull(offsets[21]);
+  object.searchHouseHoldFiltersSMC =
+      reader.readObjectList<SearchHouseHoldFilters>(
+    offsets[19],
+    SearchHouseHoldFiltersSchema.deserialize,
+    allOffsets,
+    SearchHouseHoldFilters(),
+  );
+  object.syncMethod = reader.readStringOrNull(offsets[20]);
+  object.syncTrigger = reader.readStringOrNull(offsets[21]);
+  object.tenantId = reader.readStringOrNull(offsets[22]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -962,46 +995,53 @@ P _appConfigurationDeserializeProp<P>(
         SearchHouseHoldFilters(),
       )) as P;
     case 19:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readObjectList<SearchHouseHoldFilters>(
+        offset,
+        SearchHouseHoldFiltersSchema.deserialize,
+        allOffsets,
+        SearchHouseHoldFilters(),
+      )) as P;
     case 20:
       return (reader.readStringOrNull(offset)) as P;
     case 21:
       return (reader.readStringOrNull(offset)) as P;
     case 22:
+      return (reader.readStringOrNull(offset)) as P;
+    case 23:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -2945,6 +2985,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_HOUSEHOLD_FILTERS_SMC',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       syncMethodIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4133,6 +4280,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchHouseHoldFiltersSMCElement(FilterQuery<SearchHouseHoldFilters> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'SEARCH_HOUSEHOLD_FILTERS_SMC');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       transportTypesElement(FilterQuery<TransportTypes> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'TRANSPORT_TYPES');
@@ -4550,6 +4704,13 @@ extension AppConfigurationQueryProperty
       QQueryOperations> searchHouseHoldFiltersProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'SEARCH_HOUSEHOLD_FILTERS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<SearchHouseHoldFilters>?,
+      QQueryOperations> searchHouseHoldFiltersSMCProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'SEARCH_HOUSEHOLD_FILTERS_SMC');
     });
   }
 

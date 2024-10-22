@@ -336,6 +336,14 @@ class MdmsRepository {
         ..active = e.active;
       return searchFilters;
     }).toList();
+    appConfiguration.searchHouseHoldFiltersSMC =
+        result.hcmWrapperModel?.searchHouseHoldFiltersSMC?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
 
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {

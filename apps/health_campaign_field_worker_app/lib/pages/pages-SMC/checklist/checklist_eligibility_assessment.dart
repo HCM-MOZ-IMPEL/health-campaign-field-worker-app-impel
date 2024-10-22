@@ -14,10 +14,10 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../../models/entities/roles_type.dart';
-import '../../../models/entities/status.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
@@ -376,7 +376,7 @@ class _EligibilityChecklistViewPage
                                               ),
                                               projectId: context.projectId,
                                               status: Status
-                                                  .beneficiaryIneligible
+                                                  .beneficiaryInEligible
                                                   .toValue(),
                                               clientAuditDetails:
                                                   ClientAuditDetails(
@@ -395,7 +395,7 @@ class _EligibilityChecklistViewPage
                                                 fields: [
                                                   AdditionalField(
                                                     'taskStatus',
-                                                    Status.beneficiaryIneligible
+                                                    Status.beneficiaryInEligible
                                                         .toValue(),
                                                   ),
                                                   AdditionalField(

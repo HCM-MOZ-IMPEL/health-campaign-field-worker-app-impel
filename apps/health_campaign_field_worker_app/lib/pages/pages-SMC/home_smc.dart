@@ -47,6 +47,7 @@ import '../../widgets/home/home_item_card.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -167,7 +168,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBar(
+                    : CustomBeneficiaryProgressBarSMC(
                         label: localizations.translate(
                           i18.home.progressIndicatorTitle,
                         ),
@@ -701,11 +702,12 @@ void setPackagesSingleton(BuildContext context) {
               .toList(),
           symptomsTypes:
               appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .map((e) => e.code)
-                  .toList()
-              : [],
+          searchHouseHoldFilter:
+              appConfiguration.searchHouseHoldFiltersSMC != null
+                  ? appConfiguration.searchHouseHoldFiltersSMC!
+                      .map((e) => e.code)
+                      .toList()
+                  : [],
           referralReasons:
               appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:

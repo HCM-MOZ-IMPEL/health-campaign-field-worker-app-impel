@@ -88,9 +88,25 @@ class CustomIndividualDetailsSMCPageState
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  context.router.push(CustomBeneficiaryAcknowledgementSMCRoute(
-                    enableViewHousehold: true,
-                  ));
+                  Future.delayed(
+                    const Duration(
+                      milliseconds: 500,
+                    ),
+                    () {
+                      context.read<SearchHouseholdsBloc>().add(
+                            SearchHouseholdsByHouseholdsEvent(
+                              householdModel: value.householdModel,
+                              projectId: context.projectId,
+                              isProximityEnabled: false,
+                            ),
+                          );
+                    },
+                  ).then((value) => {
+                        context.router
+                            .push(CustomBeneficiaryAcknowledgementSMCRoute(
+                          enableViewHousehold: true,
+                        ))
+                      });
                 } else {
                   Future.delayed(
                     const Duration(

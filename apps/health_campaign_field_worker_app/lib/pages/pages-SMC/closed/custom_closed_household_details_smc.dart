@@ -208,7 +208,9 @@ class CustomClosedHouseholdDetailsPageState
                                   form.control(_reasonKey).value != null
                                       ? [form.control(_reasonKey).value]
                                       : [],
-                              options: reasonOptions.toList(),
+                              options: reasonOptions
+                                  .map((e) => e.toUpperCase())
+                                  .toList(),
                               onSelectionChanged: (value) {
                                 setState(() {
                                   if (value.isNotEmpty) {
