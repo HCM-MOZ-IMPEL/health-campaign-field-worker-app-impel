@@ -406,7 +406,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
+          label: InventorySingleton().isDistributor
+              ? i18.home.specialCaseCheckList
+              : i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
@@ -520,13 +522,10 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element ==
-                i18.home.db) // TODO: need to add close household inside mdms
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element)) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels

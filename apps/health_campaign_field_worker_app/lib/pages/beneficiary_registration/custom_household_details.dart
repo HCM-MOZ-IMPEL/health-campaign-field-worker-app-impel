@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -20,6 +22,7 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -51,6 +54,7 @@ class CustomHouseHoldDetailsPageState
   static const _childrenCountKey = 'childrenCount';
   static const _menCountKey = 'menCount';
   static const _womenCountKey = 'womenCount';
+  static const _genderKey = 'genderOfInterviewee';
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +197,11 @@ class CustomHouseHoldDetailsPageState
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () async {
+                      if (form.control(_genderKey).value == null) {
+                        setState(() {
+                          form.control(_genderKey).setErrors({'': true});
+                        });
+                      }
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
@@ -203,7 +212,6 @@ class CustomHouseHoldDetailsPageState
                           .control(_dateOfRegistrationKey)
                           .value as DateTime;
 
-                      //[TODO: Use pregnant women form value based on project config
                       final pregnantWomen = widget.isEligible
                           ? form.control(_pregnantWomenCountKey).value as int
                           : 0;
@@ -218,7 +226,19 @@ class CustomHouseHoldDetailsPageState
                           ? form.control(_womenCountKey).value as int
                           : 0;
 
-                      if (widget.isEligible && (memberCount < (men + women))) {
+                      if (memberCount <= 0) {
+                        DigitToast.show(
+                          context,
+                          options: DigitToastOptions(
+                            localizations.translate(
+                                i18_local.beneficiaryDetails.memberZeroError),
+                            true,
+                            Theme.of(context),
+                          ),
+                        );
+                        return;
+                      } else if (widget.isEligible &&
+                          (memberCount < (men + women))) {
                         DigitToast.show(context,
                             options: DigitToastOptions(
                                 localizations.translate(
@@ -356,7 +376,20 @@ class CustomHouseHoldDetailsPageState
                                                       .toValue() &&
                                               e.key !=
                                                   AdditionalFieldsType.children
-                                                      .toValue()),
+                                                      .toValue() &&
+                                              e.key != _menCountKey &&
+                                              e.key != _womenCountKey &&
+                                              e.key != _genderKey),
+                                      AdditionalField(
+                                        _genderKey,
+                                        form.control(_genderKey).value == null
+                                            ? null
+                                            : form
+                                                .control(_genderKey)
+                                                .value
+                                                .toString()
+                                                .toLowerCase(),
+                                      ),
                                       if (widget.isEligible)
                                         AdditionalField(
                                           AdditionalFieldsType.pregnantWomen
@@ -442,7 +475,20 @@ class CustomHouseHoldDetailsPageState
                                                       .toValue() &&
                                               e.key !=
                                                   AdditionalFieldsType.children
-                                                      .toValue()),
+                                                      .toValue() &&
+                                              e.key != _menCountKey &&
+                                              e.key != _womenCountKey &&
+                                              e.key != _genderKey),
+                                      AdditionalField(
+                                        _genderKey,
+                                        form.control(_genderKey).value == null
+                                            ? null
+                                            : form
+                                                .control(_genderKey)
+                                                .value
+                                                .toString()
+                                                .toLowerCase(),
+                                      ),
                                       if (widget.isEligible)
                                         AdditionalField(
                                           AdditionalFieldsType.pregnantWomen
@@ -454,6 +500,16 @@ class CustomHouseHoldDetailsPageState
                                           AdditionalFieldsType.children
                                               .toValue(),
                                           children,
+                                        ),
+                                      if (widget.isEligible)
+                                        AdditionalField(
+                                          _menCountKey,
+                                          men,
+                                        ),
+                                      if (widget.isEligible)
+                                        AdditionalField(
+                                          _womenCountKey,
+                                          women,
                                         )
                                     ]));
 
@@ -564,7 +620,51 @@ class CustomHouseHoldDetailsPageState
                                 ),
                               ),
                             ),
-                            //[TODO: Use pregnant women form value based on project config
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding, 0, kPadding, 0),
+                              child: SelectionBox<String>(
+                                isRequired: true,
+                                title: localizations.translate(
+                                  i18_local
+                                      .beneficiaryDetails.genderOfInterviewee,
+                                ),
+                                allowMultipleSelection: false,
+                                width: 148,
+                                initialSelection:
+                                    form.control(_genderKey).value != null
+                                        ? [form.control(_genderKey).value]
+                                        : [],
+                                options: RegistrationDeliverySingleton()
+                                    .genderOptions!
+                                    .map(
+                                      (e) => e,
+                                    )
+                                    .toList(),
+                                onSelectionChanged: (value) {
+                                  setState(() {
+                                    if (value.isNotEmpty) {
+                                      form.control(_genderKey).value =
+                                          value.first;
+                                    } else {
+                                      form.control(_genderKey).value = null;
+                                      setState(() {
+                                        form
+                                            .control(_genderKey)
+                                            .setErrors({'': true});
+                                      });
+                                    }
+                                  });
+                                },
+                                valueMapper: (value) {
+                                  return localizations.translate(value);
+                                },
+                                errorMessage: form.control(_genderKey).hasErrors
+                                    ? localizations.translate(
+                                        i18.common.corecommonRequired)
+                                    : null,
+                              ),
+                            ),
                             if (widget.isEligible)
                               DigitIntegerFormPicker(
                                 minimum: 0,
@@ -671,27 +771,32 @@ class CustomHouseHoldDetailsPageState
                             householdDetailsShowcaseData
                                 .numberOfMembersLivingInHousehold
                                 .buildWith(
-                              child: DigitIntegerFormPicker(
-                                minimum: men + women != 0 ? men + women : 1,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
-                                  if (memberCount <= men + women) {
-                                    form.control(_memberCountKey).value =
-                                        (men + women);
-                                  }
-                                },
-                                form: form,
-                                formControlName: _memberCountKey,
-                                label: localizations.translate(
-                                  i18.householdDetails.noOfMembersCountLabel,
-                                ),
-                                incrementer: true,
-                              ),
+                              child: !widget.isEligible
+                                  ? DigitIntegerFormPicker(
+                                      minimum:
+                                          men + women != 0 ? men + women : 0,
+                                      maximum: 20,
+                                      form: form,
+                                      formControlName: _memberCountKey,
+                                      label: localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountLabel,
+                                      ),
+                                      incrementer: !widget.isEligible,
+                                      // readOnly: widget.isEligible,
+                                    )
+                                  : LabeledField(
+                                      padding: const EdgeInsets.only(
+                                          top: kPadding * 2),
+                                      label: localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountLabel,
+                                      ),
+                                      child: ReactiveTextField(
+                                        formControlName: _memberCountKey,
+                                        keyboardType: TextInputType.number,
+                                        readOnly: widget.isEligible,
+                                      )),
                             ),
                           ]),
                           const SizedBox(height: 16),
@@ -706,6 +811,14 @@ class CustomHouseHoldDetailsPageState
         },
       ),
     );
+  }
+
+  getGenderOptions(String? gender) {
+    final options = RegistrationDeliverySingleton().genderOptions;
+
+    return options?.map((e) => e).firstWhereOrNull(
+          (element) => element.toLowerCase() == gender,
+        );
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
@@ -725,8 +838,20 @@ class CustomHouseHoldDetailsPageState
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
+      _genderKey: FormControl<String>(
+          value: household?.additionalFields?.fields
+                      .where((h) => h.key == _genderKey)
+                      .firstOrNull
+                      ?.value !=
+                  null
+              ? getGenderOptions(household?.additionalFields?.fields
+                  .where((h) => h.key == _genderKey)
+                  .firstOrNull
+                  ?.value
+                  .toString())
+              : null),
       _memberCountKey: FormControl<int>(
-        value: household?.memberCount ?? 1,
+        value: household?.memberCount ?? 0,
         validators: [Validators.max<int>(20)],
       ),
       // if (widget.isEligible)

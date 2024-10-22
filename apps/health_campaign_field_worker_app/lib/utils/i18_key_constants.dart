@@ -37,6 +37,8 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const attendance = Attendance();
+
 class Common {
   const Common();
 
@@ -604,6 +606,8 @@ class Home {
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
 
+  String get specialCaseCheckList => 'SPECIAL_CASE_CHECK_LIST_LABEL';
+
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
@@ -1075,6 +1079,7 @@ class BeneficiaryDetails {
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
+  String get memberZeroError => 'MEMBER_ZERO_ERROR';
 
   String get noOfRoomsAlertTitle => 'ROOMS_ALERT_TITLE';
   String get noOfRoomsAlertContent => 'ROOMS_ALERT_CONTENT';
@@ -1091,6 +1096,7 @@ class BeneficiaryDetails {
 
   String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
+  String get genderOfInterviewee => 'GENDER_OF_INTERVIEWEE';
 }
 
 class StockDetails {
@@ -1098,6 +1104,18 @@ class StockDetails {
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
+
+  String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
+
+  String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
+
+  String get countContent => 'STOCK_DETAILS_COUNT_DIALOG_CONTENT';
+
+  String get countDialogSuccess =>
+      'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+
+  String get countDialogCancel =>
+      'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
 }
 
 class StockReconciliationDetails {
@@ -1126,4 +1144,10 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class Attendance {
+  const Attendance();
+
+  String get comments => 'ATTENDANCE_COMMENTS_FIELD';
 }

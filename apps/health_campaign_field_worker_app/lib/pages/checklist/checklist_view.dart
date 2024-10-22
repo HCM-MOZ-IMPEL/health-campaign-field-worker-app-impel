@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,7 @@ class ChecklistViewPage extends LocalizedStatefulWidget {
 class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  bool triggerLocalization = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
@@ -42,7 +44,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
   String othersText = "OTHERS";
-  String yesText = "YES";
+  String yesText = "dummy";
   String multiSelectionSeparator = ".";
   int maxStringChar = 8000;
 
@@ -104,35 +106,20 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                       ),
                   ]),
                   enableFixedButton: true,
-                  footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                      onPressed: () async {
+                  footer: BlocListener<LocationBloc, LocationState>(
+                    listener: (context, state) async {
+                      if (state.accuracy != null && triggerLocalization) {
+                        if (!mounted) return;
+                        triggerLocalization = false;
                         final router = context.router;
-                        submitTriggered = true;
+                        // close the location capturing `dialog`
+                        DigitComponentsUtils().hideDialog(context);
 
-                        context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
-                                value: '',
-                                submitTriggered: true,
-                              ),
-                            );
-                        final isValid =
-                            checklistFormKey.currentState?.validate();
-                        if (!isValid!) {
-                          return;
-                        }
-                        final itemsAttributes = initialAttributes;
-
-                        for (int i = 0; i < controller.length; i++) {
-                          if (itemsAttributes?[i].required == true &&
-                              visibleChecklistIndexes.any((e) => e == i) &&
-                              controller[i].text == '') {
-                            return;
-                          }
-                        }
+                        // Wait for the location to be obtained
+                        final locationState =
+                            context.read<LocationBloc>().state;
+                        double? latitude = locationState.latitude;
+                        double? longitude = locationState.longitude;
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -211,10 +198,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                         .values
                                                         ?.firstWhereOrNull(
                                                           (element) =>
-                                                              localizations
-                                                                  .translate(
-                                                                    'CORE_COMMON_$element',
-                                                                  )
+                                                              element
                                                                   .toUpperCase() ==
                                                               othersText,
                                                         ) !=
@@ -226,14 +210,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                         )
                                                         .firstWhereOrNull(
                                                           (element) =>
-                                                              localizations
-                                                                  .translate(
-                                                                    'CORE_COMMON_$element',
-                                                                  )
+                                                              element
                                                                   .toUpperCase() ==
                                                               othersText,
                                                         ) !=
-                                                    null))
+                                                    null &&
+                                                attribute?[i].dataType ==
+                                                    'MultiValueList'))
                                         ? additionalController[i]
                                                 .text
                                                 .toString()
@@ -285,8 +268,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
-                                          additionalDetails:
-                                              context.boundary.code,
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                context.boundary.code,
+                                            'lat': latitude,
+                                            'lng': longitude,
+                                          },
                                         ),
                                       ),
                                     );
@@ -311,17 +298,57 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          // if (isHealthFacilityWorker &&
-                          //     widget.referralClientRefId != null) {
-                          //   router.navigate(SearchReferralsRoute());
-                          // } else {
                           router.navigate(ChecklistRoute());
-                          // }
                           router.push(AcknowledgementRoute());
                         }
-                      },
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
+                      }
+                    },
+                    child: DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      child: DigitElevatedButton(
+                        onPressed: () async {
+                          final router = context.router;
+                          submitTriggered = true;
+
+                          context.read<ServiceBloc>().add(
+                                const ServiceChecklistEvent(
+                                  value: '',
+                                  submitTriggered: true,
+                                ),
+                              );
+                          final isValid =
+                              checklistFormKey.currentState?.validate();
+                          if (!isValid!) {
+                            return;
+                          }
+                          final itemsAttributes = initialAttributes;
+
+                          for (int i = 0; i < controller.length; i++) {
+                            if (itemsAttributes?[i].required == true &&
+                                visibleChecklistIndexes.any((e) => e == i) &&
+                                controller[i].text == '') {
+                              return;
+                            }
+                          }
+
+                          triggerLocalization = true;
+
+                          // Request location from LocationBloc
+                          context
+                              .read<LocationBloc>()
+                              .add(const LocationEvent.load());
+                          DigitComponentsUtils().showLocationCapturingDialog(
+                            context,
+                            localizations
+                                .translate(i18.common.locationCapturing),
+                            DigitSyncDialogType.inProgress,
+                          );
+                        },
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSubmit),
+                        ),
                       ),
                     ),
                   ),
@@ -454,6 +481,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    visibleChecklistIndexes.add(index);
+
                                     return Column(
                                       children: e.values!
                                           .where((e) =>
@@ -514,10 +543,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     return controller[index]
                                                 .text
                                                 .split(multiSelectionSeparator)
-                                                .firstWhereOrNull(
-                                                  (element) =>
-                                                      element == e.values?.last,
-                                                ) !=
+                                                .firstWhereOrNull((element) =>
+                                                    element == othersText) !=
                                             null
                                         ? Padding(
                                             padding: const EdgeInsets.only(
@@ -702,25 +729,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   ) !=
                                   null &&
                               controller[index].text ==
-                                  item.values?[1].trim()) ||
-                          (item.values?.firstWhereOrNull(
-                                        (element) =>
-                                            localizations
-                                                .translate(
-                                                  'CORE_COMMON_$element',
-                                                )
-                                                .toUpperCase() ==
-                                            othersText,
-                                      ) !=
-                                      null &&
-                                  localizations
-                                          .translate(
-                                            'CORE_COMMON_${controller[index].text}',
-                                          )
-                                          .toUpperCase() ==
-                                      othersText) &&
-                              !(isHealthFacilityWorker &&
-                                  widget.referralClientRefId != null))
+                                  item.values?[1].trim()) &&
+                          !(isHealthFacilityWorker &&
+                              widget.referralClientRefId != null))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: 4.0,
@@ -860,6 +871,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             ).trim()} ${item.required == true ? '*' : ''}',
       );
     } else if (item.dataType == 'MultiValueList') {
+      visibleChecklistIndexes.add(index);
+
       return Column(
         children: [
           Align(
@@ -928,7 +941,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           .text
                           .split(multiSelectionSeparator)
                           .firstWhereOrNull(
-                            (element) => element == item.values?.last,
+                            (element) => element == othersText,
                           ) !=
                       null
                   ? Padding(

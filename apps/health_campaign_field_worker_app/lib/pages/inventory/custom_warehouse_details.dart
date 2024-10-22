@@ -6,6 +6,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -18,6 +19,7 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
 
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 
 @RoutePage()
 class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {
@@ -61,7 +63,9 @@ class CustomWarehouseDetailsPageState
         ),
         _teamCodeKey: FormControl<String>(
           value: isDistributor
-              ? InventorySingleton().loggedInUserUuid
+              ? InventorySingleton().loggedInUser!.userName.toString() +
+                  Constants.pipeSeparator +
+                  InventorySingleton().loggedInUserUuid
               : stockState.primaryId,
           validators: isDistributor ? [Validators.required] : [],
         ),
@@ -71,6 +75,8 @@ class CustomWarehouseDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
+    final stockReconciliationBloc =
+        BlocProvider.of<StockReconciliationBloc>(context);
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -214,13 +220,24 @@ class CustomWarehouseDetailsPageState
                                                                 .isWareHouseMgr!
                                                             ? FacilityModel(
                                                                 id: teamCode
-                                                                    .toString(),
+                                                                    .toString()
+                                                                    .split(
+                                                                      Constants
+                                                                          .pipeSeparator,
+                                                                    )
+                                                                    .last,
                                                               )
                                                             : facility,
                                                     primaryId:
                                                         !InventorySingleton()
                                                                 .isWareHouseMgr!
-                                                            ? teamCode ?? ''
+                                                            ? teamCode
+                                                                .toString()
+                                                                .split(
+                                                                  Constants
+                                                                      .pipeSeparator,
+                                                                )
+                                                                .last
                                                             : facility?.id ??
                                                                 '',
                                                     primaryType:
@@ -230,6 +247,23 @@ class CustomWarehouseDetailsPageState
                                                             : "WAREHOUSE",
                                                   ),
                                                 );
+                                                stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                        !InventorySingleton()
+                                                                .isWareHouseMgr!
+                                                            ? FacilityModel(
+                                                                id: teamCode
+                                                                    .toString()
+                                                                    .split(
+                                                                      Constants
+                                                                          .pipeSeparator,
+                                                                    )
+                                                                    .last,
+                                                              )
+                                                            : facility ??
+                                                                FacilityModel(
+                                                                  id: '',
+                                                                )));
                                                 context.router.push(
                                                   CustomStockDetailsRoute(),
                                                 );
