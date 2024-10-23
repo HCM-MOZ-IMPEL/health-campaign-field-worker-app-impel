@@ -164,16 +164,20 @@ class _CustomViewBeneficiaryCardSMCState
               : DateTime.now(),
         ).months;
 
-        final beneficiaryId = e.identifiers
-                ?.lastWhere(
-                  (e) =>
-                      e.identifierType ==
-                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )
-                .identifierId ??
-            localizations.translate(
-              i18.common.noResultsFound,
-            );
+        final beneficiaryId = e.identifiers == null
+            ? localizations.translate(
+                i18.common.noResultsFound,
+              )
+            : e.identifiers
+                    ?.lastWhere(
+                      (e) =>
+                          e.identifierType ==
+                          IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                    )
+                    .identifierId ??
+                localizations.translate(
+                  i18.common.noResultsFound,
+                );
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
