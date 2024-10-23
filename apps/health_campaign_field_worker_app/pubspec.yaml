@@ -65,8 +65,8 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
-  digit_data_model: 1.0.4-dev.5-uniqueId
-  registration_delivery: 1.0.4-dev.1-uniqueId
+  digit_data_model: 1.0.4-dev.7-uniqueId
+  registration_delivery: 1.0.4-dev.3-search-fix
   disable_battery_optimization: ^1.1.1
   inventory_management: ^1.0.3+3
   closed_household: ^1.0.1+1
