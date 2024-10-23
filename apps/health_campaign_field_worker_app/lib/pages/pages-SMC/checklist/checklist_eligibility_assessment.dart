@@ -109,10 +109,6 @@ class _EligibilityChecklistViewPage
                     if (!isControllersInitialized) {
                       initialAttributes?.forEach((e) {
                         controller.add(TextEditingController());
-                        if (!(context.isHealthFacilitySupervisor &&
-                            widget.referralClientRefId != null)) {
-                          additionalController.add(TextEditingController());
-                        }
                       });
 
                       // Set the flag to true after initializing controllers
@@ -962,7 +958,7 @@ class _EligibilityChecklistViewPage
     bool ifAdministration,
   ) {
     var isIneligible = false;
-    var q4Key = "SEA4";
+    var q4Key = "SEA3";
     Map<String, String> keyVsReason = {
       q4Key: "CHILD_ON_MEDICATION_1",
     };
@@ -993,8 +989,8 @@ class _EligibilityChecklistViewPage
   ) {
     var isReferral = false;
     var q1Key = "SEA1";
-    var q2Key = "SEA2";
-    var q3Key = "SEA3";
+    var q2Key = "SEA1.YES.ADT1";
+    var q3Key = "SEA2";
     Map<String, String> referralKeysVsCode = {
       q1Key: "SICK",
       q2Key: "FEVER",
