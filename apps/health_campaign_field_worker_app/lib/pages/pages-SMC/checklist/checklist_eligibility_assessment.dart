@@ -198,34 +198,6 @@ class _EligibilityChecklistViewPage
                                         i++) {
                                       final attribute = initialAttributes;
 
-                                      /// Conditionally add the 'reason' field if additionalDetails is present
-                                      final String? additionalDetailValue =
-                                          isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null
-                                              ? null
-                                              : ((attribute?[i]
-                                                                  .values
-                                                                  ?.length ==
-                                                              2 ||
-                                                          attribute?[i]
-                                                                  .values
-                                                                  ?.length ==
-                                                              3) &&
-                                                      controller[i].text ==
-                                                          attribute?[i]
-                                                              .values?[1]
-                                                              .trim())
-                                                  ? additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                          .isNotEmpty
-                                                      ? additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                      : null
-                                                  : null;
-
                                       attributes.add(ServiceAttributesModel(
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
@@ -267,11 +239,6 @@ class _EligibilityChecklistViewPage
                                               'longitude',
                                               longitude,
                                             ),
-                                            if (additionalDetailValue != null)
-                                              AdditionalField(
-                                                'reason',
-                                                additionalDetailValue,
-                                              ),
                                           ],
                                         ),
                                       ));
