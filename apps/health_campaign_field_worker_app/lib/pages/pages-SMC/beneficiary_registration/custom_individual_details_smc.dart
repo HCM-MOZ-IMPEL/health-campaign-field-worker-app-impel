@@ -64,7 +64,7 @@ class CustomIndividualDetailsSMCPageState
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
   bool isEditIndividual = false;
-  Set<String>? beneId;
+  Set<String>? beneficiaryId;
 
   @override
   void initState() {
@@ -169,7 +169,7 @@ class CustomIndividualDetailsSMCPageState
 
                               String localityCode = locality!.code;
 
-                              beneId =
+                              beneficiaryId =
                                   await UniqueIdGeneration().generateUniqueId(
                                 localityCode: localityCode,
                                 loggedInUserId: context.loggedInUserUuid,
@@ -268,7 +268,7 @@ class CustomIndividualDetailsSMCPageState
                                       context,
                                       form: form,
                                       oldIndividual: null,
-                                      beneId: beneId!.first);
+                                      beneficiaryId: beneficiaryId!.first);
                                   isEditIndividual = false;
                                   final boundary =
                                       RegistrationDeliverySingleton().boundary;
@@ -408,7 +408,7 @@ class CustomIndividualDetailsSMCPageState
                                   final individual = _getIndividualModel(
                                       context,
                                       form: form,
-                                      beneId: beneId!.first);
+                                      beneficiaryId: beneficiaryId!.first);
 
                                   bloc.add(
                                     BeneficiaryRegistrationAddMemberEvent(
@@ -666,7 +666,7 @@ class CustomIndividualDetailsSMCPageState
 
   IndividualModel _getIndividualModel(
     BuildContext context, {
-    final beneId,
+    final beneficiaryId,
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
@@ -742,7 +742,7 @@ class CustomIndividualDetailsSMCPageState
     if (isEditIndividual == false) {
       identifiers?.add(IdentifierModel(
         clientReferenceId: individual.clientReferenceId,
-        identifierId: beneId,
+        identifierId: beneficiaryId,
         identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
         clientAuditDetails: individual.clientAuditDetails,
         auditDetails: individual.auditDetails,
@@ -766,7 +766,7 @@ class CustomIndividualDetailsSMCPageState
           ? identifiers
           : [
               identifier.copyWith(
-                identifierId: beneId,
+                identifierId: beneficiaryId,
                 identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
               ),
             ],
