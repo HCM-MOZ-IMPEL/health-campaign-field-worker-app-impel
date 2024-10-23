@@ -124,7 +124,10 @@ class _EligibilityChecklistViewPage
                       header: Column(children: [
                         if (!(context.isHealthFacilitySupervisor &&
                             widget.referralClientRefId != null))
-                          const BackNavigationHelpHeaderWidget(),
+                          const BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showcaseButton: null,
+                          ),
                       ]),
                       enableFixedButton: true,
                       footer: BlocListener<LocationBloc, LocationState>(

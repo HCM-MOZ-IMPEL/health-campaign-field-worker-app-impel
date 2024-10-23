@@ -137,6 +137,7 @@ class CustomIndividualDetailsSMCPageState
               header: Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
+                  showcaseButton: null,
                   handleBack: () {
                     if (isEditIndividual) {
                       final parent = context.router.parent() as StackRouter;

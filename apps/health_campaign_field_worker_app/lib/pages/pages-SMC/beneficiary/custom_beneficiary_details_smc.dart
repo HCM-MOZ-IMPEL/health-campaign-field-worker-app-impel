@@ -133,7 +133,10 @@ class CustomBeneficiaryDetailsSMCPageState
                       body: ScrollableContent(
                         enableFixedButton: true,
                         header: const Column(children: [
-                          BackNavigationHelpHeaderWidget(),
+                          BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showcaseButton: null,
+                          ),
                         ]),
                         footer: BlocBuilder<DeliverInterventionBloc,
                             DeliverInterventionState>(
@@ -326,11 +329,19 @@ class CustomBeneficiaryDetailsSMCPageState
                                     ): RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
-                                        ? householdMemberWrapper.headOfHousehold
-                                            ?.gender?.name.sentenceCase
-                                        : state.selectedIndividual?.gender?.name
-                                                .sentenceCase ??
-                                            '--',
+                                        ? localizations.translate(
+                                            householdMemberWrapper
+                                                    .headOfHousehold
+                                                    ?.gender
+                                                    ?.name
+                                                    .toUpperCase() ??
+                                                '--')
+                                        : localizations.translate(state
+                                                .selectedIndividual
+                                                ?.gender
+                                                ?.name
+                                                .toUpperCase() ??
+                                            '--'),
                                     localizations.translate(i18
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {

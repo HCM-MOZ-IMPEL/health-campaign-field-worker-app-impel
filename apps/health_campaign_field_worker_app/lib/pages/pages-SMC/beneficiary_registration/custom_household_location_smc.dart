@@ -116,6 +116,7 @@ class _CustomHouseholdLocationSMCPageState
                 children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    showcaseButton: null,
                   ),
                 ],
               ),

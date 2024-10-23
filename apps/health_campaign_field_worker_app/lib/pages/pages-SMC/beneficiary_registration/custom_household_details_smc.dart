@@ -181,6 +181,7 @@ class CustomHouseHoldDetailsSMCPageState
                 header: const Column(children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    showcaseButton: null,
                   ),
                 ]),
                 enableFixedButton: true,

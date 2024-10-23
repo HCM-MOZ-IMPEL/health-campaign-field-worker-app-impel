@@ -451,6 +451,7 @@ class CustomDeliverInterventionSMCPageState
                                     header: const Column(children: [
                                       BackNavigationHelpHeaderWidget(
                                         showHelp: false,
+                                        showcaseButton: null,
                                       ),
                                     ]),
                                     children: [

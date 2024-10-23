@@ -65,7 +65,7 @@ class DeliverySummaryPageState
                   header: Column(children: [
                     const BackNavigationHelpHeaderWidget(
                       showHelp: false,
-                      showcaseButton: ShowcaseButton(),
+                      showcaseButton: null,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(

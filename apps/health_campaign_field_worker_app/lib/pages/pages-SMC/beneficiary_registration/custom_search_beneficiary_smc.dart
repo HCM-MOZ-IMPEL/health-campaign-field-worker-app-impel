@@ -118,7 +118,10 @@ class _CustomSearchBeneficiarySMCPageState
           },
           child: ScrollableContent(
             header: const Column(children: [
-              BackNavigationHelpHeaderWidget(),
+              BackNavigationHelpHeaderWidget(
+                showHelp: false,
+                showcaseButton: null,
+              ),
             ]),
             slivers: [
               SliverToBoxAdapter(

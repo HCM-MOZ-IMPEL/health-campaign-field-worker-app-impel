@@ -75,6 +75,8 @@ class CustomHouseholdOverviewSMCPageState
                             .read<SearchHouseholdsBloc>()
                             .add(const SearchHouseholdsEvent.clear());
                       },
+                      showHelp: false,
+                      showcaseButton: null,
                     ),
                     enableFixedButton: true,
                     footer: Offstage(

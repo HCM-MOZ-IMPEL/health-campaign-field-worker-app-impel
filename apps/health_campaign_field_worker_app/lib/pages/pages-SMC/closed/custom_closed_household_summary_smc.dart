@@ -55,6 +55,7 @@ class CustomClosedHouseholdSummaryPageState
               enableFixedButton: true,
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
+                showcaseButton: null,
               ),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),

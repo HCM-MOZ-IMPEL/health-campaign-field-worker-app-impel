@@ -108,8 +108,13 @@ class CustomReferBeneficiarySMCPageState
                     widget.isReadministrationUnSuccessful
                         ? const BackNavigationHelpHeaderWidget(
                             showBackNavigation: false,
+                            showHelp: false,
+                            showcaseButton: null,
                           )
-                        : const BackNavigationHelpHeaderWidget(),
+                        : const BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showcaseButton: null,
+                          ),
                   ]),
                   footer: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),

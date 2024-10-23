@@ -104,6 +104,7 @@ class CustomClosedHouseholdDetailsPageState
                 children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    showcaseButton: null,
                   ),
                 ],
               ),
