@@ -17,6 +17,7 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/registration_delivery.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -119,8 +120,8 @@ class CustomClosedHouseholdDetailsPageState
                             .control(_householdHeadNameKey)
                             .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
+                        context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSummary(
                                 latitude: locationState.latitude!,
                                 longitude: locationState.longitude!,
                                 locationAccuracy: locationState.accuracy!,
