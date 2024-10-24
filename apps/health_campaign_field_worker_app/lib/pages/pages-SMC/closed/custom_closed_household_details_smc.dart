@@ -97,8 +97,8 @@ class CustomClosedHouseholdDetailsPageState
                 ? false
                 : true;
           },
-          child: BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
-              builder: (context, state) {
+          child: BlocBuilder<custombloc.ClosedHouseholdBloc,
+              custombloc.ClosedHouseholdState>(builder: (context, state) {
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(
