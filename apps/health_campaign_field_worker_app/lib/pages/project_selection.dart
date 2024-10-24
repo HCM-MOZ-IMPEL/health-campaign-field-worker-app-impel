@@ -1,15 +1,29 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/app_configuration.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
+import 'package:health_campaign_field_worker_app/models/entities/roles_type.dart';
+import 'package:health_campaign_field_worker_app/pages/home.dart';
+import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/models/entities/inventory_transport_type.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
+import '../models/entities/project_types.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -140,9 +154,12 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final selectedProject = state.selectedProject;
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
+                //// Function to set initial Data required for the packages to run
+
+                setPackagesSingleton(context);
 
                 if (boundary != null) {
-                  navigateToBoundary(boundary);
+                  navigateToBoundary(boundary, context);
                 } else {
                   DigitToast.show(
                     context,
@@ -225,18 +242,133 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     );
   }
 
-  void navigateToBoundary(String boundary) async {
+  void navigateToBoundary(String boundary, BuildContext context) async {
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
+
       context.router.replaceAll([
-        HomeRoute(),
+        context.selectedProject.additionalDetails?.projectType?.code ==
+                ProjectTypes.smc.toValue()
+            ? const SMCWrapperRoute()
+            : const IRSWrapperRoute(),
         BoundarySelectionRoute(),
       ]);
     } catch (e) {
       debugPrint('error $e');
     }
   }
+}
+
+List<String> getHouseholdFiltersBasedOnProjectType(
+    AppConfiguration appConfiguration, BuildContext context) {
+  List<String> list = [];
+  if (context.selectedProject.additionalDetails?.projectType?.code ==
+      ProjectTypes.smc.toValue()) {
+    if (appConfiguration.searchHouseHoldFiltersSMC != null) {
+      list.addAll(appConfiguration.searchHouseHoldFiltersSMC!
+          .map((e) => e.code)
+          .toList());
+    }
+  } else {
+    if (appConfiguration.searchHouseHoldFilters != null) {
+      list.addAll(
+          appConfiguration.searchHouseHoldFilters!.map((e) => e.code).toList());
+    }
+  }
+
+  return list;
+}
+
+void setPackagesSingleton(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+      orElse: () {},
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
+        // INFO : Need to add singleton of package Here
+        AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId ?? '',
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) => role.code == RolesType.distributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: dashboardConfigSchema,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
+
+        RegistrationDeliverySingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter:
+              getHouseholdFiltersBasedOnProjectType(appConfiguration, context),
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+        );
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
+        );
+      });
 }

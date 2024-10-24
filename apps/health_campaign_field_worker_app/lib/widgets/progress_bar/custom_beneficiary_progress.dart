@@ -12,6 +12,8 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import '../../data/repositories/custom_task.dart';
+import '../../models/entities/project_types.dart';
+import '../../utils/extensions/extensions.dart';
 import '../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {
@@ -85,16 +87,8 @@ class CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    // final selectedProject = RegistrationDeliverySingleton().selectedProject!;
-    // final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
-
-    // final targetModel = selectedProject.targets?.firstWhereOrNull(
-    //   (element) => element.beneficiaryType == beneficiaryType,
-    // );
-
-    // final target = targetModel?.targetNo ?? 8.0;
-
-    final target = 8.0;
+    final target =
+        context.projectTypeCode == ProjectTypes.smc.toValue() ? 65.0 : 8.0;
 
     return DigitCard(
       child: ProgressIndicatorContainer(

@@ -1,4 +1,5 @@
 import 'package:digit_components/models/privacy_policy_model.dart';
+import 'package:digit_components/models/privacy_policy_model.dart';
 import 'package:isar/isar.dart';
 import 'package:digit_dss/digit_dss.dart';
 
@@ -57,6 +58,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
+  @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
+
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
 
@@ -76,6 +80,9 @@ class AppConfiguration {
 
   @Name('SEARCH_HOUSEHOLD_FILTERS')
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
+
+  @Name('SEARCH_HOUSEHOLD_FILTERS_SMC')
+  late List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC;
 
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;

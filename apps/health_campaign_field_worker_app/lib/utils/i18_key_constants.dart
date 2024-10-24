@@ -1,6 +1,7 @@
 library i18;
 
 const common = Common();
+const householdDetails = HouseholdDetails();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
@@ -242,6 +243,24 @@ class WarehouseDetailsShowcase {
   String get warehouseName {
     return 'WAREHOUSE_DETAILS_SHOWCASE_WAREHOUSE_NAME';
   }
+}
+
+class HouseholdDetails {
+  const HouseholdDetails();
+
+  String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
+
+  String get dateOfRegistrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
+
+  String get dateOfAdministrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_ADMINISTRATION_LABEL';
+
+  String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get viewHouseHoldDetailsAction =>
+      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 }
 
 class StockDetailsReceiptShowcase {

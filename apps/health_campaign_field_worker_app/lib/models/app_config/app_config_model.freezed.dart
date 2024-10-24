@@ -941,6 +941,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -954,6 +957,9 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
   List<SearchHouseHoldFilters>? get searchHouseHoldFilters =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
@@ -997,6 +1003,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1004,6 +1012,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1034,11 +1044,13 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
+    Object? searchHouseHoldFiltersSMC = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1082,6 +1094,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value.deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1101,6 +1117,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       searchHouseHoldFilters: freezed == searchHouseHoldFilters
           ? _value.searchHouseHoldFilters
           : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersSMC: freezed == searchHouseHoldFiltersSMC
+          ? _value.searchHouseHoldFiltersSMC
+          : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value.referralReasonList
@@ -1147,6 +1167,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1154,6 +1176,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1182,11 +1206,13 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
+    Object? searchHouseHoldFiltersSMC = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1230,6 +1256,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value._deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1249,6 +1279,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
       searchHouseHoldFilters: freezed == searchHouseHoldFilters
           ? _value._searchHouseHoldFilters
           : searchHouseHoldFilters // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersSMC: freezed == searchHouseHoldFiltersSMC
+          ? _value._searchHouseHoldFiltersSMC
+          : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value._referralReasonList
@@ -1292,6 +1326,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1302,6 +1338,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1320,11 +1358,13 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
         _symptomsTypeList = symptomsTypeList,
         _searchHouseHoldFilters = searchHouseHoldFilters,
+        _searchHouseHoldFiltersSMC = searchHouseHoldFiltersSMC,
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
@@ -1422,6 +1462,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
 
+  final List<DeliveryCommentOptions> _deliveryCommentOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc {
+    if (_deliveryCommentOptionsSmc is EqualUnmodifiableListView)
+      return _deliveryCommentOptionsSmc;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentOptionsSmc);
+  }
+
   final List<BackendInterface> _backendInterface;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1477,6 +1527,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<SearchHouseHoldFilters>? _searchHouseHoldFiltersSMC;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC {
+    final value = _searchHouseHoldFiltersSMC;
+    if (value == null) return null;
+    if (_searchHouseHoldFiltersSMC is EqualUnmodifiableListView)
+      return _searchHouseHoldFiltersSMC;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<ReferralReasonType>? _referralReasonList;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
@@ -1525,7 +1587,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1554,6 +1616,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentOptionsSmc, _deliveryCommentOptionsSmc) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
@@ -1564,6 +1628,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._symptomsTypeList, _symptomsTypeList) &&
             const DeepCollectionEquality().equals(
                 other._searchHouseHoldFilters, _searchHouseHoldFilters) &&
+            const DeepCollectionEquality().equals(
+                other._searchHouseHoldFiltersSMC, _searchHouseHoldFiltersSMC) &&
             const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList) &&
             const DeepCollectionEquality()
@@ -1576,27 +1642,30 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_appConfig),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_backgroundServiceConfig),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      const DeepCollectionEquality().hash(_backendInterface),
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes),
-      const DeepCollectionEquality().hash(_symptomsTypeList),
-      const DeepCollectionEquality().hash(_searchHouseHoldFilters),
-      const DeepCollectionEquality().hash(_referralReasonList),
-      const DeepCollectionEquality().hash(_houseStructureTypes),
-      const DeepCollectionEquality().hash(_refusalReasons),
-      const DeepCollectionEquality().hash(_firebaseConfig));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(_appConfig),
+        const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
+        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+        const DeepCollectionEquality()
+            .hash(_householdMemberDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_backgroundServiceConfig),
+        const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
+        const DeepCollectionEquality().hash(_backendInterface),
+        const DeepCollectionEquality().hash(_callSupportOptions),
+        const DeepCollectionEquality().hash(_transportTypes),
+        const DeepCollectionEquality().hash(_symptomsTypeList),
+        const DeepCollectionEquality().hash(_searchHouseHoldFilters),
+        const DeepCollectionEquality().hash(_searchHouseHoldFiltersSMC),
+        const DeepCollectionEquality().hash(_referralReasonList),
+        const DeepCollectionEquality().hash(_houseStructureTypes),
+        const DeepCollectionEquality().hash(_refusalReasons),
+        const DeepCollectionEquality().hash(_firebaseConfig)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -1633,6 +1702,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1643,6 +1714,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1684,6 +1757,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
   @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc;
+  @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
   @override
@@ -1698,6 +1774,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
   List<SearchHouseHoldFilters>? get searchHouseHoldFilters;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;

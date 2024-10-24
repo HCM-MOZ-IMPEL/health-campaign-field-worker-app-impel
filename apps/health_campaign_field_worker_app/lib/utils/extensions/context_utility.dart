@@ -24,6 +24,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedProject;
   }
 
+  String? get projectTypeCode {
+    final projectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType.code;
+  }
+
   String get projectId => selectedProject.id;
 
   ProjectCycle? get selectedCycle {
@@ -72,13 +85,29 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isHealthFacilitySupervisor {
+    try {
+      // todo : verify this make this healthFacilitySupervsior as per kebbi
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.healthFacilityWorker.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
+    } catch (_) {
+      return false;
+    }
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
 
-    final BeneficiaryType? selectedBeneficiary =
-        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+    final BeneficiaryType? selectedBeneficiary = projectState
+        .selectedProject?.additionalDetails?.projectType?.beneficiaryType;
 
     if (selectedBeneficiary == null) {
       throw AppException('No beneficiary type is selected');
