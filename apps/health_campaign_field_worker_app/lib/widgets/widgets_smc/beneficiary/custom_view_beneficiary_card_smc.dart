@@ -83,12 +83,6 @@ class _CustomViewBeneficiaryCardSMCState
         localizations.translate(i18.common.coreCommonGender),
         cellKey: 'gender',
       ),
-      TableHeader(
-        localizations.translate(
-          i18Local.common.coreCommonBeneficiaryId,
-        ),
-        cellKey: 'beneficiaryId',
-      ),
     ];
     final filteredHeaderList = RegistrationDeliverySingleton()
                 .beneficiaryType !=
@@ -164,21 +158,6 @@ class _CustomViewBeneficiaryCardSMCState
               : DateTime.now(),
         ).months;
 
-        final beneficiaryId = e.identifiers == null
-            ? localizations.translate(
-                i18.common.noResultsFound,
-              )
-            : e.identifiers
-                    ?.lastWhere(
-                      (e) =>
-                          e.identifierType ==
-                          IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                    )
-                    .identifierId ??
-                localizations.translate(
-                  i18.common.noResultsFound,
-                );
-
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
             years: ageInYears,
@@ -253,10 +232,6 @@ class _CustomViewBeneficiaryCardSMCState
                     .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}')
                 : ' -- ',
             cellKey: 'gender',
-          ),
-          TableData(
-            beneficiaryId,
-            cellKey: 'beneficiaryId',
           ),
         ];
 
