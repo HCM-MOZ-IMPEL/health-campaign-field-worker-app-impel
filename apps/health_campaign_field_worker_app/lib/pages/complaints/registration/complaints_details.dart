@@ -361,20 +361,6 @@ class _ComplaintsDetailsPageState
                             ),
                             BlocBuilder<AuthBloc, AuthState>(
                               builder: (context, state) {
-                                state.mapOrNull(
-                                  authenticated: (value) {
-                                    var user = value.userModel;
-
-                                    if (isRaisedForSelf) {
-                                      form.control(_complainantName).value =
-                                          user.name;
-                                      form
-                                          .control(_complainantContactNumber)
-                                          .value = user.mobileNumber;
-                                    }
-                                  },
-                                );
-
                                 return Column(
                                   children: [
                                     DigitTextFormField(
@@ -385,7 +371,6 @@ class _ComplaintsDetailsPageState
                                       inputFormatters: [
                                         RemoveEmojiInputFormatter(),
                                       ],
-                                      readOnly: isRaisedForSelf,
                                       isRequired: true,
                                       validationMessages: {
                                         'required': (object) =>
@@ -404,7 +389,6 @@ class _ComplaintsDetailsPageState
                                       label: localizations.translate(
                                         i18.complaints.complainantContactNumber,
                                       ),
-                                      readOnly: isRaisedForSelf,
                                       isRequired: true,
                                       keyboardType: TextInputType.number,
                                       inputFormatters: [

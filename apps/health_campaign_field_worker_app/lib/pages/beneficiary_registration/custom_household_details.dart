@@ -673,12 +673,8 @@ class CustomHouseHoldDetailsPageState
                                   int men = form.control(_menCountKey).value;
                                   int women =
                                       form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
                                   form.control(_memberCountKey).value =
-                                      memberCount < (men + women)
-                                          ? men + women
-                                          : memberCount;
+                                      men + women;
                                 },
                                 form: form,
                                 formControlName: _menCountKey,
@@ -696,12 +692,8 @@ class CustomHouseHoldDetailsPageState
                                   int men = form.control(_menCountKey).value;
                                   int women =
                                       form.control(_womenCountKey).value;
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
                                   form.control(_memberCountKey).value =
-                                      memberCount < (men + women)
-                                          ? men + women
-                                          : memberCount;
+                                      men + women;
                                 },
                                 form: form,
                                 formControlName: _womenCountKey,
@@ -718,17 +710,6 @@ class CustomHouseHoldDetailsPageState
                                 child: DigitIntegerFormPicker(
                                   minimum: 0,
                                   maximum: 20,
-                                  // onChange: () {
-                                  //   int men = form.control(_menCountKey).value;
-                                  //   int women =
-                                  //       form.control(_womenCountKey).value;
-                                  //   int memberCount =
-                                  //       form.control(_memberCountKey).value;
-                                  //   form.control(_memberCountKey).value =
-                                  //       memberCount < (men + women)
-                                  //           ? men + women
-                                  //           : memberCount;
-                                  // },
                                   form: form,
                                   formControlName: _pregnantWomenCountKey,
                                   label: localizations.translate(
@@ -745,20 +726,6 @@ class CustomHouseHoldDetailsPageState
                                 child: DigitIntegerFormPicker(
                                   minimum: 0,
                                   maximum: 20,
-                                  // onChange: () {
-                                  //   int pregnantWomen = form
-                                  //       .control(_pregnantWomenCountKey)
-                                  //       .value;
-                                  //   int children =
-                                  //       form.control(_childrenCountKey).value;
-                                  //   int memberCount =
-                                  //       form.control(_memberCountKey).value;
-                                  //   form.control(_memberCountKey).value =
-                                  //       memberCount <=
-                                  //               (children + pregnantWomen)
-                                  //           ? children + pregnantWomen
-                                  //           : memberCount;
-                                  // },
                                   form: form,
                                   formControlName: _childrenCountKey,
                                   label: localizations.translate(
