@@ -380,7 +380,7 @@ class _BoundarySelectionPageState
                                         i18.beneficiaryDetails.downloadreport,
                                       )}\n\n\n${localizations.translate(
                                         i18.beneficiaryDetails.boundary,
-                                      )} ${result.boundaryName}\n${localizations.translate(
+                                      )} ${localizations.translate(result.locality ?? "")}\n${localizations.translate(
                                         i18.beneficiaryDetails.status,
                                       )} ${localizations.translate(
                                         i18.beneficiaryDetails

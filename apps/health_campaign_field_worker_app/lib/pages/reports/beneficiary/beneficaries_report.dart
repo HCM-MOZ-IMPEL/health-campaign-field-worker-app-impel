@@ -354,7 +354,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                 element: {
                                   localizations.translate(
                                     i18.beneficiaryDetails.boundary,
-                                  ): e.boundaryName!,
+                                  ): localizations.translate(e.locality ?? ""),
                                   localizations.translate(
                                     i18.beneficiaryDetails.status,
                                   ): e.offset == 0 && e.limit == 0
