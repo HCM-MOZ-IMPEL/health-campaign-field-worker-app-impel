@@ -184,8 +184,8 @@ class CustomClosedHouseholdDetailsPageState
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
                                   .replaceAll('{}', maxLength.toString()),
-                              'min2': (object) => localizations
-                                  .translate(i18.common.min2CharsRequired)
+                              'min3': (object) => localizations
+                                  .translate(i18_local.common.min3CharsRequired)
                                   .replaceAll('{}', ''),
                             },
                           ),
@@ -212,7 +212,7 @@ class CustomClosedHouseholdDetailsPageState
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          CustomValidator.requiredMin2,
+          CustomValidator.requiredMin3,
           Validators.maxLength(200),
         ],
       ),
