@@ -12,13 +12,13 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18Local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/localized.dart';
 
+import '../../utils/utils.dart';
 import '../../widgets/custom_digit_text_form_field.dart';
 
 @RoutePage()
@@ -107,6 +107,9 @@ class CustomClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
+                        form.markAllAsTouched();
+                        if (!form.valid) return;
+
                         final String? householdHeadName = form
                             .control(_householdHeadNameKey)
                             .value as String?;
@@ -162,7 +165,7 @@ class CustomClosedHouseholdDetailsPageState
                           ),
                           CustomDigitTextFormField(
                             suffixString: localizations.translate(
-                              i18Local.common.metersLabel,
+                              i18_local.common.metersLabel,
                             ),
                             readOnly: true,
                             formControlName: _accuracyKey,
@@ -181,6 +184,9 @@ class CustomClosedHouseholdDetailsPageState
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
                                   .replaceAll('{}', maxLength.toString()),
+                              'min2': (object) => localizations
+                                  .translate(i18.common.min2CharsRequired)
+                                  .replaceAll('{}', ''),
                             },
                           ),
                         ]),
@@ -200,13 +206,13 @@ class CustomClosedHouseholdDetailsPageState
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          CustomValidator.requiredMin,
+          CustomValidator.requiredMin2,
           Validators.maxLength(200),
         ],
       ),

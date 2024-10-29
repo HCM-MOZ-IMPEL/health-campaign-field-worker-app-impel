@@ -505,7 +505,8 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
-        value: complaintDetails?.administrativeArea ?? context.boundary.name,
+        value: localizations.translate(complaintDetails?.administrativeArea ??
+            context.boundary.code.toString()),
         disabled: shouldDisableForm,
         validators: [Validators.required],
       ),
