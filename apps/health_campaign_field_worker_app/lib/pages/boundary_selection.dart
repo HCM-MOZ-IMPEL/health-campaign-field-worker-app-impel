@@ -406,7 +406,8 @@ class _BoundarySelectionPageState
                                         descriptionTableData: {
                                           localizations.translate(
                                             i18.beneficiaryDetails.boundary,
-                                          ): result.boundaryName!,
+                                          ): localizations
+                                              .translate(result.locality ?? ""),
                                           localizations.translate(
                                             i18.beneficiaryDetails.status,
                                           ): localizations.translate(

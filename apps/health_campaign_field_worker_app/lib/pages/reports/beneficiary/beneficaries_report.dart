@@ -231,7 +231,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             i18.beneficiaryDetails.downloadreport,
                           )}\n\n\n${localizations.translate(
                             i18.beneficiaryDetails.boundary,
-                          )} ${result.boundaryName}\n${localizations.translate(
+                          )} ${localizations.translate(result.locality ?? "")}\n${localizations.translate(
                             i18.beneficiaryDetails.status,
                           )} ${localizations.translate(
                             i18.beneficiaryDetails.downloadcompleted,
@@ -247,7 +247,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             descriptionTableData: {
                               localizations.translate(
                                 i18.beneficiaryDetails.boundary,
-                              ): result.boundaryName!,
+                              ): localizations.translate(result.locality ?? ""),
                               localizations.translate(
                                 i18.beneficiaryDetails.status,
                               ): localizations.translate(
