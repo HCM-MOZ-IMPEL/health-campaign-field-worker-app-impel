@@ -94,6 +94,22 @@ class CustomWarehouseDetailsPageState
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allFacilities) {
+                      if (RegistrationDeliverySingleton()
+                              .selectedProject
+                              ?.address
+                              ?.boundaryType ==
+                          'Provincia') {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == 'Provincial Warehouse',
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      }
+
                       final teamFacilities = [
                         FacilityModel(
                           id: 'Delivery Team',
