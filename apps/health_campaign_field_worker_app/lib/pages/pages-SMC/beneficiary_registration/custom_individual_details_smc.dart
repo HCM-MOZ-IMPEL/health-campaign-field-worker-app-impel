@@ -454,8 +454,11 @@ class CustomIndividualDetailsSMCPageState
                           padding: const EdgeInsets.only(bottom: kPadding),
                           child: Text(
                             localizations.translate(
-                              i18_local.individualDetails
-                                  .individualsDetailsLabelTextSMC,
+                              widget.isHeadOfHousehold
+                                  ? i18_local.individualDetails
+                                      .individualsDetailsLabelTextSMC
+                                  : i18_local.individualDetails
+                                      .individualsChildDetailsLabelTextSMC,
                             ),
                             style: theme.textTheme.displayMedium,
                           ),

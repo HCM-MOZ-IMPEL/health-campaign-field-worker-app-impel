@@ -1141,6 +1141,8 @@ class IndividualDetails {
   const IndividualDetails();
 
   String get individualsDetailsLabelTextSMC => 'INDIVIDUAL_LABEL_TEXT_SMC';
+  String get individualsChildDetailsLabelTextSMC =>
+      'INDIVIDUAL_CHILD_LABEL_TEXT_SMC';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
