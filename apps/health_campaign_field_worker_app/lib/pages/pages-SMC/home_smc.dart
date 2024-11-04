@@ -348,7 +348,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           enableCustomIcon: true,
           customIcon: Constants.closedHouseholdSvg,
           customIconSize: 48,
-          label: i18.home.closedHouseHoldLabel,
+          label: i18.home.closedHouseHoldLabelSMC,
           onPressed: () async {
             await context.router.push(const ClosedHouseholdWrapperRoute());
           },
