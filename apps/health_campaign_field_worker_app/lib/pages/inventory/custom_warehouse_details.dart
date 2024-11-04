@@ -17,6 +17,7 @@ import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
@@ -56,7 +57,8 @@ class CustomWarehouseDetailsPageState
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
-          value: localizations.translate(InventorySingleton().boundaryName),
+          value: localizations.translate(
+              RegistrationDeliverySingleton().boundary!.code.toString()),
         ),
         _warehouseKey: FormControl<String>(
           validators: isDistributor ? [] : [Validators.required],
@@ -92,6 +94,22 @@ class CustomWarehouseDetailsPageState
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allFacilities) {
+                      if (RegistrationDeliverySingleton()
+                              .selectedProject
+                              ?.address
+                              ?.boundaryType ==
+                          'Provincia') {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == 'Provincial Warehouse',
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      }
+
                       final teamFacilities = [
                         FacilityModel(
                           id: 'Delivery Team',

@@ -525,12 +525,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where((element) => state.actionsWrapper.actions
             .map((e) => e.displayName)
             .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+            .contains(element))
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) =>
-            f != i18.home.db) // TODO: need to add close household inside mdms
+        .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 

@@ -186,7 +186,8 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          complaint.address.locality?.name ?? "",
+                          localizations.translate(
+                              complaint.address.locality?.code ?? ""),
                         ),
                       ),
                     ],

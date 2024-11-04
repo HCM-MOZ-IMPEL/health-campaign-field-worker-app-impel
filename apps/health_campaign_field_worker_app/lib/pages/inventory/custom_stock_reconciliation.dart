@@ -9,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/inventory_management.dart'
+    hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
@@ -19,10 +20,10 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../widgets/localized.dart';
+import '../../utils/utils.dart' show CustomValidator;
 
 @RoutePage()
 class CustomStockReconciliationPage extends LocalizedStatefulWidget {

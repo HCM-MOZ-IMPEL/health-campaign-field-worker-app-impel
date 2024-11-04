@@ -60,6 +60,7 @@ class CustomStockDetailsPageState
   List<GS1Barcode> scannedResources = [];
   List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
       driverNameValidations = [];
+  int maxCount = 100000000;
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -71,7 +72,7 @@ class CustomStockDetailsPageState
         Validators.number,
         Validators.required,
         Validators.min(1),
-        Validators.max(10000),
+        Validators.max(maxCount),
       ]),
       _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(
@@ -84,20 +85,8 @@ class CustomStockDetailsPageState
         validators: driverNameValidations,
       ),
       _commentsKey: FormControl<String>(),
-      _deliveryTeamKey: FormControl<String>(
-          // validators: !InventorySingleton().isDistributor &&
-          //         !InventorySingleton().isWareHouseMgr &&
-          //         deliveryTeamSelected
-          //     ? [Validators.required]
-          //     : [],
-          ),
-      _supervisorKey: FormControl<String>(
-          // validators: (InventorySingleton().isWareHouseMgr ||
-          //             InventorySingleton().isDistributor) &&
-          //         supervisorSelected
-          //     ? [Validators.required]
-          //     : [],
-          ),
+      _deliveryTeamKey: FormControl<String>(),
+      _supervisorKey: FormControl<String>(),
     });
   }
 
@@ -623,14 +612,16 @@ class CustomStockDetailsPageState
                                             referenceId: stockState.projectId,
                                             referenceIdType: 'PROJECT',
                                             quantity: quantity.toString(),
-                                            wayBillNumber: waybillNumber
-                                                    .toString()
-                                                    .trim()
-                                                    .isEmpty
-                                                ? null
-                                                : waybillNumber
-                                                    .toString()
-                                                    .trim(),
+                                            wayBillNumber: waybillNumber != null
+                                                ? waybillNumber
+                                                        .toString()
+                                                        .trim()
+                                                        .isEmpty
+                                                    ? null
+                                                    : waybillNumber
+                                                        .toString()
+                                                        .trim()
+                                                : null,
                                             receiverId: receiverId,
                                             receiverType: receiverType,
                                             senderId: senderId,
@@ -1111,7 +1102,8 @@ class CustomStockDetailsPageState
                                                         Validators.required,
                                                         Validators.number,
                                                         Validators.min(0),
-                                                        Validators.max(10000),
+                                                        Validators.max(
+                                                            maxCount),
                                                       ],
                                                       updateParent: true,
                                                       autoValidate: true,
@@ -1441,7 +1433,7 @@ class CustomStockDetailsPageState
                                                             Validators.number,
                                                             Validators.min(0),
                                                             Validators.max(
-                                                                10000),
+                                                                maxCount),
                                                           ],
                                                           updateParent: true,
                                                           autoValidate: true,
@@ -1691,7 +1683,7 @@ class CustomStockDetailsPageState
                                       if (val.value > 10000000000) {
                                         form
                                             .control(_transactionQuantityKey)
-                                            .value = 10000;
+                                            .value = maxCount;
                                       }
                                     }
                                   },

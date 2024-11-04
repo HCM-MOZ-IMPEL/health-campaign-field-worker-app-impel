@@ -246,9 +246,9 @@ class _ComplaintsInboxFilterPageState
                                 for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());
 
-                                  if (e.address.locality?.name != null) {
+                                  if (e.address.locality?.code != null) {
                                     locality.add(
-                                      e.address.locality?.name ?? "",
+                                      e.address.locality?.code ?? "",
                                     );
                                   }
 
@@ -313,7 +313,8 @@ class _ComplaintsInboxFilterPageState
                                   form: formGroup,
                                   menuItems: locality.toList(),
                                   formControlName: _complaintLocality,
-                                  valueMapper: (value) => value.trim(),
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
                                   emptyText: localizations
                                       .translate(i18.common.noMatchFound),
                                 ),

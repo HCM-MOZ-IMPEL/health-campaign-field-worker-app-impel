@@ -114,6 +114,8 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get min3CharsRequired => 'MIN_3_CHARS_REQUIRED';
+
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
   String get maxCharsRequiredValidation => 'MAX_CHARS_ALLOWED_VALIDATION';
   String get minCharsRequiredValidation => 'MIN_CHARS_ALLOWED_VALIDATION';
