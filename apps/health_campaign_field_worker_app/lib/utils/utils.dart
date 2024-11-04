@@ -133,16 +133,7 @@ performBackgroundService({
   if (stopService) {
     if (isRunning) {
       if (!isBackground && context != null) {
-        if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
-        }
+        if (context.mounted) {}
       }
     }
   } else {
@@ -150,14 +141,6 @@ performBackgroundService({
       service.startService();
       if (context != null && context.mounted) {
         requestDisableBatteryOptimization();
-        DigitToast.show(
-          context,
-          options: DigitToastOptions(
-            'Background Service Started',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
       }
     }
   }
