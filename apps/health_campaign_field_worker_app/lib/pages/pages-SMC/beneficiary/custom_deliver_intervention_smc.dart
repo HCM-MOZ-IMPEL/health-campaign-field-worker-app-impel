@@ -640,6 +640,7 @@ class CustomDeliverInterventionSMCPageState
                                                             .deliveryCommentLabelSMC,
                                                       ),
                                                       form: form,
+                                                      enabled: doseAdministered,
                                                       menuItems:
                                                           deliveryCommentOptionsSmc
                                                               .map((e) {
@@ -647,7 +648,8 @@ class CustomDeliverInterventionSMCPageState
                                                       }).toList(),
                                                       formControlName:
                                                           _deliveryCommentKey,
-                                                      isRequired: false,
+                                                      isRequired:
+                                                          doseAdministered,
                                                       valueMapper: (value) =>
                                                           localizations
                                                               .translate(
