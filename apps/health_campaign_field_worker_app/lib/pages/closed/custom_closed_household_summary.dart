@@ -111,10 +111,11 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdVillageName),
-                            value: ClosedHouseholdSingleton()
-                                .boundary!
-                                .name
-                                .toString(),
+                            value: localizations.translate(
+                                ClosedHouseholdSingleton()
+                                    .boundary!
+                                    .code
+                                    .toString()),
                           ),
                           LabelValuePair(
                             label: localizations.translate(

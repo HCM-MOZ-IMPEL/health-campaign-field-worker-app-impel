@@ -93,6 +93,8 @@ class Constants {
   static const String intTwo = '2';
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
+  static const String pipeSeparator = ' || ';
+  static const String commentsKey = 'comments';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

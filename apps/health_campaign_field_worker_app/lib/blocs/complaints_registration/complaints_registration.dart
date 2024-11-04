@@ -70,7 +70,7 @@ class ComplaintsRegistrationBloc
             complaintsDetailsModel: event.complaintsDetailsModel,
             addressModel: value.addressModel?.copyWith(
               locality: code != null && name != null
-                  ? LocalityModel(code: code, name: name)
+                  ? LocalityModel(code: code, name: code)
                   : null,
             ),
           ),

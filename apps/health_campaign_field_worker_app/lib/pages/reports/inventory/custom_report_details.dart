@@ -426,15 +426,16 @@ class CustomInventoryReportDetailsPageState
                                                     key: dateKey,
                                                     width: 100,
                                                   ),
-                                                  DigitGridColumn(
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.inventoryReportDetails
-                                                          .waybillLabel,
+                                                  if (isWareHouseManager)
+                                                    DigitGridColumn(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.inventoryReportDetails
+                                                            .waybillLabel,
+                                                      ),
+                                                      key: waybillKey,
+                                                      width: 150,
                                                     ),
-                                                    key: waybillKey,
-                                                    width: 150,
-                                                  ),
                                                   DigitGridColumn(
                                                     label: quantityLabel,
                                                     key: quantityKey,
@@ -458,14 +459,15 @@ class CustomInventoryReportDetailsPageState
                                                             key: dateKey,
                                                             value: entry.key,
                                                           ),
-                                                          DigitGridCell(
-                                                            key: waybillKey,
-                                                            value: model
-                                                                    .wayBillNumber ??
-                                                                model
-                                                                    .wayBillNumber ??
-                                                                '',
-                                                          ),
+                                                          if (isWareHouseManager)
+                                                            DigitGridCell(
+                                                              key: waybillKey,
+                                                              value: model
+                                                                      .wayBillNumber ??
+                                                                  model
+                                                                      .wayBillNumber ??
+                                                                  '',
+                                                            ),
                                                           DigitGridCell(
                                                             key: quantityKey,
                                                             value: model
@@ -488,14 +490,24 @@ class CustomInventoryReportDetailsPageState
                                                                     widget.reportType ==
                                                                         InventoryReportType
                                                                             .damage
-                                                                ? model.senderId ??
-                                                                    model
-                                                                        .senderType ??
-                                                                    ''
-                                                                : model.receiverId ??
-                                                                    model
-                                                                        .receiverType ??
-                                                                    '',
+                                                                ? model.senderType ==
+                                                                        'WAREHOUSE'
+                                                                    ? localizations
+                                                                        .translate(
+                                                                            'FAC_${model.senderId}')
+                                                                    : (model.senderId ??
+                                                                        model
+                                                                            .senderType ??
+                                                                        '')
+                                                                : model.receiverType ==
+                                                                        'WAREHOUSE'
+                                                                    ? localizations
+                                                                        .translate(
+                                                                            'FAC_${model.receiverId}')
+                                                                    : (model.receiverId ??
+                                                                        model
+                                                                            .receiverType ??
+                                                                        ''),
                                                           ),
                                                         ],
                                                       ),
@@ -521,8 +533,7 @@ class CustomInventoryReportDetailsPageState
                                             const receivedKey = 'received';
                                             const dispatchedKey = 'dispatched';
                                             const returnedKey = 'returned';
-                                            // const damagedKey = 'damaged';
-                                            // const lossKey = 'loss';
+                                            const commentsKey = 'comments';
                                             const stockInHandKey =
                                                 'stockInHand';
                                             const manualCountKey =
@@ -568,24 +579,6 @@ class CustomInventoryReportDetailsPageState
                                                     key: returnedKey,
                                                     width: 120,
                                                   ),
-                                                  // DigitGridColumn(
-                                                  //   label:
-                                                  //       localizations.translate(
-                                                  //     i18.inventoryReportDetails
-                                                  //         .damagedCountLabel,
-                                                  //   ),
-                                                  //   key: damagedKey,
-                                                  //   width: 120,
-                                                  // ),
-                                                  // DigitGridColumn(
-                                                  //   label:
-                                                  //       localizations.translate(
-                                                  //     i18.inventoryReportDetails
-                                                  //         .lostCountLabel,
-                                                  //   ),
-                                                  //   key: lossKey,
-                                                  //   width: 120,
-                                                  // ),
                                                   DigitGridColumn(
                                                     label:
                                                         localizations.translate(
@@ -602,6 +595,15 @@ class CustomInventoryReportDetailsPageState
                                                           .manualCountLabel,
                                                     ),
                                                     key: manualCountKey,
+                                                    width: 150,
+                                                  ),
+                                                  DigitGridColumn(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.stockReconciliationDetails
+                                                          .commentsLabel,
+                                                    ),
+                                                    key: commentsKey,
                                                     width: 150,
                                                   ),
                                                 ],
@@ -640,22 +642,6 @@ class CustomInventoryReportDetailsPageState
                                                               'returned',
                                                             ),
                                                           ),
-                                                          // DigitGridCell(
-                                                          //   key: lossKey,
-                                                          //   value:
-                                                          //       _getCountFromAdditionalDetails(
-                                                          //     model,
-                                                          //     'lost',
-                                                          //   ),
-                                                          // ),
-                                                          // DigitGridCell(
-                                                          //   key: damagedKey,
-                                                          //   value:
-                                                          //       _getCountFromAdditionalDetails(
-                                                          //     model,
-                                                          //     'damaged',
-                                                          //   ),
-                                                          // ),
                                                           DigitGridCell(
                                                             key: stockInHandKey,
                                                             value:
@@ -670,6 +656,12 @@ class CustomInventoryReportDetailsPageState
                                                                 (model.physicalCount ??
                                                                         '0')
                                                                     .toString(),
+                                                          ),
+                                                          DigitGridCell(
+                                                            key: commentsKey,
+                                                            value: (model
+                                                                    .commentsOnReconciliation ??
+                                                                ''),
                                                           ),
                                                         ],
                                                       ),

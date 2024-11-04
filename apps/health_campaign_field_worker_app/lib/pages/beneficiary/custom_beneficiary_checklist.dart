@@ -9,6 +9,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -43,6 +44,7 @@ class _CustomBeneficiaryChecklistPageState
   bool isControllersInitialized = false;
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
+  String? beneficiaryId;
 
   @override
   void initState() {
@@ -59,6 +61,12 @@ class _CustomBeneficiaryChecklistPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    HouseholdOverviewState householdOverviewState =
+        context.read<HouseholdOverviewBloc>().state;
+    beneficiaryId = widget.beneficiaryClientRefId ??
+        householdOverviewState
+            .householdMemberWrapper.household?.clientReferenceId;
 
     return PopScope(
       canPop: false,
@@ -126,7 +134,9 @@ class _CustomBeneficiaryChecklistPageState
                         for (int i = 0; i < controller.length; i++) {
                           if (itemsAttributes?[i].required == true &&
                               ((itemsAttributes?[i].dataType == 'Boolean' &&
-                                  (controller[i].text == '')))) {
+                                  (controller[0].text == '' ||
+                                      (controller[1].text == '' &&
+                                          controller[0].text == 'true'))))) {
                             setState(() {
                               validFields = false;
                               validChecklist = false;
@@ -144,7 +154,7 @@ class _CustomBeneficiaryChecklistPageState
                               attributeCode: '${attribute?[i].code}',
                               dataType: attribute?[i].dataType,
                               clientReferenceId: IdGen.i.identifier,
-                              referenceId: widget.beneficiaryClientRefId,
+                              referenceId: beneficiaryId,
                               value: attribute?[i].dataType != 'SingleValueList'
                                   ? controller[i]
                                           .text
@@ -152,7 +162,7 @@ class _CustomBeneficiaryChecklistPageState
                                           .trim()
                                           .isNotEmpty
                                       ? controller[i].text.toString()
-                                      : ''
+                                      : 'false'
                                   : visibleChecklistIndexes.contains(i)
                                       ? controller[i].text.toString()
                                       : i18.checklist.notSelectedKey,
@@ -173,17 +183,18 @@ class _CustomBeneficiaryChecklistPageState
                                         Constants.checklistViewDateFormat,
                                   ),
                                   tenantId: selectedServiceDefinition!.tenantId,
-                                  clientId:
-                                      widget.beneficiaryClientRefId.toString(),
+                                  clientId: beneficiaryId.toString(),
                                   serviceDefId: selectedServiceDefinition?.id,
                                   attributes: attributes,
                                   rowVersion: 1,
                                   accountId:
                                       RegistrationDeliverySingleton().projectId,
-                                  additionalDetails:
-                                      RegistrationDeliverySingleton()
-                                          .boundary
-                                          ?.code,
+                                  additionalDetails: {
+                                    "boundaryCode":
+                                        RegistrationDeliverySingleton()
+                                            .boundary
+                                            ?.code,
+                                  },
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
                                         .loggedInUserUuid!,
@@ -392,7 +403,9 @@ class _CustomBeneficiaryChecklistPageState
                                   },
                                 ),
                               ] else if (e.dataType == 'Boolean') ...[
-                                if (!(e.code ?? '').contains('.'))
+                                if (!(e.code ?? '').contains('.') &&
+                                    (!(e.code ?? '').contains('ATTR2') ||
+                                        controller[0].text == 'true'))
                                   DigitCard(
                                     child: Column(
                                       children: [
