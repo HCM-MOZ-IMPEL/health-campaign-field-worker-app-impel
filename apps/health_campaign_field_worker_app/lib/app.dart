@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart' as bloc;
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
