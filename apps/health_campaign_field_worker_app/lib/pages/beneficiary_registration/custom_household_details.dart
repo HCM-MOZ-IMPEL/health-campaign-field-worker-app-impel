@@ -730,7 +730,7 @@ class CustomHouseHoldDetailsPageState
                                     form.control(_pregnantWomenCountKey).value =
                                         womenCount < pregnantWomen
                                             ? womenCount
-                                            : children;
+                                            : pregnantWomen;
                                   },
                                   label: localizations.translate(
                                     i18.householdDetails
