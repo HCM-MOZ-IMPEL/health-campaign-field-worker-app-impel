@@ -68,7 +68,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
     });
   }
 
-  FutureOr<List<TaskModel>> searchTask(
+  FutureOr<List<TaskModel>> progressBarSearch(
     TaskSearchModel query, [
     String? userId,
   ]) async {
@@ -80,7 +80,6 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
             sql.task.clientReferenceId,
           ),
         ),
-        // TODO :[Need to change this to taskclient reference Id]
         leftOuterJoin(
           sql.taskResource,
           sql.taskResource.taskclientReferenceId.equalsExp(
@@ -88,9 +87,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
           ),
         ),
       ]);
-      if (query.limit != null && query.offset != null) {
-        selectQuery.limit(query.limit!, offset: query.offset);
-      }
+
       final results = await (selectQuery
             ..where(buildAnd([
               if (query.clientReferenceId != null)
@@ -101,15 +98,12 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 sql.task.projectBeneficiaryClientReferenceId.isIn(
                   query.projectBeneficiaryClientReferenceId!,
                 ),
-              if (query.status != null)
-                sql.task.status.equals(
-                  query.status!,
-                ),
-              if (userId != null || query.createdBy != null)
+              if (userId != null)
                 sql.task.auditCreatedBy.equals(
-                  userId ?? query.createdBy!,
+                  userId,
                 ),
-              if (query.plannedEndDate != null)
+              if (query.plannedEndDate != null &&
+                  query.plannedStartDate != null)
                 sql.task.clientCreatedTime.isBetweenValues(
                   query.plannedStartDate!,
                   query.plannedEndDate!,
@@ -117,17 +111,21 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
             ]))
             ..orderBy([
               OrderingTerm(
-                expression: sql.task.clientCreatedTime,
+                expression: sql.task.clientModifiedTime,
                 mode: OrderingMode.asc,
               ),
             ]))
           .get();
+
       final tasksMap = <String, TaskModel>{};
+
       for (final e in results) {
         final task = e.readTableOrNull(sql.task);
         final resources = e.readTableOrNull(sql.taskResource);
         final address = e.readTableOrNull(sql.address);
+
         if (task == null) continue;
+
         // Check if the task is already in the map
         if (tasksMap.containsKey(task.clientReferenceId)) {
           // If it is, add the resource to the existing task's resources
@@ -149,15 +147,6 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                     lastModifiedBy: resources.auditModifiedBy,
                     lastModifiedTime: resources.auditModifiedTime,
                   ),
-                  clientAuditDetails: (task.clientCreatedBy != null &&
-                          task.clientCreatedTime != null)
-                      ? ClientAuditDetails(
-                          createdBy: task.clientCreatedBy!,
-                          createdTime: task.clientCreatedTime!,
-                          lastModifiedBy: task.clientModifiedBy,
-                          lastModifiedTime: task.clientModifiedTime,
-                        )
-                      : null,
                 ),
               );
         } else {
@@ -265,178 +254,13 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
           );
         }
       }
+
       // Convert the map values to a list of tasks
       final uniqueTasks = tasksMap.values.toList();
+
       return uniqueTasks.where((element) => element.isDeleted != true).toList();
     });
   }
-
-  // @override
-  // FutureOr<void> create(
-  //   TaskModel entity, {
-  //   bool createOpLog = true,
-  //   DataOperation dataOperation = DataOperation.create,
-  // }) async {
-  //   return retryLocalCallOperation(() async {
-  //     final taskCompanion = entity.companion;
-  //     final addresses = entity.address?.copyWith(
-  //       relatedClientReferenceId: entity.clientReferenceId,
-  //     );
-  //     final resources = entity.resources;
-  //     await sql.batch((batch) async {
-  //       batch.insert(sql.task, taskCompanion);
-
-  //       if (resources != null) {
-  //         final resourcesCompanions = resources.map((e) {
-  //           return e.companion;
-  //         }).toList();
-
-  //         batch.insertAll(
-  //           sql.taskResource,
-  //           resourcesCompanions,
-  //           mode: InsertMode.insertOrReplace,
-  //         );
-
-  //         if (addresses != null) {
-  //           final addressCompanions = addresses.companion;
-
-  //           batch.insert(
-  //             sql.address,
-  //             addressCompanions,
-  //             mode: InsertMode.insertOrReplace,
-  //           );
-  //         }
-  //       }
-
-  //       await super.create(
-  //         entity,
-  //       );
-  //     });
-  //   });
-  // }
-
-  // @override
-  // FutureOr<void> bulkCreate(
-  //   List<TaskModel> entities,
-  // ) async {
-  //   final taskCompanions = entities.map((e) => e.companion).toList();
-
-  //   List<AddressCompanion> addressCompanions = [];
-  //   List<TaskResourceCompanion> resourceCompanions = [];
-
-  //   for (TaskModel entity in entities) {
-  //     final addressCompanion = entity.address
-  //         ?.copyWith(
-  //           relatedClientReferenceId: entity.clientReferenceId,
-  //           auditDetails: entity.auditDetails,
-  //           clientAuditDetails: entity.clientAuditDetails,
-  //         )
-  //         .companion;
-  //     if (addressCompanion != null) {
-  //       addressCompanions.add(addressCompanion);
-  //     }
-
-  //     final resources = entity.resources?.map((e) {
-  //           return e
-  //               .copyWith(
-  //                 taskclientReferenceId: entity.clientReferenceId,
-  //               )
-  //               .companion;
-  //         }).toList() ??
-  //         [];
-  //     resourceCompanions.addAll(resources);
-  //   }
-
-  //   await sql.batch((batch) async {
-  //     batch.insertAll(
-  //       sql.task,
-  //       taskCompanions,
-  //       mode: InsertMode.insertOrReplace,
-  //     );
-
-  //     if (addressCompanions.isNotEmpty) {
-  //       batch.insertAll(
-  //         sql.address,
-  //         addressCompanions.whereNotNull().toList(),
-  //         mode: InsertMode.insertOrReplace,
-  //       );
-  //     }
-
-  //     batch.insertAllOnConflictUpdate(sql.taskResource, resourceCompanions);
-  //   });
-  // }
-
-  // @override
-  // FutureOr<void> update(
-  //   TaskModel entity, {
-  //   bool createOpLog = true,
-  // }) async {
-  //   final taskCompanion = entity.companion;
-
-  //   final addressCompanion = entity.address
-  //       ?.copyWith(
-  //         relatedClientReferenceId: entity.clientReferenceId,
-  //         auditDetails: entity.auditDetails,
-  //         clientAuditDetails: entity.clientAuditDetails,
-  //       )
-  //       .companion;
-
-  //   final resourcesCompanions = entity.resources?.map((e) {
-  //         return e
-  //             .copyWith(
-  //               clientReferenceId: e.clientReferenceId,
-  //               taskclientReferenceId: entity.clientReferenceId,
-  //             )
-  //             .companion;
-  //       }).toList() ??
-  //       [];
-
-  //   await sql.batch((batch) {
-  //     batch.update(
-  //       sql.task,
-  //       taskCompanion,
-  //       where: (table) => table.clientReferenceId.equals(
-  //         entity.clientReferenceId,
-  //       ),
-  //     );
-
-  //     if (addressCompanion != null) {
-  //       batch.update(
-  //         sql.address,
-  //         addressCompanion,
-  //         where: (table) => table.relatedClientReferenceId.equals(
-  //           addressCompanion.relatedClientReferenceId.value!,
-  //         ),
-  //       );
-  //     }
-
-  //     batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
-  //   });
-
-  //   await super.update(entity, createOpLog: createOpLog);
-  // }
-
-  // @override
-  // FutureOr<void> delete(
-  //   TaskModel entity, {
-  //   bool createOpLog = true,
-  // }) async {
-  //   final updated = entity.copyWith(
-  //     isDeleted: true,
-  //     rowVersion: entity.rowVersion,
-  //   );
-  //   await sql.batch((batch) {
-  //     batch.update(
-  //       sql.task,
-  //       updated.companion,
-  //       where: (table) => table.clientReferenceId.equals(
-  //         entity.clientReferenceId,
-  //       ),
-  //     );
-  //   });
-
-  //   return super.delete(updated);
-  // }
 
   @override
   DataModelType get type => DataModelType.task;

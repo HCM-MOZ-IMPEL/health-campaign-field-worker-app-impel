@@ -247,6 +247,15 @@ class CustomHouseHoldDetailsPageState
                                     i18.householdDetails.memberCountError),
                                 true,
                                 theme));
+                      } else if (widget.isEligible &&
+                          (memberCount < children || women < pregnantWomen)) {
+                        DigitToast.show(context,
+                            options: DigitToastOptions(
+                                localizations.translate(i18_local
+                                    .beneficiaryDetails
+                                    .invalidChildPregnantWomenCount),
+                                true,
+                                theme));
                       } else {
                         if (memberCount > 10) {
                           final shouldSubmit = await DigitDialog.show<bool>(
@@ -718,6 +727,17 @@ class CustomHouseHoldDetailsPageState
                                   maximum: 20,
                                   form: form,
                                   formControlName: _pregnantWomenCountKey,
+                                  onChange: () {
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int womenCount =
+                                        form.control(_womenCountKey).value;
+                                    form.control(_pregnantWomenCountKey).value =
+                                        womenCount < pregnantWomen
+                                            ? womenCount
+                                            : pregnantWomen;
+                                  },
                                   label: localizations.translate(
                                     i18.householdDetails
                                         .noOfPregnantWomenCountLabel,
@@ -734,6 +754,16 @@ class CustomHouseHoldDetailsPageState
                                   maximum: 20,
                                   form: form,
                                   formControlName: _childrenCountKey,
+                                  onChange: () {
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    form.control(_childrenCountKey).value =
+                                        memberCount < children
+                                            ? memberCount
+                                            : children;
+                                  },
                                   label: localizations.translate(
                                     i18.householdDetails
                                         .noOfChildrenBelow5YearsLabel,
@@ -845,7 +875,6 @@ class CustomHouseHoldDetailsPageState
             : 0,
         validators: [Validators.max<int>(20)],
       ),
-      // if (widget.isEligible)
       _childrenCountKey: FormControl<int>(
         value: household?.additionalFields?.fields
                     .where(

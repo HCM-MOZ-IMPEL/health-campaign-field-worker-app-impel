@@ -1118,6 +1118,9 @@ class BeneficiaryDetails {
   String get commentsLabel => 'REFUSAL_COMMENTS_LABEL';
   String get refusalCommentsRequried => 'REFUSAL_COMMENTS_REQUIRED';
   String get genderOfInterviewee => 'GENDER_OF_INTERVIEWEE';
+
+  String get invalidChildPregnantWomenCount =>
+      'INVALID_CHILD_PREGNANT_WOMEN_COUNT';
 }
 
 class StockDetails {

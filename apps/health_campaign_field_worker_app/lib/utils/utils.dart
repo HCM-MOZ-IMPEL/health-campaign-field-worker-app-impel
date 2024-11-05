@@ -145,7 +145,7 @@ performBackgroundService({
           DigitToast.show(
             context,
             options: DigitToastOptions(
-              'Background Service Stopped',
+              'Serviço em segundo plano interrompido',
               true,
               DigitTheme.instance.mobileTheme,
             ),
@@ -161,7 +161,7 @@ performBackgroundService({
         DigitToast.show(
           context,
           options: DigitToastOptions(
-            'Background Service Started',
+            'Serviço em segundo plano iniciado',
             false,
             DigitTheme.instance.mobileTheme,
           ),

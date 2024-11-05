@@ -74,10 +74,37 @@ class CustomBeneficiaryProgressBarState
         plannedEndDate: lte.millisecondsSinceEpoch,
         plannedStartDate: gte.millisecondsSinceEpoch,
       ),
-      listener: (data) {
+      listener: (data) async {
+        final now = DateTime.now();
+        final gte = DateTime(
+          now.year,
+          now.month,
+          now.day,
+        );
+
+        final lte = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          23,
+          59,
+          59,
+          999,
+        );
+
+        TaskSearchModel taskSearchQuery = TaskSearchModel(
+          status: Status.administeredSuccess.toValue(),
+          createdBy: loggedInUserUuid,
+          plannedEndDate: lte.millisecondsSinceEpoch,
+          plannedStartDate: gte.millisecondsSinceEpoch,
+          projectId: projectId,
+        );
+        List<TaskModel> results =
+            await taskRepository.progressBarSearch(taskSearchQuery);
+
         if (mounted) {
           setState(() {
-            current = data.length;
+            current = results.length;
           });
         }
       },
@@ -87,8 +114,7 @@ class CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    final target =
-        context.projectTypeCode == ProjectTypes.smc.toValue() ? 65.0 : 8.0;
+    const target = 8.0;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
