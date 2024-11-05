@@ -63,6 +63,8 @@ class _CustomBeneficiaryProgressBarSMCState
         createdBy: loggedInUserUuid,
         limit: 1,
         offset: 0,
+        plannedEndDate: lte.millisecondsSinceEpoch,
+        plannedStartDate: gte.millisecondsSinceEpoch,
       ),
       listener: (taskData) async {
         if (mounted) {
@@ -86,9 +88,10 @@ class _CustomBeneficiaryProgressBarSMCState
             createdBy: loggedInUserUuid,
             plannedEndDate: lte.millisecondsSinceEpoch,
             plannedStartDate: gte.millisecondsSinceEpoch,
+            projectId: projectId,
           );
           List<TaskModel> results =
-              await taskRepository.searchTask(taskSearchQuery);
+              await taskRepository.progressBarSearch(taskSearchQuery);
           final groupedEntries = results.groupListsBy(
             (element) => element.projectBeneficiaryClientReferenceId,
           );
@@ -107,7 +110,7 @@ class _CustomBeneficiaryProgressBarSMCState
 
   @override
   Widget build(BuildContext context) {
-    final target = 65;
+    const target = 65;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
