@@ -124,7 +124,8 @@ class CustomClosedHouseholdDetailsPageState
                               custombloc.ClosedHouseholdEvent.handleSummary(
                                 latitude: locationState.latitude!,
                                 longitude: locationState.longitude!,
-                                locationAccuracy: locationState.accuracy!,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
                                 householdHeadName: householdHeadName != null &&
                                         householdHeadName.trim().isNotEmpty
                                     ? householdHeadName
