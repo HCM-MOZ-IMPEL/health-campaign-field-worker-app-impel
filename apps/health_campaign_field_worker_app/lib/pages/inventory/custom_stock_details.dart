@@ -1731,6 +1731,10 @@ class CustomStockDetailsPageState
                                           !deliveryTeamSelected,
                                       formControlName: _waybillQuantityKey,
                                       validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            ),
                                         "number": (object) =>
                                             localizations.translate(
                                               '${quantityCountLabel}_ERROR',
