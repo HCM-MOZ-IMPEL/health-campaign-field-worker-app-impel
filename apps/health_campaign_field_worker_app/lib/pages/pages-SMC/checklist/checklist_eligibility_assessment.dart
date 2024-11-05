@@ -290,8 +290,10 @@ class _EligibilityChecklistViewPage
                                                 lastModifiedTime: context
                                                     .millisecondsSinceEpoch(),
                                               ),
-                                              additionalDetails:
-                                                  context.boundary.code,
+                                              additionalDetails: {
+                                                "boundaryCode":
+                                                    context.boundary.code
+                                              },
                                             ),
                                           ),
                                         );
