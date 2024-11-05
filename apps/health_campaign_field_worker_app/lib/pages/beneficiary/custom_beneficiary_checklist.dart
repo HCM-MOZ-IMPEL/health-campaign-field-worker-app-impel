@@ -189,12 +189,17 @@ class _CustomBeneficiaryChecklistPageState
                                   rowVersion: 1,
                                   accountId:
                                       RegistrationDeliverySingleton().projectId,
-                                  additionalDetails: {
-                                    "boundaryCode":
+                                  additionalFields: ServiceAdditionalFields(
+                                    version: 1,
+                                    fields: [
+                                      AdditionalField(
+                                        "boundaryCode",
                                         RegistrationDeliverySingleton()
                                             .boundary
                                             ?.code,
-                                  },
+                                      )
+                                    ],
+                                  ),
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
                                         .loggedInUserUuid!,
