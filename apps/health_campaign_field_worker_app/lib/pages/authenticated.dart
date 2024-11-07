@@ -79,12 +79,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                               ?.projectType?.code ==
                                           ProjectTypes.smc.toValue()) {
                                         ctx.router.replaceAll([
-                                          SMCWrapperRoute(),
+                                          const SMCWrapperRoute(),
                                           BoundarySelectionRoute()
                                         ]);
                                       } else {
                                         ctx.router.replaceAll([
-                                          IRSWrapperRoute(),
+                                          const IRSWrapperRoute(),
                                           BoundarySelectionRoute()
                                         ]);
                                       }
