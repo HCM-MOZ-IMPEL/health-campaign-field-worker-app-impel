@@ -246,8 +246,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
-                                          additionalDetails:
-                                              context.boundary.code,
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                context.boundary.code
+                                          },
                                         ),
                                       ),
                                     );

@@ -52,6 +52,7 @@ class CustomClosedHouseholdSummaryPageState
               enableFixedButton: true,
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
+                showcaseButton: null,
               ),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
@@ -69,8 +70,8 @@ class CustomClosedHouseholdSummaryPageState
                                   context.boundary.code,
                                   context.boundary.name,
                                   context.loggedInUserUuid,
-                                  context.projectId,
                                   envConfig.variables.tenantId,
+                                  context.projectId,
                                   context.beneficiaryType!.toString(),
                                   reason:
                                       localizations.translate(widget.reason),

@@ -137,6 +137,7 @@ class CustomIndividualDetailsSMCPageState
               header: Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
+                  showcaseButton: null,
                   handleBack: () {
                     if (isEditIndividual) {
                       final parent = context.router.parent() as StackRouter;
@@ -453,8 +454,11 @@ class CustomIndividualDetailsSMCPageState
                           padding: const EdgeInsets.only(bottom: kPadding),
                           child: Text(
                             localizations.translate(
-                              i18_local.individualDetails
-                                  .individualsDetailsLabelTextSMC,
+                              widget.isHeadOfHousehold
+                                  ? i18_local.individualDetails
+                                      .individualsDetailsLabelTextSMC
+                                  : i18_local.individualDetails
+                                      .individualsChildDetailsLabelTextSMC,
                             ),
                             style: theme.textTheme.displayMedium,
                           ),
@@ -641,9 +645,9 @@ class CustomIndividualDetailsSMCPageState
                                           .individualDetails
                                           .mobileNumberLengthValidationMessage),
                                   'minLength': (object) =>
-                                      localizations.translate(i18
+                                      localizations.translate(i18_local
                                           .individualDetails
-                                          .mobileNumberLengthValidationMessage),
+                                          .mobileMinLengthValidationMessageSMC),
                                 },
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -739,8 +743,7 @@ class CustomIndividualDetailsSMCPageState
     );
 
     List<IdentifierModel>? identifiers = individual.identifiers;
-
-    if (beneficiaryId != null) {
+    if (isEditIndividual == false) {
       identifiers?.add(IdentifierModel(
         clientReferenceId: individual.clientReferenceId,
         identifierId: beneficiaryId,
@@ -763,12 +766,14 @@ class CustomIndividualDetailsSMCPageState
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
-      identifiers: [
-        identifier.copyWith(
-          identifierId: beneficiaryId,
-          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        ),
-      ],
+      identifiers: isEditIndividual
+          ? identifiers
+          : [
+              identifier.copyWith(
+                identifierId: beneficiaryId,
+                identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+              ),
+            ],
     );
 
     return individual;
@@ -824,12 +829,12 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey: FormControl<String>(
-          value: individual?.mobileNumber,
-          validators: [
-            CustomValidator.validMobileNumber,
-            Validators.maxLength(9)
-          ]),
+      _mobileNumberKey:
+          FormControl<String>(value: individual?.mobileNumber, validators: [
+        CustomValidator.validMobileNumber,
+        Validators.maxLength(9),
+        Validators.minLength(9),
+      ]),
     });
   }
 

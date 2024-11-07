@@ -314,7 +314,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.address.locality?.name ?? "",
+                    localizations.translate(item.address.locality?.code ?? ""),
                   ),
                 ),
               ],

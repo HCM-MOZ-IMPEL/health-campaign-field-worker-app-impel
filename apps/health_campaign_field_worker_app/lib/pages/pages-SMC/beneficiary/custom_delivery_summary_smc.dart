@@ -64,7 +64,7 @@ class DeliverySummaryPageState
                   header: Column(children: [
                     const BackNavigationHelpHeaderWidget(
                       showHelp: false,
-                      showcaseButton: ShowcaseButton(),
+                      showcaseButton: null,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -153,11 +153,7 @@ class DeliverySummaryPageState
                                         context.router.popUntilRouteWithName(
                                           BeneficiaryWrapperRoute.name,
                                         );
-                                        // context.router.push(
-                                        //   HouseholdAcknowledgementRoute(
-                                        //     enableViewHousehold: true,
-                                        //   ),
-                                        // );
+
                                         context.router.push(
                                             DoseAdministeredVerificationRoute());
                                       } else {
@@ -227,17 +223,6 @@ class DeliverySummaryPageState
                                     i18.householdDetails.householdDetailsLabel),
                                 withDivider: true,
                                 items: [
-                                  LabelValuePair(
-                                      label: localizations.translate(
-                                          i18.beneficiaryDetails.totalMembers),
-                                      value: deliverState.householdMemberWrapper
-                                              ?.members?.length
-                                              .toString() ??
-                                          deliverState.householdMemberWrapper
-                                              ?.household?.memberCount
-                                              .toString() ??
-                                          '0',
-                                      isInline: true),
                                   LabelValuePair(
                                       label: localizations.translate(i18_local
                                           .individualDetails

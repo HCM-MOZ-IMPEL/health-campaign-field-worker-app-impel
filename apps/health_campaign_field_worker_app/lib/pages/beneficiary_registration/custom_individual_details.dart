@@ -596,6 +596,10 @@ class CustomIndividualDetailsPageState
                                 'required': (object) => localizations.translate(
                                       '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                     ),
+                                'min3': (object) => localizations
+                                    .translate(
+                                        i18_local.common.min3CharsRequired)
+                                    .replaceAll('{}', ''),
                                 'maxLength': (object) => localizations
                                     .translate(i18.common.maxCharsRequired)
                                     .replaceAll('{}', maxLength.toString()),
@@ -868,7 +872,7 @@ class CustomIndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          CustomValidator.requiredMin3,
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),

@@ -9,6 +9,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/localized.dart';
@@ -85,14 +88,15 @@ class CustomClosedHouseholdDetailsPageState
                 ? false
                 : true;
           },
-          child: BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
-              builder: (context, state) {
+          child: BlocBuilder<custombloc.ClosedHouseholdBloc,
+              custombloc.ClosedHouseholdState>(builder: (context, state) {
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    showcaseButton: null,
                   ),
                 ],
               ),
@@ -107,11 +111,12 @@ class CustomClosedHouseholdDetailsPageState
                             .control(_householdHeadNameKey)
                             .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
+                        context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSummary(
                                 latitude: locationState.latitude!,
                                 longitude: locationState.longitude!,
-                                locationAccuracy: locationState.accuracy!,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
                                 householdHeadName: householdHeadName != null &&
                                         householdHeadName.trim().isNotEmpty
                                     ? householdHeadName
@@ -121,7 +126,6 @@ class CustomClosedHouseholdDetailsPageState
 
                         final reason =
                             form.control(_reasonKey).value as String?;
-
                         if (reason == null || reason.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

@@ -26,6 +26,7 @@ class ComplaintTypePage extends LocalizedStatefulWidget {
 class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
   static const _complaintType = 'complaintType';
   static const _otherComplaintType = 'otherComplaintType';
+  static const otherText = "Other";
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                     var otherComplaintTypeValue =
                         form.control(_otherComplaintType).value;
 
-                    if (complaintType == "Other") {
+                    if (complaintType == otherText) {
                       form.control(_otherComplaintType).setValidators(
                         [Validators.required],
                         autoValidate: true,
@@ -136,9 +137,21 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                 _,
                               ) {
                                 var complaintTypes = appConfiguration
-                                    .complaintTypes
-                                    ?.map((e) => e.code)
-                                    .toList();
+                                        .complaintTypes
+                                        ?.map((e) => e.code)
+                                        .toList() ??
+                                    [];
+
+                                complaintTypes.sort((a, b) {
+                                  if (a == otherText) {
+                                    return 1; // Keep 'Others' at the end
+                                  }
+                                  if (b == otherText) {
+                                    return -1; // Keep 'Others' at the end
+                                  }
+                                  return a
+                                      .compareTo(b); // Normal alphabetical sort
+                                });
 
                                 final isDisabled =
                                     form.control(_complaintType).disabled;
@@ -159,7 +172,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                         ? theme.colorScheme.shadow
                                         : theme.colorScheme.onBackground,
                                   ),
-                                  items: complaintTypes ?? [],
+                                  items: complaintTypes,
                                   itemBuilder: (item) => RadioButtonBuilder(
                                     localizations.translate(
                                       item.snakeCase.toUpperCase().trim(),
@@ -171,7 +184,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           },
                         ),
                       ),
-                      if (form.control(_complaintType).value == "Other") ...[
+                      if (form.control(_complaintType).value == otherText) ...[
                         DigitTextFormField(
                           formControlName: _otherComplaintType,
                           label: "",

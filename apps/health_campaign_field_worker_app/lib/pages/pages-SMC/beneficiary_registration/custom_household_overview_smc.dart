@@ -75,6 +75,8 @@ class CustomHouseholdOverviewSMCPageState
                             .read<SearchHouseholdsBloc>()
                             .add(const SearchHouseholdsEvent.clear());
                       },
+                      showHelp: false,
+                      showcaseButton: null,
                     ),
                     enableFixedButton: true,
                     footer: Offstage(
@@ -437,7 +439,7 @@ class CustomHouseholdOverviewSMCPageState
                                               ),
                                             ),
                                             children: [
-                                              IndividualDetailsRoute(
+                                              CustomIndividualDetailsSMCRoute(
                                                 isHeadOfHousehold: isHead,
                                               ),
                                             ],
@@ -644,7 +646,7 @@ class CustomHouseholdOverviewSMCPageState
           householdModel: household,
         ),
         children: [
-          CustomIndividualDetailsSMCRoute(),
+          CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false),
         ],
       ),
     );

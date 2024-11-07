@@ -75,6 +75,16 @@ class CustomValidator {
         : {'min2': true};
   }
 
+  static Map<String, dynamic>? requiredMin3(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().trim().length >= 3 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min3': true};
+  }
+
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {
@@ -91,6 +101,23 @@ class CustomValidator {
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
 
     return {'mobileNumber': true};
+  }
+
+  static Map<String, dynamic>? validStockCount(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value == null || control.value.toString().isEmpty) {
+      return {'required': true};
+    }
+
+    var parsed = int.tryParse(control.value) ?? 0;
+    if (parsed < 0) {
+      return {'min': true};
+    } else if (parsed > 100000000) {
+      return {'max': true};
+    }
+
+    return null;
   }
 }
 
@@ -118,7 +145,7 @@ performBackgroundService({
           DigitToast.show(
             context,
             options: DigitToastOptions(
-              'Background Service Stopped',
+              'Serviço em segundo plano interrompido',
               true,
               DigitTheme.instance.mobileTheme,
             ),
@@ -134,7 +161,7 @@ performBackgroundService({
         DigitToast.show(
           context,
           options: DigitToastOptions(
-            'Background Service Started',
+            'Serviço em segundo plano iniciado',
             false,
             DigitTheme.instance.mobileTheme,
           ),

@@ -11,10 +11,10 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../../models/entities/roles_type.dart';
-import '../../../models/entities/status.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
@@ -106,10 +106,6 @@ class _EligibilityChecklistViewPage
                     if (!isControllersInitialized) {
                       initialAttributes?.forEach((e) {
                         controller.add(TextEditingController());
-                        if (!(context.isHealthFacilitySupervisor &&
-                            widget.referralClientRefId != null)) {
-                          additionalController.add(TextEditingController());
-                        }
                       });
 
                       // Set the flag to true after initializing controllers
@@ -125,7 +121,10 @@ class _EligibilityChecklistViewPage
                       header: Column(children: [
                         if (!(context.isHealthFacilitySupervisor &&
                             widget.referralClientRefId != null))
-                          const BackNavigationHelpHeaderWidget(),
+                          const BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showcaseButton: null,
+                          ),
                       ]),
                       enableFixedButton: true,
                       footer: BlocListener<LocationBloc, LocationState>(
@@ -199,34 +198,6 @@ class _EligibilityChecklistViewPage
                                         i++) {
                                       final attribute = initialAttributes;
 
-                                      /// Conditionally add the 'reason' field if additionalDetails is present
-                                      final String? additionalDetailValue =
-                                          isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null
-                                              ? null
-                                              : ((attribute?[i]
-                                                                  .values
-                                                                  ?.length ==
-                                                              2 ||
-                                                          attribute?[i]
-                                                                  .values
-                                                                  ?.length ==
-                                                              3) &&
-                                                      controller[i].text ==
-                                                          attribute?[i]
-                                                              .values?[1]
-                                                              .trim())
-                                                  ? additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                          .isNotEmpty
-                                                      ? additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                      : null
-                                                  : null;
-
                                       attributes.add(ServiceAttributesModel(
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
@@ -268,11 +239,6 @@ class _EligibilityChecklistViewPage
                                               'longitude',
                                               longitude,
                                             ),
-                                            if (additionalDetailValue != null)
-                                              AdditionalField(
-                                                'reason',
-                                                additionalDetailValue,
-                                              ),
                                           ],
                                         ),
                                       ));
@@ -321,8 +287,10 @@ class _EligibilityChecklistViewPage
                                                 lastModifiedTime: context
                                                     .millisecondsSinceEpoch(),
                                               ),
-                                              additionalDetails:
-                                                  context.boundary.code,
+                                              additionalDetails: {
+                                                "boundaryCode":
+                                                    context.boundary.code
+                                              },
                                             ),
                                           ),
                                         );
@@ -373,7 +341,7 @@ class _EligibilityChecklistViewPage
                                               ),
                                               projectId: context.projectId,
                                               status: Status
-                                                  .beneficiaryIneligible
+                                                  .beneficiaryInEligible
                                                   .toValue(),
                                               clientAuditDetails:
                                                   ClientAuditDetails(
@@ -392,7 +360,7 @@ class _EligibilityChecklistViewPage
                                                 fields: [
                                                   AdditionalField(
                                                     'taskStatus',
-                                                    Status.beneficiaryIneligible
+                                                    Status.beneficiaryInEligible
                                                         .toValue(),
                                                   ),
                                                   AdditionalField(
@@ -959,7 +927,7 @@ class _EligibilityChecklistViewPage
     bool ifAdministration,
   ) {
     var isIneligible = false;
-    var q4Key = "SEA4";
+    var q4Key = "SEA3";
     Map<String, String> keyVsReason = {
       q4Key: "CHILD_ON_MEDICATION_1",
     };
@@ -990,8 +958,8 @@ class _EligibilityChecklistViewPage
   ) {
     var isReferral = false;
     var q1Key = "SEA1";
-    var q2Key = "SEA2";
-    var q3Key = "SEA3";
+    var q2Key = "SEA1.YES.ADT1";
+    var q3Key = "SEA2";
     Map<String, String> referralKeysVsCode = {
       q1Key: "SICK",
       q2Key: "FEVER",

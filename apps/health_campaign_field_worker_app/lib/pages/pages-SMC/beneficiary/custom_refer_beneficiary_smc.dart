@@ -57,6 +57,7 @@ class CustomReferBeneficiarySMCPageState
   static const _referredToKey = 'referredTo';
   final clickedStatus = ValueNotifier<bool>(false);
   static const referralReasons = "referralReasons";
+  static const sideEffectFromCurrentCycle = "DRUG_SE_CC";
 
   @override
   void dispose() {
@@ -90,7 +91,9 @@ class CustomReferBeneficiarySMCPageState
             ) ??
             [];
 
-        final reasons = widget.referralReasons ?? [];
+        final reasons = widget.isReadministrationUnSuccessful
+            ? [sideEffectFromCurrentCycle]
+            : (widget.referralReasons ?? []);
 
         return WillPopScope(
           onWillPop: () =>
@@ -105,8 +108,13 @@ class CustomReferBeneficiarySMCPageState
                     widget.isReadministrationUnSuccessful
                         ? const BackNavigationHelpHeaderWidget(
                             showBackNavigation: false,
+                            showHelp: false,
+                            showcaseButton: null,
                           )
-                        : const BackNavigationHelpHeaderWidget(),
+                        : const BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showcaseButton: null,
+                          ),
                   ]),
                   footer: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),

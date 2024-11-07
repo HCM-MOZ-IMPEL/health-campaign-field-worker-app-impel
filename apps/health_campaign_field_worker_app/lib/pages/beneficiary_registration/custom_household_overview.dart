@@ -313,9 +313,10 @@ class _CustomHouseholdOverviewPageState
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
-                                          ): RegistrationDeliverySingleton()
-                                              .boundary
-                                              ?.name,
+                                          ): localizations.translate(
+                                              RegistrationDeliverySingleton()
+                                                  .boundary!
+                                                  .code!),
                                           localizations.translate(
                                             i18.deliverIntervention
                                                 .memberCountText,

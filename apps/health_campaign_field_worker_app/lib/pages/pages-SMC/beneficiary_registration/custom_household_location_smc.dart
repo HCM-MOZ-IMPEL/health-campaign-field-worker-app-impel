@@ -55,16 +55,6 @@ class _CustomHouseholdLocationSMCPageState
     regState.maybeMap(
       orElse: () => false,
       editHousehold: (value) => false,
-      editIndividual: (value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final isHead =
-              state.householdMemberWrapper.headOfHousehold?.clientReferenceId ==
-                  value.individualModel.clientReferenceId;
-          router
-              .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: isHead));
-        });
-        return true;
-      },
       create: (value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // Show the dialog after the first frame is built
@@ -73,13 +63,6 @@ class _CustomHouseholdLocationSMCPageState
             localizations.translate(i18Local.common.locationCapturing),
             DigitSyncDialogType.inProgress,
           );
-        });
-        return true;
-      },
-      addMember: (value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          router
-              .push(CustomIndividualDetailsSMCRoute(isHeadOfHousehold: false));
         });
         return true;
       },
@@ -135,6 +118,7 @@ class _CustomHouseholdLocationSMCPageState
                 children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    showcaseButton: null,
                   ),
                 ],
               ),

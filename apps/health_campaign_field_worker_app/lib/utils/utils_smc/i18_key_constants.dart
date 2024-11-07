@@ -655,6 +655,7 @@ class Home {
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+  String get closedHouseHoldLabelSMC => 'HOME_CLOSE_HOUSEHOLD_LABEL_SMC';
 }
 
 class ReferBeneficiary {
@@ -1141,6 +1142,8 @@ class IndividualDetails {
   const IndividualDetails();
 
   String get individualsDetailsLabelTextSMC => 'INDIVIDUAL_LABEL_TEXT_SMC';
+  String get individualsChildDetailsLabelTextSMC =>
+      'INDIVIDUAL_CHILD_LABEL_TEXT_SMC';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
@@ -1193,6 +1196,8 @@ class IndividualDetails {
   String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
   String get firstNameHeadLabelTextSMC => 'FIRST_NAME_HEAD_LABEL_TEXT_SMC';
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+  String get mobileMinLengthValidationMessageSMC =>
+      'MOBILE_MIN_LENGTH_VALIDATION_SMC';
 }
 
 class BeneficiaryDetails {

@@ -367,13 +367,37 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
-    final facilities = await facilityRemoteRepository.search(
-        FacilitySearchModel(
-          id: null,
-        ),
-        limit: 1000);
+    String? parentProjectId;
 
-    await facilityLocalRepository.bulkCreate(facilities);
+    if (projects.isNotEmpty &&
+        projects.first.projectHierarchy != null &&
+        projects.first.projectHierarchy!.split('.').length >= 2) {
+      parentProjectId = projects.first.projectHierarchy?.split('.')[1];
+    }
+
+    if (parentProjectId == null) {
+      final facilities = await facilityRemoteRepository.search(
+          FacilitySearchModel(
+            id: null,
+          ),
+          limit: 1000);
+
+      await facilityLocalRepository.bulkCreate(facilities);
+    } else {
+      final parentProjectFacilities =
+          await projectFacilityRemoteRepository.search(
+              ProjectFacilitySearchModel(
+                projectId: [parentProjectId],
+              ),
+              limit: 1000);
+      final facilities = await facilityRemoteRepository.search(
+          FacilitySearchModel(
+            id: parentProjectFacilities.map((e) => e.facilityId).toList(),
+          ),
+          limit: 1000);
+
+      await facilityLocalRepository.bulkCreate(facilities);
+    }
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {

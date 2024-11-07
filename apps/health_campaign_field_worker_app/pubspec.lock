@@ -144,6 +144,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.3.2"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      name: auto_size_text
+      sha256: "3f5261cd3fb5f2a9ab4e2fc3fba84fd9fcaac8821f20a1d4e71f557521b22599"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   battery_plus:
     dependency: "direct main"
     description:
@@ -507,18 +515,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "0d9a14ce5889ed6ddec0c619cf8262331b37e23bdff1168f04d48b48bced518e"
+      sha256: "0d201c866dc68652cdc5c632193179e14b06fdf5e112e837f0c998dd02440bff"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.5-uniqueId"
+    version: "1.0.4-dev.8-uniqueId"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: "32e2173ae52e7fd9fb53fa435fb21466248029366584f44a0c0f2c6836267a98"
+      sha256: "0498e3e910883a0132050a1acdd7b3a094b935240111bac24683515c9d0dcf3b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1549,10 +1557,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: cd307a4ba048634d7307ef51c3ca97e2e21b9f9d35c9b232b3804676d7d0fc05
+      sha256: "86024b07a5c5e51e0717d60e5d2970102167fc0f7f2c253554351cd881f3fe97"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.1-uniqueId"
+    version: "1.0.4-dev.4-search-fix"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:

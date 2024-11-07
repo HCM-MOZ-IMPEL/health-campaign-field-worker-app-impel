@@ -205,13 +205,16 @@ class CustomDeliverySummaryPageState
                               LabelValuePair(
                                   label: localizations.translate(
                                       i18.householdLocation.villageLabel),
-                                  value: deliverState.householdMemberWrapper
-                                          ?.household?.address?.locality?.code
+                                  value: localizations.translate(deliverState
+                                          .householdMemberWrapper
+                                          ?.household
+                                          ?.address
+                                          ?.locality
+                                          ?.code
                                           .split('_')
-                                          .last
-                                          .titleCase ??
+                                          .last ??
                                       localizations
-                                          .translate(i18.common.coreCommonNA),
+                                          .translate(i18.common.coreCommonNA)),
                                   isInline: true),
                             ]),
                       ),

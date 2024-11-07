@@ -449,6 +449,7 @@ class CustomDeliverInterventionSMCPageState
                                     header: const Column(children: [
                                       BackNavigationHelpHeaderWidget(
                                         showHelp: false,
+                                        showcaseButton: null,
                                       ),
                                     ]),
                                     children: [
@@ -586,7 +587,7 @@ class CustomDeliverInterventionSMCPageState
                                                         1),
                                                     FilteringTextInputFormatter
                                                         .allow(
-                                                      RegExp("[1-2]"),
+                                                      RegExp(r'^[123]$'),
                                                     ),
                                                   ],
                                                   label:
@@ -637,6 +638,7 @@ class CustomDeliverInterventionSMCPageState
                                                             .deliveryCommentLabelSMC,
                                                       ),
                                                       form: form,
+                                                      enabled: doseAdministered,
                                                       menuItems:
                                                           deliveryCommentOptionsSmc
                                                               .map((e) {
@@ -644,7 +646,8 @@ class CustomDeliverInterventionSMCPageState
                                                       }).toList(),
                                                       formControlName:
                                                           _deliveryCommentKey,
-                                                      isRequired: false,
+                                                      isRequired:
+                                                          doseAdministered,
                                                       valueMapper: (value) =>
                                                           localizations
                                                               .translate(

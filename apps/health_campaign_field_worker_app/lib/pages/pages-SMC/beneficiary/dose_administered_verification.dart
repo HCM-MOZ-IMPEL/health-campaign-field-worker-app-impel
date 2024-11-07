@@ -67,12 +67,6 @@ class _DoseAdministeredVerificationPageState
               return BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (context, deliveryInterventionstate) {
-                  var beneficiaryName =
-                      (' ${state.selectedIndividual?.name?.givenName ?? "-"}'
-                              " "
-                              '${state.selectedIndividual?.name?.familyName ?? "-"}')
-                          .toString();
-
                   var beneficiaryId = state.selectedIndividual?.identifiers
                           ?.lastWhere(
                             (e) =>
@@ -337,7 +331,6 @@ class _DoseAdministeredVerificationPageState
                                           .infoWrittenInChildCard,
                                     )}"),
                                     {
-                                      Constants.smallBraces: beneficiaryName,
                                       Constants.curlyBraces: beneficiaryId,
                                     },
                                     theme,
