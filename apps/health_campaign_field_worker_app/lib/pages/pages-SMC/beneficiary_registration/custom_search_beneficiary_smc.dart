@@ -51,10 +51,11 @@ class _CustomSearchBeneficiarySMCPageState
     householdMembers: [],
   );
 
-  late final SearchBlocWrapper blocWrapper;
+  late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
 
   @override
   void initState() {
+    // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
@@ -73,6 +74,7 @@ class _CustomSearchBeneficiarySMCPageState
           });
           if (!ifSearchTriggered) {
             ifSearchTriggered = true;
+            // Trigger search after location is loaded
             triggerGlobalSearchEvent();
           }
         }
