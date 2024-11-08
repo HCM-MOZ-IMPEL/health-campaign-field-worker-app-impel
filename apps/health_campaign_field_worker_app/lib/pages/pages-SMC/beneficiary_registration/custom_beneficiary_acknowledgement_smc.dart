@@ -35,9 +35,16 @@ class CustomBeneficiaryAcknowledgementSMCPage extends LocalizedStatefulWidget {
 
 class CustomBeneficiaryAcknowledgementSMCPageState
     extends LocalizedState<CustomBeneficiaryAcknowledgementSMCPage> {
+  late final HouseholdMemberWrapper? wrapper;
+
   @override
   void initState() {
     super.initState();
+    final bloc = context.read<SearchBlocWrapper>();
+    final overviewBloc = context.read<HouseholdOverviewBloc>();
+    wrapper = bloc.state.householdMembers.isEmpty
+        ? overviewBloc.state.householdMemberWrapper
+        : bloc.state.householdMembers.lastOrNull;
   }
 
   @override
@@ -57,17 +64,33 @@ class CustomBeneficiaryAcknowledgementSMCPageState
               milliseconds: 0,
             ),
             () {
+              final overviewBloc = context.read<HouseholdOverviewBloc>();
+
               HouseholdMemberWrapper? memberWrapper =
                   searchBlocState.householdMembers.isEmpty
                       ? null
                       : searchBlocState.householdMembers.first;
-              memberWrapper = searchBlocState.householdMembers.firstOrNull;
+              overviewBloc.add(
+                HouseholdOverviewReloadEvent(
+                  projectId:
+                      RegistrationDeliverySingleton().projectId.toString(),
+                  projectBeneficiaryType:
+                      RegistrationDeliverySingleton().beneficiaryType ??
+                          BeneficiaryType.household,
+                ),
+              );
+              memberWrapper = searchBlocState.householdMembers.isEmpty
+                  ? overviewBloc.state.householdMemberWrapper
+                  : searchBlocState.householdMembers.first;
             },
           ).then((value) {
+            final overviewBloc = context.read<HouseholdOverviewBloc>();
             parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
             parent.push(
               BeneficiaryWrapperRoute(
-                wrapper: searchBlocState.householdMembers.firstOrNull!,
+                wrapper: searchBlocState.householdMembers.isEmpty
+                    ? overviewBloc.state.householdMemberWrapper
+                    : searchBlocState.householdMembers.first,
               ),
             );
           });
@@ -76,7 +99,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         secondaryLabel: localizations.translate(
           i18_local.householdDetails.viewHouseHoldDetailsActionSMC,
         ),
-        subLabel: getSubText(),
+        subLabel: getSubText(wrapper),
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(
@@ -88,10 +111,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
     );
   }
 
-  getSubText() {
-    HouseholdMemberWrapper wrapper =
-        context.read<SearchBlocWrapper>().state.householdMembers.last;
-
+  getSubText(HouseholdMemberWrapper? wrapper) {
     return wrapper != null
         ? '${localizations.translate(i18.beneficiaryDetails.beneficiaryId)}\n'
             '${wrapper.members?.lastOrNull!.name!.givenName} - '
