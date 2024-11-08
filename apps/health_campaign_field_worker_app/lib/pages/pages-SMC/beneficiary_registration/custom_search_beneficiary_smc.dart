@@ -51,11 +51,10 @@ class _CustomSearchBeneficiarySMCPageState
     householdMembers: [],
   );
 
-  late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
+  late final SearchBlocWrapper blocWrapper;
 
   @override
   void initState() {
-    // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
@@ -74,14 +73,12 @@ class _CustomSearchBeneficiarySMCPageState
           });
           if (!ifSearchTriggered) {
             ifSearchTriggered = true;
-            // Trigger search after location is loaded
             triggerGlobalSearchEvent();
           }
         }
       });
     }
 
-    // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
         setState(() {
@@ -342,7 +339,6 @@ class _CustomSearchBeneficiarySMCPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    // #TODO : add circular progress bar till searchResults is not fetched
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {

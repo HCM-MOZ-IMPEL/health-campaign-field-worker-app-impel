@@ -57,7 +57,6 @@ class _CustomHouseholdLocationSMCPageState
       editHousehold: (value) => false,
       create: (value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          // Show the dialog after the first frame is built
           DigitComponentsUtils().showLocationCapturingDialog(
             context,
             localizations.translate(i18Local.common.locationCapturing),
@@ -87,7 +86,6 @@ class _CustomHouseholdLocationSMCPageState
                   orElse: () => false,
                   create: (value) {
                     if (locationState.accuracy != null) {
-                      //Hide the dialog after 1 seconds
                       Future.delayed(const Duration(seconds: 1), () {
                         DigitComponentsUtils().hideDialog(context);
                       });

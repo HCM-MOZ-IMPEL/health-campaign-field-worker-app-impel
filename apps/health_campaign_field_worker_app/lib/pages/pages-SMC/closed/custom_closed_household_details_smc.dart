@@ -44,7 +44,6 @@ class CustomClosedHouseholdDetailsPageState
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Show the dialog after the first frame is built
       DigitComponentsUtils().showLocationCapturingDialog(
         context,
         localizations.translate(i18.common.locationCapturing),
@@ -67,7 +66,6 @@ class CustomClosedHouseholdDetailsPageState
         builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
           listener: (context, locationState) {
             if (locationState.accuracy != null) {
-              //Hide the dialog after 1 seconds
               Future.delayed(const Duration(seconds: 1), () {
                 DigitComponentsUtils().hideDialog(context);
               });
@@ -210,8 +208,7 @@ class CustomClosedHouseholdDetailsPageState
                                   if (value.isNotEmpty) {
                                     form.control(_reasonKey).value =
                                         value.first;
-                                  } // todo verify this
-                                  else if (true) {
+                                  } else if (true) {
                                     form.control(_reasonKey).value = null;
                                     setState(() {
                                       form

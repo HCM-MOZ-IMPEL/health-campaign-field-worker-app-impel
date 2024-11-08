@@ -54,7 +54,7 @@ class CustomBeneficiaryDetailsSMCPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-          // Filtering project beneficiaries based on the selected individual
+
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
@@ -66,8 +66,6 @@ class CustomBeneficiaryDetailsSMCPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
-
-          // Extracting task data related to the selected project beneficiary
 
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
@@ -115,8 +113,6 @@ class CustomBeneficiaryDetailsSMCPageState
               ),
             );
           }
-
-          // Building the table content based on the DeliverInterventionState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(
             builder: (context, productState) {

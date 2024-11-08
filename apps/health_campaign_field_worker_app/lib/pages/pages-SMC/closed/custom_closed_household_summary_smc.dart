@@ -86,7 +86,6 @@ class CustomClosedHouseholdSummaryPageState
                                       ? scannerState.qrCodes.first
                                       : null));
 
-                          ///clear the scanner
                           context.router
                               .push(ClosedHouseholdAcknowledgementRoute());
                         },
