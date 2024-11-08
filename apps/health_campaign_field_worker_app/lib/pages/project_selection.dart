@@ -250,8 +250,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           .firstWhere((element) => element.boundaryList.isNotEmpty);
 
       context.router.replaceAll([
-        context.selectedProject.additionalDetails?.projectType?.code ==
-                ProjectTypes.smc.toValue()
+        isProjectTypeSMC(context)
             ? const SMCWrapperRoute()
             : const IRSWrapperRoute(),
         BoundarySelectionRoute(),
@@ -371,4 +370,8 @@ void setPackagesSingleton(BuildContext context) {
           beneficiaryType: context.beneficiaryType,
         );
       });
+}
+
+bool isProjectTypeSMC(BuildContext context) {
+  return context.projectTypeCode == ProjectTypes.smc.toValue();
 }

@@ -81,7 +81,6 @@ class _CustomSearchBeneficiarySMCPageState
       });
     }
 
-    // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
         setState(() {
@@ -342,7 +341,6 @@ class _CustomSearchBeneficiarySMCPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    // #TODO : add circular progress bar till searchResults is not fetched
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {

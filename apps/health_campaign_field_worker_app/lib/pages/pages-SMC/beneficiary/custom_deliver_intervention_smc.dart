@@ -20,13 +20,11 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
-import '../../../blocs/project/project.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
@@ -74,7 +72,7 @@ class CustomDeliverInterventionSMCPageState
   // List of controllers for form elements
   final List _controllers = [];
 
-// Initialize the currentStep variable to keep track of the current step in a process.
+  // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
 
   @override
@@ -692,7 +690,6 @@ class CustomDeliverInterventionSMCPageState
   bool hasEmptyOrZeroQuantity(FormGroup form) {
     final quantityDistributedArray =
         form.control(_quantityDistributedKey) as FormArray;
-
     // Check if any quantity is zero or null
     return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
         true;
@@ -867,8 +864,7 @@ class CustomDeliverInterventionSMCPageState
     return task;
   }
 
-// This method builds a form used for delivering interventions.
-
+  // This method builds a form used for delivering interventions.
   FormGroup buildForm(
     BuildContext context,
     List<DeliveryProductVariant>? productVariants,

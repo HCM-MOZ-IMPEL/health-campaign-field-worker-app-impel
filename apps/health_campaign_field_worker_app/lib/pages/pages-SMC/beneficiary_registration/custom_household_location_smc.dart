@@ -10,6 +10,7 @@ import 'package:health_campaign_field_worker_app/models/entities/project_types.d
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/extensions/extensions.dart' as contextLocal;
@@ -49,6 +50,7 @@ class _CustomHouseholdLocationSMCPageState
     final regState = context.read<BeneficiaryRegistrationBloc>().state;
     context.read<LocationBloc>().add(const LoadLocationEvent());
     final router = context.router;
+    final state = context.read<HouseholdOverviewBloc>().state;
 
     regState.maybeMap(
       orElse: () => false,
@@ -85,7 +87,6 @@ class _CustomHouseholdLocationSMCPageState
                   orElse: () => false,
                   create: (value) {
                     if (locationState.accuracy != null) {
-                      //Hide the dialog after 1 seconds
                       Future.delayed(const Duration(seconds: 1), () {
                         DigitComponentsUtils().hideDialog(context);
                       });
