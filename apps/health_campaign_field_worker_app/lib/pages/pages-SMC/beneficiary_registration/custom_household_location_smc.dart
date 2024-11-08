@@ -57,6 +57,7 @@ class _CustomHouseholdLocationSMCPageState
       editHousehold: (value) => false,
       create: (value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Show the dialog after the first frame is built
           DigitComponentsUtils().showLocationCapturingDialog(
             context,
             localizations.translate(i18Local.common.locationCapturing),

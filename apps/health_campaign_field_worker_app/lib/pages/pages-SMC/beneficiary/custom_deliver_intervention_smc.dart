@@ -47,6 +47,7 @@ class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
 
 class CustomDeliverInterventionSMCPageState
     extends LocalizedState<CustomDeliverInterventionSMCPage> {
+  // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _quantityWastedKey = 'quantityWasted';
@@ -57,16 +58,21 @@ class CustomDeliverInterventionSMCPageState
   static const _administeredQuantity = 2;
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
+
+  // Variable to track dose administration status
   bool doseAdministered = false;
 
+  // toggle doseAdministered
   void checkDoseAdministration(bool newValue) {
     setState(() {
       doseAdministered = newValue;
     });
   }
 
+  // List of controllers for form elements
   final List _controllers = [];
 
+  // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
 
   @override
@@ -170,6 +176,7 @@ class CustomDeliverInterventionSMCPageState
           DigitSyncDialogType.inProgress);
 
       Future.delayed(const Duration(seconds: 2), () {
+        // After delay, hide the initial dialog
         DigitComponentsUtils().hideDialog(context);
         handleCapturedLocationState(
           locationState,
@@ -683,7 +690,7 @@ class CustomDeliverInterventionSMCPageState
   bool hasEmptyOrZeroQuantity(FormGroup form) {
     final quantityDistributedArray =
         form.control(_quantityDistributedKey) as FormArray;
-
+    // Check if any quantity is zero or null
     return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
         true;
   }
@@ -717,6 +724,7 @@ class CustomDeliverInterventionSMCPageState
       final productId = deliveredProducts[i]?.id;
       if (productId != null) {
         if (uniqueProductIds.contains(productId)) {
+          // Duplicate found
           return true;
         } else {
           uniqueProductIds.add(productId);
@@ -760,10 +768,12 @@ class CustomDeliverInterventionSMCPageState
       ),
     );
 
+    // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
+    // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
       resources: productvariantList
@@ -854,6 +864,7 @@ class CustomDeliverInterventionSMCPageState
     return task;
   }
 
+  // This method builds a form used for delivering interventions.
   FormGroup buildForm(
     BuildContext context,
     List<DeliveryProductVariant>? productVariants,
