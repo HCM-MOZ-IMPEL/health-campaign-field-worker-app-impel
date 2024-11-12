@@ -26,6 +26,7 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
+import 'package:digit_location_tracker/utils/utils.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -712,6 +713,10 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,
           beneficiaryType: context.beneficiaryType,
+        );
+        LocationTrackerSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
         );
       });
 }
