@@ -108,6 +108,10 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                   query.plannedStartDate!,
                   query.plannedEndDate!,
                 ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
+                ),
             ]))
             ..orderBy([
               OrderingTerm(
