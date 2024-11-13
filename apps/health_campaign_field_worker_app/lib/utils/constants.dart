@@ -1,6 +1,9 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:digit_components/utils/app_logger.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:health_campaign_field_worker_app/firebase_options.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -142,6 +145,8 @@ class Constants {
         sql,
         AttendanceLogOpLogManager(isar),
       ),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -226,6 +231,8 @@ class Constants {
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
