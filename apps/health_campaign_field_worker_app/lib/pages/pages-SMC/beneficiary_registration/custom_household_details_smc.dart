@@ -62,18 +62,10 @@ class CustomHouseHoldDetailsSMCPageState
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
         builder: (context, form, child) {
-          int pregnantWomen = widget.isEligible
-              ? form.control(_pregnantWomenCountKey).value as int
-              : 0;
-          int children = widget.isEligible
-              ? form.control(_childrenCountKey).value as int
-              : 0;
-
           int men =
               widget.isEligible ? form.control(_menCountKey).value as int : 0;
           int women =
               widget.isEligible ? form.control(_womenCountKey).value as int : 0;
-          int memberCount = form.control(_memberCountKey).value;
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
             listener: (context, state) {

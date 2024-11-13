@@ -14,6 +14,7 @@ import 'package:registration_delivery/models/entities/status.dart'
     as reg_status;
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 part 'closed_household.freezed.dart';
 
@@ -53,6 +54,13 @@ class ClosedHouseholdBloc
         LocalityModel(code: event.boundaryCode!, name: event.boundaryName);
 
     try {
+      String localityCode = locality!.code;
+
+      Set<String> beneficiaryId = await UniqueIdGeneration().generateUniqueId(
+        localityCode: localityCode,
+        loggedInUserId: event.loggedInUserUuid!,
+        returnCombinedIds: false,
+      );
       var address = AddressModel(
         latitude: event.latitude,
         longitude: event.longitude,
@@ -186,8 +194,8 @@ class ClosedHouseholdBloc
         ],
         identifiers: [
           identifier.copyWith(
-            identifierId: IdGen.i.identifier,
-            identifierType: 'DEFAULT',
+            identifierId: beneficiaryId.first,
+            identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
           ),
         ],
         auditDetails: AuditDetails(
