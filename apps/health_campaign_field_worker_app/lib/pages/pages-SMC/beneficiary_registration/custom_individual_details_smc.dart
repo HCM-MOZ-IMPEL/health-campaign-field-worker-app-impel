@@ -780,23 +780,23 @@ class CustomIndividualDetailsSMCPageState
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
-    final individual = state.mapOrNull<IndividualModel>(
-      editIndividual: (value) {
-        isEditIndividual = true;
-        if (value.projectBeneficiaryModel?.tag != null) {
-          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
-              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
-        }
+    final individual =
+        state.mapOrNull<IndividualModel>(editIndividual: (value) {
+      isEditIndividual = true;
+      if (value.projectBeneficiaryModel?.tag != null) {
+        context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
+            barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
+      }
 
-        return value.individualModel;
-      },
-      create: (value) {
-        return value.individualModel;
-      },
-      summary: (value) {
-        return value.individualModel;
-      },
-    );
+      return value.individualModel;
+    }, create: (value) {
+      return value.individualModel;
+    }, summary: (value) {
+      return value.individualModel;
+    }, editHousehold: (value) {
+      isEditIndividual = true;
+      return value.headOfHousehold;
+    });
 
     final searchQuery = state.mapOrNull<String>(
       create: (value) {
