@@ -69,36 +69,37 @@ class CustomHouseHoldDetailsSMCPageState
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
             listener: (context, state) {
-              // if (state is BeneficiaryRegistrationPersistedState &&
-              //     state.isEdit) {
-              //   final overviewBloc = context.read<HouseholdOverviewBloc>();
+              if (state is BeneficiaryRegistrationPersistedState &&
+                  state.isEdit) {
+                final overviewBloc = context.read<HouseholdOverviewBloc>();
 
-              //   HouseholdMemberWrapper memberWrapper =
-              //       overviewBloc.state.householdMemberWrapper;
+                HouseholdMemberWrapper memberWrapper =
+                    overviewBloc.state.householdMemberWrapper;
 
-              //   Future.delayed(
-              //     const Duration(
-              //       milliseconds: 300,
-              //     ),
-              //     () {
-              //       overviewBloc.add(
-              //         HouseholdOverviewReloadEvent(
-              //           projectId: RegistrationDeliverySingleton()
-              //               .projectId
-              //               .toString(),
-              //           projectBeneficiaryType:
-              //               RegistrationDeliverySingleton().beneficiaryType ??
-              //                   BeneficiaryType.household,
-              //         ),
-              //       );
-              //       memberWrapper = overviewBloc.state.householdMemberWrapper;
-              //     },
-              //   );
-              //   final route = router.parent() as StackRouter;
-              //   route.popUntilRouteWithName(
-              //       CustomSearchBeneficiarySMCRoute.name);
-              //   route.push(CustomHouseholdWrapperRoute(wrapper: memberWrapper));
-              // }
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 300,
+                  ),
+                  () {
+                    overviewBloc.add(
+                      HouseholdOverviewReloadEvent(
+                        projectId: RegistrationDeliverySingleton()
+                            .projectId
+                            .toString(),
+                        projectBeneficiaryType:
+                            RegistrationDeliverySingleton().beneficiaryType ??
+                                BeneficiaryType.household,
+                      ),
+                    );
+                    memberWrapper = overviewBloc.state.householdMemberWrapper;
+                  },
+                );
+                final route = router.parent() as StackRouter;
+                route.popUntilRouteWithName(
+                    CustomSearchBeneficiarySMCRoute.name);
+
+                route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
+              }
             },
             builder: (context, registrationState) {
               return ScrollableContent(
@@ -421,28 +422,28 @@ class CustomHouseHoldDetailsSMCPageState
                               ),
                             ),
                           );
-                          final overviewBloc =
-                              context.read<HouseholdOverviewBloc>();
-                          HouseholdMemberWrapper? memberWrapper =
-                              overviewBloc.state.householdMemberWrapper;
-                          overviewBloc.add(
-                            HouseholdOverviewReloadEvent(
-                              projectId: RegistrationDeliverySingleton()
-                                  .projectId
-                                  .toString(),
-                              projectBeneficiaryType:
-                                  RegistrationDeliverySingleton()
-                                          .beneficiaryType ??
-                                      BeneficiaryType.household,
-                            ),
-                          );
+                          // final overviewBloc =
+                          //     context.read<HouseholdOverviewBloc>();
+                          // HouseholdMemberWrapper? memberWrapper =
+                          //     overviewBloc.state.householdMemberWrapper;
+                          // overviewBloc.add(
+                          //   HouseholdOverviewReloadEvent(
+                          //     projectId: RegistrationDeliverySingleton()
+                          //         .projectId
+                          //         .toString(),
+                          //     projectBeneficiaryType:
+                          //         RegistrationDeliverySingleton()
+                          //                 .beneficiaryType ??
+                          //             BeneficiaryType.household,
+                          //   ),
+                          // );
 
-                          final route = router.parent() as StackRouter;
-                          context.router.push(
-                            CustomIndividualDetailsSMCRoute(
-                              isHeadOfHousehold: true, //TOCHECK
-                            ),
-                          );
+                          // final route = router.parent() as StackRouter;
+                          // context.router.push(
+                          //   CustomIndividualDetailsSMCRoute(
+                          //     isHeadOfHousehold: true, //TOCHECK
+                          //   ),
+                          // );
                         });
                       }
                     },
