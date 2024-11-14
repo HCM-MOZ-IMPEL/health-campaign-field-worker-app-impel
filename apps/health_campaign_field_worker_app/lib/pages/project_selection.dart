@@ -39,6 +39,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
   @override
   void initState() {
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     context.read<ProjectBloc>().add(const ProjectInitializeEvent());
     super.initState();
   }
