@@ -75,6 +75,7 @@ class _CustomSearchBeneficiarySMCPageState
           if (!ifSearchTriggered) {
             ifSearchTriggered = true;
             // Trigger search after location is loaded
+            blocWrapper.clearEvent();
             triggerGlobalSearchEvent();
           }
         }
