@@ -4,6 +4,7 @@ import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:health_campaign_field_worker_app/firebase_options.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -273,6 +274,8 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    LocationTrackerSingleton()
+        .setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
 
