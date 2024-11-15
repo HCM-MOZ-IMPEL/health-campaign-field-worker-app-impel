@@ -3,6 +3,7 @@ import 'package:attendance_management/router/attendance_router.gm.dart';
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -26,6 +27,7 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
+import 'package:digit_location_tracker/utils/utils.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -580,6 +582,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -612,6 +616,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -712,6 +718,10 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,
           beneficiaryType: context.beneficiaryType,
+        );
+        LocationTrackerSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
         );
       });
 }

@@ -104,6 +104,8 @@ extension ContextUtilityExtensions on BuildContext {
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
 
     return selectedBoundary;
   }

@@ -5,6 +5,10 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -268,6 +272,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           AttendanceLogOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => LocationTrackerLocalBaseRepository(
+          sql,
+          LocationTrackerOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -484,6 +495,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
             create: (_) =>
                 AttendanceLogRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.userLocation)
+          RepositoryProvider<
+              RemoteRepository<UserActionModel, UserActionSearchModel>>(
+            create: (_) =>
+                LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

@@ -7,8 +7,10 @@
    <uses-permission android:name="android.permission.BLUETOOTH"/>
    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+   <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
    <uses-permission android:name="com.android.alarm.permission.SCHEDULE_EXACT_ALARM" />
+   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <!--#docregion android-queries-->
   <!-- Provide required visibility configuration for API level 30 and above -->
   <queries>
@@ -22,12 +24,17 @@
   </queries>
   <!--#enddocregion android-queries-->
    <application
-        android:label="Salama"
+        android:label="Formação"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_training"
         android:allowBackup="false"
         android:fullBackupOnly="false"
         android:fullBackupContent="false">
+        <service
+            android:name=".LocationService"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:exported="false" />
         <activity
             android:showWhenLocked="false"
             android:turnScreenOn="true"
