@@ -103,11 +103,13 @@ class AppInitializationBloc
                     MasterEnums.checklistTypes.toValue(),
                     MasterEnums.idTypes.toValue(),
                     MasterEnums.deliveryComments.toValue(),
+                    MasterEnums.deliveryCommentsSMC.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.searchHouseHoldFiltersSMC.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

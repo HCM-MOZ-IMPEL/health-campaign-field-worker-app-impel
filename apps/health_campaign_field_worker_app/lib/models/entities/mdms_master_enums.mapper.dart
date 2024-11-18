@@ -51,6 +51,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.idTypes;
       case "DELIVERY_COMMENT_OPTIONS_POPULATOR":
         return MasterEnums.deliveryComments;
+      case "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR":
+        return MasterEnums.deliveryCommentsSMC;
       case "BACKEND_INTERFACE":
         return MasterEnums.backendInterface;
       case "CALL_SUPPORT":
@@ -69,6 +71,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.firebaseConfig;
       case "SEARCH_HOUSEHOLD_FILTERS":
         return MasterEnums.searchHouseHoldFilters;
+      case "SEARCH_HOUSEHOLD_FILTERS_SMC":
+        return MasterEnums.searchHouseHoldFiltersSMC;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
@@ -107,6 +111,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ID_TYPE_OPTIONS_POPULATOR";
       case MasterEnums.deliveryComments:
         return "DELIVERY_COMMENT_OPTIONS_POPULATOR";
+      case MasterEnums.deliveryCommentsSMC:
+        return "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR";
       case MasterEnums.backendInterface:
         return "BACKEND_INTERFACE";
       case MasterEnums.callSupport:
@@ -125,6 +131,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "FIREBASE_CONFIG";
       case MasterEnums.searchHouseHoldFilters:
         return "SEARCH_HOUSEHOLD_FILTERS";
+      case MasterEnums.searchHouseHoldFiltersSMC:
+        return "SEARCH_HOUSEHOLD_FILTERS_SMC";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:

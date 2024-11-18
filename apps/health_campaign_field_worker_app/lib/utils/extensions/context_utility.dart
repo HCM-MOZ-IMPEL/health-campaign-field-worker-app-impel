@@ -24,6 +24,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedProject;
   }
 
+  String? get projectTypeCode {
+    final projectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType.code;
+  }
+
   String get projectId => selectedProject.id;
 
   ProjectCycle? get selectedCycle {
@@ -69,6 +82,22 @@ extension ContextUtilityExtensions on BuildContext {
       return resultList;
     } else {
       return [];
+    }
+  }
+
+  bool get isHealthFacilitySupervisor {
+    try {
+      // todo : verify this make this healthFacilitySupervsior as per kebbi
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.healthFacilityWorker.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
+    } catch (_) {
+      return false;
     }
   }
 

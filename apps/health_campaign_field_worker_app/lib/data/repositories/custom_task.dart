@@ -53,6 +53,8 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 isDeleted: task.isDeleted,
                 projectId: task.projectId,
                 projectBeneficiaryId: task.projectBeneficiaryId,
+                projectBeneficiaryClientReferenceId:
+                    task.projectBeneficiaryClientReferenceId,
                 createdDate: task.createdDate,
                 status: task.status,
               );
@@ -105,6 +107,10 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 sql.task.clientCreatedTime.isBetweenValues(
                   query.plannedStartDate!,
                   query.plannedEndDate!,
+                ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
                 ),
             ]))
             ..orderBy([

@@ -7,10 +7,11 @@ import 'downsync/downsync.dart' as p0;
 import 'entities/additional_fields_type.dart' as p1;
 import 'entities/mdms_master_enums.dart' as p2;
 import 'entities/mdms_module_enums.dart' as p3;
-import 'entities/roles.dart' as p4;
-import 'entities/roles_type.dart' as p5;
-import 'entities/scanner_type.dart' as p6;
-import 'entities/status.dart' as p7;
+import 'entities/project_types.dart' as p4;
+import 'entities/roles.dart' as p5;
+import 'entities/roles_type.dart' as p6;
+import 'entities/scanner_type.dart' as p7;
+import 'entities/status.dart' as p8;
 
 void initializeMappers() {
   p0.DownsyncSearchModelMapper.ensureInitialized();
@@ -19,8 +20,9 @@ void initializeMappers() {
   p1.AdditionalFieldsTypeMapper.ensureInitialized();
   p2.MasterEnumsMapper.ensureInitialized();
   p3.ModuleEnumsMapper.ensureInitialized();
-  p4.RolesMapper.ensureInitialized();
-  p5.RolesTypeMapper.ensureInitialized();
-  p6.ScannerTypeMapper.ensureInitialized();
-  p7.StatusMapper.ensureInitialized();
+  p4.ProjectTypesMapper.ensureInitialized();
+  p5.RolesMapper.ensureInitialized();
+  p6.RolesTypeMapper.ensureInitialized();
+  p7.ScannerTypeMapper.ensureInitialized();
+  p8.StatusMapper.ensureInitialized();
 }

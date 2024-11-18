@@ -31,6 +31,8 @@ enum MasterEnums {
   idTypes,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_POPULATOR")
   deliveryComments,
+  @MappableValue("DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR")
+  deliveryCommentsSMC,
   @MappableValue("BACKEND_INTERFACE")
   backendInterface,
   @MappableValue("CALL_SUPPORT")
@@ -49,6 +51,8 @@ enum MasterEnums {
   firebaseConfig,
   @MappableValue("SEARCH_HOUSEHOLD_FILTERS")
   searchHouseHoldFilters,
+  @MappableValue("SEARCH_HOUSEHOLD_FILTERS_SMC")
+  searchHouseHoldFiltersSMC,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")
