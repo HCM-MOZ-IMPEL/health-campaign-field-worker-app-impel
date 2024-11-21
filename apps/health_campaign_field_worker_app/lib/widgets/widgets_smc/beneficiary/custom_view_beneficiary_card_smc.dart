@@ -429,7 +429,8 @@ class _CustomViewBeneficiaryCardSMCState
       bool isNotEligible,
       bool isBeneficiaryRefused) {
     if (projectBeneficiaries.isNotEmpty) {
-      if (tasks.isEmpty) {
+      if (tasks.isEmpty || tasks.last.status == "NOT_ADMINISTERED") {
+        // INFO : for closed household status update on edit
         return Status.registered.toValue();
       } else {
         return getTaskStatus(tasks).toValue();
