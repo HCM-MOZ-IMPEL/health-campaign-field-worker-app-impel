@@ -32,6 +32,10 @@
     {
       "name": "Team Supervisor",
       "value": "TEAM_SUPERVISOR"
+    },
+    {
+      "name": "Attendance Staff",
+      "value": "ATTENDANCE_STAFF"
     }
   ],
   "isEnum": true
