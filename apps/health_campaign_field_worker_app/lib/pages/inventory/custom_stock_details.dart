@@ -1722,40 +1722,33 @@ class CustomStockDetailsPageState
                                   ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
-                                      label: localizations.translate(
-                                        i18.stockDetails
-                                            .quantityOfProductIndicatedOnWaybillLabel,
-                                      ),
-                                      isRequired: isWareHouseMgr &&
-                                          !supervisorSelected &&
-                                          !deliveryTeamSelected,
-                                      formControlName: _waybillQuantityKey,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              i18.common.corecommonRequired,
-                                            ),
-                                        "number": (object) =>
-                                            localizations.translate(
-                                              '${quantityCountLabel}_ERROR',
-                                            ),
-                                        "max": (object) =>
-                                            localizations.translate(
-                                              '${quantityCountLabel}_MAX_ERROR',
-                                            ),
-                                        "min": (object) =>
-                                            localizations.translate(
-                                              '${quantityCountLabel}_MIN_ERROR',
-                                            ),
-                                      },
-                                      onChanged: (val) {
-                                        if (val.toString().isEmpty ||
-                                            val.value == null) {
-                                          form
-                                              .control(_waybillQuantityKey)
-                                              .value = '0';
-                                        }
-                                      }),
+                                    label: localizations.translate(
+                                      i18.stockDetails
+                                          .quantityOfProductIndicatedOnWaybillLabel,
+                                    ),
+                                    isRequired: isWareHouseMgr &&
+                                        !supervisorSelected &&
+                                        !deliveryTeamSelected,
+                                    formControlName: _waybillQuantityKey,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                      "number": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_ERROR',
+                                          ),
+                                      "max": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MAX_ERROR',
+                                          ),
+                                      "min": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MIN_ERROR',
+                                          ),
+                                    },
+                                  ),
                                 if (isWareHouseMgr)
                                   transportTypes.isNotEmpty
                                       ? DigitReactiveDropdown<String>(

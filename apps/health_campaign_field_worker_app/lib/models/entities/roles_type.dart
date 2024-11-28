@@ -23,5 +23,7 @@ enum RolesType {
   teamSupervisor,
   @MappableValue("COMMUNITY_DISTRIBUTOR")
   communityDistributor,
+  @MappableValue("ATTENDANCE_STAFF")
+  attendanceStaff,
   ;
 }
