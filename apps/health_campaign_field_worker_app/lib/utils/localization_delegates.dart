@@ -1,3 +1,5 @@
+import 'package:referral_reconciliation/blocs/app_localization.dart'
+    as referral_reconciliation_localization;
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
 import 'dart:ui';
@@ -60,6 +62,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     component_localization.ComponentLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

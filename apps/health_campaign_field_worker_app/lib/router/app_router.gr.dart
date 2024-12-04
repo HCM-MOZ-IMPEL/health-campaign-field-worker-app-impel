@@ -811,6 +811,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
+    ...ReferralReconciliationRoute().pagesMap,
   };
 }
 

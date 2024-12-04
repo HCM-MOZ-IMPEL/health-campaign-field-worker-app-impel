@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'package:referral_reconciliation/referral_reconciliation.dart'
+    as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 import 'package:collection/collection.dart';
@@ -484,6 +486,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
+    Future(() => referral_reconciliation_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

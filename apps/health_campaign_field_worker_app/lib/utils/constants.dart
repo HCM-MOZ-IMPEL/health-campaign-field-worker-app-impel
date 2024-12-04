@@ -1,3 +1,4 @@
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -153,6 +154,7 @@ class Constants {
         sql,
         AttendanceLogOpLogManager(isar),
       ),
+      HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
     ];
   }
 
@@ -237,6 +239,8 @@ class Constants {
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -277,6 +281,8 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+
+    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 
