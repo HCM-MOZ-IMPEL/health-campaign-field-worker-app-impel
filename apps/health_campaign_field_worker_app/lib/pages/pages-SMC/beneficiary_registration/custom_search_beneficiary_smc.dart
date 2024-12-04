@@ -58,6 +58,7 @@ class _CustomSearchBeneficiarySMCPageState
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
+    print("Yash  -> ${context.router.parent().toString()}");
 
     isProximityEnabled = true;
     var ifSearchTriggered = false;
@@ -444,6 +445,9 @@ class _CustomSearchBeneficiarySMCPageState
                               initialState:
                                   const BeneficiaryRegistrationCreateState(),
                             ));
+                            setState(() {
+                              isProximityEnabled = false;
+                            });
                             searchController.clear();
                             selectedFilters = [];
                             blocWrapper.clearEvent();
