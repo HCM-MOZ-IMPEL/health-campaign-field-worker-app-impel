@@ -39,6 +39,7 @@ class _CustomSearchBeneficiarySMCPageState
     extends LocalizedState<CustomSearchBeneficiarySMCPage> {
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
+  bool isSearchByBeneficaryIdEnabled = false;
   int offset = 0;
   int limit = 10;
 
@@ -151,41 +152,71 @@ class _CustomSearchBeneficiarySMCPageState
                           return Column(
                             children: [
                               locationState.latitude != null
-                                  ? Row(
+                                  ? Column(
                                       children: [
-                                        Switch(
-                                          value: isProximityEnabled,
-                                          onChanged: (value) {
-                                            searchController.clear();
-                                            setState(() {
-                                              isProximityEnabled = value;
-                                              lat = locationState.latitude!;
-                                              long = locationState.longitude!;
-                                            });
+                                        Row(
+                                          children: [
+                                            Switch(
+                                              value: isProximityEnabled,
+                                              onChanged: (value) {
+                                                searchController.clear();
+                                                setState(() {
+                                                  isProximityEnabled = value;
+                                                  lat = locationState.latitude!;
+                                                  long =
+                                                      locationState.longitude!;
+                                                });
 
-                                            if (locationState.hasPermissions &&
-                                                value &&
-                                                locationState.latitude !=
-                                                    null &&
-                                                locationState.longitude !=
-                                                    null &&
-                                                RegistrationDeliverySingleton()
-                                                        .maxRadius !=
-                                                    null &&
-                                                isProximityEnabled) {
-                                              triggerGlobalSearchEvent();
-                                            } else {
-                                              blocWrapper.clearEvent();
-                                              triggerGlobalSearchEvent();
-                                            }
-                                          },
+                                                if (locationState
+                                                        .hasPermissions &&
+                                                    value &&
+                                                    locationState.latitude !=
+                                                        null &&
+                                                    locationState.longitude !=
+                                                        null &&
+                                                    RegistrationDeliverySingleton()
+                                                            .maxRadius !=
+                                                        null &&
+                                                    isProximityEnabled) {
+                                                  triggerGlobalSearchEvent();
+                                                } else {
+                                                  blocWrapper.clearEvent();
+                                                  triggerGlobalSearchEvent();
+                                                }
+                                              },
+                                            ),
+                                            Text(
+                                              localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .proximityLabel,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          localizations.translate(
-                                            i18.searchBeneficiary
-                                                .proximityLabel,
-                                          ),
-                                        ),
+                                        Row(
+                                          children: [
+                                            Switch(
+                                              value:
+                                                  isSearchByBeneficaryIdEnabled,
+                                              onChanged: (value) {
+                                                searchController.clear();
+                                                setState(() {
+                                                  isSearchByBeneficaryIdEnabled =
+                                                      value;
+                                                  isProximityEnabled = false;
+                                                });
+
+                                                if (isSearchByBeneficaryIdEnabled) {
+                                                  SearchByBeneficiaryId();
+                                                }
+                                              },
+                                            ),
+                                            Text(
+                                              localizations.translate(
+                                                  'SEARCH_BY_BENEFICIARY_ID'),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     )
                                   : const Offstage(),
@@ -505,6 +536,8 @@ class _CustomSearchBeneficiarySMCPageState
       triggerGlobalSearchEvent();
     }
   }
+
+  void SearchByBeneficiaryId() {}
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
