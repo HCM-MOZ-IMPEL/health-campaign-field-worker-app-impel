@@ -19,8 +19,11 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../../blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
+import '../../../blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/extensions/extensions.dart';
+import '../../../utils/utils_smc/global_search_parameters_smc.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -59,7 +62,6 @@ class _CustomSearchBeneficiarySMCPageState
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
-    print("Yash  -> ${context.router.parent().toString()}");
 
     isProximityEnabled = true;
     var ifSearchTriggered = false;
@@ -75,6 +77,7 @@ class _CustomSearchBeneficiarySMCPageState
             long = locationState.longitude!;
           });
           if (!ifSearchTriggered) {
+            // SearchByBeneficiaryId();
             ifSearchTriggered = true;
             // Trigger search after location is loaded
             blocWrapper.clearEvent();
@@ -541,7 +544,30 @@ class _CustomSearchBeneficiarySMCPageState
     }
   }
 
-  void SearchByBeneficiaryId() {}
+  void SearchByBeneficiaryId(
+      {bool isPagination = false, String beneficiaryId = ""}) {
+    final individualglobalsearchSMC =
+        context.read<IndividualGlobalSearchSMCBloc>();
+    individualglobalsearchSMC.add(IndividualGlobalSearchSMCEvent(
+        globalSearchParams: GlobalSearchParametersSMC(
+      isProximityEnabled: isProximityEnabled,
+      latitude: lat,
+      longitude: long,
+      maxRadius: RegistrationDeliverySingleton().maxRadius,
+      nameSearch: searchController.text.trim().length > 2
+          ? searchController.text.trim()
+          : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+      beneficiaryId: beneficiaryId,
+      filter: selectedFilters,
+      offset: isPagination
+          ? blocWrapper.individualGlobalSearchBloc.state.offset
+          : offset,
+      limit: isPagination
+          ? blocWrapper.individualGlobalSearchBloc.state.limit
+          : limit,
+      projectId: context.projectId,
+    )));
+  }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
@@ -552,24 +578,25 @@ class _CustomSearchBeneficiarySMCPageState
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.individualGlobalSearchBloc.add(
-            SearchHouseholdsEvent.individualGlobalSearch(
+        blocWrapper.individualGlobalSearchBloc
+            .add(SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-                    isProximityEnabled: isProximityEnabled,
-                    latitude: lat,
-                    longitude: long,
-                    maxRadius: RegistrationDeliverySingleton().maxRadius,
-                    nameSearch: searchController.text.trim().length > 2
-                        ? searchController.text.trim()
-                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-                    filter: selectedFilters,
-                    offset: isPagination
-                        ? blocWrapper.individualGlobalSearchBloc.state.offset
-                        : offset,
-                    limit: isPagination
-                        ? blocWrapper.individualGlobalSearchBloc.state.limit
-                        : limit,
-                    projectId: context.projectId)));
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          filter: selectedFilters,
+          offset: isPagination
+              ? blocWrapper.individualGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.individualGlobalSearchBloc.state.limit
+              : limit,
+          projectId: context.projectId,
+        )));
       }
     } else {
       if (isProximityEnabled ||
