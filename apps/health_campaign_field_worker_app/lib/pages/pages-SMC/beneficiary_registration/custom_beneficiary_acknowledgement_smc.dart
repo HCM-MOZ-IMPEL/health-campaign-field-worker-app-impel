@@ -52,6 +52,8 @@ class CustomBeneficiaryAcknowledgementSMCPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
+          final bloc = context.read<SearchBlocWrapper>();
+          bloc.clearEvent();
           final parent = context.router.parent() as StackRouter;
           parent.popUntilRouteWithName(CustomSearchBeneficiarySMCRoute.name);
         },
