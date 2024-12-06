@@ -1,3 +1,6 @@
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 
@@ -467,6 +470,21 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
+        child: HomeItemCard(
+          icon: Icons.supervised_user_circle_rounded,
+          label: i18.home.beneficiaryReferralLabel,
+          onPressed: () async {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _, __) {
+                    context.router.push(SearchReferralReconciliationsRoute());
+                  },
+                );
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -504,11 +522,13 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-
+      i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
@@ -558,6 +578,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
+                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+                context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
 
@@ -589,6 +611,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),

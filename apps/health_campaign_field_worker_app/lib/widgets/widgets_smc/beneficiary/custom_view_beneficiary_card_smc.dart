@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -11,6 +12,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
@@ -167,6 +169,9 @@ class _CustomViewBeneficiaryCardSMCState
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
+        final isHead = e.clientReferenceId ==
+            householdMember.headOfHousehold!.clientReferenceId;
+
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
@@ -189,15 +194,19 @@ class _CustomViewBeneficiaryCardSMCState
             cellKey: 'beneficiary',
           ),
           TableData(
-            getTableCellText(
-              StatusKeys(
-                isNotEligible,
-                isBeneficiaryRefused,
-                isBeneficiaryReferred,
-                isStatusReset,
-              ),
-              taskData,
-            ),
+            isHead
+                ? localizations.translate(
+                    i18.householdOverView.householdOverViewHouseholdHeadLabel,
+                  )
+                : getTableCellText(
+                    StatusKeys(
+                      isNotEligible,
+                      isBeneficiaryRefused,
+                      isBeneficiaryReferred,
+                      isStatusReset,
+                    ),
+                    taskData,
+                  ),
             cellKey: 'delivery',
             style: TextStyle(
               color: getTableCellTextColor(
@@ -429,7 +438,8 @@ class _CustomViewBeneficiaryCardSMCState
       bool isNotEligible,
       bool isBeneficiaryRefused) {
     if (projectBeneficiaries.isNotEmpty) {
-      if (tasks.isEmpty) {
+      if (tasks.isEmpty || tasks.last.status == "NOT_ADMINISTERED") {
+        // INFO : for closed household status update on edit
         return Status.registered.toValue();
       } else {
         return getTaskStatus(tasks).toValue();

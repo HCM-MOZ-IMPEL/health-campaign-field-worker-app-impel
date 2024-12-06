@@ -444,6 +444,9 @@ class _CustomSearchBeneficiarySMCPageState
                               initialState:
                                   const BeneficiaryRegistrationCreateState(),
                             ));
+                            setState(() {
+                              isProximityEnabled = false;
+                            });
                             searchController.clear();
                             selectedFilters = [];
                             blocWrapper.clearEvent();

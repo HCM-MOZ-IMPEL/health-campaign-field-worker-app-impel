@@ -58,6 +58,8 @@ class CustomReferBeneficiarySMCPageState
   final clickedStatus = ValueNotifier<bool>(false);
   static const referralReasons = "referralReasons";
   static const sideEffectFromCurrentCycle = "DRUG_SE_CC";
+  static const _referralCode = 'referralCode';
+  static const _referralComments = 'referralComments';
 
   @override
   void dispose() {
@@ -409,6 +411,18 @@ class CustomReferBeneficiarySMCPageState
                                 form.control(_referredToKey).value = facility;
                               },
                             ),
+                            DigitTextFormField(
+                              formControlName: _referralCode,
+                              label: localizations.translate(
+                                i18.referBeneficiary.referralCodeLabel,
+                              ),
+                              isRequired: true,
+                            ),
+                            DigitTextFormField(
+                                formControlName: _referralComments,
+                                label: localizations.translate(
+                                  i18.referBeneficiary.referralComments,
+                                )),
                           ]),
                         ],
                       ),
@@ -438,10 +452,11 @@ class CustomReferBeneficiarySMCPageState
           Validators.required,
         ],
       ),
+
       // _referralReason: FormControl<KeyValue>(value: null),
       // _beneficiaryIdKey: FormControl<String>(validators: [Validators.required]),
-      // _referralComments: FormControl<String>(value: null),
-      // _referralCode: FormControl<String>(validators: [Validators.required]),
+      _referralComments: FormControl<String>(value: null),
+      _referralCode: FormControl<String>(validators: [Validators.required]),
     });
   }
 

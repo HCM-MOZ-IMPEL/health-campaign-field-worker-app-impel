@@ -23,6 +23,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/attendance_management.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -268,6 +269,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           AttendanceLogOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -484,6 +492,11 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
             create: (_) =>
                 AttendanceLogRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.hFReferral)
+          RepositoryProvider<
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
+            create: (_) => HFReferralRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }
