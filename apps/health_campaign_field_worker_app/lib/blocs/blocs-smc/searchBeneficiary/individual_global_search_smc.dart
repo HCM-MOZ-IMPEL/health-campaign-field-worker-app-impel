@@ -41,7 +41,6 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
     searchHouseholdsSMC.SearchHouseholdsSMCEmitter emit,
   ) async {
     // Here we need to add logic for beneficiary id search
-    print("Searching");
     final containers = <searchHouseholdsSMC.HouseholdMemberWrapper>[
       ...state.householdMembers
     ];
@@ -65,7 +64,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
         longitude: event.globalSearchParams.longitude,
         maxRadius: event.globalSearchParams.maxRadius,
         nameSearch: event.globalSearchParams.nameSearch,
-        beneficiaryId: "",
+        beneficiaryId: event.globalSearchParams.beneficiaryId,
         filter: event.globalSearchParams.filter,
         offset: event.globalSearchParams.offset,
         limit: event.globalSearchParams.limit,
@@ -280,7 +279,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,
-      searchQuery: event.globalSearchParams.nameSearch,
+      searchQuery: event.globalSearchParams.beneficiaryId,
       offset:
           event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,

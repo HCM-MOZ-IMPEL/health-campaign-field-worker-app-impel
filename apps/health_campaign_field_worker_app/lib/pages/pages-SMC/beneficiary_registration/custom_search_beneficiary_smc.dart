@@ -55,6 +55,9 @@ class _CustomSearchBeneficiarySMCPageState
     householdMembers: [],
   );
 
+  SearchHouseholdsSMCState searchHouseholdsSMCState =
+      const SearchHouseholdsSMCState(loading: false, householdMembers: []);
+
   late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
 
   @override
@@ -209,10 +212,6 @@ class _CustomSearchBeneficiarySMCPageState
                                                       value;
                                                   isProximityEnabled = false;
                                                 });
-
-                                                if (isSearchByBeneficaryIdEnabled) {
-                                                  SearchByBeneficiaryId();
-                                                }
                                               },
                                             ),
                                             Text(
@@ -233,9 +232,12 @@ class _CustomSearchBeneficiarySMCPageState
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   blocWrapper.clearEvent();
-
-                                  if (value.isEmpty ||
-                                      value.trim().length > 2) {
+                                  if (isSearchByBeneficaryIdEnabled &&
+                                      value.length == 14) {
+                                    SearchByBeneficiaryId(beneficiaryId: value);
+                                  } else if (!isSearchByBeneficaryIdEnabled &&
+                                      (value.isEmpty ||
+                                          value.trim().length > 2)) {
                                     triggerGlobalSearchEvent();
                                   }
                                 },
@@ -455,6 +457,31 @@ class _CustomSearchBeneficiarySMCPageState
                   },
                 ),
               ),
+              if (isSearchByBeneficaryIdEnabled)
+                BlocConsumer<IndividualGlobalSearchSMCBloc,
+                    SearchHouseholdsSMCState>(
+                  listener: (context, searchSMCstate) {},
+                  builder: (context, searchSMCstate) {
+                    if (searchSMCstate.loading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      // Build UI with the fetched data
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final household =
+                                searchSMCstate.householdMembers[index];
+                            return ListTile(
+                              title: Text(household.members!.first!.name!
+                                  .givenName!), // Replace with actual data
+                            );
+                          },
+                          childCount: searchSMCstate.householdMembers.length,
+                        ),
+                      );
+                    }
+                  },
+                )
             ],
           ),
         ),

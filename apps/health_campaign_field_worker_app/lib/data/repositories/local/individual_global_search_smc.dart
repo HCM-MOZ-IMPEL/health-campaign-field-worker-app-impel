@@ -29,13 +29,16 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
     // Check if the filter contains status for registered or not registered
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
-      var proximitySelectQuery =
-          await proximitySearch(selectQuery, params, super.sql);
+      // var proximitySelectQuery =
+      //     await proximitySearch(selectQuery, params, super.sql);
 
-      var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+      // var nameSelectQuery =
+      //     await nameSearch(proximitySelectQuery, params, super.sql);
 
-      var filterSelectQuery = nameSelectQuery;
+      var BeneficiarySelectQuery =
+          await BeneficiaryIdSearch(selectQuery, params, super.sql);
+
+      var filterSelectQuery = BeneficiarySelectQuery;
 
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
@@ -43,7 +46,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
               await filterSearch(filterSelectQuery, params, filter, super.sql);
         }
       } else {
-        filterSelectQuery = nameSelectQuery;
+        filterSelectQuery = BeneficiarySelectQuery;
       }
 
       if (filterSelectQuery == null) {
@@ -65,13 +68,16 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return _returnIndividualModel(results, count);
       }
     } else if (params.filter!.isNotEmpty && params.filter != null) {
-      var proximitySelectQuery =
-          await proximitySearch(selectQuery, params, super.sql);
+      // var proximitySelectQuery =
+      //     await proximitySearch(selectQuery, params, super.sql);
 
-      var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+      // var nameSelectQuery =
+      //     await nameSearch(proximitySelectQuery, params, super.sql);
 
-      var filterSelectQuery = nameSelectQuery;
+      var BeneficiarySelectQuery =
+          await BeneficiaryIdSearch(selectQuery, params, super.sql);
+
+      var filterSelectQuery = BeneficiarySelectQuery;
 
       // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
@@ -80,7 +86,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
               await filterSearch(filterSelectQuery, params, filter, super.sql);
         }
       } else {
-        filterSelectQuery = nameSelectQuery;
+        filterSelectQuery = BeneficiarySelectQuery;
       }
 
       // Return empty list if no results found
@@ -172,26 +178,30 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return {"data": data, "total_count": count};
       }
     } else {
-      var proximitySelectQuery =
-          await proximitySearch(selectQuery, params, super.sql);
+      // var proximitySelectQuery =
+      //     await proximitySearch(selectQuery, params, super.sql);
 
-      var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+      // var nameSelectQuery =
+      //     await nameSearch(proximitySelectQuery, params, super.sql);
+
+      var BeneficiarySelectQuery =
+          await BeneficiaryIdSearch(selectQuery, params, super.sql);
 
       // Return empty list if no results found
-      if (nameSelectQuery == null) {
+      if (BeneficiarySelectQuery == null) {
         return [];
       } else {
         // Get total count if offset is zero and filters are applied
         if (params.offset == 0 &&
             params.filter != null &&
             params.filter!.isNotEmpty) {
-          count = await _getTotalCount(nameSelectQuery, params, super.sql);
+          count =
+              await _getTotalCount(BeneficiarySelectQuery, params, super.sql);
         }
-        await nameSelectQuery.limit(params.limit ?? 50,
+        await BeneficiarySelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
-        final results = await nameSelectQuery.get();
+        final results = await BeneficiarySelectQuery.get();
 
         return _returnIndividualModel(results, count);
       }
@@ -303,6 +313,58 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
             ),
             sql.name.otherNames.equals(
               params.nameSearch!,
+            ),
+          ]),
+        ]),
+    ]));
+  }
+
+  // Function to perform BeneficiaryId search based on provided parameters
+  BeneficiaryIdSearch(selectQuery, GlobalSearchParametersSMC params,
+      LocalSqlDataStore sql) async {
+    if (params.beneficiaryId == null || params.beneficiaryId!.isEmpty) {
+      return selectQuery;
+    } else if (params.beneficiaryId != null ||
+        params.beneficiaryId!.isNotEmpty && selectQuery == null) {
+      selectQuery = super.sql.individual.select().join(
+          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
+      await searchByBeneficiaryId(selectQuery, params, sql);
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId))
+      ]);
+      selectQuery.join([
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId))
+      ]);
+    } else if (params.beneficiaryId != null &&
+        params.beneficiaryId!.isNotEmpty &&
+        selectQuery != null) {
+      selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
+      selectQuery = searchByBeneficiaryId(selectQuery, params, sql);
+    }
+    return selectQuery;
+  }
+
+  searchByBeneficiaryId(
+      selectQuery, GlobalSearchParametersSMC params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.beneficiaryId != null)
+        buildOr([
+          sql.identifier.identifierId.contains(
+            params.beneficiaryId!,
+          ),
+          buildOr([
+            sql.identifier.identifierId.contains(
+              params.beneficiaryId!,
             ),
           ]),
         ]),
