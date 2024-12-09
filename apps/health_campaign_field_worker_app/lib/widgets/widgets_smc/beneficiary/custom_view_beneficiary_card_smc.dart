@@ -5,6 +5,8 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart'
+    as utilsLocal;
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -182,6 +184,9 @@ class _CustomViewBeneficiaryCardSMCState
           referralData,
           currentCycle,
         );
+        final isBeneficiaryIneligible = utilsLocal.checkIfBeneficiaryIneligible(
+          taskData,
+        );
 
         final isStatusReset = checkStatus(taskData, currentCycle);
 
@@ -206,6 +211,7 @@ class _CustomViewBeneficiaryCardSMCState
                       isStatusReset,
                     ),
                     taskData,
+                    isBeneficiaryIneligible,
                   ),
             cellKey: 'delivery',
             style: TextStyle(
@@ -216,6 +222,7 @@ class _CustomViewBeneficiaryCardSMCState
                     isBeneficiaryRefused || isBeneficiaryReferred,
                 isStatusReset: isStatusReset,
                 theme: theme,
+                isBeneficiaryIneligible: isBeneficiaryIneligible,
               ),
             ),
           ),
@@ -394,8 +401,9 @@ class _CustomViewBeneficiaryCardSMCState
   String getTableCellText(
     StatusKeys statusKeys,
     List<TaskModel>? taskData,
+    bool isBeneficiaryIneligible,
   ) {
-    if (statusKeys.isNotEligible) {
+    if (statusKeys.isNotEligible || isBeneficiaryIneligible) {
       return localizations.translate(
           i18.householdOverView.householdOverViewNotEligibleIconLabel);
     } else if (statusKeys.isBeneficiaryReferred) {
@@ -422,12 +430,14 @@ class _CustomViewBeneficiaryCardSMCState
     required bool isBeneficiaryRefused,
     required bool isStatusReset,
     required ThemeData theme,
+    required bool isBeneficiaryIneligible,
   }) {
     return taskdata != null &&
             taskdata.isNotEmpty &&
             !isBeneficiaryRefused &&
             !isNotEligible &&
-            !isStatusReset
+            !isStatusReset &&
+            !isBeneficiaryIneligible
         ? theme.colorScheme.onSurfaceVariant
         : theme.colorScheme.error;
   }

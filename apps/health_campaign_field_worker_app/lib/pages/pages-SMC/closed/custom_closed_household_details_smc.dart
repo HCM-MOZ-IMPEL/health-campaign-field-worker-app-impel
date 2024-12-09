@@ -236,6 +236,8 @@ class CustomClosedHouseholdDetailsPageState
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
                                   .replaceAll('{}', maxLength.toString()),
+                              'min3': (object) => localizations
+                                  .translate(i18Local.common.min3CharsRequired)
                             },
                           ),
                         ]),
@@ -262,6 +264,7 @@ class CustomClosedHouseholdDetailsPageState
         value: null,
         validators: [
           CustomValidator.requiredMin,
+          Validators.minLength(3),
           Validators.maxLength(200),
         ],
       ),
