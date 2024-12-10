@@ -29,12 +29,6 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
     // Check if the filter contains status for registered or not registered
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
-      // var proximitySelectQuery =
-      //     await proximitySearch(selectQuery, params, super.sql);
-
-      // var nameSelectQuery =
-      //     await nameSearch(proximitySelectQuery, params, super.sql);
-
       var BeneficiarySelectQuery =
           await BeneficiaryIdSearch(selectQuery, params, super.sql);
 
@@ -68,12 +62,6 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return _returnIndividualModel(results, count);
       }
     } else if (params.filter!.isNotEmpty && params.filter != null) {
-      // var proximitySelectQuery =
-      //     await proximitySearch(selectQuery, params, super.sql);
-
-      // var nameSelectQuery =
-      //     await nameSearch(proximitySelectQuery, params, super.sql);
-
       var BeneficiarySelectQuery =
           await BeneficiaryIdSearch(selectQuery, params, super.sql);
 
@@ -178,12 +166,6 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return {"data": data, "total_count": count};
       }
     } else {
-      // var proximitySelectQuery =
-      //     await proximitySearch(selectQuery, params, super.sql);
-
-      // var nameSelectQuery =
-      //     await nameSearch(proximitySelectQuery, params, super.sql);
-
       var BeneficiarySelectQuery =
           await BeneficiaryIdSearch(selectQuery, params, super.sql);
 
@@ -206,117 +188,6 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return _returnIndividualModel(results, count);
       }
     }
-  }
-
-  proximitySearch(
-      selectQuery, GlobalSearchParametersSMC params, LocalSqlDataStore sql) {
-    if (!params.isProximityEnabled) {
-      return null;
-    } else if (params.isProximityEnabled) {
-      selectQuery = super.sql.individual.select().join([
-        joinIndividualAddress(sql),
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(sql.individual.clientReferenceId))
-      ])
-        ..where(buildAnd([
-          sql.address.relatedClientReferenceId.isNotNull(),
-          sql.individual.clientReferenceId.isNotNull(),
-          if (params.latitude != null &&
-              params.longitude != null &&
-              params.maxRadius != null)
-            CustomExpression<bool>('''
-              (6371393 * acos(
-                  cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                  * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                  + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-              )) <= ${params.maxRadius!}
-            '''),
-          if (params.latitude != null &&
-              params.longitude != null &&
-              params.maxRadius != null)
-            sql.address.longitude.isNotNull(),
-          sql.address.latitude.isNotNull(),
-        ]))
-        ..orderBy([
-          if (params.latitude != null &&
-              params.longitude != null &&
-              params.maxRadius != null)
-            OrderingTerm(
-              expression: CustomExpression<double>('''
-                (6371393 * acos(
-                    cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                    * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                    + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-                ))
-              '''),
-              mode: OrderingMode.asc,
-            ),
-        ]);
-    }
-    return selectQuery;
-  }
-
-  // Function to perform name search based on provided parameters
-  nameSearch(selectQuery, GlobalSearchParametersSMC params,
-      LocalSqlDataStore sql) async {
-    if (params.nameSearch == null || params.nameSearch!.isEmpty) {
-      return selectQuery;
-    } else if (params.nameSearch != null ||
-        params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super.sql.individual.select().join(
-          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
-      await searchByName(selectQuery, params, sql);
-      selectQuery = selectQuery.join([
-        leftOuterJoin(
-            sql.householdMember,
-            sql.householdMember.individualClientReferenceId
-                .equalsExp(sql.individual.clientReferenceId))
-      ]);
-      selectQuery.join([
-        leftOuterJoin(
-            sql.household,
-            sql.household.clientReferenceId
-                .equalsExp(sql.householdMember.householdClientReferenceId)),
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(sql.individual.clientReferenceId))
-      ]);
-    } else if (params.nameSearch != null &&
-        params.nameSearch!.isNotEmpty &&
-        selectQuery != null) {
-      selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
-      selectQuery = searchByName(selectQuery, params, sql);
-    }
-    return selectQuery;
-  }
-
-  searchByName(
-      selectQuery, GlobalSearchParametersSMC params, LocalSqlDataStore sql) {
-    return selectQuery.where(buildAnd([
-      if (params.nameSearch != null)
-        buildOr([
-          sql.name.givenName.contains(
-            params.nameSearch!,
-          ),
-          sql.name.familyName.contains(
-            params.nameSearch!,
-          ),
-          buildOr([
-            sql.name.givenName.contains(
-              params.nameSearch!,
-            ),
-            sql.name.familyName.contains(
-              params.nameSearch!,
-            ),
-            sql.name.otherNames.equals(
-              params.nameSearch!,
-            ),
-          ]),
-        ]),
-    ]));
   }
 
   // Function to perform BeneficiaryId search based on provided parameters

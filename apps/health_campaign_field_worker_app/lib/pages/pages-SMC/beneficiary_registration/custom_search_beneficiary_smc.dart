@@ -252,8 +252,9 @@ class _CustomSearchBeneficiarySMCPageState
 
                                   blocWrapper.clearEvent();
                                   if (isSearchByBeneficaryIdEnabled &&
-                                      isBeneficiaryIdValid(value)) {
-                                    SearchByBeneficiaryId(beneficiaryId: value);
+                                      isBeneficiaryIdValid(value.trim())) {
+                                    SearchByBeneficiaryId(
+                                        beneficiaryId: value.trim());
                                   } else if (!isSearchByBeneficaryIdEnabled &&
                                       (value.isEmpty ||
                                           value.trim().length > 2)) {
@@ -554,7 +555,7 @@ class _CustomSearchBeneficiarySMCPageState
                   },
                 ),
               if (isSearchByBeneficaryIdEnabled &&
-                  !isBeneficiaryIdValid(searchController.text))
+                  !isBeneficiaryIdValid(searchController.text.trim()))
                 SliverList(
                     delegate: SliverChildBuilderDelegate((ctx, index) {
                   return DigitInfoCard(
@@ -766,6 +767,15 @@ class _CustomSearchBeneficiarySMCPageState
 }
 
 bool isBeneficiaryIdValid(String value) {
-  if (value.length != 14) return false;
+  if (value.trim().length != 14) return false;
+  for (var i = 0; i < value.length; i++) {
+    if ((i == 4 || i == 9) && value[i] != '-')
+      return false;
+    else if (isLowerCase(value[i])) return false;
+  }
   return true;
+}
+
+bool isLowerCase(String ch) {
+  return ch.codeUnitAt(0) >= 97 && ch.codeUnitAt(0) <= 122;
 }

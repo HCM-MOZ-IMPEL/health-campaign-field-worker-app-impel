@@ -40,7 +40,6 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
     searchHouseholdsSMC.IndividualGlobalSearchSMCEvent event,
     searchHouseholdsSMC.SearchHouseholdsSMCEmitter emit,
   ) async {
-    // Here we need to add logic for beneficiary id search
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
 
     List<HouseholdModel> householdList = [];
