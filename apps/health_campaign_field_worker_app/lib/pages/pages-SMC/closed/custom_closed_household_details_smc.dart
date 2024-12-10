@@ -10,6 +10,7 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+import '../../../utils/utils.dart' as utilsLocal;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -238,6 +239,7 @@ class CustomClosedHouseholdDetailsPageState
                                   .replaceAll('{}', maxLength.toString()),
                               'min3': (object) => localizations
                                   .translate(i18Local.common.min3CharsRequired)
+                                  .replaceAll('{}', ''),
                             },
                           ),
                         ]),
@@ -263,8 +265,7 @@ class CustomClosedHouseholdDetailsPageState
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          CustomValidator.requiredMin,
-          Validators.minLength(3),
+          utilsLocal.CustomValidator.requiredMin3,
           Validators.maxLength(200),
         ],
       ),
