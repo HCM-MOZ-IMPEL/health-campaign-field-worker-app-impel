@@ -873,6 +873,36 @@ class AppRouter extends _$AppRouter {
                 ),
               ]),
 
+          // Attendance Route
+          AutoRoute(
+            page: ManageAttendanceRoute.page,
+            path: 'manage-attendance',
+          ),
+          AutoRoute(
+            page: CustomManageAttendanceRoute.page,
+            path: 'custom-manage-attendance',
+          ),
+          AutoRoute(
+            page: AttendanceDateSessionSelectionRoute.page,
+            path: 'attendance-date-session-selection',
+          ),
+          AutoRoute(
+            page: CustomAttendanceDateSessionSelectionRoute.page,
+            path: 'custom-attendance-date-session-selection',
+          ),
+          AutoRoute(
+            page: MarkAttendanceRoute.page,
+            path: 'mark-attendance',
+          ),
+          AutoRoute(
+            page: CustomMarkAttendanceRoute.page,
+            path: 'custom-mark-attendance',
+          ),
+          AutoRoute(
+            page: AttendanceAcknowledgementRoute.page,
+            path: 'attendance-acknowledgement',
+          ),
+
           // Inventory Route
           AutoRoute(
             page: ManageStocksRoute.page,

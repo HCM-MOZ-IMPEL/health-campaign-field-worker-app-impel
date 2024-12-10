@@ -744,6 +744,28 @@ void setPackagesSingleton(BuildContext context) {
           projectId: context.projectId,
           beneficiaryType: context.beneficiaryType,
         );
+        ReferralReconSingleton().setInitialData(
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
+        );
       });
 }
 
