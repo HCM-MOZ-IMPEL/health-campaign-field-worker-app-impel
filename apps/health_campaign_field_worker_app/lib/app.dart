@@ -23,6 +23,8 @@ import 'package:registration_delivery/blocs/household_overview/household_overvie
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart'
+    as customIndividualGlobalSearchBloc;
 import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -37,10 +39,13 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/blocs-smc/closed/closed_household.dart';
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
+import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/repositories/local/individual_global_search_smc.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -87,6 +92,12 @@ class MainApplicationState extends State<MainApplication>
         RepositoryProvider<Isar>.value(value: widget.isar),
         RepositoryProvider<IndividualGlobalSearchRepository>(
           create: (context) => IndividualGlobalSearchRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar),
+          ),
+        ),
+        RepositoryProvider<IndividualGlobalSearchSMCRepository>(
+          create: (context) => IndividualGlobalSearchSMCRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
           ),
@@ -175,6 +186,38 @@ class MainApplicationState extends State<MainApplication>
                           .repository<ReferralModel, ReferralSearchModel>(),
                       individualGlobalSearchRepository:
                           context.read<IndividualGlobalSearchRepository>(),
+                      houseHoldGlobalSearchRepository:
+                          context.read<HouseHoldGlobalSearchRepository>());
+                },
+              ),
+
+              BlocProvider(
+                create: (context) {
+                  return SearchHouseholdsSMCBloc(
+                      beneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType!,
+                      userUid:
+                          RegistrationDeliverySingleton().loggedInUserUuid!,
+                      projectId: RegistrationDeliverySingleton().projectId!,
+                      addressRepository:
+                          context.read<RegistrationDeliveryAddressRepo>(),
+                      projectBeneficiary: context.repository<
+                          ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(),
+                      householdMember: context.repository<HouseholdMemberModel,
+                          HouseholdMemberSearchModel>(),
+                      household: context
+                          .repository<HouseholdModel, HouseholdSearchModel>(),
+                      individual: context
+                          .repository<IndividualModel, IndividualSearchModel>(),
+                      taskDataRepository:
+                          context.repository<TaskModel, TaskSearchModel>(),
+                      sideEffectDataRepository: context
+                          .repository<SideEffectModel, SideEffectSearchModel>(),
+                      referralDataRepository: context
+                          .repository<ReferralModel, ReferralSearchModel>(),
+                      individualGlobalSearchSMCRepository:
+                          context.read<IndividualGlobalSearchSMCRepository>(),
                       houseHoldGlobalSearchRepository:
                           context.read<HouseHoldGlobalSearchRepository>());
                 },
@@ -273,6 +316,28 @@ class MainApplicationState extends State<MainApplication>
 
                     return MultiBlocProvider(
                       providers: [
+                        BlocProvider(
+                            create: (_) => IndividualGlobalSearchSMCBloc(
+                                userUid: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                projectId:
+                                    RegistrationDeliverySingleton().projectId!,
+                                individual: individual,
+                                householdMember: householdMember,
+                                household: household,
+                                projectBeneficiary: projectBeneficiary,
+                                taskDataRepository: task,
+                                beneficiaryType: RegistrationDeliverySingleton()
+                                    .beneficiaryType!,
+                                sideEffectDataRepository: sideEffect,
+                                addressRepository: context
+                                    .read<RegistrationDeliveryAddressRepo>(),
+                                referralDataRepository: referral,
+                                individualGlobalSearchSMCRepository:
+                                    context.read<
+                                        IndividualGlobalSearchSMCRepository>(),
+                                houseHoldGlobalSearchRepository: context
+                                    .read<HouseHoldGlobalSearchRepository>())),
                         BlocProvider(
                           create: (localizationModulesList != null &&
                                   firstLanguage != null)
@@ -488,7 +553,8 @@ class MainApplicationState extends State<MainApplication>
                           create: (_) => HouseholdOverviewBloc(
                               const HouseholdOverviewState(
                                 householdMemberWrapper:
-                                    HouseholdMemberWrapper(),
+                                    customIndividualGlobalSearchBloc
+                                        .HouseholdMemberWrapper(),
                               ),
                               individualRepository: individual,
                               householdRepository: household,

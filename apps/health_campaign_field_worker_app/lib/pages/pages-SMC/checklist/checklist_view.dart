@@ -375,8 +375,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
-                                      return localizations
-                                          .translate("${e.code}_REQUIRED");
+                                      return localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      );
                                     }
                                     if (e.regex != null) {
                                       return (RegExp(e.regex!).hasMatch(value!))
@@ -785,7 +786,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
           ],
           validator: (value) {
             if (((value == null || value == '') && item.required == true)) {
-              return localizations.translate("${item.code}_REQUIRED");
+              return localizations.translate(
+                i18.common.corecommonRequired,
+              );
             }
             if (item.regex != null) {
               return (RegExp(item.regex!).hasMatch(value!))
