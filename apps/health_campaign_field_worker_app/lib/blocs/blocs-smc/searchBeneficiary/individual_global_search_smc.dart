@@ -41,9 +41,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
     searchHouseholdsSMC.SearchHouseholdsSMCEmitter emit,
   ) async {
     // Here we need to add logic for beneficiary id search
-    final containers = <searchHouseholdsSMC.HouseholdMemberWrapper>[
-      ...state.householdMembers
-    ];
+    final containers = <HouseholdMemberWrapper>[...state.householdMembers];
 
     List<HouseholdModel> householdList = [];
     List<IndividualModel> individualsList = [];
@@ -295,7 +293,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
       List<TaskModel> taskList,
       List<SideEffectModel> sideEffectsList,
       List<ReferralModel> referralsList,
-      List<searchHouseholdsSMC.HouseholdMemberWrapper> containers) async {
+      List<HouseholdMemberWrapper> containers) async {
     // Group household members by household client reference ID
     final groupedHouseholdsMembers = householdMembers
         .groupListsBy((element) => element.householdClientReferenceId);
@@ -352,7 +350,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
 
       // Add household member wrapper to containers
       containers.add(
-        searchHouseholdsSMC.HouseholdMemberWrapper(
+        HouseholdMemberWrapper(
           household: filteredHousehold,
           headOfHousehold: head,
           members: filteredIndividuals,

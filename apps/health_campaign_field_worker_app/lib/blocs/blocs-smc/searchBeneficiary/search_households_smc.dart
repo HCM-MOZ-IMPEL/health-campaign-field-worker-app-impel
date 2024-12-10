@@ -290,17 +290,3 @@ class SearchHouseholdsSMCState with _$SearchHouseholdsSMCState {
     return householdMembers.isEmpty;
   }
 }
-
-@freezed
-class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
-  const factory HouseholdMemberWrapper({
-    HouseholdModel? household,
-    IndividualModel? headOfHousehold,
-    List<IndividualModel>? members,
-    List<ProjectBeneficiaryModel>? projectBeneficiaries,
-    double? distance,
-    List<TaskModel>? tasks,
-    List<SideEffectModel>? sideEffects,
-    List<ReferralModel>? referrals,
-  }) = _HouseholdMemberWrapper;
-}

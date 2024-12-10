@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
+import 'package:health_campaign_field_worker_app/blocs/blocs-smc/searchBeneficiary/search_households_smc.dart'
+    as yash;
 import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -80,7 +82,6 @@ class _CustomSearchBeneficiarySMCPageState
             long = locationState.longitude!;
           });
           if (!ifSearchTriggered) {
-            // SearchByBeneficiaryId();
             ifSearchTriggered = true;
             // Trigger search after location is loaded
             blocWrapper.clearEvent();
@@ -97,6 +98,10 @@ class _CustomSearchBeneficiarySMCPageState
         });
       }
     });
+
+    context
+        .read<IndividualGlobalSearchSMCBloc>()
+        .add(SearchHouseholdsSMCEvent.clear());
 
     super.initState();
   }
@@ -169,6 +174,8 @@ class _CustomSearchBeneficiarySMCPageState
                                                 searchController.clear();
                                                 setState(() {
                                                   isProximityEnabled = value;
+                                                  isSearchByBeneficaryIdEnabled =
+                                                      false;
                                                   lat = locationState.latitude!;
                                                   long =
                                                       locationState.longitude!;
@@ -207,10 +214,18 @@ class _CustomSearchBeneficiarySMCPageState
                                                   isSearchByBeneficaryIdEnabled,
                                               onChanged: (value) {
                                                 searchController.clear();
+                                                context
+                                                    .read<
+                                                        IndividualGlobalSearchSMCBloc>()
+                                                    .add(
+                                                        SearchHouseholdsSMCEvent
+                                                            .clear());
                                                 setState(() {
                                                   isSearchByBeneficaryIdEnabled =
                                                       value;
                                                   isProximityEnabled = false;
+                                                  searchController.clear();
+                                                  blocWrapper.clearEvent();
                                                 });
                                               },
                                             ),
@@ -231,9 +246,13 @@ class _CustomSearchBeneficiarySMCPageState
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
+                                  context
+                                      .read<IndividualGlobalSearchSMCBloc>()
+                                      .add(SearchHouseholdsSMCEvent.clear());
+
                                   blocWrapper.clearEvent();
                                   if (isSearchByBeneficaryIdEnabled &&
-                                      value.length == 14) {
+                                      isBeneficiaryIdValid(value)) {
                                     SearchByBeneficiaryId(beneficiaryId: value);
                                   } else if (!isSearchByBeneficaryIdEnabled &&
                                       (value.isEmpty ||
@@ -343,7 +362,8 @@ class _CustomSearchBeneficiarySMCPageState
                         },
                       ),
                       const SizedBox(height: kPadding * 2),
-                      if (searchHouseholdsState.resultsNotFound &&
+                      if (!isSearchByBeneficaryIdEnabled &&
+                          searchHouseholdsState.resultsNotFound &&
                           !searchHouseholdsState.loading)
                         DigitInfoCard(
                           description: localizations.translate(
@@ -357,7 +377,8 @@ class _CustomSearchBeneficiarySMCPageState
                   ),
                 ),
               ),
-              if (searchHouseholdsState.loading)
+              if (!isSearchByBeneficaryIdEnabled &&
+                  searchHouseholdsState.loading)
                 const SliverFillRemaining(
                   child: Center(
                     child: CircularProgressIndicator(),
@@ -465,15 +486,65 @@ class _CustomSearchBeneficiarySMCPageState
                     if (searchSMCstate.loading) {
                       return Center(child: CircularProgressIndicator());
                     } else {
-                      // Build UI with the fetched data
                       return SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final household =
-                                searchSMCstate.householdMembers[index];
-                            return ListTile(
-                              title: Text(household.members!.first!.name!
-                                  .givenName!), // Replace with actual data
+                          (ctx, index) {
+                            final i = searchSMCstate.householdMembers[index];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: kPadding),
+                              child: CustomViewBeneficiaryCardSMC(
+                                householdMember: i,
+                                onOpenPressed: () async {
+                                  final scannerBloc =
+                                      context.read<DigitScannerBloc>();
+
+                                  scannerBloc.add(
+                                    const DigitScannerEvent.handleScanner(),
+                                  );
+
+                                  if ((i.tasks != null &&
+                                          i.tasks?.last.status ==
+                                              Status.closeHousehold.toValue() &&
+                                          (i.tasks ?? []).isNotEmpty) ||
+                                      (i.projectBeneficiaries ?? []).isEmpty) {
+                                    setState(() {
+                                      selectedFilters = [];
+                                    });
+                                    blocWrapper.clearEvent();
+                                    await context.router.push(
+                                      BeneficiaryRegistrationWrapperRoute(
+                                        initialState: BeneficiaryRegistrationState
+                                            .editHousehold(
+                                                householdModel: i.household!,
+                                                individualModel: i.members!,
+                                                registrationDate:
+                                                    DateTime.now(),
+                                                projectBeneficiaryModel:
+                                                    (i.projectBeneficiaries ??
+                                                                [])
+                                                            .isNotEmpty
+                                                        ? i.projectBeneficiaries
+                                                            ?.last
+                                                        : null,
+                                                addressModel: i.headOfHousehold!
+                                                    .address!.last,
+                                                headOfHousehold:
+                                                    i.headOfHousehold),
+                                      ),
+                                    );
+                                  } else {
+                                    await context.router.push(
+                                        BeneficiaryWrapperRoute(wrapper: i));
+                                  }
+                                  setState(() {
+                                    isProximityEnabled = false;
+                                    isSearchByBeneficaryIdEnabled = false;
+                                  });
+                                  searchController.clear();
+                                  selectedFilters.clear();
+                                  blocWrapper.clearEvent();
+                                },
+                              ),
                             );
                           },
                           childCount: searchSMCstate.householdMembers.length,
@@ -481,7 +552,20 @@ class _CustomSearchBeneficiarySMCPageState
                       );
                     }
                   },
-                )
+                ),
+              if (isSearchByBeneficaryIdEnabled &&
+                  !isBeneficiaryIdValid(searchController.text))
+                SliverList(
+                    delegate: SliverChildBuilderDelegate((ctx, index) {
+                  return DigitInfoCard(
+                    description: localizations.translate(
+                      i18.searchBeneficiary.beneficiaryInfoDescription,
+                    ),
+                    title: localizations.translate(
+                      i18.searchBeneficiary.beneficiaryInfoTitle,
+                    ),
+                  );
+                }, childCount: 1))
             ],
           ),
         ),
@@ -679,4 +763,9 @@ class _CustomSearchBeneficiarySMCPageState
       return selectedFilter;
     }
   }
+}
+
+bool isBeneficiaryIdValid(String value) {
+  if (value.length != 14) return false;
+  return true;
 }
