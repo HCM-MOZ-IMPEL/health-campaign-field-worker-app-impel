@@ -101,6 +101,36 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isSpaqManager {
+    try {
+      bool spaqManager = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.spaqManager.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return spaqManager;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isCommunitySupervisor {
+    try {
+      bool communitySupervisor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.communitySupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return communitySupervisor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 

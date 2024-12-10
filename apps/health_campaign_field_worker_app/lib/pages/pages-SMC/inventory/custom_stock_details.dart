@@ -10,10 +10,10 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:inventory_management/inventory_management.dart'
     hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../utils/extensions/extensions.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
@@ -50,8 +50,12 @@ class CustomStockDetailsPageState
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   static const _supervisorKey = 'supervisor';
+  static const _spaqManagerKey = 'spaqManager';
+
   bool deliveryTeamSelected = false;
   bool supervisorSelected = false;
+  bool spaqManagerSelected = false;
+
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
 
@@ -82,20 +86,9 @@ class CustomStockDetailsPageState
         validators: driverNameValidations,
       ),
       _commentsKey: FormControl<String>(),
-      _deliveryTeamKey: FormControl<String>(
-          // validators: !InventorySingleton().isDistributor &&
-          //         !InventorySingleton().isWareHouseMgr &&
-          //         deliveryTeamSelected
-          //     ? [Validators.required]
-          //     : [],
-          ),
-      _supervisorKey: FormControl<String>(
-          // validators: (InventorySingleton().isWareHouseMgr ||
-          //             InventorySingleton().isDistributor) &&
-          //         supervisorSelected
-          //     ? [Validators.required]
-          //     : [],
-          ),
+      _deliveryTeamKey: FormControl<String>(),
+      _supervisorKey: FormControl<String>(),
+      _spaqManagerKey: FormControl<String>(),
     });
   }
 
@@ -112,6 +105,7 @@ class CustomStockDetailsPageState
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    bool isSpaqManager = context.isSpaqManager;
     if (isWareHouseMgr) {
       driverNameValidations = [
         Validators.required,
