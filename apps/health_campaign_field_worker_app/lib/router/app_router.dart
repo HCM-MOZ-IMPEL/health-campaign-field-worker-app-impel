@@ -1016,6 +1016,12 @@ class AppRouter extends _$AppRouter {
                     path: 'closed-household-acknowledgement'),
               ]),
 
+          // DSS Dashboard Routes
+          AutoRoute(
+            page: UserDashboardRoute.page,
+            path: 'dashboard',
+          ),
+
           AutoRoute(
               page: ChecklistWrapperRoute.page,
               path: 'checklist',
