@@ -935,8 +935,10 @@ class Complaints {
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
-  String get validationMinLengthError =>
+  String get validationMinLengthErrorSMC =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get validationMaxLengthErrorSMC =>
+      'COMPLAINTS_VALIDATION_MAXLENGTH_ERROR_SMC';
   String get mobilenumberValidationMaxLengthError =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
