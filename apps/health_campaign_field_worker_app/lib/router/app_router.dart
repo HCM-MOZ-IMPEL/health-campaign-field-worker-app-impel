@@ -251,14 +251,6 @@ class AppRouter extends _$AppRouter {
                 path: 'inventory-select-facilities',
               ),
               AutoRoute(
-                page: CustomInventoryFacilitySelectionRoute.page,
-                path: 'custom-inventory-select-facilities',
-              ),
-              RedirectRoute(
-                path: 'inventory-select-facilities',
-                redirectTo: 'custom-inventory-select-facilities',
-              ),
-              AutoRoute(
                 page: StockReconciliationRoute.page,
                 path: 'stock-reconciliation',
               ),
@@ -931,6 +923,14 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: InventoryFacilitySelectionRoute.page,
             path: 'inventory-select-facilities',
+          ),
+          AutoRoute(
+            page: CustomInventoryFacilitySelectionRoute.page,
+            path: 'custom-inventory-select-facilities',
+          ),
+          RedirectRoute(
+            path: 'inventory-select-facilities',
+            redirectTo: 'custom-inventory-select-facilities',
           ),
           AutoRoute(
             page: StockReconciliationRoute.page,

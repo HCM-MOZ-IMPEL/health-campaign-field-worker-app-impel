@@ -556,14 +556,24 @@ class CustomInventoryReportDetailsSMCPageState
                                                                     widget.reportType ==
                                                                         InventoryReportType
                                                                             .damage
-                                                                ? model.senderId ??
-                                                                    model
-                                                                        .senderType ??
-                                                                    ''
-                                                                : model.receiverId ??
-                                                                    model
-                                                                        .receiverType ??
-                                                                    '',
+                                                                ? model.senderType ==
+                                                                        'WAREHOUSE'
+                                                                    ? localizations
+                                                                        .translate(
+                                                                            'FAC_${model.senderId}')
+                                                                    : (model.senderId ??
+                                                                        model
+                                                                            .senderType ??
+                                                                        '')
+                                                                : model.receiverType ==
+                                                                        'WAREHOUSE'
+                                                                    ? localizations
+                                                                        .translate(
+                                                                            'FAC_${model.receiverId}')
+                                                                    : (model.receiverId ??
+                                                                        model
+                                                                            .receiverType ??
+                                                                        ''),
                                                           ),
                                                         ],
                                                       ),

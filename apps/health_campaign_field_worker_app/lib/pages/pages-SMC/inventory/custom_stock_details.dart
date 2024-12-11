@@ -992,20 +992,17 @@ class CustomStockDetailsSMCPageState
 
                                               final facility =
                                                   await context.router.push(
-                                                          InventoryFacilitySelectionRoute(
+                                                          CustomInventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   allFacilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
-                                              form
-                                                  .control(_secondaryPartyKey)
-                                                  .value = facility.id ==
-                                                      'Delivery Team'
-                                                  ? localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    )
-                                                  : facility.name;
+                                              form.control(_secondaryPartyKey).value =
+                                                  facility.name ??
+                                                      localizations.translate(
+                                                        'FAC_${facility.id}',
+                                                      );
 
                                               setState(() {
                                                 selectedFacilityId =
@@ -1318,21 +1315,18 @@ class CustomStockDetailsSMCPageState
 
                                                   final facility =
                                                       await context.router.push(
-                                                    InventoryFacilitySelectionRoute(
+                                                    CustomInventoryFacilitySelectionRoute(
                                                       facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
                                                   if (facility == null) return;
-                                                  form
-                                                      .control(
-                                                          _secondaryPartyKey)
-                                                      .value = facility.id ==
-                                                          'Delivery Team'
-                                                      ? localizations.translate(
-                                                          'FAC_${facility.id}',
-                                                        )
-                                                      : facility.name;
+                                                  form.control(_secondaryPartyKey).value =
+                                                      facility.name ??
+                                                          localizations
+                                                              .translate(
+                                                            'FAC_${facility.id}',
+                                                          );
 
                                                   setState(() {
                                                     selectedFacilityId =

@@ -67,7 +67,7 @@ class _CustomInventoryReportSelectionSMCPageState
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsSMCRoute(
                       reportType: InventoryReportType.receipt,
                     ),
                   ),
@@ -82,7 +82,7 @@ class _CustomInventoryReportSelectionSMCPageState
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsSMCRoute(
                       reportType: InventoryReportType.dispatch,
                     ),
                   ),
@@ -98,7 +98,7 @@ class _CustomInventoryReportSelectionSMCPageState
                     prefixIcon: Icons.settings_backup_restore,
                     sufixIcon: Icons.arrow_circle_right,
                     onPressed: () => context.router.push(
-                      CustomInventoryReportDetailsRoute(
+                      CustomInventoryReportDetailsSMCRoute(
                         reportType: InventoryReportType.returned,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _CustomInventoryReportSelectionSMCPageState
                     prefixIcon: Icons.store,
                     sufixIcon: Icons.arrow_circle_right,
                     onPressed: () => context.router.push(
-                      CustomInventoryReportDetailsRoute(
+                      CustomInventoryReportDetailsSMCRoute(
                         reportType: InventoryReportType.reconciliation,
                       ),
                     ),
