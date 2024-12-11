@@ -675,7 +675,9 @@ void setPackagesSingleton(BuildContext context) {
               .isNotEmpty,
           isDistributor: context.loggedInUserRoles
               .where(
-                (role) => role.code == RolesType.distributor.toValue(),
+                (role) =>
+                    role.code == RolesType.distributor.toValue() ||
+                    role.code == RolesType.communityDistributor.toValue(),
               )
               .toList()
               .isNotEmpty,

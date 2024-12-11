@@ -93,12 +93,12 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
-import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
+import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
 
 part 'app_router.gr.dart';
 
@@ -243,6 +243,14 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: InventoryFacilitySelectionRoute.page,
                 path: 'inventory-select-facilities',
+              ),
+              AutoRoute(
+                page: CustomInventoryFacilitySelectionRoute.page,
+                path: 'custom-inventory-select-facilities',
+              ),
+              RedirectRoute(
+                path: 'inventory-select-facilities',
+                redirectTo: 'custom-inventory-select-facilities',
               ),
               AutoRoute(
                 page: StockReconciliationRoute.page,
