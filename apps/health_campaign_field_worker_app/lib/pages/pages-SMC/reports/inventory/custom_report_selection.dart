@@ -10,19 +10,19 @@ import '../../../../widgets/header/back_navigation_help_header.dart';
 import '../../../../widgets/localized.dart';
 
 @RoutePage()
-class CustomInventoryReportSelectionPage extends LocalizedStatefulWidget {
-  const CustomInventoryReportSelectionPage({
+class CustomInventoryReportSelectionSMCPage extends LocalizedStatefulWidget {
+  const CustomInventoryReportSelectionSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomInventoryReportSelectionPage> createState() =>
-      _CustomInventoryReportSelectionPageState();
+  State<CustomInventoryReportSelectionSMCPage> createState() =>
+      _CustomInventoryReportSelectionSMCPageState();
 }
 
-class _CustomInventoryReportSelectionPageState
-    extends LocalizedState<CustomInventoryReportSelectionPage> {
+class _CustomInventoryReportSelectionSMCPageState
+    extends LocalizedState<CustomInventoryReportSelectionSMCPage> {
   @override
   void initState() {
     super.initState();
@@ -67,7 +67,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsSMCRoute(
                       reportType: InventoryReportType.receipt,
                     ),
                   ),
@@ -82,7 +82,7 @@ class _CustomInventoryReportSelectionPageState
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    CustomInventoryReportDetailsRoute(
+                    CustomInventoryReportDetailsSMCRoute(
                       reportType: InventoryReportType.dispatch,
                     ),
                   ),
@@ -98,7 +98,7 @@ class _CustomInventoryReportSelectionPageState
                     prefixIcon: Icons.settings_backup_restore,
                     sufixIcon: Icons.arrow_circle_right,
                     onPressed: () => context.router.push(
-                      CustomInventoryReportDetailsRoute(
+                      CustomInventoryReportDetailsSMCRoute(
                         reportType: InventoryReportType.returned,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _CustomInventoryReportSelectionPageState
                     prefixIcon: Icons.store,
                     sufixIcon: Icons.arrow_circle_right,
                     onPressed: () => context.router.push(
-                      CustomInventoryReportDetailsRoute(
+                      CustomInventoryReportDetailsSMCRoute(
                         reportType: InventoryReportType.reconciliation,
                       ),
                     ),

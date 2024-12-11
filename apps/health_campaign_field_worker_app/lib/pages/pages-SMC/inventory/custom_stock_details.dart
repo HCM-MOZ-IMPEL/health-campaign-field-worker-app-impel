@@ -14,6 +14,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
@@ -28,18 +29,19 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../custom_digit_scanner.dart';
 
 @RoutePage()
-class CustomStockDetailsPage extends LocalizedStatefulWidget {
-  const CustomStockDetailsPage({
+class CustomStockDetailsSMCPage extends LocalizedStatefulWidget {
+  const CustomStockDetailsSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomStockDetailsPage> createState() => CustomStockDetailsPageState();
+  State<CustomStockDetailsSMCPage> createState() =>
+      CustomStockDetailsSMCPageState();
 }
 
-class CustomStockDetailsPageState
-    extends LocalizedState<CustomStockDetailsPage> {
+class CustomStockDetailsSMCPageState
+    extends LocalizedState<CustomStockDetailsSMCPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
@@ -52,7 +54,6 @@ class CustomStockDetailsPageState
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   static const _supervisorKey = 'supervisor';
-  static const _spaqManagerKey = 'spaqManager';
 
   bool deliveryTeamSelected = false;
   bool supervisorSelected = false;
@@ -109,7 +110,6 @@ class CustomStockDetailsPageState
         BlocProvider.of<StockReconciliationBloc>(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
-    bool isSpaqManager = context.isSpaqManager;
     if (isWareHouseMgr) {
       driverNameValidations = [
         Validators.required,
@@ -859,32 +859,130 @@ class CustomStockDetailsPageState
                                         fetched: (facilities, allFacilities1) {
                                           List<FacilityModel> allFacilities =
                                               [];
-                                          if (InventorySingleton()
-                                                  .isDistributor ||
-                                              isWareHouseMgr) {
-                                            allFacilities.add(
-                                              FacilityModel(
-                                                id: 'Supervisor',
-                                                name: 'Chefe de Equipa',
-                                                additionalFields:
-                                                    FacilityAdditionalFields(
-                                                  version: 1,
-                                                  fields: [
-                                                    const AdditionalField(
-                                                        'type', 'Supervisor')
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                            allFacilities.addAll(allFacilities1
-                                                .where((element) =>
-                                                    element.id !=
-                                                    'Delivery Team')
-                                                .toList());
+                                          String? boundaryLevel =
+                                              RegistrationDeliverySingleton()
+                                                  .selectedProject
+                                                  ?.address
+                                                  ?.boundaryType;
+                                          if (boundaryLevel ==
+                                              Constants
+                                                  .provincialBoundaryLevel) {
+                                            if (stockState.entryType ==
+                                                StockRecordEntryType.receipt) {
+                                              allFacilities.addAll(
+                                                  allFacilities1
+                                                      .where((element) =>
+                                                          element.usage ==
+                                                          Constants.lastCycle)
+                                                      .toList());
+                                              allFacilities.addAll(facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .nationalWarehouse)
+                                                  .toList());
+                                            } else {
+                                              allFacilities.addAll(facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .districWarehouse)
+                                                  .toList());
+                                            }
+                                          } else if (boundaryLevel ==
+                                              Constants.districtBoundaryLevel) {
+                                            if (stockState.entryType ==
+                                                StockRecordEntryType.receipt) {
+                                              allFacilities.addAll(
+                                                  allFacilities1
+                                                      .where((element) =>
+                                                          element.usage ==
+                                                          Constants.lastCycle)
+                                                      .toList());
+                                              allFacilities.addAll(facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .provincialWarehouse)
+                                                  .toList());
+                                            } else {
+                                              allFacilities.addAll(facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.healthFacility)
+                                                  .toList());
+                                            }
                                           } else {
-                                            allFacilities
-                                                .addAll(allFacilities1);
+                                            if (isWareHouseMgr) {
+                                              if (stockState.entryType ==
+                                                  StockRecordEntryType
+                                                      .receipt) {
+                                                allFacilities.addAll(
+                                                    allFacilities1
+                                                        .where((element) =>
+                                                            element.usage ==
+                                                            Constants.lastCycle)
+                                                        .toList());
+                                                allFacilities.addAll(facilities
+                                                    .where((element) =>
+                                                        element.usage ==
+                                                        Constants
+                                                            .districWarehouse)
+                                                    .toList());
+                                              } else {
+                                                allFacilities.add(
+                                                  FacilityModel(
+                                                    id: 'Supervisor',
+                                                    name: 'Chefe de Equipa',
+                                                    additionalFields:
+                                                        FacilityAdditionalFields(
+                                                      version: 1,
+                                                      fields: [
+                                                        const AdditionalField(
+                                                            'type',
+                                                            'Supervisor')
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            } else if (InventorySingleton()
+                                                .isDistributor) {
+                                              allFacilities.add(
+                                                FacilityModel(
+                                                  id: 'Supervisor',
+                                                  name: 'Chefe de Equipa',
+                                                  additionalFields:
+                                                      FacilityAdditionalFields(
+                                                    version: 1,
+                                                    fields: [
+                                                      const AdditionalField(
+                                                          'type', 'Supervisor')
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              if (stockState.entryType ==
+                                                  StockRecordEntryType
+                                                      .receipt) {
+                                                allFacilities.addAll(facilities
+                                                    .where((element) =>
+                                                        element.usage ==
+                                                        Constants
+                                                            .healthFacility)
+                                                    .toList());
+                                              } else {
+                                                allFacilities.addAll(
+                                                    allFacilities1
+                                                        .where((element) =>
+                                                            element.id ==
+                                                            'Delivery Team')
+                                                        .toList());
+                                              }
+                                            }
                                           }
+
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
@@ -894,20 +992,17 @@ class CustomStockDetailsPageState
 
                                               final facility =
                                                   await context.router.push(
-                                                          InventoryFacilitySelectionRoute(
+                                                          CustomInventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   allFacilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
-                                              form
-                                                  .control(_secondaryPartyKey)
-                                                  .value = facility.id ==
-                                                      'Delivery Team'
-                                                  ? localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    )
-                                                  : facility.name;
+                                              form.control(_secondaryPartyKey).value =
+                                                  facility.name ??
+                                                      localizations.translate(
+                                                        'FAC_${facility.id}',
+                                                      );
 
                                               setState(() {
                                                 selectedFacilityId =
@@ -1220,21 +1315,18 @@ class CustomStockDetailsPageState
 
                                                   final facility =
                                                       await context.router.push(
-                                                    InventoryFacilitySelectionRoute(
+                                                    CustomInventoryFacilitySelectionRoute(
                                                       facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
                                                   if (facility == null) return;
-                                                  form
-                                                      .control(
-                                                          _secondaryPartyKey)
-                                                      .value = facility.id ==
-                                                          'Delivery Team'
-                                                      ? localizations.translate(
-                                                          'FAC_${facility.id}',
-                                                        )
-                                                      : facility.name;
+                                                  form.control(_secondaryPartyKey).value =
+                                                      facility.name ??
+                                                          localizations
+                                                              .translate(
+                                                            'FAC_${facility.id}',
+                                                          );
 
                                                   setState(() {
                                                     selectedFacilityId =

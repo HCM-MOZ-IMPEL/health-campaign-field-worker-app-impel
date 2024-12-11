@@ -11,18 +11,19 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 
 @RoutePage()
-class CustomManageStocksPage extends LocalizedStatefulWidget {
-  const CustomManageStocksPage({
+class CustomManageStocksSMCPage extends LocalizedStatefulWidget {
+  const CustomManageStocksSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomManageStocksPage> createState() => _CustomManageStocksPageState();
+  State<CustomManageStocksSMCPage> createState() =>
+      _CustomManageStocksSMCPageState();
 }
 
-class _CustomManageStocksPageState
-    extends LocalizedState<CustomManageStocksPage> {
+class _CustomManageStocksSMCPageState
+    extends LocalizedState<CustomManageStocksSMCPage> {
   @override
   initState() {
     super.initState();

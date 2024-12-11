@@ -89,6 +89,13 @@ class Constants {
   static const String lgaBoundaryLevel = 'LGA';
   static const String lgaFacility = 'LGA Facility';
   static const String healthFacility = 'Health Facility';
+  static const String provincialWarehouse = 'Provincial Warehouse';
+  static const String districWarehouse = 'District Warehouse';
+  static const String provincialBoundaryLevel = 'Provincia';
+  static const String districtBoundaryLevel = 'Distrito';
+  static const String nationalWarehouse = 'National Warehouse';
+  static const String lastCycle = 'Last Cycle';
+
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
   static const String intTwo = '2';

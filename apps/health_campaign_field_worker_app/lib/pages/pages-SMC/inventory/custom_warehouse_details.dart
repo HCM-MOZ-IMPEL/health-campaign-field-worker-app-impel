@@ -6,6 +6,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -21,21 +22,22 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/extensions/extensions.dart';
 
 @RoutePage()
-class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {
-  const CustomWarehouseDetailsPage({
+class CustomWarehouseDetailsSMCPage extends LocalizedStatefulWidget {
+  const CustomWarehouseDetailsSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomWarehouseDetailsPage> createState() =>
-      CustomWarehouseDetailsPageState();
+  State<CustomWarehouseDetailsSMCPage> createState() =>
+      CustomWarehouseDetailsSMCPageState();
 }
 
-class CustomWarehouseDetailsPageState
-    extends LocalizedState<CustomWarehouseDetailsPage> {
+class CustomWarehouseDetailsSMCPageState
+    extends LocalizedState<CustomWarehouseDetailsSMCPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
@@ -98,11 +100,41 @@ class CustomWarehouseDetailsPageState
                               .selectedProject
                               ?.address
                               ?.boundaryType ==
-                          'Provincia') {
+                          Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == 'Provincial Warehouse',
+                                  element.usage ==
+                                  Constants.provincialWarehouse,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      } else if (RegistrationDeliverySingleton()
+                              .selectedProject
+                              ?.address
+                              ?.boundaryType ==
+                          Constants.districtBoundaryLevel) {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == Constants.districWarehouse,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      } else {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == Constants.healthFacility &&
+                                  (context.loggedInUser.permanentCity == null ||
+                                      (element.name ??
+                                              localizations.translate(
+                                                  'FAC_${element.id}')) ==
+                                          context.loggedInUser.permanentCity),
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty
@@ -283,7 +315,7 @@ class CustomWarehouseDetailsPageState
                                                                   id: '',
                                                                 )));
                                                 context.router.push(
-                                                  CustomStockDetailsRoute(),
+                                                  CustomStockDetailsSMCRoute(),
                                                 );
                                               }
                                             },
@@ -354,7 +386,7 @@ class CustomWarehouseDetailsPageState
                                               await Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  InventoryFacilitySelectionPage(
+                                                  CustomInventoryFacilitySelectionPage(
                                                 facilities: facilities,
                                               ),
                                             ),
@@ -419,7 +451,7 @@ class CustomWarehouseDetailsPageState
                                                       .push(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      InventoryFacilitySelectionPage(
+                                                      CustomInventoryFacilitySelectionPage(
                                                     facilities: facilities,
                                                   ),
                                                 ),
