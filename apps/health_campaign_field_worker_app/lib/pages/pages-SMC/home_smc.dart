@@ -479,7 +479,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _, __) {
-                    context.router.push(SearchReferralReconciliationsRoute());
+                    context.router
+                        .push(CustomSearchReferralReconciliationsSMCRoute());
                   },
                 );
           },

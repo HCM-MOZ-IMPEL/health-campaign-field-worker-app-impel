@@ -1,5 +1,7 @@
 library i18;
 
+import 'package:referral_reconciliation/utils/i18_key_constants.dart';
+
 const common = Common();
 const householdDetails = HouseholdDetails();
 const login = Login();
@@ -39,6 +41,8 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const attendance = Attendance();
+
+const referralReconciliation = ReferralReconciliation();
 
 class Common {
   const Common();
