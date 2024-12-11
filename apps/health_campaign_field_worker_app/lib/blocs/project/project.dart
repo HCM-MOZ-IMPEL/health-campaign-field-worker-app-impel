@@ -25,6 +25,7 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -467,6 +468,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     List<BoundaryModel> boundaries;
     try {
       try {
+        // read the projectTypeCode to identify the campaign
+        final projectTypeCode =
+            event.model.additionalDetails?.projectType?.code!;
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)
             .toLocal()
@@ -479,6 +483,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         final dashboardConfig = await isar.dashboardConfigSchemas
             .where()
             .filter()
+            .idEqualTo(returnChartIdBasedOnProjectType(projectTypeCode))
             .chartsIsNotNull()
             .chartsIsNotEmpty()
             .findAll();
@@ -621,6 +626,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       syncError: null,
     ));
   }
+}
+
+// Info returns chart id based on the projectTypeCode , default for IRS
+dynamic returnChartIdBasedOnProjectType(String? projectTypeCode) {
+  var chartId = 2;
+
+  if (projectTypeCode == ProjectTypes.smc.toValue()) {
+    chartId = 1;
+  }
+  return chartId;
 }
 
 @freezed
