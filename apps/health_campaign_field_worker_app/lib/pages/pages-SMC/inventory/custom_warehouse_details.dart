@@ -358,12 +358,13 @@ class CustomWarehouseDetailsPageState
                                                 facilities: facilities,
                                               ),
                                             ),
-                                          );
+                                          ) as FacilityModel?;
 
                                           if (facility == null) return;
                                           form.control(_warehouseKey).value =
-                                              localizations.translate(
-                                                  'FAC_${facility.id}');
+                                              facility.name ??
+                                                  localizations.translate(
+                                                      'FAC_${facility.id}');
 
                                           setState(() {
                                             selectedFacilityId = facility.id;
@@ -422,14 +423,15 @@ class CustomWarehouseDetailsPageState
                                                     facilities: facilities,
                                                   ),
                                                 ),
-                                              );
+                                              ) as FacilityModel?;
 
                                               if (facility == null) return;
                                               form
                                                       .control(_warehouseKey)
                                                       .value =
-                                                  localizations.translate(
-                                                      'FAC_${facility.id}');
+                                                  facility.name ??
+                                                      localizations.translate(
+                                                          'FAC_${facility.id}');
 
                                               setState(() {
                                                 selectedFacilityId =
