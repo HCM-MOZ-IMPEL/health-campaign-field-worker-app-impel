@@ -44,6 +44,10 @@
     {
       "name": "Spaq Manager",
       "value": "SPAQ_MANAGER"
+    },
+    {
+      "name": "Health Facility Supervisor",
+      "value": "HEALTH_FACILITY_SUPERVISOR"
     }
   ],
   "isEnum": true

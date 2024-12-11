@@ -423,11 +423,11 @@ class _ComplaintsDetailsPageState
                                         'minLength': (object) =>
                                             localizations.translate(i18
                                                 .complaints
-                                                .validationMinLengthError),
-                                        'maxLength': (object) => localizations
-                                            .translate(i18.common
-                                                .maxCharsRequiredValidation)
-                                            .replaceAll('{}', '9'),
+                                                .validationMinLengthErrorSMC),
+                                        'maxLength': (object) =>
+                                            localizations.translate(i18
+                                                .complaints
+                                                .validationMaxLengthErrorSMC)
                                       },
                                     ),
                                   ],
@@ -465,12 +465,11 @@ class _ComplaintsDetailsPageState
                                           .mobileNumberInvalidFormatValidationMessage,
                                     ),
                                 'minLength': (object) =>
+                                    localizations.translate(i18.complaints
+                                        .validationMinLengthErrorSMC),
+                                'maxLength': (object) =>
                                     localizations.translate(i18
-                                        .complaints.validationMinLengthError),
-                                'maxLength': (object) => localizations
-                                    .translate(
-                                        i18.common.maxCharsRequiredValidation)
-                                    .replaceAll('{}', '9'),
+                                        .complaints.validationMaxLengthErrorSMC)
                               },
                             ),
                             DigitTextFormField(

@@ -29,5 +29,7 @@ enum RolesType {
   communitySupervisor,
   @MappableValue("SPAQ_MANAGER")
   spaqManager,
+  @MappableValue("HEALTH_FACILITY_SUPERVISOR")
+  healthFacilitySupervisor,
   ;
 }

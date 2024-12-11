@@ -935,8 +935,10 @@ class Complaints {
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
-  String get validationMinLengthError =>
+  String get validationMinLengthErrorSMC =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get validationMaxLengthErrorSMC =>
+      'COMPLAINTS_VALIDATION_MAXLENGTH_ERROR_SMC';
   String get mobilenumberValidationMaxLengthError =>
       'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
@@ -1124,6 +1126,8 @@ class SearchBeneficiary {
       'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
 
   String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+  String get beneficiaryIdValidInfoDescription =>
+      'BENEFICIARY_ID_VALID_INFO_DESCRIPTION';
 
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
 

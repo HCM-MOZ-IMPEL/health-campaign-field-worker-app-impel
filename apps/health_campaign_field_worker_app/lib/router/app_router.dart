@@ -78,6 +78,7 @@ import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/ineligible_summary_page.dart';
 import '../pages/inventory/custom_stock_details.dart';
+import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
@@ -93,12 +94,14 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
-import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
+
+import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -243,14 +246,6 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: InventoryFacilitySelectionRoute.page,
                 path: 'inventory-select-facilities',
-              ),
-              AutoRoute(
-                page: CustomInventoryFacilitySelectionRoute.page,
-                path: 'custom-inventory-select-facilities',
-              ),
-              RedirectRoute(
-                path: 'inventory-select-facilities',
-                redirectTo: 'custom-inventory-select-facilities',
               ),
               AutoRoute(
                 page: StockReconciliationRoute.page,
@@ -881,6 +876,36 @@ class AppRouter extends _$AppRouter {
                 ),
               ]),
 
+          // Attendance Route
+          AutoRoute(
+            page: ManageAttendanceRoute.page,
+            path: 'manage-attendance',
+          ),
+          AutoRoute(
+            page: CustomManageAttendanceRoute.page,
+            path: 'custom-manage-attendance',
+          ),
+          AutoRoute(
+            page: AttendanceDateSessionSelectionRoute.page,
+            path: 'attendance-date-session-selection',
+          ),
+          AutoRoute(
+            page: CustomAttendanceDateSessionSelectionRoute.page,
+            path: 'custom-attendance-date-session-selection',
+          ),
+          AutoRoute(
+            page: MarkAttendanceRoute.page,
+            path: 'mark-attendance',
+          ),
+          AutoRoute(
+            page: CustomMarkAttendanceRoute.page,
+            path: 'custom-mark-attendance',
+          ),
+          AutoRoute(
+            page: AttendanceAcknowledgementRoute.page,
+            path: 'attendance-acknowledgement',
+          ),
+
           // Inventory Route
           AutoRoute(
             page: ManageStocksRoute.page,
@@ -994,6 +1019,12 @@ class AppRouter extends _$AppRouter {
                     path: 'closed-household-acknowledgement'),
               ]),
 
+          // DSS Dashboard Routes
+          AutoRoute(
+            page: UserDashboardRoute.page,
+            path: 'dashboard',
+          ),
+
           AutoRoute(
               page: ChecklistWrapperRoute.page,
               path: 'checklist',
@@ -1101,6 +1132,11 @@ class AppRouter extends _$AppRouter {
             page: SearchReferralReconciliationsRoute.page,
             path: 'search-referrals',
           ),
+          AutoRoute(
+              page: CustomSearchReferralReconciliationsSMCRoute.page,
+              path: 'custom-search-referrals'),
+          RedirectRoute(
+              path: 'search-referrals', redirectTo: 'custom-search-referrals')
         ]),
       ],
     ),
