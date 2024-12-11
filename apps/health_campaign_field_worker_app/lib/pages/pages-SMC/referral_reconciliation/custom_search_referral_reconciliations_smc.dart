@@ -247,27 +247,6 @@ class _SearchReferralReconciliationsPageState
                         );
                       },
                     ),
-                    // DigitOutlineIconButton(
-                    //   buttonStyle: OutlinedButton.styleFrom(
-                    //     shape: const RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.zero,
-                    //     ),
-                    //   ),
-                    //   onPressed: () async {
-                    //     context.read<DigitScannerBloc>().add(
-                    //           const DigitScannerEvent.handleScanner(),
-                    //         );
-                    //     context.router.push(DigitScannerRoute(
-                    //       quantity: 1,
-                    //       isGS1code: false,
-                    //       singleValue: true,
-                    //     ));
-                    //   },
-                    //   icon: Icons.qr_code,
-                    //   label: localizations.translate(
-                    //     i18.referralReconciliation.scannerLabel,
-                    //   ),
-                    // ),
                   ),
                 ),
               ),
