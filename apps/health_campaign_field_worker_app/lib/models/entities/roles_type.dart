@@ -25,5 +25,9 @@ enum RolesType {
   communityDistributor,
   @MappableValue("ATTENDANCE_STAFF")
   attendanceStaff,
+  @MappableValue("COMMUNITY_SUPERVISOR")
+  communitySupervisor,
+  @MappableValue("SPAQ_MANAGER")
+  spaqManager,
   ;
 }

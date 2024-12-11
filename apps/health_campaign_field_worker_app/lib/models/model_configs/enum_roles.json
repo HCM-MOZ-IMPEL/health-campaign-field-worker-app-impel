@@ -36,6 +36,14 @@
     {
       "name": "Attendance Staff",
       "value": "ATTENDANCE_STAFF"
+    },
+    {
+      "name": "Community Supervisor",
+      "value": "COMMUNITY_SUPERVISOR"
+    },
+    {
+      "name": "Spaq Manager",
+      "value": "SPAQ_MANAGER"
     }
   ],
   "isEnum": true
