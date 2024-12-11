@@ -680,6 +680,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomSearchReferralReconciliationsSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomSearchReferralReconciliationsSMCRouteArgs>(
+              orElse: () =>
+                  const CustomSearchReferralReconciliationsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSearchReferralReconciliationsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomStockDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
           orElse: () => const CustomStockDetailsRouteArgs());
@@ -3293,6 +3306,45 @@ class CustomSearchBeneficiarySMCRouteArgs {
   @override
   String toString() {
     return 'CustomSearchBeneficiarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSearchReferralReconciliationsSMCPage]
+class CustomSearchReferralReconciliationsSMCRoute
+    extends PageRouteInfo<CustomSearchReferralReconciliationsSMCRouteArgs> {
+  CustomSearchReferralReconciliationsSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSearchReferralReconciliationsSMCRoute.name,
+          args: CustomSearchReferralReconciliationsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSearchReferralReconciliationsSMCRoute';
+
+  static const PageInfo<CustomSearchReferralReconciliationsSMCRouteArgs> page =
+      PageInfo<CustomSearchReferralReconciliationsSMCRouteArgs>(name);
+}
+
+class CustomSearchReferralReconciliationsSMCRouteArgs {
+  const CustomSearchReferralReconciliationsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSearchReferralReconciliationsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
