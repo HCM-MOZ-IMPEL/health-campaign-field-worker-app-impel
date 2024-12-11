@@ -11,7 +11,6 @@ import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -19,25 +18,27 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import 'package:inventory_management/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
+import '../../../utils/constants.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import '../../../../widgets/localized.dart';
 
 @RoutePage()
-class CustomStockReconciliationPage extends LocalizedStatefulWidget {
-  const CustomStockReconciliationPage({
+class CustomStockReconciliationSMCPage extends LocalizedStatefulWidget {
+  const CustomStockReconciliationSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomStockReconciliationPage> createState() =>
-      _CustomStockReconciliationPageState();
+  State<CustomStockReconciliationSMCPage> createState() =>
+      _CustomStockReconciliationSMCPageState();
 }
 
-class _CustomStockReconciliationPageState
-    extends LocalizedState<CustomStockReconciliationPage> {
+class _CustomStockReconciliationSMCPageState
+    extends LocalizedState<CustomStockReconciliationSMCPage> {
   static const _facilityKey = 'facility';
   static const _productVariantKey = 'productVariant';
   static const _manualCountKey = 'manualCountKey';
@@ -87,10 +88,10 @@ class _CustomStockReconciliationPageState
                     dateOfReconciliation: DateTime.now(),
                   ),
                   stockRepository:
-                      context.repository<StockModel, StockSearchModel>(context),
+                      context.repository<StockModel, StockSearchModel>(),
                   stockReconciliationRepository: context.repository<
                       StockReconciliationModel,
-                      StockReconciliationSearchModel>(context),
+                      StockReconciliationSearchModel>(),
                 ),
                 child: BlocConsumer<StockReconciliationBloc,
                     StockReconciliationState>(
@@ -319,6 +320,72 @@ class _CustomStockReconciliationPageState
                                                 ),
                                             fetched:
                                                 (facilities, allFacilities) {
+                                              if (RegistrationDeliverySingleton()
+                                                      .selectedProject
+                                                      ?.address
+                                                      ?.boundaryType ==
+                                                  Constants
+                                                      .provincialBoundaryLevel) {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                              Constants
+                                                                  .provincialWarehouse,
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              } else if (RegistrationDeliverySingleton()
+                                                      .selectedProject
+                                                      ?.address
+                                                      ?.boundaryType ==
+                                                  Constants
+                                                      .districtBoundaryLevel) {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                              Constants
+                                                                  .districWarehouse,
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              } else {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                                  Constants
+                                                                      .healthFacility &&
+                                                              (context.loggedInUser
+                                                                          .permanentCity ==
+                                                                      null ||
+                                                                  (element.name ??
+                                                                          localizations.translate(
+                                                                              'FAC_${element.id}')) ==
+                                                                      context
+                                                                          .loggedInUser
+                                                                          .permanentCity),
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              }
+
                                               return InkWell(
                                                 onTap: () async {
                                                   final stockReconciliationBloc =

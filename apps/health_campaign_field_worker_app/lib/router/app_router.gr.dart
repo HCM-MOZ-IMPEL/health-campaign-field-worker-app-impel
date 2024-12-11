@@ -552,12 +552,34 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryReportDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomInventoryReportDetailsSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          reportType: args.reportType,
+        ),
+      );
+    },
     CustomInventoryReportSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportSelectionRouteArgs>(
           orElse: () => const CustomInventoryReportSelectionRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomInventoryReportSelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomInventoryReportSelectionSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomInventoryReportSelectionSMCRouteArgs>(
+          orElse: () => const CustomInventoryReportSelectionSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportSelectionSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -575,6 +597,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomManageStocksPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomManageStocksSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomManageStocksSMCRouteArgs>(
+          orElse: () => const CustomManageStocksSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomManageStocksSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -658,6 +691,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsSMCRouteArgs>(
+          orElse: () => const CustomStockDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomStockReconciliationRoute.name: (routeData) {
       final args = routeData.argsAs<CustomStockReconciliationRouteArgs>(
           orElse: () => const CustomStockReconciliationRouteArgs());
@@ -669,12 +713,34 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockReconciliationSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockReconciliationSMCRouteArgs>(
+          orElse: () => const CustomStockReconciliationSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockReconciliationSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomWarehouseDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomWarehouseDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomWarehouseDetailsSMCRouteArgs>(
+          orElse: () => const CustomWarehouseDetailsSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomWarehouseDetailsSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -2752,6 +2818,50 @@ class CustomInventoryReportDetailsRouteArgs {
 }
 
 /// generated route for
+/// [CustomInventoryReportDetailsSMCPage]
+class CustomInventoryReportDetailsSMCRoute
+    extends PageRouteInfo<CustomInventoryReportDetailsSMCRouteArgs> {
+  CustomInventoryReportDetailsSMCRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required InventoryReportType reportType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportDetailsSMCRoute.name,
+          args: CustomInventoryReportDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            reportType: reportType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportDetailsSMCRoute';
+
+  static const PageInfo<CustomInventoryReportDetailsSMCRouteArgs> page =
+      PageInfo<CustomInventoryReportDetailsSMCRouteArgs>(name);
+}
+
+class CustomInventoryReportDetailsSMCRouteArgs {
+  const CustomInventoryReportDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.reportType,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final InventoryReportType reportType;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
+  }
+}
+
+/// generated route for
 /// [CustomInventoryReportSelectionPage]
 class CustomInventoryReportSelectionRoute
     extends PageRouteInfo<CustomInventoryReportSelectionRouteArgs> {
@@ -2787,6 +2897,45 @@ class CustomInventoryReportSelectionRouteArgs {
   @override
   String toString() {
     return 'CustomInventoryReportSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomInventoryReportSelectionSMCPage]
+class CustomInventoryReportSelectionSMCRoute
+    extends PageRouteInfo<CustomInventoryReportSelectionSMCRouteArgs> {
+  CustomInventoryReportSelectionSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportSelectionSMCRoute.name,
+          args: CustomInventoryReportSelectionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportSelectionSMCRoute';
+
+  static const PageInfo<CustomInventoryReportSelectionSMCRouteArgs> page =
+      PageInfo<CustomInventoryReportSelectionSMCRouteArgs>(name);
+}
+
+class CustomInventoryReportSelectionSMCRouteArgs {
+  const CustomInventoryReportSelectionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportSelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2840,6 +2989,45 @@ class CustomManageStocksRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomManageStocksSMCPage]
+class CustomManageStocksSMCRoute
+    extends PageRouteInfo<CustomManageStocksSMCRouteArgs> {
+  CustomManageStocksSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomManageStocksSMCRoute.name,
+          args: CustomManageStocksSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageStocksSMCRoute';
+
+  static const PageInfo<CustomManageStocksSMCRouteArgs> page =
+      PageInfo<CustomManageStocksSMCRouteArgs>(name);
+}
+
+class CustomManageStocksSMCRouteArgs {
+  const CustomManageStocksSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomManageStocksSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -3148,6 +3336,45 @@ class CustomStockDetailsRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockDetailsSMCPage]
+class CustomStockDetailsSMCRoute
+    extends PageRouteInfo<CustomStockDetailsSMCRouteArgs> {
+  CustomStockDetailsSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsSMCRoute.name,
+          args: CustomStockDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsSMCRoute';
+
+  static const PageInfo<CustomStockDetailsSMCRouteArgs> page =
+      PageInfo<CustomStockDetailsSMCRouteArgs>(name);
+}
+
+class CustomStockDetailsSMCRouteArgs {
+  const CustomStockDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomStockReconciliationPage]
 class CustomStockReconciliationRoute
     extends PageRouteInfo<CustomStockReconciliationRouteArgs> {
@@ -3187,6 +3414,45 @@ class CustomStockReconciliationRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockReconciliationSMCPage]
+class CustomStockReconciliationSMCRoute
+    extends PageRouteInfo<CustomStockReconciliationSMCRouteArgs> {
+  CustomStockReconciliationSMCRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockReconciliationSMCRoute.name,
+          args: CustomStockReconciliationSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockReconciliationSMCRoute';
+
+  static const PageInfo<CustomStockReconciliationSMCRouteArgs> page =
+      PageInfo<CustomStockReconciliationSMCRouteArgs>(name);
+}
+
+class CustomStockReconciliationSMCRouteArgs {
+  const CustomStockReconciliationSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockReconciliationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomWarehouseDetailsPage]
 class CustomWarehouseDetailsRoute
     extends PageRouteInfo<CustomWarehouseDetailsRouteArgs> {
@@ -3222,6 +3488,45 @@ class CustomWarehouseDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomWarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomWarehouseDetailsSMCPage]
+class CustomWarehouseDetailsSMCRoute
+    extends PageRouteInfo<CustomWarehouseDetailsSMCRouteArgs> {
+  CustomWarehouseDetailsSMCRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomWarehouseDetailsSMCRoute.name,
+          args: CustomWarehouseDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomWarehouseDetailsSMCRoute';
+
+  static const PageInfo<CustomWarehouseDetailsSMCRouteArgs> page =
+      PageInfo<CustomWarehouseDetailsSMCRouteArgs>(name);
+}
+
+class CustomWarehouseDetailsSMCRouteArgs {
+  const CustomWarehouseDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomWarehouseDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

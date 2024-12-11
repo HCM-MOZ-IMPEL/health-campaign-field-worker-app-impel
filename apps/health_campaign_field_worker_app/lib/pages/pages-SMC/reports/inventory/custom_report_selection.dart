@@ -10,19 +10,19 @@ import '../../../../widgets/header/back_navigation_help_header.dart';
 import '../../../../widgets/localized.dart';
 
 @RoutePage()
-class CustomInventoryReportSelectionPage extends LocalizedStatefulWidget {
-  const CustomInventoryReportSelectionPage({
+class CustomInventoryReportSelectionSMCPage extends LocalizedStatefulWidget {
+  const CustomInventoryReportSelectionSMCPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomInventoryReportSelectionPage> createState() =>
-      _CustomInventoryReportSelectionPageState();
+  State<CustomInventoryReportSelectionSMCPage> createState() =>
+      _CustomInventoryReportSelectionSMCPageState();
 }
 
-class _CustomInventoryReportSelectionPageState
-    extends LocalizedState<CustomInventoryReportSelectionPage> {
+class _CustomInventoryReportSelectionSMCPageState
+    extends LocalizedState<CustomInventoryReportSelectionSMCPage> {
   @override
   void initState() {
     super.initState();

@@ -544,13 +544,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element ==
-                i18.home.db) // TODO: need to add close household inside mdms
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element)) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -669,8 +666,9 @@ void setPackagesSingleton(BuildContext context) {
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .where((role) =>
+                  role.code == RolesType.warehouseManager.toValue() ||
+                  role.code == RolesType.spaqManager.toValue())
               .toList()
               .isNotEmpty,
           isDistributor: context.loggedInUserRoles

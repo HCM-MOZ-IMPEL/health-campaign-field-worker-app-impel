@@ -298,8 +298,9 @@ void setPackagesSingleton(BuildContext context) {
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .where((role) =>
+                  role.code == RolesType.warehouseManager.toValue() ||
+                  role.code == RolesType.spaqManager.toValue())
               .toList()
               .isNotEmpty,
           isDistributor: context.loggedInUserRoles

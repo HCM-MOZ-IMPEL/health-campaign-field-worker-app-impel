@@ -99,6 +99,12 @@ import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
+import '../pages/pages-SMC/inventory/custom_stock_details.dart';
+import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
+import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
+import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
+import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
+import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
 
 part 'app_router.gr.dart';
 
@@ -887,7 +893,7 @@ class AppRouter extends _$AppRouter {
             path: 'manage-stocks',
           ),
           AutoRoute(
-            page: CustomManageStocksRoute.page,
+            page: CustomManageStocksSMCRoute.page,
             path: 'custom-manage-stocks',
           ),
           RedirectRoute(
@@ -904,7 +910,7 @@ class AppRouter extends _$AppRouter {
                 // initial: true,
               ),
               AutoRoute(
-                page: CustomWarehouseDetailsRoute.page,
+                page: CustomWarehouseDetailsSMCRoute.page,
                 path: 'custom-warehouse-details',
                 initial: true,
               ),
@@ -913,7 +919,7 @@ class AppRouter extends _$AppRouter {
                 path: 'details',
               ),
               AutoRoute(
-                page: CustomStockDetailsRoute.page,
+                page: CustomStockDetailsSMCRoute.page,
                 path: 'custom-details',
               ),
               RedirectRoute(
@@ -931,7 +937,7 @@ class AppRouter extends _$AppRouter {
             path: 'stock-reconciliation',
           ),
           AutoRoute(
-            page: CustomStockReconciliationRoute.page,
+            page: CustomStockReconciliationSMCRoute.page,
             path: 'custom-stock-reconciliation',
           ),
           RedirectRoute(
@@ -943,7 +949,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-selection',
           ),
           AutoRoute(
-            page: CustomInventoryReportSelectionRoute.page,
+            page: CustomInventoryReportSelectionSMCRoute.page,
             path: 'custom-inventory-report-selection',
           ),
           RedirectRoute(
@@ -955,7 +961,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-details',
           ),
           AutoRoute(
-            page: CustomInventoryReportDetailsRoute.page,
+            page: CustomInventoryReportDetailsSMCRoute.page,
             path: 'custom-inventory-report-details',
           ),
           RedirectRoute(
