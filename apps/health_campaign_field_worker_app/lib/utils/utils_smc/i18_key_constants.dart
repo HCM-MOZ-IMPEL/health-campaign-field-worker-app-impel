@@ -1126,6 +1126,8 @@ class SearchBeneficiary {
       'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
 
   String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+  String get beneficiaryIdValidInfoDescription =>
+      'BENEFICIARY_ID_VALID_INFO_DESCRIPTION';
 
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
 

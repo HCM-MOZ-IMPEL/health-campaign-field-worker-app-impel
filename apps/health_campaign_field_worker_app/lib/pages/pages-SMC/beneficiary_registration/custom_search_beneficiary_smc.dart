@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
-import 'package:health_campaign_field_worker_app/blocs/blocs-smc/searchBeneficiary/search_households_smc.dart'
-    as yash;
+
 import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -26,6 +25,8 @@ import '../../../blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/extensions/extensions.dart';
 import '../../../utils/utils_smc/global_search_parameters_smc.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -47,6 +48,7 @@ class _CustomSearchBeneficiarySMCPageState
   bool isSearchByBeneficaryIdEnabled = false;
   int offset = 0;
   int limit = 10;
+  RegExp pattern = RegExp(r'^[0-9-]+$');
 
   double lat = 0.0;
   double long = 0.0;
@@ -218,7 +220,7 @@ class _CustomSearchBeneficiarySMCPageState
                                                     .read<
                                                         IndividualGlobalSearchSMCBloc>()
                                                     .add(
-                                                        SearchHouseholdsSMCEvent
+                                                        const SearchHouseholdsSMCEvent
                                                             .clear());
                                                 setState(() {
                                                   isSearchByBeneficaryIdEnabled =
@@ -248,7 +250,8 @@ class _CustomSearchBeneficiarySMCPageState
                                 onChanged: (value) {
                                   context
                                       .read<IndividualGlobalSearchSMCBloc>()
-                                      .add(SearchHouseholdsSMCEvent.clear());
+                                      .add(const SearchHouseholdsSMCEvent
+                                          .clear());
 
                                   blocWrapper.clearEvent();
                                   if (isSearchByBeneficaryIdEnabled &&
@@ -369,6 +372,19 @@ class _CustomSearchBeneficiarySMCPageState
                         DigitInfoCard(
                           description: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoDescription,
+                          ),
+                          title: localizations.translate(
+                            i18.searchBeneficiary.beneficiaryInfoTitle,
+                          ),
+                        ),
+                      if (isSearchByBeneficaryIdEnabled &&
+                          searchController.text.trim().isNotEmpty &&
+                          !isBeneficiaryIdValidPattern(
+                              searchController.text.trim()))
+                        DigitInfoCard(
+                          description: localizations.translate(
+                            i18Local.searchBeneficiary
+                                .beneficiaryIdValidInfoDescription,
                           ),
                           title: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoTitle,
@@ -555,6 +571,7 @@ class _CustomSearchBeneficiarySMCPageState
                   },
                 ),
               if (isSearchByBeneficaryIdEnabled &&
+                  searchController.text.trim().isNotEmpty &&
                   !isBeneficiaryIdValid(searchController.text.trim()))
                 SliverList(
                     delegate: SliverChildBuilderDelegate((ctx, index) {
@@ -764,18 +781,28 @@ class _CustomSearchBeneficiarySMCPageState
       return selectedFilter;
     }
   }
-}
 
-bool isBeneficiaryIdValid(String value) {
-  if (value.trim().length != 14) return false;
-  for (var i = 0; i < value.length; i++) {
-    if ((i == 4 || i == 9) && value[i] != '-')
-      return false;
-    else if (isLowerCase(value[i])) return false;
+  bool isBeneficiaryIdValid(String value) {
+    if (value.trim().length != 14) return false;
+    for (var i = 0; i < value.length; i++) {
+      if ((i == 4 || i == 9) && value[i] != '-')
+        return false;
+      else if (isLowerCase(value[i])) return false;
+    }
+    return true;
   }
-  return true;
-}
 
-bool isLowerCase(String ch) {
-  return ch.codeUnitAt(0) >= 97 && ch.codeUnitAt(0) <= 122;
+  bool isLowerCase(String ch) {
+    return ch.codeUnitAt(0) >= 97 && ch.codeUnitAt(0) <= 122;
+  }
+
+  bool isBeneficiaryIdValidPattern(String value) {
+    bool isValid = true;
+    if (value.trim().length > 14) {
+      isValid = false;
+    } else if (!pattern.hasMatch(value.trim())) {
+      isValid = false;
+    }
+    return isValid;
+  }
 }
