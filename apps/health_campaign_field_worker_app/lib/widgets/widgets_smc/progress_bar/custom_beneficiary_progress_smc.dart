@@ -61,8 +61,6 @@ class _CustomBeneficiaryProgressBarSMCState
         status: Status.administeredSuccess.toValue(),
         projectId: projectId,
         createdBy: loggedInUserUuid,
-        limit: 1,
-        offset: 0,
         plannedEndDate: lte.millisecondsSinceEpoch,
         plannedStartDate: gte.millisecondsSinceEpoch,
       ),

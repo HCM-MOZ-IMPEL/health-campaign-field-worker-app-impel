@@ -33,7 +33,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 query.status!,
               ),
             if (query.plannedEndDate != null && query.plannedStartDate != null)
-              sql.task.clientCreatedTime.isBetweenValues(
+              sql.task.clientModifiedTime.isBetweenValues(
                 query.plannedStartDate!,
                 query.plannedEndDate!,
               ),
@@ -116,7 +116,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 ),
               if (query.plannedEndDate != null &&
                   query.plannedStartDate != null)
-                sql.task.clientCreatedTime.isBetweenValues(
+                sql.task.clientModifiedTime.isBetweenValues(
                   query.plannedStartDate!,
                   query.plannedEndDate!,
                 ),
