@@ -541,6 +541,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryFacilitySelectionSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryFacilitySelectionSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryFacilitySelectionSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          facilities: args.facilities,
+        ),
+      );
+    },
     CustomInventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -2783,6 +2795,50 @@ class CustomInventoryFacilitySelectionRouteArgs {
   @override
   String toString() {
     return 'CustomInventoryFacilitySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
+  }
+}
+
+/// generated route for
+/// [CustomInventoryFacilitySelectionSMCPage]
+class CustomInventoryFacilitySelectionSMCRoute
+    extends PageRouteInfo<CustomInventoryFacilitySelectionSMCRouteArgs> {
+  CustomInventoryFacilitySelectionSMCRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required List<FacilityModel> facilities,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryFacilitySelectionSMCRoute.name,
+          args: CustomInventoryFacilitySelectionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            facilities: facilities,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryFacilitySelectionSMCRoute';
+
+  static const PageInfo<CustomInventoryFacilitySelectionSMCRouteArgs> page =
+      PageInfo<CustomInventoryFacilitySelectionSMCRouteArgs>(name);
+}
+
+class CustomInventoryFacilitySelectionSMCRouteArgs {
+  const CustomInventoryFacilitySelectionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.facilities,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final List<FacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'CustomInventoryFacilitySelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
   }
 }
 

@@ -108,6 +108,7 @@ import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
+import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -829,6 +830,10 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: CustomReferBeneficiarySMCRoute.page,
                       path: 'refer-beneficiary-smc',
+                    ),
+                    AutoRoute(
+                      page: CustomInventoryFacilitySelectionSMCRoute.page,
+                      path: 'custom-inventory-select-facilities-smc',
                     ),
                     AutoRoute(
                       page: DoseAdministeredRoute.page,
