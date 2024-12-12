@@ -98,7 +98,7 @@ class _EligibilityChecklistViewPage
                     // todo: verify the checklist name
                     selectedServiceDefinition = value.serviceDefinitionList
                         .where((element) => element.code.toString().contains(
-                              'SMC.ELIGIBLITY_ASSESSMENT.COMMUNITY_DISTRIBUTOR',
+                              '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.COMMUNITY_DISTRIBUTOR',
                             ))
                         .toList()
                         .first;
