@@ -277,8 +277,8 @@ int getAgeMonths(DigitDOBAge age) {
 }
 
 // todo verify the else condition once
-
-String? getAgeConditionString(String condition) {
+// Info : will handle the ageCondition based on projectTypeCode
+String? getAgeConditionString(String condition, BuildContext context) {
   String? finalCondition;
   final ageConditions =
       condition.split('and').where((element) => element.contains('age'));
@@ -294,12 +294,21 @@ String? getAgeConditionString(String condition) {
     String greaterThanAge =
         greaterThanCondition?.split(lessThanSymbol).last ?? '0';
 
-    finalCondition =
-        '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()}';
+    if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
+      finalCondition =
+          '${int.parse(lessThanAge) + 1} - ${int.parse(greaterThanAge) - 1}';
+    } else {
+      finalCondition =
+          '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()}';
+    }
   } else {
     if (ageConditions.first.contains(greaterThanSymbol)) {
       String age = ageConditions.first.split(greaterThanSymbol).last;
-      finalCondition = '${(int.parse(age) / 12).round()} yrs and above';
+      if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
+        finalCondition = '${int.parse(age)} months and above';
+      } else {
+        finalCondition = '${(int.parse(age) / 12).round()} yrs and above';
+      }
     }
   }
 
