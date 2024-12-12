@@ -416,7 +416,7 @@ class _CustomViewBeneficiaryCardSMCState
       } else if (statusKeys.isStatusReset) {
         return localizations.translate(Status.notVisited.toValue());
       } else {
-        return localizations.translate(Status.visited.toValue());
+        return localizations.translate(Status.administeredSuccess.toValue());
       }
     } else {
       return localizations.translate(Status.notVisited.toValue());
