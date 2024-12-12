@@ -48,7 +48,7 @@ class _CustomSearchBeneficiarySMCPageState
   bool isSearchByBeneficaryIdEnabled = false;
   int offset = 0;
   int limit = 10;
-  RegExp pattern = RegExp(r'^[0-9-]+$');
+  RegExp pattern = RegExp(r'^[0-9A-Z-]+$');
 
   double lat = 0.0;
   double long = 0.0;

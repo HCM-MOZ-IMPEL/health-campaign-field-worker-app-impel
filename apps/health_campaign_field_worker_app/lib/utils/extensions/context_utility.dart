@@ -90,7 +90,9 @@ extension ContextUtilityExtensions on BuildContext {
       // todo : verify this make this healthFacilitySupervsior as per kebbi
       bool isDownSyncEnabled = loggedInUserRoles
           .where(
-            (role) => role.code == RolesType.healthFacilityWorker.toValue(),
+            (role) =>
+                role.code == RolesType.healthFacilityWorker.toValue() ||
+                role.code == RolesType.healthFacilitySupervisor.toValue(),
           )
           .toList()
           .isNotEmpty;
@@ -126,6 +128,21 @@ extension ContextUtilityExtensions on BuildContext {
           .isNotEmpty;
 
       return communitySupervisor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isCommunityDistributor {
+    try {
+      bool communityDistributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.communityDistributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return communityDistributor;
     } catch (_) {
       return false;
     }
