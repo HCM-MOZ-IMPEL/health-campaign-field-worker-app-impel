@@ -831,9 +831,8 @@ class CustomIndividualDetailsSMCPageState
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
+        utils.CustomValidator.validMobileNumber,
         Validators.maxLength(9),
-        Validators.minLength(9),
       ]),
     });
   }
