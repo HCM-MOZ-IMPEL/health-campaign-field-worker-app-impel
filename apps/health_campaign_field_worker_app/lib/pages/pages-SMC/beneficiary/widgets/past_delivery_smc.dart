@@ -12,6 +12,8 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../../../models/entities/project_types.dart';
+
 // This function builds a table with the given data and headers
 Widget buildTableContent(
   DeliverInterventionState deliverInterventionState,
@@ -80,7 +82,7 @@ Widget buildTableContent(
             ): fetchProductVariant(item, individualModel, householdModel)
                         ?.condition !=
                     null
-                ? '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)?.condition}')} ${localizations.translate(i18.individualDetails.yearsHintText)}'
+                ? '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)?.condition}', context)} ${localizations.translate(context.projectTypeCode == ProjectTypes.smc.toValue() ? i18.individualDetails.monthsHintText : i18.individualDetails.yearsHintText)}'
                 : null,
           },
         ),
