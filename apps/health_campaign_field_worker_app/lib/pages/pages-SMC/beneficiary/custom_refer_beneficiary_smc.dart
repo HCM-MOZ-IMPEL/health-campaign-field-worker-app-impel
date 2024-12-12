@@ -3,7 +3,7 @@ import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/pages/facility_selection.dart';
+import 'package:health_campaign_field_worker_app/pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/status.dart';
@@ -381,6 +381,7 @@ class CustomReferBeneficiarySMCPageState
                             DigitTextFormField(
                               valueAccessor: FacilityValueAccessor(
                                 facilities,
+                                context,
                               ),
                               label: localizations.translate(
                                 i18.referBeneficiary.referredToLabel,
@@ -402,7 +403,7 @@ class CustomReferBeneficiarySMCPageState
                                 final parent =
                                     context.router.parent() as StackRouter;
                                 final facility = await parent.push(
-                                  FacilitySelectionRoute(
+                                  CustomInventoryFacilitySelectionSMCRoute(
                                     facilities: facilities,
                                   ),
                                 );
