@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:inventory_management/inventory_management.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'dart:async';
 
@@ -596,6 +597,54 @@ class PerformSyncDown {
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+          case DataModelType.hFReferral:
+            responseEntities = await remote.search(
+              HFReferralSearchModel(
+                clientReferenceId: entities
+                    .whereType<HFReferralModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as HFReferralModel;
+              final responseEntity = responseEntities
+                  .whereType<HFReferralModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
                   ),
