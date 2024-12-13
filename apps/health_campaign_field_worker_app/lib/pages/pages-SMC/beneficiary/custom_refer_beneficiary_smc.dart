@@ -78,7 +78,8 @@ class CustomReferBeneficiarySMCPageState
         );
       },
       builder: (ctx, facilityState) {
-        final facilities = facilityState.whenOrNull(
+        List<FacilityModel> facilities = [];
+        final healthFacilities = facilityState.whenOrNull(
               fetched: (
                 facilities,
                 allFacilities,
@@ -91,6 +92,18 @@ class CustomReferBeneficiarySMCPageState
               },
             ) ??
             [];
+
+        facilities.add(
+          FacilityModel(
+            id: 'APS',
+            name: 'APS',
+            additionalFields: FacilityAdditionalFields(
+              version: 1,
+              fields: [const AdditionalField('type', 'APS')],
+            ),
+          ),
+        );
+        facilities.addAll(healthFacilities);
 
         final reasons = widget.isReadministrationUnSuccessful
             ? [sideEffectFromCurrentCycle]
