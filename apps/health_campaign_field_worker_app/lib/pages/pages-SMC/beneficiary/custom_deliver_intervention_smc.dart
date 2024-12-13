@@ -111,52 +111,89 @@ class CustomDeliverInterventionSMCPageState
 // todo verify this how to handle this should pass default 00 or make user enter some value
     String? wastedCount =
         ((form.control(_quantityWastedKey).value) ?? "00").toString();
-    if (isReferral) {
-      // todo set other params as per old smc
-      final productVariantId =
-          ((form.control(_resourceDeliveredKey) as FormArray).value
-                  as List<ProductVariantModel?>)
-              .first
-              ?.id;
+    final shouldSubmit = await DigitDialog.show<bool>(
+      context,
+      options: DigitDialogOptions(
+        titleText: localizations.translate(
+          i18.deliverIntervention.dialogTitle,
+        ),
+        contentText: localizations.translate(
+          isReferral
+              ? i18_local.deliverIntervention.dialogReferralContentSMC
+              : i18.deliverIntervention.dialogContent,
+        ),
+        primaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonSubmit,
+          ),
+          action: (context) {
+            clickedStatus.value = true;
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop(true);
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonCancel,
+          ),
+          action: (context) => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+        ),
+      ),
+    );
+    if (context.mounted && (shouldSubmit ?? false)) {
+      if (isReferral) {
+        // todo set other params as per old smc
+        final productVariantId =
+            ((form.control(_resourceDeliveredKey) as FormArray).value
+                    as List<ProductVariantModel?>)
+                .first
+                ?.id;
 
-      context.router.popAndPush(
-        CustomReferBeneficiarySMCRoute(
-            projectBeneficiaryClientRefId:
-                projectBeneficiaryClientReferenceId ?? '',
-            individual: selectedIndividual!,
-            quantityWasted: wastedCount,
-            isReadministrationUnSuccessful: true,
-            productVariantId: productVariantId),
-      );
-    } else {
-      context.read<DeliverInterventionBloc>().add(
-            DeliverInterventionSubmitEvent(
-                task: _getTaskModel(
-                  context,
-                  form: form,
-                  oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.household
-                      ? deliverInterventionState.tasks?.last
-                      : null,
-                  projectBeneficiaryClientReferenceId:
-                      projectBeneficiary.clientReferenceId,
-                  dose: deliverInterventionState.dose,
-                  cycle: deliverInterventionState.cycle,
-                  deliveryStrategy: DeliverStrategyType.direct.toValue(),
-                  address: householdMember.members?.first.address?.first,
-                  latitude: lat,
-                  longitude: long,
-                ),
-                isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
-                        RegistrationDeliverySingleton().beneficiaryType ==
+        context.router.popAndPush(
+          CustomReferBeneficiarySMCRoute(
+              projectBeneficiaryClientRefId:
+                  projectBeneficiaryClientReferenceId ?? '',
+              individual: selectedIndividual!,
+              quantityWasted: wastedCount,
+              isReadministrationUnSuccessful: true,
+              productVariantId: productVariantId),
+        );
+      } else {
+        context.read<DeliverInterventionBloc>().add(
+              DeliverInterventionSubmitEvent(
+                  task: _getTaskModel(
+                    context,
+                    form: form,
+                    oldTask: RegistrationDeliverySingleton().beneficiaryType ==
                             BeneficiaryType.household
-                    ? true
-                    : false,
-                boundaryModel: RegistrationDeliverySingleton().boundary!,
-                navigateToSummary: true,
-                householdMemberWrapper: householdMember),
-          );
-      context.router.push(DeliverySummaryRoute());
+                        ? deliverInterventionState.tasks?.last
+                        : null,
+                    projectBeneficiaryClientReferenceId:
+                        projectBeneficiary.clientReferenceId,
+                    dose: deliverInterventionState.dose,
+                    cycle: deliverInterventionState.cycle,
+                    deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                    address: householdMember.members?.first.address?.first,
+                    latitude: lat,
+                    longitude: long,
+                  ),
+                  isEditing:
+                      (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                              RegistrationDeliverySingleton().beneficiaryType ==
+                                  BeneficiaryType.household
+                          ? true
+                          : false,
+                  boundaryModel: RegistrationDeliverySingleton().boundary!,
+                  navigateToSummary: true,
+                  householdMemberWrapper: householdMember),
+            );
+        context.router.push(DeliverySummaryRoute());
+      }
     }
   }
 
