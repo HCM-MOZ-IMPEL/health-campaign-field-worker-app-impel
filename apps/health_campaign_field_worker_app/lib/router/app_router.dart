@@ -69,11 +69,8 @@ import '../pages/closed/custom_closed_household_details.dart';
 import '../pages/beneficiary_registration/custom_household_wrapper.dart';
 import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/custom_household_acknowledgement.dart';
-
 import '../pages/beneficiary/custom_beneficiary_checklist.dart';
-
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
-
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/ineligible_summary_page.dart';
@@ -94,13 +91,11 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
-import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
-
 import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
 import '../pages/pages-SMC/inventory/custom_stock_details.dart';
 import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
@@ -109,6 +104,10 @@ import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
 import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
+import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
+import 'package:referral_reconciliation/blocs/app_localization.dart';
+import '../pages/pages-SMC/referral/custom_record_facility_smc.dart';
+import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 
 part 'app_router.gr.dart';
 
@@ -1124,15 +1123,41 @@ class AppRouter extends _$AppRouter {
               path: 'hf-referral',
               children: [
                 AutoRoute(
-                    page: ReferralFacilityRoute.page,
-                    path: 'facility-details',
-                    initial: true),
+                  page: ReferralFacilityRoute.page,
+                  path: 'facility-details',
+                  // initial: true,
+                ),
+                AutoRoute(
+                  page: CustomReferralFacilitySMCRoute.page,
+                  path: 'custom-facility-details-smc',
+                  initial: true,
+                ),
+                RedirectRoute(
+                  path: 'facility-details',
+                  redirectTo: 'custom-facility-details-smc',
+                ),
                 AutoRoute(
                     page: RecordReferralDetailsRoute.page,
                     path: 'referral-details'),
                 AutoRoute(
+                  page: CustomRecordReferralDetailsSMCRoute.page,
+                  path: 'custom-referral-details-smc',
+                ),
+                RedirectRoute(
+                  path: 'referral-details',
+                  redirectTo: 'custom-referral-details-smc',
+                ),
+                AutoRoute(
                   page: ReferralReasonChecklistRoute.page,
                   path: 'referral-checklist-create',
+                ),
+                AutoRoute(
+                  page: CustomReferralReasonChecklistSMCRoute.page,
+                  path: 'custom-referral-checklist-create-smc',
+                ),
+                RedirectRoute(
+                  path: 'referral-checklist-create',
+                  redirectTo: 'custom-referral-checklist-create-smc',
                 ),
                 AutoRoute(
                   page: ReferralReasonChecklistPreviewRoute.page,
