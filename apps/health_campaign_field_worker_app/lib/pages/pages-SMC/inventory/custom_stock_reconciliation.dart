@@ -9,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/inventory_management.dart'
+    hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -19,6 +20,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
+import '../../../utils/utils.dart' show CustomValidator;
+
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;

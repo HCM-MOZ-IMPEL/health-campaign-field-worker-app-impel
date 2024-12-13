@@ -494,15 +494,16 @@ class CustomInventoryReportDetailsSMCPageState
                                                     key: dateKey,
                                                     width: 100,
                                                   ),
-                                                  DigitGridColumn(
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.inventoryReportDetails
-                                                          .waybillLabel,
+                                                  if (isWareHouseManager)
+                                                    DigitGridColumn(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.inventoryReportDetails
+                                                            .waybillLabel,
+                                                      ),
+                                                      key: waybillKey,
+                                                      width: 150,
                                                     ),
-                                                    key: waybillKey,
-                                                    width: 150,
-                                                  ),
                                                   DigitGridColumn(
                                                     label: quantityLabel,
                                                     key: quantityKey,
@@ -526,14 +527,15 @@ class CustomInventoryReportDetailsSMCPageState
                                                             key: dateKey,
                                                             value: entry.key,
                                                           ),
-                                                          DigitGridCell(
-                                                            key: waybillKey,
-                                                            value: model
-                                                                    .wayBillNumber ??
-                                                                model
-                                                                    .wayBillNumber ??
-                                                                '',
-                                                          ),
+                                                          if (isWareHouseManager)
+                                                            DigitGridCell(
+                                                              key: waybillKey,
+                                                              value: model
+                                                                      .wayBillNumber ??
+                                                                  model
+                                                                      .wayBillNumber ??
+                                                                  '',
+                                                            ),
                                                           DigitGridCell(
                                                             key: quantityKey,
                                                             value: model
