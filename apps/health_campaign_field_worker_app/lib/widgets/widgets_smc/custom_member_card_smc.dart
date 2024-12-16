@@ -229,7 +229,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                         iconText: localizations.translate(
                           isHead
                               ? i18_local.householdOverView
-                                  .householdOverViewHouseholderHeadLabel
+                                  .householdOverViewHouseholderHeadLabelSMC
                               : (isNotEligible || isBeneficiaryIneligible)
                                   ? i18_local.householdOverView
                                       .householdOverViewNotEligibleIconLabelSMC

@@ -201,7 +201,8 @@ class _CustomViewBeneficiaryCardSMCState
           TableData(
             isHead
                 ? localizations.translate(
-                    i18.householdOverView.householdOverViewHouseholdHeadLabel,
+                    i18Local.householdOverView
+                        .householdOverViewHouseholderHeadLabelSMC,
                   )
                 : getTableCellText(
                     StatusKeys(

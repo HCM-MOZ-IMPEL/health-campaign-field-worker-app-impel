@@ -598,8 +598,8 @@ class HouseholdDetails {
 
 class HouseholdOverView {
   const HouseholdOverView();
-  String get householdOverViewHouseholderHeadLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+  String get householdOverViewHouseholderHeadLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL_SMC';
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
