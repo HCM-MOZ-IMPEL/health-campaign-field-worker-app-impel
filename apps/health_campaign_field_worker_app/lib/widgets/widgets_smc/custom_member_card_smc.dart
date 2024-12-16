@@ -231,15 +231,16 @@ class CustomMemberCardSMC extends StatelessWidget {
                               ? i18_local.householdOverView
                                   .householdOverViewHouseholderHeadLabel
                               : (isNotEligible || isBeneficiaryIneligible)
-                                  ? i18.householdOverView
-                                      .householdOverViewNotEligibleIconLabel
+                                  ? i18_local.householdOverView
+                                      .householdOverViewNotEligibleIconLabelSMC
                                   : isBeneficiaryReferred
-                                      ? i18.householdOverView
-                                          .householdOverViewBeneficiaryReferredLabel
+                                      ? i18_local.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabelSMC
                                       : isBeneficiaryRefused
-                                          ? Status.beneficiaryRefused.toValue()
-                                          : i18.householdOverView
-                                              .householdOverViewNotDeliveredIconLabel,
+                                          ? i18_local.householdOverView
+                                              .householdOverViewBeneficiaryRefusedLabelSMC
+                                          : i18_local.householdOverView
+                                              .householdOverViewNotDeliveredIconLabelSMC,
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -250,8 +251,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                       child: DigitIconButton(
                         icon: Icons.check_circle,
                         iconText: localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewDeliveredIconLabel,
+                          i18_local.householdOverView
+                              .householdOverViewDeliveredIconLabelSMC,
                         ),
                         iconSize: 20,
                         iconTextColor:

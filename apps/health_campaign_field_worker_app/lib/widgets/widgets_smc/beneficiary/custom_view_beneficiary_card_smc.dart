@@ -405,21 +405,27 @@ class _CustomViewBeneficiaryCardSMCState
   ) {
     if (statusKeys.isNotEligible || isBeneficiaryIneligible) {
       return localizations.translate(
-          i18.householdOverView.householdOverViewNotEligibleIconLabel);
+          i18Local.householdOverView.householdOverViewNotEligibleIconLabelSMC);
     } else if (statusKeys.isBeneficiaryReferred) {
-      return localizations.translate(Status.beneficiaryReferred.toValue());
+      return localizations.translate(i18Local
+          .householdOverView.householdOverViewBeneficiaryReferredLabelSMC);
     } else if (taskData != null) {
       if (taskData.isEmpty) {
-        return localizations.translate(Status.notVisited.toValue());
+        return localizations.translate(i18Local
+            .householdOverView.householdOverViewNotDeliveredIconLabelSMC);
       } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
-        return localizations.translate(Status.beneficiaryRefused.toValue());
+        return localizations.translate(i18Local
+            .householdOverView.householdOverViewBeneficiaryRefusedLabelSMC);
       } else if (statusKeys.isStatusReset) {
-        return localizations.translate(Status.notVisited.toValue());
+        return localizations.translate(i18Local
+            .householdOverView.householdOverViewNotDeliveredIconLabelSMC);
       } else {
-        return localizations.translate(Status.administeredSuccess.toValue());
+        return localizations.translate(
+            i18Local.householdOverView.householdOverViewDeliveredIconLabelSMC);
       }
     } else {
-      return localizations.translate(Status.notVisited.toValue());
+      return localizations.translate(
+          i18Local.householdOverView.householdOverViewNotDeliveredIconLabelSMC);
     }
   }
 

@@ -603,6 +603,17 @@ class HouseholdOverView {
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+
+  String get householdOverViewDeliveredIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_SMC';
+  String get householdOverViewNotEligibleIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_SMC';
+  String get householdOverViewBeneficiaryReferredLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL_SMC';
+  String get householdOverViewBeneficiaryRefusedLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_SMC';
+  String get householdOverViewNotDeliveredIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_SMC';
 }
 
 class ForgotPassword {
