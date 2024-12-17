@@ -75,7 +75,7 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.searchHouseHoldFiltersSMC;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
-      case "dashboardConfig":
+      case "dashboardConfigSMC":
         return MasterEnums.dashboardConfig;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -136,7 +136,7 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
-        return "dashboardConfig";
+        return "dashboardConfigSMC";
     }
   }
 }

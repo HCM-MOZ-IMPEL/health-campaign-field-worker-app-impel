@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: f1b4373e8d0d9f8227ede0d25d4141f0d16d18ac2525c0347b844098cdab080f
+      sha256: "8a09814ca11cca736d771be70fb6174303ea0cb3525aa72e7239cbc14b915303"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.2+4"
   audioplayers:
     dependency: "direct main"
     description:
@@ -268,10 +268,10 @@ packages:
     dependency: "direct main"
     description:
       name: camera
-      sha256: "9499cbc2e51d8eb0beadc158b288380037618ce4e30c9acbc4fae1ac3ecb5797"
+      sha256: dfa8fc5a1adaeb95e7a54d86a5bd56f4bb0e035515354c8ac6d262e35cec2ec8
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.5+9"
+    version: "0.10.6"
   camera_android:
     dependency: transitive
     description:
@@ -284,10 +284,10 @@ packages:
     dependency: transitive
     description:
       name: camera_avfoundation
-      sha256: "608b56b0880722f703871329c4d7d4c2f379c8e2936940851df7fc041abc6f51"
+      sha256: "7c28969a975a7eb2349bc2cb2dfe3ad218a33dba9968ecfb181ce08c87486655"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.13+10"
+    version: "0.9.17+3"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -324,10 +324,10 @@ packages:
     dependency: transitive
     description:
       name: charcode
-      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
+      sha256: fb0f1107cac15a5ea6ef0a6ef71a807b9e4267c713bb93e00e92d737cc8dbd8a
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.4.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -436,10 +436,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_mappable
-      sha256: "47269caf2060533c29b823ff7fa9706502355ffcb61e7f2a374e3a0fb2f2c3f0"
+      sha256: f69a961ae8589724ebb542e588f228ae844c5f78028899cbe2cc718977c1b382
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   dart_mappable_builder:
     dependency: "direct dev"
     description:
@@ -491,10 +491,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
-      sha256: "282d3cf731045a2feb66abfe61bbc40870ae50a3ed10a4d3d217556c35c8c2ba"
+      sha256: "0b04e02b30791224b31969eb1b50d723498f402971bff3630bca2ba839bd1ed2"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.1"
+    version: "7.0.2"
   diff_match_patch:
     dependency: transitive
     description:
@@ -523,10 +523,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: "0498e3e910883a0132050a1acdd7b3a094b935240111bac24683515c9d0dcf3b"
+      sha256: "28cda7a2f6ce9664035aedf17447674711bab96ef0dd28bb2ec0ca431a0e2524"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.2-dev.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -618,10 +618,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.7"
   expandable:
     dependency: "direct main"
     description:
@@ -666,10 +666,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: e30da58198a6d4b49d5bce4e852f985c32cb10db329ebef9473db2b9f09ce810
+      sha256: b94b217e3ad745e784960603d33d99471621ecca151c99c670869b76e50ad2a6
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.0"
+    version: "5.3.1"
   firebase_core_web:
     dependency: transitive
     description:
@@ -698,10 +698,10 @@ packages:
     dependency: transitive
     description:
       name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
+      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1120,10 +1120,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "2237616a36c0d69aef7549ab439b833fb7f9fb9fc861af2cc9ac3eedddd69ca8"
+      sha256: f31d52537dc417fdcde36088fdf11d191026fd5e4fae742491ebd40e5a8bea7d
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.0"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -1389,10 +1389,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "5a7999be66e000916500be4f15a3633ebceb8302719b47b9cc49ce924125350f"
+      sha256: f234384a3fdd67f989b4d54a5d73ca2a6c422fa55ae694381ae0f4375cd1ea16
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.0"
   path_provider_linux:
     dependency: transitive
     description:
@@ -1605,10 +1605,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_foundation
-      sha256: "7708d83064f38060c7b39db12aefe449cb8cdc031d6062280087bc4cdb988f5c"
+      sha256: "671e7a931f55a08aa45be2a13fe7247f2a41237897df434b30d2012388191833"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.5"
+    version: "2.5.0"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -1754,10 +1754,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
-      sha256: "62bbb4073edbcdf53f40c80775f33eea01d301b7b81417e5b3fb7395416258c1"
+      sha256: "636b0fe8a2de894e5455572f6cbbc458f4ffecfe9f860b79439e27041ea4f0b9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.24"
+    version: "0.5.27"
   sqlparser:
     dependency: transitive
     description:
@@ -1850,10 +1850,10 @@ packages:
     dependency: transitive
     description:
       name: time
-      sha256: ad8e018a6c9db36cb917a031853a1aae49467a93e0d464683e029537d848c221
+      sha256: "370572cf5d1e58adcb3e354c47515da3f7469dac3a95b447117e728e7be6f461"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   timezone:
     dependency: transitive
     description:
@@ -1914,10 +1914,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: "75bb6fe3f60070407704282a2d295630cab232991eb52542b18347a8a941df03"
+      sha256: e43b677296fadce447e987a2f519dcf5f6d1e527dc35d01ffab4fff5b8a7063e
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.4"
+    version: "6.3.1"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -2090,10 +2090,10 @@ packages:
     dependency: transitive
     description:
       name: xxh3
-      sha256: cbeb0e1d10f4c6bf67b650f395eac0cc689425b5efc2ba0cc3d3e069a0beaeec
+      sha256: "399a0438f5d426785723c99da6b16e136f4953fb1e9db0bf270bd41dd4619916"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   yaml:
     dependency: transitive
     description:
@@ -2104,4 +2104,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.2.3 <3.9.0"
-  flutter: ">=3.16.0"
+  flutter: ">=3.16.6"
