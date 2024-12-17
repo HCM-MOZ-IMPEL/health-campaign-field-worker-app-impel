@@ -42,6 +42,10 @@
       "value": "COMMUNITY_SUPERVISOR"
     },
     {
+      "name": "Community Distributor",
+      "value": "COMMUNITY_DISTRIBUTOR"
+    },
+    {
       "name": "Spaq Manager",
       "value": "SPAQ_MANAGER"
     },
