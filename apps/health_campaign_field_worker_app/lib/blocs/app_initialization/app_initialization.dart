@@ -173,12 +173,12 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
-          print(dashboardConfigWrapper);
+
           final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
                   jsonDecode(dashboardConfigWrapper)['MdmsRes']
                       [ModuleEnums.hcm.toValue()])
               .dashboardConfigWrapper;
-          print(dashboardConfigs);
+
           if (dashboardConfigs.isNotEmpty) {
             dashboardConfigs.forEach((dashboardConfig) async {
               await dashboardRemoteRepository.writeToDashboardConfigDB(
