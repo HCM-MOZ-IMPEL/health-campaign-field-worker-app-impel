@@ -28,6 +28,7 @@ import '../../../utils/utils_smc/global_search_parameters_smc.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
+import '../../../widgets/widgets_smc/status_filter_smc.dart';
 
 @RoutePage()
 class CustomSearchBeneficiarySMCPage extends LocalizedStatefulWidget {
@@ -648,7 +649,7 @@ class _CustomSearchBeneficiarySMCPageState
           dialogPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          content: StatusFilter(
+          content: StatusFilterSMC(
             selectedFilters: selectedFilters,
             titleIcon: Icon(getFilterIconNLabel()['icon'],
                 color: const DigitColors().burningOrange),
