@@ -441,14 +441,14 @@ class CustomStockDetailsPageState
                                               .value as String?;
                                           String? distributorUsername;
                                           if (deliveryTeamName != null) {
-                                            deliveryTeamName = deliveryTeamName
-                                                .split(Constants.pipeSeparator)
-                                                .last;
                                             distributorUsername =
                                                 deliveryTeamName
                                                     .split(
                                                         Constants.pipeSeparator)
                                                     .first;
+                                            deliveryTeamName = deliveryTeamName
+                                                .split(Constants.pipeSeparator)
+                                                .last;
                                           }
 
                                           String? supervisor = form
@@ -458,12 +458,12 @@ class CustomStockDetailsPageState
                                           String? supervisorUsername;
 
                                           if (supervisor != null) {
-                                            supervisor = supervisor
-                                                .split(Constants.pipeSeparator)
-                                                .last;
                                             supervisorUsername = supervisor
                                                 .split(Constants.pipeSeparator)
                                                 .first;
+                                            supervisor = supervisor
+                                                .split(Constants.pipeSeparator)
+                                                .last;
                                           }
 
                                           if (isWareHouseMgr &&
