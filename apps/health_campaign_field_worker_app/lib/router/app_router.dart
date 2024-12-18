@@ -20,7 +20,6 @@ import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
-import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/complaints/inbox/complaints_details_view.dart';
 import '../pages/complaints/inbox/complaints_inbox.dart';
@@ -33,6 +32,13 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
+
+import '../pages/checklist/checklist.dart';
+import '../pages/checklist/checklist_boundary_view.dart';
+import '../pages/checklist/checklist_preview.dart';
+import '../pages/checklist/checklist_view.dart';
+import '../pages/checklist/checklist_wrapper.dart';
+
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
