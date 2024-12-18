@@ -22,6 +22,8 @@ import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
+import '../../../utils/constants.dart';
+
 @RoutePage()
 class CustomInventoryReportDetailsPage extends LocalizedStatefulWidget {
   final InventoryReportType reportType;
@@ -495,19 +497,34 @@ class CustomInventoryReportDetailsPageState
                                                                     ? localizations
                                                                         .translate(
                                                                             'FAC_${model.senderId}')
-                                                                    : (model.senderId ??
-                                                                        model
-                                                                            .senderType ??
-                                                                        '')
+                                                                    : model.senderType ==
+                                                                            'STAFF'
+                                                                        ? _getStaffUsernameFromAdditionalDetails(
+                                                                            model,
+                                                                            model
+                                                                                .senderId,
+                                                                            model
+                                                                                .senderType)
+                                                                        : (model.senderId ??
+                                                                            model
+                                                                                .senderType ??
+                                                                            '')
                                                                 : model.receiverType ==
                                                                         'WAREHOUSE'
                                                                     ? localizations
                                                                         .translate(
                                                                             'FAC_${model.receiverId}')
-                                                                    : (model.receiverId ??
-                                                                        model
-                                                                            .receiverType ??
-                                                                        ''),
+                                                                    : model.senderType ==
+                                                                            'STAFF'
+                                                                        ? _getStaffUsernameFromAdditionalDetails(
+                                                                            model,
+                                                                            model
+                                                                                .receiverId,
+                                                                            model
+                                                                                .receiverType)
+                                                                        : (model.receiverId ??
+                                                                            model.receiverType ??
+                                                                            ''),
                                                           ),
                                                         ],
                                                       ),
@@ -794,6 +811,26 @@ class CustomInventoryReportDetailsPageState
     }
     return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
   }
+}
+
+String _getStaffUsernameFromAdditionalDetails(
+    StockModel model, String? id, String? type) {
+  final additionalDetails = model.additionalFields;
+  if (additionalDetails == null) {
+    return (id ?? type ?? '');
+  }
+  final username = additionalDetails.fields
+      .firstWhereOrNull(
+        (e) =>
+            e.key == Constants.supervisorUsername ||
+            e.key == Constants.distributorUsername,
+      )
+      ?.value as String?;
+  if (username == null) {
+    return (id ?? type ?? '');
+  }
+
+  return username;
 }
 
 class _ReportDetailsContent extends StatelessWidget {

@@ -54,6 +54,7 @@ class CustomStockDetailsPageState
   static const _supervisorKey = 'supervisor';
   bool deliveryTeamSelected = false;
   bool supervisorSelected = false;
+  bool byHand = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
 
@@ -438,20 +439,31 @@ class CustomStockDetailsPageState
                                           String? deliveryTeamName = form
                                               .control(_deliveryTeamKey)
                                               .value as String?;
+                                          String? distributorUsername;
                                           if (deliveryTeamName != null) {
                                             deliveryTeamName = deliveryTeamName
                                                 .split(Constants.pipeSeparator)
                                                 .last;
+                                            distributorUsername =
+                                                deliveryTeamName
+                                                    .split(
+                                                        Constants.pipeSeparator)
+                                                    .first;
                                           }
 
                                           String? supervisor = form
                                               .control(_supervisorKey)
                                               .value as String?;
 
+                                          String? supervisorUsername;
+
                                           if (supervisor != null) {
                                             supervisor = supervisor
                                                 .split(Constants.pipeSeparator)
                                                 .last;
+                                            supervisorUsername = supervisor
+                                                .split(Constants.pipeSeparator)
+                                                .first;
                                           }
 
                                           if (isWareHouseMgr &&
@@ -685,6 +697,26 @@ class CustomStockDetailsPageState
                                                   AdditionalField(
                                                     'deliveryTeam',
                                                     deliveryTeamName,
+                                                  ),
+                                                if (distributorUsername !=
+                                                        null &&
+                                                    distributorUsername
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    Constants
+                                                        .distributorUsername,
+                                                    distributorUsername,
+                                                  ),
+                                                if (supervisorUsername !=
+                                                        null &&
+                                                    supervisorUsername
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    Constants
+                                                        .supervisorUsername,
+                                                    supervisorUsername,
                                                   ),
                                                 if (driverName != null &&
                                                     driverName.isNotEmpty)
@@ -946,15 +978,7 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
-                                                  form
-                                                      .control(
-                                                    _vehicleNumberKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                  removeVehicleValidation(form);
 
                                                   form
                                                       .control(
@@ -1023,15 +1047,7 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
-                                                  form
-                                                      .control(
-                                                    _vehicleNumberKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                  removeVehicleValidation(form);
                                                   form
                                                       .control(
                                                     _deliveryTeamKey,
@@ -1119,20 +1135,22 @@ class CustomStockDetailsPageState
                                                       updateParent: true,
                                                       autoValidate: true,
                                                     );
-                                                    form
-                                                        .control(
-                                                      _vehicleNumberKey,
-                                                    )
-                                                        .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
+                                                    final transportTypeValue =
+                                                        form
+                                                            .control(
+                                                              _typeOfTransportKey,
+                                                            )
+                                                            .value as String?;
+                                                    if (transportTypeValue ==
+                                                        Constants.byHand) {
+                                                      byHand = true;
+                                                      removeVehicleValidation(
+                                                          form);
+                                                    } else {
+                                                      byHand = false;
+                                                      addVehicleValidations(
+                                                          form);
+                                                    }
 
                                                     form
                                                         .control(
@@ -1152,11 +1170,6 @@ class CustomStockDetailsPageState
                                                     form
                                                         .control(
                                                           _typeOfTransportKey,
-                                                        )
-                                                        .touched;
-                                                    form
-                                                        .control(
-                                                          _vehicleNumberKey,
                                                         )
                                                         .touched;
                                                   }
@@ -1449,21 +1462,24 @@ class CustomStockDetailsPageState
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
-                                                        form
-                                                            .control(
-                                                          _vehicleNumberKey,
-                                                        )
-                                                            .setValidators(
-                                                          [
-                                                            Validators.required,
-                                                            Validators
-                                                                .minLength(2),
-                                                            Validators
-                                                                .maxLength(200),
-                                                          ],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
+
+                                                        final transportTypeValue =
+                                                            form
+                                                                    .control(
+                                                                      _typeOfTransportKey,
+                                                                    )
+                                                                    .value
+                                                                as String?;
+                                                        if (transportTypeValue ==
+                                                            Constants.byHand) {
+                                                          byHand = true;
+                                                          removeVehicleValidation(
+                                                              form);
+                                                        } else {
+                                                          byHand = false;
+                                                          addVehicleValidations(
+                                                              form);
+                                                        }
 
                                                         form
                                                             .control(
@@ -1483,11 +1499,6 @@ class CustomStockDetailsPageState
                                                         form
                                                             .control(
                                                               _typeOfTransportKey,
-                                                            )
-                                                            .touched;
-                                                        form
-                                                            .control(
-                                                              _vehicleNumberKey,
                                                             )
                                                             .touched;
                                                       }
@@ -1761,11 +1772,28 @@ class CustomStockDetailsPageState
                                           ),
                                           valueMapper: (e) => e,
                                           onChanged: (value) {
-                                            setState(() {
-                                              form.control(
-                                                _typeOfTransportKey,
-                                              );
-                                            });
+                                            final transportTypeValue = form
+                                                .control(
+                                                  _typeOfTransportKey,
+                                                )
+                                                .value as String?;
+                                            if (transportTypeValue ==
+                                                Constants.byHand) {
+                                              setState(() {
+                                                byHand = true;
+                                                removeVehicleValidation(form);
+                                              });
+                                            } else {
+                                              setState(() {
+                                                byHand = false;
+                                                if (!supervisorSelected &&
+                                                    !deliveryTeamSelected) {
+                                                  addVehicleValidations(form);
+                                                } else {
+                                                  removeVehicleValidation(form);
+                                                }
+                                              });
+                                            }
                                           },
                                           initialValue:
                                               transportTypes.firstOrNull?.name,
@@ -1816,7 +1844,8 @@ class CustomStockDetailsPageState
                                     ),
                                     isRequired: isWareHouseMgr &&
                                         !supervisorSelected &&
-                                        !deliveryTeamSelected,
+                                        !deliveryTeamSelected &&
+                                        !byHand,
                                     formControlName: _vehicleNumberKey,
                                     validationMessages: {
                                       'required': (object) =>
@@ -1854,6 +1883,40 @@ class CustomStockDetailsPageState
           },
         ),
       ),
+    );
+  }
+
+  void addVehicleValidations(FormGroup form) {
+    form
+        .control(
+      _vehicleNumberKey,
+    )
+        .setValidators(
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
+          _vehicleNumberKey,
+        )
+        .touched;
+  }
+
+  void removeVehicleValidation(FormGroup form) {
+    form
+        .control(
+      _vehicleNumberKey,
+    )
+        .setValidators(
+      [],
+      updateParent: true,
+      autoValidate: true,
     );
   }
 
