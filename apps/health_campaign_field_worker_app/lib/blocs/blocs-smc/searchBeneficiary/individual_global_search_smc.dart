@@ -98,12 +98,11 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           clientReferenceId: houseHoldIds,
         ),
       );
-
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualClientReferenceIds.map((e) => e).toList()));
+                  individualsList.map((e) => e.clientReferenceId).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -177,7 +176,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualClientReferenceIds.map((e) => e).toList()));
+                  individualsList.map((e) => e.clientReferenceId).toList()));
 
       individualsList = await individual.search(
         IndividualSearchModel(clientReferenceId: individualClientReferenceIds),

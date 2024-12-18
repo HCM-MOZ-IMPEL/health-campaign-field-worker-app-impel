@@ -25,6 +25,7 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -482,14 +483,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .chartsIsNotNull()
             .chartsIsNotEmpty()
             .findAll();
+
+        final filteredDashboardConfig = dashboardConfig
+            .where((e) => e.projectTypeCode == ProjectTypes.smc.toValue());
+
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (dashboardConfig.isNotEmpty &&
-            dashboardConfig.first.enableDashboard == true &&
-            dashboardConfig.first.charts != null) {
+        if (filteredDashboardConfig.isNotEmpty &&
+            filteredDashboardConfig.first.enableDashboard == true &&
+            filteredDashboardConfig.first.charts != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -513,7 +518,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first.charts ?? [],
+            filteredDashboardConfig.first.charts ?? [],
             startDate,
             endDate,
             isar,
