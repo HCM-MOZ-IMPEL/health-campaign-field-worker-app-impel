@@ -894,8 +894,8 @@ class _CustomRecordReferralDetailsSMCPageState
                                           ),
                                           formControlName: _genderKey,
                                           valueMapper: (value) {
-                                            return localizations
-                                                .translate(value);
+                                            return localizations.translate(
+                                                'CORE_COMMON_${value.toUpperCase()}');
                                           },
                                           emptyText: localizations.translate(
                                             i18.common.noMatchFound,
