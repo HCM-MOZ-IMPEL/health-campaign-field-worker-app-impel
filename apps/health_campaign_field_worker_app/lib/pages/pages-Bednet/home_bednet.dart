@@ -53,17 +53,17 @@ import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 
 @RoutePage()
-class HomeSMCPage extends LocalizedStatefulWidget {
-  const HomeSMCPage({
+class HomeBednetPage extends LocalizedStatefulWidget {
+  const HomeBednetPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<HomeSMCPage> createState() => HomeSMCPageState();
+  State<HomeBednetPage> createState() => HomeSMCPageState();
 }
 
-class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
+class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<ConnectivityResult> subscription;

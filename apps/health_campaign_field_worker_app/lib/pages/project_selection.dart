@@ -249,12 +249,29 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
 
-      context.router.replaceAll([
-        isProjectTypeSMC(context)
-            ? const SMCWrapperRoute()
-            : const IRSWrapperRoute(),
-        BoundarySelectionRoute(),
-      ]);
+      // context.router.replaceAll([
+      //   isProjectTypeSMC(context)
+      //       ? const SMCWrapperRoute()
+      //       : const IRSWrapperRoute(),
+      //   BoundarySelectionRoute(),
+      // ]);
+
+      if (isProjectTypeSMC(context)) {
+        context.router.replaceAll([
+          const BednetWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      } else if (isProjectTypeIRS(context)) {
+        context.router.replaceAll([
+          const IRSWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      } else {
+        context.router.replaceAll([
+          const BednetWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      }
     } catch (e) {
       debugPrint('error $e');
     }
@@ -377,4 +394,8 @@ void setPackagesSingleton(BuildContext context) {
 
 bool isProjectTypeSMC(BuildContext context) {
   return context.projectTypeCode == ProjectTypes.smc.toValue();
+}
+
+bool isProjectTypeIRS(BuildContext context) {
+  return context.projectTypeCode == ProjectTypes.irs.toValue();
 }
