@@ -258,7 +258,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
       if (isProjectTypeSMC(context)) {
         context.router.replaceAll([
-          const BednetWrapperRoute(),
+          const SMCWrapperRoute(),
           BoundarySelectionRoute(),
         ]);
       } else if (isProjectTypeIRS(context)) {
