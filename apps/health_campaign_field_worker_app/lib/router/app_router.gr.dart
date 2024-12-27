@@ -259,6 +259,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomAttendanceDateSessionSelectionBednetRoute.name: (routeData) {
+      final args = routeData
+          .argsAs<CustomAttendanceDateSessionSelectionBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomAttendanceDateSessionSelectionBednetPage(
+          registers: args.registers,
+          registerID: args.registerID,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomAttendanceDateSessionSelectionRoute.name: (routeData) {
       final args =
           routeData.argsAs<CustomAttendanceDateSessionSelectionRouteArgs>();
@@ -796,6 +809,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomManageAttendanceBednetRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomManageAttendanceBednetPage(),
+      );
+    },
     CustomManageAttendanceRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -819,6 +838,23 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomManageStocksSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomMarkAttendanceBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomMarkAttendanceBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomMarkAttendanceBednetPage(
+          exitTime: args.exitTime,
+          entryTime: args.entryTime,
+          dateTime: args.dateTime,
+          attendees: args.attendees,
+          registerId: args.registerId,
+          tenantId: args.tenantId,
+          session: args.session,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -2092,6 +2128,56 @@ class ConsentHouseholdAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'ConsentHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomAttendanceDateSessionSelectionBednetPage]
+class CustomAttendanceDateSessionSelectionBednetRoute
+    extends PageRouteInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs> {
+  CustomAttendanceDateSessionSelectionBednetRoute({
+    required List<AttendanceRegisterModel> registers,
+    required String registerID,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomAttendanceDateSessionSelectionBednetRoute.name,
+          args: CustomAttendanceDateSessionSelectionBednetRouteArgs(
+            registers: registers,
+            registerID: registerID,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomAttendanceDateSessionSelectionBednetRoute';
+
+  static const PageInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs>
+      page =
+      PageInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs>(name);
+}
+
+class CustomAttendanceDateSessionSelectionBednetRouteArgs {
+  const CustomAttendanceDateSessionSelectionBednetRouteArgs({
+    required this.registers,
+    required this.registerID,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final List<AttendanceRegisterModel> registers;
+
+  final String registerID;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomAttendanceDateSessionSelectionBednetRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -4045,6 +4131,20 @@ class CustomInventoryReportSelectionSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomManageAttendanceBednetPage]
+class CustomManageAttendanceBednetRoute extends PageRouteInfo<void> {
+  const CustomManageAttendanceBednetRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomManageAttendanceBednetRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageAttendanceBednetRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [CustomManageAttendancePage]
 class CustomManageAttendanceRoute extends PageRouteInfo<void> {
   const CustomManageAttendanceRoute({List<PageRouteInfo>? children})
@@ -4133,6 +4233,80 @@ class CustomManageStocksSMCRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomMarkAttendanceBednetPage]
+class CustomMarkAttendanceBednetRoute
+    extends PageRouteInfo<CustomMarkAttendanceBednetRouteArgs> {
+  CustomMarkAttendanceBednetRoute({
+    required int exitTime,
+    required int entryTime,
+    required DateTime dateTime,
+    required List<AttendeeModel> attendees,
+    required String registerId,
+    required String tenantId,
+    int? session,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomMarkAttendanceBednetRoute.name,
+          args: CustomMarkAttendanceBednetRouteArgs(
+            exitTime: exitTime,
+            entryTime: entryTime,
+            dateTime: dateTime,
+            attendees: attendees,
+            registerId: registerId,
+            tenantId: tenantId,
+            session: session,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomMarkAttendanceBednetRoute';
+
+  static const PageInfo<CustomMarkAttendanceBednetRouteArgs> page =
+      PageInfo<CustomMarkAttendanceBednetRouteArgs>(name);
+}
+
+class CustomMarkAttendanceBednetRouteArgs {
+  const CustomMarkAttendanceBednetRouteArgs({
+    required this.exitTime,
+    required this.entryTime,
+    required this.dateTime,
+    required this.attendees,
+    required this.registerId,
+    required this.tenantId,
+    this.session,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final int exitTime;
+
+  final int entryTime;
+
+  final DateTime dateTime;
+
+  final List<AttendeeModel> attendees;
+
+  final String registerId;
+
+  final String tenantId;
+
+  final int? session;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomMarkAttendanceBednetRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

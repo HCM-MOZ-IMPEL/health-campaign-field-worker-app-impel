@@ -44,6 +44,10 @@ import '../pages/pages-Bednet/beneficiary_registration/custom_search_beneficiary
 import '../pages/pages-Bednet/closed/custom_closed_household_details_bednet.dart';
 import '../pages/pages-Bednet/closed/custom_closed_household_summary_bednet.dart';
 
+import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
+import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
+import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
+
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -1241,6 +1245,43 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                   page: FacilitySelectionRoute.page,
                   path: 'select-facilities',
+                ),
+
+                // Attendance Route
+                AutoRoute(
+                  page: ManageAttendanceRoute.page,
+                  path: 'manage-attendance',
+                ),
+                AutoRoute(
+                  page: CustomManageAttendanceBednetRoute.page,
+                  path: 'custom-manage-attendance-bednet',
+                ),
+                RedirectRoute(
+                    path: 'manage-attendance',
+                    redirectTo: 'custom-manage-attendance-bednet'),
+                AutoRoute(
+                  page: AttendanceDateSessionSelectionRoute.page,
+                  path: 'attendance-date-session-selection',
+                ),
+                AutoRoute(
+                  page: CustomAttendanceDateSessionSelectionRoute.page,
+                  path: 'custom-attendance-date-session-selection',
+                ),
+                AutoRoute(
+                  page: CustomAttendanceDateSessionSelectionBednetRoute.page,
+                  path: 'custom-attendance-date-session-selection-bednet',
+                ),
+                AutoRoute(
+                  page: MarkAttendanceRoute.page,
+                  path: 'mark-attendance',
+                ),
+                AutoRoute(
+                  page: CustomMarkAttendanceBednetRoute.page,
+                  path: 'custom-mark-attendance-bednet',
+                ),
+                AutoRoute(
+                  page: AttendanceAcknowledgementRoute.page,
+                  path: 'attendance-acknowledgement',
                 ),
 
                 //       /// Beneficiary Registration

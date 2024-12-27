@@ -340,7 +340,7 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(const CustomManageAttendanceRoute());
+            context.router.push(const CustomManageAttendanceBednetRoute());
           },
         ),
       ),
