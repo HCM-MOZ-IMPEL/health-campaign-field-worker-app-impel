@@ -358,6 +358,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomClosedHouseholdDetailsBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomClosedHouseholdDetailsBednetRouteArgs>(
+              orElse: () =>
+                  const CustomClosedHouseholdDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
           orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
@@ -375,6 +388,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomClosedHouseholdDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomClosedHouseholdSummaryBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomClosedHouseholdSummaryBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdSummaryBednetPage(
+          reason: args.reason,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -2418,6 +2443,45 @@ class CustomBeneficiaryDetailsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomClosedHouseholdDetailsBednetPage]
+class CustomClosedHouseholdDetailsBednetRoute
+    extends PageRouteInfo<CustomClosedHouseholdDetailsBednetRouteArgs> {
+  CustomClosedHouseholdDetailsBednetRoute({
+    Key? key,
+    ClosedHouseholdLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdDetailsBednetRoute.name,
+          args: CustomClosedHouseholdDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdDetailsBednetRoute';
+
+  static const PageInfo<CustomClosedHouseholdDetailsBednetRouteArgs> page =
+      PageInfo<CustomClosedHouseholdDetailsBednetRouteArgs>(name);
+}
+
+class CustomClosedHouseholdDetailsBednetRouteArgs {
+  const CustomClosedHouseholdDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ClosedHouseholdLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomClosedHouseholdDetailsPage]
 class CustomClosedHouseholdDetailsRoute
     extends PageRouteInfo<CustomClosedHouseholdDetailsRouteArgs> {
@@ -2492,6 +2556,50 @@ class CustomClosedHouseholdDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdSummaryBednetPage]
+class CustomClosedHouseholdSummaryBednetRoute
+    extends PageRouteInfo<CustomClosedHouseholdSummaryBednetRouteArgs> {
+  CustomClosedHouseholdSummaryBednetRoute({
+    required dynamic reason,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdSummaryBednetRoute.name,
+          args: CustomClosedHouseholdSummaryBednetRouteArgs(
+            reason: reason,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdSummaryBednetRoute';
+
+  static const PageInfo<CustomClosedHouseholdSummaryBednetRouteArgs> page =
+      PageInfo<CustomClosedHouseholdSummaryBednetRouteArgs>(name);
+}
+
+class CustomClosedHouseholdSummaryBednetRouteArgs {
+  const CustomClosedHouseholdSummaryBednetRouteArgs({
+    required this.reason,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final dynamic reason;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdSummaryBednetRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

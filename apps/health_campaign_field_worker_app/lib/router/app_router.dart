@@ -41,6 +41,9 @@ import '../pages/pages-Bednet/beneficiary_registration/custom_household_wrapper_
 import '../pages/pages-Bednet/beneficiary_registration/custom_individual_details_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_search_beneficiary_bednet.dart';
 
+import '../pages/pages-Bednet/closed/custom_closed_household_details_bednet.dart';
+import '../pages/pages-Bednet/closed/custom_closed_household_summary_bednet.dart';
+
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -1471,6 +1474,33 @@ class AppRouter extends _$AppRouter {
                     ),
                   ],
                 ),
+
+                /// close household
+                AutoRoute(
+                    page: ClosedHouseholdWrapperRoute.page,
+                    path: 'closed-household-wrapper',
+                    children: [
+                      AutoRoute(
+                        page: ClosedHouseholdDetailsRoute.page,
+                        path: 'closed-household-details',
+                      ),
+                      AutoRoute(
+                        page: CustomClosedHouseholdDetailsBednetRoute.page,
+                        path: 'custom-closed-household-details-bednet',
+                        initial: true,
+                      ),
+                      RedirectRoute(
+                        path: 'closed-household-details',
+                        redirectTo: 'custom-closed-household-details-bednet',
+                      ),
+                      AutoRoute(
+                        page: CustomClosedHouseholdSummaryBednetRoute.page,
+                        path: 'custom-closed-household-summary-bednet',
+                      ),
+                      AutoRoute(
+                          page: ClosedHouseholdAcknowledgementRoute.page,
+                          path: 'closed-household-acknowledgement'),
+                    ]),
               ]),
         ]),
       ],
