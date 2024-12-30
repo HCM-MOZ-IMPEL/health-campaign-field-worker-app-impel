@@ -944,15 +944,6 @@ class CustomStockDetailsPageState
                                                   supervisorSelected = false;
                                                   form
                                                       .control(
-                                                    _driverNameKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
-                                                  form
-                                                      .control(
                                                     _waybillNumberKey,
                                                   )
                                                       .setValidators(
@@ -1011,15 +1002,6 @@ class CustomStockDetailsPageState
                                                 setState(() {
                                                   supervisorSelected = true;
                                                   deliveryTeamSelected = false;
-                                                  form
-                                                      .control(
-                                                    _driverNameKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
                                                   form
                                                       .control(
                                                     _waybillNumberKey,
@@ -1082,21 +1064,6 @@ class CustomStockDetailsPageState
                                                   if (isWareHouseMgr) {
                                                     form
                                                         .control(
-                                                      _driverNameKey,
-                                                    )
-                                                        .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
-
-                                                    form
-                                                        .control(
                                                       _waybillNumberKey,
                                                     )
                                                         .setValidators(
@@ -1152,11 +1119,6 @@ class CustomStockDetailsPageState
                                                           form);
                                                     }
 
-                                                    form
-                                                        .control(
-                                                          _driverNameKey,
-                                                        )
-                                                        .touched;
                                                     form
                                                         .control(
                                                           _waybillNumberKey,
@@ -1252,15 +1214,6 @@ class CustomStockDetailsPageState
                                                           false;
                                                       form
                                                           .control(
-                                                        _driverNameKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
-                                                      form
-                                                          .control(
                                                         _waybillNumberKey,
                                                       )
                                                           .setValidators(
@@ -1286,15 +1239,9 @@ class CustomStockDetailsPageState
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
-                                                      form
-                                                          .control(
-                                                        _vehicleNumberKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+
+                                                      removeVehicleValidation(
+                                                          form);
 
                                                       form
                                                           .control(
@@ -1330,15 +1277,6 @@ class CustomStockDetailsPageState
                                                           false;
                                                       form
                                                           .control(
-                                                        _driverNameKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
-                                                      form
-                                                          .control(
                                                         _waybillNumberKey,
                                                       )
                                                           .setValidators(
@@ -1364,15 +1302,8 @@ class CustomStockDetailsPageState
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
-                                                      form
-                                                          .control(
-                                                        _vehicleNumberKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+                                                      removeVehicleValidation(
+                                                          form);
                                                       form
                                                           .control(
                                                         _deliveryTeamKey,
@@ -1406,21 +1337,6 @@ class CustomStockDetailsPageState
                                                       supervisorSelected =
                                                           false;
                                                       if (isWareHouseMgr) {
-                                                        form
-                                                            .control(
-                                                          _driverNameKey,
-                                                        )
-                                                            .setValidators(
-                                                          [
-                                                            Validators.required,
-                                                            Validators
-                                                                .minLength(2),
-                                                            Validators
-                                                                .maxLength(200),
-                                                          ],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
                                                         form
                                                             .control(
                                                           _waybillNumberKey,
@@ -1481,11 +1397,6 @@ class CustomStockDetailsPageState
                                                               form);
                                                         }
 
-                                                        form
-                                                            .control(
-                                                              _driverNameKey,
-                                                            )
-                                                            .touched;
                                                         form
                                                             .control(
                                                               _waybillNumberKey,
@@ -1820,7 +1731,8 @@ class CustomStockDetailsPageState
                                     ),
                                     isRequired: isWareHouseMgr &&
                                         !supervisorSelected &&
-                                        !deliveryTeamSelected,
+                                        !deliveryTeamSelected &&
+                                        !byHand,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
@@ -1903,7 +1815,27 @@ class CustomStockDetailsPageState
 
     form
         .control(
+      _driverNameKey,
+    )
+        .setValidators(
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
           _vehicleNumberKey,
+        )
+        .touched;
+
+    form
+        .control(
+          _driverNameKey,
         )
         .touched;
   }
@@ -1912,6 +1844,16 @@ class CustomStockDetailsPageState
     form
         .control(
       _vehicleNumberKey,
+    )
+        .setValidators(
+      [],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
+      _driverNameKey,
     )
         .setValidators(
       [],
