@@ -484,8 +484,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .chartsIsNotEmpty()
             .findAll();
 
-        final filteredDashboardConfig = dashboardConfig
-            .where((e) => e.projectTypeCode == ProjectTypes.smc.toValue());
+        // Info : added IRS as default projectTypeCode else based on the user logged in
+
+        final projectTypeCode = event.model.additionalDetails?.projectType ??
+            ProjectTypes.irs.toValue();
+
+        final filteredDashboardConfig =
+            filterDashboardConfig(dashboardConfig, projectTypeCode);
 
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
@@ -626,6 +631,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       syncError: null,
     ));
   }
+}
+
+Iterable<DashboardConfigSchema> filterDashboardConfig(
+    List<DashboardConfigSchema> dashboardConfig, String projectTypeCode) {
+  return dashboardConfig
+      .where((element) => element.projectTypeCode == projectTypeCode);
 }
 
 @freezed
