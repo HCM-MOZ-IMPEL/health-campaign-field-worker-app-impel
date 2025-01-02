@@ -366,108 +366,100 @@ class CustomDeliverInterventionSMCPageState
                                                   builder:
                                                       (context, locationState) {
                                                 return DigitElevatedButton(
-                                                  onPressed: isClicked
-                                                      ? null
-                                                      : () async {
-                                                          final deliveredProducts =
-                                                              ((form.control(_resourceDeliveredKey)
-                                                                          as FormArray)
-                                                                      .value
-                                                                  as List<
-                                                                      ProductVariantModel?>);
-                                                          final hasEmptyResources =
-                                                              hasEmptyOrNullResources(
-                                                                  deliveredProducts);
-                                                          // final hasZeroQuantity =
-                                                          //     hasEmptyOrZeroQuantity(
-                                                          //         form);
-                                                          final hasDuplicates =
-                                                              hasDuplicateResources(
-                                                                  deliveredProducts,
-                                                                  form);
+                                                  onPressed: () async {
+                                                    final deliveredProducts =
+                                                        ((form.control(_resourceDeliveredKey)
+                                                                    as FormArray)
+                                                                .value
+                                                            as List<
+                                                                ProductVariantModel?>);
+                                                    final hasEmptyResources =
+                                                        hasEmptyOrNullResources(
+                                                            deliveredProducts);
+                                                    // final hasZeroQuantity =
+                                                    //     hasEmptyOrZeroQuantity(
+                                                    //         form);
+                                                    final hasDuplicates =
+                                                        hasDuplicateResources(
+                                                            deliveredProducts,
+                                                            form);
 
-                                                          if (hasEmptyResources) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDeliveredValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (hasDuplicates) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDuplicateValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          }
-                                                          //  else if (hasZeroQuantity) {
-                                                          //   await DigitToast
-                                                          //       .show(
-                                                          //     context,
-                                                          //     options:
-                                                          //         DigitToastOptions(
-                                                          //       localizations
-                                                          //           .translate(i18
-                                                          //               .deliverIntervention
-                                                          //               .resourceCannotBeZero),
-                                                          //       true,
-                                                          //       theme,
-                                                          //     ),
-                                                          //   );
-                                                          // }
-                                                          else if (doseAdministered &&
-                                                              form
-                                                                      .control(
-                                                                        _deliveryCommentKey,
-                                                                      )
-                                                                      .value ==
-                                                                  null) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations.translate(
-                                                                    i18_local
-                                                                        .deliverIntervention
-                                                                        .deliveryCommentRequired),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            context
-                                                                .read<
-                                                                    LocationBloc>()
-                                                                .add(
-                                                                    const LoadLocationEvent());
-                                                            handleLocationState(
-                                                              locationState,
-                                                              context,
-                                                              deliveryInterventionState,
-                                                              form,
-                                                              householdMemberWrapper,
-                                                              projectBeneficiary!
-                                                                  .first,
-                                                              selectedIndividual,
-                                                            );
-                                                          }
-                                                        },
+                                                    if (hasEmptyResources) {
+                                                      await DigitToast.show(
+                                                        context,
+                                                        options:
+                                                            DigitToastOptions(
+                                                          localizations.translate(i18
+                                                              .deliverIntervention
+                                                              .resourceDeliveredValidation),
+                                                          true,
+                                                          theme,
+                                                        ),
+                                                      );
+                                                    } else if (hasDuplicates) {
+                                                      await DigitToast.show(
+                                                        context,
+                                                        options:
+                                                            DigitToastOptions(
+                                                          localizations.translate(i18
+                                                              .deliverIntervention
+                                                              .resourceDuplicateValidation),
+                                                          true,
+                                                          theme,
+                                                        ),
+                                                      );
+                                                    }
+                                                    //  else if (hasZeroQuantity) {
+                                                    //   await DigitToast
+                                                    //       .show(
+                                                    //     context,
+                                                    //     options:
+                                                    //         DigitToastOptions(
+                                                    //       localizations
+                                                    //           .translate(i18
+                                                    //               .deliverIntervention
+                                                    //               .resourceCannotBeZero),
+                                                    //       true,
+                                                    //       theme,
+                                                    //     ),
+                                                    //   );
+                                                    // }
+                                                    else if (doseAdministered &&
+                                                        form
+                                                                .control(
+                                                                  _deliveryCommentKey,
+                                                                )
+                                                                .value ==
+                                                            null) {
+                                                      await DigitToast.show(
+                                                        context,
+                                                        options:
+                                                            DigitToastOptions(
+                                                          localizations.translate(
+                                                              i18_local
+                                                                  .deliverIntervention
+                                                                  .deliveryCommentRequired),
+                                                          true,
+                                                          theme,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      context
+                                                          .read<LocationBloc>()
+                                                          .add(
+                                                              const LoadLocationEvent());
+                                                      handleLocationState(
+                                                        locationState,
+                                                        context,
+                                                        deliveryInterventionState,
+                                                        form,
+                                                        householdMemberWrapper,
+                                                        projectBeneficiary!
+                                                            .first,
+                                                        selectedIndividual,
+                                                      );
+                                                    }
+                                                  },
                                                   child: Center(
                                                     child: Text(
                                                       localizations.translate(
