@@ -406,9 +406,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
-          label: InventorySingleton().isDistributor
-              ? i18.home.specialCaseCheckList
-              : i18.home.myCheckList,
+          label: context.isMobilizer
+              ? i18.home.mobilizerChecklist
+              : InventorySingleton().isDistributor
+                  ? i18.home.specialCaseCheckList
+                  : i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
