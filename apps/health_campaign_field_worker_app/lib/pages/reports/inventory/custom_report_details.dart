@@ -514,7 +514,7 @@ class CustomInventoryReportDetailsPageState
                                                                     ? localizations
                                                                         .translate(
                                                                             'FAC_${model.receiverId}')
-                                                                    : model.senderType ==
+                                                                    : model.receiverType ==
                                                                             'STAFF'
                                                                         ? _getStaffUsernameFromAdditionalDetails(
                                                                             model,
