@@ -302,6 +302,11 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
       List<TaskModel> filteredTasks = [];
       List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
       final householdId = entry.key;
+
+      final exisitingHousehold = state.householdMembers.firstWhereOrNull(
+        (element) => element.household?.clientReferenceId == householdId,
+      );
+      if (exisitingHousehold != null) continue;
       if (householdId == null) continue;
 
       // Filter household based on household ID
