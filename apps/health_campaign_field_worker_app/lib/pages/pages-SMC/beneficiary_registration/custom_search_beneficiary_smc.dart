@@ -28,6 +28,7 @@ import '../../../utils/utils_smc/global_search_parameters_smc.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
 import '../../../widgets/widgets_smc/beneficiary/custom_view_beneficiary_card_smc.dart';
+import '../../../widgets/widgets_smc/status_filter_smc.dart';
 
 @RoutePage()
 class CustomSearchBeneficiarySMCPage extends LocalizedStatefulWidget {
@@ -265,19 +266,20 @@ class _CustomSearchBeneficiarySMCPageState
                                   }
                                 },
                               ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: kPadding),
-                                  child: DigitIconButton(
-                                    textDirection: TextDirection.rtl,
-                                    iconText: getFilterIconNLabel()['label'],
-                                    icon: getFilterIconNLabel()['icon'],
-                                    onPressed: () => showFilterDialog(),
+                              if (!isSearchByBeneficaryIdEnabled)
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: kPadding),
+                                    child: DigitIconButton(
+                                      textDirection: TextDirection.rtl,
+                                      iconText: getFilterIconNLabel()['label'],
+                                      icon: getFilterIconNLabel()['icon'],
+                                      onPressed: () => showFilterDialog(),
+                                    ),
                                   ),
                                 ),
-                              ),
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
@@ -647,7 +649,7 @@ class _CustomSearchBeneficiarySMCPageState
           dialogPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          content: StatusFilter(
+          content: StatusFilterSMC(
             selectedFilters: selectedFilters,
             titleIcon: Icon(getFilterIconNLabel()['icon'],
                 color: const DigitColors().burningOrange),

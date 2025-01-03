@@ -98,12 +98,11 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           clientReferenceId: houseHoldIds,
         ),
       );
-
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualClientReferenceIds.map((e) => e).toList()));
+                  individualsList.map((e) => e.clientReferenceId).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -177,7 +176,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualClientReferenceIds.map((e) => e).toList()));
+                  individualsList.map((e) => e.clientReferenceId).toList()));
 
       individualsList = await individual.search(
         IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
@@ -253,7 +252,7 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualClientReferenceIds.map((e) => e).toList()));
+                  individualsList.map((e) => e.clientReferenceId).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -303,6 +302,11 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
       List<TaskModel> filteredTasks = [];
       List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
       final householdId = entry.key;
+
+      final exisitingHousehold = state.householdMembers.firstWhereOrNull(
+        (element) => element.household?.clientReferenceId == householdId,
+      );
+      if (exisitingHousehold != null) continue;
       if (householdId == null) continue;
 
       // Filter household based on household ID

@@ -173,19 +173,17 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
+
           final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
                   jsonDecode(dashboardConfigWrapper)['MdmsRes']
                       [ModuleEnums.hcm.toValue()])
               .dashboardConfigWrapper;
 
           if (dashboardConfigs.isNotEmpty) {
-            await dashboardRemoteRepository.writeToDashboardConfigDB(
-                DashboardConfigPrimaryWrapper.fromJson(
-                        jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                            [ModuleEnums.hcm.toValue()])
-                    .dashboardConfigWrapper
-                    .first,
-                isar);
+            dashboardConfigs.forEach((dashboardConfig) async {
+              await dashboardRemoteRepository.writeToDashboardConfigDB(
+                  dashboardConfig, isar);
+            });
           }
         } catch (e) {
           debugPrint(e.toString());

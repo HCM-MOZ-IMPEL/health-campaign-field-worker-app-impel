@@ -612,7 +612,8 @@ class CustomIndividualDetailsSMCPageState
                                 });
                               },
                               valueMapper: (value) {
-                                return localizations.translate(value);
+                                return localizations.translate(
+                                    'CORE_COMMON_${value.toUpperCase()}');
                               },
                               errorMessage: form.control(_genderKey).hasErrors
                                   ? localizations

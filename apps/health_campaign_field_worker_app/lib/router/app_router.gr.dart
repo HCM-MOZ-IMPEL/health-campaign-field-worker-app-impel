@@ -541,6 +541,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryFacilitySelectionSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryFacilitySelectionSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryFacilitySelectionSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          facilities: args.facilities,
+        ),
+      );
+    },
     CustomInventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -630,6 +642,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomRecordReferralDetailsSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomRecordReferralDetailsSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomRecordReferralDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          projectId: args.projectId,
+          cycles: args.cycles,
+        ),
+      );
+    },
     CustomReferBeneficiarySMCRoute.name: (routeData) {
       final args = routeData.argsAs<CustomReferBeneficiarySMCRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -644,6 +669,30 @@ abstract class _$AppRouter extends RootStackRouter {
           quantityWasted: args.quantityWasted,
           productVariantId: args.productVariantId,
           referralReasons: args.referralReasons,
+        ),
+      );
+    },
+    CustomReferralFacilitySMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomReferralFacilitySMCRouteArgs>(
+          orElse: () => const CustomReferralFacilitySMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomReferralFacilitySMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    CustomReferralReasonChecklistSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomReferralReasonChecklistSMCRouteArgs>(
+          orElse: () => const CustomReferralReasonChecklistSMCRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomReferralReasonChecklistSMCPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          appLocalizations: args.appLocalizations,
         ),
       );
     },
@@ -2787,6 +2836,50 @@ class CustomInventoryFacilitySelectionRouteArgs {
 }
 
 /// generated route for
+/// [CustomInventoryFacilitySelectionSMCPage]
+class CustomInventoryFacilitySelectionSMCRoute
+    extends PageRouteInfo<CustomInventoryFacilitySelectionSMCRouteArgs> {
+  CustomInventoryFacilitySelectionSMCRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required List<FacilityModel> facilities,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryFacilitySelectionSMCRoute.name,
+          args: CustomInventoryFacilitySelectionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            facilities: facilities,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryFacilitySelectionSMCRoute';
+
+  static const PageInfo<CustomInventoryFacilitySelectionSMCRouteArgs> page =
+      PageInfo<CustomInventoryFacilitySelectionSMCRouteArgs>(name);
+}
+
+class CustomInventoryFacilitySelectionSMCRouteArgs {
+  const CustomInventoryFacilitySelectionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.facilities,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final List<FacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'CustomInventoryFacilitySelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
+  }
+}
+
+/// generated route for
 /// [CustomInventoryReportDetailsPage]
 class CustomInventoryReportDetailsRoute
     extends PageRouteInfo<CustomInventoryReportDetailsRouteArgs> {
@@ -3119,6 +3212,60 @@ class CustomMarkAttendanceRouteArgs {
 }
 
 /// generated route for
+/// [CustomRecordReferralDetailsSMCPage]
+class CustomRecordReferralDetailsSMCRoute
+    extends PageRouteInfo<CustomRecordReferralDetailsSMCRouteArgs> {
+  CustomRecordReferralDetailsSMCRoute({
+    Key? key,
+    ReferralReconLocalization? appLocalizations,
+    bool isEditing = false,
+    required String projectId,
+    required List<String> cycles,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomRecordReferralDetailsSMCRoute.name,
+          args: CustomRecordReferralDetailsSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            projectId: projectId,
+            cycles: cycles,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomRecordReferralDetailsSMCRoute';
+
+  static const PageInfo<CustomRecordReferralDetailsSMCRouteArgs> page =
+      PageInfo<CustomRecordReferralDetailsSMCRouteArgs>(name);
+}
+
+class CustomRecordReferralDetailsSMCRouteArgs {
+  const CustomRecordReferralDetailsSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    required this.projectId,
+    required this.cycles,
+  });
+
+  final Key? key;
+
+  final ReferralReconLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  final String projectId;
+
+  final List<String> cycles;
+
+  @override
+  String toString() {
+    return 'CustomRecordReferralDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectId: $projectId, cycles: $cycles}';
+  }
+}
+
+/// generated route for
 /// [CustomReferBeneficiarySMCPage]
 class CustomReferBeneficiarySMCRoute
     extends PageRouteInfo<CustomReferBeneficiarySMCRouteArgs> {
@@ -3189,6 +3336,94 @@ class CustomReferBeneficiarySMCRouteArgs {
   @override
   String toString() {
     return 'CustomReferBeneficiarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual, isReadministrationUnSuccessful: $isReadministrationUnSuccessful, quantityWasted: $quantityWasted, productVariantId: $productVariantId, referralReasons: $referralReasons}';
+  }
+}
+
+/// generated route for
+/// [CustomReferralFacilitySMCPage]
+class CustomReferralFacilitySMCRoute
+    extends PageRouteInfo<CustomReferralFacilitySMCRouteArgs> {
+  CustomReferralFacilitySMCRoute({
+    Key? key,
+    ReferralReconLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomReferralFacilitySMCRoute.name,
+          args: CustomReferralFacilitySMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomReferralFacilitySMCRoute';
+
+  static const PageInfo<CustomReferralFacilitySMCRouteArgs> page =
+      PageInfo<CustomReferralFacilitySMCRouteArgs>(name);
+}
+
+class CustomReferralFacilitySMCRouteArgs {
+  const CustomReferralFacilitySMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final ReferralReconLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomReferralFacilitySMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomReferralReasonChecklistSMCPage]
+class CustomReferralReasonChecklistSMCRoute
+    extends PageRouteInfo<CustomReferralReasonChecklistSMCRouteArgs> {
+  CustomReferralReasonChecklistSMCRoute({
+    Key? key,
+    String? referralClientRefId,
+    ReferralReconLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomReferralReasonChecklistSMCRoute.name,
+          args: CustomReferralReasonChecklistSMCRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomReferralReasonChecklistSMCRoute';
+
+  static const PageInfo<CustomReferralReasonChecklistSMCRouteArgs> page =
+      PageInfo<CustomReferralReasonChecklistSMCRouteArgs>(name);
+}
+
+class CustomReferralReasonChecklistSMCRouteArgs {
+  const CustomReferralReasonChecklistSMCRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? referralClientRefId;
+
+  final ReferralReconLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomReferralReasonChecklistSMCRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
   }
 }
 

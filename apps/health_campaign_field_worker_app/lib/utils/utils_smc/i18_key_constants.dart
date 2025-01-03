@@ -598,11 +598,22 @@ class HouseholdDetails {
 
 class HouseholdOverView {
   const HouseholdOverView();
-  String get householdOverViewHouseholderHeadLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+  String get householdOverViewHouseholderHeadLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL_SMC';
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+
+  String get householdOverViewDeliveredIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_SMC';
+  String get householdOverViewNotEligibleIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_SMC';
+  String get householdOverViewBeneficiaryReferredLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL_SMC';
+  String get householdOverViewBeneficiaryRefusedLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_SMC';
+  String get householdOverViewNotDeliveredIconLabelSMC =>
+      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_SMC';
 }
 
 class ForgotPassword {
@@ -749,6 +760,8 @@ class DeliverIntervention {
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+  String get dialogReferralContentSMC =>
+      'DELIVER_INTERVENTION_DIALOG_REFERRAL_CONTENT_SMC';
 
   String get wastedDialogTitle => 'DELIVER_INTERVENTION_WASTED_DIALOG_TITLE';
 

@@ -1,37 +1,39 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
-import '../../../models/entities/roles_type.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
+import 'package:referral_reconciliation/blocs/referral_recon_service_definition.dart';
+import 'package:referral_reconciliation/utils/i18_key_constants.dart' as i18;
+import 'package:referral_reconciliation/utils/utils.dart';
+import 'package:referral_reconciliation/widgets/localized.dart';
+
+import '../../../utils/extensions/extensions.dart';
 
 @RoutePage()
-class ChecklistViewPage extends LocalizedStatefulWidget {
+class CustomReferralReasonChecklistSMCPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
-
-  const ChecklistViewPage({
-    Key? key,
+  const CustomReferralReasonChecklistSMCPage({
+    super.key,
     this.referralClientRefId,
     super.appLocalizations,
-  }) : super(key: key);
+  });
 
   @override
-  State<ChecklistViewPage> createState() => _ChecklistViewPageState();
+  State<CustomReferralReasonChecklistSMCPage> createState() =>
+      _CustomReferralReasonChecklistSMCPageState();
 }
 
-class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
+class _CustomReferralReasonChecklistSMCPageState
+    extends LocalizedState<CustomReferralReasonChecklistSMCPage> {
   String isStateChanged = '';
   var submitTriggered = false;
   List<TextEditingController> controller = [];
@@ -39,7 +41,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   List<AttributesModel>? initialAttributes;
   ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
-  bool triggerLocalization = false;
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
 
@@ -58,17 +59,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
-
-    return WillPopScope(
-      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
-          ? () async => false
-          : () async => _onBackPressed(context),
+    return PopScope(
+      canPop: false,
       child: Scaffold(
-        body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
+        body: BlocBuilder<ReferralReconServiceDefinitionBloc,
+            ReferralReconServiceDefinitionState>(
           builder: (context, state) {
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
@@ -77,10 +72,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null)) {
-                      additionalController.add(TextEditingController());
-                    }
                   });
 
                   // Set the flag to true after initializing controllers
@@ -93,25 +84,44 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  header: Column(children: [
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null))
-                      const BackNavigationHelpHeaderWidget(),
-                  ]),
                   enableFixedButton: true,
-                  footer: BlocListener<LocationBloc, LocationState>(
-                    listener: (context, state) async {
-                      if (state.accuracy != null && triggerLocalization) {
-                        triggerLocalization = false;
+                  footer: DigitCard(
+                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    child: DigitElevatedButton(
+                      onPressed: () async {
                         final router = context.router;
-                        // close the location capturing `dialog`
-                        DigitComponentsUtils().hideDialog(context);
+                        submitTriggered = true;
 
-                        // Wait for the location to be obtained
-                        final locationState =
-                            context.read<LocationBloc>().state;
-                        double? latitude = locationState.latitude;
-                        double? longitude = locationState.longitude;
+                        context.read<ServiceBloc>().add(
+                              const ServiceChecklistEvent(
+                                value: '',
+                                submitTriggered: true,
+                              ),
+                            );
+                        final isValid =
+                            checklistFormKey.currentState?.validate();
+                        if (!isValid!) {
+                          return;
+                        }
+                        final itemsAttributes = initialAttributes;
+
+                        for (int i = 0; i < controller.length; i++) {
+                          if (itemsAttributes?[i].required == true &&
+                              ((itemsAttributes?[i].dataType ==
+                                          'SingleValueList' &&
+                                      visibleChecklistIndexes
+                                          .any((e) => e == i) &&
+                                      (controller[i].text == '')) ||
+                                  (itemsAttributes?[i].dataType !=
+                                          'SingleValueList' &&
+                                      (controller[i].text == '' &&
+                                          !(widget.referralClientRefId !=
+                                              null))))) {
+                            return;
+                          }
+                        }
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -127,83 +137,29 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 i18.checklist.checklistDialogPrimaryAction,
                               ),
                               action: (ctx) {
-                                final referenceId = IdGen.i.identifier;
                                 List<ServiceAttributesModel> attributes = [];
                                 for (int i = 0; i < controller.length; i++) {
                                   final attribute = initialAttributes;
-
-                                  /// Conditionally add the 'reason' field if additionalDetails is present
-                                  final String? additionalDetailValue =
-                                      isHealthFacilityWorker &&
-                                              widget.referralClientRefId != null
-                                          ? null
-                                          : ((attribute?[i].values?.length ==
-                                                          2 ||
-                                                      attribute?[i]
-                                                              .values
-                                                              ?.length ==
-                                                          3) &&
-                                                  controller[i].text ==
-                                                      attribute?[i]
-                                                          .values?[1]
-                                                          .trim())
-                                              ? additionalController[i]
-                                                      .text
-                                                      .toString()
-                                                      .isNotEmpty
-                                                  ? additionalController[i]
-                                                      .text
-                                                      .toString()
-                                                  : null
-                                              : null;
-
                                   attributes.add(ServiceAttributesModel(
-                                    auditDetails: AuditDetails(
-                                      createdBy: context.loggedInUserUuid,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    attributeCode: '${attribute?[i].code}',
-                                    dataType: attribute?[i].dataType,
-                                    clientReferenceId: IdGen.i.identifier,
-                                    referenceId: isHealthFacilityWorker &&
-                                            widget.referralClientRefId != null
-                                        ? widget.referralClientRefId
-                                        : referenceId,
-                                    value: attribute?[i].dataType !=
-                                            'SingleValueList'
-                                        ? controller[i]
-                                                .text
-                                                .toString()
-                                                .trim()
-                                                .isNotEmpty
-                                            ? controller[i].text.toString()
-                                            : ''
-                                        : visibleChecklistIndexes.contains(i)
-                                            ? controller[i].text.toString()
-                                            : i18.checklist.notSelectedKey,
-                                    rowVersion: 1,
-                                    tenantId: attribute?[i].tenantId,
-                                    additionalFields:
-                                        ServiceAttributesAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                        AdditionalField(
-                                          'latitude',
-                                          latitude,
-                                        ),
-                                        AdditionalField(
-                                          'longitude',
-                                          longitude,
-                                        ),
-                                        if (additionalDetailValue != null)
-                                          AdditionalField(
-                                            'reason',
-                                            additionalDetailValue,
-                                          ),
-                                      ],
-                                    ),
-                                  ));
+                                      attributeCode: '${attribute?[i].code}',
+                                      dataType: attribute?[i].dataType,
+                                      clientReferenceId: IdGen.i.identifier,
+                                      referenceId: widget.referralClientRefId,
+                                      value: attribute?[i].dataType !=
+                                              'SingleValueList'
+                                          ? controller[i]
+                                                  .text
+                                                  .toString()
+                                                  .trim()
+                                                  .isNotEmpty
+                                              ? controller[i].text.toString()
+                                              : ''
+                                          : visibleChecklistIndexes.contains(i)
+                                              ? controller[i].text.toString()
+                                              : i18.checklist.notSelectedKey,
+                                      rowVersion: 1,
+                                      tenantId: attribute?[i].tenantId,
+                                      additionalDetails: null));
                                 }
 
                                 context.read<ServiceBloc>().add(
@@ -214,23 +170,19 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             DateTime.now()
                                                 .toLocal()
                                                 .millisecondsSinceEpoch,
-                                            dateFormat: Constants
-                                                .checklistViewDateFormat,
+                                            dateFormat: defaultDateTimeFormat,
                                           ),
                                           tenantId: value
                                               .selectedServiceDefinition!
                                               .tenantId,
-                                          clientId: isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null
-                                              ? widget.referralClientRefId
-                                                  .toString()
-                                              : referenceId,
+                                          clientId: widget.referralClientRefId
+                                              .toString(),
                                           serviceDefId: value
                                               .selectedServiceDefinition?.id,
                                           attributes: attributes,
                                           rowVersion: 1,
-                                          accountId: context.projectId,
+                                          accountId: ReferralReconSingleton()
+                                              .projectId,
                                           auditDetails: AuditDetails(
                                             createdBy: context.loggedInUserUuid,
                                             createdTime: DateTime.now()
@@ -247,8 +199,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           additionalDetails: {
-                                            "boundaryCode":
-                                                context.boundary.code
+                                            'boundaryCode':
+                                                context.boundary.code,
                                           },
                                         ),
                                       ),
@@ -274,66 +226,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          router.navigate(ChecklistRoute());
-
-                          router.push(AcknowledgementRoute());
+                          router.maybePop();
+                          router.push(ReferralReconAcknowledgementRoute());
                         }
-                      }
-                    },
-                    child: DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                      padding:
-                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                      child: DigitElevatedButton(
-                        onPressed: () async {
-                          submitTriggered = true;
-
-                          context.read<ServiceBloc>().add(
-                                const ServiceChecklistEvent(
-                                  value: '',
-                                  submitTriggered: true,
-                                ),
-                              );
-                          final isValid =
-                              checklistFormKey.currentState?.validate();
-                          if (!isValid!) {
-                            return;
-                          }
-                          final itemsAttributes = initialAttributes;
-
-                          for (int i = 0; i < controller.length; i++) {
-                            if (itemsAttributes?[i].required == true &&
-                                ((itemsAttributes?[i].dataType ==
-                                            'SingleValueList' &&
-                                        visibleChecklistIndexes
-                                            .any((e) => e == i) &&
-                                        (controller[i].text == '')) ||
-                                    (itemsAttributes?[i].dataType !=
-                                            'SingleValueList' &&
-                                        (controller[i].text == '' &&
-                                            !(isHealthFacilityWorker &&
-                                                widget.referralClientRefId !=
-                                                    null))))) {
-                              return;
-                            }
-                          }
-
-                          triggerLocalization = true;
-
-                          // Request location from LocationBloc
-                          context
-                              .read<LocationBloc>()
-                              .add(const LocationEvent.load());
-                          DigitComponentsUtils().showLocationCapturingDialog(
-                            context,
-                            localizations
-                                .translate(i18.common.locationCapturing),
-                            DigitSyncDialogType.inProgress,
-                          );
-                        },
-                        child: Text(
-                          localizations.translate(i18.common.coreCommonSubmit),
-                        ),
+                      },
+                      child: Text(
+                        localizations.translate(i18.common.coreCommonSubmit),
                       ),
                     ),
                   ),
@@ -375,9 +273,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
-                                      return localizations.translate(
-                                        i18.common.corecommonRequired,
-                                      );
+                                      return localizations
+                                          .translate("${e.code}_REQUIRED");
                                     }
                                     if (e.regex != null) {
                                       return (RegExp(e.regex!).hasMatch(value!))
@@ -498,82 +395,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       context,
                                     ),
                                   ),
-                              ] else if (e.dataType == 'Boolean') ...[
-                                if (!(e.code ?? '').contains('.'))
-                                  DigitCard(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  '${localizations.translate(
-                                                    '${selectedServiceDefinition?.code}.${e.code}',
-                                                  )} ${e.required == true ? '*' : ''}',
-                                                  style: theme
-                                                      .textTheme.headlineSmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        BlocBuilder<ServiceBloc, ServiceState>(
-                                          builder: (context, state) {
-                                            return SelectionBox<bool>(
-                                              //label: e,
-                                              allowMultipleSelection: false,
-                                              width: 110,
-                                              valueMapper: (value) {
-                                                return value
-                                                    ? localizations.translate(
-                                                        i18.common
-                                                            .coreCommonYes,
-                                                      )
-                                                    : localizations.translate(
-                                                        i18.common.coreCommonNo,
-                                                      );
-                                              },
-                                              initialSelection:
-                                                  controller[index].text ==
-                                                          'true'
-                                                      ? [true]
-                                                      : controller[index]
-                                                                  .text ==
-                                                              'false'
-                                                          ? [false]
-                                                          : [],
-                                              options: const [
-                                                true,
-                                                false
-                                              ], // TODO: need to update
-                                              onSelectionChanged: (curValue) {
-                                                if (curValue.isNotEmpty) {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceChecklistEvent(
-                                                          value: curValue
-                                                              .toString(),
-                                                          submitTriggered:
-                                                              submitTriggered,
-                                                        ),
-                                                      );
-                                                  controller[index].value =
-                                                      TextEditingValue(
-                                                    text: curValue.first
-                                                        .toString(),
-                                                  );
-                                                }
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                               ],
                             ]);
                           }),
@@ -599,10 +420,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
     final theme = Theme.of(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
@@ -658,7 +475,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            // controller[childIndex].clear();
+                            controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -675,14 +492,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         if (excludedIndexes.isNotEmpty) {
                           for (int i = 0; i < excludedIndexes.length; i++) {
                             // Clear excluded child controllers
-                            if (item.dataType != 'SingleValueList') {
-                              // controller[excludedIndexes[i]].value =
-                              //     TextEditingController.fromValue(
-                              //   const TextEditingValue(
-                              //     text: '',
-                              //   ),
-                              // ).value;
-                            }
+                            controller[excludedIndexes[i]].value =
+                                TextEditingController.fromValue(
+                              const TextEditingValue(
+                                text: '',
+                              ),
+                            ).value;
                           }
                         }
 
@@ -700,38 +515,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                       ),
                     ),
                   );
-                },
-              ),
-              BlocBuilder<ServiceBloc, ServiceState>(
-                builder: (context, state) {
-                  return (controller[index].text == item.values?[1].trim() &&
-                          !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null))
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                            left: 4.0,
-                            right: 4.0,
-                            bottom: 16,
-                          ),
-                          child: DigitTextField(
-                            maxLength: 1000,
-                            isRequired: true,
-                            controller: additionalController[index],
-                            label: localizations.translate(
-                              '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
-                            ),
-                            validator: (value1) {
-                              if (value1 == null || value1 == '') {
-                                return localizations.translate(
-                                  i18.common.coreCommonReasonRequired,
-                                );
-                              }
-
-                              return null;
-                            },
-                          ),
-                        )
-                      : const SizedBox();
                 },
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -773,7 +556,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DigitTextField(
-          maxLength: 1000,
           onChange: (value) {
             checklistFormKey.currentState?.validate();
           },
@@ -786,9 +568,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
           ],
           validator: (value) {
             if (((value == null || value == '') && item.required == true)) {
-              return localizations.translate(
-                i18.common.corecommonRequired,
-              );
+              return localizations.translate("${item.code}_REQUIRED");
             }
             if (item.regex != null) {
               return (RegExp(item.regex!).hasMatch(value!))
@@ -889,62 +669,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
           ),
         ],
       );
-    } else if (item.dataType == 'Boolean') {
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text(
-                    '${localizations.translate(
-                      '${selectedServiceDefinition?.code}.${item.code}',
-                    )} ${item.required == true ? '*' : ''}',
-                    style: theme.textTheme.headlineSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          BlocBuilder<ServiceBloc, ServiceState>(
-            builder: (context, state) {
-              return SelectionBox<bool>(
-                //label: e,
-                allowMultipleSelection: false,
-                width: 110,
-                valueMapper: (value) {
-                  return value ? 'Yes' : 'No';
-                },
-                initialSelection: const [false],
-                options: const [true, false],
-                onSelectionChanged: (valuec) {
-                  context.read<ServiceBloc>().add(
-                        ServiceChecklistEvent(
-                          value: valuec.toString(),
-                          submitTriggered: submitTriggered,
-                        ),
-                      );
-                  final String ele;
-                  var val = controller[index].text.split('.');
-                  if (val.contains(e)) {
-                    val.remove(e);
-                    ele = val.join(".");
-                  } else {
-                    ele = "${controller[index].text}.$e";
-                  }
-                  controller[index].value = TextEditingController.fromValue(
-                    TextEditingValue(
-                      text: ele,
-                    ),
-                  ).value;
-                },
-              );
-            },
-          ),
-        ],
-      );
     } else {
       return const SizedBox.shrink();
     }
@@ -975,8 +699,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 : const DigitColors().white,
             child: _buildChecklist(
               matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-              // Pass parentIndex here as we're building at the same level
+              initialAttributes?.indexOf(matchingChildItem) ??
+                  parentIndex, // Pass parentIndex here as we're building at the same level
               selectedServiceDefinition,
               context,
             ),
@@ -1008,43 +732,5 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     }
 
     return dotCount;
-  }
-
-  Future<bool> _onBackPressed(BuildContext context) async {
-    bool? shouldNavigateBack = await showDialog<bool>(
-      context: context,
-      builder: (context) => DigitDialog(
-        options: DigitDialogOptions(
-          titleText: localizations.translate(
-            i18.checklist.checklistBackDialogLabel,
-          ),
-          content: Text(localizations.translate(
-            i18.checklist.checklistBackDialogDescription,
-          )),
-          primaryAction: DigitDialogActions(
-            label: localizations
-                .translate(i18.checklist.checklistBackDialogPrimaryAction),
-            action: (ctx) {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pop(true);
-            },
-          ),
-          secondaryAction: DigitDialogActions(
-            label: localizations
-                .translate(i18.checklist.checklistBackDialogSecondaryAction),
-            action: (context) {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pop(false);
-            },
-          ),
-        ),
-      ),
-    );
-
-    return shouldNavigateBack ?? false;
   }
 }
