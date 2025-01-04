@@ -18,6 +18,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/action_card/action_card.dart';
@@ -122,8 +123,8 @@ class _CustomHouseholdOverviewBednetPageState
                                     child: Center(
                                       child: Text(
                                         localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewActionText,
+                                          i18_local.householdDetails
+                                              .bednetHouseholdOverViewActionText,
                                         ),
                                       ),
                                     ),
@@ -749,8 +750,8 @@ class _CustomHouseholdOverviewBednetPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
-          : Status.registered.toValue();
+          ? i18_local.deliverIntervention.delivered
+          : i18_local.deliverIntervention.notDelivered;
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? (state.householdMemberWrapper.tasks?.last.status ==

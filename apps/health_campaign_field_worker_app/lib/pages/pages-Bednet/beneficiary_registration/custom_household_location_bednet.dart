@@ -13,7 +13,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import '../../../models/entities/project_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/extensions/extensions.dart' as contextLocal;
-import '../../../utils/i18_key_constants.dart' as i18Local;
+import '../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -64,7 +64,7 @@ class _CustomHouseholdLocationBednetPageState
             // Show the dialog after the first frame is built
             DigitComponentsUtils().showLocationCapturingDialog(
               context,
-              localizations.translate(i18Local.common.locationCapturing),
+              localizations.translate(i18_local.common.locationCapturing),
               DigitSyncDialogType.inProgress,
             );
           });
@@ -186,7 +186,8 @@ class _CustomHouseholdLocationBednetPageState
                               addressModel,
                             ),
                           );
-                          router.push(HouseDetailsRoute());
+                          router.push(CustomHouseHoldDetailsBednetRoute(
+                              isEligible: true));
                         }, editHousehold: (
                           address,
                           householdModel,
@@ -209,13 +210,14 @@ class _CustomHouseholdLocationBednetPageState
                               addressModel,
                             ),
                           );
-                          router.push(HouseDetailsRoute());
+                          router.push(CustomHouseHoldDetailsBednetRoute(
+                              isEligible: true));
                         });
                       },
                       child: Center(
                         child: Text(
                           localizations.translate(
-                            i18Local.householdLocation.actionLabel,
+                            i18_local.householdLocation.actionLabel,
                           ),
                         ),
                       ),
@@ -233,12 +235,12 @@ class _CustomHouseholdLocationBednetPageState
                         TextBlock(
                             padding: const EdgeInsets.only(top: kPadding),
                             heading: localizations.translate(
-                              i18Local
+                              i18_local
                                   .householdLocation.householdLocationLabelText,
                             ),
                             headingStyle: theme.textTheme.displayMedium,
                             body: localizations.translate(
-                              i18Local.householdLocation
+                              i18_local.householdLocation
                                   .householdLocationDescriptionText,
                             )),
                         Column(children: [
@@ -247,14 +249,14 @@ class _CustomHouseholdLocationBednetPageState
                             child: DigitTextFormField(
                               formControlName: _administrationAreaKey,
                               label: localizations.translate(
-                                i18Local.householdLocation
+                                i18_local.householdLocation
                                     .administrationAreaFormLabel,
                               ),
                               readOnly: true,
                               isRequired: true,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
-                                      i18Local.householdLocation
+                                      i18_local.householdLocation
                                           .administrationAreaRequiredValidation,
                                     ),
                               },
@@ -263,7 +265,7 @@ class _CustomHouseholdLocationBednetPageState
                           householdLocationShowcaseData.gpsAccuracy.buildWith(
                             child: CustomDigitTextFormField(
                               suffixString: localizations.translate(
-                                i18Local.common.metersLabel,
+                                i18_local.common.metersLabel,
                               ),
                               readOnly: true,
                               formControlName: _accuracyKey,

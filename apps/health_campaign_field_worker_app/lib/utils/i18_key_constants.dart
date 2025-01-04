@@ -16,6 +16,7 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
+const deliverIntervention = DeliverIntervention();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -269,6 +270,8 @@ class HouseholdDetails {
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+  String get bednetHouseholdOverViewActionText =>
+      'BEDNET_HOUSEHOLD_OVERVIEW_ACTION_LABEL';
 }
 
 class StockDetailsReceiptShowcase {
@@ -968,6 +971,10 @@ class IndividualDetails {
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
+  String get individualsDetailsLabelTextSMC => 'INDIVIDUAL_LABEL_TEXT_SMC';
+  String get individualsChildDetailsLabelTextSMC =>
+      'INDIVIDUAL_CHILD_LABEL_TEXT_SMC';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
@@ -1009,6 +1016,19 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelTextSMC =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT_SMC';
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+  String get firstNameHeadLabelTextSMC => 'FIRST_NAME_HEAD_LABEL_TEXT_SMC';
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+  String get mobileMinLengthValidationMessageSMC =>
+      'MOBILE_MIN_LENGTH_VALIDATION_SMC';
 }
 
 class BeneficiaryDetails {
@@ -1178,4 +1198,30 @@ class Attendance {
   const Attendance();
 
   String get comments => 'ATTENDANCE_COMMENTS_FIELD';
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+
+  String get memberCountText => "MEMBER_COUNT_TEXT";
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
+
+  String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
+  String get infoWrittenInChildCard =>
+      'DELIVER_INTERVENTION_DOSE_INFO_IN_CHILD_CARD_ADDED';
+  String get healthTalkGivenOnSPAQ =>
+      'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get informationBulletOne => 'INFORMATION_BULLET_ONE';
+  String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
+  String get informationBulletThree => 'INFORMATION_BULLET_THREE';
+  String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get notDelivered => 'NOT_DELIVERED';
+  String get delivered => 'DELIVERED';
+  String get resourceDelivered => 'RESOURCE_DELIVERED';
+  String get numberOfResourceDelivered => 'NUMBER_OF_RESOURCE_DELIVERED_LABEL';
+  String get scanBednet => 'SCAN_THE_BEDNET';
 }

@@ -31,6 +31,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../../widgets/custom_digit_dob_picker.dart';
 import '../../../widgets/localized.dart';
+import '../../../widgets/widgets_bednet/custom_digit_dob_picker_bednet.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
 // as registration_delivery_localization;
 
@@ -54,6 +55,7 @@ class CustomIndividualDetailsBednetPage extends LocalizedStatefulWidget {
 class CustomIndividualDetailsBednetPageState
     extends LocalizedState<CustomIndividualDetailsBednetPage> {
   static const _individualNameKey = 'individualName';
+  static const _individualLastNameKey = 'individualLastName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
@@ -69,6 +71,7 @@ class CustomIndividualDetailsBednetPageState
     final router = context.router;
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
+    DateTime before18Years = DateTime(now.year - 18, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
     bool isEligible = widget.isEligible;
 
@@ -124,7 +127,7 @@ class CustomIndividualDetailsBednetPageState
                           if (!isEligible) {
                             if (isEditIndividual) {
                               parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryRoute.name);
+                                  CustomSearchBeneficiaryBednetRoute.name);
                               parent.push(CustomHouseholdWrapperRoute(
                                   wrapper:
                                       searchBlocState.householdMembers.first));
@@ -201,13 +204,13 @@ class CustomIndividualDetailsBednetPageState
                           } else {
                             if (isEditIndividual) {
                               parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryRoute.name);
+                                  CustomSearchBeneficiaryBednetRoute.name);
                               parent.push(CustomHouseholdWrapperRoute(
                                   wrapper:
                                       searchBlocState.householdMembers.first));
                             } else {
                               parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryRoute.name);
+                                  CustomSearchBeneficiaryBednetRoute.name);
                               parent.push(CustomHouseholdWrapperRoute(
                                   wrapper:
                                       searchBlocState.householdMembers.first));
@@ -215,7 +218,7 @@ class CustomIndividualDetailsBednetPageState
                           }
                         } else {
                           parent.popUntilRouteWithName(
-                              CustomSearchBeneficiaryRoute.name);
+                              CustomSearchBeneficiaryBednetRoute.name);
                         }
                       },
                     );
@@ -589,40 +592,71 @@ class CustomIndividualDetailsBednetPageState
                           individualDetailsShowcaseData.nameOfIndividual
                               .buildWith(
                             child: DigitTextFormField(
-                              formControlName: 'individualName',
+                              formControlName: _individualNameKey,
                               label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
+                                widget.isHeadOfHousehold
+                                    ? i18_local.individualDetails
+                                        .firstNameHeadLabelTextSMC
+                                    : i18_local.individualDetails
+                                        .childFirstNameLabelTextSMC,
                               ),
                               isRequired: true,
                               validationMessages: {
                                 'required': (object) => localizations.translate(
                                       '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                     ),
-                                'min3': (object) => localizations
-                                    .translate(
-                                        i18_local.common.min3CharsRequired)
-                                    .replaceAll('{}', ''),
                                 'maxLength': (object) => localizations
                                     .translate(i18.common.maxCharsRequired)
                                     .replaceAll('{}', maxLength.toString()),
+                                "min3": (object) => localizations.translate(
+                                      i18_local.common.min3CharsRequired,
+                                    ),
                               },
                             ),
                           ),
+                          DigitTextFormField(
+                            formControlName: _individualLastNameKey,
+                            label: localizations.translate(
+                              widget.isHeadOfHousehold
+                                  ? i18_local
+                                      .individualDetails.lastNameHeadLabelText
+                                  : i18_local
+                                      .individualDetails.childLastNameLabelText,
+                            ),
+                            maxLength: 200,
+                            isRequired: true,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    i18_local.individualDetails
+                                        .lastNameIsRequiredError,
+                                  ),
+                              'minLength': (object) => localizations.translate(
+                                    i18_local
+                                        .individualDetails.lastNameLengthError,
+                                  ),
+                              'maxLength': (object) => localizations.translate(
+                                    i18_local
+                                        .individualDetails.lastNameLengthError,
+                                  ),
+                              "min3": (object) => localizations.translate(
+                                    i18_local.common.min3CharsRequired,
+                                  ),
+                            },
+                          ),
                           // solution customisation
-                          // Offstage(
-                          //   offstage: !widget.isHeadOfHousehold,
-                          //   child: DigitCheckbox(
-                          //     label: localizations.translate(
-                          //       i18.individualDetails.checkboxLabelText,
-                          //     ),
-                          //     value: widget.isHeadOfHousehold,
-                          //   ),
-                          // ),
+                          Offstage(
+                            offstage: !widget.isHeadOfHousehold,
+                            child: DigitCheckbox(
+                              label: localizations.translate(
+                                i18.individualDetails.checkboxLabelText,
+                              ),
+                              value: widget.isHeadOfHousehold,
+                            ),
+                          ),
                           const SizedBox(
                             height: 10,
                           ),
-                          CustomDigitDobPicker(
-                            isEligible: isEligible,
+                          CustomDigitDobPickerBednet(
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
@@ -637,9 +671,10 @@ class CustomIndividualDetailsBednetPageState
                               i18.individualDetails.separatorLabelText,
                             ),
                             yearsAndMonthsErrMsg: localizations.translate(
-                              i18.individualDetails.yearsAndMonthsErrorText,
+                              i18_local.individualDetails.yearsErrorText,
                             ),
                             initialDate: before150Years,
+                            endDate: before18Years,
                             onChangeOfFormControl: (formControl) {
                               // Handle changes to the control's value here
                               final value = formControl.value;
@@ -827,6 +862,8 @@ class CustomIndividualDetailsBednetPageState
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
+        familyName:
+            (form.control(_individualLastNameKey).value as String).trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -878,6 +915,14 @@ class CustomIndividualDetailsBednetPageState
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
+      ),
+      _individualLastNameKey: FormControl<String>(
+        validators: [
+          Validators.required,
+          CustomValidator.requiredMin3,
+          Validators.maxLength(200),
+        ],
+        value: individual?.name?.familyName ?? '',
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

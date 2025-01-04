@@ -36,9 +36,23 @@ class CustomHouseholdAcknowledgementBednetPageState
           builder: (context, householdState) {
             return DigitAcknowledgement.success(
               action: () {
+                final wrapper = context
+                    .read<HouseholdOverviewBloc>()
+                    .state
+                    .householdMemberWrapper;
+
                 final parent = context.router.parent() as StackRouter;
+
+                context.read<SearchHouseholdsBloc>().add(
+                      SearchHouseholdsEvent.searchByHousehold(
+                        householdModel: wrapper.household!,
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        isProximityEnabled: false,
+                      ),
+                    );
                 // Pop twice to navigate back to the previous screen
-                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+                parent.popUntilRouteWithName(
+                    CustomSearchBeneficiaryBednetRoute.name);
               },
               secondaryAction: () {
                 final wrapper = context
@@ -59,7 +73,8 @@ class CustomHouseholdAcknowledgementBednetPageState
                 final searchBlocState =
                     context.read<SearchHouseholdsBloc>().state;
 
-                parent.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+                parent.popUntilRouteWithName(
+                    CustomSearchBeneficiaryBednetRoute.name);
 
                 context.router.push(
                   CustomHouseholdWrapperRoute(wrapper: wrapper),

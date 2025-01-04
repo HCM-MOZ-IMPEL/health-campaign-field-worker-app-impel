@@ -17,6 +17,7 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../models/entities/project_types.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -573,7 +574,11 @@ class BoundarySelectionViewPageState
 
                                                     if (context.mounted) {
                                                       if (isOnline &&
-                                                          isDistributor) {
+                                                          isDistributor &&
+                                                          context.projectTypeCode !=
+                                                              ProjectTypes
+                                                                  .bednet
+                                                                  .toValue()) {
                                                         context
                                                             .read<
                                                                 BeneficiaryDownSyncBloc>()

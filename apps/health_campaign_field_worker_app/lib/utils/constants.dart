@@ -102,6 +102,7 @@ class Constants {
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
   static const String commentsKey = 'comments';
+  static const String comma = ',';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

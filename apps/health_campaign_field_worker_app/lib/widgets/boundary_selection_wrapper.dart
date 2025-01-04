@@ -35,9 +35,19 @@ class BoundarySelectionWrapper extends StatelessWidget {
               },
             );
           }
-        } else {
+        } else if (context.projectTypeCode == ProjectTypes.irs.toValue()) {
           context.navigateTo(
             IRSWrapperRoute(),
+            onFailure: (failure) {
+              AppLogger.instance.error(
+                title: 'BoundarySelectionWrapper',
+                message: failure.toString(),
+              );
+            },
+          );
+        } else {
+          context.navigateTo(
+            BednetWrapperRoute(),
             onFailure: (failure) {
               AppLogger.instance.error(
                 title: 'BoundarySelectionWrapper',

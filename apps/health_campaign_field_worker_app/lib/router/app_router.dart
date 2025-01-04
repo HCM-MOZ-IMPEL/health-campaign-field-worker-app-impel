@@ -1399,7 +1399,7 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: CustomBeneficiaryDetailsBednetRoute.page,
                       path: 'custom-beneficiary-details-bednet',
-                      initial: true,
+                      // initial: true,
                     ),
                     RedirectRoute(
                       path: 'beneficiary-details',
@@ -1412,6 +1412,7 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: CustomDeliverInterventionBednetRoute.page,
                       path: 'custom-deliver-intervention-bednet',
+                      initial: true,
                     ),
                     RedirectRoute(
                       path: 'deliver-intervention',

@@ -52,11 +52,6 @@ class CustomHouseHoldDetailsBednetPageState
     extends LocalizedState<CustomHouseHoldDetailsBednetPage> {
   static const _dateOfRegistrationKey = 'dateOfRegistration';
   static const _memberCountKey = 'memberCount';
-  static const _pregnantWomenCountKey = 'pregnantWomenCount';
-  static const _childrenCountKey = 'childrenCount';
-  static const _menCountKey = 'menCount';
-  static const _womenCountKey = 'womenCount';
-  static const _genderKey = 'genderOfInterviewee';
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +63,6 @@ class CustomHouseHoldDetailsBednetPageState
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
         builder: (context, form, child) {
-          int pregnantWomen = widget.isEligible
-              ? form.control(_pregnantWomenCountKey).value as int
-              : 0;
-          int children = widget.isEligible
-              ? form.control(_childrenCountKey).value as int
-              : 0;
-
-          int men =
-              widget.isEligible ? form.control(_menCountKey).value as int : 0;
-          int women =
-              widget.isEligible ? form.control(_womenCountKey).value as int : 0;
           int memberCount = form.control(_memberCountKey).value;
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
@@ -199,11 +183,6 @@ class CustomHouseHoldDetailsBednetPageState
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () async {
-                      if (form.control(_genderKey).value == null) {
-                        setState(() {
-                          form.control(_genderKey).setErrors({'': true});
-                        });
-                      }
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
@@ -213,20 +192,6 @@ class CustomHouseHoldDetailsBednetPageState
                       final dateOfRegistration = form
                           .control(_dateOfRegistrationKey)
                           .value as DateTime;
-
-                      final pregnantWomen = widget.isEligible
-                          ? form.control(_pregnantWomenCountKey).value as int
-                          : 0;
-                      final children = widget.isEligible
-                          ? form.control(_childrenCountKey).value as int
-                          : 0;
-
-                      final men = widget.isEligible
-                          ? form.control(_menCountKey).value as int
-                          : 0;
-                      final women = widget.isEligible
-                          ? form.control(_womenCountKey).value as int
-                          : 0;
 
                       if (memberCount <= 0) {
                         DigitToast.show(
@@ -239,66 +204,7 @@ class CustomHouseHoldDetailsBednetPageState
                           ),
                         );
                         return;
-                      } else if (widget.isEligible &&
-                          (memberCount < (men + women))) {
-                        DigitToast.show(context,
-                            options: DigitToastOptions(
-                                localizations.translate(
-                                    i18.householdDetails.memberCountError),
-                                true,
-                                theme));
-                      } else if (widget.isEligible &&
-                          (memberCount < children || women < pregnantWomen)) {
-                        DigitToast.show(context,
-                            options: DigitToastOptions(
-                                localizations.translate(i18_local
-                                    .beneficiaryDetails
-                                    .invalidChildPregnantWomenCount),
-                                true,
-                                theme));
                       } else {
-                        if (memberCount > 10) {
-                          final shouldSubmit = await DigitDialog.show<bool>(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(
-                                i18_local
-                                    .beneficiaryDetails.noOfMembersAlertTitle,
-                              ),
-                              contentText: localizations.translate(
-                                i18_local
-                                    .beneficiaryDetails.noOfMembersAlertContent,
-                              ),
-                              primaryAction: DigitDialogActions(
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfMembersAlertYes,
-                                ),
-                                action: (ctx) {
-                                  Navigator.of(
-                                    context,
-                                    rootNavigator: true,
-                                  ).pop(true);
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfMembersAlertNo,
-                                ),
-                                action: (context) => Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(false),
-                              ),
-                            ),
-                          );
-
-                          if (!(shouldSubmit ?? false)) {
-                            return;
-                          }
-                        }
-
                         registrationState.maybeWhen(
                           orElse: () {
                             return;
@@ -342,88 +248,37 @@ class CustomHouseHoldDetailsBednetPageState
                             );
 
                             household = household.copyWith(
-                                rowVersion: 1,
-                                tenantId:
-                                    RegistrationDeliverySingleton().tenantId,
-                                clientReferenceId:
-                                    householdModel?.clientReferenceId ??
-                                        IdGen.i.identifier,
-                                memberCount: memberCount,
-                                clientAuditDetails: ClientAuditDetails(
-                                  createdBy: RegistrationDeliverySingleton()
-                                      .loggedInUserUuid
-                                      .toString(),
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy:
-                                      RegistrationDeliverySingleton()
-                                          .loggedInUserUuid
-                                          .toString(),
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
-                                auditDetails: AuditDetails(
-                                  createdBy: RegistrationDeliverySingleton()
-                                      .loggedInUserUuid
-                                      .toString(),
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy:
-                                      RegistrationDeliverySingleton()
-                                          .loggedInUserUuid
-                                          .toString(),
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
-                                address: addressModel,
-                                additionalFields: HouseholdAdditionalFields(
-                                    version: 1,
-                                    fields: [
-                                      //[TODO: Use pregnant women form value based on project config
-                                      ...?householdModel
-                                          ?.additionalFields?.fields
-                                          .where((e) =>
-                                              e.key !=
-                                                  AdditionalFieldsType
-                                                      .pregnantWomen
-                                                      .toValue() &&
-                                              e.key !=
-                                                  AdditionalFieldsType.children
-                                                      .toValue() &&
-                                              e.key != _menCountKey &&
-                                              e.key != _womenCountKey &&
-                                              e.key != _genderKey),
-                                      AdditionalField(
-                                        _genderKey,
-                                        form.control(_genderKey).value == null
-                                            ? null
-                                            : form
-                                                .control(_genderKey)
-                                                .value
-                                                .toString()
-                                                .toLowerCase(),
-                                      ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          AdditionalFieldsType.pregnantWomen
-                                              .toValue(),
-                                          pregnantWomen,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          AdditionalFieldsType.children
-                                              .toValue(),
-                                          children,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          _menCountKey,
-                                          men,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          _womenCountKey,
-                                          women,
-                                        )
-                                    ]));
+                              rowVersion: 1,
+                              tenantId:
+                                  RegistrationDeliverySingleton().tenantId,
+                              clientReferenceId:
+                                  householdModel?.clientReferenceId ??
+                                      IdGen.i.identifier,
+                              memberCount: memberCount,
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
+                              ),
+                              auditDetails: AuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
+                              ),
+                              address: addressModel,
+                            );
 
                             bloc.add(
                               BeneficiaryRegistrationSaveHouseholdDetailsEvent(
@@ -453,80 +308,28 @@ class CustomHouseHoldDetailsBednetPageState
                             isHeadOfHousehold,
                           ) {
                             var household = householdModel.copyWith(
-                                memberCount: memberCount,
-                                address: addressModel,
-                                clientAuditDetails: (householdModel
-                                                .clientAuditDetails
-                                                ?.createdBy !=
-                                            null &&
-                                        householdModel.clientAuditDetails
-                                                ?.createdTime !=
-                                            null)
-                                    ? ClientAuditDetails(
-                                        createdBy: householdModel
-                                            .clientAuditDetails!.createdBy,
-                                        createdTime: householdModel
-                                            .clientAuditDetails!.createdTime,
-                                        lastModifiedBy:
-                                            RegistrationDeliverySingleton()
-                                                .loggedInUserUuid,
-                                        lastModifiedTime: DateTime.now()
-                                            .millisecondsSinceEpoch,
-                                      )
-                                    : null,
-                                rowVersion: householdModel.rowVersion,
-                                additionalFields: HouseholdAdditionalFields(
-                                    version: householdModel
-                                            .additionalFields?.version ??
-                                        1,
-                                    fields: [
-                                      //[TODO: Use pregnant women form value based on project config
-                                      ...?householdModel
-                                          .additionalFields?.fields
-                                          .where((e) =>
-                                              e.key !=
-                                                  AdditionalFieldsType
-                                                      .pregnantWomen
-                                                      .toValue() &&
-                                              e.key !=
-                                                  AdditionalFieldsType.children
-                                                      .toValue() &&
-                                              e.key != _menCountKey &&
-                                              e.key != _womenCountKey &&
-                                              e.key != _genderKey),
-                                      AdditionalField(
-                                        _genderKey,
-                                        form.control(_genderKey).value == null
-                                            ? null
-                                            : form
-                                                .control(_genderKey)
-                                                .value
-                                                .toString()
-                                                .toLowerCase(),
-                                      ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          AdditionalFieldsType.pregnantWomen
-                                              .toValue(),
-                                          pregnantWomen,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          AdditionalFieldsType.children
-                                              .toValue(),
-                                          children,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          _menCountKey,
-                                          men,
-                                        ),
-                                      if (widget.isEligible)
-                                        AdditionalField(
-                                          _womenCountKey,
-                                          women,
-                                        )
-                                    ]));
+                              memberCount: memberCount,
+                              address: addressModel,
+                              clientAuditDetails: (householdModel
+                                              .clientAuditDetails?.createdBy !=
+                                          null &&
+                                      householdModel.clientAuditDetails
+                                              ?.createdTime !=
+                                          null)
+                                  ? ClientAuditDetails(
+                                      createdBy: householdModel
+                                          .clientAuditDetails!.createdBy,
+                                      createdTime: householdModel
+                                          .clientAuditDetails!.createdTime,
+                                      lastModifiedBy:
+                                          RegistrationDeliverySingleton()
+                                              .loggedInUserUuid,
+                                      lastModifiedTime:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                    )
+                                  : null,
+                              rowVersion: householdModel.rowVersion,
+                            );
 
                             bloc.add(
                               BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
@@ -635,171 +438,20 @@ class CustomHouseHoldDetailsBednetPageState
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: SelectionBox<String>(
-                                isRequired: true,
-                                title: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.genderOfInterviewee,
-                                ),
-                                allowMultipleSelection: false,
-                                width: 148,
-                                initialSelection:
-                                    form.control(_genderKey).value != null
-                                        ? [form.control(_genderKey).value]
-                                        : [],
-                                options: RegistrationDeliverySingleton()
-                                    .genderOptions!
-                                    .map(
-                                      (e) => e,
-                                    )
-                                    .toList(),
-                                onSelectionChanged: (value) {
-                                  setState(() {
-                                    if (value.isNotEmpty) {
-                                      form.control(_genderKey).value =
-                                          value.first;
-                                    } else {
-                                      form.control(_genderKey).value = null;
-                                      setState(() {
-                                        form
-                                            .control(_genderKey)
-                                            .setErrors({'': true});
-                                      });
-                                    }
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations.translate(value);
-                                },
-                                errorMessage: form.control(_genderKey).hasErrors
-                                    ? localizations.translate(
-                                        i18.common.corecommonRequired)
-                                    : null,
-                              ),
-                            ),
-                            if (widget.isEligible)
-                              DigitIntegerFormPicker(
-                                minimum: 0,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  form.control(_memberCountKey).value =
-                                      men + women;
-                                },
-                                form: form,
-                                formControlName: _menCountKey,
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfMenCountLabel,
-                                ),
-                                incrementer: true,
-                              ),
-                            if (widget.isEligible)
-                              DigitIntegerFormPicker(
-                                minimum: 0,
-                                maximum: 20,
-                                onChange: () {
-                                  int men = form.control(_menCountKey).value;
-                                  int women =
-                                      form.control(_womenCountKey).value;
-                                  form.control(_memberCountKey).value =
-                                      men + women;
-                                },
-                                form: form,
-                                formControlName: _womenCountKey,
-                                label: localizations.translate(
-                                  i18_local
-                                      .beneficiaryDetails.noOfWomenCountLabel,
-                                ),
-                                incrementer: true,
-                              ),
-                            if (widget.isEligible)
-                              householdDetailsShowcaseData
-                                  .numberOfPregnantWomenInHousehold
-                                  .buildWith(
-                                child: DigitIntegerFormPicker(
-                                  minimum: 0,
-                                  maximum: 20,
-                                  form: form,
-                                  formControlName: _pregnantWomenCountKey,
-                                  onChange: () {
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int womenCount =
-                                        form.control(_womenCountKey).value;
-                                    form.control(_pregnantWomenCountKey).value =
-                                        womenCount < pregnantWomen
-                                            ? womenCount
-                                            : pregnantWomen;
-                                  },
-                                  label: localizations.translate(
-                                    i18.householdDetails
-                                        .noOfPregnantWomenCountLabel,
-                                  ),
-                                  incrementer: true,
-                                ),
-                              ),
-                            if (widget.isEligible)
-                              householdDetailsShowcaseData
-                                  .numberOfChildrenBelow5InHousehold
-                                  .buildWith(
-                                child: DigitIntegerFormPicker(
-                                  minimum: 0,
-                                  maximum: 20,
-                                  form: form,
-                                  formControlName: _childrenCountKey,
-                                  onChange: () {
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_childrenCountKey).value =
-                                        memberCount < children
-                                            ? memberCount
-                                            : children;
-                                  },
-                                  label: localizations.translate(
-                                    i18.householdDetails
-                                        .noOfChildrenBelow5YearsLabel,
-                                  ),
-                                  incrementer: true,
-                                ),
-                              ),
                             householdDetailsShowcaseData
                                 .numberOfMembersLivingInHousehold
                                 .buildWith(
-                              child: !widget.isEligible
-                                  ? DigitIntegerFormPicker(
-                                      minimum:
-                                          men + women != 0 ? men + women : 0,
-                                      maximum: 20,
-                                      form: form,
-                                      formControlName: _memberCountKey,
-                                      label: localizations.translate(
-                                        i18.householdDetails
-                                            .noOfMembersCountLabel,
-                                      ),
-                                      incrementer: !widget.isEligible,
-                                      // readOnly: widget.isEligible,
-                                    )
-                                  : LabeledField(
-                                      padding: const EdgeInsets.only(
-                                          top: kPadding * 2),
-                                      label: localizations.translate(
-                                        i18.householdDetails
-                                            .noOfMembersCountLabel,
-                                      ),
-                                      child: ReactiveTextField(
-                                        formControlName: _memberCountKey,
-                                        keyboardType: TextInputType.number,
-                                        readOnly: widget.isEligible,
-                                      )),
+                              child: DigitIntegerFormPicker(
+                                minimum: 1,
+                                maximum: 20,
+                                form: form,
+                                formControlName: _memberCountKey,
+                                label: localizations.translate(
+                                  i18.householdDetails.noOfMembersCountLabel,
+                                ),
+                                incrementer: true,
+                                // readOnly: widget.isEligible,
+                              ),
                             ),
                           ]),
                           const SizedBox(height: 16),
@@ -841,86 +493,8 @@ class CustomHouseHoldDetailsBednetPageState
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
-      _genderKey: FormControl<String>(
-          value: household?.additionalFields?.fields
-                      .where((h) => h.key == _genderKey)
-                      .firstOrNull
-                      ?.value !=
-                  null
-              ? getGenderOptions(household?.additionalFields?.fields
-                  .where((h) => h.key == _genderKey)
-                  .firstOrNull
-                  ?.value
-                  .toString())
-              : null),
       _memberCountKey: FormControl<int>(
-        value: household?.memberCount ?? 0,
-        validators: [Validators.max<int>(20)],
-      ),
-      // if (widget.isEligible)
-      _pregnantWomenCountKey: FormControl<int>(
-        value: household?.additionalFields?.fields
-                    .where((h) =>
-                        h.key == AdditionalFieldsType.pregnantWomen.toValue())
-                    .firstOrNull
-                    ?.value !=
-                null
-            ? int.tryParse(household?.additionalFields?.fields
-                    .where((h) =>
-                        h.key == AdditionalFieldsType.pregnantWomen.toValue())
-                    .firstOrNull
-                    ?.value
-                    .toString() ??
-                '0')
-            : 0,
-        validators: [Validators.max<int>(20)],
-      ),
-      _childrenCountKey: FormControl<int>(
-        value: household?.additionalFields?.fields
-                    .where(
-                        (h) => h.key == AdditionalFieldsType.children.toValue())
-                    .firstOrNull
-                    ?.value !=
-                null
-            ? int.tryParse(household?.additionalFields?.fields
-                    .where(
-                        (h) => h.key == AdditionalFieldsType.children.toValue())
-                    .firstOrNull
-                    ?.value
-                    .toString() ??
-                '0')
-            : 0,
-        validators: [Validators.max<int>(20)],
-      ),
-      _menCountKey: FormControl<int>(
-        value: household?.additionalFields?.fields
-                    .where((h) => h.key == _menCountKey)
-                    .firstOrNull
-                    ?.value !=
-                null
-            ? int.tryParse(household?.additionalFields?.fields
-                    .where((h) => h.key == _menCountKey)
-                    .firstOrNull
-                    ?.value
-                    .toString() ??
-                '0')
-            : 0,
-        validators: [Validators.max<int>(20)],
-      ),
-      // if (widget.isEligible)
-      _womenCountKey: FormControl<int>(
-        value: household?.additionalFields?.fields
-                    .where((h) => h.key == _womenCountKey)
-                    .firstOrNull
-                    ?.value !=
-                null
-            ? int.tryParse(household?.additionalFields?.fields
-                    .where((h) => h.key == _womenCountKey)
-                    .firstOrNull
-                    ?.value
-                    .toString() ??
-                '0')
-            : 0,
+        value: household?.memberCount ?? 1,
         validators: [Validators.max<int>(20)],
       ),
     });

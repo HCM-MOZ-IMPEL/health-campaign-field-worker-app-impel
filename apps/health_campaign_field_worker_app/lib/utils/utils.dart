@@ -387,8 +387,13 @@ void showDownloadDialog(
                 (context.selectedProject.additionalDetails?.projectType?.code ==
                         ProjectTypes.smc.toValue())
                     ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
-                    : context.router
-                        .popUntilRouteWithName(IRSWrapperRoute.name);
+                    : (context.selectedProject.additionalDetails?.projectType
+                                ?.code ==
+                            ProjectTypes.irs.toValue())
+                        ? context.router
+                            .popUntilRouteWithName(IRSWrapperRoute.name)
+                        : context.router
+                            .popUntilRouteWithName(BednetWrapperRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -422,8 +427,13 @@ void showDownloadDialog(
                               (ProjectTypes.smc.toValue()))
                           ? context.router
                               .popUntilRouteWithName(SMCWrapperRoute.name)
-                          : context.router
-                              .popUntilRouteWithName(IRSWrapperRoute.name);
+                          : (context.selectedProject.additionalDetails
+                                      ?.projectType?.code ==
+                                  ProjectTypes.irs.toValue())
+                              ? context.router
+                                  .popUntilRouteWithName(IRSWrapperRoute.name)
+                              : context.router.popUntilRouteWithName(
+                                  BednetWrapperRoute.name);
                     }
                   },
                 )

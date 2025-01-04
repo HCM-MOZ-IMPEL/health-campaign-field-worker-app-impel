@@ -50,6 +50,7 @@ import '../../widgets/home/home_item_card.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
+import '../../widgets/widgets_bednet/progress_bar/custom_beneficiary_progress_bednet.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 
 @RoutePage()
@@ -171,7 +172,7 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBarSMC(
+                    : CustomBeneficiaryProgressBarBednet(
                         label: localizations.translate(
                           i18.home.progressIndicatorTitle,
                         ),
@@ -531,12 +532,11 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
-      i18.home.closedHouseHoldLabel,
+      // i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
-
-      i18.home.myCheckList,
+      if (!InventorySingleton().isDistributor) i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,

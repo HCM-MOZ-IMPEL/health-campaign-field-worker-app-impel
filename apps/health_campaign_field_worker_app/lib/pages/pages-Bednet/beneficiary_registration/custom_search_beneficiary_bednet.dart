@@ -22,6 +22,7 @@ import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 import '../../../widgets/beneficiary/custom_view_beneficiary_card.dart';
 
 import '../../../router/app_router.dart';
+import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryBednetPage extends LocalizedStatefulWidget {
@@ -122,45 +123,7 @@ class _CustomSearchBeneficiaryBednetPageState
                         builder: (context, locationState) {
                           return Column(
                             children: [
-                              locationState.latitude != null
-                                  ? Row(
-                                      children: [
-                                        Switch(
-                                          value: isProximityEnabled,
-                                          onChanged: (value) {
-                                            searchController.clear();
-                                            setState(() {
-                                              isProximityEnabled = value;
-                                              lat = locationState.latitude!;
-                                              long = locationState.longitude!;
-                                            });
-
-                                            if (locationState.hasPermissions &&
-                                                value &&
-                                                locationState.latitude !=
-                                                    null &&
-                                                locationState.longitude !=
-                                                    null &&
-                                                RegistrationDeliverySingleton()
-                                                        .maxRadius !=
-                                                    null &&
-                                                isProximityEnabled) {
-                                              triggerGlobalSearchEvent();
-                                            } else {
-                                              blocWrapper.clearEvent();
-                                              triggerGlobalSearchEvent();
-                                            }
-                                          },
-                                        ),
-                                        Text(
-                                          localizations.translate(
-                                            i18.searchBeneficiary
-                                                .proximityLabel,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : const Offstage(),
+                              const Offstage(),
                               DigitSearchBar(
                                 controller: searchController,
                                 hintText: localizations.translate(
@@ -175,19 +138,6 @@ class _CustomSearchBeneficiaryBednetPageState
                                     triggerGlobalSearchEvent();
                                   }
                                 },
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: kPadding),
-                                  child: DigitIconButton(
-                                    textDirection: TextDirection.rtl,
-                                    iconText: getFilterIconNLabel()['label'],
-                                    icon: getFilterIconNLabel()['icon'],
-                                    onPressed: () => showFilterDialog(),
-                                  ),
-                                ),
                               ),
                               selectedFilters.isNotEmpty
                                   ? Align(
@@ -331,7 +281,7 @@ class _CustomSearchBeneficiaryBednetPageState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: CustomViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCardBednet(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
@@ -406,24 +356,20 @@ class _CustomSearchBeneficiaryBednetPageState
               child: Column(
                 children: [
                   DigitElevatedButton(
-                    onPressed: searchHouseholdsState.searchQuery != null &&
-                            searchHouseholdsState.searchQuery!.isNotEmpty
-                        ? () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            context.read<DigitScannerBloc>().add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-                            context.router
-                                .push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: searchHouseholdsState.searchQuery,
-                              ),
-                            ));
-                            searchController.clear();
-                            selectedFilters = [];
-                            blocWrapper.clearEvent();
-                          }
-                        : null,
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      context.read<DigitScannerBloc>().add(
+                            const DigitScannerEvent.handleScanner(),
+                          );
+                      context.router.push(BeneficiaryRegistrationWrapperRoute(
+                        initialState: BeneficiaryRegistrationCreateState(
+                          searchQuery: searchHouseholdsState.searchQuery,
+                        ),
+                      ));
+                      searchController.clear();
+                      selectedFilters = [];
+                      blocWrapper.clearEvent();
+                    },
                     child: Center(
                       child: Text(localizations.translate(
                         i18.searchBeneficiary.beneficiaryAddActionLabel,
