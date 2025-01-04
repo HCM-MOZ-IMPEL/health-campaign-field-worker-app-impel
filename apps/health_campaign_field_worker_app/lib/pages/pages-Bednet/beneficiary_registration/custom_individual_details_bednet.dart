@@ -206,7 +206,9 @@ class CustomIndividualDetailsBednetPageState
                                   wrapper:
                                       searchBlocState.householdMembers.first));
                             } else {
-                              parent.push(BeneficiaryWrapperRoute(
+                              parent.popUntilRouteWithName(
+                                  CustomSearchBeneficiaryRoute.name);
+                              parent.push(CustomHouseholdWrapperRoute(
                                   wrapper:
                                       searchBlocState.householdMembers.first));
                             }

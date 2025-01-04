@@ -1393,29 +1393,13 @@ class AppRouter extends _$AppRouter {
                   path: 'beneficiary',
                   children: [
                     AutoRoute(
-                      page: BeneficiaryChecklistRoute.page,
-                      path: 'beneficiary-checklist',
-                    ),
-                    AutoRoute(
-                      page: HouseholdOverviewRoute.page,
-                      path: 'overview',
-                    ),
-                    AutoRoute(
-                      page: CustomHouseholdOverviewBednetRoute.page,
-                      path: 'custom-overview-bednet',
-                      initial: true,
-                    ),
-                    RedirectRoute(
-                      path: 'overview',
-                      redirectTo: 'custom-overview-bednet',
-                    ),
-                    AutoRoute(
                       page: BeneficiaryDetailsRoute.page,
                       path: 'beneficiary-details',
                     ),
                     AutoRoute(
                       page: CustomBeneficiaryDetailsBednetRoute.page,
                       path: 'custom-beneficiary-details-bednet',
+                      initial: true,
                     ),
                     RedirectRoute(
                       path: 'beneficiary-details',
@@ -1543,6 +1527,91 @@ class AppRouter extends _$AppRouter {
                           path: 'closed-household-acknowledgement'),
                     ]),
               ]),
+          // Inventory Route
+          AutoRoute(
+            page: ManageStocksRoute.page,
+            path: 'manage-stocks',
+          ),
+          AutoRoute(
+            page: CustomManageStocksRoute.page,
+            path: 'custom-manage-stocks',
+          ),
+          RedirectRoute(
+            path: 'manage-stocks',
+            redirectTo: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+            page: RecordStockWrapperRoute.page,
+            path: 'record-stock',
+            children: [
+              AutoRoute(
+                page: WarehouseDetailsRoute.page,
+                path: 'warehouse-details',
+                // initial: true,
+              ),
+              AutoRoute(
+                page: CustomWarehouseDetailsRoute.page,
+                path: 'custom-warehouse-details',
+                initial: true,
+              ),
+              AutoRoute(
+                page: StockDetailsRoute.page,
+                path: 'details',
+              ),
+              AutoRoute(
+                page: CustomStockDetailsRoute.page,
+                path: 'custom-details',
+              ),
+              RedirectRoute(
+                path: 'details',
+                redirectTo: 'custom-details',
+              ),
+            ],
+          ),
+          AutoRoute(
+            page: InventoryFacilitySelectionRoute.page,
+            path: 'inventory-select-facilities',
+          ),
+          AutoRoute(
+            page: StockReconciliationRoute.page,
+            path: 'stock-reconciliation',
+          ),
+          AutoRoute(
+            page: CustomStockReconciliationRoute.page,
+            path: 'custom-stock-reconciliation',
+          ),
+          RedirectRoute(
+            path: 'stock-reconciliation',
+            redirectTo: 'custom-stock-reconciliation',
+          ),
+          AutoRoute(
+            page: InventoryReportSelectionRoute.page,
+            path: 'inventory-report-selection',
+          ),
+          AutoRoute(
+            page: CustomInventoryReportSelectionRoute.page,
+            path: 'custom-inventory-report-selection',
+          ),
+          RedirectRoute(
+            path: 'inventory-report-selection',
+            redirectTo: 'custom-inventory-report-selection',
+          ),
+          AutoRoute(
+            page: InventoryReportDetailsRoute.page,
+            path: 'inventory-report-details',
+          ),
+          AutoRoute(
+            page: CustomInventoryReportDetailsRoute.page,
+            path: 'custom-inventory-report-details',
+          ),
+          RedirectRoute(
+            path: 'inventory-report-details',
+            redirectTo: 'custom-inventory-report-details',
+          ),
+          AutoRoute(
+            page: InventoryAcknowledgementRoute.page,
+            path: 'inventory-acknowledgement',
+          ),
         ]),
       ],
     ),
