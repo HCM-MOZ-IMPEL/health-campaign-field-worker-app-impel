@@ -130,10 +130,15 @@ import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
 import '../pages/pages-SMC/inventory/custom_stock_details.dart';
 import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
+import '../pages/pages-Bednet/inventory/custom_warehouse_details.dart';
+import '../pages/pages-Bednet/inventory/custom_stock_details.dart';
+import '../pages/pages-Bednet/inventory/custom_stock_reconciliation.dart';
 import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
+import '../pages/pages-Bednet/reports/inventory/custom_report_selection.dart';
+import '../pages/pages-Bednet/reports/inventory/custom_report_details.dart';
 import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
@@ -1551,8 +1556,8 @@ class AppRouter extends _$AppRouter {
                 // initial: true,
               ),
               AutoRoute(
-                page: CustomWarehouseDetailsRoute.page,
-                path: 'custom-warehouse-details',
+                page: CustomWarehouseDetailsBednetRoute.page,
+                path: 'custom-warehouse-details-bednet',
                 initial: true,
               ),
               AutoRoute(
@@ -1560,12 +1565,12 @@ class AppRouter extends _$AppRouter {
                 path: 'details',
               ),
               AutoRoute(
-                page: CustomStockDetailsRoute.page,
-                path: 'custom-details',
+                page: CustomStockDetailsBednetRoute.page,
+                path: 'custom-details-bednet',
               ),
               RedirectRoute(
                 path: 'details',
-                redirectTo: 'custom-details',
+                redirectTo: 'custom-details-bednet',
               ),
             ],
           ),
@@ -1578,36 +1583,36 @@ class AppRouter extends _$AppRouter {
             path: 'stock-reconciliation',
           ),
           AutoRoute(
-            page: CustomStockReconciliationRoute.page,
-            path: 'custom-stock-reconciliation',
+            page: CustomStockReconciliationBednetRoute.page,
+            path: 'custom-stock-reconciliation-bednet',
           ),
           RedirectRoute(
             path: 'stock-reconciliation',
-            redirectTo: 'custom-stock-reconciliation',
+            redirectTo: 'custom-stock-reconciliation-bednet',
           ),
           AutoRoute(
             page: InventoryReportSelectionRoute.page,
             path: 'inventory-report-selection',
           ),
           AutoRoute(
-            page: CustomInventoryReportSelectionRoute.page,
-            path: 'custom-inventory-report-selection',
+            page: CustomInventoryReportSelectionBednetRoute.page,
+            path: 'custom-inventory-report-selection-bednet',
           ),
           RedirectRoute(
             path: 'inventory-report-selection',
-            redirectTo: 'custom-inventory-report-selection',
+            redirectTo: 'custom-inventory-report-selection-bednet',
           ),
           AutoRoute(
             page: InventoryReportDetailsRoute.page,
             path: 'inventory-report-details',
           ),
           AutoRoute(
-            page: CustomInventoryReportDetailsRoute.page,
-            path: 'custom-inventory-report-details',
+            page: CustomInventoryReportDetailsBednetRoute.page,
+            path: 'custom-inventory-report-details-bednet',
           ),
           RedirectRoute(
             path: 'inventory-report-details',
-            redirectTo: 'custom-inventory-report-details',
+            redirectTo: 'custom-inventory-report-details-bednet',
           ),
           AutoRoute(
             page: InventoryAcknowledgementRoute.page,

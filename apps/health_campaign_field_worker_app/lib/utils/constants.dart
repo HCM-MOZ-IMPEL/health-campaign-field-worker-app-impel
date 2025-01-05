@@ -103,6 +103,9 @@ class Constants {
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
   static const String commentsKey = 'comments';
   static const String comma = ',';
+  static const String byHand = 'Em mão';
+  static const String distributorUsername = 'distributor_username';
+  static const String supervisorUsername = 'supervisor_username';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

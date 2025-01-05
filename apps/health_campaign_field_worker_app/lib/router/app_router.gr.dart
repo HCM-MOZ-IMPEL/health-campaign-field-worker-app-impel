@@ -765,6 +765,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryReportDetailsBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryReportDetailsBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          reportType: args.reportType,
+        ),
+      );
+    },
     CustomInventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -784,6 +796,19 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           reportType: args.reportType,
+        ),
+      );
+    },
+    CustomInventoryReportSelectionBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryReportSelectionBednetRouteArgs>(
+              orElse: () =>
+                  const CustomInventoryReportSelectionBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportSelectionBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
         ),
       );
     },
@@ -1016,6 +1041,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsBednetRouteArgs>(
+          orElse: () => const CustomStockDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomStockDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
           orElse: () => const CustomStockDetailsRouteArgs());
@@ -1038,6 +1074,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockReconciliationBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockReconciliationBednetRouteArgs>(
+          orElse: () => const CustomStockReconciliationBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockReconciliationBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomStockReconciliationRoute.name: (routeData) {
       final args = routeData.argsAs<CustomStockReconciliationRouteArgs>(
           orElse: () => const CustomStockReconciliationRouteArgs());
@@ -1055,6 +1102,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomStockReconciliationSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomWarehouseDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomWarehouseDetailsBednetRouteArgs>(
+          orElse: () => const CustomWarehouseDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomWarehouseDetailsBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -3965,6 +4023,50 @@ class CustomInventoryFacilitySelectionSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomInventoryReportDetailsBednetPage]
+class CustomInventoryReportDetailsBednetRoute
+    extends PageRouteInfo<CustomInventoryReportDetailsBednetRouteArgs> {
+  CustomInventoryReportDetailsBednetRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required InventoryReportType reportType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportDetailsBednetRoute.name,
+          args: CustomInventoryReportDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            reportType: reportType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportDetailsBednetRoute';
+
+  static const PageInfo<CustomInventoryReportDetailsBednetRouteArgs> page =
+      PageInfo<CustomInventoryReportDetailsBednetRouteArgs>(name);
+}
+
+class CustomInventoryReportDetailsBednetRouteArgs {
+  const CustomInventoryReportDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.reportType,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final InventoryReportType reportType;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
+  }
+}
+
+/// generated route for
 /// [CustomInventoryReportDetailsPage]
 class CustomInventoryReportDetailsRoute
     extends PageRouteInfo<CustomInventoryReportDetailsRouteArgs> {
@@ -4049,6 +4151,45 @@ class CustomInventoryReportDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomInventoryReportDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
+  }
+}
+
+/// generated route for
+/// [CustomInventoryReportSelectionBednetPage]
+class CustomInventoryReportSelectionBednetRoute
+    extends PageRouteInfo<CustomInventoryReportSelectionBednetRouteArgs> {
+  CustomInventoryReportSelectionBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportSelectionBednetRoute.name,
+          args: CustomInventoryReportSelectionBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportSelectionBednetRoute';
+
+  static const PageInfo<CustomInventoryReportSelectionBednetRouteArgs> page =
+      PageInfo<CustomInventoryReportSelectionBednetRouteArgs>(name);
+}
+
+class CustomInventoryReportSelectionBednetRouteArgs {
+  const CustomInventoryReportSelectionBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportSelectionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -4909,6 +5050,45 @@ class CustomSearchReferralReconciliationsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockDetailsBednetPage]
+class CustomStockDetailsBednetRoute
+    extends PageRouteInfo<CustomStockDetailsBednetRouteArgs> {
+  CustomStockDetailsBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsBednetRoute.name,
+          args: CustomStockDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsBednetRoute';
+
+  static const PageInfo<CustomStockDetailsBednetRouteArgs> page =
+      PageInfo<CustomStockDetailsBednetRouteArgs>(name);
+}
+
+class CustomStockDetailsBednetRouteArgs {
+  const CustomStockDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomStockDetailsPage]
 class CustomStockDetailsRoute
     extends PageRouteInfo<CustomStockDetailsRouteArgs> {
@@ -4987,6 +5167,45 @@ class CustomStockDetailsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockReconciliationBednetPage]
+class CustomStockReconciliationBednetRoute
+    extends PageRouteInfo<CustomStockReconciliationBednetRouteArgs> {
+  CustomStockReconciliationBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockReconciliationBednetRoute.name,
+          args: CustomStockReconciliationBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockReconciliationBednetRoute';
+
+  static const PageInfo<CustomStockReconciliationBednetRouteArgs> page =
+      PageInfo<CustomStockReconciliationBednetRouteArgs>(name);
+}
+
+class CustomStockReconciliationBednetRouteArgs {
+  const CustomStockReconciliationBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockReconciliationBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomStockReconciliationPage]
 class CustomStockReconciliationRoute
     extends PageRouteInfo<CustomStockReconciliationRouteArgs> {
@@ -5061,6 +5280,45 @@ class CustomStockReconciliationSMCRouteArgs {
   @override
   String toString() {
     return 'CustomStockReconciliationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomWarehouseDetailsBednetPage]
+class CustomWarehouseDetailsBednetRoute
+    extends PageRouteInfo<CustomWarehouseDetailsBednetRouteArgs> {
+  CustomWarehouseDetailsBednetRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomWarehouseDetailsBednetRoute.name,
+          args: CustomWarehouseDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomWarehouseDetailsBednetRoute';
+
+  static const PageInfo<CustomWarehouseDetailsBednetRouteArgs> page =
+      PageInfo<CustomWarehouseDetailsBednetRouteArgs>(name);
+}
+
+class CustomWarehouseDetailsBednetRouteArgs {
+  const CustomWarehouseDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomWarehouseDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

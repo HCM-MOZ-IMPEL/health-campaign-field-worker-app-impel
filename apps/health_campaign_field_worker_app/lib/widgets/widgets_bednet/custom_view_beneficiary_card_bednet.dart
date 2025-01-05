@@ -330,7 +330,7 @@ class _CustomViewBeneficiaryCardBednetState
                     householdMember.headOfHousehold?.name?.givenName ??
                         localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
-                  ].whereNotNull().join(''),
+                  ].whereNotNull().join(' '),
                 ),
               ),
               Flexible(
