@@ -892,6 +892,10 @@ class CustomDeliverInterventionBednetPageState
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
                 isDelivered: true,
+                deliveryComment: deliveryComment != null &&
+                        deliveryComment.trim().toString().isNotEmpty
+                    ? deliveryComment
+                    : null,
                 taskId: task?.id,
                 tenantId: RegistrationDeliverySingleton().tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,

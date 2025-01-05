@@ -1153,6 +1153,8 @@ class StockDetails {
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 
+  String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
+
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
 
   String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';

@@ -454,7 +454,7 @@ class _CustomHouseholdOverviewBednetPageState
                                               ),
                                             ),
                                             children: [
-                                              CustomIndividualDetailsRoute(
+                                              CustomIndividualDetailsBednetRoute(
                                                 isHeadOfHousehold: isHead,
                                               ),
                                             ],

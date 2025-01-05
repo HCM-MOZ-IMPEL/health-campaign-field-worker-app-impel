@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
@@ -53,8 +54,10 @@ class CustomStockDetailsBednetPageState
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   static const _supervisorKey = 'supervisor';
+  static const localMonitor = 'LocalMonitor';
   bool deliveryTeamSelected = false;
   bool supervisorSelected = false;
+  bool commentRequired = false;
   bool byHand = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
@@ -992,14 +995,14 @@ class CustomStockDetailsBednetPageState
                                                       isWareHouseMgr) {
                                                     allFacilities.add(
                                                       FacilityModel(
-                                                        id: 'Supervisor',
+                                                        id: localMonitor,
                                                         additionalFields:
                                                             FacilityAdditionalFields(
                                                           version: 1,
                                                           fields: [
                                                             const AdditionalField(
                                                                 'type',
-                                                                'Supervisor')
+                                                                localMonitor)
                                                           ],
                                                         ),
                                                       ),
@@ -1051,6 +1054,9 @@ class CustomStockDetailsBednetPageState
                                                               true;
                                                           supervisorSelected =
                                                               false;
+                                                          updateCommentValidation(
+                                                              isWareHouseMgr,
+                                                              form);
                                                           form
                                                               .control(
                                                             _waybillNumberKey,
@@ -1111,12 +1117,15 @@ class CustomStockDetailsBednetPageState
                                                           );
                                                         });
                                                       } else if (facility.id ==
-                                                          'Supervisor') {
+                                                          localMonitor) {
                                                         setState(() {
                                                           supervisorSelected =
                                                               true;
                                                           deliveryTeamSelected =
                                                               false;
+                                                          updateCommentValidation(
+                                                              isWareHouseMgr,
+                                                              form);
                                                           form
                                                               .control(
                                                             _waybillNumberKey,
@@ -1181,6 +1190,9 @@ class CustomStockDetailsBednetPageState
                                                               false;
                                                           supervisorSelected =
                                                               false;
+                                                          updateCommentValidation(
+                                                              isWareHouseMgr,
+                                                              form);
 
                                                           if (isWareHouseMgr) {
                                                             form
@@ -1360,6 +1372,9 @@ class CustomStockDetailsBednetPageState
                                                                   true;
                                                               supervisorSelected =
                                                                   false;
+                                                              updateCommentValidation(
+                                                                  isWareHouseMgr,
+                                                                  form);
                                                               form
                                                                   .control(
                                                                 _waybillNumberKey,
@@ -1432,12 +1447,15 @@ class CustomStockDetailsBednetPageState
                                                             });
                                                           } else if (facility
                                                                   .id ==
-                                                              'Supervisor') {
+                                                              localMonitor) {
                                                             setState(() {
                                                               supervisorSelected =
                                                                   true;
                                                               deliveryTeamSelected =
                                                                   false;
+                                                              updateCommentValidation(
+                                                                  isWareHouseMgr,
+                                                                  form);
                                                               form
                                                                   .control(
                                                                 _waybillNumberKey,
@@ -1512,6 +1530,9 @@ class CustomStockDetailsBednetPageState
                                                                   false;
                                                               supervisorSelected =
                                                                   false;
+                                                              updateCommentValidation(
+                                                                  isWareHouseMgr,
+                                                                  form);
                                                               if (isWareHouseMgr) {
                                                                 form
                                                                     .control(
@@ -1736,7 +1757,7 @@ class CustomStockDetailsBednetPageState
                                               child: DigitTextFormField(
                                                 label: localizations.translate(
                                                   i18_local.stockDetails
-                                                      .supervisorCodeLabel,
+                                                      .monitorCodeLabel,
                                                 ),
                                                 onChanged: (val) {
                                                   String? value =
@@ -1798,6 +1819,11 @@ class CustomStockDetailsBednetPageState
                                               .numberWithOptions(
                                             decimal: true,
                                           ),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                              RegExp(r'[0-9]'),
+                                            ),
+                                          ],
                                           isRequired: true,
                                           validationMessages: {
                                             "number": (object) =>
@@ -1814,14 +1840,10 @@ class CustomStockDetailsBednetPageState
                                                 ),
                                           },
                                           onChanged: (val) {
-                                            if (val.value != null) {
-                                              if (val.value > 10000000000) {
-                                                form
-                                                    .control(
-                                                        _transactionQuantityKey)
-                                                    .value = maxCount;
-                                              }
-                                            }
+                                            setState(() {
+                                              updateCommentValidation(
+                                                  isWareHouseMgr, form);
+                                            });
                                           },
                                           label: localizations.translate(
                                             quantityCountLabel,
@@ -1870,6 +1892,15 @@ class CustomStockDetailsBednetPageState
                                                 !deliveryTeamSelected,
                                             formControlName:
                                                 _waybillQuantityKey,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                RegExp(r'[0-9]'),
+                                              ),
+                                            ],
+                                            keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                              decimal: true,
+                                            ),
                                             validationMessages: {
                                               'required': (object) =>
                                                   localizations.translate(
@@ -1888,6 +1919,12 @@ class CustomStockDetailsBednetPageState
                                                   localizations.translate(
                                                     '${quantityCountLabel}_MIN_ERROR',
                                                   ),
+                                            },
+                                            onChanged: (val) {
+                                              setState(() {
+                                                updateCommentValidation(
+                                                    isWareHouseMgr, form);
+                                              });
                                             },
                                           ),
                                         if (isWareHouseMgr)
@@ -2015,6 +2052,17 @@ class CustomStockDetailsBednetPageState
                                           minLines: 2,
                                           maxLines: 3,
                                           formControlName: _commentsKey,
+                                          isRequired: commentRequired,
+                                          validationMessages: {
+                                            'required': (object) =>
+                                                localizations.translate(
+                                                  i18.common.corecommonRequired,
+                                                ),
+                                            'min2': (object) => localizations
+                                                .translate(i18
+                                                    .common.min2CharsRequired)
+                                                .replaceAll('{}', ''),
+                                          },
                                         ),
                                       ],
                                     ),
@@ -2034,6 +2082,75 @@ class CustomStockDetailsBednetPageState
         ),
       ),
     );
+  }
+
+  void updateCommentValidation(bool isWareHouseMgr, FormGroup form) {
+    if (isWareHouseMgr && !supervisorSelected && !deliveryTeamSelected) {
+      final quantity =
+          (form.control(_transactionQuantityKey).value ?? 0) as int;
+
+      final waybillQuantity =
+          (form.control(_waybillQuantityKey).value ?? 0) as int;
+
+      if (quantity != waybillQuantity) {
+        commentRequired = true;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [
+            Validators.required,
+            CustomValidator.requiredMin2,
+          ],
+          updateParent: true,
+          autoValidate: true,
+        );
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      } else {
+        commentRequired = false;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [
+            CustomValidator.requiredMin2,
+          ],
+          updateParent: true,
+          autoValidate: true,
+        );
+
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      }
+    } else {
+      commentRequired = false;
+      form
+          .control(
+        _commentsKey,
+      )
+          .setValidators(
+        [
+          CustomValidator.requiredMin2,
+        ],
+        updateParent: true,
+        autoValidate: true,
+      );
+
+      form
+          .control(
+            _commentsKey,
+          )
+          .touched;
+    }
   }
 
   void addVehicleValidations(FormGroup form) {
