@@ -1020,6 +1020,16 @@ class CustomStockDetailsBednetPageState
                                                   return InkWell(
                                                     onTap: () async {
                                                       clearQRCodes();
+                                                      stockReconciliationBloc
+                                                          .add(
+                                                        StockReconciliationSelectProductEvent(
+                                                          productVariants
+                                                              .first.id,
+                                                          isDistributor:
+                                                              !InventorySingleton()
+                                                                  .isWareHouseMgr!,
+                                                        ),
+                                                      );
                                                       form
                                                           .control(
                                                               _deliveryTeamKey)
@@ -1335,6 +1345,16 @@ class CustomStockDetailsBednetPageState
                                                             _secondaryPartyKey,
                                                         onTap: () async {
                                                           clearQRCodes();
+                                                          stockReconciliationBloc
+                                                              .add(
+                                                            StockReconciliationSelectProductEvent(
+                                                              productVariants
+                                                                  .first.id,
+                                                              isDistributor:
+                                                                  !InventorySingleton()
+                                                                      .isWareHouseMgr!,
+                                                            ),
+                                                          );
                                                           form
                                                               .control(
                                                                   _deliveryTeamKey)
