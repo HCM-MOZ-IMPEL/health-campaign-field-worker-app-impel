@@ -158,137 +158,7 @@ class _CustomHouseholdOverviewBednetPageState
                                           style: theme.textTheme.displayMedium,
                                         ),
                                       ),
-                                      if (!isSuccessfulOrInEligible(
-                                          state, deliverState))
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: DigitIconButton(
-                                            onPressed: () {
-                                              final projectId =
-                                                  RegistrationDeliverySingleton()
-                                                      .projectId!;
-
-                                              final bloc = context.read<
-                                                  HouseholdOverviewBloc>();
-                                              bloc.add(
-                                                HouseholdOverviewReloadEvent(
-                                                  projectId: projectId,
-                                                  projectBeneficiaryType:
-                                                      beneficiaryType,
-                                                ),
-                                              );
-                                              DigitActionDialog.show(
-                                                context,
-                                                widget: ActionCard(
-                                                  items: [
-                                                    ActionCardModel(
-                                                      icon: Icons.edit,
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.householdOverView
-                                                            .householdOverViewEditLabel,
-                                                      ),
-                                                      action: () async {
-                                                        Navigator.of(
-                                                          context,
-                                                          rootNavigator: true,
-                                                        ).pop();
-
-                                                        HouseholdMemberWrapper
-                                                            wrapper = state
-                                                                .householdMemberWrapper;
-
-                                                        final timestamp = wrapper
-                                                            .headOfHousehold
-                                                            ?.clientAuditDetails
-                                                            ?.createdTime;
-                                                        final date = DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                          timestamp ??
-                                                              DateTime.now()
-                                                                  .millisecondsSinceEpoch,
-                                                        );
-
-                                                        final address = wrapper
-                                                            .household?.address;
-
-                                                        if (address == null)
-                                                          return;
-
-                                                        final projectBeneficiary = state
-                                                            .householdMemberWrapper
-                                                            .projectBeneficiaries
-                                                            ?.firstWhereOrNull(
-                                                          (element) =>
-                                                              element
-                                                                  .beneficiaryClientReferenceId ==
-                                                              wrapper.household
-                                                                  ?.clientReferenceId,
-                                                        );
-
-                                                        await context
-                                                            .router.root
-                                                            .push(
-                                                          BeneficiaryRegistrationWrapperRoute(
-                                                            initialState:
-                                                                BeneficiaryRegistrationEditHouseholdState(
-                                                              addressModel:
-                                                                  address,
-                                                              individualModel: state
-                                                                      .householdMemberWrapper
-                                                                      .members ??
-                                                                  [],
-                                                              householdModel: state
-                                                                  .householdMemberWrapper
-                                                                  .household!,
-                                                              registrationDate:
-                                                                  date,
-                                                              projectBeneficiaryModel:
-                                                                  projectBeneficiary,
-                                                            ),
-                                                            children: [
-                                                              HouseholdLocationRoute(),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            iconText: localizations.translate(
-                                              i18.householdOverView
-                                                  .householdOverViewEditIconText,
-                                            ),
-                                            icon: Icons.edit,
-                                          ),
-                                        ),
                                     ]),
-                              // BlocBuilder<DeliverInterventionBloc,
-                              //     DeliverInterventionState>(
-                              //   builder: (ctx, deliverInterventionState) =>
-                              //       Offstage(
-                              //     offstage: beneficiaryType ==
-                              //         BeneficiaryType.individual,
-                              //     child: Align(
-                              //       alignment: Alignment.centerLeft,
-                              //       child: DigitIconButton(
-                              //         icon: getStatusAttributes(state,
-                              //             deliverInterventionState)['icon'],
-                              //         iconText: localizations.translate(
-                              //           getStatusAttributes(state,
-                              //                   deliverInterventionState)[
-                              //               'textLabel'],
-                              //         ), // [TODO: map task status accordingly based on projectBeneficiaries and tasks]
-                              //         iconTextColor: getStatusAttributes(state,
-                              //             deliverInterventionState)['color'],
-                              //         iconColor: getStatusAttributes(state,
-                              //             deliverInterventionState)['color'],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   left: kPadding,
@@ -305,11 +175,24 @@ class _CustomHouseholdOverviewBednetPageState
                                                   .householdOverView
                                                   .householdOverViewHouseholdHeadNameLabel):
                                               state
-                                                      .householdMemberWrapper
-                                                      .headOfHousehold
-                                                      ?.name
-                                                      ?.givenName ??
-                                                  localizations.translate(
+                                                          .householdMemberWrapper
+                                                          .headOfHousehold
+                                                          ?.name
+                                                          ?.givenName !=
+                                                      null
+                                                  ? [
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .headOfHousehold
+                                                          ?.name
+                                                          ?.givenName,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .headOfHousehold
+                                                          ?.name
+                                                          ?.familyName,
+                                                    ].whereNotNull().join(' ')
+                                                  : localizations.translate(
                                                       i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.householdLocation
@@ -595,7 +478,8 @@ class _CustomHouseholdOverviewBednetPageState
                                               sideEffectData,
                                             )
                                           : false,
-                                      name: e.name?.givenName ?? ' - - ',
+                                      name:
+                                          '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                       years: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(

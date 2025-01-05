@@ -15,18 +15,22 @@ import 'custom_digit_reactive_dropdown.dart';
 
 class CustomResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
+  final void Function() onQuantityUpdate;
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
   final bool isAdministered;
+  final int bednetCount;
 
   const CustomResourceBeneficiaryCard({
     super.key,
     super.appLocalizations,
     required this.onDelete,
+    required this.onQuantityUpdate,
     required this.cardIndex,
     required this.form,
     required this.totalItems,
+    required this.bednetCount,
     this.isAdministered = false,
   });
 
@@ -73,14 +77,18 @@ class CustomResourceBeneficiaryCardState
           ),
           CustomDigitIntegerFormPicker(
             incrementer: true,
-            readOnly: true,
+            readOnly: false,
             formControlName: 'quantityDistributed.${widget.cardIndex}',
             form: widget.form,
             label: localizations.translate(
               i18_local.deliverIntervention.numberOfResourceDelivered,
             ),
             minimum: 1,
+            maximum: widget.bednetCount,
             buttonWidth: 50,
+            onChange: () {
+              widget.onQuantityUpdate();
+            },
           ),
           SizedBox(
             child: Align(

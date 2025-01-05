@@ -1224,4 +1224,5 @@ class DeliverIntervention {
   String get resourceDelivered => 'RESOURCE_DELIVERED';
   String get numberOfResourceDelivered => 'NUMBER_OF_RESOURCE_DELIVERED_LABEL';
   String get scanBednet => 'SCAN_THE_BEDNET';
+  String get deliveryCommentError => 'BEDNET_DELIVERY_COMMENT_ERROR';
 }

@@ -61,7 +61,7 @@ class CustomDeliverInterventionBednetPageState
   static const _qrCodesKey = "qrCodes";
 
   // Variable to track dose administration status
-  bool doseAdministered = false;
+  bool deliveryCommentRequired = false;
 
   // List of controllers for form elements
   final List _controllers = [];
@@ -279,6 +279,10 @@ class CustomDeliverInterventionBednetPageState
                                                     onPressed: isClicked
                                                         ? null
                                                         : () async {
+                                                            form.markAllAsTouched();
+                                                            if (!form.valid) {
+                                                              return;
+                                                            }
                                                             bednetScanned =
                                                                 scannerState
                                                                     .qrCodes
@@ -299,7 +303,6 @@ class CustomDeliverInterventionBednetPageState
                                                                 hasDuplicateResources(
                                                                     deliveredProducts,
                                                                     form);
-
                                                             if (hasEmptyResources) {
                                                               await DigitToast
                                                                   .show(
@@ -343,23 +346,6 @@ class CustomDeliverInterventionBednetPageState
                                                                 ),
                                                               );
                                                             }
-                                                            // info : show dialog stating less bednet scanned then the permissible count
-                                                            // else if (bednetScanned <
-                                                            //     bednetCount) {
-                                                            //   await DigitToast
-                                                            //       .show(
-                                                            //     context,
-                                                            //     options:
-                                                            //         DigitToastOptions(
-                                                            //       localizations.translate(
-                                                            //           i18_local
-                                                            //               .deliverIntervention
-                                                            //               .bednetScanLessThanCount),
-                                                            //       true,
-                                                            //       theme,
-                                                            //     ),
-                                                            //   );
-                                                            // }
                                                             // info : show dialog stating more bednet scanned then the permissible count
                                                             else if (bednetScanned >
                                                                 bednetCount) {
@@ -514,32 +500,84 @@ class CustomDeliverInterventionBednetPageState
                                                   ),
                                                   ..._controllers.map((e) =>
                                                       CustomResourceBeneficiaryCard(
-                                                        form: form,
-                                                        cardIndex: _controllers
-                                                            .indexOf(e),
-                                                        totalItems:
-                                                            _controllers.length,
-                                                        onDelete: (index) {
-                                                          (form.control(
-                                                            _resourceDeliveredKey,
-                                                          ) as FormArray)
-                                                              .removeAt(
-                                                            index,
-                                                          );
-                                                          (form.control(
-                                                            _quantityDistributedKey,
-                                                          ) as FormArray)
-                                                              .removeAt(
-                                                            index,
-                                                          );
-                                                          _controllers.removeAt(
-                                                            index,
-                                                          );
-                                                          setState(() {
-                                                            _controllers;
-                                                          });
-                                                        },
-                                                      )),
+                                                          form: form,
+                                                          bednetCount:
+                                                              bednetCount,
+                                                          cardIndex:
+                                                              _controllers
+                                                                  .indexOf(e),
+                                                          totalItems:
+                                                              _controllers
+                                                                  .length,
+                                                          onDelete: (index) {
+                                                            (form.control(
+                                                              _resourceDeliveredKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            (form.control(
+                                                              _quantityDistributedKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            _controllers
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            setState(() {
+                                                              _controllers;
+                                                            });
+                                                          },
+                                                          onQuantityUpdate: () {
+                                                            final quantity = (((form
+                                                                        .control(
+                                                                            _quantityDistributedKey)
+                                                                    as FormArray)
+                                                                .value)?[0]) as int;
+                                                            if (quantity ==
+                                                                bednetCount) {
+                                                              setState(() {
+                                                                deliveryCommentRequired =
+                                                                    false;
+                                                                (form.control(
+                                                                  _deliveryCommentKey,
+                                                                )).value = null;
+
+                                                                (form.control(
+                                                                  _deliveryCommentKey,
+                                                                )).setValidators(
+                                                                  [],
+                                                                  updateParent:
+                                                                      true,
+                                                                  autoValidate:
+                                                                      true,
+                                                                );
+                                                              });
+                                                            } else {
+                                                              setState(() {
+                                                                deliveryCommentRequired =
+                                                                    true;
+
+                                                                (form.control(
+                                                                  _deliveryCommentKey,
+                                                                )).setValidators(
+                                                                  [
+                                                                    Validators
+                                                                        .required
+                                                                  ],
+                                                                  updateParent:
+                                                                      true,
+                                                                  autoValidate:
+                                                                      true,
+                                                                );
+                                                                (form.control(
+                                                                  _deliveryCommentKey,
+                                                                )).touched;
+                                                              });
+                                                            }
+                                                          })),
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .fromLTRB(kPadding,
@@ -586,6 +624,10 @@ class CustomDeliverInterventionBednetPageState
                                                                           .edit),
                                                                   onPressed:
                                                                       () {
+                                                                    final quantity =
+                                                                        (((form.control(_quantityDistributedKey) as FormArray).value)?[0])
+                                                                            as int;
+
                                                                     Navigator.of(
                                                                             context)
                                                                         .push(
@@ -595,11 +637,11 @@ class CustomDeliverInterventionBednetPageState
                                                                             (context) =>
                                                                                 CustomDigitScannerPage(
                                                                           quantity:
-                                                                              bednetCount,
+                                                                              quantity,
                                                                           isGS1code:
                                                                               true,
                                                                           singleValue:
-                                                                              bednetCount < 2,
+                                                                              quantity < 2,
                                                                           isEditEnabled:
                                                                               true,
                                                                           manualEnabled:
@@ -673,14 +715,56 @@ class CustomDeliverInterventionBednetPageState
                                                     CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  DigitTextFormField(
-                                                    formControlName:
-                                                        _deliveryCommentKey,
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .deliveryCommentLabel,
-                                                    ),
+                                                  BlocBuilder<
+                                                      AppInitializationBloc,
+                                                      AppInitializationState>(
+                                                    builder: (context, state) {
+                                                      if (state
+                                                          is! AppInitialized) {
+                                                        return const Offstage();
+                                                      }
+
+                                                      final deliveryCommentOptions = state
+                                                              .appConfiguration
+                                                              .deliveryCommentOptions ??
+                                                          <DeliveryCommentOptions>[];
+
+                                                      return DigitReactiveSearchDropdown<
+                                                          String>(
+                                                        label: localizations
+                                                            .translate(
+                                                          i18.deliverIntervention
+                                                              .deliveryCommentLabel,
+                                                        ),
+                                                        form: form,
+                                                        enabled:
+                                                            deliveryCommentRequired,
+                                                        isRequired:
+                                                            deliveryCommentRequired,
+                                                        menuItems:
+                                                            deliveryCommentOptions
+                                                                .map((e) {
+                                                          return e.code;
+                                                        }).toList(),
+                                                        formControlName:
+                                                            _deliveryCommentKey,
+                                                        valueMapper: (value) =>
+                                                            localizations
+                                                                .translate(
+                                                          value,
+                                                        ),
+                                                        emptyText: localizations
+                                                            .translate(i18
+                                                                .common
+                                                                .noMatchFound),
+                                                        validationMessage:
+                                                            localizations
+                                                                .translate(
+                                                          i18.common
+                                                              .corecommonRequired,
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ],
                                               ),

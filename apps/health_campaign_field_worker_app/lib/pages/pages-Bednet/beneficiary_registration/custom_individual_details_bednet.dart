@@ -914,7 +914,7 @@ class CustomIndividualDetailsBednetPageState
           CustomValidator.requiredMin3,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ?? '',
       ),
       _individualLastNameKey: FormControl<String>(
         validators: [
