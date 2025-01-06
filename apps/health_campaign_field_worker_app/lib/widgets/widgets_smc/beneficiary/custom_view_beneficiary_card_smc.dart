@@ -195,7 +195,7 @@ class _CustomViewBeneficiaryCardSMCState
             [
               e.name?.givenName,
               e.name?.familyName,
-            ].whereNotNull().join('-'),
+            ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
           TableData(
@@ -333,7 +333,7 @@ class _CustomViewBeneficiaryCardSMCState
                       '${menCount != null ? ' | $menCount ${localizations.translate(i18Local.beneficiaryDetails.menLabel)}' : ''}'
                       '${womenCount != null ? ' | $womenCount ${localizations.translate(i18Local.beneficiaryDetails.womenLabel)}' : ''}'
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
-                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
+                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} m) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
                       tasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
@@ -346,7 +346,7 @@ class _CustomViewBeneficiaryCardSMCState
                     householdMember.headOfHousehold?.name?.givenName ??
                         localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
-                  ].whereNotNull().join(''),
+                  ].whereNotNull().join(' '),
                 ),
               ),
               Flexible(

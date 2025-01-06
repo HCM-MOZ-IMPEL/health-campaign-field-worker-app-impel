@@ -13,6 +13,8 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_localSMC;
+
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/utils/utils.dart';
@@ -486,8 +488,8 @@ class CustomWarehouseDetailsSMCPageState
                                     if (!InventorySingleton().isWareHouseMgr)
                                       DigitTextFormField(
                                         label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .teamCodeLabel,
+                                          i18_localSMC
+                                              .stockDetails.teamCodeLabelSMC,
                                         ),
                                         readOnly: true,
                                         formControlName: _teamCodeKey,

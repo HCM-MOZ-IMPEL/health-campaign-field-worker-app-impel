@@ -1337,6 +1337,8 @@ class StockDetails {
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
+  String get selectProductLabelSMC => 'STOCK_SELECT_PRODUCT_LABEL_SPAQ_SMC';
+  String get teamCodeLabelSMC => 'STOCK_TEAM_CODE_LABEL_SMC';
 }
 
 class StockReconciliationDetails {

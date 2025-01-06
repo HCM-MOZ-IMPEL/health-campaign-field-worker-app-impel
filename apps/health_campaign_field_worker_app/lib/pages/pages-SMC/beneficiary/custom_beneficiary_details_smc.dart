@@ -22,6 +22,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
+import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
 import 'widgets/past_delivery_smc.dart';
 
 @RoutePage()
@@ -386,7 +387,7 @@ class CustomBeneficiaryDetailsSMCPageState
                                                                 ?.cycles ??
                                                             [])
                                                         .isNotEmpty
-                                                    ? RecordDeliveryCycle(
+                                                    ? CustomRecordDeliveryCycle(
                                                         projectCycles:
                                                             RegistrationDeliverySingleton()
                                                                     .projectType

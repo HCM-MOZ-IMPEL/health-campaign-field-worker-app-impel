@@ -17,6 +17,7 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_localSMC;
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../utils/utils.dart' show CustomValidator;
@@ -805,7 +806,8 @@ class CustomStockDetailsSMCPageState
                                           key: const Key(_productVariantKey),
                                           formControlName: _productVariantKey,
                                           label: localizations.translate(
-                                            module.selectProductLabel,
+                                            i18_localSMC.stockDetails
+                                                .selectProductLabelSMC,
                                           ),
                                           isRequired: true,
                                           valueMapper: (value) {
@@ -1642,8 +1644,8 @@ class CustomStockDetailsSMCPageState
                                     child: IgnorePointer(
                                       child: DigitTextFormField(
                                         label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .teamCodeLabel,
+                                          i18_localSMC
+                                              .stockDetails.teamCodeLabelSMC,
                                         ),
                                         onChanged: (val) {
                                           String? value = val.value as String?;
