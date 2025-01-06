@@ -24,6 +24,7 @@ const householdDetails = HouseholdDetails();
 const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
+const warehouseDetails = WarehouseDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -1347,8 +1348,15 @@ class StockReconciliationDetails {
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
+class WarehouseDetails {
+  const WarehouseDetails();
+
+  String get dateOfReceiptSMC => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT_SMC';
+}
+
 class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+  String get noteDescriptionSMC => 'DSS_NOTE_DESCRIPTION_SMC';
 }

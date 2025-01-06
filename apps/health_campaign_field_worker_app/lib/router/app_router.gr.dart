@@ -786,6 +786,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomUserDashboardSMCRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomUserDashboardSMCPage(),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
@@ -3737,6 +3743,20 @@ class CustomStockReconciliationSMCRouteArgs {
   String toString() {
     return 'CustomStockReconciliationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [CustomUserDashboardSMCPage]
+class CustomUserDashboardSMCRoute extends PageRouteInfo<void> {
+  const CustomUserDashboardSMCRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomUserDashboardSMCRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomUserDashboardSMCRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

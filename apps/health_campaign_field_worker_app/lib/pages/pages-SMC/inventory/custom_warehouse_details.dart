@@ -359,7 +359,8 @@ class CustomWarehouseDetailsSMCPageState
                                         isEnabled: false,
                                         formControlName: _dateOfEntryKey,
                                         label: localizations.translate(
-                                          i18.warehouseDetails.dateOfReceipt,
+                                          i18_localSMC.warehouseDetails
+                                              .dateOfReceiptSMC,
                                         ),
                                         isRequired: false,
                                         confirmText: localizations.translate(
