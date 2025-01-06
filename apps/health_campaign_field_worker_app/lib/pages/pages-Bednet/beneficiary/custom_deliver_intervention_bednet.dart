@@ -11,6 +11,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -82,7 +83,7 @@ class CustomDeliverInterventionBednetPageState
     FormGroup form,
     HouseholdMemberWrapper householdMember,
     ProjectBeneficiaryModel projectBeneficiary,
-    List<String> codes,
+    List<AdditionalField> codeAdditionalFields,
   ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
@@ -103,7 +104,7 @@ class CustomDeliverInterventionBednetPageState
                 address: householdMember.members?.first.address?.first,
                 latitude: lat,
                 longitude: long,
-                codes: codes,
+                codes: codeAdditionalFields,
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -125,7 +126,7 @@ class CustomDeliverInterventionBednetPageState
     FormGroup form,
     HouseholdMemberWrapper householdMember,
     ProjectBeneficiaryModel projectBeneficiary,
-    List<String> codes,
+    List<AdditionalField> codeAdditionalFields,
   ) {
     if (context.mounted) {
       DigitComponentsUtils().showLocationCapturingDialog(
@@ -143,7 +144,7 @@ class CustomDeliverInterventionBednetPageState
             form,
             householdMember,
             projectBeneficiary,
-            codes);
+            codeAdditionalFields);
       });
     }
   }
@@ -285,8 +286,50 @@ class CustomDeliverInterventionBednetPageState
                                                             }
                                                             bednetScanned =
                                                                 scannerState
-                                                                    .qrCodes
+                                                                    .barCodes
                                                                     .length;
+
+                                                            final List<
+                                                                    GS1Barcode>
+                                                                barcodes =
+                                                                scannerState
+                                                                    .barCodes;
+
+                                                            List<AdditionalField>
+                                                                codeAdditionalFields =
+                                                                [];
+
+                                                            for (var element
+                                                                in barcodes) {
+                                                              List<String>
+                                                                  keys = [];
+                                                              List<String>
+                                                                  values = [];
+                                                              for (var e
+                                                                  in element
+                                                                      .elements
+                                                                      .entries) {
+                                                                e.value.rawData;
+                                                                keys.add(
+                                                                  e.key
+                                                                      .toString(),
+                                                                );
+                                                                values.add(
+                                                                  e.value.data
+                                                                      .toString(),
+                                                                );
+                                                              }
+
+                                                              codeAdditionalFields
+                                                                  .add(
+                                                                AdditionalField(
+                                                                  keys.join(
+                                                                      '|'),
+                                                                  values.join(
+                                                                      '|'),
+                                                                ),
+                                                              );
+                                                            }
                                                             final deliveredProducts =
                                                                 ((form.control(_resourceDeliveredKey)
                                                                             as FormArray)
@@ -437,8 +480,7 @@ class CustomDeliverInterventionBednetPageState
                                                                   householdMemberWrapper,
                                                                   projectBeneficiary!
                                                                       .first,
-                                                                  scannerState
-                                                                      .qrCodes,
+                                                                  codeAdditionalFields,
                                                                 );
                                                               }
                                                             }
@@ -855,7 +897,7 @@ class CustomDeliverInterventionBednetPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
-    List<String>? codes,
+    List<AdditionalField>? codes,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -964,11 +1006,7 @@ class CustomDeliverInterventionBednetPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
-          if (codes != null && codes.isNotEmpty)
-            AdditionalField(
-              _qrCodesKey,
-              codes.join(Constants.comma),
-            ),
+          if (codes != null && codes.isNotEmpty) ...codes
         ],
       ),
     );
