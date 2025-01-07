@@ -497,9 +497,8 @@ class _CustomStockReconciliationSMCPageState
                                               key:
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
-                                                i18_local
-                                                    .stockReconciliationDetails
-                                                    .insecticideLabel,
+                                                i18_local.stockDetails
+                                                    .selectProductLabelSMC,
                                               ),
                                               form: form,
                                               menuItems: productVariants,
