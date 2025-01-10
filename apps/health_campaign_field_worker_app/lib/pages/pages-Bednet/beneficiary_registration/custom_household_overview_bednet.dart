@@ -83,8 +83,7 @@ class _CustomHouseholdOverviewBednetPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: isSuccessfulOrInEligible(
-                                        state, deliverInterventionState) ||
-                                    isIneligibleHouseStructure(state)
+                                    state, deliverInterventionState)
                                 ? const Offstage()
                                 : DigitElevatedButton(
                                     onPressed: (state.householdMemberWrapper
@@ -593,14 +592,6 @@ class _CustomHouseholdOverviewBednetPageState
 
     if (status == Status.administeredSuccess.toValue()) {
       return true;
-    }
-
-    if (status == Status.administeredFailed.toValue()) {
-      final reasonField = lastTask?.additionalFields?.fields.firstWhereOrNull(
-          (field) =>
-              field.key == AdditionalFieldsType.reasonOfRefusal.toValue());
-
-      return reasonField?.value == "INCOMPATIBLE";
     }
 
     return false;
