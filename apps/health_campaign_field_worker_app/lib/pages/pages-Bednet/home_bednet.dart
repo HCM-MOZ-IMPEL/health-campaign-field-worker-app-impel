@@ -561,22 +561,6 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
-    widgetList.add(homeShowcaseData.db.buildWith(
-      child: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.home.db,
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
-              ),
-            ),
-          );
-        },
-      ),
-    ));
-
     return _HomeItemDataModel(
       widgetList,
       showcaseKeys,
