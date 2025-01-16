@@ -21,11 +21,10 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../router/app_router.dart';
-import '../../../widgets/action_card/action_card.dart';
+import '../../../utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
-import 'package:registration_delivery/widgets/member_card/member_card.dart';
-import '../../../widgets/custom_member_card.dart';
+import '../../../widgets/widgets_bednet/custom_member_card.dart';
 
 @RoutePage()
 class CustomHouseholdOverviewBednetPage extends LocalizedStatefulWidget {
@@ -74,7 +73,8 @@ class _CustomHouseholdOverviewBednetPageState
                     header: const BackNavigationHelpHeaderWidget(),
                     enableFixedButton: true,
                     footer: Offstage(
-                      offstage: beneficiaryType == BeneficiaryType.individual,
+                      offstage: beneficiaryType == BeneficiaryType.individual ||
+                          !context.isDistributor,
                       child: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (ctx, deliverInterventionState) => DigitCard(

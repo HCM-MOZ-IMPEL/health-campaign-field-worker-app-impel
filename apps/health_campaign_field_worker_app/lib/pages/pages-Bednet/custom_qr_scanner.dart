@@ -59,7 +59,7 @@ class _CustomDigitScannerPageState
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   static const _manualCodeFormKey = 'manualCode';
 
-  RegExp pattern = RegExp(r'^2025-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$');
+  RegExp pattern = RegExp(r'^25-\d{2}-\d{7}$');
 
   @override
   void initState() {

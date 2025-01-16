@@ -148,6 +148,36 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isDistributor {
+    try {
+      bool distributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return distributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isRegistrar {
+    try {
+      bool registrar = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.registrar.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return registrar;
+    } catch (_) {
+      return false;
+    }
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 

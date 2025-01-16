@@ -40,6 +40,7 @@ import '../pages/pages-Bednet/beneficiary_registration/custom_household_overview
 import '../pages/pages-Bednet/beneficiary_registration/custom_household_wrapper_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_individual_details_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_search_beneficiary_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_summary_page_bednet.dart';
 
 import '../pages/pages-Bednet/closed/custom_closed_household_details_bednet.dart';
 import '../pages/pages-Bednet/closed/custom_closed_household_summary_bednet.dart';
@@ -1358,6 +1359,14 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: SummaryRoute.page,
                       path: 'beneficiary-summary',
+                    ),
+                    AutoRoute(
+                      page: CustomBednetSummaryRoute.page,
+                      path: 'custom-bednet-beneficiary-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-summary',
+                      redirectTo: 'custom-bednet-beneficiary-summary',
                     ),
                     AutoRoute(
                       page: BeneficiaryChecklistRoute.page,

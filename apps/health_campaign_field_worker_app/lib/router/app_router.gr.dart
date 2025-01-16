@@ -285,6 +285,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBednetSummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBednetSummaryRouteArgs>(
+          orElse: () => const CustomBednetSummaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBednetSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomBeneficiaryAcknowledgementBednetRoute.name: (routeData) {
       final args =
           routeData.argsAs<CustomBeneficiaryAcknowledgementBednetRouteArgs>(
@@ -2285,6 +2296,45 @@ class CustomAttendanceDateSessionSelectionRouteArgs {
   @override
   String toString() {
     return 'CustomAttendanceDateSessionSelectionRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBednetSummaryPage]
+class CustomBednetSummaryRoute
+    extends PageRouteInfo<CustomBednetSummaryRouteArgs> {
+  CustomBednetSummaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBednetSummaryRoute.name,
+          args: CustomBednetSummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBednetSummaryRoute';
+
+  static const PageInfo<CustomBednetSummaryRouteArgs> page =
+      PageInfo<CustomBednetSummaryRouteArgs>(name);
+}
+
+class CustomBednetSummaryRouteArgs {
+  const CustomBednetSummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBednetSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
