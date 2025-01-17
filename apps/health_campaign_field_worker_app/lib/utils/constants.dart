@@ -106,6 +106,7 @@ class Constants {
   static const String byHand = 'Em mão';
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
+  static const int maxBednetCount = 4;
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

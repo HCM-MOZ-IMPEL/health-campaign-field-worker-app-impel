@@ -12,13 +12,13 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../utils/constants.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 @RoutePage()
@@ -210,10 +210,12 @@ class CustomBednetSummaryPageState
                               LabelValuePair(
                                   label: localizations.translate(
                                       i18.householdLocation.villageLabel),
-                                  value: householdState.householdModel?.address
-                                          ?.locality?.code ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
+                                  value: localizations.translate(householdState
+                                          .householdModel
+                                          ?.address
+                                          ?.locality
+                                          ?.code ??
+                                      i18.common.coreCommonNA),
                                   isInline: true),
                             ]),
                       ),
@@ -240,7 +242,7 @@ class CustomBednetSummaryPageState
                                                       ?.memberCount ??
                                                   0) /
                                               2,
-                                          3)
+                                          Constants.maxBednetCount)
                                       .round()
                                       .toString(),
                                   isInline: true),
@@ -296,8 +298,8 @@ class CustomBednetSummaryPageState
                                                                         ?.dateOfBirth ??
                                                                     '')
                                                         .toString(),
-                                                    dateFormat: Constants()
-                                                        .dateMonthYearFormat)
+                                                    dateFormat: Constants
+                                                        .defaultDateFormat)
                                                 .toString()
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),

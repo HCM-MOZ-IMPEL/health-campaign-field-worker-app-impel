@@ -169,7 +169,7 @@ class CustomDeliverInterventionBednetPageState
           final householdMemberWrapper = state.householdMemberWrapper;
           final memberCount =
               householdMemberWrapper.household?.memberCount ?? 0;
-          bednetCount = min(memberCount / 2, 3).round();
+          bednetCount = min(memberCount / 2, Constants.maxBednetCount).round();
 
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
