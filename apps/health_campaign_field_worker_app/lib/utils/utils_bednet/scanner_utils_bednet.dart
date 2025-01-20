@@ -156,9 +156,6 @@ class DigitScannerUtils {
                 i18_local.deliverIntervention.scanValidResource,
               );
             }
-
-            // Store the QR code if not already scanned
-            await storeCode(barcodes.first.displayValue.toString());
           }
         }
       }
