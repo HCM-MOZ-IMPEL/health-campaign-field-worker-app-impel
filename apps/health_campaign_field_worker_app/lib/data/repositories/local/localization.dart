@@ -30,7 +30,7 @@ class LocalizationLocalRepository {
         if (LocalizationParams().exclude == true) {
           // Exclude modules but include records where the code matches
           final moduleCondition =
-              sql.localization.module.isIn(moduleToExclude.toList()).not();
+              sql.localization.module.contains(moduleToExclude.first).not();
           final codeCondition = LocalizationParams().code != null &&
                   LocalizationParams().code!.isNotEmpty
               ? sql.localization.code.isIn(LocalizationParams().code!.toList())
@@ -40,15 +40,20 @@ class LocalizationLocalRepository {
           andConditions.add(buildAnd([moduleCondition | codeCondition]));
         } else {
           // Include specified modules and optionally filter by code
-          final moduleCondition =
-              sql.localization.module.isIn(moduleToExclude.toList());
+
+          final moduleCondition = moduleToExclude.isNotEmpty
+              ? buildOr(moduleToExclude
+                  .map((module) => sql.localization.module.contains(module))
+                  .toList())
+              : const Constant(false);
+
           final codeCondition = LocalizationParams().code != null &&
                   LocalizationParams().code!.isNotEmpty
               ? sql.localization.code.isIn(LocalizationParams().code!.toList())
               : const Constant(false);
 
-          // Combine conditions: module matches and optionally code filter
-          andConditions.add(buildAnd([moduleCondition | codeCondition]));
+// Combine conditions: module matches and optionally code filter
+          andConditions.add(buildOr([moduleCondition, codeCondition]));
         }
       } else if (LocalizationParams().code != null &&
           LocalizationParams().code!.isNotEmpty) {
@@ -66,9 +71,12 @@ class LocalizationLocalRepository {
 
       return result.map((row) {
         final data = row.readTableOrNull(sql.localization);
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
 
         return Localization()
-          ..code = data!.code
+          ..code = data.code
           ..locale = data.locale
           ..module = data.module
           ..message = data.message;
