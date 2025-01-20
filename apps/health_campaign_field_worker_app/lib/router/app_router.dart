@@ -1230,6 +1230,12 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
               page: BoundarySelectionViewRoute.page,
               path: 'boundary-selection-view'),
+          AutoRoute(page: ProfileRoute.page, path: 'profile'),
+          AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',
@@ -1627,7 +1633,6 @@ class AppRouter extends _$AppRouter {
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement',
           ),
-
           AutoRoute(
               page: ChecklistWrapperRoute.page,
               path: 'checklist',

@@ -163,7 +163,7 @@ class CustomHouseHoldDetailsBednetPageState
                   } else {
                     final route = router.parent() as StackRouter;
                     route.popUntilRouteWithName(
-                        CustomSearchBeneficiaryRoute.name);
+                        CustomSearchBeneficiaryBednetRoute.name);
                     route.push(
                         CustomHouseholdWrapperRoute(wrapper: memberWrapper));
                   }
