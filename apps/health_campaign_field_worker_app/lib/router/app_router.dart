@@ -649,6 +649,12 @@ class AppRouter extends _$AppRouter {
             path: 'home',
             redirectTo: 'home-smc',
           ),
+          AutoRoute(page: ProfileRoute.page, path: 'profile'),
+          AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
           AutoRoute(
               page: BoundarySelectionViewRoute.page,
               path: 'boundary-selection-view'),

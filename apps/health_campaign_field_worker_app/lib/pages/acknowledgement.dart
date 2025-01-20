@@ -1,7 +1,9 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../models/entities/project_types.dart';
 import '../router/app_router.dart';
+import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -65,7 +67,19 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
                   onPressed: () {
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                    if (isProjectTypeSMC(context)) {
+                      context.router.replaceAll([
+                        const SMCWrapperRoute(),
+                      ]);
+                    } else if (isProjectTypeIRS(context)) {
+                      context.router.replaceAll([
+                        const IRSWrapperRoute(),
+                      ]);
+                    } else {
+                      // context.router.replaceAll([
+                      //   const BednetWrapperRoute(),
+                      // ]);
+                    }
                   },
                 ),
                 const SizedBox(
@@ -73,7 +87,22 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                 ),
                 DigitOutLineButton(
                   onPressed: () {
-                    context.router.popAndPush(BoundarySelectionRoute());
+                    if (isProjectTypeSMC(context)) {
+                      context.router.replaceAll([
+                        const SMCWrapperRoute(),
+                        BoundarySelectionRoute(),
+                      ]);
+                    } else if (isProjectTypeIRS(context)) {
+                      context.router.replaceAll([
+                        const IRSWrapperRoute(),
+                        BoundarySelectionRoute(),
+                      ]);
+                    } else {
+                      // context.router.replaceAll([
+                      //   const BednetWrapperRoute(),
+                      //   BoundarySelectionRoute(),
+                      // ]);
+                    }
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
@@ -99,4 +128,12 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
       ),
     );
   }
+}
+
+bool isProjectTypeSMC(BuildContext context) {
+  return context.projectTypeCode == ProjectTypes.smc.toValue();
+}
+
+bool isProjectTypeIRS(BuildContext context) {
+  return context.projectTypeCode == ProjectTypes.irs.toValue();
 }
