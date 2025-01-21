@@ -17,7 +17,7 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18_localSMC;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local_SMC;
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../utils/utils.dart' show CustomValidator;
@@ -806,7 +806,7 @@ class CustomStockDetailsSMCPageState
                                           key: const Key(_productVariantKey),
                                           formControlName: _productVariantKey,
                                           label: localizations.translate(
-                                            i18_localSMC.stockDetails
+                                            i18_local_SMC.stockDetails
                                                 .selectProductLabelSMC,
                                           ),
                                           isRequired: true,
@@ -935,7 +935,7 @@ class CustomStockDetailsSMCPageState
                                                 allFacilities.add(
                                                   FacilityModel(
                                                     id: 'Supervisor',
-                                                    name: 'Chefe de Equipa',
+                                                    name: 'Supervisor de DC',
                                                     additionalFields:
                                                         FacilityAdditionalFields(
                                                       version: 1,
@@ -1644,7 +1644,7 @@ class CustomStockDetailsSMCPageState
                                     child: IgnorePointer(
                                       child: DigitTextFormField(
                                         label: localizations.translate(
-                                          i18_localSMC
+                                          i18_local_SMC
                                               .stockDetails.teamCodeLabelSMC,
                                         ),
                                         onChanged: (val) {
@@ -1713,8 +1713,8 @@ class CustomStockDetailsSMCPageState
                                     child: IgnorePointer(
                                       child: DigitTextFormField(
                                         label: localizations.translate(
-                                          i18_local
-                                              .stockDetails.supervisorCodeLabel,
+                                          i18_local_SMC.stockDetails
+                                              .supervisorCodeLabelSMC,
                                         ),
                                         onChanged: (val) {
                                           String? value = val.value as String?;

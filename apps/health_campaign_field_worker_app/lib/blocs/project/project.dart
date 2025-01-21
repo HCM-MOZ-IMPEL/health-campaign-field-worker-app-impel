@@ -486,8 +486,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
         // Info : added IRS as default projectTypeCode else based on the user logged in
 
-        final projectTypeCode = event.model.additionalDetails?.projectType ??
-            ProjectTypes.irs.toValue();
+        final projectTypeCode =
+            event.model.additionalDetails?.projectType?.code ??
+                ProjectTypes.irs.toValue();
 
         final filteredDashboardConfig =
             filterDashboardConfig(dashboardConfig, projectTypeCode);

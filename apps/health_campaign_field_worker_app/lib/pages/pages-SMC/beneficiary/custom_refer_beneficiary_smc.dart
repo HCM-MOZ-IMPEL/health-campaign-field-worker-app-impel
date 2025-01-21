@@ -155,6 +155,9 @@ class CustomReferBeneficiarySMCPageState
                                         .control(_referredToKey)
                                         .value as FacilityModel;
                                     final reason = reasons.first;
+                                    final referralCodeValue = form
+                                        .control(_referralCode)
+                                        .value as String?;
                                     final recipientType = recipient.id == 'APS'
                                         ? 'STAFF'
                                         : 'FACILITY';
@@ -202,6 +205,11 @@ class CustomReferBeneficiarySMCPageState
                                               referralReasons,
                                               reasons.join(","),
                                             ),
+                                            if (referralCodeValue != null)
+                                              AdditionalField(
+                                                _referralCode,
+                                                referralCodeValue,
+                                              )
                                           ],
                                         ),
                                       ),
@@ -426,12 +434,20 @@ class CustomReferBeneficiarySMCPageState
                               },
                             ),
                             DigitTextFormField(
-                              formControlName: _referralCode,
-                              label: localizations.translate(
-                                i18.referBeneficiary.referralCodeLabel,
-                              ),
-                              isRequired: true,
-                            ),
+                                formControlName: _referralCode,
+                                label: localizations.translate(
+                                  i18.referBeneficiary.referralCodeLabel,
+                                ),
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                  'min2': (object) => localizations
+                                      .translate(i18.common.min2CharsRequired)
+                                      .replaceAll('{}', ''),
+                                }),
                             DigitTextFormField(
                                 formControlName: _referralComments,
                                 label: localizations.translate(
@@ -470,7 +486,10 @@ class CustomReferBeneficiarySMCPageState
       // _referralReason: FormControl<KeyValue>(value: null),
       // _beneficiaryIdKey: FormControl<String>(validators: [Validators.required]),
       _referralComments: FormControl<String>(value: null),
-      _referralCode: FormControl<String>(validators: [Validators.required]),
+      _referralCode: FormControl<String>(validators: [
+        Validators.required,
+        CustomValidator.requiredMin2,
+      ]),
     });
   }
 

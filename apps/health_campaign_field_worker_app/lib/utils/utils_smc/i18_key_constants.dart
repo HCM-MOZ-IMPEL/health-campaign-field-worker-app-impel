@@ -24,6 +24,7 @@ const householdDetails = HouseholdDetails();
 const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
+const warehouseDetails = WarehouseDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -1336,7 +1337,7 @@ class StockDetails {
   const StockDetails();
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
-  String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
+  String get supervisorCodeLabelSMC => 'STOCK_SUPERVISOR_CODE_LABEL_SMC';
   String get selectProductLabelSMC => 'STOCK_SELECT_PRODUCT_LABEL_SPAQ_SMC';
   String get teamCodeLabelSMC => 'STOCK_TEAM_CODE_LABEL_SMC';
 }
@@ -1347,8 +1348,15 @@ class StockReconciliationDetails {
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
+class WarehouseDetails {
+  const WarehouseDetails();
+
+  String get dateOfReceiptSMC => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT_SMC';
+}
+
 class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+  String get noteDescriptionSMC => 'DSS_NOTE_DESCRIPTION_SMC';
 }

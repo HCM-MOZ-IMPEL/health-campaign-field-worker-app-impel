@@ -329,7 +329,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const UserDashboardRoute());
+            context.router.push(const CustomUserDashboardSMCRoute());
           },
         ),
       ),
