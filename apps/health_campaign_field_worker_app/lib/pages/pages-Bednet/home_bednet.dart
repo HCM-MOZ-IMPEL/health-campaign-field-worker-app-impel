@@ -533,10 +533,10 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
       // i18.home.closedHouseHoldLabel,
-      if (!InventorySingleton().isDistributor) i18.home.manageStockLabel,
-      if (!InventorySingleton().isDistributor)
+      if (InventorySingleton().isWareHouseMgr) i18.home.manageStockLabel,
+      if (InventorySingleton().isWareHouseMgr)
         i18.home.stockReconciliationLabel,
-      if (!InventorySingleton().isDistributor) i18.home.viewReportsLabel,
+      if (InventorySingleton().isWareHouseMgr) i18.home.viewReportsLabel,
       if (!InventorySingleton().isDistributor) i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,

@@ -1,19 +1,17 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../models/entities/project_types.dart';
-import '../router/app_router.dart';
-import '../utils/extensions/extensions.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/localized.dart';
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/localized.dart';
 
 @RoutePage()
-class AcknowledgementPage extends LocalizedStatefulWidget {
+class AcknowledgementBednetPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
   String? label;
   String? description;
   Map<String, dynamic>? descriptionTableData;
-  AcknowledgementPage({
+  AcknowledgementBednetPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -23,10 +21,12 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<AcknowledgementPage> createState() => _AcknowledgementPageState();
+  State<AcknowledgementBednetPage> createState() =>
+      _AcknowledgementBednetPageState();
 }
 
-class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
+class _AcknowledgementBednetPageState
+    extends LocalizedState<AcknowledgementBednetPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -67,19 +67,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
                   onPressed: () {
-                    if (isProjectTypeSMC(context)) {
-                      context.router.replaceAll([
-                        const SMCWrapperRoute(),
-                      ]);
-                    } else if (isProjectTypeIRS(context)) {
-                      context.router.replaceAll([
-                        const IRSWrapperRoute(),
-                      ]);
-                    } else {
-                      context.router.replaceAll([
-                        const BednetWrapperRoute(),
-                      ]);
-                    }
+                    context.router.replaceAll([HomeRoute()]);
                   },
                 ),
                 const SizedBox(
@@ -87,22 +75,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                 ),
                 DigitOutLineButton(
                   onPressed: () {
-                    if (isProjectTypeSMC(context)) {
-                      context.router.replaceAll([
-                        const SMCWrapperRoute(),
-                        BoundarySelectionRoute(),
-                      ]);
-                    } else if (isProjectTypeIRS(context)) {
-                      context.router.replaceAll([
-                        const IRSWrapperRoute(),
-                        BoundarySelectionRoute(),
-                      ]);
-                    } else {
-                      context.router.replaceAll([
-                        const BednetWrapperRoute(),
-                        BoundarySelectionRoute(),
-                      ]);
-                    }
+                    context.router.popAndPush(BoundarySelectionRoute());
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
@@ -128,12 +101,4 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
       ),
     );
   }
-}
-
-bool isProjectTypeSMC(BuildContext context) {
-  return context.projectTypeCode == ProjectTypes.smc.toValue();
-}
-
-bool isProjectTypeIRS(BuildContext context) {
-  return context.projectTypeCode == ProjectTypes.irs.toValue();
 }

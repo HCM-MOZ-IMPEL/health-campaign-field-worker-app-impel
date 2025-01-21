@@ -2,11 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -15,14 +13,14 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/global_search_parameters.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
-import '../../../widgets/beneficiary/custom_view_beneficiary_card.dart';
+import '../../../utils/utils.dart';
 
 import '../../../router/app_router.dart';
 import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
+import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryBednetPage extends LocalizedStatefulWidget {
@@ -348,34 +346,62 @@ class _CustomSearchBeneficiaryBednetPageState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: 70,
+          height: context.isRegistrar && context.isDistributor ? 140 : 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
               padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
               child: Column(
                 children: [
-                  DigitElevatedButton(
-                    onPressed: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(),
-                          );
-                      context.router.push(BeneficiaryRegistrationWrapperRoute(
-                        initialState: BeneficiaryRegistrationCreateState(
-                          searchQuery: searchHouseholdsState.searchQuery,
-                        ),
-                      ));
-                      searchController.clear();
-                      selectedFilters = [];
-                      blocWrapper.clearEvent();
-                    },
-                    child: Center(
-                      child: Text(localizations.translate(
-                        i18.searchBeneficiary.beneficiaryAddActionLabel,
-                      )),
+                  if (context.isRegistrar)
+                    DigitElevatedButton(
+                      onPressed: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        context.read<DigitScannerBloc>().add(
+                              const DigitScannerEvent.handleScanner(),
+                            );
+                        context.router.push(BeneficiaryRegistrationWrapperRoute(
+                          initialState: BeneficiaryRegistrationCreateState(
+                            searchQuery: searchHouseholdsState.searchQuery,
+                          ),
+                        ));
+                        searchController.clear();
+                        selectedFilters = [];
+                        blocWrapper.clearEvent();
+                      },
+                      child: Center(
+                        child: Text(localizations.translate(
+                          i18.searchBeneficiary.beneficiaryAddActionLabel,
+                        )),
+                      ),
                     ),
-                  ),
+                  if (context.isDistributor)
+                    DigitOutlineIconButton(
+                      buttonStyle: OutlinedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                      onPressed: () {
+                        blocWrapper.clearEvent();
+                        selectedFilters = [];
+                        searchController.clear();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CustomDigitScannerPage(
+                              quantity: 1,
+                              isGS1code: false,
+                              singleValue: true,
+                            ),
+                            settings: const RouteSettings(name: '/qr-scanner'),
+                          ),
+                        );
+                      },
+                      icon: Icons.qr_code,
+                      label: localizations.translate(
+                        i18.deliverIntervention.scannerLabel,
+                      ),
+                    ),
                 ],
               ),
             ),

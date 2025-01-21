@@ -40,6 +40,7 @@ import '../pages/pages-Bednet/beneficiary_registration/custom_household_overview
 import '../pages/pages-Bednet/beneficiary_registration/custom_household_wrapper_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_individual_details_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_search_beneficiary_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_summary_page_bednet.dart';
 
 import '../pages/pages-Bednet/closed/custom_closed_household_details_bednet.dart';
 import '../pages/pages-Bednet/closed/custom_closed_household_summary_bednet.dart';
@@ -1229,6 +1230,12 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
               page: BoundarySelectionViewRoute.page,
               path: 'boundary-selection-view'),
+          AutoRoute(page: ProfileRoute.page, path: 'profile'),
+          AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',
@@ -1358,6 +1365,14 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: SummaryRoute.page,
                       path: 'beneficiary-summary',
+                    ),
+                    AutoRoute(
+                      page: CustomBednetSummaryRoute.page,
+                      path: 'custom-bednet-beneficiary-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-summary',
+                      redirectTo: 'custom-bednet-beneficiary-summary',
                     ),
                     AutoRoute(
                       page: BeneficiaryChecklistRoute.page,
@@ -1618,7 +1633,6 @@ class AppRouter extends _$AppRouter {
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement',
           ),
-
           AutoRoute(
               page: ChecklistWrapperRoute.page,
               path: 'checklist',

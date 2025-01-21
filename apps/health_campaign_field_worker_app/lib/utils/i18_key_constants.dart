@@ -1029,6 +1029,8 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
   String get mobileMinLengthValidationMessageSMC =>
       'MOBILE_MIN_LENGTH_VALIDATION_SMC';
+  String get scanVoucherAndLinkToIndividual => 'VOUCHER_LINK_ERROR';
+  String get bednetCountSummaryText => 'BEDNET_SUMMARY_COUNT_TEXT';
 }
 
 class BeneficiaryDetails {
