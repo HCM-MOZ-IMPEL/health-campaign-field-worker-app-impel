@@ -85,7 +85,6 @@ class CustomBednetSummaryPageState
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
                 Padding(
                   padding:
