@@ -59,6 +59,8 @@ class CustomStockDetailsSMCPageState
   bool deliveryTeamSelected = false;
   bool supervisorSelected = false;
   bool spaqManagerSelected = false;
+  bool commentRequired = false;
+  bool byHand = false;
 
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
@@ -444,7 +446,13 @@ class CustomStockDetailsSMCPageState
                                           String? deliveryTeamName = form
                                               .control(_deliveryTeamKey)
                                               .value as String?;
+                                          String? distributorUsername;
                                           if (deliveryTeamName != null) {
+                                            distributorUsername =
+                                                deliveryTeamName
+                                                    .split(
+                                                        Constants.pipeSeparator)
+                                                    .first;
                                             deliveryTeamName = deliveryTeamName
                                                 .split(Constants.pipeSeparator)
                                                 .last;
@@ -453,6 +461,17 @@ class CustomStockDetailsSMCPageState
                                           String? supervisor = form
                                               .control(_supervisorKey)
                                               .value as String?;
+
+                                          String? supervisorUsername;
+
+                                          if (supervisor != null) {
+                                            supervisorUsername = supervisor
+                                                .split(Constants.pipeSeparator)
+                                                .first;
+                                            supervisor = supervisor
+                                                .split(Constants.pipeSeparator)
+                                                .last;
+                                          }
 
                                           if (supervisor != null) {
                                             supervisor = supervisor
@@ -691,6 +710,26 @@ class CustomStockDetailsSMCPageState
                                                   AdditionalField(
                                                     'deliveryTeam',
                                                     deliveryTeamName,
+                                                  ),
+                                                if (distributorUsername !=
+                                                        null &&
+                                                    distributorUsername
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    Constants
+                                                        .distributorUsername,
+                                                    distributorUsername,
+                                                  ),
+                                                if (supervisorUsername !=
+                                                        null &&
+                                                    supervisorUsername
+                                                        .trim()
+                                                        .isNotEmpty)
+                                                  AdditionalField(
+                                                    Constants
+                                                        .supervisorUsername,
+                                                    supervisorUsername,
                                                   ),
                                                 if (driverName != null &&
                                                     driverName.isNotEmpty)
@@ -1030,15 +1069,9 @@ class CustomStockDetailsSMCPageState
                                                 setState(() {
                                                   deliveryTeamSelected = true;
                                                   supervisorSelected = false;
-                                                  form
-                                                      .control(
-                                                    _driverNameKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                  updateCommentValidation(
+                                                      isWareHouseMgr, form);
+                                                  removeVehicleValidation(form);
                                                   form
                                                       .control(
                                                     _waybillNumberKey,
@@ -1060,15 +1093,6 @@ class CustomStockDetailsSMCPageState
                                                   form
                                                       .control(
                                                     _typeOfTransportKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
-                                                  form
-                                                      .control(
-                                                    _vehicleNumberKey,
                                                   )
                                                       .setValidators(
                                                     [],
@@ -1107,15 +1131,9 @@ class CustomStockDetailsSMCPageState
                                                 setState(() {
                                                   supervisorSelected = true;
                                                   deliveryTeamSelected = false;
-                                                  form
-                                                      .control(
-                                                    _driverNameKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                  updateCommentValidation(
+                                                      isWareHouseMgr, form);
+                                                  removeVehicleValidation(form);
                                                   form
                                                       .control(
                                                     _waybillNumberKey,
@@ -1143,15 +1161,7 @@ class CustomStockDetailsSMCPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
-                                                  form
-                                                      .control(
-                                                    _vehicleNumberKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+
                                                   form
                                                       .control(
                                                     _deliveryTeamKey,
@@ -1182,23 +1192,10 @@ class CustomStockDetailsSMCPageState
                                                 setState(() {
                                                   deliveryTeamSelected = false;
                                                   supervisorSelected = false;
+                                                  updateCommentValidation(
+                                                      isWareHouseMgr, form);
 
                                                   if (isWareHouseMgr) {
-                                                    form
-                                                        .control(
-                                                      _driverNameKey,
-                                                    )
-                                                        .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
-
                                                     form
                                                         .control(
                                                       _waybillNumberKey,
@@ -1239,26 +1236,23 @@ class CustomStockDetailsSMCPageState
                                                       updateParent: true,
                                                       autoValidate: true,
                                                     );
-                                                    form
-                                                        .control(
-                                                      _vehicleNumberKey,
-                                                    )
-                                                        .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
+                                                    final transportTypeValue =
+                                                        form
+                                                            .control(
+                                                              _typeOfTransportKey,
+                                                            )
+                                                            .value as String?;
+                                                    if (transportTypeValue ==
+                                                        Constants.byHand) {
+                                                      byHand = true;
+                                                      removeVehicleValidation(
+                                                          form);
+                                                    } else {
+                                                      byHand = false;
+                                                      addVehicleValidations(
+                                                          form);
+                                                    }
 
-                                                    form
-                                                        .control(
-                                                          _driverNameKey,
-                                                        )
-                                                        .touched;
                                                     form
                                                         .control(
                                                           _waybillNumberKey,
@@ -1272,11 +1266,6 @@ class CustomStockDetailsSMCPageState
                                                     form
                                                         .control(
                                                           _typeOfTransportKey,
-                                                        )
-                                                        .touched;
-                                                    form
-                                                        .control(
-                                                          _vehicleNumberKey,
                                                         )
                                                         .touched;
                                                   }
@@ -1356,15 +1345,10 @@ class CustomStockDetailsSMCPageState
                                                           true;
                                                       supervisorSelected =
                                                           false;
-                                                      form
-                                                          .control(
-                                                        _driverNameKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+                                                      updateCommentValidation(
+                                                          isWareHouseMgr, form);
+                                                      removeVehicleValidation(
+                                                          form);
                                                       form
                                                           .control(
                                                         _waybillNumberKey,
@@ -1386,15 +1370,6 @@ class CustomStockDetailsSMCPageState
                                                       form
                                                           .control(
                                                         _typeOfTransportKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
-                                                      form
-                                                          .control(
-                                                        _vehicleNumberKey,
                                                       )
                                                           .setValidators(
                                                         [],
@@ -1434,15 +1409,10 @@ class CustomStockDetailsSMCPageState
                                                       supervisorSelected = true;
                                                       deliveryTeamSelected =
                                                           false;
-                                                      form
-                                                          .control(
-                                                        _driverNameKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+                                                      updateCommentValidation(
+                                                          isWareHouseMgr, form);
+                                                      removeVehicleValidation(
+                                                          form);
                                                       form
                                                           .control(
                                                         _waybillNumberKey,
@@ -1464,15 +1434,6 @@ class CustomStockDetailsSMCPageState
                                                       form
                                                           .control(
                                                         _typeOfTransportKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
-                                                      form
-                                                          .control(
-                                                        _vehicleNumberKey,
                                                       )
                                                           .setValidators(
                                                         [],
@@ -1511,22 +1472,10 @@ class CustomStockDetailsSMCPageState
                                                           false;
                                                       supervisorSelected =
                                                           false;
+                                                      updateCommentValidation(
+                                                          isWareHouseMgr, form);
+
                                                       if (isWareHouseMgr) {
-                                                        form
-                                                            .control(
-                                                          _driverNameKey,
-                                                        )
-                                                            .setValidators(
-                                                          [
-                                                            Validators.required,
-                                                            Validators
-                                                                .minLength(2),
-                                                            Validators
-                                                                .maxLength(200),
-                                                          ],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
                                                         form
                                                             .control(
                                                           _waybillNumberKey,
@@ -1568,27 +1517,24 @@ class CustomStockDetailsSMCPageState
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
-                                                        form
-                                                            .control(
-                                                          _vehicleNumberKey,
-                                                        )
-                                                            .setValidators(
-                                                          [
-                                                            Validators.required,
-                                                            Validators
-                                                                .minLength(2),
-                                                            Validators
-                                                                .maxLength(200),
-                                                          ],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
+                                                        final transportTypeValue =
+                                                            form
+                                                                    .control(
+                                                                      _typeOfTransportKey,
+                                                                    )
+                                                                    .value
+                                                                as String?;
+                                                        if (transportTypeValue ==
+                                                            Constants.byHand) {
+                                                          byHand = true;
+                                                          removeVehicleValidation(
+                                                              form);
+                                                        } else {
+                                                          byHand = false;
+                                                          addVehicleValidations(
+                                                              form);
+                                                        }
 
-                                                        form
-                                                            .control(
-                                                              _driverNameKey,
-                                                            )
-                                                            .touched;
                                                         form
                                                             .control(
                                                               _waybillNumberKey,
@@ -1602,11 +1548,6 @@ class CustomStockDetailsSMCPageState
                                                         form
                                                             .control(
                                                               _typeOfTransportKey,
-                                                            )
-                                                            .touched;
-                                                        form
-                                                            .control(
-                                                              _vehicleNumberKey,
                                                             )
                                                             .touched;
                                                       }
@@ -1798,13 +1739,10 @@ class CustomStockDetailsSMCPageState
                                         ),
                                   },
                                   onChanged: (val) {
-                                    if (val.value != null) {
-                                      if (val.value > 10000000000) {
-                                        form
-                                            .control(_transactionQuantityKey)
-                                            .value = maxCount;
-                                      }
-                                    }
+                                    setState(() {
+                                      updateCommentValidation(
+                                          isWareHouseMgr, form);
+                                    });
                                   },
                                   label: localizations.translate(
                                     quantityCountLabel,
@@ -1867,6 +1805,12 @@ class CustomStockDetailsSMCPageState
                                             '${quantityCountLabel}_MIN_ERROR',
                                           ),
                                     },
+                                    onChanged: (val) {
+                                      setState(() {
+                                        updateCommentValidation(
+                                            isWareHouseMgr, form);
+                                      });
+                                    },
                                   ),
                                 if (isWareHouseMgr)
                                   transportTypes.isNotEmpty
@@ -1880,11 +1824,28 @@ class CustomStockDetailsSMCPageState
                                           ),
                                           valueMapper: (e) => e,
                                           onChanged: (value) {
-                                            setState(() {
-                                              form.control(
-                                                _typeOfTransportKey,
-                                              );
-                                            });
+                                            final transportTypeValue = form
+                                                .control(
+                                                  _typeOfTransportKey,
+                                                )
+                                                .value as String?;
+                                            if (transportTypeValue ==
+                                                Constants.byHand) {
+                                              setState(() {
+                                                byHand = true;
+                                                removeVehicleValidation(form);
+                                              });
+                                            } else {
+                                              setState(() {
+                                                byHand = false;
+                                                if (!supervisorSelected &&
+                                                    !deliveryTeamSelected) {
+                                                  addVehicleValidations(form);
+                                                } else {
+                                                  removeVehicleValidation(form);
+                                                }
+                                              });
+                                            }
                                           },
                                           initialValue:
                                               transportTypes.firstOrNull?.name,
@@ -1911,7 +1872,8 @@ class CustomStockDetailsSMCPageState
                                     ),
                                     isRequired: isWareHouseMgr &&
                                         !supervisorSelected &&
-                                        !deliveryTeamSelected,
+                                        !deliveryTeamSelected &&
+                                        !byHand,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
@@ -1935,7 +1897,8 @@ class CustomStockDetailsSMCPageState
                                     ),
                                     isRequired: isWareHouseMgr &&
                                         !supervisorSelected &&
-                                        !deliveryTeamSelected,
+                                        !deliveryTeamSelected &&
+                                        !byHand,
                                     formControlName: _vehicleNumberKey,
                                     validationMessages: {
                                       'required': (object) =>
@@ -1959,6 +1922,16 @@ class CustomStockDetailsSMCPageState
                                   minLines: 2,
                                   maxLines: 3,
                                   formControlName: _commentsKey,
+                                  isRequired: commentRequired,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
+                                    'min2': (object) => localizations
+                                        .translate(i18.common.min2CharsRequired)
+                                        .replaceAll('{}', ''),
+                                  },
                                 ),
                               ],
                             ),
@@ -1973,6 +1946,139 @@ class CustomStockDetailsSMCPageState
           },
         ),
       ),
+    );
+  }
+
+  void addVehicleValidations(FormGroup form) {
+    form
+        .control(
+      _vehicleNumberKey,
+    )
+        .setValidators(
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
+      _driverNameKey,
+    )
+        .setValidators(
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(200),
+      ],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
+          _vehicleNumberKey,
+        )
+        .touched;
+
+    form
+        .control(
+          _driverNameKey,
+        )
+        .touched;
+  }
+
+  void updateCommentValidation(bool isWareHouseMgr, FormGroup form) {
+    if (isWareHouseMgr && !supervisorSelected && !deliveryTeamSelected) {
+      final quantity =
+          (form.control(_transactionQuantityKey).value ?? 0) as int;
+
+      final waybillQuantity =
+          (form.control(_waybillQuantityKey).value ?? 0) as int;
+
+      if (quantity != waybillQuantity) {
+        commentRequired = true;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [
+            Validators.required,
+            CustomValidator.requiredMin2,
+          ],
+          updateParent: true,
+          autoValidate: true,
+        );
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      } else {
+        commentRequired = false;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [
+            CustomValidator.requiredMin2,
+          ],
+          updateParent: true,
+          autoValidate: true,
+        );
+
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      }
+    } else {
+      commentRequired = false;
+      form
+          .control(
+        _commentsKey,
+      )
+          .setValidators(
+        [
+          CustomValidator.requiredMin2,
+        ],
+        updateParent: true,
+        autoValidate: true,
+      );
+
+      form
+          .control(
+            _commentsKey,
+          )
+          .touched;
+    }
+  }
+
+  void removeVehicleValidation(FormGroup form) {
+    form
+        .control(
+      _vehicleNumberKey,
+    )
+        .setValidators(
+      [],
+      updateParent: true,
+      autoValidate: true,
+    );
+
+    form
+        .control(
+      _driverNameKey,
+    )
+        .setValidators(
+      [],
+      updateParent: true,
+      autoValidate: true,
     );
   }
 
