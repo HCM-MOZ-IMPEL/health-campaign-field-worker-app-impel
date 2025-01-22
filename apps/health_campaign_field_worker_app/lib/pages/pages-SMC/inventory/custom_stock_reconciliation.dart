@@ -20,6 +20,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart' hide CustomValidator;
+import '../../../router/app_router.dart';
 import '../../../utils/utils.dart' show CustomValidator;
 
 import '../../../utils/constants.dart';
@@ -396,7 +397,7 @@ class _CustomStockReconciliationSMCPageState
                                                           StockReconciliationBloc>();
                                                   final facility = await context
                                                           .router
-                                                          .push(InventoryFacilitySelectionRoute(
+                                                          .push(CustomInventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   facilities))
                                                       as FacilityModel?;
@@ -404,12 +405,12 @@ class _CustomStockReconciliationSMCPageState
                                                   if (facility == null) {
                                                     return;
                                                   }
-                                                  form
-                                                          .control(_facilityKey)
-                                                          .value =
-                                                      localizations.translate(
-                                                    'FAC_${facility.id}',
-                                                  );
+                                                  form.control(_facilityKey).value =
+                                                      facility.name ??
+                                                          localizations
+                                                              .translate(
+                                                            'FAC_${facility.id}',
+                                                          );
                                                   setState(() {
                                                     selectedFacilityId =
                                                         facility.id;
@@ -446,7 +447,7 @@ class _CustomStockReconciliationSMCPageState
 
                                                       final facility = await context
                                                               .router
-                                                              .push(InventoryFacilitySelectionRoute(
+                                                              .push(CustomInventoryFacilitySelectionRoute(
                                                                   facilities:
                                                                       facilities))
                                                           as FacilityModel?;
@@ -455,12 +456,13 @@ class _CustomStockReconciliationSMCPageState
                                                         return;
                                                       }
                                                       form
-                                                              .control(_facilityKey)
-                                                              .value =
+                                                          .control(_facilityKey)
+                                                          .value = facility
+                                                              .name ??
                                                           localizations
                                                               .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
+                                                            'FAC_${facility.id}',
+                                                          );
                                                       setState(() {
                                                         selectedFacilityId =
                                                             facility.id;

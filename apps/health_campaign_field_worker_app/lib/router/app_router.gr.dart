@@ -929,6 +929,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ReferralReconProjectFacilitySelectionSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<ReferralReconProjectFacilitySelectionSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ReferralReconProjectFacilitySelectionSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          projectFacilities: args.projectFacilities,
+          facilityMap: args.facilityMap,
+        ),
+      );
+    },
     SMCWrapperRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -4231,6 +4244,55 @@ class ProjectSelectionRouteArgs {
   @override
   String toString() {
     return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ReferralReconProjectFacilitySelectionSMCPage]
+class ReferralReconProjectFacilitySelectionSMCRoute
+    extends PageRouteInfo<ReferralReconProjectFacilitySelectionSMCRouteArgs> {
+  ReferralReconProjectFacilitySelectionSMCRoute({
+    Key? key,
+    ReferralReconLocalization? appLocalizations,
+    required List<ProjectFacilityModel> projectFacilities,
+    required Map<String, String> facilityMap,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReferralReconProjectFacilitySelectionSMCRoute.name,
+          args: ReferralReconProjectFacilitySelectionSMCRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            projectFacilities: projectFacilities,
+            facilityMap: facilityMap,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReferralReconProjectFacilitySelectionSMCRoute';
+
+  static const PageInfo<ReferralReconProjectFacilitySelectionSMCRouteArgs>
+      page = PageInfo<ReferralReconProjectFacilitySelectionSMCRouteArgs>(name);
+}
+
+class ReferralReconProjectFacilitySelectionSMCRouteArgs {
+  const ReferralReconProjectFacilitySelectionSMCRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.projectFacilities,
+    required this.facilityMap,
+  });
+
+  final Key? key;
+
+  final ReferralReconLocalization? appLocalizations;
+
+  final List<ProjectFacilityModel> projectFacilities;
+
+  final Map<String, String> facilityMap;
+
+  @override
+  String toString() {
+    return 'ReferralReconProjectFacilitySelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, projectFacilities: $projectFacilities, facilityMap: $facilityMap}';
   }
 }
 

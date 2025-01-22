@@ -18,6 +18,7 @@ import 'package:referral_reconciliation/widgets/localized.dart';
 import 'package:referral_reconciliation/pages/project_facility/project_facility_selection.dart';
 
 import '../../../router/app_router.dart';
+import 'referral_project_facility_selection_smc.dart';
 
 @RoutePage()
 class CustomReferralFacilitySMCPage extends LocalizedStatefulWidget {
@@ -252,19 +253,23 @@ class _CustomReferralFacilitySMCState
                                                           .push(
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ReferralReconProjectFacilitySelectionPage(
+                                                          ReferralReconProjectFacilitySelectionSMCPage(
                                                         projectFacilities:
                                                             facilities,
+                                                        facilityMap:
+                                                            facilityMap,
                                                       ),
                                                     ),
                                                   );
 
                                                   if (facility == null) return;
                                                   form
-                                                          .control(
-                                                            _evaluationFacilityKey,
-                                                          )
-                                                          .value =
+                                                      .control(
+                                                        _evaluationFacilityKey,
+                                                      )
+                                                      .value = facilityMap[
+                                                          facility
+                                                              .facilityId] ??
                                                       localizations.translate(
                                                           'PJ_FAC_${facility.id}');
                                                   setState(() {
@@ -303,9 +308,11 @@ class _CustomReferralFacilitySMCState
                                                               .push(
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              ReferralReconProjectFacilitySelectionPage(
+                                                              ReferralReconProjectFacilitySelectionSMCPage(
                                                             projectFacilities:
                                                                 facilities,
+                                                            facilityMap:
+                                                                facilityMap,
                                                           ),
                                                         ),
                                                       );
@@ -314,14 +321,16 @@ class _CustomReferralFacilitySMCState
                                                         return;
                                                       }
                                                       form
-                                                              .control(
-                                                                _evaluationFacilityKey,
-                                                              )
-                                                              .value =
+                                                          .control(
+                                                            _evaluationFacilityKey,
+                                                          )
+                                                          .value = facilityMap[
+                                                              facility
+                                                                  .facilityId] ??
                                                           localizations
                                                               .translate(
-                                                        'PJ_FAC_${facility.id}',
-                                                      );
+                                                            'PJ_FAC_${facility.id}',
+                                                          );
                                                       setState(() {
                                                         selectedProjectFacilityId =
                                                             facility.id;

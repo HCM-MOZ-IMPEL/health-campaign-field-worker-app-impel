@@ -470,7 +470,8 @@ class CustomReferBeneficiarySMCPageState
   FormGroup buildForm(List<FacilityModel> healthFacilities) {
     return fb.group(<String, Object>{
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
-      _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
+      _administrativeUnitKey: FormControl<String>(
+          value: localizations.translate(context.boundary.code!)),
       _referredByKey: FormControl<String>(
         value: context.loggedInUser.userName,
         validators: [Validators.required],

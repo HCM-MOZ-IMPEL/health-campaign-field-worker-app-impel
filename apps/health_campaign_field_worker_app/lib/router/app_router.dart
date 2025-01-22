@@ -108,6 +108,7 @@ import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral/custom_record_facility_smc.dart';
+import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
@@ -1188,6 +1189,10 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: ReferralReconProjectFacilitySelectionRoute.page,
             path: 'referral-project-facility',
+          ),
+          AutoRoute(
+            page: ReferralReconProjectFacilitySelectionSMCRoute.page,
+            path: 'referral-project-facility-smc',
           ),
           AutoRoute(
             page: SearchReferralReconciliationsRoute.page,

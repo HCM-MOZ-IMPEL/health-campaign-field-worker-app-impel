@@ -68,7 +68,8 @@ class CustomClosedHouseholdSummaryPageState
                           context.read<custombloc.ClosedHouseholdBloc>().add(
                               custombloc.ClosedHouseholdEvent.handleSubmit(
                                   context.boundary.code,
-                                  context.boundary.name,
+                                  localizations
+                                      .translate(context.boundary.code!),
                                   context.loggedInUserUuid,
                                   envConfig.variables.tenantId,
                                   context.projectId,
@@ -121,10 +122,11 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdVillageName),
-                            value: ClosedHouseholdSingleton()
-                                .boundary!
-                                .name
-                                .toString(),
+                            value: localizations.translate(
+                                ClosedHouseholdSingleton()
+                                    .boundary!
+                                    .code
+                                    .toString()),
                           ),
                           LabelValuePair(
                             label: localizations.translate(

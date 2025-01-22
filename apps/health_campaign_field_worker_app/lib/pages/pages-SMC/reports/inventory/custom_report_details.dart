@@ -22,6 +22,7 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../../../router/app_router.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/extensions/extensions.dart';
 
@@ -45,6 +46,7 @@ class CustomInventoryReportDetailsSMCPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
   String? selectedFacilityId;
+  Map<String, FacilityModel> facilityMap = {};
 
   /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
   ///
@@ -218,6 +220,21 @@ class CustomInventoryReportDetailsSMCPageState
                                                         ) ??
                                                         [];
 
+                                                final allFacilities =
+                                                    state.whenOrNull(
+                                                          fetched: (
+                                                            _,
+                                                            allFacilities,
+                                                          ) =>
+                                                              allFacilities,
+                                                        ) ??
+                                                        [];
+                                                for (var element
+                                                    in allFacilities) {
+                                                  facilityMap[element.id] =
+                                                      element;
+                                                }
+
                                                 if (RegistrationDeliverySingleton()
                                                         .selectedProject
                                                         ?.address
@@ -292,7 +309,7 @@ class CustomInventoryReportDetailsSMCPageState
 
                                                     final facility = await context
                                                             .router
-                                                            .push(InventoryFacilitySelectionRoute(
+                                                            .push(CustomInventoryFacilitySelectionRoute(
                                                                 facilities:
                                                                     facilities))
                                                         as FacilityModel?;
@@ -300,11 +317,12 @@ class CustomInventoryReportDetailsSMCPageState
                                                     if (facility == null)
                                                       return;
                                                     form
-                                                            .control(_facilityKey)
-                                                            .value =
+                                                        .control(_facilityKey)
+                                                        .value = facility
+                                                            .name ??
                                                         localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    );
+                                                          'FAC_${facility.id}',
+                                                        );
 
                                                     setState(() {
                                                       selectedFacilityId =
@@ -347,7 +365,7 @@ class CustomInventoryReportDetailsSMCPageState
 
                                                         final facility = await context
                                                                 .router
-                                                                .push(InventoryFacilitySelectionRoute(
+                                                                .push(CustomInventoryFacilitySelectionRoute(
                                                                     facilities:
                                                                         facilities))
                                                             as FacilityModel?;
@@ -355,13 +373,14 @@ class CustomInventoryReportDetailsSMCPageState
                                                         if (facility == null)
                                                           return;
                                                         form
-                                                                .control(
-                                                                    _facilityKey)
-                                                                .value =
+                                                            .control(
+                                                                _facilityKey)
+                                                            .value = facility
+                                                                .name ??
                                                             localizations
                                                                 .translate(
-                                                          'FAC_${facility.id}',
-                                                        );
+                                                              'FAC_${facility.id}',
+                                                            );
 
                                                         setState(() {
                                                           selectedFacilityId =
@@ -545,10 +564,7 @@ class CustomInventoryReportDetailsSMCPageState
                                                           DigitGridCell(
                                                             key:
                                                                 transactingPartyKey,
-                                                            value: widget
-                                                                            .reportType ==
-                                                                        InventoryReportType
-                                                                            .receipt ||
+                                                            value: widget.reportType == InventoryReportType.receipt ||
                                                                     widget.reportType ==
                                                                         InventoryReportType
                                                                             .returned ||
@@ -560,9 +576,9 @@ class CustomInventoryReportDetailsSMCPageState
                                                                             .damage
                                                                 ? model.senderType ==
                                                                         'WAREHOUSE'
-                                                                    ? localizations
-                                                                        .translate(
-                                                                            'FAC_${model.senderId}')
+                                                                    ? (facilityMap[model.senderId]?.name ??
+                                                                        localizations.translate(
+                                                                            'FAC_${model.senderId}'))
                                                                     : model.senderType ==
                                                                             'STAFF'
                                                                         ? _getStaffUsernameFromAdditionalDetails(
@@ -577,9 +593,10 @@ class CustomInventoryReportDetailsSMCPageState
                                                                             '')
                                                                 : model.receiverType ==
                                                                         'WAREHOUSE'
-                                                                    ? localizations
-                                                                        .translate(
-                                                                            'FAC_${model.receiverId}')
+                                                                    ? (facilityMap[model.receiverId]
+                                                                            ?.name ??
+                                                                        localizations.translate(
+                                                                            'FAC_${model.receiverId}'))
                                                                     : model.receiverType ==
                                                                             'STAFF'
                                                                         ? _getStaffUsernameFromAdditionalDetails(
