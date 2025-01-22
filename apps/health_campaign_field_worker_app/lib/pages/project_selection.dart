@@ -287,8 +287,14 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        final projectTypeCode =
+            context.projectTypeCode ?? ProjectTypes.irs.toValue();
+
+        final filteredDashboardConfig =
+            filterDashboardConfig(dashboardConfigSchema ?? [], projectTypeCode);
+
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,
@@ -323,7 +329,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

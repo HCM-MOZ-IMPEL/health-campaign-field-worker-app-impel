@@ -499,8 +499,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
         if (filteredDashboardConfig.isNotEmpty &&
-            filteredDashboardConfig.first.enableDashboard == true &&
-            filteredDashboardConfig.first.charts != null) {
+            filteredDashboardConfig.first != null &&
+            filteredDashboardConfig.first!.enableDashboard == true &&
+            filteredDashboardConfig.first!.charts != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -524,7 +525,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            filteredDashboardConfig.first.charts ?? [],
+            filteredDashboardConfig.first!.charts ?? [],
             startDate,
             endDate,
             isar,
@@ -632,12 +633,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       syncError: null,
     ));
   }
-}
-
-Iterable<DashboardConfigSchema> filterDashboardConfig(
-    List<DashboardConfigSchema> dashboardConfig, String projectTypeCode) {
-  return dashboardConfig
-      .where((element) => element.projectTypeCode == projectTypeCode);
 }
 
 @freezed

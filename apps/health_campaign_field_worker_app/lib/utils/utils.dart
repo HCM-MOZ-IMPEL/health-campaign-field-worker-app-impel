@@ -1,5 +1,6 @@
 library app_utils;
 
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -315,6 +316,22 @@ String? getAgeConditionString(String condition, BuildContext context) {
   return finalCondition;
 }
 
+String? getAgeConditionStringFromVariant(
+    DeliveryProductVariant productVariant, List<ProductVariantModel>? variant) {
+  String? finalCondition;
+  String? value = variant
+      ?.firstWhereOrNull(
+        (element) => element.id == productVariant.productVariantId,
+      )
+      ?.sku;
+
+  if (value != null) {
+    finalCondition = value.split('(').last.split(')').first;
+  }
+
+  return finalCondition;
+}
+
 void showDownloadDialog(
   BuildContext context, {
   required DownloadBeneficiary model,
@@ -613,4 +630,12 @@ class LocalizationParams {
   Locale? get locale => _locale;
 
   bool? get exclude => _exclude;
+}
+
+List<DashboardConfigSchema?> filterDashboardConfig(
+    List<DashboardConfigSchema?> dashboardConfig, String projectTypeCode) {
+  return dashboardConfig
+      .where((element) =>
+          element != null && element.projectTypeCode == projectTypeCode)
+      .toList();
 }

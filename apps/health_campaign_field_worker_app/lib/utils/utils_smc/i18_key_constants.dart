@@ -1352,6 +1352,7 @@ class WarehouseDetails {
   const WarehouseDetails();
 
   String get dateOfReceiptSMC => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT_SMC';
+  String get warehouseDetailsLabelSMC => 'WAREHOUSE_DETAILS_LABEL_SMC';
 }
 
 class Dashboard {

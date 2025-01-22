@@ -934,15 +934,17 @@ class CustomStockDetailsSMCPageState
                                               } else {
                                                 allFacilities.add(
                                                   FacilityModel(
-                                                    id: 'Supervisor',
-                                                    name: 'Supervisor de DC',
+                                                    id: Constants.supervisor,
+                                                    name: Constants
+                                                        .supervisorLabel,
                                                     additionalFields:
                                                         FacilityAdditionalFields(
                                                       version: 1,
                                                       fields: [
                                                         const AdditionalField(
                                                             'type',
-                                                            'Supervisor')
+                                                            Constants
+                                                                .supervisor)
                                                       ],
                                                     ),
                                                   ),
@@ -952,14 +954,16 @@ class CustomStockDetailsSMCPageState
                                                 .isDistributor) {
                                               allFacilities.add(
                                                 FacilityModel(
-                                                  id: 'Supervisor',
-                                                  name: 'Chefe de Equipa',
+                                                  id: Constants.supervisor,
+                                                  name:
+                                                      Constants.supervisorLabel,
                                                   additionalFields:
                                                       FacilityAdditionalFields(
                                                     version: 1,
                                                     fields: [
                                                       const AdditionalField(
-                                                          'type', 'Supervisor')
+                                                          'type',
+                                                          Constants.supervisor)
                                                     ],
                                                   ),
                                                 ),
@@ -975,12 +979,23 @@ class CustomStockDetailsSMCPageState
                                                             .healthFacility)
                                                     .toList());
                                               } else {
-                                                allFacilities.addAll(
-                                                    allFacilities1
-                                                        .where((element) =>
-                                                            element.id ==
-                                                            'Delivery Team')
-                                                        .toList());
+                                                allFacilities.addAll([
+                                                  FacilityModel(
+                                                    id: Constants.deliveryTeam,
+                                                    name: Constants
+                                                        .deliveryTeamLabel,
+                                                    additionalFields:
+                                                        FacilityAdditionalFields(
+                                                      version: 1,
+                                                      fields: [
+                                                        const AdditionalField(
+                                                            'type',
+                                                            Constants
+                                                                .deliveryTeamType)
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ]);
                                               }
                                             }
                                           }
@@ -1011,7 +1026,7 @@ class CustomStockDetailsSMCPageState
                                                     facility.id;
                                               });
                                               if (facility.id ==
-                                                  'Delivery Team') {
+                                                  Constants.deliveryTeam) {
                                                 setState(() {
                                                   deliveryTeamSelected = true;
                                                   supervisorSelected = false;
@@ -1088,7 +1103,7 @@ class CustomStockDetailsSMCPageState
                                                   );
                                                 });
                                               } else if (facility.id ==
-                                                  'Supervisor') {
+                                                  Constants.supervisor) {
                                                 setState(() {
                                                   supervisorSelected = true;
                                                   deliveryTeamSelected = false;
@@ -1335,7 +1350,7 @@ class CustomStockDetailsSMCPageState
                                                         facility.id;
                                                   });
                                                   if (facility.id ==
-                                                      'Delivery Team') {
+                                                      Constants.deliveryTeam) {
                                                     setState(() {
                                                       deliveryTeamSelected =
                                                           true;
@@ -1414,7 +1429,7 @@ class CustomStockDetailsSMCPageState
                                                       );
                                                     });
                                                   } else if (facility.id ==
-                                                      'Supervisor') {
+                                                      Constants.supervisor) {
                                                     setState(() {
                                                       supervisorSelected = true;
                                                       deliveryTeamSelected =

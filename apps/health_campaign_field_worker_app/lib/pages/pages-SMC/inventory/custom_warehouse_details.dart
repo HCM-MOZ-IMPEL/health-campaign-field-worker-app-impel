@@ -13,7 +13,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18_localSMC;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
@@ -349,8 +349,8 @@ class CustomWarehouseDetailsSMCPageState
                                                   .transactionDetailsLabel,
                                             )
                                           : localizations.translate(
-                                              i18.warehouseDetails
-                                                  .warehouseDetailsLabel,
+                                              i18_local.warehouseDetails
+                                                  .warehouseDetailsLabelSMC,
                                             ),
                                       style: theme.textTheme.displayMedium,
                                     ),
@@ -359,7 +359,7 @@ class CustomWarehouseDetailsSMCPageState
                                         isEnabled: false,
                                         formControlName: _dateOfEntryKey,
                                         label: localizations.translate(
-                                          i18_localSMC.warehouseDetails
+                                          i18_local.warehouseDetails
                                               .dateOfReceiptSMC,
                                         ),
                                         isRequired: false,
@@ -489,7 +489,7 @@ class CustomWarehouseDetailsSMCPageState
                                     if (!InventorySingleton().isWareHouseMgr)
                                       DigitTextFormField(
                                         label: localizations.translate(
-                                          i18_localSMC
+                                          i18_local
                                               .stockDetails.teamCodeLabelSMC,
                                         ),
                                         readOnly: true,

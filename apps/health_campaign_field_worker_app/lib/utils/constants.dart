@@ -102,6 +102,11 @@ class Constants {
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
   static const String commentsKey = 'comments';
+  static const String deliveryTeam = 'Delivery Team';
+  static const String deliveryTeamType = 'DeliveryTeam';
+  static const String deliveryTeamLabel = 'DC';
+  static const String supervisor = 'Supervisor';
+  static const String supervisorLabel = 'Supervisor de DC';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

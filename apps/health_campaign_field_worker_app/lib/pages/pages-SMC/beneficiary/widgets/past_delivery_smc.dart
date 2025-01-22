@@ -80,9 +80,10 @@ Widget buildTableContent(
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
             ): fetchProductVariant(item, individualModel, householdModel)
-                        ?.condition !=
+                        ?.productVariants
+                        ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)?.condition}', context)} ${localizations.translate(context.projectTypeCode == ProjectTypes.smc.toValue() ? i18.individualDetails.monthsHintText : i18.individualDetails.yearsHintText)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariant(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
                 : null,
           },
         ),
