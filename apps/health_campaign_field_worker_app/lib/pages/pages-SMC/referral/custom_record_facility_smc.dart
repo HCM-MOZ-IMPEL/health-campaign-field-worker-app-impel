@@ -93,7 +93,8 @@ class _CustomReferralFacilitySMCState
                             false;
 
                         return ReactiveFormBuilder(
-                          form: () => buildForm(recordState, projectFacilities),
+                          form: () => buildForm(
+                              recordState, projectFacilities, facilityMap),
                           builder: (context, form, child) => ScrollableContent(
                             enableFixedButton: true,
                             header: const Column(children: [
@@ -392,6 +393,7 @@ class _CustomReferralFacilitySMCState
   FormGroup buildForm(
     RecordHFReferralState referralState,
     List<ProjectFacilityModel> facilities,
+    Map<String, String> facilityMap,
   ) {
     final dateOfEvaluation = referralState.mapOrNull(
       create: (value) => value.viewOnly &&
@@ -453,11 +455,21 @@ class _CustomReferralFacilitySMCState
       _evaluationFacilityKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
-              ? localizations.translate(
-                  'PJ_FAC_${facilities.where(
-                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
-                      ).first.id.toString()}',
-                )
+              ? facilityMap[facilities
+                          .where(
+                            (e) =>
+                                e.id ==
+                                value.hfReferralModel?.projectFacilityId,
+                          )
+                          .firstOrNull
+                          ?.facilityId ??
+                      ""] ??
+                  localizations.translate(
+                    'PJ_FAC_${facilities.where(
+                          (e) =>
+                              e.id == value.hfReferralModel?.projectFacilityId,
+                        ).first.id.toString()}',
+                  )
               : null,
         ),
         validators: [Validators.required],

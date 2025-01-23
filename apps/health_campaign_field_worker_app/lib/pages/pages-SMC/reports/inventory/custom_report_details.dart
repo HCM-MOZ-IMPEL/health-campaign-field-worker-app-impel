@@ -199,165 +199,109 @@ class CustomInventoryReportDetailsSMCPageState
                                     DigitCard(
                                       child: Column(
                                         children: [
-                                          if (isWareHouseManager)
-                                            BlocConsumer<FacilityBloc,
-                                                FacilityState>(
-                                              listener: (context, state) =>
-                                                  state.whenOrNull(
-                                                empty: () =>
-                                                    NoFacilitiesAssignedDialog
-                                                        .show(
-                                                  context,
-                                                  localizations,
-                                                ),
+                                          BlocConsumer<FacilityBloc,
+                                              FacilityState>(
+                                            listener: (context, state) =>
+                                                state.whenOrNull(
+                                              empty: () =>
+                                                  NoFacilitiesAssignedDialog
+                                                      .show(
+                                                context,
+                                                localizations,
                                               ),
-                                              builder: (context, state) {
-                                                List<FacilityModel> facilities =
-                                                    state.whenOrNull(
-                                                          fetched: (facilities,
-                                                                  allFacilities) =>
-                                                              facilities,
-                                                        ) ??
-                                                        [];
+                                            ),
+                                            builder: (context, state) {
+                                              List<FacilityModel> facilities =
+                                                  state.whenOrNull(
+                                                        fetched: (facilities,
+                                                                allFacilities) =>
+                                                            facilities,
+                                                      ) ??
+                                                      [];
 
-                                                final allFacilities =
-                                                    state.whenOrNull(
-                                                          fetched: (
-                                                            _,
+                                              final allFacilities =
+                                                  state.whenOrNull(
+                                                        fetched: (
+                                                          _,
+                                                          allFacilities,
+                                                        ) =>
                                                             allFacilities,
-                                                          ) =>
-                                                              allFacilities,
-                                                        ) ??
-                                                        [];
-                                                for (var element
-                                                    in allFacilities) {
-                                                  facilityMap[element.id] =
-                                                      element;
-                                                }
+                                                      ) ??
+                                                      [];
+                                              for (var element
+                                                  in allFacilities) {
+                                                facilityMap[element.id] =
+                                                    element;
+                                              }
 
-                                                if (RegistrationDeliverySingleton()
-                                                        .selectedProject
-                                                        ?.address
-                                                        ?.boundaryType ==
-                                                    Constants
-                                                        .provincialBoundaryLevel) {
-                                                  List<FacilityModel>
-                                                      filteredFacilities =
-                                                      facilities
-                                                          .where(
-                                                            (element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .provincialWarehouse,
-                                                          )
-                                                          .toList();
-                                                  facilities =
-                                                      filteredFacilities.isEmpty
-                                                          ? facilities
-                                                          : filteredFacilities;
-                                                } else if (RegistrationDeliverySingleton()
-                                                        .selectedProject
-                                                        ?.address
-                                                        ?.boundaryType ==
-                                                    Constants
-                                                        .districtBoundaryLevel) {
-                                                  List<FacilityModel>
-                                                      filteredFacilities =
-                                                      facilities
-                                                          .where(
-                                                            (element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .districWarehouse,
-                                                          )
-                                                          .toList();
-                                                  facilities =
-                                                      filteredFacilities.isEmpty
-                                                          ? facilities
-                                                          : filteredFacilities;
-                                                } else {
-                                                  List<FacilityModel>
-                                                      filteredFacilities =
-                                                      facilities
-                                                          .where(
-                                                            (element) =>
-                                                                element.usage ==
-                                                                    Constants
-                                                                        .healthFacility &&
-                                                                (context.loggedInUser
-                                                                            .permanentCity ==
-                                                                        null ||
-                                                                    (element.name ??
-                                                                            localizations.translate(
-                                                                                'FAC_${element.id}')) ==
-                                                                        context
-                                                                            .loggedInUser
-                                                                            .permanentCity),
-                                                          )
-                                                          .toList();
-                                                  facilities =
-                                                      filteredFacilities.isEmpty
-                                                          ? facilities
-                                                          : filteredFacilities;
-                                                }
+                                              if (RegistrationDeliverySingleton()
+                                                      .selectedProject
+                                                      ?.address
+                                                      ?.boundaryType ==
+                                                  Constants
+                                                      .provincialBoundaryLevel) {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                              Constants
+                                                                  .provincialWarehouse,
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              } else if (RegistrationDeliverySingleton()
+                                                      .selectedProject
+                                                      ?.address
+                                                      ?.boundaryType ==
+                                                  Constants
+                                                      .districtBoundaryLevel) {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                              Constants
+                                                                  .districWarehouse,
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              } else {
+                                                List<FacilityModel>
+                                                    filteredFacilities =
+                                                    facilities
+                                                        .where(
+                                                          (element) =>
+                                                              element.usage ==
+                                                                  Constants
+                                                                      .healthFacility &&
+                                                              (context.loggedInUser
+                                                                          .permanentCity ==
+                                                                      null ||
+                                                                  (element.name ??
+                                                                          localizations.translate(
+                                                                              'FAC_${element.id}')) ==
+                                                                      context
+                                                                          .loggedInUser
+                                                                          .permanentCity),
+                                                        )
+                                                        .toList();
+                                                facilities =
+                                                    filteredFacilities.isEmpty
+                                                        ? facilities
+                                                        : filteredFacilities;
+                                              }
 
-                                                return InkWell(
-                                                  onTap: () async {
-                                                    final stockReconciliationBloc =
-                                                        context.read<
-                                                            StockReconciliationBloc>();
-
-                                                    final facility = await context
-                                                            .router
-                                                            .push(CustomInventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
-
-                                                    if (facility == null)
-                                                      return;
-                                                    form
-                                                        .control(_facilityKey)
-                                                        .value = facility
-                                                            .name ??
-                                                        localizations.translate(
-                                                          'FAC_${facility.id}',
-                                                        );
-
-                                                    setState(() {
-                                                      selectedFacilityId =
-                                                          facility.id;
-                                                    });
-                                                    stockReconciliationBloc.add(
-                                                      StockReconciliationSelectFacilityEvent(
-                                                        facility,
-                                                      ),
-                                                    );
-
-                                                    handleSelection(
-                                                        form,
-                                                        context.read<
-                                                            InventoryReportBloc>());
-                                                  },
-                                                  child: IgnorePointer(
-                                                    child: DigitTextFormField(
-                                                      key: const Key(
-                                                          _facilityKey),
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.stockReconciliationDetails
-                                                            .facilityLabel,
-                                                      ),
-                                                      suffix: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child:
-                                                            Icon(Icons.search),
-                                                      ),
-                                                      formControlName:
-                                                          _facilityKey,
-                                                      readOnly: false,
-                                                      isRequired: true,
+                                              return isWareHouseManager
+                                                  ? InkWell(
                                                       onTap: () async {
                                                         final stockReconciliationBloc =
                                                             context.read<
@@ -386,10 +330,6 @@ class CustomInventoryReportDetailsSMCPageState
                                                           selectedFacilityId =
                                                               facility.id;
                                                         });
-                                                        form
-                                                            .control(
-                                                                _facilityKey)
-                                                            .value = facility;
                                                         stockReconciliationBloc
                                                             .add(
                                                           StockReconciliationSelectFacilityEvent(
@@ -402,11 +342,77 @@ class CustomInventoryReportDetailsSMCPageState
                                                             context.read<
                                                                 InventoryReportBloc>());
                                                       },
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                                      child: IgnorePointer(
+                                                        child:
+                                                            DigitTextFormField(
+                                                          key: const Key(
+                                                              _facilityKey),
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.stockReconciliationDetails
+                                                                .facilityLabel,
+                                                          ),
+                                                          suffix: const Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8.0),
+                                                            child: Icon(
+                                                                Icons.search),
+                                                          ),
+                                                          formControlName:
+                                                              _facilityKey,
+                                                          readOnly: false,
+                                                          isRequired: true,
+                                                          onTap: () async {
+                                                            final stockReconciliationBloc =
+                                                                context.read<
+                                                                    StockReconciliationBloc>();
+
+                                                            final facility = await context
+                                                                    .router
+                                                                    .push(CustomInventoryFacilitySelectionRoute(
+                                                                        facilities:
+                                                                            facilities))
+                                                                as FacilityModel?;
+
+                                                            if (facility ==
+                                                                null) return;
+                                                            form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value = facility
+                                                                    .name ??
+                                                                localizations
+                                                                    .translate(
+                                                                  'FAC_${facility.id}',
+                                                                );
+
+                                                            setState(() {
+                                                              selectedFacilityId =
+                                                                  facility.id;
+                                                            });
+                                                            form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value = facility;
+                                                            stockReconciliationBloc
+                                                                .add(
+                                                              StockReconciliationSelectFacilityEvent(
+                                                                facility,
+                                                              ),
+                                                            );
+
+                                                            handleSelection(
+                                                                form,
+                                                                context.read<
+                                                                    InventoryReportBloc>());
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const Offstage();
+                                            },
+                                          ),
                                           BlocBuilder<
                                               InventoryProductVariantBloc,
                                               InventoryProductVariantState>(
