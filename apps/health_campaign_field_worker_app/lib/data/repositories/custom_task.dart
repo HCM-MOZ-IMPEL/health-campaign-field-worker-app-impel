@@ -33,7 +33,7 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 query.status!,
               ),
             if (query.plannedEndDate != null && query.plannedStartDate != null)
-              sql.task.clientCreatedTime.isBetweenValues(
+              sql.task.clientModifiedTime.isBetweenValues(
                 query.plannedStartDate!,
                 query.plannedEndDate!,
               ),
@@ -53,6 +53,8 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 isDeleted: task.isDeleted,
                 projectId: task.projectId,
                 projectBeneficiaryId: task.projectBeneficiaryId,
+                projectBeneficiaryClientReferenceId:
+                    task.projectBeneficiaryClientReferenceId,
                 createdDate: task.createdDate,
                 status: task.status,
               );
@@ -100,11 +102,27 @@ class CustomTaskLocalRepository extends TaskLocalRepository {
                 sql.task.auditCreatedBy.equals(
                   userId,
                 ),
+              if (query.projectId != null)
+                sql.task.projectId.equals(
+                  query.projectId!,
+                ),
+              if (query.createdBy != null)
+                sql.task.clientCreatedBy.equals(
+                  query.createdBy!,
+                ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
+                ),
               if (query.plannedEndDate != null &&
                   query.plannedStartDate != null)
-                sql.task.clientCreatedTime.isBetweenValues(
+                sql.task.clientModifiedTime.isBetweenValues(
                   query.plannedStartDate!,
                   query.plannedEndDate!,
+                ),
+              if (query.status != null)
+                sql.task.status.equals(
+                  query.status!,
                 ),
             ]))
             ..orderBy([

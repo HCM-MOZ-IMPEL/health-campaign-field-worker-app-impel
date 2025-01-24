@@ -118,6 +118,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isMobilizer {
+    try {
+      bool isMobilizerRole = loggedInUserRoles
+          .where(
+            (role) => role.code == 'MOBILIZER',
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isMobilizerRole;
+    } catch (_) {
+      return false;
+    }
+  }
+
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(

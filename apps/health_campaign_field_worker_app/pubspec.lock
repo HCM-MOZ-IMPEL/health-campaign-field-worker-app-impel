@@ -515,10 +515,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "0e5a1f8c5f0548e573af9c0279942f2dbc332042865614e0b89fe5952002ef1f"
+      sha256: df389a1972ddc9d59b2f7e1375a04bab88700ae4cc876e5cb83e8fbfe55cfa62
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.4-dev.10-uniqueId"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1141,10 +1141,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "26b14fc7286af4961c41ec0e896ce16c7dc722608f6837deef9ece6e2688681d"
+      sha256: "4c395cf028153c4aa809d12d6469c98bac1b1d1f007aa150465e6ecfd7740d8a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+3"
+    version: "1.0.3-dev.5"
   io:
     dependency: transitive
     description:
@@ -1605,10 +1605,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: b7074bf7115e375b9df2ad2937891139fea163024a35958ff177af137574c047
+      sha256: "028a16614818597ab50bd546489c27fc2735a03cd4a180a9569136bd6ebda0e1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+3"
+    version: "1.0.4-dev.8-search-fix"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:
