@@ -104,9 +104,9 @@ class Constants {
   static const String commentsKey = 'comments';
   static const String deliveryTeam = 'Delivery Team';
   static const String deliveryTeamType = 'DeliveryTeam';
-  static const String deliveryTeamLabel = 'DC';
+  static const String deliveryTeamLabel = 'DELIVERY_TEAM_FACILITY_NAME';
   static const String supervisor = 'Supervisor';
-  static const String supervisorLabel = 'Supervisor de DC';
+  static const String supervisorLabel = 'SUPERVISOR_FACILITY_NAME';
   static const String byHand = 'Em mão';
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';

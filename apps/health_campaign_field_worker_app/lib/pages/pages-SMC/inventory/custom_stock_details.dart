@@ -974,8 +974,9 @@ class CustomStockDetailsSMCPageState
                                                 allFacilities.add(
                                                   FacilityModel(
                                                     id: Constants.supervisor,
-                                                    name: Constants
-                                                        .supervisorLabel,
+                                                    name: localizations
+                                                        .translate(Constants
+                                                            .supervisorLabel),
                                                     additionalFields:
                                                         FacilityAdditionalFields(
                                                       version: 1,
@@ -994,8 +995,9 @@ class CustomStockDetailsSMCPageState
                                               allFacilities.add(
                                                 FacilityModel(
                                                   id: Constants.supervisor,
-                                                  name:
-                                                      Constants.supervisorLabel,
+                                                  name: localizations.translate(
+                                                      Constants
+                                                          .supervisorLabel),
                                                   additionalFields:
                                                       FacilityAdditionalFields(
                                                     version: 1,
@@ -1021,8 +1023,9 @@ class CustomStockDetailsSMCPageState
                                                 allFacilities.addAll([
                                                   FacilityModel(
                                                     id: Constants.deliveryTeam,
-                                                    name: Constants
-                                                        .deliveryTeamLabel,
+                                                    name: localizations
+                                                        .translate(Constants
+                                                            .deliveryTeamLabel),
                                                     additionalFields:
                                                         FacilityAdditionalFields(
                                                       version: 1,
