@@ -1594,6 +1594,10 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-select-facilities',
           ),
           AutoRoute(
+            page: CustomInventoryFacilitySelectionBednetRoute.page,
+            path: 'custom-inventory-select-facilities-bednet',
+          ),
+          AutoRoute(
             page: StockReconciliationRoute.page,
             path: 'stock-reconciliation',
           ),

@@ -1037,7 +1037,7 @@ class CustomStockDetailsBednetPageState
 
                                                       final facility = await context
                                                               .router
-                                                              .push(InventoryFacilitySelectionRoute(
+                                                              .push(CustomInventoryFacilitySelectionBednetRoute(
                                                                   facilities:
                                                                       allFacilities))
                                                           as FacilityModel?;
@@ -1045,13 +1045,14 @@ class CustomStockDetailsBednetPageState
                                                       if (facility == null)
                                                         return;
                                                       form
-                                                              .control(
-                                                                  _secondaryPartyKey)
-                                                              .value =
+                                                          .control(
+                                                              _secondaryPartyKey)
+                                                          .value = facility
+                                                              .name ??
                                                           localizations
                                                               .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
+                                                            'FAC_${facility.id}',
+                                                          );
 
                                                       setState(() {
                                                         selectedFacilityId =
@@ -1364,7 +1365,7 @@ class CustomStockDetailsBednetPageState
                                                               await context
                                                                   .router
                                                                   .push(
-                                                            InventoryFacilitySelectionRoute(
+                                                            CustomInventoryFacilitySelectionBednetRoute(
                                                               facilities:
                                                                   allFacilities,
                                                             ),
@@ -1373,13 +1374,14 @@ class CustomStockDetailsBednetPageState
                                                           if (facility == null)
                                                             return;
                                                           form
-                                                                  .control(
-                                                                      _secondaryPartyKey)
-                                                                  .value =
+                                                              .control(
+                                                                  _secondaryPartyKey)
+                                                              .value = facility
+                                                                  .name ??
                                                               localizations
                                                                   .translate(
-                                                            'FAC_${facility.id}',
-                                                          );
+                                                                'FAC_${facility.id}',
+                                                              );
 
                                                           setState(() {
                                                             selectedFacilityId =
