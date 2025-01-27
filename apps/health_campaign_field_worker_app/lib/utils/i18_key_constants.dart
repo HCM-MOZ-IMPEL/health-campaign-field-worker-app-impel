@@ -1168,6 +1168,9 @@ class StockDetails {
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
+
+  String get selectProductBednetLabel => 'SELECT_PRODUCT_BEDNET_LABEL';
+  String get stockIssuedBednetDetailsLabel => 'ISSUED_STOCK_BEDNET_DETAILS';
 }
 
 class StockReconciliationDetails {

@@ -857,6 +857,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CustomManageAttendancePage(),
       );
     },
+    CustomManageStocksBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomManageStocksBednetRouteArgs>(
+          orElse: () => const CustomManageStocksBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomManageStocksBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<CustomManageStocksRouteArgs>(
           orElse: () => const CustomManageStocksRouteArgs());
@@ -4347,6 +4358,45 @@ class CustomManageAttendanceRoute extends PageRouteInfo<void> {
   static const String name = 'CustomManageAttendanceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CustomManageStocksBednetPage]
+class CustomManageStocksBednetRoute
+    extends PageRouteInfo<CustomManageStocksBednetRouteArgs> {
+  CustomManageStocksBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomManageStocksBednetRoute.name,
+          args: CustomManageStocksBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageStocksBednetRoute';
+
+  static const PageInfo<CustomManageStocksBednetRouteArgs> page =
+      PageInfo<CustomManageStocksBednetRouteArgs>(name);
+}
+
+class CustomManageStocksBednetRouteArgs {
+  const CustomManageStocksBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomManageStocksBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for

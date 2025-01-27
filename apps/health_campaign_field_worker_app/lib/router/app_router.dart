@@ -134,6 +134,7 @@ import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
 import '../pages/pages-Bednet/inventory/custom_warehouse_details.dart';
 import '../pages/pages-Bednet/inventory/custom_stock_details.dart';
 import '../pages/pages-Bednet/inventory/custom_stock_reconciliation.dart';
+import '../pages/pages-Bednet/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
@@ -1554,12 +1555,12 @@ class AppRouter extends _$AppRouter {
             path: 'manage-stocks',
           ),
           AutoRoute(
-            page: CustomManageStocksRoute.page,
-            path: 'custom-manage-stocks',
+            page: CustomManageStocksBednetRoute.page,
+            path: 'custom-manage-stocks-bednet',
           ),
           RedirectRoute(
             path: 'manage-stocks',
-            redirectTo: 'custom-manage-stocks',
+            redirectTo: 'custom-manage-stocks-bednet',
           ),
           AutoRoute(
             page: RecordStockWrapperRoute.page,

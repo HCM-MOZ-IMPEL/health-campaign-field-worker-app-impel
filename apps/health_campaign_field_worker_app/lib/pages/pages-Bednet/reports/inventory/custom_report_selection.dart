@@ -87,7 +87,7 @@ class _CustomInventoryReportSelectionBednetPageState
                     ),
                   ),
                 ),
-                if (!InventorySingleton().isDistributor)
+                if (InventorySingleton().isWareHouseMgr)
                   DigitListView(
                     title: localizations.translate(i18
                         .inventoryReportSelection.inventoryReportReturnedLabel),

@@ -505,9 +505,8 @@ class _CustomStockReconciliationBednetPageState
                                               key:
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
-                                                i18_local
-                                                    .stockReconciliationDetails
-                                                    .insecticideLabel,
+                                                i18_local.stockDetails
+                                                    .selectProductBednetLabel,
                                               ),
                                               form: form,
                                               menuItems: productVariants,

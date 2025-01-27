@@ -74,7 +74,8 @@ class _CustomHouseholdOverviewBednetPageState
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual ||
-                          !context.isDistributor,
+                          !context.isDistributor ||
+                          context.isVoucherAcceptor,
                       child: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (ctx, deliverInterventionState) => DigitCard(

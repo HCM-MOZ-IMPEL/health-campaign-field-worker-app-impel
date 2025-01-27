@@ -9,6 +9,7 @@ import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -416,8 +417,8 @@ class CustomInventoryReportDetailsBednetPageState
                                                             _productVariantKey),
                                                         label: localizations
                                                             .translate(
-                                                          i18.stockReconciliationDetails
-                                                              .productLabel,
+                                                          i18_local.stockDetails
+                                                              .selectProductBednetLabel,
                                                         ),
                                                         form: form,
                                                         menuItems:

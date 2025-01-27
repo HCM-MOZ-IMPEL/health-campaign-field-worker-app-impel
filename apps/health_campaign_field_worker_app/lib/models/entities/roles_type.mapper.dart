@@ -51,6 +51,10 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.spaqManager;
       case "HEALTH_FACILITY_SUPERVISOR":
         return RolesType.healthFacilitySupervisor;
+      case "VOUCHER_ACCEPTOR":
+        return RolesType.voucherAcceptor;
+      case "LOCAL_MONITOR":
+        return RolesType.localMonitor;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -85,6 +89,10 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "SPAQ_MANAGER";
       case RolesType.healthFacilitySupervisor:
         return "HEALTH_FACILITY_SUPERVISOR";
+      case RolesType.voucherAcceptor:
+        return "VOUCHER_ACCEPTOR";
+      case RolesType.localMonitor:
+        return "LOCAL_MONITOR";
     }
   }
 }
