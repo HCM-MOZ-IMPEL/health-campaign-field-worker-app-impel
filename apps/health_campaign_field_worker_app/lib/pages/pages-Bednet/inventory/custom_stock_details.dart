@@ -1975,7 +1975,7 @@ class CustomStockDetailsBednetPageState
                                               });
                                             },
                                           ),
-                                        if (isWareHouseMgr && !byHand)
+                                        if (isWareHouseMgr)
                                           transportTypes.isNotEmpty
                                               ? DigitReactiveDropdown<String>(
                                                   key: const Key(
@@ -2065,7 +2065,7 @@ class CustomStockDetailsBednetPageState
                                                   .replaceAll('{}', ''),
                                             },
                                           ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr && !byHand)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18.stockDetails
