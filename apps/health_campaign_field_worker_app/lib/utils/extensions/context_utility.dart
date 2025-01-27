@@ -152,7 +152,7 @@ extension ContextUtilityExtensions on BuildContext {
     try {
       bool voucherAcceptor = loggedInUserRoles
           .where(
-            (role) => role.code == RolesType.distributor.toValue(),
+            (role) => role.code == RolesType.voucherAcceptor.toValue(),
           )
           .toList()
           .isNotEmpty;
