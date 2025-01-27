@@ -189,7 +189,8 @@ class CustomStockDetailsBednetPageState
 
                             break;
                           case StockRecordEntryType.dispatch:
-                            pageTitle = module.issuedPageTitle;
+                            pageTitle = i18_local
+                                .stockDetails.stockIssuedBednetDetailsLabel;
                             transactionPartyLabel =
                                 module.selectTransactingPartyIssued;
                             quantityCountLabel = module.quantitySentLabel;
@@ -198,8 +199,7 @@ class CustomStockDetailsBednetPageState
 
                             break;
                           case StockRecordEntryType.returned:
-                            pageTitle = i18_local
-                                .stockDetails.stockIssuedBednetDetailsLabel;
+                            pageTitle = module.returnedPageTitle;
                             transactionPartyLabel =
                                 module.selectTransactingPartyReturned;
                             quantityCountLabel = module.quantityReturnedLabel;
@@ -1014,8 +1014,8 @@ class CustomStockDetailsBednetPageState
                                                           ),
                                                         ),
                                                       );
-                                                    } else if (stockState
-                                                                .entryType ==
+                                                    }
+                                                    if (stockState.entryType ==
                                                             StockRecordEntryType
                                                                 .receipt ||
                                                         stockState.entryType ==
@@ -1975,7 +1975,7 @@ class CustomStockDetailsBednetPageState
                                               });
                                             },
                                           ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr && !byHand)
                                           transportTypes.isNotEmpty
                                               ? DigitReactiveDropdown<String>(
                                                   key: const Key(
@@ -2036,7 +2036,7 @@ class CustomStockDetailsBednetPageState
                                                   },
                                                 )
                                               : const Offstage(),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr && !byHand)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18_local
