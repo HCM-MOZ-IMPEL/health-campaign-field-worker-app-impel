@@ -1016,6 +1016,7 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+  String get voucherCodeBednet => 'BEDNET_VOUCHER_CODE_INDIVIDUAL';
 
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
