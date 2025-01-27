@@ -57,23 +57,6 @@ class _CustomHouseholdOverviewBednetPageState
     super.initState();
   }
 
-//TODO: check this get tag info from projectBeneficiary
-  Future<void> getTag(HouseholdOverviewState state, var voucherCode) async {
-    final individualClientReferenceId =
-        state.householdMemberWrapper.headOfHousehold?.clientReferenceId;
-
-    final repository = context.read<
-            LocalRepository<ProjectBeneficiaryModel,
-                ProjectBeneficiarySearchModel>>()
-        as ProjectBeneficiaryLocalRepository;
-
-    final projectBeneficiary = await repository.search(
-        ProjectBeneficiarySearchModel(
-            clientReferenceId: [individualClientReferenceId ?? ""]));
-    voucherCode =
-        projectBeneficiary.isNotEmpty ? projectBeneficiary.first.tag : "";
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -93,7 +76,9 @@ class _CustomHouseholdOverviewBednetPageState
           final memberCount =
               state.householdMemberWrapper.household?.memberCount ?? 0;
           bednetCount = min(memberCount / 2, Constants.maxBednetCount).round();
-          getTag(state, voucherCode);
+          voucherCode =
+              state.householdMemberWrapper.projectBeneficiaries?.first.tag ??
+                  "";
 
           return Scaffold(
             body: state.loading
@@ -240,8 +225,7 @@ class _CustomHouseholdOverviewBednetPageState
                                                 .bednetCountText,
                                           ): bednetCount,
                                           localizations.translate(
-                                            i18_local.individualDetails
-                                                .voucherCodeBednet,
+                                            i18.deliverIntervention.voucherCode,
                                           ): voucherCode,
                                           localizations.translate(i18
                                               .beneficiaryDetails
