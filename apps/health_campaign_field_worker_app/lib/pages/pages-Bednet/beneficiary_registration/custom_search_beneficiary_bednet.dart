@@ -277,63 +277,76 @@ class _CustomSearchBeneficiaryBednetPageState
                             ),
                           );
 
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: kPadding),
-                            child: CustomViewBeneficiaryCardBednet(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
+                          return (i.projectBeneficiaries == null ||
+                                  i.projectBeneficiaries!.isEmpty)
+                              ? const Offstage()
+                              : Container(
+                                  margin:
+                                      const EdgeInsets.only(bottom: kPadding),
+                                  child: CustomViewBeneficiaryCardBednet(
+                                    distance:
+                                        isProximityEnabled ? distance : null,
+                                    householdMember: i,
+                                    onOpenPressed: () async {
+                                      final scannerBloc =
+                                          context.read<DigitScannerBloc>();
 
-                                scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
+                                      scannerBloc.add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+
+                                      if ((i.tasks != null &&
+                                              i.tasks?.last.status ==
+                                                  Status.closeHousehold
+                                                      .toValue() &&
+                                              (i.tasks ?? []).isNotEmpty) ||
+                                          (i.projectBeneficiaries ?? [])
+                                              .isEmpty) {
+                                        setState(() {
+                                          selectedFilters = [];
+                                        });
+                                        blocWrapper.clearEvent();
+                                        await context.router.push(
+                                          BeneficiaryRegistrationWrapperRoute(
+                                            initialState: BeneficiaryRegistrationState
+                                                .editHousehold(
+                                                    householdModel: i
+                                                        .household!,
+                                                    individualModel: i.members!,
+                                                    registrationDate:
+                                                        DateTime.now(),
+                                                    projectBeneficiaryModel:
+                                                        (i.projectBeneficiaries ??
+                                                                    [])
+                                                                .isNotEmpty
+                                                            ? i
+                                                                .projectBeneficiaries
+                                                                ?.last
+                                                            : null,
+                                                    addressModel: i
+                                                        .headOfHousehold!
+                                                        .address!
+                                                        .last,
+                                                    headOfHousehold:
+                                                        i.headOfHousehold),
+                                          ),
+                                        );
+                                      } else {
+                                        await context.router.push(
+                                          CustomHouseholdWrapperRoute(
+                                            wrapper: i,
+                                          ),
+                                        );
+                                      }
+                                      setState(() {
+                                        isProximityEnabled = false;
+                                      });
+                                      searchController.clear();
+                                      selectedFilters.clear();
+                                      blocWrapper.clearEvent();
+                                    },
+                                  ),
                                 );
-
-                                if ((i.tasks != null &&
-                                        i.tasks?.last.status ==
-                                            Status.closeHousehold.toValue() &&
-                                        (i.tasks ?? []).isNotEmpty) ||
-                                    (i.projectBeneficiaries ?? []).isEmpty) {
-                                  setState(() {
-                                    selectedFilters = [];
-                                  });
-                                  blocWrapper.clearEvent();
-                                  await context.router.push(
-                                    BeneficiaryRegistrationWrapperRoute(
-                                      initialState: BeneficiaryRegistrationState
-                                          .editHousehold(
-                                              householdModel: i.household!,
-                                              individualModel: i.members!,
-                                              registrationDate: DateTime.now(),
-                                              projectBeneficiaryModel:
-                                                  (i.projectBeneficiaries ?? [])
-                                                          .isNotEmpty
-                                                      ? i.projectBeneficiaries
-                                                          ?.last
-                                                      : null,
-                                              addressModel: i.headOfHousehold!
-                                                  .address!.last,
-                                              headOfHousehold:
-                                                  i.headOfHousehold),
-                                    ),
-                                  );
-                                } else {
-                                  await context.router.push(
-                                    CustomHouseholdWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                }
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
-                                selectedFilters.clear();
-                                blocWrapper.clearEvent();
-                              },
-                            ),
-                          );
                         },
                         childCount:
                             searchHouseholdsState.householdMembers.length,
