@@ -20,6 +20,7 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../widgets/localized.dart';
@@ -370,7 +371,7 @@ class _CustomStockReconciliationBednetPageState
                                                                   StockReconciliationBloc>();
                                                           final facility = await context
                                                                   .router
-                                                                  .push(InventoryFacilitySelectionRoute(
+                                                                  .push(CustomInventoryFacilitySelectionBednetRoute(
                                                                       facilities:
                                                                           facilities))
                                                               as FacilityModel?;
@@ -380,13 +381,14 @@ class _CustomStockReconciliationBednetPageState
                                                             return;
                                                           }
                                                           form
-                                                                  .control(
-                                                                      _facilityKey)
-                                                                  .value =
+                                                              .control(
+                                                                  _facilityKey)
+                                                              .value = facility
+                                                                  .name ??
                                                               localizations
                                                                   .translate(
-                                                            'FAC_${facility.id}',
-                                                          );
+                                                                'FAC_${facility.id}',
+                                                              );
                                                           setState(() {
                                                             selectedFacilityId =
                                                                 facility.id;
@@ -445,7 +447,7 @@ class _CustomStockReconciliationBednetPageState
 
                                                               final facility = await context
                                                                       .router
-                                                                      .push(InventoryFacilitySelectionRoute(
+                                                                      .push(CustomInventoryFacilitySelectionBednetRoute(
                                                                           facilities:
                                                                               facilities))
                                                                   as FacilityModel?;
@@ -455,13 +457,14 @@ class _CustomStockReconciliationBednetPageState
                                                                 return;
                                                               }
                                                               form
-                                                                      .control(
-                                                                          _facilityKey)
-                                                                      .value =
+                                                                  .control(
+                                                                      _facilityKey)
+                                                                  .value = facility
+                                                                      .name ??
                                                                   localizations
                                                                       .translate(
-                                                                'FAC_${facility.id}',
-                                                              );
+                                                                    'FAC_${facility.id}',
+                                                                  );
                                                               setState(() {
                                                                 selectedFacilityId =
                                                                     facility.id;
@@ -502,9 +505,8 @@ class _CustomStockReconciliationBednetPageState
                                               key:
                                                   const Key(_productVariantKey),
                                               label: localizations.translate(
-                                                i18_local
-                                                    .stockReconciliationDetails
-                                                    .insecticideLabel,
+                                                i18_local.stockDetails
+                                                    .selectProductBednetLabel,
                                               ),
                                               form: form,
                                               menuItems: productVariants,

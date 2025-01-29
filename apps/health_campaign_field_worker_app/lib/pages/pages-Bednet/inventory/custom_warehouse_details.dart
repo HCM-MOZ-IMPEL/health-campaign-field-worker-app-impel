@@ -21,6 +21,7 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
+import '../beneficiary/custom_facility_selection_bednet.dart';
 
 @RoutePage()
 class CustomWarehouseDetailsBednetPage extends LocalizedStatefulWidget {
@@ -355,7 +356,7 @@ class CustomWarehouseDetailsBednetPageState
                                               await Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  InventoryFacilitySelectionPage(
+                                                  CustomInventoryFacilitySelectionBednetPage(
                                                 facilities: facilities,
                                               ),
                                             ),
@@ -363,8 +364,9 @@ class CustomWarehouseDetailsBednetPageState
 
                                           if (facility == null) return;
                                           form.control(_warehouseKey).value =
-                                              localizations.translate(
-                                                  'FAC_${facility.id}');
+                                              facility.name ??
+                                                  localizations.translate(
+                                                      'FAC_${facility.id}');
 
                                           setState(() {
                                             selectedFacilityId = facility.id;
@@ -419,7 +421,7 @@ class CustomWarehouseDetailsBednetPageState
                                                       .push(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      InventoryFacilitySelectionPage(
+                                                      CustomInventoryFacilitySelectionBednetPage(
                                                     facilities: facilities,
                                                   ),
                                                 ),
@@ -429,8 +431,9 @@ class CustomWarehouseDetailsBednetPageState
                                               form
                                                       .control(_warehouseKey)
                                                       .value =
-                                                  localizations.translate(
-                                                      'FAC_${facility.id}');
+                                                  facility.name ??
+                                                      localizations.translate(
+                                                          'FAC_${facility.id}');
 
                                               setState(() {
                                                 selectedFacilityId =

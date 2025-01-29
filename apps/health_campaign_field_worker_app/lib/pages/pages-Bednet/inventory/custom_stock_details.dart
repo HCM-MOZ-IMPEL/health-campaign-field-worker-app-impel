@@ -12,11 +12,11 @@ import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart'
     hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../../utils/constants.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../utils/utils.dart' show CustomValidator;
@@ -189,7 +189,8 @@ class CustomStockDetailsBednetPageState
 
                             break;
                           case StockRecordEntryType.dispatch:
-                            pageTitle = module.issuedPageTitle;
+                            pageTitle = i18_local
+                                .stockDetails.stockIssuedBednetDetailsLabel;
                             transactionPartyLabel =
                                 module.selectTransactingPartyIssued;
                             quantityCountLabel = module.quantitySentLabel;
@@ -934,7 +935,8 @@ class CustomStockDetailsBednetPageState
                                           key: const Key(_productVariantKey),
                                           formControlName: _productVariantKey,
                                           label: localizations.translate(
-                                            module.selectProductLabel,
+                                            i18_local.stockDetails
+                                                .selectProductBednetLabel,
                                           ),
                                           isRequired: true,
                                           isDisabled: true,
@@ -956,7 +958,8 @@ class CustomStockDetailsBednetPageState
                                           },
                                           validationMessages: {
                                             'required': (object) =>
-                                                '${module.selectProductLabel}_IS_REQUIRED',
+                                                localizations.translate(i18
+                                                    .common.corecommonRequired)
                                           },
                                         ),
                                         if ([
@@ -990,28 +993,51 @@ class CustomStockDetailsBednetPageState
                                                     allFacilities1) {
                                                   List<FacilityModel>
                                                       allFacilities = [];
-                                                  if (InventorySingleton()
-                                                          .isDistributor ||
-                                                      isWareHouseMgr) {
-                                                    allFacilities.add(
-                                                      FacilityModel(
-                                                        id: localMonitor,
-                                                        additionalFields:
-                                                            FacilityAdditionalFields(
-                                                          version: 1,
-                                                          fields: [
-                                                            const AdditionalField(
-                                                                'type',
-                                                                localMonitor)
-                                                          ],
+                                                  if (isWareHouseMgr) {
+                                                    if (stockState.entryType ==
+                                                            StockRecordEntryType
+                                                                .returned ||
+                                                        stockState.entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                      allFacilities.add(
+                                                        FacilityModel(
+                                                          id: localMonitor,
+                                                          additionalFields:
+                                                              FacilityAdditionalFields(
+                                                            version: 1,
+                                                            fields: [
+                                                              const AdditionalField(
+                                                                  'type',
+                                                                  localMonitor)
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
+                                                      );
+                                                    }
+                                                    if (stockState.entryType ==
+                                                            StockRecordEntryType
+                                                                .receipt ||
+                                                        stockState.entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                      allFacilities.addAll(
+                                                          allFacilities1
+                                                              .where((element) =>
+                                                                  element
+                                                                      .usage ==
+                                                                  Constants
+                                                                      .provincialWarehouse)
+                                                              .toList());
+                                                    }
+                                                  } else if (context
+                                                      .isLocalMonitor) {
                                                     allFacilities.addAll(
                                                         allFacilities1
                                                             .where((element) =>
-                                                                element.id !=
-                                                                'Delivery Team')
+                                                                element.usage ==
+                                                                Constants
+                                                                    .districWarehouse)
                                                             .toList());
                                                   } else {
                                                     allFacilities
@@ -1037,7 +1063,7 @@ class CustomStockDetailsBednetPageState
 
                                                       final facility = await context
                                                               .router
-                                                              .push(InventoryFacilitySelectionRoute(
+                                                              .push(CustomInventoryFacilitySelectionBednetRoute(
                                                                   facilities:
                                                                       allFacilities))
                                                           as FacilityModel?;
@@ -1045,13 +1071,14 @@ class CustomStockDetailsBednetPageState
                                                       if (facility == null)
                                                         return;
                                                       form
-                                                              .control(
-                                                                  _secondaryPartyKey)
-                                                              .value =
+                                                          .control(
+                                                              _secondaryPartyKey)
+                                                          .value = facility
+                                                              .name ??
                                                           localizations
                                                               .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
+                                                            'FAC_${facility.id}',
+                                                          );
 
                                                       setState(() {
                                                         selectedFacilityId =
@@ -1364,7 +1391,7 @@ class CustomStockDetailsBednetPageState
                                                               await context
                                                                   .router
                                                                   .push(
-                                                            InventoryFacilitySelectionRoute(
+                                                            CustomInventoryFacilitySelectionBednetRoute(
                                                               facilities:
                                                                   allFacilities,
                                                             ),
@@ -1373,13 +1400,14 @@ class CustomStockDetailsBednetPageState
                                                           if (facility == null)
                                                             return;
                                                           form
-                                                                  .control(
-                                                                      _secondaryPartyKey)
-                                                                  .value =
+                                                              .control(
+                                                                  _secondaryPartyKey)
+                                                              .value = facility
+                                                                  .name ??
                                                               localizations
                                                                   .translate(
-                                                            'FAC_${facility.id}',
-                                                          );
+                                                                'FAC_${facility.id}',
+                                                              );
 
                                                           setState(() {
                                                             selectedFacilityId =
@@ -2008,7 +2036,7 @@ class CustomStockDetailsBednetPageState
                                                   },
                                                 )
                                               : const Offstage(),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr && !byHand)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18_local
@@ -2037,7 +2065,7 @@ class CustomStockDetailsBednetPageState
                                                   .replaceAll('{}', ''),
                                             },
                                           ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr && !byHand)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18.stockDetails

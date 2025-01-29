@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +14,10 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import 'package:registration_delivery/models/entities/status.dart';
@@ -37,6 +42,8 @@ class CustomHouseholdOverviewBednetPage extends LocalizedStatefulWidget {
 
 class _CustomHouseholdOverviewBednetPageState
     extends LocalizedState<CustomHouseholdOverviewBednetPage> {
+  var bednetCount = 0;
+  var voucherCode = "";
   @override
   void initState() {
     final bloc = context.read<HouseholdOverviewBloc>();
@@ -66,6 +73,13 @@ class _CustomHouseholdOverviewBednetPageState
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
+          final memberCount =
+              state.householdMemberWrapper.household?.memberCount ?? 0;
+          bednetCount = min(memberCount / 2, Constants.maxBednetCount).round();
+          voucherCode =
+              state.householdMemberWrapper.projectBeneficiaries?.first.tag ??
+                  "";
+
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
@@ -74,7 +88,8 @@ class _CustomHouseholdOverviewBednetPageState
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual ||
-                          !context.isDistributor,
+                          !context.isDistributor ||
+                          context.isVoucherAcceptor,
                       child: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (ctx, deliverInterventionState) => DigitCard(
@@ -205,6 +220,13 @@ class _CustomHouseholdOverviewBednetPageState
                                                 .memberCountText,
                                           ): state.householdMemberWrapper
                                               .household?.memberCount,
+                                          localizations.translate(
+                                            i18_local.deliverIntervention
+                                                .bednetCountText,
+                                          ): bednetCount,
+                                          localizations.translate(
+                                            i18.deliverIntervention.voucherCode,
+                                          ): voucherCode,
                                           localizations.translate(i18
                                               .beneficiaryDetails
                                               .status): localizations.translate(

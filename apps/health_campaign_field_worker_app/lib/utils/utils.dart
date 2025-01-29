@@ -425,15 +425,18 @@ void showDownloadDialog(
                       (context.selectedProject.additionalDetails?.projectType
                                   ?.code ==
                               (ProjectTypes.smc.toValue()))
-                          ? context.router
-                              .popUntilRouteWithName(SMCWrapperRoute.name)
+                          ? context.router.replaceAll([
+                              const SMCWrapperRoute(),
+                            ])
                           : (context.selectedProject.additionalDetails
                                       ?.projectType?.code ==
                                   ProjectTypes.irs.toValue())
-                              ? context.router
-                                  .popUntilRouteWithName(IRSWrapperRoute.name)
-                              : context.router.popUntilRouteWithName(
-                                  BednetWrapperRoute.name);
+                              ? context.router.replaceAll([
+                                  const IRSWrapperRoute(),
+                                ])
+                              : context.router.replaceAll([
+                                  const BednetWrapperRoute(),
+                                ]);
                     }
                   },
                 )

@@ -9,6 +9,7 @@ import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -22,6 +23,7 @@ import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
+import '../../../../router/app_router.dart';
 import '../../../../utils/constants.dart';
 
 @RoutePage()
@@ -44,6 +46,7 @@ class CustomInventoryReportDetailsBednetPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
   String? selectedFacilityId;
+  Map<String, FacilityModel> facilityMap = {};
 
   /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
   ///
@@ -257,98 +260,45 @@ class CustomInventoryReportDetailsBednetPageState
                                                 DigitCard(
                                                   child: Column(
                                                     children: [
-                                                      if (isWareHouseManager)
-                                                        BlocConsumer<
-                                                            FacilityBloc,
-                                                            FacilityState>(
-                                                          listener: (context,
-                                                                  state) =>
-                                                              state.whenOrNull(
-                                                            empty: () =>
-                                                                NoFacilitiesAssignedDialog
-                                                                    .show(
-                                                              context,
-                                                              localizations,
-                                                            ),
+                                                      BlocConsumer<FacilityBloc,
+                                                          FacilityState>(
+                                                        listener: (context,
+                                                                state) =>
+                                                            state.whenOrNull(
+                                                          empty: () =>
+                                                              NoFacilitiesAssignedDialog
+                                                                  .show(
+                                                            context,
+                                                            localizations,
                                                           ),
-                                                          builder:
-                                                              (context, state) {
-                                                            final facilities =
-                                                                state.whenOrNull(
-                                                                      fetched: (facilities,
-                                                                              allFacilities) =>
-                                                                          facilities,
-                                                                    ) ??
-                                                                    [];
+                                                        ),
+                                                        builder:
+                                                            (context, state) {
+                                                          final facilities =
+                                                              state.whenOrNull(
+                                                                    fetched: (facilities,
+                                                                            allFacilities) =>
+                                                                        facilities,
+                                                                  ) ??
+                                                                  [];
 
-                                                            return InkWell(
-                                                              onTap: () async {
-                                                                final stockReconciliationBloc =
-                                                                    context.read<
-                                                                        StockReconciliationBloc>();
+                                                          final allFacilities =
+                                                              state.whenOrNull(
+                                                                    fetched: (
+                                                                      _,
+                                                                      allFacilities,
+                                                                    ) =>
+                                                                        allFacilities,
+                                                                  ) ??
+                                                                  [];
+                                                          for (var element
+                                                              in allFacilities) {
+                                                            facilityMap[element
+                                                                .id] = element;
+                                                          }
 
-                                                                final facility = await context
-                                                                        .router
-                                                                        .push(InventoryFacilitySelectionRoute(
-                                                                            facilities:
-                                                                                facilities))
-                                                                    as FacilityModel?;
-
-                                                                if (facility ==
-                                                                    null)
-                                                                  return;
-                                                                form
-                                                                        .control(
-                                                                            _facilityKey)
-                                                                        .value =
-                                                                    localizations
-                                                                        .translate(
-                                                                  'FAC_${facility.id}',
-                                                                );
-
-                                                                setState(() {
-                                                                  selectedFacilityId =
-                                                                      facility
-                                                                          .id;
-                                                                });
-                                                                stockReconciliationBloc
-                                                                    .add(
-                                                                  StockReconciliationSelectFacilityEvent(
-                                                                    facility,
-                                                                  ),
-                                                                );
-
-                                                                handleSelection(
-                                                                    form,
-                                                                    context.read<
-                                                                        InventoryReportBloc>());
-                                                              },
-                                                              child:
-                                                                  IgnorePointer(
-                                                                child:
-                                                                    DigitTextFormField(
-                                                                  key: const Key(
-                                                                      _facilityKey),
-                                                                  label: localizations
-                                                                      .translate(
-                                                                    i18.stockReconciliationDetails
-                                                                        .facilityLabel,
-                                                                  ),
-                                                                  suffix:
-                                                                      const Padding(
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .search),
-                                                                  ),
-                                                                  formControlName:
-                                                                      _facilityKey,
-                                                                  readOnly:
-                                                                      false,
-                                                                  isRequired:
-                                                                      true,
+                                                          return isWareHouseManager
+                                                              ? InkWell(
                                                                   onTap:
                                                                       () async {
                                                                     final stockReconciliationBloc =
@@ -357,18 +307,22 @@ class CustomInventoryReportDetailsBednetPageState
 
                                                                     final facility = await context
                                                                         .router
-                                                                        .push(InventoryFacilitySelectionRoute(
+                                                                        .push(CustomInventoryFacilitySelectionBednetRoute(
                                                                             facilities:
                                                                                 facilities)) as FacilityModel?;
 
                                                                     if (facility ==
                                                                         null)
                                                                       return;
-                                                                    form.control(_facilityKey).value =
+                                                                    form
+                                                                        .control(
+                                                                            _facilityKey)
+                                                                        .value = facility
+                                                                            .name ??
                                                                         localizations
                                                                             .translate(
-                                                                      'FAC_${facility.id}',
-                                                                    );
+                                                                          'FAC_${facility.id}',
+                                                                        );
 
                                                                     setState(
                                                                         () {
@@ -376,10 +330,6 @@ class CustomInventoryReportDetailsBednetPageState
                                                                           facility
                                                                               .id;
                                                                     });
-                                                                    form
-                                                                        .control(
-                                                                            _facilityKey)
-                                                                        .value = facility;
                                                                     stockReconciliationBloc
                                                                         .add(
                                                                       StockReconciliationSelectFacilityEvent(
@@ -392,19 +342,83 @@ class CustomInventoryReportDetailsBednetPageState
                                                                         context.read<
                                                                             InventoryReportBloc>());
                                                                   },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                                  child:
+                                                                      IgnorePointer(
+                                                                    child:
+                                                                        DigitTextFormField(
+                                                                      key: const Key(
+                                                                          _facilityKey),
+                                                                      label: localizations
+                                                                          .translate(
+                                                                        i18.stockReconciliationDetails
+                                                                            .facilityLabel,
+                                                                      ),
+                                                                      suffix:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
+                                                                        child: Icon(
+                                                                            Icons.search),
+                                                                      ),
+                                                                      formControlName:
+                                                                          _facilityKey,
+                                                                      readOnly:
+                                                                          false,
+                                                                      isRequired:
+                                                                          true,
+                                                                      onTap:
+                                                                          () async {
+                                                                        final stockReconciliationBloc =
+                                                                            context.read<StockReconciliationBloc>();
+
+                                                                        final facility = await context
+                                                                            .router
+                                                                            .push(CustomInventoryFacilitySelectionBednetRoute(facilities: facilities)) as FacilityModel?;
+
+                                                                        if (facility ==
+                                                                            null)
+                                                                          return;
+                                                                        form
+                                                                            .control(
+                                                                                _facilityKey)
+                                                                            .value = facility
+                                                                                .name ??
+                                                                            localizations.translate(
+                                                                              'FAC_${facility.id}',
+                                                                            );
+
+                                                                        setState(
+                                                                            () {
+                                                                          selectedFacilityId =
+                                                                              facility.id;
+                                                                        });
+                                                                        form.control(_facilityKey).value =
+                                                                            facility;
+                                                                        stockReconciliationBloc
+                                                                            .add(
+                                                                          StockReconciliationSelectFacilityEvent(
+                                                                            facility,
+                                                                          ),
+                                                                        );
+
+                                                                        handleSelection(
+                                                                            form,
+                                                                            context.read<InventoryReportBloc>());
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : const Offstage();
+                                                        },
+                                                      ),
                                                       DigitReactiveSearchDropdown<
                                                           ProductVariantModel>(
                                                         key: const Key(
                                                             _productVariantKey),
                                                         label: localizations
                                                             .translate(
-                                                          i18.stockReconciliationDetails
-                                                              .productLabel,
+                                                          i18_local.stockDetails
+                                                              .selectProductBednetLabel,
                                                         ),
                                                         form: form,
                                                         menuItems:
@@ -559,12 +573,12 @@ class CustomInventoryReportDetailsBednetPageState
                                                                                 widget.reportType == InventoryReportType.loss ||
                                                                                 widget.reportType == InventoryReportType.damage
                                                                             ? model.senderType == 'WAREHOUSE'
-                                                                                ? localizations.translate('FAC_${model.senderId}')
+                                                                                ? (facilityMap[model.senderId]?.name ?? localizations.translate('FAC_${model.senderId}'))
                                                                                 : model.senderType == 'STAFF'
                                                                                     ? _getStaffUsernameFromAdditionalDetails(model, model.senderId, model.senderType)
                                                                                     : (model.senderId ?? model.senderType ?? '')
                                                                             : model.receiverType == 'WAREHOUSE'
-                                                                                ? localizations.translate('FAC_${model.receiverId}')
+                                                                                ? (facilityMap[model.receiverId]?.name ?? localizations.translate('FAC_${model.receiverId}'))
                                                                                 : model.receiverType == 'STAFF'
                                                                                     ? _getStaffUsernameFromAdditionalDetails(model, model.receiverId, model.receiverType)
                                                                                     : (model.receiverId ?? model.receiverType ?? ''),

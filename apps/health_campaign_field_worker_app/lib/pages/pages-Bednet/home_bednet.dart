@@ -532,12 +532,10 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
-      // i18.home.closedHouseHoldLabel,
-      if (InventorySingleton().isWareHouseMgr) i18.home.manageStockLabel,
-      if (InventorySingleton().isWareHouseMgr)
-        i18.home.stockReconciliationLabel,
-      if (InventorySingleton().isWareHouseMgr) i18.home.viewReportsLabel,
-      if (!InventorySingleton().isDistributor) i18.home.myCheckList,
+      if (!context.isDistributor) i18.home.manageStockLabel,
+      if (!context.isDistributor) i18.home.stockReconciliationLabel,
+      if (!context.isDistributor) i18.home.viewReportsLabel,
+      if (!context.isDistributor) i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,

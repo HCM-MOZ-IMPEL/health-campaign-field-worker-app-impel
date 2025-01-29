@@ -148,6 +148,36 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isVoucherAcceptor {
+    try {
+      bool voucherAcceptor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.voucherAcceptor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return voucherAcceptor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isLocalMonitor {
+    try {
+      bool localMonitor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.localMonitor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return localMonitor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isDistributor {
     try {
       bool distributor = loggedInUserRoles
