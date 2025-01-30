@@ -52,7 +52,7 @@ class CustomBeneficiaryCardBednet extends StatelessWidget {
               : DigitIconButton(
                   icon: Icons.info_rounded,
                   iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(i18_local.deliverIntervention.notDelivered),
+                      .translate(status.toString()),
                   iconTextColor: theme.colorScheme.error,
                   iconColor: theme.colorScheme.error,
                 ),

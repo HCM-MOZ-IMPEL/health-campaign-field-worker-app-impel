@@ -718,8 +718,8 @@ void setPackagesSingleton(BuildContext context) {
           symptomsTypes:
               appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter:
-              appConfiguration.searchHouseHoldFiltersSMC != null
-                  ? appConfiguration.searchHouseHoldFiltersSMC!
+              appConfiguration.searchHouseHoldFiltersBednet != null
+                  ? appConfiguration.searchHouseHoldFiltersBednet!
                       .map((e) => e.code)
                       .toList()
                   : [],
