@@ -110,6 +110,7 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.searchHouseHoldFiltersSMC.toValue(),
+                    MasterEnums.searchHouseHoldFiltersBednet.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

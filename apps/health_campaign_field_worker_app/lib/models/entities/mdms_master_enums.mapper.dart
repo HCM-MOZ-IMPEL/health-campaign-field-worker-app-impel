@@ -73,6 +73,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.searchHouseHoldFilters;
       case "SEARCH_HOUSEHOLD_FILTERS_SMC":
         return MasterEnums.searchHouseHoldFiltersSMC;
+      case "SEARCH_HOUSEHOLD_FILTERS_BEDNET":
+        return MasterEnums.searchHouseHoldFiltersBednet;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
@@ -133,6 +135,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SEARCH_HOUSEHOLD_FILTERS";
       case MasterEnums.searchHouseHoldFiltersSMC:
         return "SEARCH_HOUSEHOLD_FILTERS_SMC";
+      case MasterEnums.searchHouseHoldFiltersBednet:
+        return "SEARCH_HOUSEHOLD_FILTERS_BEDNET";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
