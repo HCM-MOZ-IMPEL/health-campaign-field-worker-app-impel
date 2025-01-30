@@ -1,7 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -12,9 +11,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:attendance_management/utils/i18_key_constants.dart' as i18;
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import 'package:attendance_management/widgets/no_result_card.dart';
+import '../../../utils/i18_key_constants.dart' as i18_Local;
 
 @RoutePage()
 class CustomManageAttendanceBednetPage extends LocalizedStatefulWidget {
@@ -88,6 +89,16 @@ class _CustomManageAttendancePageState
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.staffCountLabel):
                           register.attendees?.length ?? 0,
+                      localization
+                              .translate(i18_Local.attendance.locationBednet):
+                          RegistrationDeliverySingleton().boundary?.name ??
+                              localization.translate(i18.common.coreCommonNA),
+                      localization.translate(
+                              i18_Local.attendance.attendanceOfficerBednet):
+                          RegistrationDeliverySingleton()
+                                  .loggedInUser
+                                  ?.userName ??
+                              localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.startDateLabel):
                           register.startDate != null
                               ? DigitDateUtils.getDateFromTimestamp(

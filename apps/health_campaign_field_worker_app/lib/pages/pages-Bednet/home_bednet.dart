@@ -61,10 +61,10 @@ class HomeBednetPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HomeBednetPage> createState() => HomeSMCPageState();
+  State<HomeBednetPage> createState() => HomeBednetPageState();
 }
 
-class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
+class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<ConnectivityResult> subscription;
@@ -490,19 +490,6 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -536,6 +523,7 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
       if (!context.isDistributor) i18.home.myCheckList,
+      if (!context.isDistributor) i18.home.closedHouseHoldLabel,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
@@ -544,10 +532,13 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
