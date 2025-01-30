@@ -278,6 +278,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 }
 
+// get the search household filters based on projectType and set the same
 List<String> getHouseholdFiltersBasedOnProjectType(
     AppConfiguration appConfiguration, BuildContext context) {
   List<String> list = [];
@@ -285,6 +286,13 @@ List<String> getHouseholdFiltersBasedOnProjectType(
       ProjectTypes.smc.toValue()) {
     if (appConfiguration.searchHouseHoldFiltersSMC != null) {
       list.addAll(appConfiguration.searchHouseHoldFiltersSMC!
+          .map((e) => e.code)
+          .toList());
+    }
+  } else if (context.selectedProject.additionalDetails?.projectType?.code ==
+      ProjectTypes.bednet.toValue()) {
+    if (appConfiguration.searchHouseHoldFiltersBednet != null) {
+      list.addAll(appConfiguration.searchHouseHoldFiltersBednet!
           .map((e) => e.code)
           .toList());
     }
