@@ -15,6 +15,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/registration_delivery.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
@@ -993,7 +994,73 @@ class CustomStockDetailsBednetPageState
                                                     allFacilities1) {
                                                   List<FacilityModel>
                                                       allFacilities = [];
+
+                                                  String? boundaryLevel =
+                                                      RegistrationDeliverySingleton()
+                                                          .selectedProject
+                                                          ?.address
+                                                          ?.boundaryType;
                                                   if (isWareHouseMgr) {
+                                                    if (boundaryLevel ==
+                                                        Constants
+                                                            .provincialBoundaryLevel) {
+                                                      if (stockState
+                                                              .entryType ==
+                                                          StockRecordEntryType
+                                                              .receipt) {
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .lastCycle)
+                                                                .toList());
+                                                        allFacilities.addAll(facilities
+                                                            .where((element) =>
+                                                                element.usage ==
+                                                                Constants
+                                                                    .nationalWarehouse)
+                                                            .toList());
+                                                      } else {
+                                                        allFacilities.addAll(facilities
+                                                            .where((element) =>
+                                                                element.usage ==
+                                                                Constants
+                                                                    .districWarehouse)
+                                                            .toList());
+                                                      }
+                                                    } else if (boundaryLevel ==
+                                                        Constants
+                                                            .districtBoundaryLevel) {
+                                                      if (stockState
+                                                              .entryType ==
+                                                          StockRecordEntryType
+                                                              .receipt) {
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .lastCycle)
+                                                                .toList());
+                                                        allFacilities.addAll(facilities
+                                                            .where((element) =>
+                                                                element.usage ==
+                                                                Constants
+                                                                    .provincialWarehouse)
+                                                            .toList());
+                                                      } else {
+                                                        allFacilities.addAll(facilities
+                                                            .where((element) =>
+                                                                element.usage ==
+                                                                Constants
+                                                                    .healthFacility)
+                                                            .toList());
+                                                      }
+                                                    }
+
                                                     if (stockState.entryType ==
                                                             StockRecordEntryType
                                                                 .returned ||
