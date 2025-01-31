@@ -408,6 +408,14 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           },
         ),
       ),
+      i18.home.warehouseManagerCheckList:
+          homeShowcaseData.wareHouseManagerChecklist.buildWith(
+        child: HomeItemCard(
+          icon: Icons.menu_book,
+          label: i18.home.warehouseManagerCheckList,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+        ),
+      ),
 
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
@@ -504,6 +512,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.warehouseManagerCheckList:
+          homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -524,6 +534,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.viewReportsLabel,
       if (!context.isDistributor) i18.home.myCheckList,
       if (!context.isDistributor) i18.home.closedHouseHoldLabel,
+      i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
