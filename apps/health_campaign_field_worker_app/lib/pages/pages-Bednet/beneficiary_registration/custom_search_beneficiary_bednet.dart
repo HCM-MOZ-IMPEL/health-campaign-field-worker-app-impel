@@ -137,20 +137,19 @@ class _CustomSearchBeneficiaryBednetPageState
                                   }
                                 },
                               ),
-                              if (context.isRegistrar)
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: kPadding),
-                                    child: DigitIconButton(
-                                      textDirection: TextDirection.rtl,
-                                      iconText: getFilterIconNLabel()['label'],
-                                      icon: getFilterIconNLabel()['icon'],
-                                      onPressed: () => showFilterDialog(),
-                                    ),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: kPadding),
+                                  child: DigitIconButton(
+                                    textDirection: TextDirection.rtl,
+                                    iconText: getFilterIconNLabel()['label'],
+                                    icon: getFilterIconNLabel()['icon'],
+                                    onPressed: () => showFilterDialog(),
                                   ),
                                 ),
+                              ),
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
