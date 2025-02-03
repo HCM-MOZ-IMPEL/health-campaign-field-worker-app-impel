@@ -85,6 +85,14 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  List<DashboardConfigSchema?> filterDashboardConfig(
+      List<DashboardConfigSchema?> dashboardConfig, String projectTypeCode) {
+    return dashboardConfig
+        .where((element) =>
+            element != null && element.projectTypeCode == projectTypeCode)
+        .toList();
+  }
+
   bool get isHealthFacilitySupervisor {
     try {
       // todo : verify this make this healthFacilitySupervsior as per kebbi
