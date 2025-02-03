@@ -373,14 +373,14 @@ class _CustomSearchBeneficiaryBednetPageState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: context.isRegistrar && context.isDistributor ? 140 : 70,
+          height: context.isDistributor ? 140 : 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
               padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
               child: Column(
                 children: [
-                  if (context.isRegistrar)
+                  if (context.isRegistrar || context.isDistributor)
                     DigitElevatedButton(
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
