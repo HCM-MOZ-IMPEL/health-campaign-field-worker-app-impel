@@ -647,8 +647,8 @@ class _CustomHouseholdOverviewBednetPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? i18_local.deliverIntervention.delivered
-          : i18_local.deliverIntervention.notDelivered;
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
+          : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? (state.householdMemberWrapper.tasks?.last.status ==
