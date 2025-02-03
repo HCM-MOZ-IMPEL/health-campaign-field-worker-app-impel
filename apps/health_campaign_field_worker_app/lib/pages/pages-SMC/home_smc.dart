@@ -40,6 +40,7 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
@@ -670,9 +671,15 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
         loadLocalization(context, appConfiguration);
+
+        // info filter dashboardschema based on projectTypeCode
+        final projectTypeCode =
+            context.projectTypeCode ?? ProjectTypes.irs.toValue();
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
@@ -708,7 +715,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(
