@@ -533,7 +533,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
       if (!context.isDistributor) i18.home.myCheckList,
-      if (!context.isDistributor) i18.home.closedHouseHoldLabel,
+      i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
