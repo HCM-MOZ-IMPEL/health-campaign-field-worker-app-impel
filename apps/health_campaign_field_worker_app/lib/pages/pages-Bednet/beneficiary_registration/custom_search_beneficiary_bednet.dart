@@ -406,7 +406,7 @@ class _CustomSearchBeneficiaryBednetPageState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: context.isDistributor ? 140 : 70,
+          height: context.isDistributor ? 70 : 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
@@ -441,8 +441,9 @@ class _CustomSearchBeneficiaryBednetPageState
                         )),
                       ),
                     ),
-                  if (context.isDistributor)
-                    DigitOutlineIconButton(
+                  Offstage(
+                    offstage: true,
+                    child: DigitOutlineIconButton(
                       buttonStyle: OutlinedButton.styleFrom(
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
@@ -468,6 +469,7 @@ class _CustomSearchBeneficiaryBednetPageState
                         i18.deliverIntervention.scannerLabel,
                       ),
                     ),
+                  ),
                 ],
               ),
             ),

@@ -76,9 +76,6 @@ class _CustomHouseholdOverviewBednetPageState
           final memberCount =
               state.householdMemberWrapper.household?.memberCount ?? 0;
           bednetCount = min(memberCount / 2, Constants.maxBednetCount).round();
-          voucherCode =
-              state.householdMemberWrapper.projectBeneficiaries?.first.tag ??
-                  "";
 
           return Scaffold(
             body: state.loading
@@ -224,9 +221,6 @@ class _CustomHouseholdOverviewBednetPageState
                                             i18_local.deliverIntervention
                                                 .bednetCountText,
                                           ): bednetCount,
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
-                                          ): voucherCode,
                                           localizations.translate(i18
                                               .beneficiaryDetails
                                               .status): localizations.translate(

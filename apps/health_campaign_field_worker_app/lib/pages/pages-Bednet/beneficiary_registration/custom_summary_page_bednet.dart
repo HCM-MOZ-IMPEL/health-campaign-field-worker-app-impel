@@ -327,27 +327,6 @@ class CustomBednetSummaryPageState
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),
                               ),
-                              LabelValuePair(
-                                label: localizations.translate(
-                                    i18.deliverIntervention.voucherCode),
-                                value: householdState.maybeWhen(
-                                    orElse: () => localizations
-                                        .translate(i18.common.coreCommonNA),
-                                    summary: (
-                                      navigateToRoot,
-                                      householdModel,
-                                      individualModel,
-                                      projectBeneficiaryModel,
-                                      registrationDate,
-                                      addressModel,
-                                      loading,
-                                      isHeadOfHousehold,
-                                    ) =>
-                                        projectBeneficiaryModel?.tag != null
-                                            ? projectBeneficiaryModel!.tag!
-                                            : localizations.translate(
-                                                i18.common.coreCommonNA)),
-                              ),
                             ]),
                       ),
                     ],
