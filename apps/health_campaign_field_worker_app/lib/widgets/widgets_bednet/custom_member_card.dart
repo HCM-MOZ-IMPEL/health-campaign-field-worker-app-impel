@@ -101,35 +101,29 @@ class CustomMemberCard extends StatelessWidget {
               Positioned(
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: !context.isRegistrar
-                      ? const Offstage()
-                      : DigitIconButton(
-                          buttonDisabled:
-                              (projectBeneficiaries ?? []).isEmpty ||
-                                  !context.isRegistrar,
-                          onPressed: (projectBeneficiaries ?? []).isEmpty ||
-                                  !context.isRegistrar
-                              ? null
-                              : () => DigitActionDialog.show(
-                                    context,
-                                    widget: ActionCard(
-                                      items: [
-                                        ActionCardModel(
-                                          icon: Icons.edit,
-                                          label: localizations.translate(
-                                            i18.memberCard
-                                                .editIndividualDetails,
-                                          ),
-                                          action: editMemberAction,
-                                        ),
-                                      ],
+                  child: DigitIconButton(
+                    buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
+                    onPressed: (projectBeneficiaries ?? []).isEmpty
+                        ? null
+                        : () => DigitActionDialog.show(
+                              context,
+                              widget: ActionCard(
+                                items: [
+                                  ActionCardModel(
+                                    icon: Icons.edit,
+                                    label: localizations.translate(
+                                      i18.memberCard.editIndividualDetails,
                                     ),
+                                    action: editMemberAction,
                                   ),
-                          iconText: localizations.translate(
-                            i18.memberCard.editDetails,
-                          ),
-                          icon: Icons.edit,
-                        ),
+                                ],
+                              ),
+                            ),
+                    iconText: localizations.translate(
+                      i18.memberCard.editDetails,
+                    ),
+                    icon: Icons.edit,
+                  ),
                 ),
               ),
             ],
