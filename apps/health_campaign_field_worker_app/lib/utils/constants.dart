@@ -95,6 +95,7 @@ class Constants {
   static const String districtBoundaryLevel = 'Distrito';
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';
+  static const String bednetLabel = 'BEDNET';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';

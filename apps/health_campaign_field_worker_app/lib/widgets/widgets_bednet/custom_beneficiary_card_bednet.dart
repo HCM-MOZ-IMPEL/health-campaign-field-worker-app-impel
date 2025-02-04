@@ -4,6 +4,7 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 
 import 'package:registration_delivery/models/entities/status.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/constants.dart';
 
 class CustomBeneficiaryCardBednet extends StatelessWidget {
   final String title;
@@ -46,14 +47,16 @@ class CustomBeneficiaryCardBednet extends StatelessWidget {
               ? DigitIconButton(
                   icon: Icons.check_circle,
                   iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
+                      .translate(
+                          '${status.toString()}_${Constants.bednetLabel}'),
                   iconTextColor: theme.colorScheme.onSurfaceVariant,
                   iconColor: theme.colorScheme.onSurfaceVariant,
                 )
               : DigitIconButton(
                   icon: Icons.info_rounded,
                   iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
+                      .translate(
+                          '${status.toString()}_${Constants.bednetLabel}'),
                   iconTextColor: theme.colorScheme.error,
                   iconColor: theme.colorScheme.error,
                 ),
