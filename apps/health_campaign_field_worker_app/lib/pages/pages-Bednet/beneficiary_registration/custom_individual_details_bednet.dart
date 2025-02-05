@@ -296,22 +296,6 @@ class CustomIndividualDetailsBednetPageState
                           return;
                         }
 
-                        final scannerBloc = context.read<DigitScannerBloc>();
-                        if (scannerBloc.state.qrCodes.isEmpty) {
-                          await DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18_local.individualDetails
-                                    .scanVoucherAndLinkToIndividual,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
-                          return;
-                        }
-
                         final submit = await DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
@@ -379,43 +363,21 @@ class CustomIndividualDetailsBednetPageState
                                 isHeadOfHousehold: widget.isHeadOfHousehold,
                               ),
                             );
-                            final repository = context.read<
-                                    LocalRepository<ProjectBeneficiaryModel,
-                                        ProjectBeneficiarySearchModel>>()
-                                as ProjectBeneficiaryLocalRepository;
-                            final scannerBloc =
-                                context.read<DigitScannerBloc>();
-                            final projectBeneficiary = await repository.search(
-                                ProjectBeneficiarySearchModel(
-                                    tag: [scannerBloc.state.qrCodes.first]));
-                            if (projectBeneficiary.isNotEmpty) {
-                              DigitToast.show(
-                                context,
-                                options: DigitToastOptions(
-                                  localizations.translate(
-                                    i18.deliverIntervention
-                                        .resourceAlreadyScanned,
-                                  ),
-                                  true,
-                                  theme,
+
+                            if (context.mounted) {
+                              final scannerBloc =
+                                  context.read<DigitScannerBloc>();
+                              bloc.add(
+                                BeneficiaryRegistrationSummaryEvent(
+                                  projectId: projectId!,
+                                  userUuid: userId!,
+                                  boundary: boundary!,
+                                  tag: scannerBloc.state.qrCodes.isNotEmpty
+                                      ? scannerBloc.state.qrCodes.first
+                                      : null,
                                 ),
                               );
-                            } else {
-                              if (context.mounted) {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-                                bloc.add(
-                                  BeneficiaryRegistrationSummaryEvent(
-                                    projectId: projectId!,
-                                    userUuid: userId!,
-                                    boundary: boundary!,
-                                    tag: scannerBloc.state.qrCodes.isNotEmpty
-                                        ? scannerBloc.state.qrCodes.first
-                                        : null,
-                                  ),
-                                );
-                                router.push(CustomBednetSummaryRoute());
-                              }
+                              router.push(CustomBednetSummaryRoute());
                             }
                           },
                           editIndividual: (
@@ -427,10 +389,7 @@ class CustomIndividualDetailsBednetPageState
                           ) async {
                             // clickedStatus.value = true;
                             isEditIndividual = true;
-                            final repository = context.read<
-                                    LocalRepository<ProjectBeneficiaryModel,
-                                        ProjectBeneficiarySearchModel>>()
-                                as ProjectBeneficiaryLocalRepository;
+
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
 
@@ -443,57 +402,36 @@ class CustomIndividualDetailsBednetPageState
                                 ? scannerBloc.state.qrCodes.first
                                 : null;
 
-                            final projectBeneficiary = await repository.search(
-                                ProjectBeneficiarySearchModel(
-                                    tag: [tag ?? '']));
-
-                            if (tag != null &&
-                                tag != projectBeneficiaryModel?.tag &&
-                                projectBeneficiary.isNotEmpty) {
-                              DigitToast.show(
-                                context,
-                                options: DigitToastOptions(
-                                  localizations.translate(
-                                    i18.deliverIntervention
-                                        .resourceAlreadyScanned,
-                                  ),
-                                  true,
-                                  theme,
-                                ),
-                              );
-                            } else {
-                              bloc.add(
-                                BeneficiaryRegistrationUpdateIndividualDetailsEvent(
-                                  addressModel: addressModel,
-                                  householdModel: householdModel,
-                                  model: individual.copyWith(
-                                    clientAuditDetails: (individual
-                                                    .clientAuditDetails
-                                                    ?.createdBy !=
-                                                null &&
-                                            individual.clientAuditDetails
-                                                    ?.createdTime !=
-                                                null)
-                                        ? ClientAuditDetails(
-                                            createdBy: individual
-                                                .clientAuditDetails!.createdBy,
-                                            createdTime: individual
-                                                .clientAuditDetails!
-                                                .createdTime,
-                                            lastModifiedBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          )
-                                        : null,
-                                  ),
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
+                            bloc.add(
+                              BeneficiaryRegistrationUpdateIndividualDetailsEvent(
+                                addressModel: addressModel,
+                                householdModel: householdModel,
+                                model: individual.copyWith(
+                                  clientAuditDetails: (individual
+                                                  .clientAuditDetails
+                                                  ?.createdBy !=
+                                              null &&
+                                          individual.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: individual
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: individual
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
                                       : null,
                                 ),
-                              );
-                            }
+                                tag: scannerBloc.state.qrCodes.isNotEmpty
+                                    ? scannerBloc.state.qrCodes.first
+                                    : null,
+                              ),
+                            );
                           },
                           addMember: (
                             addressModel,
@@ -766,90 +704,97 @@ class CustomIndividualDetailsBednetPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                            buildWhen: (p, c) {
-                              return true;
-                            },
-                            builder: (context, state) => state
-                                    .qrCodes.isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
+                          Offstage(
+                            offstage: true,
+                            child: BlocBuilder<DigitScannerBloc,
+                                DigitScannerState>(
+                              buildWhen: (p, c) {
+                                return true;
+                              },
+                              builder: (context, state) => state
+                                      .qrCodes.isNotEmpty
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .voucherCode,
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineSmall,
                                           ),
-                                          style: theme.textTheme.headlineSmall,
                                         ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          localizations
-                                              .translate(state.qrCodes.first),
+                                        Flexible(
+                                          child: Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            localizations
+                                                .translate(state.qrCodes.first),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: kPadding * 2,
-                                        ),
-                                        child: IconButton(
-                                          color: theme.colorScheme.secondary,
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CustomDigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
-                                                  isEditEnabled: true,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: kPadding * 2,
+                                          ),
+                                          child: IconButton(
+                                            color: theme.colorScheme.secondary,
+                                            icon: const Icon(Icons.edit),
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                //[TODO: Add the route to auto_route]
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CustomDigitScannerPage(
+                                                    quantity: 1,
+                                                    isGS1code: false,
+                                                    singleValue: true,
+                                                    isEditEnabled: true,
+                                                  ),
+                                                  settings: const RouteSettings(
+                                                      name: '/qr-scanner'),
                                                 ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-
-                                    // ignore: no-empty-block
-                                  )
-                                : DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CustomDigitScannerPage(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            singleValue: true,
+                                              );
+                                            },
                                           ),
-                                          settings: const RouteSettings(
-                                              name: '/qr-scanner'),
                                         ),
-                                      );
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.individualDetails
-                                          .linkVoucherToIndividual,
+                                      ],
+
+                                      // ignore: no-empty-block
+                                    )
+                                  : DigitOutlineIconButton(
+                                      buttonStyle: OutlinedButton.styleFrom(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.zero,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          // [TODO: Add the route to auto_route]
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CustomDigitScannerPage(
+                                              quantity: 1,
+                                              isGS1code: false,
+                                              singleValue: true,
+                                            ),
+                                            settings: const RouteSettings(
+                                                name: '/qr-scanner'),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icons.qr_code,
+                                      label: localizations.translate(
+                                        i18.individualDetails
+                                            .linkVoucherToIndividual,
+                                      ),
                                     ),
-                                  ),
+                            ),
                           ),
                       ],
                     ),
