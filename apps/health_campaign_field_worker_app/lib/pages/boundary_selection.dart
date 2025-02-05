@@ -575,7 +575,11 @@ class _BoundarySelectionPageState
 
                                                     if (context.mounted) {
                                                       if (isOnline &&
-                                                          isDistributor) {
+                                                          isDistributor &&
+                                                          context.projectTypeCode !=
+                                                              ProjectTypes
+                                                                  .bednet
+                                                                  .toValue()) {
                                                         context
                                                             .read<
                                                                 BeneficiaryDownSyncBloc>()
