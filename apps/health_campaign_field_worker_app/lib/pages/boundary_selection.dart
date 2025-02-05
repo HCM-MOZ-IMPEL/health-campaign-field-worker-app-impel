@@ -207,8 +207,8 @@ class _BoundarySelectionPageState
                             BlocListener<BeneficiaryDownSyncBloc,
                                 BeneficiaryDownSyncState>(
                               listener: (context, downSyncState) {
-                                LocalizationParams().setModule(
-                                    ['rainmaker-boundary-admin'], true);
+                                LocalizationParams()
+                                    .setModule(['boundary'], true);
                                 context.read<LocalizationBloc>().add(
                                     LocalizationEvent.onUpdateLocalizationIndex(
                                         index: appConfiguration.languages!
@@ -612,9 +612,9 @@ class _BoundarySelectionPageState
                                                           context.router
                                                               .maybePop();
                                                           LocalizationParams()
-                                                              .setModule([
-                                                            'rainmaker-boundary-admin'
-                                                          ], true);
+                                                              .setModule(
+                                                                  ['boundary'],
+                                                                  true);
                                                           context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
                                                               index: appConfiguration
                                                                   .languages!
