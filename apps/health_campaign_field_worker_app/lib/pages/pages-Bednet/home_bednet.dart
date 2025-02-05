@@ -423,7 +423,9 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
+          label: context.isDistributor
+              ? i18.home.specialCaseCheckList
+              : i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
@@ -533,7 +535,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.manageStockLabel,
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
-      if (!context.isDistributor) i18.home.myCheckList,
+      i18.home.myCheckList,
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
