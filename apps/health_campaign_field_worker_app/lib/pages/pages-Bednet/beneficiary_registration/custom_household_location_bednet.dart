@@ -246,13 +246,22 @@ class _CustomHouseholdLocationBednetPageState
                         Column(children: [
                           householdLocationShowcaseData.administrativeArea
                               .buildWith(
-                            child: DigitTextFormField(
+                            child: DigitReactiveDropdown(
                               formControlName: _administrationAreaKey,
                               label: localizations.translate(
                                 i18_local.householdLocation
                                     .administrationAreaFormLabel,
                               ),
-                              readOnly: true,
+                              menuItems: [
+                                RegistrationDeliverySingleton()
+                                        .boundary
+                                        ?.code
+                                        .toString() ??
+                                    ""
+                              ],
+                              valueMapper: (value) {
+                                return localizations.translate(value);
+                              },
                               isRequired: true,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
@@ -295,8 +304,7 @@ class _CustomHouseholdLocationBednetPageState
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations.translate(
-            RegistrationDeliverySingleton().boundary!.code.toString()),
+        value: '',
         validators: [Validators.required],
       ),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
