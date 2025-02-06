@@ -80,6 +80,7 @@ class CustomWarehouseDetailsBednetPageState
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
     final stockReconciliationBloc =
         BlocProvider.of<StockReconciliationBloc>(context);
+    bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -145,6 +146,16 @@ class CustomWarehouseDetailsBednetPageState
                           //     scannerState.qrCodes.isNotEmpty
                           //         ? scannerState.qrCodes.last
                           //         : '';
+
+                          // Info : setting the facility name by default and selectedFacilityId
+                          if (isWareHouseMgr &&
+                              !(facilities?.isEmpty ?? true)) {
+                            form.control(_warehouseKey).value = facilities
+                                    .first?.name ??
+                                localizations
+                                    .translate('FAC_${facilities.first.id}');
+                            selectedFacilityId = facilities.first.id;
+                          }
 
                           return ScrollableContent(
                             header: const Column(children: [
