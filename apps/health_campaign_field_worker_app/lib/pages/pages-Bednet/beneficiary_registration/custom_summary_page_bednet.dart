@@ -65,26 +65,19 @@ class CustomBednetSummaryPageState
               if (value.navigateToRoot) {
                 (router.parent() as StackRouter).maybePop();
               } else {
+                context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
+                      SearchHouseholdsEvent.searchByHousehold(
+                        householdModel: value.householdModel,
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        isProximityEnabled: false,
+                      ),
+                    );
                 Future.delayed(
                   const Duration(
-                    milliseconds: 500,
+                    milliseconds: 100,
                   ),
                   () {
-                    router.popUntil((route) =>
-                        route.settings.name == SearchBeneficiaryRoute.name);
-                    context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
-                          SearchHouseholdsEvent.searchByHousehold(
-                            householdModel: value.householdModel,
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            isProximityEnabled: false,
-                          ),
-                        );
-                    router.popUntil((route) =>
-                        route.settings.name == SearchBeneficiaryRoute.name);
-                  },
-                ).then(
-                  (valueOne) {
+                    (router.parent() as StackRouter).maybePop();
                     final searchBlocState =
                         context.read<SearchHouseholdsBloc>().state;
                     if (searchBlocState.householdMembers.isNotEmpty) {
