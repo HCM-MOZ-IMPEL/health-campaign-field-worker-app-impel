@@ -67,7 +67,7 @@ class CustomBednetSummaryPageState
               } else {
                 Future.delayed(
                   const Duration(
-                    milliseconds: 700,
+                    milliseconds: 500,
                   ),
                   () {
                     router.popUntil((route) =>
