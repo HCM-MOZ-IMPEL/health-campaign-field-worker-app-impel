@@ -677,6 +677,7 @@ class AppRouter extends _$AppRouter {
               ),
             ]),
 
+        // SMC routes
         AutoRoute(page: SMCWrapperRoute.page, path: 'smc', children: [
           AutoRoute(page: HomeRoute.page, path: 'home'),
           AutoRoute(page: HomeSMCRoute.page, path: 'home-smc', initial: true),
@@ -1220,6 +1221,8 @@ class AppRouter extends _$AppRouter {
           RedirectRoute(
               path: 'search-referrals', redirectTo: 'custom-search-referrals')
         ]),
+
+        // Bednet routes
         AutoRoute(page: BednetWrapperRoute.page, path: 'bednet', children: [
           AutoRoute(page: HomeRoute.page, path: 'home'),
           AutoRoute(
