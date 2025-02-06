@@ -1014,21 +1014,17 @@ class CustomStockDetailsBednetPageState
                                                                     element
                                                                         .usage ==
                                                                     Constants
-                                                                        .lastCycle)
+                                                                        .nationalWarehouse)
                                                                 .toList());
-                                                        allFacilities.addAll(facilities
-                                                            .where((element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .nationalWarehouse)
-                                                            .toList());
                                                       } else {
-                                                        allFacilities.addAll(facilities
-                                                            .where((element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .districWarehouse)
-                                                            .toList());
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .districWarehouse)
+                                                                .toList());
                                                       }
                                                     } else if (boundaryLevel ==
                                                         Constants
@@ -1043,59 +1039,32 @@ class CustomStockDetailsBednetPageState
                                                                     element
                                                                         .usage ==
                                                                     Constants
-                                                                        .lastCycle)
+                                                                        .provincialWarehouse)
                                                                 .toList());
-                                                        allFacilities.addAll(facilities
-                                                            .where((element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .provincialWarehouse)
-                                                            .toList());
                                                       } else {
-                                                        allFacilities.addAll(facilities
-                                                            .where((element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .healthFacility)
-                                                            .toList());
+                                                        // info : add lm to facility list
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .localMonitor)
+                                                                .toList());
+                                                        if (stockState
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                          allFacilities.addAll(
+                                                              allFacilities1
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .provincialWarehouse)
+                                                                  .toList());
+                                                        }
                                                       }
-                                                    }
-
-                                                    if (stockState.entryType ==
-                                                            StockRecordEntryType
-                                                                .returned ||
-                                                        stockState.entryType ==
-                                                            StockRecordEntryType
-                                                                .dispatch) {
-                                                      allFacilities.add(
-                                                        FacilityModel(
-                                                          id: localMonitor,
-                                                          additionalFields:
-                                                              FacilityAdditionalFields(
-                                                            version: 1,
-                                                            fields: [
-                                                              const AdditionalField(
-                                                                  'type',
-                                                                  localMonitor)
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                    if (stockState.entryType ==
-                                                            StockRecordEntryType
-                                                                .receipt ||
-                                                        stockState.entryType ==
-                                                            StockRecordEntryType
-                                                                .dispatch) {
-                                                      allFacilities.addAll(
-                                                          allFacilities1
-                                                              .where((element) =>
-                                                                  element
-                                                                      .usage ==
-                                                                  Constants
-                                                                      .provincialWarehouse)
-                                                              .toList());
                                                     }
                                                   } else if (context
                                                       .isLocalMonitor) {
