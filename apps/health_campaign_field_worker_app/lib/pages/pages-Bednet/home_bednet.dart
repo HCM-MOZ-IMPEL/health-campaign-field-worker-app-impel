@@ -679,7 +679,7 @@ void setPackagesSingleton(BuildContext context) {
           isWareHouseMgr: context.loggedInUserRoles
               .where((role) =>
                   role.code == RolesType.warehouseManager.toValue() ||
-                  role.code == RolesType.spaqManager.toValue())
+                  role.code == RolesType.localMonitor.toValue())
               .toList()
               .isNotEmpty,
           isDistributor: context.loggedInUserRoles
