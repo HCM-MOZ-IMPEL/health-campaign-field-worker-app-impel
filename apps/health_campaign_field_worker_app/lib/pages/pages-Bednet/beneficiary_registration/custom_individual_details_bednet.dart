@@ -78,6 +78,30 @@ class CustomIndividualDetailsBednetPageState
           listener: (context, state) {
             state.mapOrNull(
               persisted: (value) {
+                context.read<SearchHouseholdsBloc>().add(
+                      SearchHouseholdsEvent.searchByHousehold(
+                        householdModel: value.householdModel,
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        isProximityEnabled: false,
+                      ),
+                    );
+                // (router.parent() as StackRouter).maybePop();
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  final parent = context.router.parent() as StackRouter;
+
+                  final searchBlocState =
+                      context.read<SearchHouseholdsBloc>().state;
+
+                  if (isEditIndividual) {
+                    parent.popUntilRouteWithName(
+                        CustomSearchBeneficiaryBednetRoute.name);
+                    if (searchBlocState.householdMembers.isNotEmpty) {
+                      parent.push(CustomHouseholdWrapperRoute(
+                          wrapper: searchBlocState.householdMembers.first));
+                    }
+                  }
+                });
+
                 // if (value.navigateToRoot) {
 
                 // Future.delayed(
