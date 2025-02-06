@@ -7,11 +7,13 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -63,18 +65,34 @@ class CustomBednetSummaryPageState
               if (value.navigateToRoot) {
                 (router.parent() as StackRouter).maybePop();
               } else {
-                router.popUntil((route) =>
-                    route.settings.name == SearchBeneficiaryRoute.name);
-                context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
-                      SearchHouseholdsEvent.searchByHousehold(
-                        householdModel: value.householdModel,
-                        projectId: RegistrationDeliverySingleton().projectId!,
-                        isProximityEnabled: false,
-                      ),
-                    );
-                router.push(BeneficiaryAcknowledgementRoute(
-                  enableViewHousehold: true,
-                ));
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 700,
+                  ),
+                  () {
+                    router.popUntil((route) =>
+                        route.settings.name == SearchBeneficiaryRoute.name);
+                    context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
+                          SearchHouseholdsEvent.searchByHousehold(
+                            householdModel: value.householdModel,
+                            projectId:
+                                RegistrationDeliverySingleton().projectId!,
+                            isProximityEnabled: false,
+                          ),
+                        );
+                    router.popUntil((route) =>
+                        route.settings.name == SearchBeneficiaryRoute.name);
+                  },
+                ).then(
+                  (valueOne) {
+                    final searchBlocState =
+                        context.read<SearchHouseholdsBloc>().state;
+                    if (searchBlocState.householdMembers.isNotEmpty) {
+                      router.push(BeneficiaryWrapperRoute(
+                          wrapper: searchBlocState.householdMembers.first));
+                    }
+                  },
+                );
               }
             },
           );

@@ -503,6 +503,7 @@ class CustomDeliverInterventionBednetPageState
                                       header: const Column(children: [
                                         BackNavigationHelpHeaderWidget(
                                           showHelp: false,
+                                          showBackNavigation: false,
                                         ),
                                       ]),
                                       children: [
