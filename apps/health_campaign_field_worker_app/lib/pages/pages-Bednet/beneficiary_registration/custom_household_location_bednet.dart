@@ -246,22 +246,13 @@ class _CustomHouseholdLocationBednetPageState
                         Column(children: [
                           householdLocationShowcaseData.administrativeArea
                               .buildWith(
-                            child: DigitReactiveDropdown(
+                            child: DigitTextFormField(
                               formControlName: _administrationAreaKey,
                               label: localizations.translate(
                                 i18_local.householdLocation
                                     .administrationAreaFormLabel,
                               ),
-                              menuItems: [
-                                RegistrationDeliverySingleton()
-                                        .boundary
-                                        ?.code
-                                        .toString() ??
-                                    ""
-                              ],
-                              valueMapper: (value) {
-                                return localizations.translate(value);
-                              },
+                              readOnly: true,
                               isRequired: true,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
