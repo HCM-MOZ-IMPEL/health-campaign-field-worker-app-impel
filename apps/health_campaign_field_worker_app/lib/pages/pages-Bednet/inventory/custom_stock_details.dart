@@ -1065,16 +1065,17 @@ class CustomStockDetailsBednetPageState
                                                                   .toList());
                                                         }
                                                       }
+                                                    } else if (context
+                                                        .isLocalMonitor) {
+                                                      allFacilities.addAll(
+                                                          allFacilities1
+                                                              .where((element) =>
+                                                                  element
+                                                                      .usage ==
+                                                                  Constants
+                                                                      .districWarehouse)
+                                                              .toList());
                                                     }
-                                                  } else if (context
-                                                      .isLocalMonitor) {
-                                                    allFacilities.addAll(
-                                                        allFacilities1
-                                                            .where((element) =>
-                                                                element.usage ==
-                                                                Constants
-                                                                    .districWarehouse)
-                                                            .toList());
                                                   } else {
                                                     allFacilities
                                                         .addAll(allFacilities1);
