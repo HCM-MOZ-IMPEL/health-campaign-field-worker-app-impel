@@ -121,40 +121,45 @@ class _CustomSearchBeneficiaryBednetPageState
                         builder: (context, locationState) {
                           return Column(
                             children: [
-                              Row(
-                                children: [
-                                  Switch(
-                                    value: isProximityEnabled,
-                                    onChanged: (value) {
-                                      searchController.clear();
-                                      setState(() {
-                                        isProximityEnabled = value;
-                                        lat = locationState.latitude!;
-                                        long = locationState.longitude!;
-                                      });
+                              locationState.latitude != null
+                                  ? Row(
+                                      children: [
+                                        Switch(
+                                          value: isProximityEnabled,
+                                          onChanged: (value) {
+                                            searchController.clear();
+                                            setState(() {
+                                              isProximityEnabled = value;
+                                              lat = locationState.latitude!;
+                                              long = locationState.longitude!;
+                                            });
 
-                                      if (locationState.hasPermissions &&
-                                          value &&
-                                          locationState.latitude != null &&
-                                          locationState.longitude != null &&
-                                          RegistrationDeliverySingleton()
-                                                  .maxRadius !=
-                                              null &&
-                                          isProximityEnabled) {
-                                        triggerGlobalSearchEvent();
-                                      } else {
-                                        blocWrapper.clearEvent();
-                                        triggerGlobalSearchEvent();
-                                      }
-                                    },
-                                  ),
-                                  Text(
-                                    localizations.translate(
-                                      i18.searchBeneficiary.proximityLabel,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                            if (locationState.hasPermissions &&
+                                                value &&
+                                                locationState.latitude !=
+                                                    null &&
+                                                locationState.longitude !=
+                                                    null &&
+                                                RegistrationDeliverySingleton()
+                                                        .maxRadius !=
+                                                    null &&
+                                                isProximityEnabled) {
+                                              triggerGlobalSearchEvent();
+                                            } else {
+                                              blocWrapper.clearEvent();
+                                              triggerGlobalSearchEvent();
+                                            }
+                                          },
+                                        ),
+                                        Text(
+                                          localizations.translate(
+                                            i18.searchBeneficiary
+                                                .proximityLabel,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const Offstage(),
                               const Offstage(),
                               DigitSearchBar(
                                 controller: searchController,

@@ -295,7 +295,8 @@ class _CustomHouseholdLocationBednetPageState
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: '',
+        value: localizations.translate(
+            RegistrationDeliverySingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
