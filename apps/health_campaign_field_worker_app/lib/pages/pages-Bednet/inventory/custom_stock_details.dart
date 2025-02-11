@@ -1075,6 +1075,9 @@ class CustomStockDetailsBednetPageState
                                                                   Constants
                                                                       .districWarehouse)
                                                               .toList());
+                                                    } else {
+                                                      allFacilities.addAll(
+                                                          allFacilities1);
                                                     }
                                                   } else {
                                                     allFacilities
