@@ -23,7 +23,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
 import '../../../router/app_router.dart';
-import '../../../utils/utils.dart';
+import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
 @RoutePage()
@@ -374,7 +374,8 @@ class CustomHouseholdOverviewSMCPageState
                                       currentCycle,
                                     );
                                     final isBeneficiaryIneligible =
-                                        checkIfBeneficiaryIneligible(
+                                        utilsLocalSMC
+                                            .checkIfBeneficiaryIneligible(
                                       taskData,
                                     );
 
@@ -561,7 +562,7 @@ class CustomHouseholdOverviewSMCPageState
                                       gender: e.gender?.name,
                                       isBeneficiaryRefused:
                                           isBeneficiaryRefused &&
-                                              !checkStatus(
+                                              !utilsLocalSMC.checkStatusSMC(
                                                 taskData,
                                                 currentCycle,
                                               ),
@@ -572,7 +573,7 @@ class CustomHouseholdOverviewSMCPageState
                                       isDelivered: taskData == null
                                           ? false
                                           : taskData.isNotEmpty &&
-                                                  !checkStatus(
+                                                  !utilsLocalSMC.checkStatusSMC(
                                                     taskData,
                                                     currentCycle,
                                                   )
