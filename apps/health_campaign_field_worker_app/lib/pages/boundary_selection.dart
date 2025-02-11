@@ -616,9 +616,37 @@ class _BoundarySelectionPageState
                                                             const Duration(
                                                               milliseconds: 100,
                                                             ), () {
+                                                          // Info route to proper wrapper based on projectTypeCode instead of just popping the route
                                                           if (context.mounted) {
-                                                            context.router
-                                                                .maybePop();
+                                                            if (context.projectTypeCode ==
+                                                                    null ||
+                                                                (context.projectTypeCode
+                                                                        ?.isEmpty ??
+                                                                    true)) {
+                                                              context.router
+                                                                  .maybePop();
+                                                            } else if (isProjectTypeSMC(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const SMCWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeIRS(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const IRSWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeBEDNET(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const BednetWrapperRoute(),
+                                                              ]);
+                                                            } else {
+                                                              context.router
+                                                                  .maybePop();
+                                                            }
                                                           }
 
                                                           LocalizationParams()
@@ -663,6 +691,18 @@ class _BoundarySelectionPageState
         );
       }),
     );
+  }
+
+  bool isProjectTypeSMC(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.smc.toValue();
+  }
+
+  bool isProjectTypeIRS(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.irs.toValue();
+  }
+
+  bool isProjectTypeBEDNET(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.bednet.toValue();
   }
 
   void resetChildDropdowns(String parentLabel, BoundaryState state) {
