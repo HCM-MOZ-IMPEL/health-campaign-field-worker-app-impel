@@ -634,6 +634,20 @@ class CustomDeliverInterventionSMCPageState
                                                       );
                                                     },
                                                   },
+                                                  onChanged: (formControl) {
+                                                    if ((formControl.value
+                                                            as String)
+                                                        .isNotEmpty) {
+                                                      setState(() {
+                                                        doseAdministered = true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        doseAdministered =
+                                                            false;
+                                                      });
+                                                    }
+                                                  },
                                                 ),
                                               ],
                                             ),
