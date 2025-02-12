@@ -324,7 +324,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                             sideEffects,
                                             individual,
                                           ) &&
-                                          checkStatusSMC(
+                                          !checkStatusSMC(
                                             tasks,
                                             context.selectedCycle,
                                           )

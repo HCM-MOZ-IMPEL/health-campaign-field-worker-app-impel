@@ -18,6 +18,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
 
 import 'package:registration_delivery/utils/utils.dart';
 
@@ -188,7 +189,7 @@ class _CustomViewBeneficiaryCardSMCState
           taskData,
         );
 
-        final isStatusReset = checkStatus(taskData, currentCycle);
+        final isStatusReset = checkStatusSMC(taskData, currentCycle);
 
         final rowTableData = [
           TableData(

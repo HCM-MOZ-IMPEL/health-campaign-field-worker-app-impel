@@ -607,6 +607,8 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     if (lastTask.status == Status.delivered.name) {
       return true;
     }
+
+    return false;
   }
 
   return true;
