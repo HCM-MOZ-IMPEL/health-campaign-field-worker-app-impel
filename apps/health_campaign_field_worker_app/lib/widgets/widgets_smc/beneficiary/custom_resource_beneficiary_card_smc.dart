@@ -142,29 +142,6 @@ class CustomResourceBeneficiaryCardSMCState
                   : const Offstage(),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: DigitCheckbox(
-              label: localizations.translate(
-                i18_local
-                    .deliverIntervention.deliverInteventionAdministeredLabel,
-              ),
-              value: doseAdministered,
-              onChanged: (value) {
-                setState(() {
-                  doseAdministered = value!;
-                  widget.checkDoseAdministration(value);
-                  if (!value) {
-                    widget.form
-                        .control(
-                          _deliveryCommentKey,
-                        )
-                        .value = null;
-                  }
-                });
-              },
-            ),
-          ),
         ],
       ),
     );

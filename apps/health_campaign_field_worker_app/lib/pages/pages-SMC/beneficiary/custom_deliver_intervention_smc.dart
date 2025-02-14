@@ -634,61 +634,79 @@ class CustomDeliverInterventionSMCPageState
                                                       );
                                                     },
                                                   },
+                                                  onChanged: (formControl) {
+                                                    if ((formControl.value
+                                                            as String)
+                                                        .isNotEmpty) {
+                                                      setState(() {
+                                                        doseAdministered = true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        doseAdministered =
+                                                            false;
+                                                      });
+                                                    }
+                                                  },
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                BlocBuilder<
-                                                    AppInitializationBloc,
-                                                    AppInitializationState>(
-                                                  builder: (context, state) {
-                                                    if (state
-                                                        is! AppInitialized) {
-                                                      return const Offstage();
-                                                    }
+                                          IgnorePointer(
+                                            ignoring: !doseAdministered,
+                                            child: DigitCard(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Opacity(
+                                                    opacity: doseAdministered
+                                                        ? 1
+                                                        : 0.5,
+                                                    child: BlocBuilder<
+                                                        AppInitializationBloc,
+                                                        AppInitializationState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        if (state
+                                                            is! AppInitialized) {
+                                                          return const Offstage();
+                                                        }
 
-                                                    final deliveryCommentOptionsSmc = state
-                                                            .appConfiguration
-                                                            .deliveryCommentOptionsSmc ??
-                                                        <DeliveryCommentOptions>[];
+                                                        final deliveryCommentOptionsSmc = state
+                                                                .appConfiguration
+                                                                .deliveryCommentOptionsSmc ??
+                                                            <DeliveryCommentOptions>[];
 
-                                                    return DigitReactiveSearchDropdown<
-                                                        String>(
-                                                      label: localizations
-                                                          .translate(
-                                                        i18_local
-                                                            .deliverIntervention
-                                                            .deliveryCommentLabelSMC,
-                                                      ),
-                                                      form: form,
-                                                      enabled: doseAdministered,
-                                                      menuItems:
-                                                          deliveryCommentOptionsSmc
-                                                              .map((e) {
-                                                        return e.code;
-                                                      }).toList(),
-                                                      formControlName:
-                                                          _deliveryCommentKey,
-                                                      isRequired:
-                                                          doseAdministered,
-                                                      valueMapper: (value) =>
-                                                          localizations
+                                                        return DigitReactiveDropdown<
+                                                            String>(
+                                                          label: localizations
                                                               .translate(
-                                                        value,
-                                                      ),
-                                                      emptyText: localizations
-                                                          .translate(i18.common
-                                                              .noMatchFound),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
+                                                            i18_local
+                                                                .deliverIntervention
+                                                                .deliveryCommentLabelSMC,
+                                                          ),
+                                                          menuItems:
+                                                              deliveryCommentOptionsSmc
+                                                                  .map((e) {
+                                                            return e.code;
+                                                          }).toList(),
+                                                          formControlName:
+                                                              _deliveryCommentKey,
+                                                          isRequired:
+                                                              doseAdministered,
+                                                          valueMapper: (value) =>
+                                                              localizations
+                                                                  .translate(
+                                                            value,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],

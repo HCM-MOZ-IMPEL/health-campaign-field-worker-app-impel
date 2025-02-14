@@ -18,6 +18,7 @@ import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
+import '../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -277,7 +278,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                               isBeneficiaryRefused ||
                               isBeneficiaryIneligible ||
                               isBeneficiaryReferred) &&
-                          !checkStatus(tasks, context.selectedCycle)
+                          checkStatusSMC(tasks, context.selectedCycle)
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
@@ -323,7 +324,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                             sideEffects,
                                             individual,
                                           ) &&
-                                          !checkStatus(
+                                          !checkStatusSMC(
                                             tasks,
                                             context.selectedCycle,
                                           )
