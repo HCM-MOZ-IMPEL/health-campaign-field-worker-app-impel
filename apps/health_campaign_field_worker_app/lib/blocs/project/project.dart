@@ -477,24 +477,23 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final projectTypeCode = getProjectTypeCode(event.model);
         final dashboardConfig = await isar.dashboardConfigSchemas
             .where()
             .filter()
             .chartsIsNotNull()
             .chartsIsNotEmpty()
+            .projectTypeCodeEqualTo(projectTypeCode)
             .findAll();
-
-        final filteredDashboardConfig = dashboardConfig
-            .where((e) => e.projectTypeCode == ProjectTypes.smc.toValue());
 
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (filteredDashboardConfig.isNotEmpty &&
-            filteredDashboardConfig.first.enableDashboard == true &&
-            filteredDashboardConfig.first.charts != null) {
+        if (dashboardConfig.isNotEmpty &&
+            dashboardConfig.first.enableDashboard == true &&
+            dashboardConfig.first.charts != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -518,7 +517,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            filteredDashboardConfig.first.charts ?? [],
+            dashboardConfig.first.charts ?? [],
             startDate,
             endDate,
             isar,
@@ -625,6 +624,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+// Info : get the projectTypeCode from additional Details
+  dynamic getProjectTypeCode(ProjectModel projectSelected) {
+    return projectSelected.additionalDetails?.projectType?.code ??
+        ProjectTypes.irs.toValue();
   }
 }
 

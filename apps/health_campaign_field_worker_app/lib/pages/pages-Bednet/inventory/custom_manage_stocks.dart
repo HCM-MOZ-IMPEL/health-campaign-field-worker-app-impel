@@ -8,6 +8,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
+import '../../../utils/extensions/extensions.dart';
 import '../../../widgets/localized.dart';
 
 @RoutePage()
@@ -81,7 +82,7 @@ class _CustomManageStocksBednetPageState
                             type: StockRecordEntryType.dispatch,
                           ),
                         )),
-                if (InventorySingleton().isWareHouseMgr)
+                if (!context.isLocalMonitor)
                   DigitListView(
                       title: localizations
                           .translate(i18.manageStock.recordStockReturnedLabel),

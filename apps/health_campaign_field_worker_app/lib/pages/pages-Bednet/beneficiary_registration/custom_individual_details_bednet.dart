@@ -78,147 +78,171 @@ class CustomIndividualDetailsBednetPageState
           listener: (context, state) {
             state.mapOrNull(
               persisted: (value) {
+                context.read<SearchHouseholdsBloc>().add(
+                      SearchHouseholdsEvent.searchByHousehold(
+                        householdModel: value.householdModel,
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        isProximityEnabled: false,
+                      ),
+                    );
+                // (router.parent() as StackRouter).maybePop();
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  final parent = context.router.parent() as StackRouter;
+
+                  final searchBlocState =
+                      context.read<SearchHouseholdsBloc>().state;
+
+                  if (isEditIndividual) {
+                    parent.popUntilRouteWithName(
+                        CustomSearchBeneficiaryBednetRoute.name);
+                    if (searchBlocState.householdMembers.isNotEmpty) {
+                      parent.push(CustomHouseholdWrapperRoute(
+                          wrapper: searchBlocState.householdMembers.first));
+                    }
+                  }
+                });
+
                 // if (value.navigateToRoot) {
 
-                Future.delayed(
-                  const Duration(
-                    milliseconds: 200,
-                  ),
-                  () {
-                    context.read<SearchHouseholdsBloc>().add(
-                          SearchHouseholdsEvent.searchByHousehold(
-                            householdModel: value.householdModel,
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            isProximityEnabled: false,
-                          ),
-                        );
-                  },
-                ).then(
-                  (valueOne) {
-                    final overviewBloc = context.read<HouseholdOverviewBloc>();
+                // Future.delayed(
+                //   const Duration(
+                //     milliseconds: 200,
+                //   ),
+                //   () {
+                //     context.read<SearchHouseholdsBloc>().add(
+                //           SearchHouseholdsEvent.searchByHousehold(
+                //             householdModel: value.householdModel,
+                //             projectId:
+                //                 RegistrationDeliverySingleton().projectId!,
+                //             isProximityEnabled: false,
+                //           ),
+                //         );
+                //   },
+                // ).then(
+                //   (valueOne) {
+                //     final overviewBloc = context.read<HouseholdOverviewBloc>();
 
-                    Future.delayed(
-                      const Duration(
-                        milliseconds: 200,
-                      ),
-                      () {
-                        overviewBloc.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            projectBeneficiaryType: beneficiaryType,
-                          ),
-                        );
-                      },
-                    ).then(
-                      (valueTwo) {
-                        // (router.parent() as StackRouter).maybePop();
-                        final parent = context.router.parent() as StackRouter;
+                //     Future.delayed(
+                //       const Duration(
+                //         milliseconds: 200,
+                //       ),
+                //       () {
+                //         overviewBloc.add(
+                //           HouseholdOverviewReloadEvent(
+                //             projectId:
+                //                 RegistrationDeliverySingleton().projectId!,
+                //             projectBeneficiaryType: beneficiaryType,
+                //           ),
+                //         );
+                //       },
+                //     ).then(
+                //       (valueTwo) {
+                //         // (router.parent() as StackRouter).maybePop();
+                //         final parent = context.router.parent() as StackRouter;
 
-                        final searchBlocState =
-                            context.read<SearchHouseholdsBloc>().state;
-                        if (searchBlocState.householdMembers.isNotEmpty) {
-                          if (!isEligible) {
-                            if (isEditIndividual) {
-                              parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryBednetRoute.name);
-                              parent.push(CustomHouseholdWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            } else {
-                              final householdMemberWrapperList =
-                                  searchBlocState.householdMembers;
+                //         final searchBlocState =
+                //             context.read<SearchHouseholdsBloc>().state;
+                //         if (searchBlocState.householdMembers.isNotEmpty) {
+                //           if (!isEligible) {
+                //             if (isEditIndividual) {
+                //               parent.popUntilRouteWithName(
+                //                   CustomSearchBeneficiaryBednetRoute.name);
+                //               parent.push(CustomHouseholdWrapperRoute(
+                //                   wrapper:
+                //                       searchBlocState.householdMembers.first));
+                //             } else {
+                //               final householdMemberWrapperList =
+                //                   searchBlocState.householdMembers;
 
-                              final projectBeneficiary = [
-                                householdMemberWrapperList
-                                    .first.projectBeneficiaries?.first
-                              ];
+                //               final projectBeneficiary = [
+                //                 householdMemberWrapperList
+                //                     .first.projectBeneficiaries?.first
+                //               ];
 
-                              context.read<DeliverInterventionBloc>().add(
-                                    DeliverInterventionSubmitEvent(
-                                      navigateToSummary: true,
-                                      householdMemberWrapper:
-                                          householdMemberWrapperList.first,
-                                      task: TaskModel(
-                                        projectBeneficiaryClientReferenceId:
-                                            projectBeneficiary?.first
-                                                ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                        clientReferenceId: IdGen.i.identifier,
-                                        tenantId:
-                                            RegistrationDeliverySingleton()
-                                                .tenantId,
-                                        rowVersion: 1,
-                                        auditDetails: AuditDetails(
-                                          createdBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId,
-                                        status:
-                                            Status.administeredFailed.toValue(),
-                                        clientAuditDetails: ClientAuditDetails(
-                                          createdBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid!,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                          lastModifiedBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        additionalFields: TaskAdditionalFields(
-                                          version: 1,
-                                          fields: [
-                                            AdditionalField(
-                                              AdditionalFieldsType
-                                                  .reasonOfRefusal
-                                                  .toValue(),
-                                              "INCOMPATIBLE",
-                                            ),
-                                          ],
-                                        ),
-                                        address: householdMemberWrapperList
-                                            .first.household?.address,
-                                      ),
-                                      isEditing: false,
-                                      boundaryModel:
-                                          RegistrationDeliverySingleton()
-                                              .boundary!,
-                                    ),
-                                  );
-                              parent.push(IneligibleSummaryRoute(
-                                  isEligible: isEligible));
-                            }
-                          } else {
-                            if (isEditIndividual) {
-                              parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryBednetRoute.name);
-                              parent.push(CustomHouseholdWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            } else {
-                              parent.popUntilRouteWithName(
-                                  CustomSearchBeneficiaryBednetRoute.name);
-                              parent.push(CustomHouseholdWrapperRoute(
-                                  wrapper:
-                                      searchBlocState.householdMembers.first));
-                            }
-                          }
-                        } else {
-                          parent.popUntilRouteWithName(
-                              CustomSearchBeneficiaryBednetRoute.name);
-                        }
-                      },
-                    );
-                  },
-                );
+                //               context.read<DeliverInterventionBloc>().add(
+                //                     DeliverInterventionSubmitEvent(
+                //                       navigateToSummary: true,
+                //                       householdMemberWrapper:
+                //                           householdMemberWrapperList.first,
+                //                       task: TaskModel(
+                //                         projectBeneficiaryClientReferenceId:
+                //                             projectBeneficiary?.first
+                //                                 ?.clientReferenceId, //TODO: need to check for individual based campaign
+                //                         clientReferenceId: IdGen.i.identifier,
+                //                         tenantId:
+                //                             RegistrationDeliverySingleton()
+                //                                 .tenantId,
+                //                         rowVersion: 1,
+                //                         auditDetails: AuditDetails(
+                //                           createdBy:
+                //                               RegistrationDeliverySingleton()
+                //                                   .loggedInUserUuid!,
+                //                           createdTime:
+                //                               context.millisecondsSinceEpoch(),
+                //                         ),
+                //                         projectId:
+                //                             RegistrationDeliverySingleton()
+                //                                 .projectId,
+                //                         status:
+                //                             Status.administeredFailed.toValue(),
+                //                         clientAuditDetails: ClientAuditDetails(
+                //                           createdBy:
+                //                               RegistrationDeliverySingleton()
+                //                                   .loggedInUserUuid!,
+                //                           createdTime:
+                //                               context.millisecondsSinceEpoch(),
+                //                           lastModifiedBy:
+                //                               RegistrationDeliverySingleton()
+                //                                   .loggedInUserUuid,
+                //                           lastModifiedTime:
+                //                               context.millisecondsSinceEpoch(),
+                //                         ),
+                //                         additionalFields: TaskAdditionalFields(
+                //                           version: 1,
+                //                           fields: [
+                //                             AdditionalField(
+                //                               AdditionalFieldsType
+                //                                   .reasonOfRefusal
+                //                                   .toValue(),
+                //                               "INCOMPATIBLE",
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         address: householdMemberWrapperList
+                //                             .first.household?.address,
+                //                       ),
+                //                       isEditing: false,
+                //                       boundaryModel:
+                //                           RegistrationDeliverySingleton()
+                //                               .boundary!,
+                //                     ),
+                //                   );
+                //               parent.push(IneligibleSummaryRoute(
+                //                   isEligible: isEligible));
+                //             }
+                //           } else {
+                //             if (isEditIndividual) {
+                //               parent.popUntilRouteWithName(
+                //                   CustomSearchBeneficiaryBednetRoute.name);
+                //               parent.push(CustomHouseholdWrapperRoute(
+                //                   wrapper:
+                //                       searchBlocState.householdMembers.first));
+                //             } else {
+                //               parent.popUntilRouteWithName(
+                //                   CustomSearchBeneficiaryBednetRoute.name);
+                //               parent.push(CustomHouseholdWrapperRoute(
+                //                   wrapper:
+                //                       searchBlocState.householdMembers.first));
+                //             }
+                //           }
+                //         } else {
+                //           parent.popUntilRouteWithName(
+                //               CustomSearchBeneficiaryBednetRoute.name);
+                //         }
+                //       },
+                //     );
+                //   },
+                // );
                 // }
               },
             );
@@ -296,22 +320,6 @@ class CustomIndividualDetailsBednetPageState
                           return;
                         }
 
-                        final scannerBloc = context.read<DigitScannerBloc>();
-                        if (scannerBloc.state.qrCodes.isEmpty) {
-                          await DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18_local.individualDetails
-                                    .scanVoucherAndLinkToIndividual,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
-                          return;
-                        }
-
                         final submit = await DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
@@ -379,43 +387,21 @@ class CustomIndividualDetailsBednetPageState
                                 isHeadOfHousehold: widget.isHeadOfHousehold,
                               ),
                             );
-                            final repository = context.read<
-                                    LocalRepository<ProjectBeneficiaryModel,
-                                        ProjectBeneficiarySearchModel>>()
-                                as ProjectBeneficiaryLocalRepository;
-                            final scannerBloc =
-                                context.read<DigitScannerBloc>();
-                            final projectBeneficiary = await repository.search(
-                                ProjectBeneficiarySearchModel(
-                                    tag: [scannerBloc.state.qrCodes.first]));
-                            if (projectBeneficiary.isNotEmpty) {
-                              DigitToast.show(
-                                context,
-                                options: DigitToastOptions(
-                                  localizations.translate(
-                                    i18.deliverIntervention
-                                        .resourceAlreadyScanned,
-                                  ),
-                                  true,
-                                  theme,
+
+                            if (context.mounted) {
+                              final scannerBloc =
+                                  context.read<DigitScannerBloc>();
+                              bloc.add(
+                                BeneficiaryRegistrationSummaryEvent(
+                                  projectId: projectId!,
+                                  userUuid: userId!,
+                                  boundary: boundary!,
+                                  tag: scannerBloc.state.qrCodes.isNotEmpty
+                                      ? scannerBloc.state.qrCodes.first
+                                      : null,
                                 ),
                               );
-                            } else {
-                              if (context.mounted) {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-                                bloc.add(
-                                  BeneficiaryRegistrationSummaryEvent(
-                                    projectId: projectId!,
-                                    userUuid: userId!,
-                                    boundary: boundary!,
-                                    tag: scannerBloc.state.qrCodes.isNotEmpty
-                                        ? scannerBloc.state.qrCodes.first
-                                        : null,
-                                  ),
-                                );
-                                router.push(CustomBednetSummaryRoute());
-                              }
+                              router.push(CustomBednetSummaryRoute());
                             }
                           },
                           editIndividual: (
@@ -427,10 +413,7 @@ class CustomIndividualDetailsBednetPageState
                           ) async {
                             // clickedStatus.value = true;
                             isEditIndividual = true;
-                            final repository = context.read<
-                                    LocalRepository<ProjectBeneficiaryModel,
-                                        ProjectBeneficiarySearchModel>>()
-                                as ProjectBeneficiaryLocalRepository;
+
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
 
@@ -443,57 +426,36 @@ class CustomIndividualDetailsBednetPageState
                                 ? scannerBloc.state.qrCodes.first
                                 : null;
 
-                            final projectBeneficiary = await repository.search(
-                                ProjectBeneficiarySearchModel(
-                                    tag: [tag ?? '']));
-
-                            if (tag != null &&
-                                tag != projectBeneficiaryModel?.tag &&
-                                projectBeneficiary.isNotEmpty) {
-                              DigitToast.show(
-                                context,
-                                options: DigitToastOptions(
-                                  localizations.translate(
-                                    i18.deliverIntervention
-                                        .resourceAlreadyScanned,
-                                  ),
-                                  true,
-                                  theme,
-                                ),
-                              );
-                            } else {
-                              bloc.add(
-                                BeneficiaryRegistrationUpdateIndividualDetailsEvent(
-                                  addressModel: addressModel,
-                                  householdModel: householdModel,
-                                  model: individual.copyWith(
-                                    clientAuditDetails: (individual
-                                                    .clientAuditDetails
-                                                    ?.createdBy !=
-                                                null &&
-                                            individual.clientAuditDetails
-                                                    ?.createdTime !=
-                                                null)
-                                        ? ClientAuditDetails(
-                                            createdBy: individual
-                                                .clientAuditDetails!.createdBy,
-                                            createdTime: individual
-                                                .clientAuditDetails!
-                                                .createdTime,
-                                            lastModifiedBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          )
-                                        : null,
-                                  ),
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
+                            bloc.add(
+                              BeneficiaryRegistrationUpdateIndividualDetailsEvent(
+                                addressModel: addressModel,
+                                householdModel: householdModel,
+                                model: individual.copyWith(
+                                  clientAuditDetails: (individual
+                                                  .clientAuditDetails
+                                                  ?.createdBy !=
+                                              null &&
+                                          individual.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: individual
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: individual
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
                                       : null,
                                 ),
-                              );
-                            }
+                                tag: scannerBloc.state.qrCodes.isNotEmpty
+                                    ? scannerBloc.state.qrCodes.first
+                                    : null,
+                              ),
+                            );
                           },
                           addMember: (
                             addressModel,
@@ -766,90 +728,97 @@ class CustomIndividualDetailsBednetPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                            buildWhen: (p, c) {
-                              return true;
-                            },
-                            builder: (context, state) => state
-                                    .qrCodes.isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
+                          Offstage(
+                            offstage: true,
+                            child: BlocBuilder<DigitScannerBloc,
+                                DigitScannerState>(
+                              buildWhen: (p, c) {
+                                return true;
+                              },
+                              builder: (context, state) => state
+                                      .qrCodes.isNotEmpty
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .voucherCode,
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineSmall,
                                           ),
-                                          style: theme.textTheme.headlineSmall,
                                         ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          localizations
-                                              .translate(state.qrCodes.first),
+                                        Flexible(
+                                          child: Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            localizations
+                                                .translate(state.qrCodes.first),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: kPadding * 2,
-                                        ),
-                                        child: IconButton(
-                                          color: theme.colorScheme.secondary,
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CustomDigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
-                                                  isEditEnabled: true,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: kPadding * 2,
+                                          ),
+                                          child: IconButton(
+                                            color: theme.colorScheme.secondary,
+                                            icon: const Icon(Icons.edit),
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                //[TODO: Add the route to auto_route]
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CustomDigitScannerPage(
+                                                    quantity: 1,
+                                                    isGS1code: false,
+                                                    singleValue: true,
+                                                    isEditEnabled: true,
+                                                  ),
+                                                  settings: const RouteSettings(
+                                                      name: '/qr-scanner'),
                                                 ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-
-                                    // ignore: no-empty-block
-                                  )
-                                : DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CustomDigitScannerPage(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            singleValue: true,
+                                              );
+                                            },
                                           ),
-                                          settings: const RouteSettings(
-                                              name: '/qr-scanner'),
                                         ),
-                                      );
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.individualDetails
-                                          .linkVoucherToIndividual,
+                                      ],
+
+                                      // ignore: no-empty-block
+                                    )
+                                  : DigitOutlineIconButton(
+                                      buttonStyle: OutlinedButton.styleFrom(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.zero,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          // [TODO: Add the route to auto_route]
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CustomDigitScannerPage(
+                                              quantity: 1,
+                                              isGS1code: false,
+                                              singleValue: true,
+                                            ),
+                                            settings: const RouteSettings(
+                                                name: '/qr-scanner'),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icons.qr_code,
+                                      label: localizations.translate(
+                                        i18.individualDetails
+                                            .linkVoucherToIndividual,
+                                      ),
                                     ),
-                                  ),
+                            ),
                           ),
                       ],
                     ),

@@ -76,9 +76,6 @@ class _CustomHouseholdOverviewBednetPageState
           final memberCount =
               state.householdMemberWrapper.household?.memberCount ?? 0;
           bednetCount = min(memberCount / 2, Constants.maxBednetCount).round();
-          voucherCode =
-              state.householdMemberWrapper.projectBeneficiaries?.first.tag ??
-                  "";
 
           return Scaffold(
             body: state.loading
@@ -224,9 +221,6 @@ class _CustomHouseholdOverviewBednetPageState
                                             i18_local.deliverIntervention
                                                 .bednetCountText,
                                           ): bednetCount,
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
-                                          ): voucherCode,
                                           localizations.translate(i18
                                               .beneficiaryDetails
                                               .status): localizations.translate(
@@ -647,8 +641,12 @@ class _CustomHouseholdOverviewBednetPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? i18_local.deliverIntervention.delivered
-          : i18_local.deliverIntervention.notDelivered;
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+                  Status.administeredSuccess.toValue()
+              ? '${Status.administeredSuccess.toValue()}_${Constants.bednetLabel}'
+              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+                  .toValue()
+          : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? (state.householdMemberWrapper.tasks?.last.status ==

@@ -7,11 +7,13 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -63,8 +65,6 @@ class CustomBednetSummaryPageState
               if (value.navigateToRoot) {
                 (router.parent() as StackRouter).maybePop();
               } else {
-                router.popUntil((route) =>
-                    route.settings.name == SearchBeneficiaryRoute.name);
                 context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                       SearchHouseholdsEvent.searchByHousehold(
                         householdModel: value.householdModel,
@@ -72,9 +72,20 @@ class CustomBednetSummaryPageState
                         isProximityEnabled: false,
                       ),
                     );
-                router.push(BeneficiaryAcknowledgementRoute(
-                  enableViewHousehold: true,
-                ));
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 100,
+                  ),
+                  () {
+                    (router.parent() as StackRouter).maybePop();
+                    final searchBlocState =
+                        context.read<SearchHouseholdsBloc>().state;
+                    if (searchBlocState.householdMembers.isNotEmpty) {
+                      router.push(BeneficiaryWrapperRoute(
+                          wrapper: searchBlocState.householdMembers.first));
+                    }
+                  },
+                );
               }
             },
           );
@@ -324,27 +335,6 @@ class CustomBednetSummaryPageState
                                                 individualModel?.gender?.name
                                                         .toUpperCase() ??
                                                     '')
-                                            : localizations.translate(
-                                                i18.common.coreCommonNA)),
-                              ),
-                              LabelValuePair(
-                                label: localizations.translate(
-                                    i18.deliverIntervention.voucherCode),
-                                value: householdState.maybeWhen(
-                                    orElse: () => localizations
-                                        .translate(i18.common.coreCommonNA),
-                                    summary: (
-                                      navigateToRoot,
-                                      householdModel,
-                                      individualModel,
-                                      projectBeneficiaryModel,
-                                      registrationDate,
-                                      addressModel,
-                                      loading,
-                                      isHeadOfHousehold,
-                                    ) =>
-                                        projectBeneficiaryModel?.tag != null
-                                            ? projectBeneficiaryModel!.tag!
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),
                               ),

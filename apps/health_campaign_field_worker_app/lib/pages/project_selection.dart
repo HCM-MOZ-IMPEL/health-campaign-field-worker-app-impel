@@ -278,6 +278,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 }
 
+// get the search household filters based on projectType and set the same
 List<String> getHouseholdFiltersBasedOnProjectType(
     AppConfiguration appConfiguration, BuildContext context) {
   List<String> list = [];
@@ -285,6 +286,13 @@ List<String> getHouseholdFiltersBasedOnProjectType(
       ProjectTypes.smc.toValue()) {
     if (appConfiguration.searchHouseHoldFiltersSMC != null) {
       list.addAll(appConfiguration.searchHouseHoldFiltersSMC!
+          .map((e) => e.code)
+          .toList());
+    }
+  } else if (context.selectedProject.additionalDetails?.projectType?.code ==
+      ProjectTypes.bednet.toValue()) {
+    if (appConfiguration.searchHouseHoldFiltersBednet != null) {
+      list.addAll(appConfiguration.searchHouseHoldFiltersBednet!
           .map((e) => e.code)
           .toList());
     }
@@ -304,8 +312,15 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        // info filter dashboardschema based on projectTypeCode
+
+        final projectTypeCode =
+            context.projectTypeCode ?? ProjectTypes.irs.toValue();
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
+
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,
@@ -340,7 +355,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

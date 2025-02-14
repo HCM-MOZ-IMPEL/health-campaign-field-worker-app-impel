@@ -30,6 +30,7 @@ mixin _$ClosedHouseholdEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -52,6 +53,7 @@ mixin _$ClosedHouseholdEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -74,6 +76,7 @@ mixin _$ClosedHouseholdEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -182,6 +185,7 @@ abstract class _$$ClosedHouseholdSubmitEventImplCopyWith<$Res>
       String? projectId,
       String? BenefiiaryType,
       String? reason,
+      String? projectTypeCode,
       double latitude,
       double longitude,
       double locationAccuracy,
@@ -210,6 +214,7 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
     Object? projectId = freezed,
     Object? BenefiiaryType = freezed,
     Object? reason = freezed,
+    Object? projectTypeCode = freezed,
     Object? latitude = null,
     Object? longitude = null,
     Object? locationAccuracy = null,
@@ -246,6 +251,10 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
               as String?,
+      projectTypeCode: freezed == projectTypeCode
+          ? _value.projectTypeCode
+          : projectTypeCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       latitude: null == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -280,6 +289,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   const _$ClosedHouseholdSubmitEventImpl(this.boundaryCode, this.boundaryName,
       this.loggedInUserUuid, this.tenantId, this.projectId, this.BenefiiaryType,
       {this.reason,
+      this.projectTypeCode,
       this.latitude = 0,
       this.longitude = 0,
       this.locationAccuracy = 0,
@@ -302,6 +312,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   @override
   final String? reason;
   @override
+  final String? projectTypeCode;
+  @override
   @JsonKey()
   final double latitude;
   @override
@@ -319,7 +331,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
 
   @override
   String toString() {
-    return 'ClosedHouseholdEvent.handleSubmit(boundaryCode: $boundaryCode, boundaryName: $boundaryName, loggedInUserUuid: $loggedInUserUuid, tenantId: $tenantId, projectId: $projectId, BenefiiaryType: $BenefiiaryType, reason: $reason, latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName, tag: $tag, context: $context)';
+    return 'ClosedHouseholdEvent.handleSubmit(boundaryCode: $boundaryCode, boundaryName: $boundaryName, loggedInUserUuid: $loggedInUserUuid, tenantId: $tenantId, projectId: $projectId, BenefiiaryType: $BenefiiaryType, reason: $reason, projectTypeCode: $projectTypeCode, latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName, tag: $tag, context: $context)';
   }
 
   @override
@@ -340,6 +352,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             (identical(other.BenefiiaryType, BenefiiaryType) ||
                 other.BenefiiaryType == BenefiiaryType) &&
             (identical(other.reason, reason) || other.reason == reason) &&
+            (identical(other.projectTypeCode, projectTypeCode) ||
+                other.projectTypeCode == projectTypeCode) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -362,6 +376,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
       projectId,
       BenefiiaryType,
       reason,
+      projectTypeCode,
       latitude,
       longitude,
       locationAccuracy,
@@ -387,6 +402,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -406,6 +422,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
         projectId,
         BenefiiaryType,
         reason,
+        projectTypeCode,
         latitude,
         longitude,
         locationAccuracy,
@@ -425,6 +442,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -444,6 +462,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
         projectId,
         BenefiiaryType,
         reason,
+        projectTypeCode,
         latitude,
         longitude,
         locationAccuracy,
@@ -463,6 +482,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -484,6 +504,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
           projectId,
           BenefiiaryType,
           reason,
+          projectTypeCode,
           latitude,
           longitude,
           locationAccuracy,
@@ -535,6 +556,7 @@ abstract class ClosedHouseholdSubmitEvent implements ClosedHouseholdEvent {
       final String? projectId,
       final String? BenefiiaryType,
       {final String? reason,
+      final String? projectTypeCode,
       final double latitude,
       final double longitude,
       final double locationAccuracy,
@@ -549,6 +571,7 @@ abstract class ClosedHouseholdSubmitEvent implements ClosedHouseholdEvent {
   String? get projectId;
   String? get BenefiiaryType;
   String? get reason;
+  String? get projectTypeCode;
   @override
   double get latitude;
   @override
@@ -683,6 +706,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -709,6 +733,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -735,6 +760,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
             String? projectId,
             String? BenefiiaryType,
             String? reason,
+            String? projectTypeCode,
             double latitude,
             double longitude,
             double locationAccuracy,

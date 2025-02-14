@@ -345,6 +345,15 @@ class MdmsRepository {
       return searchFilters;
     }).toList();
 
+    appConfiguration.searchHouseHoldFiltersBednet =
+        result.hcmWrapperModel?.searchHouseHoldFiltersBednet?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()

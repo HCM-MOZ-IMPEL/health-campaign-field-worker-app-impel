@@ -91,10 +91,12 @@ class Constants {
   static const String healthFacility = 'Health Facility';
   static const String provincialWarehouse = 'Provincial Warehouse';
   static const String districWarehouse = 'District Warehouse';
+  static const String localMonitor = 'Local Monitor';
   static const String provincialBoundaryLevel = 'Provincia';
   static const String districtBoundaryLevel = 'Distrito';
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';
+  static const String bednetLabel = 'BEDNET';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';

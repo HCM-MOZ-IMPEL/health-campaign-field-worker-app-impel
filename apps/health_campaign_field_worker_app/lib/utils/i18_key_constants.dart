@@ -1206,6 +1206,8 @@ class Attendance {
   const Attendance();
 
   String get comments => 'ATTENDANCE_COMMENTS_FIELD';
+  String get attendanceOfficerBednet => 'ATTENDANCE_OFFICER_BEDNET';
+  String get locationBednet => 'ATTENDANCE_LOCATION_BEDNET';
 }
 
 class DeliverIntervention {

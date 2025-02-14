@@ -6,6 +6,7 @@ import 'package:inventory_management/inventory_management.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../../../router/app_router.dart';
+import '../../../../utils/extensions/extensions.dart';
 import '../../../../widgets/header/back_navigation_help_header.dart';
 import '../../../../widgets/localized.dart';
 
@@ -87,7 +88,7 @@ class _CustomInventoryReportSelectionBednetPageState
                     ),
                   ),
                 ),
-                if (InventorySingleton().isWareHouseMgr)
+                if (!context.isLocalMonitor)
                   DigitListView(
                     title: localizations.translate(i18
                         .inventoryReportSelection.inventoryReportReturnedLabel),
@@ -103,7 +104,7 @@ class _CustomInventoryReportSelectionBednetPageState
                       ),
                     ),
                   ),
-                if (InventorySingleton().isWareHouseMgr)
+                if (!context.isLocalMonitor)
                   DigitListView(
                     title: localizations.translate(
                       i18.inventoryReportSelection

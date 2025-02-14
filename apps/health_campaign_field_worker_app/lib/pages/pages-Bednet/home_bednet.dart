@@ -40,6 +40,7 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
@@ -61,10 +62,10 @@ class HomeBednetPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HomeBednetPage> createState() => HomeSMCPageState();
+  State<HomeBednetPage> createState() => HomeBednetPageState();
 }
 
-class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
+class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<ConnectivityResult> subscription;
@@ -408,13 +409,23 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
           },
         ),
       ),
+      i18.home.warehouseManagerCheckList:
+          homeShowcaseData.wareHouseManagerChecklist.buildWith(
+        child: HomeItemCard(
+          icon: Icons.menu_book,
+          label: i18.home.warehouseManagerCheckList,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+        ),
+      ),
 
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
+          label: context.isDistributor
+              ? i18.home.specialCaseCheckList
+              : i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
@@ -490,19 +501,6 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -517,6 +515,8 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.warehouseManagerCheckList:
+          homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -535,7 +535,9 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.manageStockLabel,
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
-      if (!context.isDistributor) i18.home.myCheckList,
+      i18.home.myCheckList,
+      i18.home.closedHouseHoldLabel,
+      i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
@@ -544,10 +546,13 @@ class HomeSMCPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -653,9 +658,15 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
         loadLocalization(context, appConfiguration);
+
+        // info filter dashboardschema based on projectTypeCode
+        final projectTypeCode =
+            context.projectTypeCode ?? ProjectTypes.irs.toValue();
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
@@ -668,7 +679,7 @@ void setPackagesSingleton(BuildContext context) {
           isWareHouseMgr: context.loggedInUserRoles
               .where((role) =>
                   role.code == RolesType.warehouseManager.toValue() ||
-                  role.code == RolesType.spaqManager.toValue())
+                  role.code == RolesType.localMonitor.toValue())
               .toList()
               .isNotEmpty,
           isDistributor: context.loggedInUserRoles
@@ -691,7 +702,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(
@@ -727,8 +738,8 @@ void setPackagesSingleton(BuildContext context) {
           symptomsTypes:
               appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter:
-              appConfiguration.searchHouseHoldFiltersSMC != null
-                  ? appConfiguration.searchHouseHoldFiltersSMC!
+              appConfiguration.searchHouseHoldFiltersBednet != null
+                  ? appConfiguration.searchHouseHoldFiltersBednet!
                       .map((e) => e.code)
                       .toList()
                   : [],

@@ -11,6 +11,7 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+import '../../../models/entities/project_types.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
@@ -75,6 +76,7 @@ class CustomClosedHouseholdSummaryPageState
                                   context.beneficiaryType!.toString(),
                                   reason:
                                       localizations.translate(widget.reason),
+                                  projectTypeCode: context.projectTypeCode,
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,

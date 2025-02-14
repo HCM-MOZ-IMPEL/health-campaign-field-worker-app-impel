@@ -110,6 +110,7 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.searchHouseHoldFiltersSMC.toValue(),
+                    MasterEnums.searchHouseHoldFiltersBednet.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -225,7 +226,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.firstOrNull,
+      dashboardConfigSchema: dashboardConfigs,
     );
   }
 }
@@ -249,7 +250,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.initialized({
     required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-    DashboardConfigSchema? dashboardConfigSchema,
+    List<DashboardConfigSchema?>? dashboardConfigSchema,
   }) = AppInitialized;
 
   Map<DataModelType, Map<ApiOperation, String>> get entityActionMapping {
@@ -313,7 +314,7 @@ class AppInitializationState with _$AppInitializationState {
 class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
-  final DashboardConfigSchema? dashboardConfigSchema;
+  final List<DashboardConfigSchema?>? dashboardConfigSchema;
 
   const MdmsConfig(
       {required this.appConfigs,

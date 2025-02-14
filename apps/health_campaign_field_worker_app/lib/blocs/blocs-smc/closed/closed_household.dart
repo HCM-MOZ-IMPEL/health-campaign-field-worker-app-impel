@@ -16,6 +16,8 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../../models/entities/project_types.dart';
+
 part 'closed_household.freezed.dart';
 
 typedef ClosedHouseholdEmitter = Emitter<ClosedHouseholdState>;
@@ -194,8 +196,8 @@ class ClosedHouseholdBloc
         ],
         identifiers: [
           identifier.copyWith(
-            identifierId: beneficiaryId.first,
-            identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+            identifierId: getIdentifierId(event, beneficiaryId),
+            identifierType: getIdentifierType(event),
           ),
         ],
         auditDetails: AuditDetails(
@@ -299,6 +301,28 @@ class ClosedHouseholdBloc
     }
   }
 
+// Info get the identifier type based on projectTypeCode
+  String getIdentifierType(ClosedHouseholdSubmitEvent event) {
+    if (event.projectTypeCode?.isEmpty ?? true) {
+      return IdentifierTypes.defaultID.toValue();
+    }
+
+    return event.projectTypeCode == ProjectTypes.smc.toValue()
+        ? IdentifierTypes.uniqueBeneficiaryID.toValue()
+        : IdentifierTypes.defaultID.toValue();
+  }
+
+  String getIdentifierId(
+      ClosedHouseholdSubmitEvent event, Set<String> beneficiaryId) {
+    if (event.projectTypeCode?.isEmpty ?? true) {
+      return IdentifierTypes.defaultID.toValue();
+    }
+
+    return event.projectTypeCode == ProjectTypes.smc.toValue()
+        ? beneficiaryId.first
+        : IdentifierTypes.defaultID.toValue();
+  }
+
   FutureOr<void> _handleSummary(
     ClosedHouseholdSummaryEvent event,
     ClosedHouseholdEmitter emit,
@@ -322,6 +346,7 @@ class ClosedHouseholdEvent with _$ClosedHouseholdEvent {
     String? projectId,
     String? BenefiiaryType, {
     String? reason,
+    String? projectTypeCode,
     @Default(0) double latitude,
     @Default(0) double longitude,
     @Default(0) double locationAccuracy,

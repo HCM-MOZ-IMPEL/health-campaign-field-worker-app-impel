@@ -21,6 +21,7 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../beneficiary/custom_facility_selection_bednet.dart';
 
 @RoutePage()
@@ -80,6 +81,7 @@ class CustomWarehouseDetailsBednetPageState
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
     final stockReconciliationBloc =
         BlocProvider.of<StockReconciliationBloc>(context);
+    bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -145,6 +147,29 @@ class CustomWarehouseDetailsBednetPageState
                           //     scannerState.qrCodes.isNotEmpty
                           //         ? scannerState.qrCodes.last
                           //         : '';
+
+                          // Info : setting the facility name by default and selectedFacilityId
+                          if (isWareHouseMgr &&
+                              facilities.isNotEmpty &&
+                              facilities.length == 1) {
+                            form.control(_warehouseKey).value = facilities
+                                    .first.name ??
+                                localizations
+                                    .translate('FAC_${facilities.first.id}');
+                            selectedFacilityId = facilities.first.id;
+                          } else if (context.isLocalMonitor) {
+                            // name match for lm filter and then set
+                            final localWareHouseFacility = facilities
+                                .where((element) =>
+                                    element.name ==
+                                    context.loggedInUser.userName)
+                                .firstOrNull;
+                            if (localWareHouseFacility != null) {
+                              form.control(_warehouseKey).value =
+                                  localWareHouseFacility.name;
+                              selectedFacilityId = localWareHouseFacility.id;
+                            }
+                          }
 
                           return ScrollableContent(
                             header: const Column(children: [

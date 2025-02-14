@@ -420,6 +420,7 @@ class CustomInventoryReportDetailsBednetPageState
                                                           i18_local.stockDetails
                                                               .selectProductBednetLabel,
                                                         ),
+                                                        enabled: false,
                                                         form: form,
                                                         menuItems:
                                                             productVariants,

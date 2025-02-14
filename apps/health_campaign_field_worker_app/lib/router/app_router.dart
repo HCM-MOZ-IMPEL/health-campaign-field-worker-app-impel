@@ -677,6 +677,7 @@ class AppRouter extends _$AppRouter {
               ),
             ]),
 
+        // SMC routes
         AutoRoute(page: SMCWrapperRoute.page, path: 'smc', children: [
           AutoRoute(page: HomeRoute.page, path: 'home'),
           AutoRoute(page: HomeSMCRoute.page, path: 'home-smc', initial: true),
@@ -1220,6 +1221,8 @@ class AppRouter extends _$AppRouter {
           RedirectRoute(
               path: 'search-referrals', redirectTo: 'custom-search-referrals')
         ]),
+
+        // Bednet routes
         AutoRoute(page: BednetWrapperRoute.page, path: 'bednet', children: [
           AutoRoute(page: HomeRoute.page, path: 'home'),
           AutoRoute(
@@ -1521,33 +1524,33 @@ class AppRouter extends _$AppRouter {
                     ),
                   ],
                 ),
+              ]),
 
-                /// close household
+          /// close household
+          AutoRoute(
+              page: ClosedHouseholdWrapperRoute.page,
+              path: 'closed-household-wrapper',
+              children: [
                 AutoRoute(
-                    page: ClosedHouseholdWrapperRoute.page,
-                    path: 'closed-household-wrapper',
-                    children: [
-                      AutoRoute(
-                        page: ClosedHouseholdDetailsRoute.page,
-                        path: 'closed-household-details',
-                      ),
-                      AutoRoute(
-                        page: CustomClosedHouseholdDetailsBednetRoute.page,
-                        path: 'custom-closed-household-details-bednet',
-                        initial: true,
-                      ),
-                      RedirectRoute(
-                        path: 'closed-household-details',
-                        redirectTo: 'custom-closed-household-details-bednet',
-                      ),
-                      AutoRoute(
-                        page: CustomClosedHouseholdSummaryBednetRoute.page,
-                        path: 'custom-closed-household-summary-bednet',
-                      ),
-                      AutoRoute(
-                          page: ClosedHouseholdAcknowledgementRoute.page,
-                          path: 'closed-household-acknowledgement'),
-                    ]),
+                  page: ClosedHouseholdDetailsRoute.page,
+                  path: 'closed-household-details',
+                ),
+                AutoRoute(
+                  page: CustomClosedHouseholdDetailsBednetRoute.page,
+                  path: 'custom-closed-household-details-bednet',
+                  initial: true,
+                ),
+                RedirectRoute(
+                  path: 'closed-household-details',
+                  redirectTo: 'custom-closed-household-details-bednet',
+                ),
+                AutoRoute(
+                  page: CustomClosedHouseholdSummaryBednetRoute.page,
+                  path: 'custom-closed-household-summary-bednet',
+                ),
+                AutoRoute(
+                    page: ClosedHouseholdAcknowledgementRoute.page,
+                    path: 'closed-household-acknowledgement'),
               ]),
           // Inventory Route
           AutoRoute(
@@ -1656,6 +1659,12 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: ComplaintsAcknowledgementRoute.page,
             path: 'complaints-acknowledgement',
+          ),
+
+          // DSS Dashboard Routes
+          AutoRoute(
+            page: UserDashboardRoute.page,
+            path: 'dashboard',
           ),
 
           /// Complaints Inbox
