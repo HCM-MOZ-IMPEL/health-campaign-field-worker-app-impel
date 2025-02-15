@@ -832,9 +832,7 @@ class CustomDeliverInterventionSMCPageState
               taskId: task?.id,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: oldTask?.rowVersion ?? 1,
-              quantity: doseAdministered
-                  ? _administeredQuantity.toString()
-                  : _defaultQuantity.toString(),
+              quantity: _defaultQuantity.toString(),
               clientAuditDetails: ClientAuditDetails(
                 createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                 createdTime: context.millisecondsSinceEpoch(),
