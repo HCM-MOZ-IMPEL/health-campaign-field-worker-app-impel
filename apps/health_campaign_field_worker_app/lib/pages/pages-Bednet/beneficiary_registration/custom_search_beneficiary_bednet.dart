@@ -20,6 +20,7 @@ import '../../../utils/utils.dart';
 
 import '../../../router/app_router.dart';
 import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
+import '../../../widgets/widgets_bednet/status_filter_bednet.dart';
 import '../custom_qr_scanner.dart';
 
 @RoutePage()
@@ -220,8 +221,16 @@ class _CustomSearchBeneficiaryBednetPageState
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                            localizations.translate(
-                                                                getStatus(
+
+                                                            // Info forming custom string for successful status
+                                                            localizations.translate(getStatus(
+                                                                        selectedFilters[
+                                                                            index]) ==
+                                                                    Status
+                                                                        .administeredSuccess
+                                                                        .toValue()
+                                                                ? '${Status.administeredSuccess.toValue()}_${Constants.bednetLabel}'
+                                                                : getStatus(
                                                                     selectedFilters[
                                                                         index])),
                                                             style: TextStyle(
@@ -500,7 +509,7 @@ class _CustomSearchBeneficiaryBednetPageState
           dialogPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          content: StatusFilter(
+          content: StatusFilterBednet(
             selectedFilters: selectedFilters,
             titleIcon: Icon(getFilterIconNLabel()['icon'],
                 color: const DigitColors().burningOrange),
