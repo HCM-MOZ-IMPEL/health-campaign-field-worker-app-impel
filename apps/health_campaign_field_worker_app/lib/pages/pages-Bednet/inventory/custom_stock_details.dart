@@ -1261,6 +1261,32 @@ class CustomStockDetailsBednetPageState
                                                               )
                                                               .touched;
                                                         });
+                                                      } else if (context
+                                                              .isLocalMonitor &&
+                                                          (entryType ==
+                                                                  StockRecordEntryType
+                                                                      .receipt ||
+                                                              entryType ==
+                                                                  StockRecordEntryType
+                                                                      .dispatch)) {
+                                                        form
+                                                            .control(
+                                                          _waybillNumberKey,
+                                                        )
+                                                            .setValidators(
+                                                          [],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
+                                                        form
+                                                            .control(
+                                                          _waybillQuantityKey,
+                                                        )
+                                                            .setValidators(
+                                                          [],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
                                                       } else {
                                                         setState(() {
                                                           deliveryTeamSelected =
@@ -1944,9 +1970,16 @@ class CustomStockDetailsBednetPageState
                                               i18.stockDetails
                                                   .waybillNumberLabel,
                                             ),
-                                            isRequired: isWareHouseMgr &&
-                                                !supervisorSelected &&
-                                                !deliveryTeamSelected,
+                                            isRequired: (isWareHouseMgr &&
+                                                    !supervisorSelected &&
+                                                    !deliveryTeamSelected) &&
+                                                !(context.isLocalMonitor &&
+                                                        entryType ==
+                                                            StockRecordEntryType
+                                                                .receipt ||
+                                                    entryType ==
+                                                        StockRecordEntryType
+                                                            .dispatch),
                                             formControlName: _waybillNumberKey,
                                             keyboardType: const TextInputType
                                                 .numberWithOptions(
@@ -1977,7 +2010,14 @@ class CustomStockDetailsBednetPageState
                                             ),
                                             isRequired: isWareHouseMgr &&
                                                 !supervisorSelected &&
-                                                !deliveryTeamSelected,
+                                                !deliveryTeamSelected &&
+                                                !(context.isLocalMonitor &&
+                                                        entryType ==
+                                                            StockRecordEntryType
+                                                                .receipt ||
+                                                    entryType ==
+                                                        StockRecordEntryType
+                                                            .dispatch),
                                             formControlName:
                                                 _waybillQuantityKey,
                                             inputFormatters: [
@@ -2181,7 +2221,9 @@ class CustomStockDetailsBednetPageState
           (form.control(_waybillQuantityKey).value ?? 0) as int;
 
       if (quantity != waybillQuantity) {
-        commentRequired = true;
+        setState(() {
+          commentRequired = true;
+        });
         form
             .control(
           _commentsKey,
@@ -2200,7 +2242,9 @@ class CustomStockDetailsBednetPageState
             )
             .touched;
       } else {
-        commentRequired = false;
+        setState(() {
+          commentRequired = false;
+        });
         form
             .control(
           _commentsKey,
@@ -2220,7 +2264,9 @@ class CustomStockDetailsBednetPageState
             .touched;
       }
     } else {
-      commentRequired = false;
+      setState(() {
+        commentRequired = false;
+      });
       form
           .control(
         _commentsKey,
