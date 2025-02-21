@@ -1200,6 +1200,7 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+  String get noteDescriptionBednet => 'DSS_NOTE_DESCRIPTION_BEDNET';
 }
 
 class Attendance {

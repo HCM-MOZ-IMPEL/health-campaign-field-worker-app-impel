@@ -146,6 +146,7 @@ import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral/custom_record_facility_smc.dart';
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
+import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 
 part 'app_router.gr.dart';
 
@@ -1665,6 +1666,14 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: UserDashboardRoute.page,
             path: 'dashboard',
+          ),
+          AutoRoute(
+            page: CustomUserDashboardBednetRoute.page,
+            path: 'custom-dashboard-bedent',
+          ),
+          RedirectRoute(
+            path: 'dashboard',
+            redirectTo: 'custom-dashboard-bedent',
           ),
 
           /// Complaints Inbox

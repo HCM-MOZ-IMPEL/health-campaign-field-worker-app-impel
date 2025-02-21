@@ -1129,6 +1129,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomUserDashboardBednetRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomUserDashboardBednetPage(),
+      );
+    },
     CustomWarehouseDetailsBednetRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsBednetRouteArgs>(
           orElse: () => const CustomWarehouseDetailsBednetRouteArgs());
@@ -5381,6 +5387,20 @@ class CustomStockReconciliationSMCRouteArgs {
   String toString() {
     return 'CustomStockReconciliationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [CustomUserDashboardBednetPage]
+class CustomUserDashboardBednetRoute extends PageRouteInfo<void> {
+  const CustomUserDashboardBednetRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomUserDashboardBednetRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomUserDashboardBednetRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
