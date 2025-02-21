@@ -2000,10 +2000,6 @@ class CustomStockDetailsBednetPageState
                                                         StockRecordEntryType
                                                             .dispatch),
                                             formControlName: _waybillNumberKey,
-                                            keyboardType: const TextInputType
-                                                .numberWithOptions(
-                                              decimal: true,
-                                            ),
                                             validationMessages: {
                                               'required': (object) =>
                                                   localizations.translate(
