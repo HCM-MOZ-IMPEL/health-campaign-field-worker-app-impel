@@ -2191,6 +2191,23 @@ class CustomStockDetailsBednetPageState
                                           maxLines: 3,
                                           formControlName: _commentsKey,
                                           isRequired: commentRequired,
+                                          // info handle the scenario where comment required error was set true when transportType in hand
+                                          onChanged: (formGroup) {
+                                            if (commentRequired &&
+                                                formGroup != null &&
+                                                (formGroup.value as String)
+                                                        .length >
+                                                    2) {
+                                              form
+                                                  .control(_commentsKey)
+                                                  .removeError("required");
+                                            } else if (commentRequired) {
+                                              form
+                                                  .control(_commentsKey)
+                                                  .setErrors(
+                                                      {"required": true});
+                                            }
+                                          },
                                           validationMessages: {
                                             'required': (object) =>
                                                 localizations.translate(
