@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
@@ -1092,6 +1093,14 @@ class CustomStockDetailsBednetPageState
                                                   } else {
                                                     allFacilities
                                                         .addAll(allFacilities1);
+                                                  }
+                                                  // Info remove delivery team for all transactions and all role
+                                                  if (allFacilities
+                                                      .isNotEmpty) {
+                                                    allFacilities.removeWhere(
+                                                        (element) =>
+                                                            element.id ==
+                                                            "Delivery Team");
                                                   }
                                                   return InkWell(
                                                     onTap: () async {
