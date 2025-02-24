@@ -351,10 +351,7 @@ class CustomWarehouseDetailsBednetPageState
                                     ),
                                     Column(children: [
                                       DigitDateFormPicker(
-                                        isEnabled: isWareHouseMgr &&
-                                            (boundaryLevel ==
-                                                Constants
-                                                    .provincialBoundaryLevel),
+                                        isEnabled: false,
                                         formControlName: _dateOfEntryKey,
                                         label: localizations.translate(
                                           i18.warehouseDetails.dateOfReceipt,
