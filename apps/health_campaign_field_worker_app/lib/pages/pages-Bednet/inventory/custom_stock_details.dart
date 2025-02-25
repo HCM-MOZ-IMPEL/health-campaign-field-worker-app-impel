@@ -1076,16 +1076,19 @@ class CustomStockDetailsBednetPageState
                                                                   Constants
                                                                       .districWarehouse)
                                                               .toList());
-
-                                                      // info adding delivery team to the list for local monitor (for all entrytype)
-                                                      allFacilities.addAll(
-                                                          allFacilities1
-                                                              .where((element) =>
-                                                                  element
-                                                                      .usage ==
-                                                                  Constants
-                                                                      .deliveryTeam)
-                                                              .toList());
+                                                      if (entryType ==
+                                                          StockRecordEntryType
+                                                              .dispatch) {
+                                                        // info adding delivery team to the list for local monitor (for issue/dispatch entrytype)
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .deliveryTeam)
+                                                                .toList());
+                                                      }
                                                     } else {
                                                       allFacilities.addAll(
                                                           allFacilities1);
