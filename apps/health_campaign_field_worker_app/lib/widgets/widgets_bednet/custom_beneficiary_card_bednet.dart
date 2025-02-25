@@ -42,7 +42,6 @@ class CustomBeneficiaryCardBednet extends StatelessWidget {
         Offstage(
           offstage: status == null,
           child: status == Status.visited.toValue() ||
-                  status == Status.registered.toValue() ||
                   status == Status.administeredSuccess.toValue()
               ? DigitIconButton(
                   icon: Icons.check_circle,
