@@ -324,6 +324,28 @@ class CustomStockDetailsBednetPageState
                                               if (!form.valid) {
                                                 return;
                                               }
+
+                                              final commentValue = form
+                                                  .control(_commentsKey)
+                                                  .value as String?;
+
+                                              if (commentValue != null &&
+                                                  commentValue.length < 3) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                      i18_local
+                                                          .deliverIntervention
+                                                          .deliveryCommentRequired,
+                                                    ),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+
+                                                return;
+                                              }
                                               final primaryId = BlocProvider.of<
                                                   RecordStockBloc>(
                                                 context,
@@ -1985,7 +2007,8 @@ class CustomStockDetailsBednetPageState
                                             quantityCountLabel,
                                           ),
                                         ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr &&
+                                            !context.isLocalMonitor)
                                           DigitTextFormField(
                                             key: const Key(_waybillNumberKey),
                                             label: localizations.translate(
@@ -2020,7 +2043,8 @@ class CustomStockDetailsBednetPageState
                                                   .replaceAll('{}', ''),
                                             },
                                           ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr &&
+                                            !context.isLocalMonitor)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18.stockDetails
@@ -2255,7 +2279,12 @@ class CustomStockDetailsBednetPageState
       final waybillQuantity =
           (form.control(_waybillQuantityKey).value ?? 0) as int;
 
-      if (quantity != waybillQuantity) {
+      // info added a check to add validation for comment only when it is empty or not filled
+      final commentValue = (form.control(_commentsKey).value ?? "") as String;
+
+      if (form.control(_waybillQuantityKey).value != null &&
+          quantity != waybillQuantity &&
+          (commentValue.isEmpty)) {
         setState(() {
           commentRequired = true;
         });
