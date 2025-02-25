@@ -1342,46 +1342,50 @@ class CustomStockDetailsBednetPageState
                                                               form);
 
                                                           if (isWareHouseMgr) {
-                                                            form
-                                                                .control(
-                                                              _waybillNumberKey,
-                                                            )
-                                                                .setValidators(
-                                                              [
-                                                                Validators
-                                                                    .required,
-                                                                Validators
-                                                                    .minLength(
-                                                                        2),
-                                                                Validators
-                                                                    .maxLength(
-                                                                        200),
-                                                              ],
-                                                              updateParent:
-                                                                  true,
-                                                              autoValidate:
-                                                                  true,
-                                                            );
-                                                            form
-                                                                .control(
-                                                              _waybillQuantityKey,
-                                                            )
-                                                                .setValidators(
-                                                              [
-                                                                Validators
-                                                                    .required,
-                                                                Validators
-                                                                    .number,
-                                                                Validators.min(
-                                                                    0),
-                                                                Validators.max(
-                                                                    maxCount),
-                                                              ],
-                                                              updateParent:
-                                                                  true,
-                                                              autoValidate:
-                                                                  true,
-                                                            );
+                                                            if (entryType ==
+                                                                StockRecordEntryType
+                                                                    .receipt) {
+                                                              form
+                                                                  .control(
+                                                                _waybillNumberKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .minLength(
+                                                                          2),
+                                                                  Validators
+                                                                      .maxLength(
+                                                                          200),
+                                                                ],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                              form
+                                                                  .control(
+                                                                _waybillQuantityKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .number,
+                                                                  Validators
+                                                                      .min(0),
+                                                                  Validators.max(
+                                                                      maxCount),
+                                                                ],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                            }
                                                             form
                                                                 .control(
                                                               _typeOfTransportKey,
@@ -1692,46 +1696,52 @@ class CustomStockDetailsBednetPageState
                                                                   isWareHouseMgr,
                                                                   form);
                                                               if (isWareHouseMgr) {
-                                                                form
-                                                                    .control(
-                                                                  _waybillNumberKey,
-                                                                )
-                                                                    .setValidators(
-                                                                  [
-                                                                    Validators
-                                                                        .required,
-                                                                    Validators
-                                                                        .minLength(
-                                                                            2),
-                                                                    Validators
-                                                                        .maxLength(
-                                                                            200),
-                                                                  ],
-                                                                  updateParent:
-                                                                      true,
-                                                                  autoValidate:
-                                                                      true,
-                                                                );
-                                                                form
-                                                                    .control(
-                                                                  _waybillQuantityKey,
-                                                                )
-                                                                    .setValidators(
-                                                                  [
-                                                                    Validators
-                                                                        .required,
-                                                                    Validators
-                                                                        .number,
-                                                                    Validators
-                                                                        .min(0),
-                                                                    Validators.max(
-                                                                        maxCount),
-                                                                  ],
-                                                                  updateParent:
-                                                                      true,
-                                                                  autoValidate:
-                                                                      true,
-                                                                );
+                                                                if (entryType ==
+                                                                    StockRecordEntryType
+                                                                        .receipt) {
+                                                                  form
+                                                                      .control(
+                                                                    _waybillNumberKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [
+                                                                      Validators
+                                                                          .required,
+                                                                      Validators
+                                                                          .minLength(
+                                                                              2),
+                                                                      Validators
+                                                                          .maxLength(
+                                                                              200),
+                                                                    ],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                  form
+                                                                      .control(
+                                                                    _waybillQuantityKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [
+                                                                      Validators
+                                                                          .required,
+                                                                      Validators
+                                                                          .number,
+                                                                      Validators
+                                                                          .min(
+                                                                              0),
+                                                                      Validators
+                                                                          .max(
+                                                                              maxCount),
+                                                                    ],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                }
                                                                 form
                                                                     .control(
                                                                   _typeOfTransportKey,
