@@ -1066,14 +1066,14 @@ class CustomStockDetailsBednetPageState
                                                                         .provincialWarehouse)
                                                                 .toList());
                                                       } else {
-                                                        // info : add lm to facility list
+                                                        // info add satellite facilities
                                                         allFacilities.addAll(
                                                             allFacilities1
                                                                 .where((element) =>
                                                                     element
                                                                         .usage ==
                                                                     Constants
-                                                                        .localMonitor)
+                                                                        .warehouse)
                                                                 .toList());
                                                         if (stockState
                                                                 .entryType ==
@@ -1089,19 +1089,62 @@ class CustomStockDetailsBednetPageState
                                                                   .toList());
                                                         }
                                                       }
+                                                    } else if (boundaryLevel ==
+                                                            Constants
+                                                                .administrativeProviceBoundaryLevel &&
+                                                        !context
+                                                            .isLocalMonitor) {
+                                                      if (stockState
+                                                              .entryType ==
+                                                          StockRecordEntryType
+                                                              .receipt) {
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .districWarehouse)
+                                                                .toList());
+                                                      } else {
+                                                        // info add lm to list
+                                                        allFacilities.addAll(
+                                                            allFacilities1.where(
+                                                                (element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .localMonitor));
+                                                        if (stockState
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                          allFacilities.addAll(
+                                                              allFacilities1
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .districWarehouse)
+                                                                  .toList());
+                                                        }
+                                                      }
                                                     } else if (context
                                                         .isLocalMonitor) {
-                                                      allFacilities.addAll(
-                                                          allFacilities1
-                                                              .where((element) =>
-                                                                  element
-                                                                      .usage ==
-                                                                  Constants
-                                                                      .districWarehouse)
-                                                              .toList());
-                                                      if (entryType ==
+                                                      if (stockState
+                                                              .entryType ==
                                                           StockRecordEntryType
-                                                              .dispatch) {
+                                                              .receipt) {
+                                                        // info add satellite facilities
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .warehouse)
+                                                                .toList());
+                                                      } else {
                                                         // info adding delivery team to the list for local monitor (for issue/dispatch entrytype)
                                                         allFacilities.addAll(
                                                             allFacilities1
@@ -1111,6 +1154,20 @@ class CustomStockDetailsBednetPageState
                                                                     Constants
                                                                         .deliveryTeam)
                                                                 .toList());
+                                                        if (stockState
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                          // info add satellite facilities
+                                                          allFacilities.addAll(
+                                                              allFacilities1
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .warehouse)
+                                                                  .toList());
+                                                        }
                                                       }
                                                     } else {
                                                       allFacilities.addAll(
