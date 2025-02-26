@@ -58,6 +58,7 @@ class CustomStockDetailsBednetPageState
   static const _supervisorKey = 'supervisor';
   static const localMonitor = 'LocalMonitor';
   bool deliveryTeamSelected = false;
+  bool localMonitorSelected = false;
   bool supervisorSelected = false;
   bool commentRequired = false;
   bool byHand = false;
@@ -1152,6 +1153,14 @@ class CustomStockDetailsBednetPageState
                                                                       allFacilities))
                                                           as FacilityModel?;
 
+                                                      // info bool to decide if lm selected then handle the fields isRequired
+                                                      if (facility != null) {
+                                                        localMonitorSelected =
+                                                            facility.usage ==
+                                                                Constants
+                                                                    .localMonitor;
+                                                      }
+
                                                       if (facility == null)
                                                         return;
                                                       form
@@ -1313,24 +1322,26 @@ class CustomStockDetailsBednetPageState
                                                               entryType ==
                                                                   StockRecordEntryType
                                                                       .dispatch)) {
-                                                        form
-                                                            .control(
-                                                          _waybillNumberKey,
-                                                        )
-                                                            .setValidators(
-                                                          [],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
-                                                        form
-                                                            .control(
-                                                          _waybillQuantityKey,
-                                                        )
-                                                            .setValidators(
-                                                          [],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
+                                                        setState(() {
+                                                          form
+                                                              .control(
+                                                            _waybillNumberKey,
+                                                          )
+                                                              .setValidators(
+                                                            [],
+                                                            updateParent: true,
+                                                            autoValidate: true,
+                                                          );
+                                                          form
+                                                              .control(
+                                                            _waybillQuantityKey,
+                                                          )
+                                                              .setValidators(
+                                                            [],
+                                                            updateParent: true,
+                                                            autoValidate: true,
+                                                          );
+                                                        });
                                                       } else {
                                                         setState(() {
                                                           deliveryTeamSelected =
@@ -1342,9 +1353,30 @@ class CustomStockDetailsBednetPageState
                                                               form);
 
                                                           if (isWareHouseMgr) {
-                                                            if (entryType ==
-                                                                StockRecordEntryType
-                                                                    .receipt) {
+                                                            if (localMonitorSelected) {
+                                                              form
+                                                                  .control(
+                                                                _waybillNumberKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                              form
+                                                                  .control(
+                                                                _waybillQuantityKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                            } else {
                                                               form
                                                                   .control(
                                                                 _waybillNumberKey,
@@ -1696,9 +1728,30 @@ class CustomStockDetailsBednetPageState
                                                                   isWareHouseMgr,
                                                                   form);
                                                               if (isWareHouseMgr) {
-                                                                if (entryType ==
-                                                                    StockRecordEntryType
-                                                                        .receipt) {
+                                                                if (localMonitorSelected) {
+                                                                  form
+                                                                      .control(
+                                                                    _waybillNumberKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                  form
+                                                                      .control(
+                                                                    _waybillQuantityKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                } else {
                                                                   form
                                                                       .control(
                                                                     _waybillNumberKey,
@@ -1742,6 +1795,7 @@ class CustomStockDetailsBednetPageState
                                                                         true,
                                                                   );
                                                                 }
+
                                                                 form
                                                                     .control(
                                                                   _typeOfTransportKey,
@@ -2028,13 +2082,8 @@ class CustomStockDetailsBednetPageState
                                             isRequired: (isWareHouseMgr &&
                                                     !supervisorSelected &&
                                                     !deliveryTeamSelected) &&
-                                                !(context.isLocalMonitor &&
-                                                        entryType ==
-                                                            StockRecordEntryType
-                                                                .receipt ||
-                                                    entryType ==
-                                                        StockRecordEntryType
-                                                            .dispatch),
+                                                !(context.isLocalMonitor) &&
+                                                !localMonitorSelected,
                                             formControlName: _waybillNumberKey,
                                             validationMessages: {
                                               'required': (object) =>
@@ -2063,13 +2112,8 @@ class CustomStockDetailsBednetPageState
                                             isRequired: isWareHouseMgr &&
                                                 !supervisorSelected &&
                                                 !deliveryTeamSelected &&
-                                                !(context.isLocalMonitor &&
-                                                        entryType ==
-                                                            StockRecordEntryType
-                                                                .receipt ||
-                                                    entryType ==
-                                                        StockRecordEntryType
-                                                            .dispatch),
+                                                !(context.isLocalMonitor) &&
+                                                !localMonitorSelected,
                                             formControlName:
                                                 _waybillQuantityKey,
                                             inputFormatters: [
