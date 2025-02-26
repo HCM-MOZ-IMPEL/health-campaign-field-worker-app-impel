@@ -1372,13 +1372,7 @@ class CustomStockDetailsBednetPageState
                                                               .touched;
                                                         });
                                                       } else if (context
-                                                              .isLocalMonitor &&
-                                                          (entryType ==
-                                                                  StockRecordEntryType
-                                                                      .receipt ||
-                                                              entryType ==
-                                                                  StockRecordEntryType
-                                                                      .dispatch)) {
+                                                          .isLocalMonitor) {
                                                         setState(() {
                                                           form
                                                               .control(
