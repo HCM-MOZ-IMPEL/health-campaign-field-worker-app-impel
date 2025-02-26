@@ -261,7 +261,7 @@ class CustomClosedHouseholdDetailsPageState
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
