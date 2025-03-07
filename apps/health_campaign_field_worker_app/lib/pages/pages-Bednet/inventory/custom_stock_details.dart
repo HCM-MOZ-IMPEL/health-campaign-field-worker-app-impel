@@ -331,7 +331,7 @@ class CustomStockDetailsBednetPageState
                                                   .value as String?;
 
                                               if (commentValue != null &&
-                                                  commentValue.length < 3) {
+                                                  commentValue.length < 2) {
                                                 await DigitToast.show(
                                                   context,
                                                   options: DigitToastOptions(
@@ -2330,20 +2330,8 @@ class CustomStockDetailsBednetPageState
                                           isRequired: commentRequired,
                                           // info handle the scenario where comment required error was set true when transportType in hand
                                           onChanged: (formGroup) {
-                                            if (commentRequired &&
-                                                formGroup != null &&
-                                                (formGroup.value as String)
-                                                        .length >
-                                                    2) {
-                                              form
-                                                  .control(_commentsKey)
-                                                  .removeError("required");
-                                            } else if (commentRequired) {
-                                              form
-                                                  .control(_commentsKey)
-                                                  .setErrors(
-                                                      {"required": true});
-                                            }
+                                            form.control(_commentsKey).value =
+                                                formGroup.value;
                                           },
                                           validationMessages: {
                                             'required': (object) =>
@@ -2384,12 +2372,8 @@ class CustomStockDetailsBednetPageState
       final waybillQuantity =
           (form.control(_waybillQuantityKey).value ?? 0) as int;
 
-      // info added a check to add validation for comment only when it is empty or not filled
-      final commentValue = (form.control(_commentsKey).value ?? "") as String;
-
       if (form.control(_waybillQuantityKey).value != null &&
-          quantity != waybillQuantity &&
-          (commentValue.isEmpty)) {
+          quantity != waybillQuantity) {
         setState(() {
           commentRequired = true;
         });
