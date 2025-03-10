@@ -20,11 +20,12 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/registration_delivery.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../widgets/localized.dart';
-import '../../../utils/utils.dart' show CustomValidator;
+import '../../../utils/utils.dart' show Constants, CustomValidator;
 
 @RoutePage()
 class CustomStockReconciliationBednetPage extends LocalizedStatefulWidget {
@@ -364,6 +365,29 @@ class _CustomStockReconciliationBednetPageState
                                                         ),
                                                     fetched: (facilities,
                                                         allFacilities) {
+                                                      if (RegistrationDeliverySingleton()
+                                                              .selectedProject
+                                                              ?.address
+                                                              ?.boundaryType ==
+                                                          Constants
+                                                              .provincialBoundaryLevel) {
+                                                        List<FacilityModel>
+                                                            filteredFacilities =
+                                                            facilities
+                                                                .where(
+                                                                  (element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .provincialWarehouse,
+                                                                )
+                                                                .toList();
+                                                        facilities =
+                                                            filteredFacilities
+                                                                    .isEmpty
+                                                                ? facilities
+                                                                : filteredFacilities;
+                                                      }
                                                       return InkWell(
                                                         onTap: () async {
                                                           final stockReconciliationBloc =

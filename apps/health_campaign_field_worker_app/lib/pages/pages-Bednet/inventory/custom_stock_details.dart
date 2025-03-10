@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
@@ -57,6 +58,7 @@ class CustomStockDetailsBednetPageState
   static const _supervisorKey = 'supervisor';
   static const localMonitor = 'LocalMonitor';
   bool deliveryTeamSelected = false;
+  bool localMonitorSelected = false;
   bool supervisorSelected = false;
   bool commentRequired = false;
   bool byHand = false;
@@ -321,6 +323,28 @@ class CustomStockDetailsBednetPageState
                                           : () async {
                                               form.markAllAsTouched();
                                               if (!form.valid) {
+                                                return;
+                                              }
+
+                                              final commentValue = form
+                                                  .control(_commentsKey)
+                                                  .value as String?;
+
+                                              if (commentValue != null &&
+                                                  commentValue.length < 2) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                      i18_local
+                                                          .deliverIntervention
+                                                          .deliveryCommentRequired,
+                                                    ),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+
                                                 return;
                                               }
                                               final primaryId = BlocProvider.of<
@@ -1042,14 +1066,14 @@ class CustomStockDetailsBednetPageState
                                                                         .provincialWarehouse)
                                                                 .toList());
                                                       } else {
-                                                        // info : add lm to facility list
+                                                        // info add satellite facilities
                                                         allFacilities.addAll(
                                                             allFacilities1
                                                                 .where((element) =>
                                                                     element
                                                                         .usage ==
                                                                     Constants
-                                                                        .localMonitor)
+                                                                        .warehouse)
                                                                 .toList());
                                                         if (stockState
                                                                 .entryType ==
@@ -1065,16 +1089,86 @@ class CustomStockDetailsBednetPageState
                                                                   .toList());
                                                         }
                                                       }
+                                                    } else if (boundaryLevel ==
+                                                            Constants
+                                                                .administrativeProviceBoundaryLevel &&
+                                                        !context
+                                                            .isLocalMonitor) {
+                                                      if (stockState
+                                                              .entryType ==
+                                                          StockRecordEntryType
+                                                              .receipt) {
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .districWarehouse)
+                                                                .toList());
+                                                      } else {
+                                                        // info add lm to list
+                                                        allFacilities.addAll(
+                                                            allFacilities1.where(
+                                                                (element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .localMonitor));
+                                                        if (stockState
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                          allFacilities.addAll(
+                                                              allFacilities1
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .districWarehouse)
+                                                                  .toList());
+                                                        }
+                                                      }
                                                     } else if (context
                                                         .isLocalMonitor) {
-                                                      allFacilities.addAll(
-                                                          allFacilities1
-                                                              .where((element) =>
-                                                                  element
-                                                                      .usage ==
-                                                                  Constants
-                                                                      .districWarehouse)
-                                                              .toList());
+                                                      if (stockState
+                                                              .entryType ==
+                                                          StockRecordEntryType
+                                                              .receipt) {
+                                                        // info add satellite facilities
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .warehouse)
+                                                                .toList());
+                                                      } else {
+                                                        // info adding delivery team to the list for local monitor (for issue/dispatch entrytype)
+                                                        allFacilities.addAll(
+                                                            allFacilities1
+                                                                .where((element) =>
+                                                                    element
+                                                                        .usage ==
+                                                                    Constants
+                                                                        .deliveryTeam)
+                                                                .toList());
+                                                        if (stockState
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .dispatch) {
+                                                          // info add satellite facilities
+                                                          allFacilities.addAll(
+                                                              allFacilities1
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .usage ==
+                                                                      Constants
+                                                                          .warehouse)
+                                                                  .toList());
+                                                        }
+                                                      }
                                                     } else {
                                                       allFacilities.addAll(
                                                           allFacilities1);
@@ -1082,6 +1176,14 @@ class CustomStockDetailsBednetPageState
                                                   } else {
                                                     allFacilities
                                                         .addAll(allFacilities1);
+                                                  }
+                                                  // Info remove delivery team for all transactions and all role
+                                                  if (allFacilities
+                                                      .isNotEmpty) {
+                                                    allFacilities.removeWhere(
+                                                        (element) =>
+                                                            element.id ==
+                                                            "Delivery Team");
                                                   }
                                                   return InkWell(
                                                     onTap: () async {
@@ -1107,6 +1209,14 @@ class CustomStockDetailsBednetPageState
                                                                   facilities:
                                                                       allFacilities))
                                                           as FacilityModel?;
+
+                                                      // info bool to decide if lm selected then handle the fields isRequired
+                                                      if (facility != null) {
+                                                        localMonitorSelected =
+                                                            facility.usage ==
+                                                                Constants
+                                                                    .localMonitor;
+                                                      }
 
                                                       if (facility == null)
                                                         return;
@@ -1261,6 +1371,28 @@ class CustomStockDetailsBednetPageState
                                                               )
                                                               .touched;
                                                         });
+                                                      } else if (context
+                                                          .isLocalMonitor) {
+                                                        setState(() {
+                                                          form
+                                                              .control(
+                                                            _waybillNumberKey,
+                                                          )
+                                                              .setValidators(
+                                                            [],
+                                                            updateParent: true,
+                                                            autoValidate: true,
+                                                          );
+                                                          form
+                                                              .control(
+                                                            _waybillQuantityKey,
+                                                          )
+                                                              .setValidators(
+                                                            [],
+                                                            updateParent: true,
+                                                            autoValidate: true,
+                                                          );
+                                                        });
                                                       } else {
                                                         setState(() {
                                                           deliveryTeamSelected =
@@ -1272,46 +1404,71 @@ class CustomStockDetailsBednetPageState
                                                               form);
 
                                                           if (isWareHouseMgr) {
-                                                            form
-                                                                .control(
-                                                              _waybillNumberKey,
-                                                            )
-                                                                .setValidators(
-                                                              [
-                                                                Validators
-                                                                    .required,
-                                                                Validators
-                                                                    .minLength(
-                                                                        2),
-                                                                Validators
-                                                                    .maxLength(
-                                                                        200),
-                                                              ],
-                                                              updateParent:
-                                                                  true,
-                                                              autoValidate:
-                                                                  true,
-                                                            );
-                                                            form
-                                                                .control(
-                                                              _waybillQuantityKey,
-                                                            )
-                                                                .setValidators(
-                                                              [
-                                                                Validators
-                                                                    .required,
-                                                                Validators
-                                                                    .number,
-                                                                Validators.min(
-                                                                    0),
-                                                                Validators.max(
-                                                                    maxCount),
-                                                              ],
-                                                              updateParent:
-                                                                  true,
-                                                              autoValidate:
-                                                                  true,
-                                                            );
+                                                            if (localMonitorSelected) {
+                                                              form
+                                                                  .control(
+                                                                _waybillNumberKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                              form
+                                                                  .control(
+                                                                _waybillQuantityKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                            } else {
+                                                              form
+                                                                  .control(
+                                                                _waybillNumberKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .minLength(
+                                                                          2),
+                                                                  Validators
+                                                                      .maxLength(
+                                                                          200),
+                                                                ],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                              form
+                                                                  .control(
+                                                                _waybillQuantityKey,
+                                                              )
+                                                                  .setValidators(
+                                                                [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .number,
+                                                                  Validators
+                                                                      .min(0),
+                                                                  Validators.max(
+                                                                      maxCount),
+                                                                ],
+                                                                updateParent:
+                                                                    true,
+                                                                autoValidate:
+                                                                    true,
+                                                              );
+                                                            }
                                                             form
                                                                 .control(
                                                               _typeOfTransportKey,
@@ -1622,46 +1779,74 @@ class CustomStockDetailsBednetPageState
                                                                   isWareHouseMgr,
                                                                   form);
                                                               if (isWareHouseMgr) {
-                                                                form
-                                                                    .control(
-                                                                  _waybillNumberKey,
-                                                                )
-                                                                    .setValidators(
-                                                                  [
-                                                                    Validators
-                                                                        .required,
-                                                                    Validators
-                                                                        .minLength(
-                                                                            2),
-                                                                    Validators
-                                                                        .maxLength(
-                                                                            200),
-                                                                  ],
-                                                                  updateParent:
-                                                                      true,
-                                                                  autoValidate:
-                                                                      true,
-                                                                );
-                                                                form
-                                                                    .control(
-                                                                  _waybillQuantityKey,
-                                                                )
-                                                                    .setValidators(
-                                                                  [
-                                                                    Validators
-                                                                        .required,
-                                                                    Validators
-                                                                        .number,
-                                                                    Validators
-                                                                        .min(0),
-                                                                    Validators.max(
-                                                                        maxCount),
-                                                                  ],
-                                                                  updateParent:
-                                                                      true,
-                                                                  autoValidate:
-                                                                      true,
-                                                                );
+                                                                if (localMonitorSelected) {
+                                                                  form
+                                                                      .control(
+                                                                    _waybillNumberKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                  form
+                                                                      .control(
+                                                                    _waybillQuantityKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                } else {
+                                                                  form
+                                                                      .control(
+                                                                    _waybillNumberKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [
+                                                                      Validators
+                                                                          .required,
+                                                                      Validators
+                                                                          .minLength(
+                                                                              2),
+                                                                      Validators
+                                                                          .maxLength(
+                                                                              200),
+                                                                    ],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                  form
+                                                                      .control(
+                                                                    _waybillQuantityKey,
+                                                                  )
+                                                                      .setValidators(
+                                                                    [
+                                                                      Validators
+                                                                          .required,
+                                                                      Validators
+                                                                          .number,
+                                                                      Validators
+                                                                          .min(
+                                                                              0),
+                                                                      Validators
+                                                                          .max(
+                                                                              maxCount),
+                                                                    ],
+                                                                    updateParent:
+                                                                        true,
+                                                                    autoValidate:
+                                                                        true,
+                                                                  );
+                                                                }
+
                                                                 form
                                                                     .control(
                                                                   _typeOfTransportKey,
@@ -1937,21 +2122,20 @@ class CustomStockDetailsBednetPageState
                                             quantityCountLabel,
                                           ),
                                         ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr &&
+                                            !context.isLocalMonitor)
                                           DigitTextFormField(
                                             key: const Key(_waybillNumberKey),
                                             label: localizations.translate(
                                               i18.stockDetails
                                                   .waybillNumberLabel,
                                             ),
-                                            isRequired: isWareHouseMgr &&
-                                                !supervisorSelected &&
-                                                !deliveryTeamSelected,
+                                            isRequired: (isWareHouseMgr &&
+                                                    !supervisorSelected &&
+                                                    !deliveryTeamSelected) &&
+                                                !(context.isLocalMonitor) &&
+                                                !localMonitorSelected,
                                             formControlName: _waybillNumberKey,
-                                            keyboardType: const TextInputType
-                                                .numberWithOptions(
-                                              decimal: true,
-                                            ),
                                             validationMessages: {
                                               'required': (object) =>
                                                   localizations.translate(
@@ -1969,7 +2153,8 @@ class CustomStockDetailsBednetPageState
                                                   .replaceAll('{}', ''),
                                             },
                                           ),
-                                        if (isWareHouseMgr)
+                                        if (isWareHouseMgr &&
+                                            !context.isLocalMonitor)
                                           DigitTextFormField(
                                             label: localizations.translate(
                                               i18.stockDetails
@@ -1977,7 +2162,9 @@ class CustomStockDetailsBednetPageState
                                             ),
                                             isRequired: isWareHouseMgr &&
                                                 !supervisorSelected &&
-                                                !deliveryTeamSelected,
+                                                !deliveryTeamSelected &&
+                                                !(context.isLocalMonitor) &&
+                                                !localMonitorSelected,
                                             formControlName:
                                                 _waybillQuantityKey,
                                             inputFormatters: [
@@ -2141,6 +2328,11 @@ class CustomStockDetailsBednetPageState
                                           maxLines: 3,
                                           formControlName: _commentsKey,
                                           isRequired: commentRequired,
+                                          // info handle the scenario where comment required error was set true when transportType in hand
+                                          onChanged: (formGroup) {
+                                            form.control(_commentsKey).value =
+                                                formGroup.value;
+                                          },
                                           validationMessages: {
                                             'required': (object) =>
                                                 localizations.translate(
@@ -2180,8 +2372,11 @@ class CustomStockDetailsBednetPageState
       final waybillQuantity =
           (form.control(_waybillQuantityKey).value ?? 0) as int;
 
-      if (quantity != waybillQuantity) {
-        commentRequired = true;
+      if (form.control(_waybillQuantityKey).value != null &&
+          quantity != waybillQuantity) {
+        setState(() {
+          commentRequired = true;
+        });
         form
             .control(
           _commentsKey,
@@ -2200,7 +2395,9 @@ class CustomStockDetailsBednetPageState
             )
             .touched;
       } else {
-        commentRequired = false;
+        setState(() {
+          commentRequired = false;
+        });
         form
             .control(
           _commentsKey,
@@ -2220,7 +2417,9 @@ class CustomStockDetailsBednetPageState
             .touched;
       }
     } else {
-      commentRequired = false;
+      setState(() {
+        commentRequired = false;
+      });
       form
           .control(
         _commentsKey,

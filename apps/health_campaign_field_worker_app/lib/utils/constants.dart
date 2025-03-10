@@ -92,8 +92,12 @@ class Constants {
   static const String provincialWarehouse = 'Provincial Warehouse';
   static const String districWarehouse = 'District Warehouse';
   static const String localMonitor = 'Local Monitor';
+  static const String deliveryTeam = 'DeliveryTeam';
   static const String provincialBoundaryLevel = 'Provincia';
   static const String districtBoundaryLevel = 'Distrito';
+  static const String administrativeProviceBoundaryLevel =
+      'Posto Administrativo';
+  static const String warehouse = "Warehouse";
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';
   static const String bednetLabel = 'BEDNET';

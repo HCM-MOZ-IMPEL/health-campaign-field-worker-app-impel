@@ -82,6 +82,8 @@ class CustomWarehouseDetailsBednetPageState
     final stockReconciliationBloc =
         BlocProvider.of<StockReconciliationBloc>(context);
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    String? boundaryLevel =
+        RegistrationDeliverySingleton().selectedProject?.address?.boundaryType;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
