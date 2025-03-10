@@ -1185,6 +1185,9 @@ class IndividualDetails {
 
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
+  String get previousCycleBeneficiaryLabelText =>
+      'PREVIOUS_CYCLE_BENEFICIARY_LABEL';
+
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
 
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';

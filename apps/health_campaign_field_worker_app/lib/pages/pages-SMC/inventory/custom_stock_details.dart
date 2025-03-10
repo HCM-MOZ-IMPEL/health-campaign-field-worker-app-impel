@@ -962,7 +962,10 @@ class CustomStockDetailsSMCPageState
                                                     allFacilities1
                                                         .where((element) =>
                                                             element.usage ==
-                                                            Constants.lastCycle)
+                                                                Constants
+                                                                    .lastCycle ||
+                                                            element.usage ==
+                                                                Constants.ddm)
                                                         .toList());
                                                 allFacilities.addAll(facilities
                                                     .where((element) =>
@@ -971,6 +974,16 @@ class CustomStockDetailsSMCPageState
                                                             .districWarehouse)
                                                     .toList());
                                               } else {
+                                                if (stockState.entryType ==
+                                                    StockRecordEntryType
+                                                        .dispatch) {
+                                                  allFacilities.addAll(
+                                                      allFacilities1
+                                                          .where((element) =>
+                                                              element.usage ==
+                                                              Constants.ddm)
+                                                          .toList());
+                                                }
                                                 allFacilities.add(
                                                   FacilityModel(
                                                     id: Constants.supervisor,
