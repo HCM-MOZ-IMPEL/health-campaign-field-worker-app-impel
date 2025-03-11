@@ -12,7 +12,6 @@ import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart'
     hide CustomValidator;
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -22,6 +21,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/registration_delivery.dart';
 import '../../../router/app_router.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 import '../../../widgets/localized.dart';
@@ -92,10 +92,10 @@ class _CustomStockReconciliationBednetPageState
                     dateOfReconciliation: DateTime.now(),
                   ),
                   stockRepository:
-                      context.repository<StockModel, StockSearchModel>(context),
+                      context.repository<StockModel, StockSearchModel>(),
                   stockReconciliationRepository: context.repository<
                       StockReconciliationModel,
-                      StockReconciliationSearchModel>(context),
+                      StockReconciliationSearchModel>(),
                 ),
                 child: BlocConsumer<StockReconciliationBloc,
                     StockReconciliationState>(
@@ -380,6 +380,43 @@ class _CustomStockReconciliationBednetPageState
                                                                           .usage ==
                                                                       Constants
                                                                           .provincialWarehouse,
+                                                                )
+                                                                .toList();
+                                                        facilities =
+                                                            filteredFacilities
+                                                                    .isEmpty
+                                                                ? facilities
+                                                                : filteredFacilities;
+                                                      } else if (!context
+                                                          .isLocalMonitor) {
+                                                        List<FacilityModel>
+                                                            filteredFacilities =
+                                                            facilities
+                                                                .where(
+                                                                  (element) =>
+                                                                      element
+                                                                          .usage !=
+                                                                      Constants
+                                                                          .localMonitor,
+                                                                )
+                                                                .toList();
+                                                        facilities =
+                                                            filteredFacilities
+                                                                    .isEmpty
+                                                                ? facilities
+                                                                : filteredFacilities;
+                                                      } else if (context
+                                                          .isLocalMonitor) {
+                                                        List<FacilityModel>
+                                                            filteredFacilities =
+                                                            facilities
+                                                                .where(
+                                                                  (element) =>
+                                                                      element
+                                                                          .name ==
+                                                                      context
+                                                                          .loggedInUser
+                                                                          .userName,
                                                                 )
                                                                 .toList();
                                                         facilities =

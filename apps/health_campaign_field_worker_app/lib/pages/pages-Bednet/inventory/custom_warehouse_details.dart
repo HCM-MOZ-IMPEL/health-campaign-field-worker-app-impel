@@ -3,12 +3,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
-import 'package:inventory_management/pages/facility_selection.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -109,6 +106,26 @@ class CustomWarehouseDetailsBednetPageState
                               (element) =>
                                   element.usage ==
                                   Constants.provincialWarehouse,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      } else if (!context.isLocalMonitor) {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage != Constants.localMonitor,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      } else if (context.isLocalMonitor) {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.name == context.loggedInUser.userName,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty

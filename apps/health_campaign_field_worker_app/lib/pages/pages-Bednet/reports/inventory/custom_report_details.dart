@@ -5,11 +5,11 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
+import '../../../../utils/extensions/extensions.dart';
 import '../../../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -142,9 +142,8 @@ class CustomInventoryReportDetailsBednetPageState
     return BlocProvider<InventoryReportBloc>(
       create: (context) => InventoryReportBloc(
         stockReconciliationRepository: context.repository<
-            StockReconciliationModel, StockReconciliationSearchModel>(context),
-        stockRepository:
-            context.repository<StockModel, StockSearchModel>(context),
+            StockReconciliationModel, StockReconciliationSearchModel>(),
+        stockRepository: context.repository<StockModel, StockSearchModel>(),
       ),
       child: Scaffold(
         bottomNavigationBar: DigitCard(
@@ -238,13 +237,11 @@ class CustomInventoryReportDetailsBednetPageState
                                                 DateTime.now(),
                                           ),
                                           stockRepository: context.repository<
-                                              StockModel,
-                                              StockSearchModel>(context),
+                                              StockModel, StockSearchModel>(),
                                           stockReconciliationRepository:
                                               context.repository<
-                                                      StockReconciliationModel,
-                                                      StockReconciliationSearchModel>(
-                                                  context),
+                                                  StockReconciliationModel,
+                                                  StockReconciliationSearchModel>(),
                                         ),
                                         child: BlocConsumer<
                                             StockReconciliationBloc,
@@ -290,6 +287,32 @@ class CustomInventoryReportDetailsBednetPageState
                                                                           facilities
                                                                               .where(
                                                                                 (element) => element.usage == Constants.provincialWarehouse,
+                                                                              )
+                                                                              .toList();
+                                                                      facilities = filteredFacilities
+                                                                              .isEmpty
+                                                                          ? facilities
+                                                                          : filteredFacilities;
+                                                                    } else if (!context
+                                                                        .isLocalMonitor) {
+                                                                      List<FacilityModel>
+                                                                          filteredFacilities =
+                                                                          facilities
+                                                                              .where(
+                                                                                (element) => element.usage != Constants.localMonitor,
+                                                                              )
+                                                                              .toList();
+                                                                      facilities = filteredFacilities
+                                                                              .isEmpty
+                                                                          ? facilities
+                                                                          : filteredFacilities;
+                                                                    } else if (context
+                                                                        .isLocalMonitor) {
+                                                                      List<FacilityModel>
+                                                                          filteredFacilities =
+                                                                          facilities
+                                                                              .where(
+                                                                                (element) => element.name == context.loggedInUser.userName,
                                                                               )
                                                                               .toList();
                                                                       facilities = filteredFacilities
