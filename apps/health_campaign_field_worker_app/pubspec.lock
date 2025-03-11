@@ -515,10 +515,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: df389a1972ddc9d59b2f7e1375a04bab88700ae4cc876e5cb83e8fbfe55cfa62
+      sha256: c690470df7ee825a77606a522e8348da9622d86448aae1a9cb5185c24f5c5a18
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.10-uniqueId"
+    version: "1.0.4-dev.11-uniqueId"
   digit_dss:
     dependency: "direct main"
     description:
@@ -2103,5 +2103,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <3.9.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"
