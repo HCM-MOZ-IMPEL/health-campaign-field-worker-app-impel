@@ -2,36 +2,26 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
-import 'package:digit_components/widgets/digit_dob_picker.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
-import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart' as utils;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
-import '../../../widgets/custom_digit_dob_picker.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/widgets_smc/custom_digit_dob_picker_smc.dart';
 // import 'package:registration_delivery/blocs/app_localization.dart'
@@ -669,6 +659,15 @@ class CustomIndividualDetailsSMCPageState
                                 i18_local.individualDetails
                                     .previousCycleBeneficiaryLabelText,
                               ),
+                              validationMessages: {
+                                'min3': (object) => localizations
+                                    .translate(
+                                        i18_local.common.min3CharsRequired)
+                                    .replaceAll('{}', ''),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                              },
                             ),
                           ),
                         ),
@@ -795,12 +794,14 @@ class CustomIndividualDetailsSMCPageState
     final previousBeneficiaryId =
         form.control(_beneficiaryIdKey).value as String?;
 
-    if (previousBeneficiaryId != null) {
-      individual = individual.copyWith(
-          additionalFields: IndividualAdditionalFields(version: 1, fields: [
-        AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
-      ]));
-    }
+    individual = individual.copyWith(
+        additionalFields:
+            previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
+                ? IndividualAdditionalFields(version: 1, fields: [
+                    AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
+                  ])
+                : null);
+
     return individual;
   }
 
@@ -858,7 +859,10 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _beneficiaryIdKey: FormControl<String>(value: beneficiaryId),
+      _beneficiaryIdKey: FormControl<String>(validators: [
+        utils.CustomValidator.requiredMin3,
+        Validators.maxLength(200),
+      ], value: beneficiaryId),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
         utils.CustomValidator.validMobileNumber,
