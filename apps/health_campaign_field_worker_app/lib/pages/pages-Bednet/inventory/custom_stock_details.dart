@@ -1051,8 +1051,10 @@ class CustomStockDetailsBednetPageState
                                                                 .toList());
                                                       }
                                                     } else if (boundaryLevel ==
-                                                        Constants
-                                                            .districtBoundaryLevel) {
+                                                            Constants
+                                                                .districtBoundaryLevel &&
+                                                        !context
+                                                            .isLocalMonitor) {
                                                       if (stockState
                                                               .entryType ==
                                                           StockRecordEntryType

@@ -1,8 +1,6 @@
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -14,13 +12,10 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
-import '../../blocs/localization/localization.dart';
-import '../../data/local_store/app_shared_preferences.dart';
 
 import 'dart:async';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
-import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
@@ -49,10 +44,8 @@ import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/home/home_item_card.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_bednet/progress_bar/custom_beneficiary_progress_bednet.dart';
-import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 
 @RoutePage()
 class HomeBednetPage extends LocalizedStatefulWidget {
