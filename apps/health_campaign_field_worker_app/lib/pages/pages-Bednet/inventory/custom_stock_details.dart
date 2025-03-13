@@ -326,9 +326,14 @@ class CustomStockDetailsBednetPageState
                                                 return;
                                               }
 
-                                              final commentValue = form
+                                              String? commentValue = form
                                                   .control(_commentsKey)
                                                   .value as String?;
+
+                                              if (commentValue != null &&
+                                                  commentValue.isEmpty) {
+                                                commentValue = null;
+                                              }
 
                                               if (commentValue != null &&
                                                   commentValue.length < 2) {
