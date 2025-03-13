@@ -539,13 +539,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element ==
-                i18.home.db) // TODO: need to add close household inside mdms
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element)) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
