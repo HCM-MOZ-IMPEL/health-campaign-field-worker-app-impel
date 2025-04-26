@@ -1,4 +1,4 @@
-package org.egov.qa.smc
+package org.egov.devicetracking
 
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle

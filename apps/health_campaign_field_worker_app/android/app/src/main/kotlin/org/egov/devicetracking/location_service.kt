@@ -1,5 +1,4 @@
-package org.egov.qa.smc
-
+package org.egov.devicetracking
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager

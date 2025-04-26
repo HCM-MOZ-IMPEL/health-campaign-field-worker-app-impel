@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.egov.qa.smc">
+    package="org.egov.devicetracking">
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -24,9 +24,9 @@
   </queries>
   <!--#enddocregion android-queries-->
    <application
-        android:label="Formação"
+        android:label="Salama PIDOM RD"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher_training"
+        android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:fullBackupOnly="false"
         android:fullBackupContent="false">
