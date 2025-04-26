@@ -804,6 +804,8 @@ class CustomIndividualDetailsPageState
         : null;
 
     identifier ??= IdentifierModel(
+      identifierId: "DEFAULT",
+      identifierType: "DEFAULT",
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
@@ -833,10 +835,7 @@ class CustomIndividualDetailsPageState
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
-        identifier.copyWith(
-          identifierId: "DEFAULT",
-          identifierType: "DEFAULT",
-        ),
+        identifier,
       ],
     );
 

@@ -1141,10 +1141,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "26b14fc7286af4961c41ec0e896ce16c7dc722608f6837deef9ece6e2688681d"
+      sha256: "4c395cf028153c4aa809d12d6469c98bac1b1d1f007aa150465e6ecfd7740d8a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+3"
+    version: "1.0.3-dev.5"
   io:
     dependency: transitive
     description:
@@ -1605,10 +1605,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: b7074bf7115e375b9df2ad2937891139fea163024a35958ff177af137574c047
+      sha256: "649e81acd8c93ccf1eb902bd9b86e62e161ec3cc599cb03af46993f9c1250466"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+3"
+    version: "1.0.4-dev.7-search-fix"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:

@@ -413,6 +413,8 @@ class MainApplicationState extends State<MainApplication>
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
+                            facilityDataRepository: context.repository<
+                                FacilityModel, FacilitySearchModel>(),
                           ),
                         ),
                         BlocProvider(
