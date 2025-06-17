@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:closed_household/blocs/closed_household.dart';
+import 'package:closed_household/blocs/closed_household.dart' as bloc;
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -23,6 +23,8 @@ import 'package:registration_delivery/blocs/household_overview/household_overvie
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart'
+    as customIndividualGlobalSearchBloc;
 import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -35,10 +37,15 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/blocs-smc/closed/closed_household.dart';
+import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
+import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
+import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/repositories/local/individual_global_search_smc.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -89,6 +96,12 @@ class MainApplicationState extends State<MainApplication>
             IndividualOpLogManager(widget.isar),
           ),
         ),
+        RepositoryProvider<IndividualGlobalSearchSMCRepository>(
+          create: (context) => IndividualGlobalSearchSMCRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar),
+          ),
+        ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
           create: (context) => HouseHoldGlobalSearchRepository(
             widget.sql,
@@ -114,11 +127,21 @@ class MainApplicationState extends State<MainApplication>
               // INFO : Need to add bloc of package Here
               BlocProvider(
                 create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+                lazy: false,
+              ),
+
+              BlocProvider(
+                create: (_) {
                   return LocationBloc(location: Location())
                     ..add(const LoadLocationEvent());
                 },
                 lazy: false,
               ),
+
               BlocProvider(
                 create: (_) {
                   return DigitScannerBloc(
@@ -167,6 +190,38 @@ class MainApplicationState extends State<MainApplication>
                           context.read<HouseHoldGlobalSearchRepository>());
                 },
               ),
+
+              BlocProvider(
+                create: (context) {
+                  return SearchHouseholdsSMCBloc(
+                      beneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType!,
+                      userUid:
+                          RegistrationDeliverySingleton().loggedInUserUuid!,
+                      projectId: RegistrationDeliverySingleton().projectId!,
+                      addressRepository:
+                          context.read<RegistrationDeliveryAddressRepo>(),
+                      projectBeneficiary: context.repository<
+                          ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(),
+                      householdMember: context.repository<HouseholdMemberModel,
+                          HouseholdMemberSearchModel>(),
+                      household: context
+                          .repository<HouseholdModel, HouseholdSearchModel>(),
+                      individual: context
+                          .repository<IndividualModel, IndividualSearchModel>(),
+                      taskDataRepository:
+                          context.repository<TaskModel, TaskSearchModel>(),
+                      sideEffectDataRepository: context
+                          .repository<SideEffectModel, SideEffectSearchModel>(),
+                      referralDataRepository: context
+                          .repository<ReferralModel, ReferralSearchModel>(),
+                      individualGlobalSearchSMCRepository:
+                          context.read<IndividualGlobalSearchSMCRepository>(),
+                      houseHoldGlobalSearchRepository:
+                          context.read<HouseHoldGlobalSearchRepository>());
+                },
+              ),
               BlocProvider(
                 create: (context) {
                   return DeliverInterventionBloc(
@@ -175,12 +230,6 @@ class MainApplicationState extends State<MainApplication>
                           context.repository<TaskModel, TaskSearchModel>());
                 },
               ),
-              // BlocProvider(
-              //   create: (context) => CustomSearchHouseholdsBloc(
-              //     const CustomSearchHouseholdsState.newState(),
-              //     context.read<SearchHouseholdsBloc>(),
-              //   ),
-              // ),
 
               BlocProvider(
                 create: (_) {
@@ -268,6 +317,28 @@ class MainApplicationState extends State<MainApplication>
                     return MultiBlocProvider(
                       providers: [
                         BlocProvider(
+                            create: (_) => IndividualGlobalSearchSMCBloc(
+                                userUid: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid!,
+                                projectId:
+                                    RegistrationDeliverySingleton().projectId!,
+                                individual: individual,
+                                householdMember: householdMember,
+                                household: household,
+                                projectBeneficiary: projectBeneficiary,
+                                taskDataRepository: task,
+                                beneficiaryType: RegistrationDeliverySingleton()
+                                    .beneficiaryType!,
+                                sideEffectDataRepository: sideEffect,
+                                addressRepository: context
+                                    .read<RegistrationDeliveryAddressRepo>(),
+                                referralDataRepository: referral,
+                                individualGlobalSearchSMCRepository:
+                                    context.read<
+                                        IndividualGlobalSearchSMCRepository>(),
+                                houseHoldGlobalSearchRepository: context
+                                    .read<HouseHoldGlobalSearchRepository>())),
+                        BlocProvider(
                           create: (localizationModulesList != null &&
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
@@ -277,13 +348,8 @@ class MainApplicationState extends State<MainApplication>
                                   widget.sql)
                                 ..add(
                                   LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList.interfaces
-                                        .where((element) =>
-                                            element.type ==
-                                            Modules.localizationModule)
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
+                                    module:
+                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: appConfig.tenantId.toString(),
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
@@ -432,8 +498,28 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (_) {
-                            return ClosedHouseholdBloc(
-                              const ClosedHouseholdState(),
+                            return bloc.ClosedHouseholdBloc(
+                              const bloc.ClosedHouseholdState(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
+                            );
+                          },
+                          lazy: false,
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return custombloc.ClosedHouseholdBloc(
+                              const custombloc.ClosedHouseholdState(),
                               householdMemberRepository: context.repository<
                                   HouseholdMemberModel,
                                   HouseholdMemberSearchModel>(),
@@ -462,7 +548,8 @@ class MainApplicationState extends State<MainApplication>
                           create: (_) => HouseholdOverviewBloc(
                               const HouseholdOverviewState(
                                 householdMemberWrapper:
-                                    HouseholdMemberWrapper(),
+                                    customIndividualGlobalSearchBloc
+                                        .HouseholdMemberWrapper(),
                               ),
                               individualRepository: individual,
                               householdRepository: household,

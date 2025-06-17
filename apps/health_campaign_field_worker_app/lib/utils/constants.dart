@@ -1,3 +1,4 @@
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -79,10 +80,37 @@ class Constants {
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String reAdministeredKey = "reAdministered";
+  static const String pipeSeparator = ' || ';
+  static const String spaq1String = 'SPAQ 1';
+  static const String centralFacility = 'Central Facility';
+  static const String stateBoundaryLevel = 'State';
+  static const String stateFacility = 'State Facility';
+  static const String lgaBoundaryLevel = 'LGA';
+  static const String lgaFacility = 'LGA Facility';
+  static const String healthFacility = 'Health Facility';
+  static const String provincialWarehouse = 'Provincial Warehouse';
+  static const String districWarehouse = 'District Warehouse';
+  static const String provincialBoundaryLevel = 'Provincia';
+  static const String districtBoundaryLevel = 'Distrito';
+  static const String nationalWarehouse = 'National Warehouse';
+  static const String lastCycle = 'Last Cycle';
+  static const String ddm = 'DDM';
+
+  static const String curlyBraces = '{}';
+  static const String smallBraces = '()';
+  static const String intTwo = '2';
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
-  static const String pipeSeparator = ' || ';
   static const String commentsKey = 'comments';
+  static const String byHand = 'Em mão';
+  static const String distributorUsername = 'distributor_username';
+  static const String supervisorUsername = 'supervisor_username';
+  static const String deliveryTeam = 'Delivery Team';
+  static const String deliveryTeamType = 'DeliveryTeam';
+  static const String deliveryTeamLabel = 'DELIVERY_TEAM_FACILITY_NAME';
+  static const String supervisor = 'Supervisor';
+  static const String supervisorLabel = 'SUPERVISOR_FACILITY_NAME';
   static const String byHand = 'Em mão';
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
@@ -145,6 +173,7 @@ class Constants {
         sql,
         AttendanceLogOpLogManager(isar),
       ),
+      HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
     ];
   }
 
@@ -229,6 +258,8 @@ class Constants {
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -269,6 +300,8 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+
+    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

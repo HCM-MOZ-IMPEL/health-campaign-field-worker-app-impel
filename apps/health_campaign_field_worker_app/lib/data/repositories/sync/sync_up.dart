@@ -75,7 +75,7 @@ class PerformSyncUp {
                   }).toList(),
                   address: updatedEntity.address?.map((e) {
                     return e.copyWith(
-                      id: e.id ?? addressId,
+                      id: addressId ?? e.id,
                     );
                   }).toList(),
                 );

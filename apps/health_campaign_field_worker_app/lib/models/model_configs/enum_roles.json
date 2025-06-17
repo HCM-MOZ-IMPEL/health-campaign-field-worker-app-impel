@@ -36,6 +36,22 @@
     {
       "name": "Attendance Staff",
       "value": "ATTENDANCE_STAFF"
+    },
+    {
+      "name": "Community Supervisor",
+      "value": "COMMUNITY_SUPERVISOR"
+    },
+    {
+      "name": "Community Distributor",
+      "value": "COMMUNITY_DISTRIBUTOR"
+    },
+    {
+      "name": "Spaq Manager",
+      "value": "SPAQ_MANAGER"
+    },
+    {
+      "name": "Health Facility Supervisor",
+      "value": "HEALTH_FACILITY_SUPERVISOR"
     }
   ],
   "isEnum": true

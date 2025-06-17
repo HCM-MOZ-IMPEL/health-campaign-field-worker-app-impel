@@ -1,11 +1,17 @@
 library app_utils;
 
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart'
+    as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:collection/collection.dart';
+import 'package:digit_components/utils/date_utils.dart';
 
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:closed_household/closed_household.dart'
@@ -36,6 +42,8 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/data_model.init.dart';
+import '../models/entities/project_types.dart';
+import '../models/entities/status.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -44,6 +52,9 @@ import 'extensions/extensions.dart';
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
+
+String lessThanSymbol = '<';
+String greaterThanSymbol = '>';
 
 class CustomValidator {
   /// Validates that control's value must be `true`
@@ -262,6 +273,65 @@ Future<bool> getIsConnected() async {
   }
 }
 
+int getAgeMonths(DigitDOBAge age) {
+  return (age.years * 12) + age.months;
+}
+
+// todo verify the else condition once
+// Info : will handle the ageCondition based on projectTypeCode
+String? getAgeConditionString(String condition, BuildContext context) {
+  String? finalCondition;
+  final ageConditions =
+      condition.split('and').where((element) => element.contains('age'));
+  if (ageConditions.length == 2) {
+    String? lessThanCondition = ageConditions.firstWhereOrNull((element) {
+      return element.contains("<age");
+    });
+    String lessThanAge = lessThanCondition?.split(lessThanSymbol).first ?? '0';
+
+    String? greaterThanCondition =
+        ageConditions.firstWhereOrNull((element) => element.contains("age<"));
+
+    String greaterThanAge =
+        greaterThanCondition?.split(lessThanSymbol).last ?? '0';
+
+    if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
+      finalCondition =
+          '${int.parse(lessThanAge) + 1} - ${int.parse(greaterThanAge) - 1}';
+    } else {
+      finalCondition =
+          '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()}';
+    }
+  } else {
+    if (ageConditions.first.contains(greaterThanSymbol)) {
+      String age = ageConditions.first.split(greaterThanSymbol).last;
+      if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
+        finalCondition = '${int.parse(age)} months and above';
+      } else {
+        finalCondition = '${(int.parse(age) / 12).round()} yrs and above';
+      }
+    }
+  }
+
+  return finalCondition;
+}
+
+String? getAgeConditionStringFromVariant(
+    DeliveryProductVariant productVariant, List<ProductVariantModel>? variant) {
+  String? finalCondition;
+  String? value = variant
+      ?.firstWhereOrNull(
+        (element) => element.id == productVariant.productVariantId,
+      )
+      ?.sku;
+
+  if (value != null) {
+    finalCondition = value.split('(').last.split(')').first;
+  }
+
+  return finalCondition;
+}
+
 void showDownloadDialog(
   BuildContext context, {
   required DownloadBeneficiary model,
@@ -330,7 +400,12 @@ void showDownloadDialog(
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.router.popUntilRouteWithName(HomeRoute.name);
+                // context.router.popUntilRouteWithName(Home.name);
+                (context.selectedProject.additionalDetails?.projectType?.code ==
+                        ProjectTypes.smc.toValue())
+                    ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
+                    : context.router
+                        .popUntilRouteWithName(IRSWrapperRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -359,7 +434,13 @@ void showDownloadDialog(
                     await LocalSecureStore.instance.setManualSyncTrigger(false);
                     if (context.mounted) {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.router.popUntilRouteWithName(HomeRoute.name);
+                      (context.selectedProject.additionalDetails?.projectType
+                                  ?.code ==
+                              (ProjectTypes.smc.toValue()))
+                          ? context.router
+                              .popUntilRouteWithName(SMCWrapperRoute.name)
+                          : context.router
+                              .popUntilRouteWithName(IRSWrapperRoute.name);
                     }
                   },
                 )
@@ -431,6 +512,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
+    Future(() => referral_reconciliation_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -490,6 +572,16 @@ bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   return true;
 }
 
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
 Future<void> requestDisableBatteryOptimization() async {
   bool isIgnoringBatteryOptimizations =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
@@ -538,4 +630,12 @@ class LocalizationParams {
   Locale? get locale => _locale;
 
   bool? get exclude => _exclude;
+}
+
+List<DashboardConfigSchema?> filterDashboardConfig(
+    List<DashboardConfigSchema?> dashboardConfig, String projectTypeCode) {
+  return dashboardConfig
+      .where((element) =>
+          element != null && element.projectTypeCode == projectTypeCode)
+      .toList();
 }

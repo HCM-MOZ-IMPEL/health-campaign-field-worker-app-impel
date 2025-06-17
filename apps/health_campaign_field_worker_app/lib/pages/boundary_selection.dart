@@ -49,7 +49,8 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
-    LocalizationParams().setModule(['common', 'beneficiary'], false);
+    LocalizationParams()
+        .setModule(['hcm-common', 'hcm-beneficiary', 'hcm-home'], false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -75,7 +76,9 @@ class _BoundarySelectionPageState
   Widget build(BuildContext context) {
     bool isDistributor = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.distributor.toValue(),
+          (role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.communityDistributor.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -598,21 +601,17 @@ class _BoundarySelectionPageState
                                                             );
                                                       } else {
                                                         Future.delayed(
-                                                          const Duration(
-                                                            milliseconds: 100,
-                                                          ),
-                                                          () => context.router
-                                                              .maybePop(),
-                                                        );
-                                                      }
-                                                      clickedStatus.value =
-                                                          true;
-                                                      LocalizationParams()
-                                                          .setModule(
-                                                              ['boundary'],
-                                                              true);
-                                                      context.read<LocalizationBloc>().add(
-                                                          LocalizationEvent.onUpdateLocalizationIndex(
+                                                            const Duration(
+                                                              milliseconds: 100,
+                                                            ), () {
+                                                          context.router
+                                                              .maybePop();
+
+                                                          LocalizationParams()
+                                                              .setModule(
+                                                                  ['boundary'],
+                                                                  true);
+                                                          context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
                                                               index: appConfiguration
                                                                   .languages!
                                                                   .indexWhere((element) =>
@@ -621,6 +620,10 @@ class _BoundarySelectionPageState
                                                                       AppSharedPreferences()
                                                                           .getSelectedLocale),
                                                               code: setLocale));
+                                                        });
+                                                      }
+                                                      clickedStatus.value =
+                                                          true;
                                                     }
                                                   }
                                                 },

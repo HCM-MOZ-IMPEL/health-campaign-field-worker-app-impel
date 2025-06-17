@@ -269,7 +269,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           additionalDetails: {
-                                            "boundaryCode":
+                                            'boundaryCode':
                                                 context.boundary.code,
                                             'lat': latitude,
                                             'lng': longitude,

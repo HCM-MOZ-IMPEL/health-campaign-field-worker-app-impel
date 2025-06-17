@@ -12,6 +12,8 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import '../../data/repositories/custom_task.dart';
+import '../../models/entities/project_types.dart';
+import '../../utils/extensions/extensions.dart';
 import '../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {

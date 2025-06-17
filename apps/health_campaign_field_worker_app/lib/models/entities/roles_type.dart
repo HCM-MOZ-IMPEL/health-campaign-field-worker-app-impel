@@ -21,7 +21,15 @@ enum RolesType {
   registrar,
   @MappableValue("TEAM_SUPERVISOR")
   teamSupervisor,
+  @MappableValue("COMMUNITY_DISTRIBUTOR")
+  communityDistributor,
   @MappableValue("ATTENDANCE_STAFF")
   attendanceStaff,
+  @MappableValue("COMMUNITY_SUPERVISOR")
+  communitySupervisor,
+  @MappableValue("SPAQ_MANAGER")
+  spaqManager,
+  @MappableValue("HEALTH_FACILITY_SUPERVISOR")
+  healthFacilitySupervisor,
   ;
 }

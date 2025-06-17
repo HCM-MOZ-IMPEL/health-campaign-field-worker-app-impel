@@ -98,11 +98,12 @@ class CustomWarehouseDetailsPageState
                               .selectedProject
                               ?.address
                               ?.boundaryType ==
-                          'Provincia') {
+                          Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == 'Provincial Warehouse',
+                                  element.usage ==
+                                  Constants.provincialWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty

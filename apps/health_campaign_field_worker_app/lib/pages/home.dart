@@ -79,8 +79,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
-    //// Function to set initial Data required for the packages to run
-    setPackagesSingleton(context);
   }
 
   //  Be sure to cancel subscription after you are done
@@ -622,101 +620,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 }
 
 // Function to set initial Data required for the packages to run
-void setPackagesSingleton(BuildContext context) {
-  context.read<AppInitializationBloc>().state.maybeWhen(
-      orElse: () {},
-      initialized: (
-        AppConfiguration appConfiguration,
-        List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
-      ) {
-        loadLocalization(context, appConfiguration);
-
-        // INFO : Need to add singleton of package Here
-        AttendanceSingleton().setInitialData(
-            projectId: context.projectId,
-            loggedInIndividualId: context.loggedInIndividualId ?? '',
-            loggedInUserUuid: context.loggedInUserUuid,
-            appVersion: Constants().version);
-
-        InventorySingleton().setInitialData(
-          isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
-              .toList()
-              .isNotEmpty,
-          isDistributor: context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty,
-          loggedInUser: context.loggedInUserModel,
-          projectId: context.projectId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          transportTypes: appConfiguration.transportTypes
-              ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
-              .toList(),
-        );
-        DashboardSingleton().setInitialData(
-            projectId: context.projectId,
-            tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
-            appVersion: Constants().version,
-            selectedProject: context.selectedProject,
-            actionPath: Constants.getEndPoint(
-              serviceRegistry: serviceRegistry,
-              service: DashboardResponseModel.schemaName.toUpperCase(),
-              action: ApiOperation.search.toValue(),
-              entityName: DashboardResponseModel.schemaName,
-            ));
-
-        RegistrationDeliverySingleton().setInitialData(
-          loggedInUser: context.loggedInUserModel,
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
-          projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
-        );
-        ClosedHouseholdSingleton().setInitialData(
-          loggedInUserUuid: context.loggedInUserUuid,
-          projectId: context.projectId,
-          beneficiaryType: context.beneficiaryType,
-        );
-      });
-}
 
 void loadLocalization(
     BuildContext context, AppConfiguration appConfiguration) async {

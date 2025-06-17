@@ -17,6 +17,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../localized.dart';
+import '../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
 import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 
 class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
@@ -177,7 +178,8 @@ class _CustomViewBeneficiaryCardState
           currentCycle,
         );
 
-        final isStatusReset = checkStatus(taskData, currentCycle);
+        final isStatusReset =
+            utilsLocalSMC.checkStatusSMC(taskData, currentCycle);
 
         final rowTableData = [
           TableData(

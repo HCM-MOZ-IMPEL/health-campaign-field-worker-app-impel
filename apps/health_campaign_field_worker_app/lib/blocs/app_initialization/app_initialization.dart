@@ -103,11 +103,13 @@ class AppInitializationBloc
                     MasterEnums.checklistTypes.toValue(),
                     MasterEnums.idTypes.toValue(),
                     MasterEnums.deliveryComments.toValue(),
+                    MasterEnums.deliveryCommentsSMC.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.searchHouseHoldFiltersSMC.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -171,19 +173,17 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
+
           final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
                   jsonDecode(dashboardConfigWrapper)['MdmsRes']
                       [ModuleEnums.hcm.toValue()])
               .dashboardConfigWrapper;
 
           if (dashboardConfigs.isNotEmpty) {
-            await dashboardRemoteRepository.writeToDashboardConfigDB(
-                DashboardConfigPrimaryWrapper.fromJson(
-                        jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                            [ModuleEnums.hcm.toValue()])
-                    .dashboardConfigWrapper
-                    .first,
-                isar);
+            dashboardConfigs.forEach((dashboardConfig) async {
+              await dashboardRemoteRepository.writeToDashboardConfigDB(
+                  dashboardConfig, isar);
+            });
           }
         } catch (e) {
           debugPrint(e.toString());
@@ -225,7 +225,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.firstOrNull,
+      dashboardConfigSchema: dashboardConfigs,
     );
   }
 }
@@ -249,7 +249,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.initialized({
     required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-    DashboardConfigSchema? dashboardConfigSchema,
+    List<DashboardConfigSchema?>? dashboardConfigSchema,
   }) = AppInitialized;
 
   Map<DataModelType, Map<ApiOperation, String>> get entityActionMapping {
@@ -313,7 +313,7 @@ class AppInitializationState with _$AppInitializationState {
 class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
-  final DashboardConfigSchema? dashboardConfigSchema;
+  final List<DashboardConfigSchema?>? dashboardConfigSchema;
 
   const MdmsConfig(
       {required this.appConfigs,

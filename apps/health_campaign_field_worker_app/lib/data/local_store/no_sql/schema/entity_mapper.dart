@@ -4,6 +4,7 @@ import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_li
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 // import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
@@ -69,9 +70,9 @@ class EntityMapper extends EntityMapperListener {
         final entity = StockReconciliationModelMapper.fromJson(entityString);
         return entity;
 
-      // case "hFReferral":
-      //   final entity = HFReferralModelMapper.fromJson(entityString);
-      //   return entity;
+      case "hFReferral":
+        final entity = HFReferralModelMapper.fromJson(entityString);
+        return entity;
 
       case "attendance":
         final entity = AttendanceLogModelMapper.fromJson(entityString);
