@@ -29,6 +29,8 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
         return ProjectTypes.irs;
       case "SMC-Moz":
         return ProjectTypes.smc;
+      case "LLIN-Moz":
+        return ProjectTypes.bednet;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -41,6 +43,8 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
         return "IRS";
       case ProjectTypes.smc:
         return "SMC-Moz";
+      case ProjectTypes.bednet:
+        return "LLIN-Moz";
     }
   }
 }

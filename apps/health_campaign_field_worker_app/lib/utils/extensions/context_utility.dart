@@ -85,6 +85,14 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  List<DashboardConfigSchema?> filterDashboardConfig(
+      List<DashboardConfigSchema?> dashboardConfig, String projectTypeCode) {
+    return dashboardConfig
+        .where((element) =>
+            element != null && element.projectTypeCode == projectTypeCode)
+        .toList();
+  }
+
   bool get isHealthFacilitySupervisor {
     try {
       // todo : verify this make this healthFacilitySupervsior as per kebbi
@@ -143,6 +151,66 @@ extension ContextUtilityExtensions on BuildContext {
           .isNotEmpty;
 
       return communityDistributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isVoucherAcceptor {
+    try {
+      bool voucherAcceptor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.voucherAcceptor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return voucherAcceptor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isLocalMonitor {
+    try {
+      bool localMonitor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.localMonitor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return localMonitor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isDistributor {
+    try {
+      bool distributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return distributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isRegistrar {
+    try {
+      bool registrar = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.registrar.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return registrar;
     } catch (_) {
       return false;
     }

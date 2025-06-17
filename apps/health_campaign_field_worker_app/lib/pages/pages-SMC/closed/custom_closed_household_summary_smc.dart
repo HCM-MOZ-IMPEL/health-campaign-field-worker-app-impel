@@ -76,6 +76,7 @@ class CustomClosedHouseholdSummaryPageState
                                   context.beneficiaryType!.toString(),
                                   reason:
                                       localizations.translate(widget.reason),
+                                  projectTypeCode: context.projectTypeCode,
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,

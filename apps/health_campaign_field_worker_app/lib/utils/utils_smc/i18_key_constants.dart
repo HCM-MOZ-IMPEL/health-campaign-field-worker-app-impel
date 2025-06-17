@@ -657,6 +657,7 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+  String get specialCaseCheckList => 'SPECIAL_CASE_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 

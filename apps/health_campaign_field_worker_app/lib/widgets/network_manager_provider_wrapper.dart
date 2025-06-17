@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/custom_project_beneficairy.dart';
 import '../data/repositories/custom_task.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
@@ -205,6 +206,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           LocalRepository<ProjectBeneficiaryModel,
               ProjectBeneficiarySearchModel>>(
         create: (_) => ProjectBeneficiaryLocalRepository(
+          sql,
+          ProjectBeneficiaryOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>>(
+        create: (_) => CustomProjectBeneficiaryLocalRepository(
           sql,
           ProjectBeneficiaryOpLogManager(isar),
         ),

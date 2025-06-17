@@ -22,7 +22,7 @@
   </queries>
   <!--#enddocregion android-queries-->
    <application
-        android:label="QSM Formação"
+        android:label="Formação"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher_training"
         android:allowBackup="false"

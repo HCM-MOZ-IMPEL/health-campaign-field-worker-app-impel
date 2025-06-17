@@ -561,6 +561,22 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
+    widgetList.add(homeShowcaseData.db.buildWith(
+      child: HomeItemCard(
+        icon: Icons.table_chart,
+        label: i18.home.db,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DriftDbViewer(
+                context.read<LocalSqlDataStore>(),
+              ),
+            ),
+          );
+        },
+      ),
+    ));
+
     return _HomeItemDataModel(
       widgetList,
       showcaseKeys,
@@ -657,13 +673,13 @@ void setPackagesSingleton(BuildContext context) {
         List<ServiceRegistry> serviceRegistry,
         List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        loadLocalization(context, appConfiguration);
+
+        // info filter dashboardschema based on projectTypeCode
         final projectTypeCode =
             context.projectTypeCode ?? ProjectTypes.irs.toValue();
-
-        final filteredDashboardConfig =
-            filterDashboardConfig(dashboardConfigSchema ?? [], projectTypeCode);
-
-        loadLocalization(context, appConfiguration);
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(

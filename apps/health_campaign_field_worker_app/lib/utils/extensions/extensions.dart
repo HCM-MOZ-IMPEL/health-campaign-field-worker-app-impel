@@ -1,3 +1,4 @@
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:inventory_management/inventory_management.dart';

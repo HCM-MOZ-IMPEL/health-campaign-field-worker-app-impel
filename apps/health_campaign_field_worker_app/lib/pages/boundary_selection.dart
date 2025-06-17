@@ -17,6 +17,7 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../models/entities/project_types.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -49,6 +50,8 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
+    LocalizationParams()
+        .setModule(['hcm-common', 'hcm-beneficiary', 'hcm-home'], false);
     LocalizationParams()
         .setModule(['hcm-common', 'hcm-beneficiary', 'hcm-home'], false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
@@ -127,8 +130,15 @@ class _BoundarySelectionPageState
                           children: [
                             Expanded(
                               child: ListView.builder(
-                                itemCount: labelList.length,
+                                itemCount: labelList.length + 1,
                                 itemBuilder: (context, labelIndex) {
+                                  if (labelIndex == labelList.length) {
+                                    // Return a SizedBox for whitespace after the last item
+                                    return const SizedBox(
+                                        height: kPadding *
+                                            3); // Adjust height as needed
+                                  }
+
                                   final label = labelList.elementAt(labelIndex);
 
                                   final filteredItems =
@@ -574,7 +584,11 @@ class _BoundarySelectionPageState
 
                                                     if (context.mounted) {
                                                       if (isOnline &&
-                                                          isDistributor) {
+                                                          isDistributor &&
+                                                          context.projectTypeCode !=
+                                                              ProjectTypes
+                                                                  .bednet
+                                                                  .toValue()) {
                                                         context
                                                             .read<
                                                                 BeneficiaryDownSyncBloc>()
@@ -604,8 +618,38 @@ class _BoundarySelectionPageState
                                                             const Duration(
                                                               milliseconds: 100,
                                                             ), () {
-                                                          context.router
-                                                              .maybePop();
+                                                          // Info route to proper wrapper based on projectTypeCode instead of just popping the route
+                                                          if (context.mounted) {
+                                                            if (context.projectTypeCode ==
+                                                                    null ||
+                                                                (context.projectTypeCode
+                                                                        ?.isEmpty ??
+                                                                    true)) {
+                                                              context.router
+                                                                  .maybePop();
+                                                            } else if (isProjectTypeSMC(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const SMCWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeIRS(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const IRSWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeBEDNET(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const BednetWrapperRoute(),
+                                                              ]);
+                                                            } else {
+                                                              context.router
+                                                                  .maybePop();
+                                                            }
+                                                          }
 
                                                           LocalizationParams()
                                                               .setModule(
@@ -649,6 +693,18 @@ class _BoundarySelectionPageState
         );
       }),
     );
+  }
+
+  bool isProjectTypeSMC(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.smc.toValue();
+  }
+
+  bool isProjectTypeIRS(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.irs.toValue();
+  }
+
+  bool isProjectTypeBEDNET(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.bednet.toValue();
   }
 
   void resetChildDropdowns(String parentLabel, BoundaryState state) {

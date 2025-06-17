@@ -91,11 +91,17 @@ class Constants {
   static const String healthFacility = 'Health Facility';
   static const String provincialWarehouse = 'Provincial Warehouse';
   static const String districWarehouse = 'District Warehouse';
+  static const String localMonitor = 'Local Monitor';
+  static const String deliveryTeamFilter = 'DeliveryTeam';
   static const String provincialBoundaryLevel = 'Provincia';
   static const String districtBoundaryLevel = 'Distrito';
+  static const String administrativeProviceBoundaryLevel =
+      'Posto Administrativo';
+  static const String warehouse = "Warehouse";
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
+  static const String bednetLabel = 'BEDNET';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
@@ -103,17 +109,16 @@ class Constants {
   static const String beneficiaryChecklist =
       'IRS.TRAINING_SUPERVISION.DISTRIBUTOR';
   static const String commentsKey = 'comments';
-  static const String byHand = 'Em mão';
-  static const String distributorUsername = 'distributor_username';
-  static const String supervisorUsername = 'supervisor_username';
   static const String deliveryTeam = 'Delivery Team';
   static const String deliveryTeamType = 'DeliveryTeam';
   static const String deliveryTeamLabel = 'DELIVERY_TEAM_FACILITY_NAME';
   static const String supervisor = 'Supervisor';
   static const String supervisorLabel = 'SUPERVISOR_FACILITY_NAME';
+  static const String comma = ',';
   static const String byHand = 'Em mão';
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
+  static const int maxBednetCount = 4;
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

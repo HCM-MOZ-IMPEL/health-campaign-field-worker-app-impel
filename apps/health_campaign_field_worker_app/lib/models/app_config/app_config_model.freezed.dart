@@ -961,6 +961,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
   List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
       throw _privateConstructorUsedError;
@@ -1014,6 +1017,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1051,6 +1056,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? searchHouseHoldFiltersSMC = freezed,
+    Object? searchHouseHoldFiltersBednet = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1122,6 +1128,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.searchHouseHoldFiltersSMC
           : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersBednet: freezed == searchHouseHoldFiltersBednet
+          ? _value.searchHouseHoldFiltersBednet
+          : searchHouseHoldFiltersBednet // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1178,6 +1188,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1213,6 +1225,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? searchHouseHoldFiltersSMC = freezed,
+    Object? searchHouseHoldFiltersBednet = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1284,6 +1297,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._searchHouseHoldFiltersSMC
           : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersBednet: freezed == searchHouseHoldFiltersBednet
+          ? _value._searchHouseHoldFiltersBednet
+          : searchHouseHoldFiltersBednet // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1340,6 +1357,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1365,6 +1384,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _symptomsTypeList = symptomsTypeList,
         _searchHouseHoldFilters = searchHouseHoldFilters,
         _searchHouseHoldFiltersSMC = searchHouseHoldFiltersSMC,
+        _searchHouseHoldFiltersBednet = searchHouseHoldFiltersBednet,
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
@@ -1539,6 +1559,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<SearchHouseHoldFilters>? _searchHouseHoldFiltersBednet;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet {
+    final value = _searchHouseHoldFiltersBednet;
+    if (value == null) return null;
+    if (_searchHouseHoldFiltersBednet is EqualUnmodifiableListView)
+      return _searchHouseHoldFiltersBednet;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<ReferralReasonType>? _referralReasonList;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
@@ -1587,7 +1619,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1630,6 +1662,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._searchHouseHoldFilters, _searchHouseHoldFilters) &&
             const DeepCollectionEquality().equals(
                 other._searchHouseHoldFiltersSMC, _searchHouseHoldFiltersSMC) &&
+            const DeepCollectionEquality().equals(
+                other._searchHouseHoldFiltersBednet,
+                _searchHouseHoldFiltersBednet) &&
             const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList) &&
             const DeepCollectionEquality()
@@ -1661,6 +1696,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_symptomsTypeList),
         const DeepCollectionEquality().hash(_searchHouseHoldFilters),
         const DeepCollectionEquality().hash(_searchHouseHoldFiltersSMC),
+        const DeepCollectionEquality().hash(_searchHouseHoldFiltersBednet),
         const DeepCollectionEquality().hash(_referralReasonList),
         const DeepCollectionEquality().hash(_houseStructureTypes),
         const DeepCollectionEquality().hash(_refusalReasons),
@@ -1716,6 +1752,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1777,6 +1815,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
   List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;

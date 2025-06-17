@@ -38,6 +38,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: AuthenticatedPageWrapper(key: args.key),
       );
     },
+    BednetWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BednetWrapperPage(),
+      );
+    },
     BeneficiariesReportRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -239,6 +245,33 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    ConsentHouseholdAcknowledgementBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<ConsentHouseholdAcknowledgementBednetRouteArgs>(
+              orElse: () =>
+                  const ConsentHouseholdAcknowledgementBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConsentHouseholdAcknowledgementBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
+    CustomAttendanceDateSessionSelectionBednetRoute.name: (routeData) {
+      final args = routeData
+          .argsAs<CustomAttendanceDateSessionSelectionBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomAttendanceDateSessionSelectionBednetPage(
+          registers: args.registers,
+          registerID: args.registerID,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomAttendanceDateSessionSelectionRoute.name: (routeData) {
       final args =
           routeData.argsAs<CustomAttendanceDateSessionSelectionRouteArgs>();
@@ -249,6 +282,31 @@ abstract class _$AppRouter extends RootStackRouter {
           registerID: args.registerID,
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomBednetSummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBednetSummaryRouteArgs>(
+          orElse: () => const CustomBednetSummaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBednetSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomBeneficiaryAcknowledgementBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomBeneficiaryAcknowledgementBednetRouteArgs>(
+              orElse: () =>
+                  const CustomBeneficiaryAcknowledgementBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryAcknowledgementBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -278,6 +336,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryChecklistBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryChecklistBednetRouteArgs>(
+          orElse: () => const CustomBeneficiaryChecklistBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryChecklistBednetPage(
+          key: args.key,
+          beneficiaryClientRefId: args.beneficiaryClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomBeneficiaryChecklistRoute.name: (routeData) {
       final args = routeData.argsAs<CustomBeneficiaryChecklistRouteArgs>(
           orElse: () => const CustomBeneficiaryChecklistRouteArgs());
@@ -290,12 +360,36 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryDetailsBednetRouteArgs>(
+          orElse: () => const CustomBeneficiaryDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomBeneficiaryDetailsSMCRoute.name: (routeData) {
       final args = routeData.argsAs<CustomBeneficiaryDetailsSMCRouteArgs>(
           orElse: () => const CustomBeneficiaryDetailsSMCRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomBeneficiaryDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomClosedHouseholdDetailsBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomClosedHouseholdDetailsBednetRouteArgs>(
+              orElse: () =>
+                  const CustomClosedHouseholdDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdDetailsBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -323,6 +417,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomClosedHouseholdSummaryBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomClosedHouseholdSummaryBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdSummaryBednetPage(
+          reason: args.reason,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
           orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
@@ -342,6 +448,18 @@ abstract class _$AppRouter extends RootStackRouter {
           reason: args.reason,
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomDeliverInterventionBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionBednetRouteArgs>(
+          orElse: () => const CustomDeliverInterventionBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
         ),
       );
     },
@@ -369,6 +487,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverySummaryBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverySummaryBednetRouteArgs>(
+          orElse: () => const CustomDeliverySummaryBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverySummaryBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomDeliverySummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverySummaryRouteArgs>(
           orElse: () => const CustomDeliverySummaryRouteArgs());
@@ -391,6 +520,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseDetailsBednetRouteArgs>(
+          orElse: () => const CustomHouseDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseDetailsRouteArgs>(
           orElse: () => const CustomHouseDetailsRouteArgs());
@@ -399,6 +539,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CustomHouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomHouseHoldDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseHoldDetailsBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseHoldDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEligible: args.isEligible,
         ),
       );
     },
@@ -421,6 +572,20 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEligible: args.isEligible,
+        ),
+      );
+    },
+    CustomHouseholdAcknowledgementBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomHouseholdAcknowledgementBednetRouteArgs>(
+              orElse: () =>
+                  const CustomHouseholdAcknowledgementBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdAcknowledgementBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -449,6 +614,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseholdLocationBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdLocationBednetRouteArgs>(
+          orElse: () => const CustomHouseholdLocationBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdLocationBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdLocationRouteArgs>(
           orElse: () => const CustomHouseholdLocationRouteArgs());
@@ -466,6 +642,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomHouseholdLocationSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomHouseholdOverviewBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdOverviewBednetRouteArgs>(
+          orElse: () => const CustomHouseholdOverviewBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdOverviewBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -493,6 +680,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomHouseholdWrapperBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdWrapperBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdWrapperBednetPage(
+          key: args.key,
+          wrapper: args.wrapper,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomHouseholdWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdWrapperRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -501,6 +699,19 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           wrapper: args.wrapper,
           isEditing: args.isEditing,
+        ),
+      );
+    },
+    CustomIndividualDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomIndividualDetailsBednetRouteArgs>(
+          orElse: () => const CustomIndividualDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomIndividualDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isHeadOfHousehold: args.isHeadOfHousehold,
+          isEligible: args.isEligible,
         ),
       );
     },
@@ -529,6 +740,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryFacilitySelectionBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryFacilitySelectionBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryFacilitySelectionBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          facilities: args.facilities,
+        ),
+      );
+    },
     CustomInventoryFacilitySelectionRoute.name: (routeData) {
       final args =
           routeData.argsAs<CustomInventoryFacilitySelectionRouteArgs>();
@@ -550,6 +773,18 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           facilities: args.facilities,
+        ),
+      );
+    },
+    CustomInventoryReportDetailsBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryReportDetailsBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          reportType: args.reportType,
         ),
       );
     },
@@ -575,6 +810,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomInventoryReportSelectionBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomInventoryReportSelectionBednetRouteArgs>(
+              orElse: () =>
+                  const CustomInventoryReportSelectionBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomInventoryReportSelectionBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomInventoryReportSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportSelectionRouteArgs>(
           orElse: () => const CustomInventoryReportSelectionRouteArgs());
@@ -597,10 +845,27 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomManageAttendanceBednetRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomManageAttendanceBednetPage(),
+      );
+    },
     CustomManageAttendanceRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const CustomManageAttendancePage(),
+      );
+    },
+    CustomManageStocksBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomManageStocksBednetRouteArgs>(
+          orElse: () => const CustomManageStocksBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomManageStocksBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     CustomManageStocksRoute.name: (routeData) {
@@ -620,6 +885,23 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomManageStocksSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomMarkAttendanceBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomMarkAttendanceBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomMarkAttendanceBednetPage(
+          exitTime: args.exitTime,
+          entryTime: args.entryTime,
+          dateTime: args.dateTime,
+          attendees: args.attendees,
+          registerId: args.registerId,
+          tenantId: args.tenantId,
+          session: args.session,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -652,6 +934,23 @@ abstract class _$AppRouter extends RootStackRouter {
           isEditing: args.isEditing,
           projectId: args.projectId,
           cycles: args.cycles,
+        ),
+      );
+    },
+    CustomReferBeneficiaryBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomReferBeneficiaryBednetRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomReferBeneficiaryBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+          individual: args.individual,
+          isReadministrationUnSuccessful: args.isReadministrationUnSuccessful,
+          quantityWasted: args.quantityWasted,
+          productVariantId: args.productVariantId,
+          referralReasons: args.referralReasons,
         ),
       );
     },
@@ -696,12 +995,34 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomRefusedDeliveryBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomRefusedDeliveryBednetRouteArgs>(
+          orElse: () => const CustomRefusedDeliveryBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomRefusedDeliveryBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomRefusedDeliveryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomRefusedDeliveryRouteArgs>(
           orElse: () => const CustomRefusedDeliveryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomRefusedDeliveryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomSearchBeneficiaryBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSearchBeneficiaryBednetRouteArgs>(
+          orElse: () => const CustomSearchBeneficiaryBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSearchBeneficiaryBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -742,6 +1063,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsBednetRouteArgs>(
+          orElse: () => const CustomStockDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomStockDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
           orElse: () => const CustomStockDetailsRouteArgs());
@@ -759,6 +1091,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomStockDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomStockReconciliationBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockReconciliationBednetRouteArgs>(
+          orElse: () => const CustomStockReconciliationBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockReconciliationBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -792,6 +1135,23 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CustomUserDashboardSMCPage(),
       );
     },
+    CustomUserDashboardBednetRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomUserDashboardBednetPage(),
+      );
+    },
+    CustomWarehouseDetailsBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomWarehouseDetailsBednetRouteArgs>(
+          orElse: () => const CustomWarehouseDetailsBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomWarehouseDetailsBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
@@ -809,6 +1169,19 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomWarehouseDetailsSMCPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    DoseAdministeredVerificationBednetRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<DoseAdministeredVerificationBednetRouteArgs>(
+              orElse: () =>
+                  const DoseAdministeredVerificationBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredVerificationBednetPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -836,6 +1209,17 @@ abstract class _$AppRouter extends RootStackRouter {
           individual: args.individual,
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    HomeBednetRoute.name: (routeData) {
+      final args = routeData.argsAs<HomeBednetRouteArgs>(
+          orElse: () => const HomeBednetRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HomeBednetPage(
+          key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -1060,6 +1444,20 @@ class AuthenticatedRouteWrapperArgs {
   String toString() {
     return 'AuthenticatedRouteWrapperArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [BednetWrapperPage]
+class BednetWrapperRoute extends PageRouteInfo<void> {
+  const BednetWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          BednetWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BednetWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1751,6 +2149,144 @@ class ComplaintsRegistrationWrapperRouteArgs {
 }
 
 /// generated route for
+/// [ConsentHouseholdAcknowledgementBednetPage]
+class ConsentHouseholdAcknowledgementBednetRoute
+    extends PageRouteInfo<ConsentHouseholdAcknowledgementBednetRouteArgs> {
+  ConsentHouseholdAcknowledgementBednetRoute({
+    Key? key,
+    AttendanceLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ConsentHouseholdAcknowledgementBednetRoute.name,
+          args: ConsentHouseholdAcknowledgementBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ConsentHouseholdAcknowledgementBednetRoute';
+
+  static const PageInfo<ConsentHouseholdAcknowledgementBednetRouteArgs> page =
+      PageInfo<ConsentHouseholdAcknowledgementBednetRouteArgs>(name);
+}
+
+class ConsentHouseholdAcknowledgementBednetRouteArgs {
+  const ConsentHouseholdAcknowledgementBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AttendanceLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'ConsentHouseholdAcknowledgementBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [ConsentHouseholdAcknowledgementPage]
+class ConsentHouseholdAcknowledgementRoute
+    extends PageRouteInfo<ConsentHouseholdAcknowledgementRouteArgs> {
+  ConsentHouseholdAcknowledgementRoute({
+    Key? key,
+    AttendanceLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ConsentHouseholdAcknowledgementRoute.name,
+          args: ConsentHouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ConsentHouseholdAcknowledgementRoute';
+
+  static const PageInfo<ConsentHouseholdAcknowledgementRouteArgs> page =
+      PageInfo<ConsentHouseholdAcknowledgementRouteArgs>(name);
+}
+
+class ConsentHouseholdAcknowledgementRouteArgs {
+  const ConsentHouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AttendanceLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'ConsentHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomAttendanceDateSessionSelectionBednetPage]
+class CustomAttendanceDateSessionSelectionBednetRoute
+    extends PageRouteInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs> {
+  CustomAttendanceDateSessionSelectionBednetRoute({
+    required List<AttendanceRegisterModel> registers,
+    required String registerID,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomAttendanceDateSessionSelectionBednetRoute.name,
+          args: CustomAttendanceDateSessionSelectionBednetRouteArgs(
+            registers: registers,
+            registerID: registerID,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomAttendanceDateSessionSelectionBednetRoute';
+
+  static const PageInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs>
+      page =
+      PageInfo<CustomAttendanceDateSessionSelectionBednetRouteArgs>(name);
+}
+
+class CustomAttendanceDateSessionSelectionBednetRouteArgs {
+  const CustomAttendanceDateSessionSelectionBednetRouteArgs({
+    required this.registers,
+    required this.registerID,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final List<AttendanceRegisterModel> registers;
+
+  final String registerID;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomAttendanceDateSessionSelectionBednetRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomAttendanceDateSessionSelectionPage]
 class CustomAttendanceDateSessionSelectionRoute
     extends PageRouteInfo<CustomAttendanceDateSessionSelectionRouteArgs> {
@@ -1796,6 +2332,89 @@ class CustomAttendanceDateSessionSelectionRouteArgs {
   @override
   String toString() {
     return 'CustomAttendanceDateSessionSelectionRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBednetSummaryPage]
+class CustomBednetSummaryRoute
+    extends PageRouteInfo<CustomBednetSummaryRouteArgs> {
+  CustomBednetSummaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBednetSummaryRoute.name,
+          args: CustomBednetSummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBednetSummaryRoute';
+
+  static const PageInfo<CustomBednetSummaryRouteArgs> page =
+      PageInfo<CustomBednetSummaryRouteArgs>(name);
+}
+
+class CustomBednetSummaryRouteArgs {
+  const CustomBednetSummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBednetSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBeneficiaryAcknowledgementBednetPage]
+class CustomBeneficiaryAcknowledgementBednetRoute
+    extends PageRouteInfo<CustomBeneficiaryAcknowledgementBednetRouteArgs> {
+  CustomBeneficiaryAcknowledgementBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryAcknowledgementBednetRoute.name,
+          args: CustomBeneficiaryAcknowledgementBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryAcknowledgementBednetRoute';
+
+  static const PageInfo<CustomBeneficiaryAcknowledgementBednetRouteArgs> page =
+      PageInfo<CustomBeneficiaryAcknowledgementBednetRouteArgs>(name);
+}
+
+class CustomBeneficiaryAcknowledgementBednetRouteArgs {
+  const CustomBeneficiaryAcknowledgementBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryAcknowledgementBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 
@@ -1888,6 +2507,50 @@ class CustomBeneficiaryAcknowledgementSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomBeneficiaryChecklistBednetPage]
+class CustomBeneficiaryChecklistBednetRoute
+    extends PageRouteInfo<CustomBeneficiaryChecklistBednetRouteArgs> {
+  CustomBeneficiaryChecklistBednetRoute({
+    Key? key,
+    String? beneficiaryClientRefId,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryChecklistBednetRoute.name,
+          args: CustomBeneficiaryChecklistBednetRouteArgs(
+            key: key,
+            beneficiaryClientRefId: beneficiaryClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryChecklistBednetRoute';
+
+  static const PageInfo<CustomBeneficiaryChecklistBednetRouteArgs> page =
+      PageInfo<CustomBeneficiaryChecklistBednetRouteArgs>(name);
+}
+
+class CustomBeneficiaryChecklistBednetRouteArgs {
+  const CustomBeneficiaryChecklistBednetRouteArgs({
+    this.key,
+    this.beneficiaryClientRefId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? beneficiaryClientRefId;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryChecklistBednetRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomBeneficiaryChecklistPage]
 class CustomBeneficiaryChecklistRoute
     extends PageRouteInfo<CustomBeneficiaryChecklistRouteArgs> {
@@ -1932,6 +2595,45 @@ class CustomBeneficiaryChecklistRouteArgs {
 }
 
 /// generated route for
+/// [CustomBeneficiaryDetailsBednetPage]
+class CustomBeneficiaryDetailsBednetRoute
+    extends PageRouteInfo<CustomBeneficiaryDetailsBednetRouteArgs> {
+  CustomBeneficiaryDetailsBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryDetailsBednetRoute.name,
+          args: CustomBeneficiaryDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryDetailsBednetRoute';
+
+  static const PageInfo<CustomBeneficiaryDetailsBednetRouteArgs> page =
+      PageInfo<CustomBeneficiaryDetailsBednetRouteArgs>(name);
+}
+
+class CustomBeneficiaryDetailsBednetRouteArgs {
+  const CustomBeneficiaryDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomBeneficiaryDetailsSMCPage]
 class CustomBeneficiaryDetailsSMCRoute
     extends PageRouteInfo<CustomBeneficiaryDetailsSMCRouteArgs> {
@@ -1967,6 +2669,45 @@ class CustomBeneficiaryDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomBeneficiaryDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdDetailsBednetPage]
+class CustomClosedHouseholdDetailsBednetRoute
+    extends PageRouteInfo<CustomClosedHouseholdDetailsBednetRouteArgs> {
+  CustomClosedHouseholdDetailsBednetRoute({
+    Key? key,
+    ClosedHouseholdLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdDetailsBednetRoute.name,
+          args: CustomClosedHouseholdDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdDetailsBednetRoute';
+
+  static const PageInfo<CustomClosedHouseholdDetailsBednetRouteArgs> page =
+      PageInfo<CustomClosedHouseholdDetailsBednetRouteArgs>(name);
+}
+
+class CustomClosedHouseholdDetailsBednetRouteArgs {
+  const CustomClosedHouseholdDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ClosedHouseholdLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2045,6 +2786,50 @@ class CustomClosedHouseholdDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdSummaryBednetPage]
+class CustomClosedHouseholdSummaryBednetRoute
+    extends PageRouteInfo<CustomClosedHouseholdSummaryBednetRouteArgs> {
+  CustomClosedHouseholdSummaryBednetRoute({
+    required dynamic reason,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdSummaryBednetRoute.name,
+          args: CustomClosedHouseholdSummaryBednetRouteArgs(
+            reason: reason,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdSummaryBednetRoute';
+
+  static const PageInfo<CustomClosedHouseholdSummaryBednetRouteArgs> page =
+      PageInfo<CustomClosedHouseholdSummaryBednetRouteArgs>(name);
+}
+
+class CustomClosedHouseholdSummaryBednetRouteArgs {
+  const CustomClosedHouseholdSummaryBednetRouteArgs({
+    required this.reason,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final dynamic reason;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdSummaryBednetRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2128,6 +2913,50 @@ class CustomClosedHouseholdSummarySMCRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdSummarySMCRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverInterventionBednetPage]
+class CustomDeliverInterventionBednetRoute
+    extends PageRouteInfo<CustomDeliverInterventionBednetRouteArgs> {
+  CustomDeliverInterventionBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionBednetRoute.name,
+          args: CustomDeliverInterventionBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionBednetRoute';
+
+  static const PageInfo<CustomDeliverInterventionBednetRouteArgs> page =
+      PageInfo<CustomDeliverInterventionBednetRouteArgs>(name);
+}
+
+class CustomDeliverInterventionBednetRouteArgs {
+  const CustomDeliverInterventionBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
@@ -2220,6 +3049,45 @@ class CustomDeliverInterventionSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomDeliverySummaryBednetPage]
+class CustomDeliverySummaryBednetRoute
+    extends PageRouteInfo<CustomDeliverySummaryBednetRouteArgs> {
+  CustomDeliverySummaryBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverySummaryBednetRoute.name,
+          args: CustomDeliverySummaryBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverySummaryBednetRoute';
+
+  static const PageInfo<CustomDeliverySummaryBednetRouteArgs> page =
+      PageInfo<CustomDeliverySummaryBednetRouteArgs>(name);
+}
+
+class CustomDeliverySummaryBednetRouteArgs {
+  const CustomDeliverySummaryBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomDeliverySummaryBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomDeliverySummaryPage]
 class CustomDeliverySummaryRoute
     extends PageRouteInfo<CustomDeliverySummaryRouteArgs> {
@@ -2298,6 +3166,45 @@ class CustomDeliverySummarySMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomHouseDetailsBednetPage]
+class CustomHouseDetailsBednetRoute
+    extends PageRouteInfo<CustomHouseDetailsBednetRouteArgs> {
+  CustomHouseDetailsBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseDetailsBednetRoute.name,
+          args: CustomHouseDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseDetailsBednetRoute';
+
+  static const PageInfo<CustomHouseDetailsBednetRouteArgs> page =
+      PageInfo<CustomHouseDetailsBednetRouteArgs>(name);
+}
+
+class CustomHouseDetailsBednetRouteArgs {
+  const CustomHouseDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseDetailsPage]
 class CustomHouseDetailsRoute
     extends PageRouteInfo<CustomHouseDetailsRouteArgs> {
@@ -2333,6 +3240,50 @@ class CustomHouseDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomHouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseHoldDetailsBednetPage]
+class CustomHouseHoldDetailsBednetRoute
+    extends PageRouteInfo<CustomHouseHoldDetailsBednetRouteArgs> {
+  CustomHouseHoldDetailsBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required bool isEligible,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseHoldDetailsBednetRoute.name,
+          args: CustomHouseHoldDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEligible: isEligible,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseHoldDetailsBednetRoute';
+
+  static const PageInfo<CustomHouseHoldDetailsBednetRouteArgs> page =
+      PageInfo<CustomHouseHoldDetailsBednetRouteArgs>(name);
+}
+
+class CustomHouseHoldDetailsBednetRouteArgs {
+  const CustomHouseHoldDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.isEligible,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEligible;
+
+  @override
+  String toString() {
+    return 'CustomHouseHoldDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
   }
 }
 
@@ -2421,6 +3372,50 @@ class CustomHouseHoldDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomHouseHoldDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEligible: $isEligible}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdAcknowledgementBednetPage]
+class CustomHouseholdAcknowledgementBednetRoute
+    extends PageRouteInfo<CustomHouseholdAcknowledgementBednetRouteArgs> {
+  CustomHouseholdAcknowledgementBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdAcknowledgementBednetRoute.name,
+          args: CustomHouseholdAcknowledgementBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdAcknowledgementBednetRoute';
+
+  static const PageInfo<CustomHouseholdAcknowledgementBednetRouteArgs> page =
+      PageInfo<CustomHouseholdAcknowledgementBednetRouteArgs>(name);
+}
+
+class CustomHouseholdAcknowledgementBednetRouteArgs {
+  const CustomHouseholdAcknowledgementBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdAcknowledgementBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 
@@ -2518,6 +3513,45 @@ class CustomHouseholdAcknowledgementSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomHouseholdLocationBednetPage]
+class CustomHouseholdLocationBednetRoute
+    extends PageRouteInfo<CustomHouseholdLocationBednetRouteArgs> {
+  CustomHouseholdLocationBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdLocationBednetRoute.name,
+          args: CustomHouseholdLocationBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdLocationBednetRoute';
+
+  static const PageInfo<CustomHouseholdLocationBednetRouteArgs> page =
+      PageInfo<CustomHouseholdLocationBednetRouteArgs>(name);
+}
+
+class CustomHouseholdLocationBednetRouteArgs {
+  const CustomHouseholdLocationBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdLocationBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseholdLocationPage]
 class CustomHouseholdLocationRoute
     extends PageRouteInfo<CustomHouseholdLocationRouteArgs> {
@@ -2592,6 +3626,45 @@ class CustomHouseholdLocationSMCRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdLocationSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdOverviewBednetPage]
+class CustomHouseholdOverviewBednetRoute
+    extends PageRouteInfo<CustomHouseholdOverviewBednetRouteArgs> {
+  CustomHouseholdOverviewBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdOverviewBednetRoute.name,
+          args: CustomHouseholdOverviewBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdOverviewBednetRoute';
+
+  static const PageInfo<CustomHouseholdOverviewBednetRouteArgs> page =
+      PageInfo<CustomHouseholdOverviewBednetRouteArgs>(name);
+}
+
+class CustomHouseholdOverviewBednetRouteArgs {
+  const CustomHouseholdOverviewBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdOverviewBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2674,6 +3747,50 @@ class CustomHouseholdOverviewSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomHouseholdWrapperBednetPage]
+class CustomHouseholdWrapperBednetRoute
+    extends PageRouteInfo<CustomHouseholdWrapperBednetRouteArgs> {
+  CustomHouseholdWrapperBednetRoute({
+    Key? key,
+    required HouseholdMemberWrapper wrapper,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdWrapperBednetRoute.name,
+          args: CustomHouseholdWrapperBednetRouteArgs(
+            key: key,
+            wrapper: wrapper,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdWrapperBednetRoute';
+
+  static const PageInfo<CustomHouseholdWrapperBednetRouteArgs> page =
+      PageInfo<CustomHouseholdWrapperBednetRouteArgs>(name);
+}
+
+class CustomHouseholdWrapperBednetRouteArgs {
+  const CustomHouseholdWrapperBednetRouteArgs({
+    this.key,
+    required this.wrapper,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final HouseholdMemberWrapper wrapper;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdWrapperBednetRouteArgs{key: $key, wrapper: $wrapper, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseholdWrapperPage]
 class CustomHouseholdWrapperRoute
     extends PageRouteInfo<CustomHouseholdWrapperRouteArgs> {
@@ -2714,6 +3831,55 @@ class CustomHouseholdWrapperRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdWrapperRouteArgs{key: $key, wrapper: $wrapper, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomIndividualDetailsBednetPage]
+class CustomIndividualDetailsBednetRoute
+    extends PageRouteInfo<CustomIndividualDetailsBednetRouteArgs> {
+  CustomIndividualDetailsBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isHeadOfHousehold = true,
+    bool isEligible = true,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomIndividualDetailsBednetRoute.name,
+          args: CustomIndividualDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isHeadOfHousehold: isHeadOfHousehold,
+            isEligible: isEligible,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomIndividualDetailsBednetRoute';
+
+  static const PageInfo<CustomIndividualDetailsBednetRouteArgs> page =
+      PageInfo<CustomIndividualDetailsBednetRouteArgs>(name);
+}
+
+class CustomIndividualDetailsBednetRouteArgs {
+  const CustomIndividualDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isHeadOfHousehold = true,
+    this.isEligible = true,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isHeadOfHousehold;
+
+  final bool isEligible;
+
+  @override
+  String toString() {
+    return 'CustomIndividualDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isEligible: $isEligible}';
   }
 }
 
@@ -2811,6 +3977,50 @@ class CustomIndividualDetailsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomInventoryFacilitySelectionBednetPage]
+class CustomInventoryFacilitySelectionBednetRoute
+    extends PageRouteInfo<CustomInventoryFacilitySelectionBednetRouteArgs> {
+  CustomInventoryFacilitySelectionBednetRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required List<FacilityModel> facilities,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryFacilitySelectionBednetRoute.name,
+          args: CustomInventoryFacilitySelectionBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            facilities: facilities,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryFacilitySelectionBednetRoute';
+
+  static const PageInfo<CustomInventoryFacilitySelectionBednetRouteArgs> page =
+      PageInfo<CustomInventoryFacilitySelectionBednetRouteArgs>(name);
+}
+
+class CustomInventoryFacilitySelectionBednetRouteArgs {
+  const CustomInventoryFacilitySelectionBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.facilities,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final List<FacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'CustomInventoryFacilitySelectionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
+  }
+}
+
+/// generated route for
 /// [CustomInventoryFacilitySelectionPage]
 class CustomInventoryFacilitySelectionRoute
     extends PageRouteInfo<CustomInventoryFacilitySelectionRouteArgs> {
@@ -2895,6 +4105,50 @@ class CustomInventoryFacilitySelectionSMCRouteArgs {
   @override
   String toString() {
     return 'CustomInventoryFacilitySelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
+  }
+}
+
+/// generated route for
+/// [CustomInventoryReportDetailsBednetPage]
+class CustomInventoryReportDetailsBednetRoute
+    extends PageRouteInfo<CustomInventoryReportDetailsBednetRouteArgs> {
+  CustomInventoryReportDetailsBednetRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required InventoryReportType reportType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportDetailsBednetRoute.name,
+          args: CustomInventoryReportDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            reportType: reportType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportDetailsBednetRoute';
+
+  static const PageInfo<CustomInventoryReportDetailsBednetRouteArgs> page =
+      PageInfo<CustomInventoryReportDetailsBednetRouteArgs>(name);
+}
+
+class CustomInventoryReportDetailsBednetRouteArgs {
+  const CustomInventoryReportDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.reportType,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final InventoryReportType reportType;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
   }
 }
 
@@ -2987,6 +4241,45 @@ class CustomInventoryReportDetailsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomInventoryReportSelectionBednetPage]
+class CustomInventoryReportSelectionBednetRoute
+    extends PageRouteInfo<CustomInventoryReportSelectionBednetRouteArgs> {
+  CustomInventoryReportSelectionBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomInventoryReportSelectionBednetRoute.name,
+          args: CustomInventoryReportSelectionBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomInventoryReportSelectionBednetRoute';
+
+  static const PageInfo<CustomInventoryReportSelectionBednetRouteArgs> page =
+      PageInfo<CustomInventoryReportSelectionBednetRouteArgs>(name);
+}
+
+class CustomInventoryReportSelectionBednetRouteArgs {
+  const CustomInventoryReportSelectionBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomInventoryReportSelectionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomInventoryReportSelectionPage]
 class CustomInventoryReportSelectionRoute
     extends PageRouteInfo<CustomInventoryReportSelectionRouteArgs> {
@@ -3065,6 +4358,20 @@ class CustomInventoryReportSelectionSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomManageAttendanceBednetPage]
+class CustomManageAttendanceBednetRoute extends PageRouteInfo<void> {
+  const CustomManageAttendanceBednetRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomManageAttendanceBednetRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageAttendanceBednetRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [CustomManageAttendancePage]
 class CustomManageAttendanceRoute extends PageRouteInfo<void> {
   const CustomManageAttendanceRoute({List<PageRouteInfo>? children})
@@ -3076,6 +4383,45 @@ class CustomManageAttendanceRoute extends PageRouteInfo<void> {
   static const String name = 'CustomManageAttendanceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CustomManageStocksBednetPage]
+class CustomManageStocksBednetRoute
+    extends PageRouteInfo<CustomManageStocksBednetRouteArgs> {
+  CustomManageStocksBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomManageStocksBednetRoute.name,
+          args: CustomManageStocksBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageStocksBednetRoute';
+
+  static const PageInfo<CustomManageStocksBednetRouteArgs> page =
+      PageInfo<CustomManageStocksBednetRouteArgs>(name);
+}
+
+class CustomManageStocksBednetRouteArgs {
+  const CustomManageStocksBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomManageStocksBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for
@@ -3153,6 +4499,80 @@ class CustomManageStocksSMCRouteArgs {
   @override
   String toString() {
     return 'CustomManageStocksSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomMarkAttendanceBednetPage]
+class CustomMarkAttendanceBednetRoute
+    extends PageRouteInfo<CustomMarkAttendanceBednetRouteArgs> {
+  CustomMarkAttendanceBednetRoute({
+    required int exitTime,
+    required int entryTime,
+    required DateTime dateTime,
+    required List<AttendeeModel> attendees,
+    required String registerId,
+    required String tenantId,
+    int? session,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomMarkAttendanceBednetRoute.name,
+          args: CustomMarkAttendanceBednetRouteArgs(
+            exitTime: exitTime,
+            entryTime: entryTime,
+            dateTime: dateTime,
+            attendees: attendees,
+            registerId: registerId,
+            tenantId: tenantId,
+            session: session,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomMarkAttendanceBednetRoute';
+
+  static const PageInfo<CustomMarkAttendanceBednetRouteArgs> page =
+      PageInfo<CustomMarkAttendanceBednetRouteArgs>(name);
+}
+
+class CustomMarkAttendanceBednetRouteArgs {
+  const CustomMarkAttendanceBednetRouteArgs({
+    required this.exitTime,
+    required this.entryTime,
+    required this.dateTime,
+    required this.attendees,
+    required this.registerId,
+    required this.tenantId,
+    this.session,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final int exitTime;
+
+  final int entryTime;
+
+  final DateTime dateTime;
+
+  final List<AttendeeModel> attendees;
+
+  final String registerId;
+
+  final String tenantId;
+
+  final int? session;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomMarkAttendanceBednetRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -3281,6 +4701,80 @@ class CustomRecordReferralDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomRecordReferralDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectId: $projectId, cycles: $cycles}';
+  }
+}
+
+/// generated route for
+/// [CustomReferBeneficiaryBednetPage]
+class CustomReferBeneficiaryBednetRoute
+    extends PageRouteInfo<CustomReferBeneficiaryBednetRouteArgs> {
+  CustomReferBeneficiaryBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    required String projectBeneficiaryClientRefId,
+    required IndividualModel individual,
+    bool isReadministrationUnSuccessful = false,
+    String quantityWasted = "00",
+    String? productVariantId,
+    List<String>? referralReasons,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomReferBeneficiaryBednetRoute.name,
+          args: CustomReferBeneficiaryBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            individual: individual,
+            isReadministrationUnSuccessful: isReadministrationUnSuccessful,
+            quantityWasted: quantityWasted,
+            productVariantId: productVariantId,
+            referralReasons: referralReasons,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomReferBeneficiaryBednetRoute';
+
+  static const PageInfo<CustomReferBeneficiaryBednetRouteArgs> page =
+      PageInfo<CustomReferBeneficiaryBednetRouteArgs>(name);
+}
+
+class CustomReferBeneficiaryBednetRouteArgs {
+  const CustomReferBeneficiaryBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    required this.projectBeneficiaryClientRefId,
+    required this.individual,
+    this.isReadministrationUnSuccessful = false,
+    this.quantityWasted = "00",
+    this.productVariantId,
+    this.referralReasons,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String projectBeneficiaryClientRefId;
+
+  final IndividualModel individual;
+
+  final bool isReadministrationUnSuccessful;
+
+  final String quantityWasted;
+
+  final String? productVariantId;
+
+  final List<String>? referralReasons;
+
+  @override
+  String toString() {
+    return 'CustomReferBeneficiaryBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual, isReadministrationUnSuccessful: $isReadministrationUnSuccessful, quantityWasted: $quantityWasted, productVariantId: $productVariantId, referralReasons: $referralReasons}';
   }
 }
 
@@ -3447,6 +4941,45 @@ class CustomReferralReasonChecklistSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomRefusedDeliveryBednetPage]
+class CustomRefusedDeliveryBednetRoute
+    extends PageRouteInfo<CustomRefusedDeliveryBednetRouteArgs> {
+  CustomRefusedDeliveryBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomRefusedDeliveryBednetRoute.name,
+          args: CustomRefusedDeliveryBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomRefusedDeliveryBednetRoute';
+
+  static const PageInfo<CustomRefusedDeliveryBednetRouteArgs> page =
+      PageInfo<CustomRefusedDeliveryBednetRouteArgs>(name);
+}
+
+class CustomRefusedDeliveryBednetRouteArgs {
+  const CustomRefusedDeliveryBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomRefusedDeliveryBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomRefusedDeliveryPage]
 class CustomRefusedDeliveryRoute
     extends PageRouteInfo<CustomRefusedDeliveryRouteArgs> {
@@ -3482,6 +5015,45 @@ class CustomRefusedDeliveryRouteArgs {
   @override
   String toString() {
     return 'CustomRefusedDeliveryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSearchBeneficiaryBednetPage]
+class CustomSearchBeneficiaryBednetRoute
+    extends PageRouteInfo<CustomSearchBeneficiaryBednetRouteArgs> {
+  CustomSearchBeneficiaryBednetRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSearchBeneficiaryBednetRoute.name,
+          args: CustomSearchBeneficiaryBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSearchBeneficiaryBednetRoute';
+
+  static const PageInfo<CustomSearchBeneficiaryBednetRouteArgs> page =
+      PageInfo<CustomSearchBeneficiaryBednetRouteArgs>(name);
+}
+
+class CustomSearchBeneficiaryBednetRouteArgs {
+  const CustomSearchBeneficiaryBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSearchBeneficiaryBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -3603,6 +5175,45 @@ class CustomSearchReferralReconciliationsSMCRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockDetailsBednetPage]
+class CustomStockDetailsBednetRoute
+    extends PageRouteInfo<CustomStockDetailsBednetRouteArgs> {
+  CustomStockDetailsBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsBednetRoute.name,
+          args: CustomStockDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsBednetRoute';
+
+  static const PageInfo<CustomStockDetailsBednetRouteArgs> page =
+      PageInfo<CustomStockDetailsBednetRouteArgs>(name);
+}
+
+class CustomStockDetailsBednetRouteArgs {
+  const CustomStockDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomStockDetailsPage]
 class CustomStockDetailsRoute
     extends PageRouteInfo<CustomStockDetailsRouteArgs> {
@@ -3677,6 +5288,45 @@ class CustomStockDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomStockDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomStockReconciliationBednetPage]
+class CustomStockReconciliationBednetRoute
+    extends PageRouteInfo<CustomStockReconciliationBednetRouteArgs> {
+  CustomStockReconciliationBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockReconciliationBednetRoute.name,
+          args: CustomStockReconciliationBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockReconciliationBednetRoute';
+
+  static const PageInfo<CustomStockReconciliationBednetRouteArgs> page =
+      PageInfo<CustomStockReconciliationBednetRouteArgs>(name);
+}
+
+class CustomStockReconciliationBednetRouteArgs {
+  const CustomStockReconciliationBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockReconciliationBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -3773,6 +5423,59 @@ class CustomUserDashboardSMCRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CustomUserDashboardBednetPage]
+class CustomUserDashboardBednetRoute extends PageRouteInfo<void> {
+  const CustomUserDashboardBednetRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomUserDashboardBednetRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomUserDashboardBednetRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CustomWarehouseDetailsBednetPage]
+class CustomWarehouseDetailsBednetRoute
+    extends PageRouteInfo<CustomWarehouseDetailsBednetRouteArgs> {
+  CustomWarehouseDetailsBednetRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomWarehouseDetailsBednetRoute.name,
+          args: CustomWarehouseDetailsBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomWarehouseDetailsBednetRoute';
+
+  static const PageInfo<CustomWarehouseDetailsBednetRouteArgs> page =
+      PageInfo<CustomWarehouseDetailsBednetRouteArgs>(name);
+}
+
+class CustomWarehouseDetailsBednetRouteArgs {
+  const CustomWarehouseDetailsBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomWarehouseDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomWarehouseDetailsPage]
 class CustomWarehouseDetailsRoute
     extends PageRouteInfo<CustomWarehouseDetailsRouteArgs> {
@@ -3847,6 +5550,45 @@ class CustomWarehouseDetailsSMCRouteArgs {
   @override
   String toString() {
     return 'CustomWarehouseDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredVerificationBednetPage]
+class DoseAdministeredVerificationBednetRoute
+    extends PageRouteInfo<DoseAdministeredVerificationBednetRouteArgs> {
+  DoseAdministeredVerificationBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DoseAdministeredVerificationBednetRoute.name,
+          args: DoseAdministeredVerificationBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DoseAdministeredVerificationBednetRoute';
+
+  static const PageInfo<DoseAdministeredVerificationBednetRouteArgs> page =
+      PageInfo<DoseAdministeredVerificationBednetRouteArgs>(name);
+}
+
+class DoseAdministeredVerificationBednetRouteArgs {
+  const DoseAdministeredVerificationBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredVerificationBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -3941,6 +5683,44 @@ class EligibilityChecklistViewRouteArgs {
   @override
   String toString() {
     return 'EligibilityChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [HomeBednetPage]
+class HomeBednetRoute extends PageRouteInfo<HomeBednetRouteArgs> {
+  HomeBednetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HomeBednetRoute.name,
+          args: HomeBednetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeBednetRoute';
+
+  static const PageInfo<HomeBednetRouteArgs> page =
+      PageInfo<HomeBednetRouteArgs>(name);
+}
+
+class HomeBednetRouteArgs {
+  const HomeBednetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'HomeBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

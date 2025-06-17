@@ -18,6 +18,37 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-Bednet/bednetwrapper.dart';
+import '../pages/pages-Bednet/home_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_beneficiary_checklist_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_beneficiary_details_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_deliver_intervention_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_delivery_summary_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_facility_selection_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_refer_beneficiary_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/custom_refused_delivery_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/dose_administered_verification_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/widgets/consent_household_acknowledgement_bednet.dart';
+import '../pages/pages-Bednet/beneficiary/widgets/past_delivery_smc.dart';
+
+import '../pages/pages-Bednet/beneficiary_registration/custom_beneficiary_acknowledgement_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_house_details_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_household_acknowledgement_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_household_details_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_household_location_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_household_overview_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_household_wrapper_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_individual_details_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_search_beneficiary_bednet.dart';
+import '../pages/pages-Bednet/beneficiary_registration/custom_summary_page_bednet.dart';
+
+import '../pages/pages-Bednet/closed/custom_closed_household_details_bednet.dart';
+import '../pages/pages-Bednet/closed/custom_closed_household_summary_bednet.dart';
+
+import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
+import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
+import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
+
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -100,10 +131,16 @@ import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
 import '../pages/pages-SMC/inventory/custom_stock_details.dart';
 import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
+import '../pages/pages-Bednet/inventory/custom_warehouse_details.dart';
+import '../pages/pages-Bednet/inventory/custom_stock_details.dart';
+import '../pages/pages-Bednet/inventory/custom_stock_reconciliation.dart';
+import '../pages/pages-Bednet/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
 import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
 import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
+import '../pages/pages-Bednet/reports/inventory/custom_report_selection.dart';
+import '../pages/pages-Bednet/reports/inventory/custom_report_details.dart';
 import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
@@ -112,6 +149,7 @@ import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
+import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 
 part 'app_router.gr.dart';
 
@@ -643,6 +681,7 @@ class AppRouter extends _$AppRouter {
               ),
             ]),
 
+        // SMC routes
         AutoRoute(page: SMCWrapperRoute.page, path: 'smc', children: [
           AutoRoute(page: HomeRoute.page, path: 'home'),
           AutoRoute(page: HomeSMCRoute.page, path: 'home-smc', initial: true),
@@ -1203,6 +1242,510 @@ class AppRouter extends _$AppRouter {
               path: 'custom-search-referrals'),
           RedirectRoute(
               path: 'search-referrals', redirectTo: 'custom-search-referrals')
+        ]),
+
+        // Bednet routes
+        AutoRoute(page: BednetWrapperRoute.page, path: 'bednet', children: [
+          AutoRoute(page: HomeRoute.page, path: 'home'),
+          AutoRoute(
+              page: HomeBednetRoute.page, path: 'home-bednet', initial: true),
+          RedirectRoute(
+            path: 'home',
+            redirectTo: 'home-bednet',
+          ),
+          AutoRoute(
+              page: BoundarySelectionViewRoute.page,
+              path: 'boundary-selection-view'),
+          AutoRoute(page: ProfileRoute.page, path: 'profile'),
+          AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
+          AutoRoute(
+              page: RegistrationDeliveryWrapperRoute.page,
+              path: 'registration-delivery-wrapper',
+              children: [
+                AutoRoute(
+                  page: SearchBeneficiaryRoute.page,
+                  path: 'search-beneficiary',
+                ),
+                AutoRoute(
+                  initial: true,
+                  page: CustomSearchBeneficiaryBednetRoute.page,
+                  path: 'custom-search-beneficiary-bednet',
+                ),
+                RedirectRoute(
+                  path: 'search-beneficiary',
+                  redirectTo: 'custom-search-beneficiary-bednet',
+                ),
+
+                AutoRoute(
+                  page: FacilitySelectionRoute.page,
+                  path: 'select-facilities',
+                ),
+
+                // Attendance Route
+                AutoRoute(
+                  page: ManageAttendanceRoute.page,
+                  path: 'manage-attendance',
+                ),
+                AutoRoute(
+                  page: CustomManageAttendanceBednetRoute.page,
+                  path: 'custom-manage-attendance-bednet',
+                ),
+                RedirectRoute(
+                    path: 'manage-attendance',
+                    redirectTo: 'custom-manage-attendance-bednet'),
+                AutoRoute(
+                  page: AttendanceDateSessionSelectionRoute.page,
+                  path: 'attendance-date-session-selection',
+                ),
+                AutoRoute(
+                  page: CustomAttendanceDateSessionSelectionRoute.page,
+                  path: 'custom-attendance-date-session-selection',
+                ),
+                AutoRoute(
+                  page: CustomAttendanceDateSessionSelectionBednetRoute.page,
+                  path: 'custom-attendance-date-session-selection-bednet',
+                ),
+                AutoRoute(
+                  page: MarkAttendanceRoute.page,
+                  path: 'mark-attendance',
+                ),
+                AutoRoute(
+                  page: CustomMarkAttendanceBednetRoute.page,
+                  path: 'custom-mark-attendance-bednet',
+                ),
+                AutoRoute(
+                  page: AttendanceAcknowledgementRoute.page,
+                  path: 'attendance-acknowledgement',
+                ),
+
+                //       /// Beneficiary Registration
+                AutoRoute(
+                  page: BeneficiaryRegistrationWrapperRoute.page,
+                  path: 'beneficiary-registration',
+                  children: [
+                    AutoRoute(
+                      page: IndividualDetailsRoute.page,
+                      path: 'individual-details',
+                    ),
+                    AutoRoute(
+                      page: CustomIndividualDetailsBednetRoute.page,
+                      path: 'custom-individual-details-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'individual-details',
+                      redirectTo: 'custom-individual-details-bednet',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseHoldDetailsRoute.page,
+                      path: 'custom-household-details',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseHoldDetailsBednetRoute.page,
+                      path: 'custom-household-details-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'custom-household-details',
+                      redirectTo: 'custom-household-details-bednet',
+                    ),
+                    AutoRoute(
+                      page: HouseholdLocationRoute.page,
+                      path: 'household-location',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdLocationBednetRoute.page,
+                      path: 'custom-household-location-bednet',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'household-location',
+                      redirectTo: 'custom-household-location-bednet',
+                    ),
+                    AutoRoute(
+                      page: BeneficiaryAcknowledgementRoute.page,
+                      path: 'beneficiary-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: CustomBeneficiaryAcknowledgementBednetRoute.page,
+                      path: 'custom-beneficiary-acknowledgement-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-acknowledgement',
+                      redirectTo: 'custom-beneficiary-acknowledgement-bednet',
+                    ),
+                    AutoRoute(
+                      page: HouseDetailsRoute.page,
+                      path: 'house-details',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseDetailsBednetRoute.page,
+                      path: 'custom-house-details-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'house-details',
+                      redirectTo: 'custom-house-details-bednet',
+                    ),
+                    AutoRoute(
+                      page: SummaryRoute.page,
+                      path: 'beneficiary-summary',
+                    ),
+                    AutoRoute(
+                      page: CustomBednetSummaryRoute.page,
+                      path: 'custom-bednet-beneficiary-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-summary',
+                      redirectTo: 'custom-bednet-beneficiary-summary',
+                    ),
+                    AutoRoute(
+                      page: BeneficiaryChecklistRoute.page,
+                      path: 'beneficiary-checklist',
+                    ),
+                    AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                    AutoRoute(
+                      page: IneligibleSummaryRoute.page,
+                      path: 'ineligible-beneficiary-summary',
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-summary',
+                      redirectTo: 'ineligible-beneficiary-summary',
+                    )
+                  ],
+                ),
+                AutoRoute(
+                  page: CustomHouseholdWrapperRoute.page,
+                  path: 'household',
+                  children: [
+                    AutoRoute(
+                      page: HouseholdOverviewRoute.page,
+                      path: 'overview',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdOverviewBednetRoute.page,
+                      path: 'custom-overview-bednet',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'overview',
+                      redirectTo: 'custom-overview-bednet',
+                    ),
+                  ],
+                ),
+                AutoRoute(
+                  page: BeneficiaryWrapperRoute.page,
+                  path: 'beneficiary',
+                  children: [
+                    AutoRoute(
+                      page: BeneficiaryDetailsRoute.page,
+                      path: 'beneficiary-details',
+                    ),
+                    AutoRoute(
+                      page: CustomBeneficiaryDetailsBednetRoute.page,
+                      path: 'custom-beneficiary-details-bednet',
+                      // initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'beneficiary-details',
+                      redirectTo: 'custom-beneficiary-details-bednet',
+                    ),
+                    AutoRoute(
+                      page: DeliverInterventionRoute.page,
+                      path: 'deliver-intervention',
+                    ),
+                    AutoRoute(
+                      page: CustomDeliverInterventionBednetRoute.page,
+                      path: 'custom-deliver-intervention-bednet',
+                      initial: true,
+                    ),
+                    RedirectRoute(
+                      path: 'deliver-intervention',
+                      redirectTo: 'custom-deliver-intervention-bednet',
+                    ),
+                    AutoRoute(
+                      page: EligibilityChecklistViewRoute.page,
+                      path: 'eligibility-checklist',
+                    ),
+                    AutoRoute(
+                      page: RefusedDeliveryRoute.page,
+                      path: 'refused-delivery',
+                    ),
+                    AutoRoute(
+                      page: CustomRefusedDeliveryBednetRoute.page,
+                      path: 'custom-refused-delivery-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'refused-delivery',
+                      redirectTo: 'custom-refused-delivery-bednet',
+                    ),
+                    AutoRoute(
+                      page: SideEffectsRoute.page,
+                      path: 'side-effects',
+                    ),
+                    AutoRoute(
+                      page: ReferBeneficiaryRoute.page,
+                      path: 'refer-beneficiary',
+                    ),
+                    AutoRoute(
+                      page: CustomReferBeneficiaryBednetRoute.page,
+                      path: 'refer-beneficiary-bednet',
+                    ),
+                    AutoRoute(
+                      page: CustomInventoryFacilitySelectionBednetRoute.page,
+                      path: 'custom-inventory-select-facilities-bednet',
+                    ),
+                    AutoRoute(
+                      page: DoseAdministeredRoute.page,
+                      path: 'dose-administered',
+                    ),
+                    AutoRoute(
+                      page: SplashAcknowledgementRoute.page,
+                      path: 'splash-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: ReasonForDeletionRoute.page,
+                      path: 'reason-for-deletion',
+                    ),
+                    AutoRoute(
+                      page: RecordPastDeliveryDetailsRoute.page,
+                      path: 'record-past-delivery-details',
+                    ),
+                    AutoRoute(
+                      page: HouseholdAcknowledgementRoute.page,
+                      path: 'household-acknowledgement',
+                    ),
+                    AutoRoute(
+                      page: CustomHouseholdAcknowledgementBednetRoute.page,
+                      path: 'custom-household-acknowledgement-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'household-acknowledgement',
+                      redirectTo: 'custom-household-acknowledgement-bednet',
+                    ),
+                    AutoRoute(
+                      page: ChecklistViewRoute.page,
+                      path: 'view',
+                    ),
+                    AutoRoute(
+                      page: DeliverySummaryRoute.page,
+                      path: 'delivery-summary',
+                    ),
+                    AutoRoute(
+                      page: CustomDeliverySummaryBednetRoute.page,
+                      path: 'custom-delivery-summary-bednet',
+                    ),
+                    RedirectRoute(
+                      path: 'delivery-summary',
+                      redirectTo: 'custom-delivery-summary-bednet',
+                    ),
+                    AutoRoute(
+                      page: DoseAdministeredVerificationRoute.page,
+                      path: 'dose-administered-verification',
+                    ),
+                  ],
+                ),
+              ]),
+
+          /// close household
+          AutoRoute(
+              page: ClosedHouseholdWrapperRoute.page,
+              path: 'closed-household-wrapper',
+              children: [
+                AutoRoute(
+                  page: ClosedHouseholdDetailsRoute.page,
+                  path: 'closed-household-details',
+                ),
+                AutoRoute(
+                  page: CustomClosedHouseholdDetailsBednetRoute.page,
+                  path: 'custom-closed-household-details-bednet',
+                  initial: true,
+                ),
+                RedirectRoute(
+                  path: 'closed-household-details',
+                  redirectTo: 'custom-closed-household-details-bednet',
+                ),
+                AutoRoute(
+                  page: CustomClosedHouseholdSummaryBednetRoute.page,
+                  path: 'custom-closed-household-summary-bednet',
+                ),
+                AutoRoute(
+                    page: ClosedHouseholdAcknowledgementRoute.page,
+                    path: 'closed-household-acknowledgement'),
+              ]),
+          // Inventory Route
+          AutoRoute(
+            page: ManageStocksRoute.page,
+            path: 'manage-stocks',
+          ),
+          AutoRoute(
+            page: CustomManageStocksBednetRoute.page,
+            path: 'custom-manage-stocks-bednet',
+          ),
+          RedirectRoute(
+            path: 'manage-stocks',
+            redirectTo: 'custom-manage-stocks-bednet',
+          ),
+          AutoRoute(
+            page: RecordStockWrapperRoute.page,
+            path: 'record-stock',
+            children: [
+              AutoRoute(
+                page: WarehouseDetailsRoute.page,
+                path: 'warehouse-details',
+                // initial: true,
+              ),
+              AutoRoute(
+                page: CustomWarehouseDetailsBednetRoute.page,
+                path: 'custom-warehouse-details-bednet',
+                initial: true,
+              ),
+              AutoRoute(
+                page: StockDetailsRoute.page,
+                path: 'details',
+              ),
+              AutoRoute(
+                page: CustomStockDetailsBednetRoute.page,
+                path: 'custom-details-bednet',
+              ),
+              RedirectRoute(
+                path: 'details',
+                redirectTo: 'custom-details-bednet',
+              ),
+            ],
+          ),
+          AutoRoute(
+            page: InventoryFacilitySelectionRoute.page,
+            path: 'inventory-select-facilities',
+          ),
+          AutoRoute(
+            page: CustomInventoryFacilitySelectionBednetRoute.page,
+            path: 'custom-inventory-select-facilities-bednet',
+          ),
+          AutoRoute(
+            page: StockReconciliationRoute.page,
+            path: 'stock-reconciliation',
+          ),
+          AutoRoute(
+            page: CustomStockReconciliationBednetRoute.page,
+            path: 'custom-stock-reconciliation-bednet',
+          ),
+          RedirectRoute(
+            path: 'stock-reconciliation',
+            redirectTo: 'custom-stock-reconciliation-bednet',
+          ),
+          AutoRoute(
+            page: InventoryReportSelectionRoute.page,
+            path: 'inventory-report-selection',
+          ),
+          AutoRoute(
+            page: CustomInventoryReportSelectionBednetRoute.page,
+            path: 'custom-inventory-report-selection-bednet',
+          ),
+          RedirectRoute(
+            path: 'inventory-report-selection',
+            redirectTo: 'custom-inventory-report-selection-bednet',
+          ),
+          AutoRoute(
+            page: InventoryReportDetailsRoute.page,
+            path: 'inventory-report-details',
+          ),
+          AutoRoute(
+            page: CustomInventoryReportDetailsBednetRoute.page,
+            path: 'custom-inventory-report-details-bednet',
+          ),
+          RedirectRoute(
+            path: 'inventory-report-details',
+            redirectTo: 'custom-inventory-report-details-bednet',
+          ),
+          AutoRoute(
+            page: InventoryAcknowledgementRoute.page,
+            path: 'inventory-acknowledgement',
+          ),
+          AutoRoute(
+              page: ChecklistWrapperRoute.page,
+              path: 'checklist',
+              children: [
+                AutoRoute(
+                  page: ChecklistRoute.page,
+                  path: '',
+                ),
+                AutoRoute(
+                    page: ChecklistBoundaryViewRoute.page,
+                    path: 'view-boundary'),
+                AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+              ]),
+          AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
+          AutoRoute(
+            page: ComplaintsAcknowledgementRoute.page,
+            path: 'complaints-acknowledgement',
+          ),
+
+          // DSS Dashboard Routes
+          AutoRoute(
+            page: UserDashboardRoute.page,
+            path: 'dashboard',
+          ),
+          AutoRoute(
+            page: CustomUserDashboardBednetRoute.page,
+            path: 'custom-dashboard-bedent',
+          ),
+          RedirectRoute(
+            path: 'dashboard',
+            redirectTo: 'custom-dashboard-bedent',
+          ),
+
+          /// Complaints Inbox
+          AutoRoute(
+            page: ComplaintsInboxWrapperRoute.page,
+            path: 'complaints-inbox',
+            children: [
+              AutoRoute(
+                page: ComplaintsInboxRoute.page,
+                path: 'complaints-inbox-items',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsInboxFilterRoute.page,
+                path: 'complaints-inbox-filter',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSearchRoute.page,
+                path: 'complaints-inbox-search',
+              ),
+              AutoRoute(
+                page: ComplaintsInboxSortRoute.page,
+                path: 'complaints-inbox-sort',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsViewRoute.page,
+                path: 'complaints-inbox-view-details',
+              ),
+            ],
+          ),
+
+          /// Complaints registration
+          AutoRoute(
+            page: ComplaintsRegistrationWrapperRoute.page,
+            path: 'complaints-registration',
+            children: [
+              AutoRoute(
+                page: ComplaintTypeRoute.page,
+                path: 'complaints-type',
+                initial: true,
+              ),
+              AutoRoute(
+                page: ComplaintsLocationRoute.page,
+                path: 'complaints-location',
+              ),
+              AutoRoute(
+                page: ComplaintsDetailsRoute.page,
+                path: 'complaints-details',
+              ),
+            ],
+          ),
         ]),
       ],
     ),
