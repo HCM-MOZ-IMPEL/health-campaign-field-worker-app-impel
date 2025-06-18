@@ -1,4 +1,7 @@
+import 'package:complaints/models/pgr_complaints.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;

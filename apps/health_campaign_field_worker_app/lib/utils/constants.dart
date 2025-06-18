@@ -1,3 +1,6 @@
+import 'package:complaints/data/repositories/local/pgr_service.dart';
+import 'package:complaints/data/repositories/oplog/oplog.dart';
+import 'package:complaints/data/repositories/remote/pgr_service.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -14,6 +17,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
+import 'package:survey_form/data/repositories/local/service.dart';
+import 'package:survey_form/data/repositories/local/service_definition.dart';
+import 'package:survey_form/data/repositories/oplog/oplog.dart';
+import 'package:survey_form/data/repositories/remote/service.dart';
+import 'package:survey_form/data/repositories/remote/service_definition.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -62,7 +70,7 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
-          DashboardConfigSchemaSchema,
+          DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
         ],
         name: 'HCM',
