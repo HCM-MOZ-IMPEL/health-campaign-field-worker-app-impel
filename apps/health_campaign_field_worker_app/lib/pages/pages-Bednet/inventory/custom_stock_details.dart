@@ -79,20 +79,24 @@ class CustomStockDetailsBednetPageState
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
+        Validators.number(),
         Validators.required,
         Validators.min(1),
         Validators.max(maxCount),
       ]),
       _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(
-        validators: [CustomValidator.requiredMin2, Validators.maxLength(200)],
+        validators: [
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin2(validator)),
+          Validators.maxLength(200)
+        ],
       ),
       _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: driverNameValidations,
+        validators: [],
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(),
@@ -1464,7 +1468,7 @@ class CustomStockDetailsBednetPageState
                                                                   Validators
                                                                       .required,
                                                                   Validators
-                                                                      .number,
+                                                                      .number(),
                                                                   Validators
                                                                       .min(0),
                                                                   Validators.max(
@@ -1839,7 +1843,7 @@ class CustomStockDetailsBednetPageState
                                                                       Validators
                                                                           .required,
                                                                       Validators
-                                                                          .number,
+                                                                          .number(),
                                                                       Validators
                                                                           .min(
                                                                               0),
@@ -2391,7 +2395,8 @@ class CustomStockDetailsBednetPageState
             .setValidators(
           [
             Validators.required,
-            CustomValidator.requiredMin2,
+            Validators.delegate(
+                (validator) => CustomValidator.requiredMin2(validator)),
           ],
           updateParent: true,
           autoValidate: true,
@@ -2411,7 +2416,8 @@ class CustomStockDetailsBednetPageState
         )
             .setValidators(
           [
-            CustomValidator.requiredMin2,
+            Validators.delegate(
+                (validator) => CustomValidator.requiredMin2(validator)),
           ],
           updateParent: true,
           autoValidate: true,
@@ -2433,7 +2439,8 @@ class CustomStockDetailsBednetPageState
       )
           .setValidators(
         [
-          CustomValidator.requiredMin2,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin2(validator)),
         ],
         updateParent: true,
         autoValidate: true,

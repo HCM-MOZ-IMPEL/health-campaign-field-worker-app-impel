@@ -183,7 +183,11 @@ class AppInitializationBloc
           if (dashboardConfigs.isNotEmpty) {
             dashboardConfigs.forEach((dashboardConfig) async {
               await dashboardRemoteRepository.writeToDashboardConfigDB(
-                  dashboardConfig, isar);
+                  DashboardConfigPrimaryWrapper.fromJson(
+                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                              [ModuleEnums.hcm.toValue()])
+                      .dashboardConfigWrapper,
+                  isar);
             });
           }
         } catch (e) {
@@ -209,11 +213,11 @@ class AppInitializationBloc
   ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
-    final dashboardConfigs = await isar.dashboardConfigSchemas
+    final dashboardConfigs = await isar.dashboardConfigSchemaLists
         .where()
         .filter()
-        .chartsIsNotNull()
-        .chartsIsNotEmpty()
+        .dashboardConfigsIsNotNull()
+        .dashboardConfigsIsNotEmpty()
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
@@ -226,7 +230,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -478,12 +479,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final projectTypeCode = getProjectTypeCode(event.model);
-        final dashboardConfig = await isar.dashboardConfigSchemas
+        final dashboardConfig = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
-            .chartsIsNotNull()
-            .chartsIsNotEmpty()
-            .projectTypeCodeEqualTo(projectTypeCode)
+            .dashboardConfigsIsNotNull()
+            .dashboardConfigsIsNotEmpty()
             .findAll();
 
         final dashboardActionPath = Constants.getEndPoint(
@@ -491,10 +491,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (dashboardConfig.isNotEmpty &&
-            dashboardConfig.first != null &&
-            dashboardConfig.first!.enableDashboard == true &&
-            dashboardConfig.first!.charts != null) {
+        if (dashboardConfig.isNotEmpty && dashboardConfig.first != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -518,7 +515,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first!.charts ?? [],
+            dashboardConfig.first ?? [],
             startDate,
             endDate,
             isar,

@@ -70,20 +70,24 @@ class CustomStockDetailsPageState
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
+        Validators.number(),
         Validators.required,
         Validators.min(1),
         Validators.max(maxCount),
       ]),
       _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(
-        validators: [CustomValidator.requiredMin2, Validators.maxLength(200)],
+        validators: [
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin2(validator)),
+          Validators.maxLength(200)
+        ],
       ),
       _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: driverNameValidations,
+        validators: [],
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(),
@@ -1083,7 +1087,7 @@ class CustomStockDetailsPageState
                                                         .setValidators(
                                                       [
                                                         Validators.required,
-                                                        Validators.number,
+                                                        Validators.number(),
                                                         Validators.min(0),
                                                         Validators.max(
                                                             maxCount),
@@ -1359,7 +1363,7 @@ class CustomStockDetailsPageState
                                                             .setValidators(
                                                           [
                                                             Validators.required,
-                                                            Validators.number,
+                                                            Validators.number(),
                                                             Validators.min(0),
                                                             Validators.max(
                                                                 maxCount),

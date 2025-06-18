@@ -815,7 +815,8 @@ class CustomIndividualDetailsBednetPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin3,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? '',
@@ -823,7 +824,8 @@ class CustomIndividualDetailsBednetPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin3,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.familyName ?? '',
@@ -836,12 +838,12 @@ class CustomIndividualDetailsBednetPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey: FormControl<String>(
-          value: individual?.mobileNumber,
-          validators: [
-            CustomValidator.validMobileNumber,
-            Validators.maxLength(9)
-          ]),
+      _mobileNumberKey:
+          FormControl<String>(value: individual?.mobileNumber, validators: [
+        Validators.delegate(
+            (validator) => CustomValidator.validMobileNumber(validator)),
+        Validators.maxLength(9)
+      ]),
     });
   }
 

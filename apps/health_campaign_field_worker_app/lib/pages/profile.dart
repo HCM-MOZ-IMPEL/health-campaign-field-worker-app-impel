@@ -58,7 +58,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
-            CustomValidator.validMobileNumber,
+            Validators.delegate(
+                (validator) => CustomValidator.validMobileNumber(validator)),
           ],
         ),
         _emailId: FormControl<String>(

@@ -298,7 +298,8 @@ class _CustomHouseholdLocationPageState
         validators: [Validators.required],
       ),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
       ]),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,

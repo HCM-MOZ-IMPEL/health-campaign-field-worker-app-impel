@@ -2074,7 +2074,7 @@ packages:
     source: hosted
     version: "1.2.0"
   survey_form:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: survey_form
       sha256: e81e71beff6c4982ff6944ad34da056ea5b4adba860d9552a5eb554356dd816d

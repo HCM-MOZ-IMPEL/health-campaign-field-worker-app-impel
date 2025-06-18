@@ -1,3 +1,4 @@
+import 'package:complaints/models/pgr_complaints.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -10,6 +11,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/models/entities/service.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 
@@ -703,43 +705,44 @@ void setPackagesSingleton(BuildContext context) {
             ));
 
         RegistrationDeliverySingleton().setInitialData(
-          loggedInUser: context.loggedInUserModel,
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
-          projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter:
-              appConfiguration.searchHouseHoldFiltersBednet != null
-                  ? appConfiguration.searchHouseHoldFiltersBednet!
-                      .map((e) => e.code)
-                      .toList()
-                  : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
-        );
+            loggedInUser: context.loggedInUserModel,
+            loggedInUserUuid: context.loggedInUserUuid,
+            maxRadius: appConfiguration.maxRadius!,
+            projectId: context.projectId,
+            selectedBeneficiaryType: context.beneficiaryType,
+            projectType: context.selectedProjectType,
+            selectedProject: context.selectedProject,
+            genderOptions:
+                appConfiguration.genderOptions!.map((e) => e.code).toList(),
+            idTypeOptions:
+                appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+            householdDeletionReasonOptions: appConfiguration
+                .householdDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            householdMemberDeletionReasonOptions: appConfiguration
+                .householdMemberDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+                .map((e) => e.code)
+                .toList(),
+            symptomsTypes:
+                appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+            searchHouseHoldFilter:
+                appConfiguration.searchHouseHoldFiltersBednet != null
+                    ? appConfiguration.searchHouseHoldFiltersBednet!
+                        .map((e) => e.code)
+                        .toList()
+                    : [],
+            referralReasons:
+                appConfiguration.referralReasons?.map((e) => e.code).toList(),
+            houseStructureTypes: appConfiguration.houseStructureTypes
+                ?.map((e) => e.code)
+                .toList(),
+            refusalReasons:
+                appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+            searchCLFFilters: []);
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,

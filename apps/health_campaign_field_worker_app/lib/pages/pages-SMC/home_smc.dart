@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -12,6 +13,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../blocs/localization/localization.dart';
@@ -762,6 +764,7 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
               appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          searchCLFFilters: [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
