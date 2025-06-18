@@ -1,10 +1,10 @@
+import 'package:complaints/complaints.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:recase/recase.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;

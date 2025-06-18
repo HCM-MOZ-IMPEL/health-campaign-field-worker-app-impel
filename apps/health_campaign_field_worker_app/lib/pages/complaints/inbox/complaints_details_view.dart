@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
@@ -138,9 +139,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          complaint.auditDetails?.createdTime.toDateTime
-                                  .getFormattedDate() ??
-                              "",
+                          complaint.auditDetails?.createdTime ?? "",
                         ),
                       ),
                     ],

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:complaints/blocs/complaints_inbox/complaints_inbox.dart';
+import 'package:complaints/models/pgr_complaints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../utils/utils.dart';
+import '../../../utils/extensions/extensions.dart';
 
 @RoutePage()
 class ComplaintsInboxWrapperPage extends StatelessWidget {

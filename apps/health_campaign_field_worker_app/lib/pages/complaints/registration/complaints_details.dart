@@ -1,3 +1,6 @@
+import 'package:complaints/blocs/complaints_registration/complaints_registration.dart';
+import 'package:complaints/models/complaints.dart';
+import 'package:complaints/models/pgr_address.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +11,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:remove_emoji_input_formatter/remove_emoji_input_formatter.dart';
 
 import '../../../blocs/auth/auth.dart';
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-import '../../../models/complaints/complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -525,7 +526,8 @@ class _ComplaintsDetailsPageState
         disabled: shouldDisableForm,
         validators: [
           Validators.required,
-          CustomValidator.validMobileNumber,
+          Validators.delegate(
+              (validator) => CustomValidator.validMobileNumber(validator)),
           Validators.minLength(9),
           Validators.maxLength(9)
         ],
@@ -539,7 +541,8 @@ class _ComplaintsDetailsPageState
         value: complaintDetails?.supervisorContactNumber,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.validMobileNumber,
+          Validators.delegate(
+              (validator) => CustomValidator.validMobileNumber(validator)),
           Validators.maxLength(9),
         ],
       ),
@@ -554,7 +557,8 @@ class _ComplaintsDetailsPageState
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
         ],
       ),
       _lngKey: FormControl<double>(

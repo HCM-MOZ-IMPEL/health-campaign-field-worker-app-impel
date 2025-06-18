@@ -77,20 +77,23 @@ class CustomStockDetailsSMCPageState
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
+        Validators.number(),
         Validators.required,
         Validators.min(1),
         Validators.max(maxCount),
       ]),
       _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(
-        validators: [CustomValidator.requiredMin2, Validators.maxLength(200)],
+        validators: [
+          Validators.delegate(CustomValidator.requiredMin2),
+          Validators.maxLength(200)
+        ],
       ),
       _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: driverNameValidations,
+        validators: [],
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(),
@@ -1233,7 +1236,7 @@ class CustomStockDetailsSMCPageState
                                                         .setValidators(
                                                       [
                                                         Validators.required,
-                                                        Validators.number,
+                                                        Validators.number(),
                                                         Validators.min(0),
                                                         Validators.max(
                                                             maxCount),
@@ -1514,7 +1517,7 @@ class CustomStockDetailsSMCPageState
                                                             .setValidators(
                                                           [
                                                             Validators.required,
-                                                            Validators.number,
+                                                            Validators.number(),
                                                             Validators.min(0),
                                                             Validators.max(
                                                                 maxCount),
@@ -2024,7 +2027,7 @@ class CustomStockDetailsSMCPageState
             .setValidators(
           [
             Validators.required,
-            CustomValidator.requiredMin2,
+            Validators.delegate(CustomValidator.requiredMin2),
           ],
           updateParent: true,
           autoValidate: true,
@@ -2042,7 +2045,7 @@ class CustomStockDetailsSMCPageState
         )
             .setValidators(
           [
-            CustomValidator.requiredMin2,
+            Validators.delegate(CustomValidator.requiredMin2),
           ],
           updateParent: true,
           autoValidate: true,
@@ -2062,7 +2065,7 @@ class CustomStockDetailsSMCPageState
       )
           .setValidators(
         [
-          CustomValidator.requiredMin2,
+          Validators.delegate(CustomValidator.requiredMin2),
         ],
         updateParent: true,
         autoValidate: true,

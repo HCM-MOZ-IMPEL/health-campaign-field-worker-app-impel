@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
@@ -59,6 +60,8 @@ class CustomHouseholdWrapperBednetPage extends StatelessWidget {
 
     final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
         ServiceDefinitionSearchModel>(context);
+    final individualGlobalSearch =
+        context.read<IndividualGlobalSearchRepository>();
 
     return MultiBlocProvider(
       providers: [
@@ -102,6 +105,7 @@ class CustomHouseholdWrapperBednetPage extends StatelessWidget {
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
+              individualGlobalSearchRepository: individualGlobalSearch,
               beneficiaryType:
                   RegistrationDeliverySingleton().beneficiaryType!),
         ),

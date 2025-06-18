@@ -298,7 +298,7 @@ class _CustomHouseholdLocationSMCPageState
         validators: [Validators.required],
       ),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(CustomValidator.requiredMin),
       ]),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
