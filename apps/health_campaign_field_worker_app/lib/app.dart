@@ -34,6 +34,8 @@ import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -479,8 +481,8 @@ class MainApplicationState extends State<MainApplication>
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
-                            facilityDataRepository: context.repository<
-                                FacilityModel, FacilitySearchModel>(),
+                            // facilityDataRepository: context.repository<
+                            //     FacilityModel, FacilitySearchModel>(),
                           ),
                         ),
                         BlocProvider(
@@ -544,23 +546,23 @@ class MainApplicationState extends State<MainApplication>
                                 ServiceDefinitionSearchModel>(),
                           )..add(const ServiceDefinitionFetchEvent()),
                         ),
-                        BlocProvider(
-                          create: (_) => HouseholdOverviewBloc(
-                              const HouseholdOverviewState(
-                                householdMemberWrapper:
-                                    customIndividualGlobalSearchBloc
-                                        .HouseholdMemberWrapper(),
-                              ),
-                              individualRepository: individual,
-                              householdRepository: household,
-                              householdMemberRepository: householdMember,
-                              projectBeneficiaryRepository: projectBeneficiary,
-                              taskDataRepository: task,
-                              sideEffectDataRepository: sideEffect,
-                              referralDataRepository: referral,
-                              beneficiaryType: RegistrationDeliverySingleton()
-                                  .beneficiaryType!),
-                        ),
+                        // BlocProvider(
+                        //   create: (_) => HouseholdOverviewBloc(
+                        //       const HouseholdOverviewState(
+                        //         householdMemberWrapper:
+                        //             customIndividualGlobalSearchBloc
+                        //                 .HouseholdMemberWrapper(),
+                        //       ),
+                        //       individualRepository: individual,
+                        //       householdRepository: household,
+                        //       householdMemberRepository: householdMember,
+                        //       projectBeneficiaryRepository: projectBeneficiary,
+                        //       taskDataRepository: task,
+                        //       sideEffectDataRepository: sideEffect,
+                        //       referralDataRepository: referral,
+                        //       beneficiaryType: RegistrationDeliverySingleton()
+                        //           .beneficiaryType!),
+                        // ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
