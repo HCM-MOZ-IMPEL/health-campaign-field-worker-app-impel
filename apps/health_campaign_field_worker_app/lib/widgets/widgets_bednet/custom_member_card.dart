@@ -14,9 +14,9 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/action_card/action_card.dart';
 
 import '../../utils/utils.dart';
+import '../action_card/action_card.dart';
 
 class CustomMemberCard extends StatelessWidget {
   final String name;
