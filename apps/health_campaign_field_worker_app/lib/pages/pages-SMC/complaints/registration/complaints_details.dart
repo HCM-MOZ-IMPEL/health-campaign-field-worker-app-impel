@@ -1,3 +1,4 @@
+import 'package:complaints/models/pgr_address.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -541,7 +542,7 @@ class _ComplaintsDetailsPageState
         disabled: shouldDisableForm,
         validators: [
           Validators.required,
-          CustomValidator.validMobileNumber,
+          Validators.delegate(CustomValidator.validMobileNumber),
           Validators.minLength(9),
           Validators.maxLength(9)
         ],
@@ -555,7 +556,7 @@ class _ComplaintsDetailsPageState
         value: complaintDetails?.supervisorContactNumber,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.validMobileNumber,
+          Validators.delegate(CustomValidator.validMobileNumber),
           Validators.maxLength(9),
         ],
       ),
@@ -570,7 +571,7 @@ class _ComplaintsDetailsPageState
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(CustomValidator.requiredMin),
         ],
       ),
       _lngKey: FormControl<double>(

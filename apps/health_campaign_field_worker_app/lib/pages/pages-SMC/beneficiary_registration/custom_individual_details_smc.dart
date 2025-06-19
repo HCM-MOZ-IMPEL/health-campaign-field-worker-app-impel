@@ -162,12 +162,12 @@ class CustomIndividualDetailsSMCPageState
 
                               String localityCode = locality!.code;
 
-                              beneficiaryId =
-                                  await UniqueIdGeneration().generateUniqueId(
-                                localityCode: localityCode,
-                                loggedInUserId: context.loggedInUserUuid,
-                                returnCombinedIds: false,
-                              );
+                              beneficiaryId = {};
+                              //     await UniqueIdGeneration().generateUniqueId(
+                              //   localityCode: localityCode,
+                              //   loggedInUserId: context.loggedInUserUuid,
+                              //   returnCombinedIds: false,
+                              // );
 
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,

@@ -118,7 +118,7 @@ class _CustomBeneficiaryChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -373,7 +373,7 @@ class _CustomBeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -465,7 +465,7 @@ class _CustomBeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: curValue
                                                               .toString(),
                                                           submitTriggered:

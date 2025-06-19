@@ -515,7 +515,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first ?? [],
+            dashboardConfig,
             startDate,
             endDate,
             isar,

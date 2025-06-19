@@ -182,7 +182,7 @@ class _ComplaintsInboxSearchPageState
         value: state.searchKeys?.complaintNumber,
       ),
       _mobileNumber: FormControl<String>(
-        validators: [CustomValidator.validMobileNumber],
+        validators: [Validators.delegate(CustomValidator.validMobileNumber)],
         value: state.searchKeys?.complainantMobileNumber,
       ),
     });

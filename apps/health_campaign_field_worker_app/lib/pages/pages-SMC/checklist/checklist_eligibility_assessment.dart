@@ -14,6 +14,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
 import '../../../models/entities/roles_type.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
@@ -421,7 +422,7 @@ class _EligibilityChecklistViewPage
                               submitTriggered = true;
 
                               context.read<ServiceBloc>().add(
-                                    const ServiceChecklistEvent(
+                                    ServiceSurveyFormEvent(
                                       value: '',
                                       submitTriggered: true,
                                     ),
@@ -616,7 +617,7 @@ class _EligibilityChecklistViewPage
                                                       context
                                                           .read<ServiceBloc>()
                                                           .add(
-                                                            ServiceChecklistEvent(
+                                                            ServiceSurveyFormEvent(
                                                               value:
                                                                   e.toString(),
                                                               submitTriggered:
@@ -730,7 +731,7 @@ class _EligibilityChecklistViewPage
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -888,7 +889,7 @@ class _EligibilityChecklistViewPage
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

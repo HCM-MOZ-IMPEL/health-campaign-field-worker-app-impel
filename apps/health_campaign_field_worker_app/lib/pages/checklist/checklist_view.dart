@@ -52,7 +52,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -314,7 +314,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           submitTriggered = true;
 
                           context.read<ServiceBloc>().add(
-                                const ServiceChecklistEvent(
+                                ServiceSurveyFormEvent(
                                   value: '',
                                   submitTriggered: true,
                                 ),
@@ -503,7 +503,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -682,7 +682,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -906,7 +906,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                               .contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

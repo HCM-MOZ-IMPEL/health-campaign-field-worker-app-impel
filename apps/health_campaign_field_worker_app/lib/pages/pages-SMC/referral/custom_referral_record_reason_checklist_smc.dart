@@ -48,7 +48,7 @@ class _CustomReferralReasonChecklistSMCPageState
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -96,7 +96,7 @@ class _CustomReferralReasonChecklistSMCPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -356,7 +356,7 @@ class _CustomReferralReasonChecklistSMCPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -465,7 +465,7 @@ class _CustomReferralReasonChecklistSMCPageState
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -643,7 +643,7 @@ class _CustomReferralReasonChecklistSMCPageState
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

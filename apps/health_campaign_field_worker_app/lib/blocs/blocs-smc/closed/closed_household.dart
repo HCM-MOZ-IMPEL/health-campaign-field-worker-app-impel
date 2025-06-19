@@ -59,11 +59,12 @@ class ClosedHouseholdBloc
     try {
       String localityCode = locality!.code;
 
-      Set<String> beneficiaryId = await UniqueIdGeneration().generateUniqueId(
-        localityCode: localityCode,
-        loggedInUserId: event.loggedInUserUuid!,
-        returnCombinedIds: false,
-      );
+      Set<String> beneficiaryId = {};
+      // await UniqueIdGeneration().generateUniqueId(
+      //   localityCode: localityCode,
+      //   loggedInUserId: event.loggedInUserUuid!,
+      //   returnCombinedIds: false,
+      // );
       var address = AddressModel(
         latitude: event.latitude,
         longitude: event.longitude,
