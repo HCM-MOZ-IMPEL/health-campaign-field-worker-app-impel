@@ -4,7 +4,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import '../../../models/downsync/downsync.dart';
 
-
 class DownsyncLocalRepository
     extends LocalRepository<DownsyncModel, DownsyncSearchModel> {
   DownsyncLocalRepository(super.sql, super.opLogManager);

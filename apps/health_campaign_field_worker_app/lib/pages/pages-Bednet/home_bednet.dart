@@ -415,7 +415,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
         ),
       ),
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
@@ -511,7 +511,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.warehouseManagerCheckList:
           homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
@@ -532,7 +532,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.manageStockLabel,
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
+
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,

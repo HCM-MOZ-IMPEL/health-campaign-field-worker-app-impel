@@ -403,7 +403,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
@@ -498,7 +498,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -510,6 +510,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.mySurveyForm,
 
       i18.home.beneficiaryLabel,
       i18.home.closedHouseHoldLabel,
@@ -517,7 +518,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
 
-      i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,

@@ -7,7 +7,8 @@ import 'package:digit_data_model/data_model.dart';
 part 'downsync.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMappable {
+class DownsyncSearchModel extends EntitySearchModel
+    with DownsyncSearchModelMappable {
   final String? locality;
   final String? projectId;
   final int? offset;
@@ -16,7 +17,7 @@ class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMapp
   final int? totalCount;
   final String? boundaryName;
   final String? tenantId;
-  
+
   DownsyncSearchModel({
     this.locality,
     this.projectId,
@@ -28,7 +29,7 @@ class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMapp
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   DownsyncSearchModel.ignoreDeleted({
@@ -41,12 +42,11 @@ class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMapp
     this.boundaryName,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class DownsyncModel extends EntityModel with DownsyncModelMappable {
-
   static const schemaName = 'Downsync';
 
   final String? locality;
@@ -73,9 +73,10 @@ class DownsyncModel extends EntityModel with DownsyncModelMappable {
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   DownsyncCompanion get companion {
     return DownsyncCompanion(
@@ -99,16 +100,16 @@ class DownsyncModel extends EntityModel with DownsyncModelMappable {
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class DownsyncAdditionalFields extends AdditionalFields with DownsyncAdditionalFieldsMappable {
+class DownsyncAdditionalFields extends AdditionalFields
+    with DownsyncAdditionalFieldsMappable {
   DownsyncAdditionalFields({
     super.schema = 'Downsync',
     required super.version,
     super.fields,
   });
 }
-

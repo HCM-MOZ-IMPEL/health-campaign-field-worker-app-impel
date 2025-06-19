@@ -31,9 +31,12 @@ const warehouseDetailsShowcase = WarehouseDetailsShowcase();
 const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
 const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectChecklistShowcase = SelectChecklistShowcase();
+const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 
+const surveyFormDataShowcase = SurveyFormDataShowcase();
+const surveyFormListShowcase = SurveyFormListShowcase();
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
 const complaintTypeShowcase = ComplaintTypeShowcase();
@@ -220,6 +223,10 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get supervisorMySurveyForm {
+    return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
+  }
 }
 
 class SelectStockShowcase {
@@ -387,6 +394,34 @@ class Login {
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
   String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
+}
+
+class SelectSurveyFormShowcase {
+  const SelectSurveyFormShowcase();
+
+  String get selectSurveyForm {
+    return 'SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST';
+  }
+}
+
+class SurveyFormDataShowcase {
+  const SurveyFormDataShowcase();
+
+  String get date {
+    return 'CHECKLIST_DATA_SHOWCASE_DATE';
+  }
+
+  String get administrativeUnit {
+    return 'CHECKLIST_DATA_SHOWCASE_ADMINISTRATIVE_UNIT';
+  }
+}
+
+class SurveyFormListShowcase {
+  const SurveyFormListShowcase();
+
+  String get open {
+    return 'CHECKLIST_LIST_SHOWCASE_OPEN';
+  }
 }
 
 class SelectChecklistShowcase {
@@ -611,6 +646,7 @@ class Home {
   const Home();
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 
