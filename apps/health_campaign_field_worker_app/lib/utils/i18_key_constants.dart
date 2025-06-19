@@ -47,8 +47,8 @@ const referralReconciliation = ReferralReconciliation();
 
 class Common {
   const Common();
-
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
@@ -379,12 +379,14 @@ class Login {
   const Login();
 
   String get labelText => 'LOGIN_LABEL_TEXT';
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
 }
 
 class SelectChecklistShowcase {

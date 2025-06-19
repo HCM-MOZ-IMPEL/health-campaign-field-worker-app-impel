@@ -4,13 +4,16 @@ import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 
@@ -34,7 +37,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -411,7 +413,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               : InventorySingleton().isDistributor
                   ? i18.home.specialCaseCheckList
                   : i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:

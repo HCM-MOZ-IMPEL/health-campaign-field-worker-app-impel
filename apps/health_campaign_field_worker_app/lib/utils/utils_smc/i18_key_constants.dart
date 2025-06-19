@@ -1224,7 +1224,7 @@ class IndividualDetails {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
-
+  String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';

@@ -50,7 +50,7 @@ class _CustomBeneficiaryChecklistPageState
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -112,7 +112,7 @@ class _CustomBeneficiaryChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              const ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -213,9 +213,8 @@ class _CustomBeneficiaryChecklistPageState
                         DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
-                            titleText: localizations.translate(i18
-                                .deliverIntervention
-                                .beneficiaryChecklistDialogTitle),
+                            titleText: localizations
+                                .translate(i18.checklist.checklistDialogLabel),
                             titlePadding: const EdgeInsets.only(top: kPadding),
                             barrierDismissible: false,
                             enableRecordPast: true,

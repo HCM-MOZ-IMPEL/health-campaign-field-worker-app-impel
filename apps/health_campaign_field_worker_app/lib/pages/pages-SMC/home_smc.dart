@@ -1,4 +1,5 @@
 import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -13,7 +14,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../blocs/localization/localization.dart';
@@ -39,7 +42,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_types.dart';
@@ -332,7 +334,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const CustomUserDashboardSMCRoute());
+            // context.router.push(const CustomUserDashboardSMCRoute());
           },
         ),
       ),
@@ -417,7 +419,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:

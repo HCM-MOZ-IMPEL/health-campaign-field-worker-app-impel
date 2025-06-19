@@ -115,7 +115,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
 
   getSubText(HouseholdMemberWrapper? wrapper) {
     return wrapper != null
-        ? '${localizations.translate(i18.beneficiaryDetails.beneficiaryId)}\n'
+        ? '${localizations.translate(i18_local.beneficiaryDetails.beneficiaryId)}\n'
             '${wrapper.members?.lastOrNull!.name!.givenName} - '
             '${wrapper.members?.lastOrNull!.identifiers!.lastWhereOrNull(
                   (e) =>

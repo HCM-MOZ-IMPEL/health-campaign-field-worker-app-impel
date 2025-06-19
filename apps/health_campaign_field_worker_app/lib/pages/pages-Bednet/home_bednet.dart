@@ -1,4 +1,5 @@
 import 'package:complaints/models/pgr_complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -12,6 +13,8 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 
@@ -34,7 +37,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_types.dart';
@@ -326,7 +328,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const CustomUserDashboardBednetRoute());
+            // context.router.push(const CustomUserDashboardBednetRoute());
           },
         ),
       ),
@@ -409,7 +411,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.warehouseManagerCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
 
@@ -421,7 +423,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           label: context.isDistributor
               ? i18.home.specialCaseCheckList
               : i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:

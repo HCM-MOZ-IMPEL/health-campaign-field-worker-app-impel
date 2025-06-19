@@ -278,7 +278,8 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 ?.givenName ??
                                             '--',
                                     localizations.translate(
-                                      i18.beneficiaryDetails.beneficiaryId,
+                                      i18_local
+                                          .beneficiaryDetails.beneficiaryId,
                                     ): state.selectedIndividual?.identifiers
                                             ?.lastWhere(
                                               (e) =>
