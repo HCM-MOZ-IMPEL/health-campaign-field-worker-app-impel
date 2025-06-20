@@ -549,10 +549,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: a58aae4c9ad5fe58562706fd5a83419c3fca316821ccc38e249189663e8a0f20
+      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.4+1"
   digit_firebase_services:
     dependency: "direct main"
     description:
