@@ -674,9 +674,10 @@ class CustomDeliverInterventionSMCPageState
                                                           return const Offstage();
                                                         }
 
-                                                        final deliveryCommentOptionsSmc = state
-                                                                .appConfiguration
-                                                                .deliveryCommentOptionsSmc ??
+                                                        final deliveryCommentOptionsSmc =
+                                                            // state
+                                                            //         .appConfiguration
+                                                            //         .deliveryCommentOptionsSmc ??
                                                             <DeliveryCommentOptions>[];
 
                                                         return DigitReactiveDropdown<
