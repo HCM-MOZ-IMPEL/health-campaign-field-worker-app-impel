@@ -342,15 +342,19 @@ class IneligibleSummaryPageState extends LocalizedState<IneligibleSummaryPage> {
                           builder: (context, productState) {
                         final variants = productState.whenOrNull(
                           fetched: (productVariants) {
+                            final filteredProductVariants = productVariants
+                                .where((product) =>
+                                    product.sku != Constants.vechileSKU)
+                                .toList();
                             final resourcesDelivered = deliverState
                                 .oldTask?.resources
                                 ?.map((e) => TaskResourceInfo(
-                                    productVariants
+                                    filteredProductVariants
                                             .where((p) =>
                                                 p.id == e.productVariantId)
                                             .firstOrNull
                                             ?.sku ??
-                                        productVariants
+                                        filteredProductVariants
                                             .where((p) =>
                                                 p.id == e.productVariantId)
                                             .firstOrNull

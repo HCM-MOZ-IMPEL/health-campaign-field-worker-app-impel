@@ -16,6 +16,7 @@ import 'package:registration_delivery/pages/beneficiary/widgets/record_delivery_
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../models/entities/entities_smc/identifier_types.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -125,7 +126,11 @@ class CustomBeneficiaryDetailsBednetPageState
                   fetched: (productVariantsValue) {
                     final variant = productState.whenOrNull(
                       fetched: (productVariants) {
-                        return productVariants;
+                        final filteredProductVariants = productVariants
+                            .where((product) =>
+                                product.sku != Constants.vechileSKU)
+                            .toList();
+                        return filteredProductVariants;
                       },
                     );
 

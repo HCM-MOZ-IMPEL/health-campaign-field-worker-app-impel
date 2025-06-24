@@ -159,6 +159,9 @@ class CustomStockDetailsBednetPageState
                     )),
                   ),
                   fetched: (productVariants) {
+                    final filteredProductVariants = productVariants
+                        .where((product) => product.sku != Constants.vechileSKU)
+                        .toList();
                     return BlocConsumer<RecordStockBloc, RecordStockState>(
                       listener: (context, stockState) {
                         stockState.mapOrNull(
@@ -246,7 +249,7 @@ class CustomStockDetailsBednetPageState
                         transactionReasonLabel ??= '';
 
                         return ReactiveFormBuilder(
-                          form: () => _form(entryType, productVariants),
+                          form: () => _form(entryType, filteredProductVariants),
                           builder: (context, form, child) {
                             return BlocBuilder<DigitScannerBloc,
                                     DigitScannerState>(
@@ -979,7 +982,7 @@ class CustomStockDetailsBednetPageState
                                               value.sku ?? value.id,
                                             );
                                           },
-                                          menuItems: productVariants,
+                                          menuItems: filteredProductVariants,
                                           onChanged: (value) {
                                             stockReconciliationBloc.add(
                                               StockReconciliationSelectProductEvent(
@@ -1202,7 +1205,7 @@ class CustomStockDetailsBednetPageState
                                                       stockReconciliationBloc
                                                           .add(
                                                         StockReconciliationSelectProductEvent(
-                                                          productVariants
+                                                          filteredProductVariants
                                                               .first.id,
                                                           isDistributor:
                                                               !InventorySingleton()
