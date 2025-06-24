@@ -44,6 +44,8 @@ import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
+
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/home/home_item_card.dart';
@@ -426,6 +428,14 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.buildWith(
+        child: HomeItemCard(
+          icon: Icons.local_taxi_rounded,
+          label: i18_local.home.vehicleTrackingLabel,
+          onPressed: () => {},
+        ),
+      ),
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.buildWith(
         child: HomeItemCard(
@@ -512,6 +522,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
       i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.showcaseKey,
       i18.home.warehouseManagerCheckList:
           homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
@@ -533,6 +545,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
       i18.home.mySurveyForm,
+      i18_local.home.vehicleTrackingLabel,
 
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,

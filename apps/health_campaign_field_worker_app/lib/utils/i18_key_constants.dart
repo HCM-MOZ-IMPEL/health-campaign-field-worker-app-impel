@@ -227,6 +227,10 @@ class HomeShowcase {
   String get supervisorMySurveyForm {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
+
+  String get vehicleTracking {
+    return 'VEHICLE_TRACKING';
+  }
 }
 
 class SelectStockShowcase {
@@ -647,6 +651,7 @@ class Home {
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
   String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 
