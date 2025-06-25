@@ -48,34 +48,70 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           ),
         ),
       ]),
-      slivers: const [
+      slivers: [
         SliverToBoxAdapter(
           child: DigitCard(margin: EdgeInsets.all(spacer2), children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
+            Stack(
               children: [
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(spacer2),
-                    child: Text("Test Header"),
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    width: 100,
+                    child: DigitButton(
+                      label: localizations.translate(
+                        i18_local.vehicleTracking.mapLabel,
+                      ),
+                      isDisabled: false,
+                      type: DigitButtonType.secondary,
+                      size: DigitButtonSize.medium,
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () {},
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: spacer2,
-                    right: spacer2,
-                  ),
-                  child: Column(
-                    children: [
-                      DigitTableCard(
-                        element: {
-                          "test": "test01",
-                        },
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(spacer2),
+                      child: Text(
+                        "Test Header",
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                    ],
-                  ),
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.all(spacer2),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.done_rounded,
+                              size: 12,
+                            ),
+                            SizedBox(width: spacer1),
+                            Text("Status"),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: spacer2,
+                        right: spacer2,
+                      ),
+                      child: Column(
+                        children: [
+                          DigitTableCard(
+                            element: {
+                              "test": "test01",
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -238,6 +238,7 @@ class HomeShowcase {
 class VehicleTracking {
   const VehicleTracking();
   String get vehicleOverviewLabel => 'VEHICLE_TRACKING_VEHICLE_OVERVIEW_LABEL';
+  String get mapLabel => 'VEHICLE_TRACKING_MAP_LABEL';
 }
 
 class SelectStockShowcase {
