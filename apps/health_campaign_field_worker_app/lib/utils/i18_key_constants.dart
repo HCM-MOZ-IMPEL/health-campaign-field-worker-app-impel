@@ -25,6 +25,7 @@ const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 const stockDetails = StockDetails();
 const stockReconciliationDetails = StockReconciliationDetails();
+const inventoryReportDetails = InventoryReportDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -247,6 +248,10 @@ class SelectStockShowcase {
 
 class WarehouseDetailsShowcase {
   const WarehouseDetailsShowcase();
+
+  String get dateOfReturn {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RETURN';
+  }
 
   String get dateOfReceipt {
     return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RECEIPT';
@@ -689,6 +694,16 @@ class Home {
 
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get mrrnNumberDescription => "MRRN_NUMBER_DESCRIPTION";
+  String get mrrnNumberHeading => "MRRN_NUMBER_HEADING";
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get minNumberDescription => "MIN_NUMBER_DESCRIPTION";
+  String get minNumberHeading => "MIN_NUMBER_HEADING";
+  String get mrnNumberDescription => "MRN_NUMBER_DESCRIPTION";
+  String get mrnNumberHeading => "MRN_NUMBER_HEADING";
+  String get viewtransactions => 'VIEW_TRANSACTIONS';
+  String get createNewTransactions => 'CREATE_NEW_TRANSACTION';
 
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
@@ -1192,6 +1207,15 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+  String get cddCodeLabel {
+    return 'CDD_CODE_LABEL';
+  }
+
+  String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
+  String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+  String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
+  String get selectTransactingPartyReturnedFrom =>
+      'STOCK_DETAILS_RETURNED_FROM';
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
@@ -1218,6 +1242,53 @@ class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get returnedTOTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_TO_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get backToHomeButtonLabel =>
+      "INVENTORY_REPORT_DETAILS_BACK_TO_HOME_BUTTON_LABEL";
+  String get partialReturnedQuantityLabel =>
+      "INVENTORY_REPORT_DETAILS_PARTIAL_RETURNED_QUANTITY_LABEL";
+
+  String get commentIsRequiredText => "COMMENT_IS_REQUIRED_TEXT";
+
+  String get checkTheQuantityReceivedText =>
+      'CHECK_THE_QUANTITY_RECEIEVED_TEXT';
+
+  String get stockReceiptDetailsText => 'STOCK_RECEIPT_DETAILS_TEXT';
+
+  String get receivedFromText => 'RECEIVED_FROM_TEXT';
+
+  String get quantityReceivedByWarehouse => 'QUANTITY_RECEIVED_BY_WAREHOUSE';
+
+  String get actualQuantityReceived => 'ACTUAL_QUANTITY_RECEIVED';
+
+  String get commentsText => 'COMMENTS_TEXT';
+
+  String get waybillNumberText => 'WAYBILL_NUMBER_TEXT';
+  String get summaryReport => 'INVENTORY_REPORT_DETAILS_SUMMARY_REPORT_LABEL';
+
+  String get batchNumberText => 'BATCH_NUMBER_TEXT';
+  String get houseHoldRegistered =>
+      'SUMMARY_REPORT_COLUMN_HOUSEHOLD_REGISTERED';
+  String get childrenTreated => 'SUMMARY_REPORT_COLUMN_CHILDREN_TREATED';
+  String get childrenTreatedPercentage =>
+      'SUMMARY_REPORT_COLUMN_CHILDREN_TREATED_PERCENTAGE';
+  String get drugsReceived => 'SUMMARY_REPORT_COLUMN_DRUGS_RECEIVED';
+  String get drugsUsed => 'SUMMARY_REPORT_COLUMN_DRUGS_USED';
+  String get drugsBalance => 'SUMMARY_REPORT_COLUMN_DRUGS_BALANCE';
+
+  String get aztReceived => 'SUMMARY_REPORT_COLUMN_AZT_RECEIVED';
+  String get aztConsumed => 'SUMMARY_REPORT_COLUMN_AZT_CONSUMED';
 }
 
 class PrivacyPolicy {

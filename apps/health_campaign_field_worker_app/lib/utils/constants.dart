@@ -133,6 +133,11 @@ class Constants {
   static const String supervisorUsername = 'supervisor_username';
   static const int maxBednetCount = 4;
 
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const String redVAS = "Red VAS";
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
