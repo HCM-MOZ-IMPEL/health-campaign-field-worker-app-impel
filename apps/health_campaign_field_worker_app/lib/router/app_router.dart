@@ -143,7 +143,7 @@ import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
-import '../pages/vehicle_tracking/vehicle_tracking_wrapper_route.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 
 part 'app_router.gr.dart';
 

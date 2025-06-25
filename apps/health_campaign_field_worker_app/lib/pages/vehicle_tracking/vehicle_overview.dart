@@ -1,4 +1,6 @@
+import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -44,13 +46,38 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           padding: const EdgeInsets.symmetric(vertical: spacer2),
           child: DigitButton(
             label: localizations.translate(
-              i18_local.vehicleTracking.vehicleOverviewLabel,
+              i18_local.vehicleTracking.endTripButtonLabel,
             ),
             isDisabled: false,
             type: DigitButtonType.secondary,
             size: DigitButtonSize.large,
             mainAxisSize: MainAxisSize.max,
-            onPressed: () {},
+            onPressed: () {
+              DigitDialog.show(
+                context,
+                options: DigitDialogOptions(
+                  titleText: localizations.translate(
+                    i18_local.vehicleTracking.endTripTitle,
+                  ),
+                  contentText: localizations.translate(
+                    i18_local.vehicleTracking.endTripContent,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                        i18_local.vehicleTracking.endTripButtonLabel),
+                    action: (ctx) => Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pop(true),
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations
+                        .translate(i18_local.common.coreCommonCancel),
+                    action: (ctx) {},
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ]),
