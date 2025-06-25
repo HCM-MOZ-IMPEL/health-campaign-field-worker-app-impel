@@ -18,6 +18,8 @@ const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
 const deliverIntervention = DeliverIntervention();
 
+const vehicleTracking = VehicleTracking();
+
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
@@ -231,6 +233,11 @@ class HomeShowcase {
   String get vehicleTracking {
     return 'VEHICLE_TRACKING';
   }
+}
+
+class VehicleTracking {
+  const VehicleTracking();
+  String get vehicleOverviewLabel => 'VEHICLE_TRACKING_VEHICLE_OVERVIEW_LABEL';
 }
 
 class SelectStockShowcase {

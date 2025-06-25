@@ -141,6 +141,7 @@ import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
+import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper_route.dart';
 
@@ -198,6 +199,10 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: VehicleSearchRoute.page,
                 path: 'vehicle-search',
+              ),
+              AutoRoute(
+                page: VehicleOverviewRoute.page,
+                path: 'vehicle-overview',
                 initial: true,
               )
             ]),

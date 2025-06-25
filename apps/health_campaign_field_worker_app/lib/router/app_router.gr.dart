@@ -396,6 +396,7 @@ abstract class _$AppRouter extends RootStackRouter {
           isGS1code: args.isGS1code,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
+          manualEnabled: args.manualEnabled,
         ),
       );
     },
@@ -1187,6 +1188,12 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
+      );
+    },
+    VehicleOverviewRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const VehicleOverviewPage(),
       );
     },
     VehicleSearchRoute.name: (routeData) {
@@ -2534,6 +2541,7 @@ class CustomDigitScannerRoute
     required bool isGS1code,
     bool singleValue = false,
     bool isEditEnabled = false,
+    bool manualEnabled = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2544,6 +2552,7 @@ class CustomDigitScannerRoute
             isGS1code: isGS1code,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
+            manualEnabled: manualEnabled,
           ),
           initialChildren: children,
         );
@@ -2562,6 +2571,7 @@ class CustomDigitScannerRouteArgs {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
+    this.manualEnabled = true,
   });
 
   final Key? key;
@@ -2576,9 +2586,11 @@ class CustomDigitScannerRouteArgs {
 
   final bool isEditEnabled;
 
+  final bool manualEnabled;
+
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled}';
   }
 }
 
@@ -5430,6 +5442,20 @@ class UserQRDetailsRouteArgs {
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [VehicleOverviewPage]
+class VehicleOverviewRoute extends PageRouteInfo<void> {
+  const VehicleOverviewRoute({List<PageRouteInfo>? children})
+      : super(
+          VehicleOverviewRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleOverviewRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
