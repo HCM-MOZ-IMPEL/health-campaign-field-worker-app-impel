@@ -14,6 +14,12 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
+enum VehicleStatusEnum {
+  onGoing,
+  completed,
+  cancelled,
+}
+
 @RoutePage()
 class VehicleOverviewPage extends LocalizedStatefulWidget {
   const VehicleOverviewPage({super.key});
@@ -50,7 +56,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
       ]),
       slivers: [
         SliverToBoxAdapter(
-          child: DigitCard(margin: EdgeInsets.all(spacer2), children: [
+          child: DigitCard(margin: const EdgeInsets.all(spacer2), children: [
             Stack(
               children: [
                 Align(
@@ -74,29 +80,16 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(spacer2),
+                      padding: const EdgeInsets.all(spacer2),
                       child: Text(
                         "Test Header",
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.all(spacer2),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.done_rounded,
-                              size: 12,
-                            ),
-                            SizedBox(width: spacer1),
-                            Text("Status"),
-                          ],
-                        ),
-                      ),
+                    const StatusWidget(
+                      status: VehicleStatusEnum.onGoing,
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(
                         left: spacer2,
                         right: spacer2,
@@ -119,5 +112,46 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
         ),
       ],
     ));
+  }
+}
+
+class StatusWidget extends StatelessWidget {
+  final VehicleStatusEnum status;
+  const StatusWidget({
+    super.key,
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color statusColor;
+    switch (status) {
+      case VehicleStatusEnum.onGoing:
+        statusColor = Colors.green;
+        break;
+      case VehicleStatusEnum.completed:
+        statusColor = Colors.blue;
+        break;
+      case VehicleStatusEnum.cancelled:
+        statusColor = Colors.red;
+        break;
+    }
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(spacer2),
+        child: Row(
+          children: [
+            Icon(
+              Icons.check_circle_rounded,
+              size: 15,
+              color: statusColor,
+            ),
+            const SizedBox(width: spacer1),
+            Text(status.name),
+          ],
+        ),
+      ),
+    );
   }
 }
