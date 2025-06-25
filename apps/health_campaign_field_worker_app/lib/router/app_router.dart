@@ -1,4 +1,5 @@
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -20,7 +21,9 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-Bednet/acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/bednetwrapper.dart';
+import '../pages/pages-Bednet/custom_qr_scanner.dart';
 import '../pages/pages-Bednet/home_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/custom_beneficiary_checklist_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/custom_beneficiary_details_bednet.dart';
@@ -51,6 +54,7 @@ import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
 
+import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
@@ -137,6 +141,8 @@ import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
+import '../pages/vehicle_tracking/vehicle_search.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_wrapper_route.dart';
 
 part 'app_router.gr.dart';
 
@@ -184,6 +190,17 @@ class AppRouter extends _$AppRouter {
           page: BoundarySelectionRoute.page,
           path: 'select-boundary',
         ),
+
+        AutoRoute(
+            page: VehicleTrackingWrapperRoute.page,
+            path: 'vehicle-tracking',
+            children: [
+              AutoRoute(
+                page: VehicleSearchRoute.page,
+                path: 'vehicle-search',
+                initial: true,
+              )
+            ]),
 
         AutoRoute(
             page: IRSWrapperRoute.page,
