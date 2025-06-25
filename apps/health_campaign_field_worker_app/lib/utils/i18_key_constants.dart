@@ -1207,6 +1207,21 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+
+  String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
+  String get recordStockReturnedDescription =>
+      'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
+  String get batchNumberLabel => 'STOCK_DETAILS_BATCH_NUMBER';
+
+  String get quantityReturnedMaxError =>
+      'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
+  String get quantityWastedReturnedLabel =>
+      'STOCK_DETAILS_WASTED_QUANTITY_RETURNED';
+  String get quantityUnusedReturnedLabel =>
+      'STOCK_DETAILS_UNUSED_QUANTITY_RETURNED';
+  String get quantityPartialReturnedLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
+
   String get cddCodeLabel {
     return 'CDD_CODE_LABEL';
   }

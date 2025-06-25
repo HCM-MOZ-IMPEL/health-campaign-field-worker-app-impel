@@ -54,6 +54,7 @@ import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
 
+import '../pages/pages-Bednet/inventory_management/custom_inventory_facility_selection.dart';
 import '../pages/pages-Bednet/inventory_management/custom_stock_details.dart';
 import '../pages/pages-Bednet/inventory_management/custom_warehouse_details.dart';
 import '../pages/pages-Bednet/inventory_management/qr_scanner.dart';
@@ -1257,6 +1258,10 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: BeneficiariesReportRoute.page,
             path: 'beneficiary-downsync-report',
+          ),
+          AutoRoute(
+            page: CustomInventoryFacilitySelectionRoute.page,
+            path: 'custom-inventory-select-facilities',
           ),
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,

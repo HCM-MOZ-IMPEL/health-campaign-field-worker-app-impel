@@ -271,17 +271,17 @@ class CustomWarehouseDetailsBednetPageState
                                                             StockRecordEntryType
                                                                 .returned)) {
                                                       context.router.push(
-                                                        CustomStockDetailsRoute(),
+                                                        CustomStockDetailsBednetRoute(),
                                                       );
                                                     } else {
-                                                      // context.router.push(ViewAllTransactionsRoute(
-                                                      //     warehouseId: InventorySingleton()
-                                                      //             .isDistributor
-                                                      //         ? (teamCode ?? '')
-                                                      //             .split(Constants
-                                                      //                 .pipeSeparator)
-                                                      //             .last
-                                                      //         : selectedFacilityId));
+                                                      context.router.push(ViewAllTransactionsRoute(
+                                                          warehouseId: InventorySingleton()
+                                                                  .isDistributor
+                                                              ? (teamCode ?? '')
+                                                                  .split(Constants
+                                                                      .pipeSeparator)
+                                                                  .last
+                                                              : selectedFacilityId));
                                                     }
                                                   }
                                                 },
@@ -459,7 +459,7 @@ class CustomWarehouseDetailsBednetPageState
 
   void _handleSubmission() {
     if (InventorySingleton().isDistributor) {
-      // context.router.push(QRScannerRoute());
+      context.router.push(QRScannerRoute());
     }
   }
 

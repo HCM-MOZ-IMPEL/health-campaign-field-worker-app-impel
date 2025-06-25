@@ -698,7 +698,6 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
-        InventorySingleton().setBoundary(boundary: context.boundary);
         // DashboardSingleton().setInitialData(
         //     projectId: context.projectId,
         //     tenantId: envConfig.variables.tenantId,

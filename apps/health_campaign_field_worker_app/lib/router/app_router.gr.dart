@@ -124,6 +124,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomAcknowledgementRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          mrnNumber: args.mrnNumber,
+          stockRecords: args.stockRecords,
+          entryType: args.entryType,
+        ),
+      );
+    },
     CustomAttendanceDateSessionSelectionBednetRoute.name: (routeData) {
       final args = routeData
           .argsAs<CustomAttendanceDateSessionSelectionBednetRouteArgs>();
@@ -396,7 +409,6 @@ abstract class _$AppRouter extends RootStackRouter {
           isGS1code: args.isGS1code,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
-          manualEnabled: args.manualEnabled,
         ),
       );
     },
@@ -804,6 +816,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomMinNumberRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomMinNumberRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomMinNumberPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          type: args.type,
+        ),
+      );
+    },
     CustomRecordReferralDetailsSMCRoute.name: (routeData) {
       final args = routeData.argsAs<CustomRecordReferralDetailsSMCRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1168,6 +1191,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    QRScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<QRScannerRouteArgs>(
+          orElse: () => const QRScannerRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QRScannerPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ReferralReconProjectFacilitySelectionSMCRoute.name: (routeData) {
       final args =
           routeData.argsAs<ReferralReconProjectFacilitySelectionSMCRouteArgs>();
@@ -1201,6 +1235,52 @@ abstract class _$AppRouter extends RootStackRouter {
         child: UserQRDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ViewAllTransactionsRoute.name: (routeData) {
+      final args = routeData.argsAs<ViewAllTransactionsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ViewAllTransactionsScreen(
+          key: args.key,
+          warehouseId: args.warehouseId,
+        ),
+      );
+    },
+    ViewStockRecordsCDDRoute.name: (routeData) {
+      final args = routeData.argsAs<ViewStockRecordsCDDRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ViewStockRecordsCDDPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          mrnNumber: args.mrnNumber,
+          stockRecords: args.stockRecords,
+        ),
+      );
+    },
+    ViewStockRecordsLGARoute.name: (routeData) {
+      final args = routeData.argsAs<ViewStockRecordsLGARouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ViewStockRecordsLGAPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          mrnNumber: args.mrnNumber,
+          stockRecords: args.stockRecords,
+        ),
+      );
+    },
+    ViewStockRecordsRoute.name: (routeData) {
+      final args = routeData.argsAs<ViewStockRecordsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ViewStockRecordsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          mrnNumber: args.mrnNumber,
+          stockRecords: args.stockRecords,
         ),
       );
     },
@@ -1589,6 +1669,60 @@ class ConsentHouseholdAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'ConsentHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [CustomAcknowledgementPage]
+class CustomAcknowledgementRoute
+    extends PageRouteInfo<CustomAcknowledgementRouteArgs> {
+  CustomAcknowledgementRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String mrnNumber,
+    required List<StockModel> stockRecords,
+    required StockRecordEntryType entryType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomAcknowledgementRoute.name,
+          args: CustomAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            mrnNumber: mrnNumber,
+            stockRecords: stockRecords,
+            entryType: entryType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomAcknowledgementRoute';
+
+  static const PageInfo<CustomAcknowledgementRouteArgs> page =
+      PageInfo<CustomAcknowledgementRouteArgs>(name);
+}
+
+class CustomAcknowledgementRouteArgs {
+  const CustomAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+    required this.entryType,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String mrnNumber;
+
+  final List<StockModel> stockRecords;
+
+  final StockRecordEntryType entryType;
+
+  @override
+  String toString() {
+    return 'CustomAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, mrnNumber: $mrnNumber, stockRecords: $stockRecords, entryType: $entryType}';
   }
 }
 
@@ -2532,7 +2666,6 @@ class CustomDigitScannerRoute
     required bool isGS1code,
     bool singleValue = false,
     bool isEditEnabled = false,
-    bool manualEnabled = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2543,7 +2676,6 @@ class CustomDigitScannerRoute
             isGS1code: isGS1code,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
-            manualEnabled: manualEnabled,
           ),
           initialChildren: children,
         );
@@ -2562,7 +2694,6 @@ class CustomDigitScannerRouteArgs {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
-    this.manualEnabled = true,
   });
 
   final Key? key;
@@ -2577,11 +2708,9 @@ class CustomDigitScannerRouteArgs {
 
   final bool isEditEnabled;
 
-  final bool manualEnabled;
-
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 
@@ -4071,6 +4200,49 @@ class CustomMarkAttendanceRouteArgs {
 }
 
 /// generated route for
+/// [CustomMinNumberPage]
+class CustomMinNumberRoute extends PageRouteInfo<CustomMinNumberRouteArgs> {
+  CustomMinNumberRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    required dynamic type,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomMinNumberRoute.name,
+          args: CustomMinNumberRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            type: type,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomMinNumberRoute';
+
+  static const PageInfo<CustomMinNumberRouteArgs> page =
+      PageInfo<CustomMinNumberRouteArgs>(name);
+}
+
+class CustomMinNumberRouteArgs {
+  const CustomMinNumberRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.type,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  final dynamic type;
+
+  @override
+  String toString() {
+    return 'CustomMinNumberRouteArgs{key: $key, appLocalizations: $appLocalizations, type: $type}';
+  }
+}
+
+/// generated route for
 /// [CustomRecordReferralDetailsSMCPage]
 class CustomRecordReferralDetailsSMCRoute
     extends PageRouteInfo<CustomRecordReferralDetailsSMCRouteArgs> {
@@ -5379,6 +5551,44 @@ class ProjectSelectionRouteArgs {
 }
 
 /// generated route for
+/// [QRScannerPage]
+class QRScannerRoute extends PageRouteInfo<QRScannerRouteArgs> {
+  QRScannerRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QRScannerRoute.name,
+          args: QRScannerRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QRScannerRoute';
+
+  static const PageInfo<QRScannerRouteArgs> page =
+      PageInfo<QRScannerRouteArgs>(name);
+}
+
+class QRScannerRouteArgs {
+  const QRScannerRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'QRScannerRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [ReferralReconProjectFacilitySelectionSMCPage]
 class ReferralReconProjectFacilitySelectionSMCRoute
     extends PageRouteInfo<ReferralReconProjectFacilitySelectionSMCRouteArgs> {
@@ -5490,5 +5700,190 @@ class UserQRDetailsRouteArgs {
   @override
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ViewAllTransactionsScreen]
+class ViewAllTransactionsRoute
+    extends PageRouteInfo<ViewAllTransactionsRouteArgs> {
+  ViewAllTransactionsRoute({
+    Key? key,
+    required String? warehouseId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ViewAllTransactionsRoute.name,
+          args: ViewAllTransactionsRouteArgs(
+            key: key,
+            warehouseId: warehouseId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewAllTransactionsRoute';
+
+  static const PageInfo<ViewAllTransactionsRouteArgs> page =
+      PageInfo<ViewAllTransactionsRouteArgs>(name);
+}
+
+class ViewAllTransactionsRouteArgs {
+  const ViewAllTransactionsRouteArgs({
+    this.key,
+    required this.warehouseId,
+  });
+
+  final Key? key;
+
+  final String? warehouseId;
+
+  @override
+  String toString() {
+    return 'ViewAllTransactionsRouteArgs{key: $key, warehouseId: $warehouseId}';
+  }
+}
+
+/// generated route for
+/// [ViewStockRecordsCDDPage]
+class ViewStockRecordsCDDRoute
+    extends PageRouteInfo<ViewStockRecordsCDDRouteArgs> {
+  ViewStockRecordsCDDRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String mrnNumber,
+    required List<StockModel> stockRecords,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ViewStockRecordsCDDRoute.name,
+          args: ViewStockRecordsCDDRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            mrnNumber: mrnNumber,
+            stockRecords: stockRecords,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewStockRecordsCDDRoute';
+
+  static const PageInfo<ViewStockRecordsCDDRouteArgs> page =
+      PageInfo<ViewStockRecordsCDDRouteArgs>(name);
+}
+
+class ViewStockRecordsCDDRouteArgs {
+  const ViewStockRecordsCDDRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String mrnNumber;
+
+  final List<StockModel> stockRecords;
+
+  @override
+  String toString() {
+    return 'ViewStockRecordsCDDRouteArgs{key: $key, appLocalizations: $appLocalizations, mrnNumber: $mrnNumber, stockRecords: $stockRecords}';
+  }
+}
+
+/// generated route for
+/// [ViewStockRecordsLGAPage]
+class ViewStockRecordsLGARoute
+    extends PageRouteInfo<ViewStockRecordsLGARouteArgs> {
+  ViewStockRecordsLGARoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String mrnNumber,
+    required List<StockModel> stockRecords,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ViewStockRecordsLGARoute.name,
+          args: ViewStockRecordsLGARouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            mrnNumber: mrnNumber,
+            stockRecords: stockRecords,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewStockRecordsLGARoute';
+
+  static const PageInfo<ViewStockRecordsLGARouteArgs> page =
+      PageInfo<ViewStockRecordsLGARouteArgs>(name);
+}
+
+class ViewStockRecordsLGARouteArgs {
+  const ViewStockRecordsLGARouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String mrnNumber;
+
+  final List<StockModel> stockRecords;
+
+  @override
+  String toString() {
+    return 'ViewStockRecordsLGARouteArgs{key: $key, appLocalizations: $appLocalizations, mrnNumber: $mrnNumber, stockRecords: $stockRecords}';
+  }
+}
+
+/// generated route for
+/// [ViewStockRecordsPage]
+class ViewStockRecordsRoute extends PageRouteInfo<ViewStockRecordsRouteArgs> {
+  ViewStockRecordsRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String mrnNumber,
+    required List<StockModel> stockRecords,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ViewStockRecordsRoute.name,
+          args: ViewStockRecordsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            mrnNumber: mrnNumber,
+            stockRecords: stockRecords,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewStockRecordsRoute';
+
+  static const PageInfo<ViewStockRecordsRouteArgs> page =
+      PageInfo<ViewStockRecordsRouteArgs>(name);
+}
+
+class ViewStockRecordsRouteArgs {
+  const ViewStockRecordsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String mrnNumber;
+
+  final List<StockModel> stockRecords;
+
+  @override
+  String toString() {
+    return 'ViewStockRecordsRouteArgs{key: $key, appLocalizations: $appLocalizations, mrnNumber: $mrnNumber, stockRecords: $stockRecords}';
   }
 }

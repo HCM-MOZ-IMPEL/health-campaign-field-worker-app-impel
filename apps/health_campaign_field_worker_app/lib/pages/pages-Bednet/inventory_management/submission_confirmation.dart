@@ -1,4 +1,4 @@
-
+// import 'package:digit_components/widgets/digit_elevated_button.dart';
 // import 'package:flutter/material.dart';
 
 // class SubmissionConfirmationScreen extends StatelessWidget {
@@ -20,7 +20,8 @@
 //             ),
 //             const SizedBox(height: 24),
 //             DigitElevatedButton(
-//               onPressed: () => Navigator.pushNamed(context, '/view-transactions'),
+//               onPressed: () =>
+//                   Navigator.pushNamed(context, '/view-transactions'),
 //               child: const Text('View Transactions'),
 //             ),
 //             const SizedBox(height: 12),

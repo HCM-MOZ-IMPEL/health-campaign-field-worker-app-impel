@@ -81,6 +81,7 @@ dependencies:
   disk_space_update: 0.0.2
   digit_location_tracker: ^1.0.0
   logger: ^2.5.0
+  mobile_scanner: ^3.4.1
 
 dev_dependencies:
   flutter_test:

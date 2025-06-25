@@ -31,18 +31,19 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class CustomStockDetailsPage extends LocalizedStatefulWidget {
-  const CustomStockDetailsPage({
+class CustomStockDetailsBednetPage extends LocalizedStatefulWidget {
+  const CustomStockDetailsBednetPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomStockDetailsPage> createState() => CustomStockDetailsPageState();
+  State<CustomStockDetailsBednetPage> createState() =>
+      CustomStockDetailsBednetPageState();
 }
 
-class CustomStockDetailsPageState
-    extends LocalizedState<CustomStockDetailsPage> {
+class CustomStockDetailsBednetPageState
+    extends LocalizedState<CustomStockDetailsBednetPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _vehicleNumberKey = 'vehicleNumber';
