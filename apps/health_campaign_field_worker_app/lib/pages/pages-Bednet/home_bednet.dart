@@ -433,7 +433,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
         child: HomeItemCard(
           icon: Icons.local_taxi_rounded,
           label: i18_local.home.vehicleTrackingLabel,
-          onPressed: () => {},
+          onPressed: () =>
+              context.router.push(const VehicleTrackingTripWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
@@ -546,7 +547,6 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.viewReportsLabel,
       i18.home.mySurveyForm,
       i18_local.home.vehicleTrackingLabel,
-
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
@@ -557,10 +557,14 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18_local.home
+                    .vehicleTrackingLabel) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
