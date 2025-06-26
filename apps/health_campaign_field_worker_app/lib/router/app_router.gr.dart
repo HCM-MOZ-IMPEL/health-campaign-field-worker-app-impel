@@ -1189,6 +1189,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VehicleOverviewRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const VehicleOverviewPage(),
+      );
+    },
     VehicleSearchRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleSearchRouteArgs>(
           orElse: () => const VehicleSearchRouteArgs());
@@ -1200,12 +1206,24 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    VehicleTrackingTripWrapperRoute.name: (routeData) {
+    VehicleTrackingWrapperRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const VehicleTrackingTripWrapperPage(),
+        child: const VehicleTrackingWrapperPage(),
       );
     },
+    VehicleSearchRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleSearchRouteArgs>(
+          orElse: () => const VehicleSearchRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleSearchPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+
     ...RegistrationDeliveryRoute().pagesMap,
     ...InventoryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
@@ -5374,6 +5392,20 @@ class UserQRDetailsRouteArgs {
 }
 
 /// generated route for
+/// [VehicleOverviewPage]
+class VehicleOverviewRoute extends PageRouteInfo<void> {
+  const VehicleOverviewRoute({List<PageRouteInfo>? children})
+      : super(
+          VehicleOverviewRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleOverviewRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [VehicleSearchPage]
 class VehicleSearchRoute extends PageRouteInfo<VehicleSearchRouteArgs> {
   VehicleSearchRoute({
@@ -5412,15 +5444,15 @@ class VehicleSearchRouteArgs {
 }
 
 /// generated route for
-/// [VehicleTrackingTripWrapperPage]
-class VehicleTrackingTripWrapperRoute extends PageRouteInfo<void> {
-  const VehicleTrackingTripWrapperRoute({List<PageRouteInfo>? children})
+/// [VehicleTrackingWrapperPage]
+class VehicleTrackingWrapperRoute extends PageRouteInfo<void> {
+  const VehicleTrackingWrapperRoute({List<PageRouteInfo>? children})
       : super(
-          VehicleTrackingTripWrapperRoute.name,
+          VehicleTrackingWrapperRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'VehicleTrackingTripWrapperRoute';
+  static const String name = 'VehicleTrackingWrapperRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

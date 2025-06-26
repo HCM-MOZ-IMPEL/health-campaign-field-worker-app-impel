@@ -137,8 +137,9 @@ import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
-import '../pages/vehicle_tracking/vechicle_tracking_trip_wrapper.dart';
+import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 
 part 'app_router.gr.dart';
 
@@ -186,6 +187,21 @@ class AppRouter extends _$AppRouter {
           page: BoundarySelectionRoute.page,
           path: 'select-boundary',
         ),
+
+        AutoRoute(
+            page: VehicleTrackingWrapperRoute.page,
+            path: 'vehicle-tracking',
+            children: [
+              AutoRoute(
+                page: VehicleSearchRoute.page,
+                path: 'vehicle-search',
+                initial: true,
+              ),
+              AutoRoute(
+                page: VehicleOverviewRoute.page,
+                path: 'vehicle-overview',
+              )
+            ]),
 
         AutoRoute(
             page: IRSWrapperRoute.page,
@@ -1533,18 +1549,6 @@ class AppRouter extends _$AppRouter {
                       path: 'dose-administered-verification',
                     ),
                   ],
-                ),
-              ]),
-
-          // vehcile tracking trip wrapper
-          AutoRoute(
-              page: VehicleTrackingTripWrapperRoute.page,
-              path: 'vehicle-tracking-trip',
-              children: [
-                AutoRoute(
-                  page: VehicleSearchRoute.page,
-                  path: 'vehicle-search',
-                  initial: true,
                 ),
               ]),
 
