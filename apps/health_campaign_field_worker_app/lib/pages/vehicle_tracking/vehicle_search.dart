@@ -20,6 +20,7 @@ import '../../../utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
 
+import '../../widgets/vehicle_tracking/view_vehicle_card.dart';
 import '../custom_digit_scanner.dart';
 
 @RoutePage()
@@ -191,59 +192,15 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                               : Container(
                                   margin:
                                       const EdgeInsets.only(bottom: kPadding),
-                                  child: CustomViewBeneficiaryCardBednet(
+                                  child: ViewVehicleCard(
                                     distance:
                                         isProximityEnabled ? distance : null,
                                     householdMember: i,
                                     onOpenPressed: () async {
-                                      final scannerBloc =
-                                          context.read<DigitScannerBloc>();
-
-                                      scannerBloc.add(
-                                        const DigitScannerEvent.handleScanner(),
+                                      await context.router.push(
+                                        const VehicleOverviewRoute(),
                                       );
 
-                                      if ((i.tasks != null &&
-                                              i.tasks?.last.status ==
-                                                  Status.closeHousehold
-                                                      .toValue() &&
-                                              (i.tasks ?? []).isNotEmpty) ||
-                                          (i.projectBeneficiaries ?? [])
-                                              .isEmpty) {
-                                        setState(() {});
-                                        blocWrapper.clearEvent();
-                                        await context.router.push(
-                                          BeneficiaryRegistrationWrapperRoute(
-                                            initialState: BeneficiaryRegistrationState
-                                                .editHousehold(
-                                                    householdModel: i
-                                                        .household!,
-                                                    individualModel: i.members!,
-                                                    registrationDate:
-                                                        DateTime.now(),
-                                                    projectBeneficiaryModel:
-                                                        (i.projectBeneficiaries ??
-                                                                    [])
-                                                                .isNotEmpty
-                                                            ? i
-                                                                .projectBeneficiaries
-                                                                ?.last
-                                                            : null,
-                                                    addressModel: i
-                                                        .headOfHousehold!
-                                                        .address!
-                                                        .last,
-                                                    headOfHousehold:
-                                                        i.headOfHousehold),
-                                          ),
-                                        );
-                                      } else {
-                                        await context.router.push(
-                                          CustomHouseholdWrapperRoute(
-                                            wrapper: i,
-                                          ),
-                                        );
-                                      }
                                       setState(() {
                                         isProximityEnabled = false;
                                       });
@@ -264,87 +221,8 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
             ],
           ),
         ),
-        bottomNavigationBar: SizedBox(
-          height: context.isDistributor ? 70 : 70,
-          child: Card(
-            margin: const EdgeInsets.all(0),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-              child: Column(
-                children: [
-                  if (context.isRegistrar || context.isDistributor)
-                    DigitElevatedButton(
-                      onPressed: searchHouseholdsState.loading ||
-                              searchHouseholdsState.searchQuery == null
-                          ? null
-                          : () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              context.read<DigitScannerBloc>().add(
-                                    const DigitScannerEvent.handleScanner(),
-                                  );
-                              context.router
-                                  .push(BeneficiaryRegistrationWrapperRoute(
-                                initialState:
-                                    BeneficiaryRegistrationCreateState(
-                                  searchQuery:
-                                      searchHouseholdsState.searchQuery,
-                                ),
-                              ));
-                              searchController.clear();
-
-                              blocWrapper.clearEvent();
-                            },
-                      child: Center(
-                        child: Text(localizations.translate(
-                          i18.searchBeneficiary.beneficiaryAddActionLabel,
-                        )),
-                      ),
-                    ),
-                  Offstage(
-                    offstage: true,
-                    child: DigitOutlineIconButton(
-                      buttonStyle: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                      onPressed: () {
-                        blocWrapper.clearEvent();
-
-                        searchController.clear();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CustomDigitScannerPage(
-                              quantity: 1,
-                              isGS1code: false,
-                              singleValue: true,
-                            ),
-                            settings: const RouteSettings(name: '/qr-scanner'),
-                          ),
-                        );
-                      },
-                      icon: Icons.qr_code,
-                      label: localizations.translate(
-                        i18.deliverIntervention.scannerLabel,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
-  }
-
-  getFilterIconNLabel() {
-    return {
-      'label': localizations.translate(
-        i18.searchBeneficiary.filterLabel,
-      ),
-      'icon': Icons.filter_alt
-    };
   }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {

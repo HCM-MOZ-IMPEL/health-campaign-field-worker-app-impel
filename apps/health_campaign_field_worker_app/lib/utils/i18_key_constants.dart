@@ -243,6 +243,10 @@ class VehicleTracking {
 
   String get endTripTitle => 'VEHICLE_TRACKING_END_TRIP_TITLE';
   String get endTripContent => 'VEHICLE_TRACKING_END_TRIP_CONTENT';
+
+  String get tripBookLabel => "TRIP_BOOK_LABEL";
+  String get tripBookReasonLabel => "TRIP_BOOK_REASON_LABEL";
+  String get bookTripButtonActionLabel => "BOOK_TRIP_BUTTON_ACTION_LABEL";
 }
 
 class SelectStockShowcase {

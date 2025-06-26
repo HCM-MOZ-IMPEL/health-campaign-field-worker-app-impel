@@ -140,6 +140,7 @@ import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
+import '../pages/vehicle_tracking/vechile_trip_book.dart';
 
 part 'app_router.gr.dart';
 
@@ -187,21 +188,6 @@ class AppRouter extends _$AppRouter {
           page: BoundarySelectionRoute.page,
           path: 'select-boundary',
         ),
-
-        AutoRoute(
-            page: VehicleTrackingWrapperRoute.page,
-            path: 'vehicle-tracking',
-            children: [
-              AutoRoute(
-                page: VehicleSearchRoute.page,
-                path: 'vehicle-search',
-                initial: true,
-              ),
-              AutoRoute(
-                page: VehicleOverviewRoute.page,
-                path: 'vehicle-overview',
-              )
-            ]),
 
         AutoRoute(
             page: IRSWrapperRoute.page,
@@ -1269,6 +1255,28 @@ class AppRouter extends _$AppRouter {
             page: BeneficiariesReportRoute.page,
             path: 'beneficiary-downsync-report',
           ),
+
+          // vehicle Tracking module
+          AutoRoute(
+              page: VehicleTrackingWrapperRoute.page,
+              path: 'vehicle-tracking',
+              children: [
+                AutoRoute(
+                  page: VehicleSearchRoute.page,
+                  path: 'vehicle-search',
+                  initial: true,
+                ),
+                AutoRoute(
+                  page: VehicleOverviewRoute.page,
+                  path: 'vehicle-overview',
+                ),
+                AutoRoute(
+                  page: VehicleTripBookRoute.page,
+                  path: 'vehicle-trip-book',
+                )
+              ]),
+
+          // registration delivery
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
               path: 'registration-delivery-wrapper',

@@ -37,7 +37,6 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
     return Scaffold(
         body: ScrollableContent(
       header: BackNavigationHelpHeaderWidget(
-        handleBack: () {},
         showHelp: false,
       ),
       enableFixedDigitButton: true,

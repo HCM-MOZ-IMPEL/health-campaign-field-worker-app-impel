@@ -1212,18 +1212,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const VehicleTrackingWrapperPage(),
       );
     },
-    VehicleSearchRoute.name: (routeData) {
-      final args = routeData.argsAs<VehicleSearchRouteArgs>(
-          orElse: () => const VehicleSearchRouteArgs());
+    VehicleTripBookRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleTripBookRouteArgs>(
+          orElse: () => const VehicleTripBookRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: VehicleSearchPage(
+        child: VehicleTripBookPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-
     ...RegistrationDeliveryRoute().pagesMap,
     ...InventoryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
@@ -5455,4 +5454,42 @@ class VehicleTrackingWrapperRoute extends PageRouteInfo<void> {
   static const String name = 'VehicleTrackingWrapperRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [VehicleTripBookPage]
+class VehicleTripBookRoute extends PageRouteInfo<VehicleTripBookRouteArgs> {
+  VehicleTripBookRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleTripBookRoute.name,
+          args: VehicleTripBookRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleTripBookRoute';
+
+  static const PageInfo<VehicleTripBookRouteArgs> page =
+      PageInfo<VehicleTripBookRouteArgs>(name);
+}
+
+class VehicleTripBookRouteArgs {
+  const VehicleTripBookRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
