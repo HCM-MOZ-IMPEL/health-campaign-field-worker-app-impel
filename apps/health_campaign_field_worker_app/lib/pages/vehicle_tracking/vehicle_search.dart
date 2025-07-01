@@ -20,6 +20,8 @@ import '../../../utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
 
+import '../../blocs/vehicle_tracking/search_vehicle_bloc_common_wrapper.dart';
+import '../../blocs/vehicle_tracking/search_vehicles.dart';
 import '../../widgets/vehicle_tracking/view_vehicle_card.dart';
 import '../custom_digit_scanner.dart';
 
@@ -40,26 +42,24 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
   int offset = 0;
   int limit = 10;
 
-  double lat = 0.0;
-  double long = 0.0;
-
-  SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
+  SearchVehiclesState searchVehiclesState = const SearchVehiclesState(
     loading: false,
-    householdMembers: [],
+    vehicles: [],
   );
 
-  late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
+  late final SearchVehicleBlocWrapper
+      searchVehicleBlocWrapper; // Declare BlocWrapper
 
   @override
   void initState() {
-    // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
-    blocWrapper = context.read<SearchBlocWrapper>();
+    // Initialize the BlocWrapper with instances of SearchVehicleBloc
+    searchVehicleBlocWrapper = context.read<SearchVehicleBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
     // Listen to state changes
-    blocWrapper.stateChanges.listen((state) {
+    searchVehicleBlocWrapper.stateChanges.listen((state) {
       if (mounted) {
         setState(() {
-          searchHouseholdsState = state;
+          searchVehiclesState = state;
         });
       }
     });
@@ -89,137 +89,100 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
             return true;
           },
           child: ScrollableContent(
-            header: const Column(children: [
-              BackNavigationHelpHeaderWidget(),
-            ]),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(kPadding),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            localizations.translate("SEARCH_VEHICLE_LABEL"),
-                            style: theme.textTheme.displayMedium,
-                            textAlign: TextAlign.left,
+              header: const Column(children: [
+                BackNavigationHelpHeaderWidget(),
+              ]),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPadding),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              localizations.translate("SEARCH_VEHICLE_LABEL"),
+                              style: theme.textTheme.displayMedium,
+                              textAlign: TextAlign.left,
+                            ),
                           ),
                         ),
-                      ),
-                      BlocBuilder<LocationBloc, LocationState>(
-                        builder: (context, locationState) {
-                          return Column(
-                            children: [
-                              const Offstage(),
-                              DigitSearchBar(
-                                controller: searchController,
-                                hintText: localizations.translate(
-                                  i18.searchBeneficiary
-                                      .beneficiarySearchHintText,
+                        BlocBuilder<LocationBloc, LocationState>(
+                          builder: (context, locationState) {
+                            return Column(
+                              children: [
+                                const Offstage(),
+                                DigitSearchBar(
+                                  controller: searchController,
+                                  hintText: localizations.translate(
+                                    i18.searchBeneficiary
+                                        .beneficiarySearchHintText,
+                                  ),
+                                  textCapitalization: TextCapitalization.words,
+                                  onChanged: (value) {
+                                    searchVehicleBlocWrapper.clearEvent();
+                                    if (value.isEmpty ||
+                                        value.trim().length > 2) {
+                                      triggerGlobalSearchEvent();
+                                    }
+                                  },
                                 ),
-                                textCapitalization: TextCapitalization.words,
-                                onChanged: (value) {
-                                  blocWrapper.clearEvent();
-                                  if (value.isEmpty ||
-                                      value.trim().length > 2) {
-                                    triggerGlobalSearchEvent();
-                                  }
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: kPadding * 2),
-                      if (searchHouseholdsState.resultsNotFound &&
-                          !searchHouseholdsState.loading)
-                        DigitInfoCard(
-                          description: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
-                          title: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoTitle,
-                          ),
+                              ],
+                            );
+                          },
                         ),
-                    ],
-                  ),
-                ),
-              ),
-              if (searchHouseholdsState.loading)
-                const SliverFillRemaining(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              BlocListener<DigitScannerBloc, DigitScannerState>(
-                listener: (context, scannerState) {
-                  if (scannerState.qrCodes.isNotEmpty) {
-                    context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                          SearchHouseholdsEvent.searchByTag(
-                            tag: scannerState.qrCodes.isNotEmpty
-                                ? scannerState.qrCodes.lastOrNull!
-                                : '',
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
+                        const SizedBox(height: kPadding * 2),
+                        if (searchVehiclesState.resultsNotFound &&
+                            !searchVehiclesState.loading)
+                          DigitInfoCard(
+                            description: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                            ),
+                            title: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoTitle,
+                            ),
                           ),
-                        );
-                  }
-                },
-                child: BlocBuilder<LocationBloc, LocationState>(
+                      ],
+                    ),
+                  ),
+                ),
+                if (searchVehiclesState.loading)
+                  const SliverFillRemaining(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
-                              .elementAt(index);
-                          final distance = calculateDistance(
-                            Coordinate(
-                              lat,
-                              long,
-                            ),
-                            Coordinate(
-                              i.household?.address?.latitude,
-                              i.household?.address?.longitude,
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: kPadding),
+                            child: ViewVehicleCard(
+                              onOpenPressed: () async {
+                                await context.router.push(
+                                  const VehicleOverviewRoute(),
+                                );
+
+                                setState(() {
+                                  isProximityEnabled = false;
+                                });
+                                searchController.clear();
+
+                                searchVehicleBlocWrapper.clearEvent();
+                              },
                             ),
                           );
-
-                          return (i.projectBeneficiaries == null ||
-                                  i.projectBeneficiaries!.isEmpty)
-                              ? const Offstage()
-                              : Container(
-                                  margin:
-                                      const EdgeInsets.only(bottom: kPadding),
-                                  child: ViewVehicleCard(
-                                    distance:
-                                        isProximityEnabled ? distance : null,
-                                    householdMember: i,
-                                    onOpenPressed: () async {
-                                      await context.router.push(
-                                        const VehicleOverviewRoute(),
-                                      );
-
-                                      setState(() {
-                                        isProximityEnabled = false;
-                                      });
-                                      searchController.clear();
-
-                                      blocWrapper.clearEvent();
-                                    },
-                                  ),
-                                );
                         },
-                        childCount:
-                            searchHouseholdsState.householdMembers.length,
+                        childCount: searchVehiclesState.vehicles.length,
                       ),
                     );
                   },
                 ),
-              ),
-            ],
-          ),
+              ]),
         ),
       ),
     );
@@ -227,80 +190,13 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
-      blocWrapper.clearEvent();
+      searchVehicleBlocWrapper.clearEvent();
     }
-    if (RegistrationDeliverySingleton().beneficiaryType ==
-        BeneficiaryType.individual) {
-      if (isProximityEnabled || searchController.text.isNotEmpty) {
-        blocWrapper.individualGlobalSearchBloc
-            .add(SearchHouseholdsEvent.individualGlobalSearch(
-                globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: [],
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-        )));
-      }
-    } else {
-      if (isProximityEnabled || searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc
-            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-                globalSearchParams: GlobalSearchParameters(
-          projectId: RegistrationDeliverySingleton().projectId,
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: [],
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-        )));
-      }
-    }
-  }
-
-  String getStatus(String selectedFilter) {
-    final statusMap = {
-      Status.delivered.toValue(): Status.delivered,
-      // Status.notDelivered.toValue(): Status.notDelivered,
-      Status.visited.toValue(): Status.visited,
-      Status.notVisited.toValue(): Status.notVisited,
-      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
-      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
-      Status.administeredSuccess.toValue(): Status.administeredSuccess,
-      Status.administeredFailed.toValue(): Status.administeredFailed,
-      Status.inComplete.toValue(): Status.inComplete,
-      Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closeHousehold.toValue(): Status.closeHousehold,
-      Status.registered.toValue(): Status.registered,
-      Status.notRegistered.toValue(): Status.notRegistered,
-    };
-
-    var mappedStatus = statusMap.entries
-        .where((element) => element.value.name == selectedFilter)
-        .first
-        .key;
-    if (mappedStatus != null) {
-      return mappedStatus;
-    } else {
-      return selectedFilter;
+    if (isProximityEnabled || searchController.text.isNotEmpty) {
+      searchVehicleBlocWrapper.searchVehiclesBloc.add(
+          SearchVehiclesEvent.searchByVehicleNo(
+              projectId: RegistrationDeliverySingleton().projectId!,
+              vehicleNo: ""));
     }
   }
 }

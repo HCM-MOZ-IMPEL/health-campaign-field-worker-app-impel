@@ -22,14 +22,12 @@ import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart'
 import 'vehicle_card.dart';
 
 class ViewVehicleCard extends LocalizedStatefulWidget {
-  final HouseholdMemberWrapper householdMember;
   final VoidCallback? onOpenPressed;
   final double? distance;
 
   const ViewVehicleCard({
     super.key,
     super.appLocalizations,
-    required this.householdMember,
     this.onOpenPressed,
     this.distance,
   });
@@ -40,18 +38,14 @@ class ViewVehicleCard extends LocalizedStatefulWidget {
 
 class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
   late HouseholdMemberWrapper householdMember;
-  static const _menCountKey = 'menCount';
-  static const _womenCountKey = 'womenCount';
 
   @override
   void initState() {
-    householdMember = widget.householdMember;
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant ViewVehicleCard oldWidget) {
-    householdMember = widget.householdMember;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -65,231 +59,6 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final headerList = [
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
-        cellKey: 'beneficiary',
-      ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.deliveryHeader),
-        cellKey: 'delivery',
-      ),
-      TableHeader(
-        localizations.translate(i18.individualDetails.ageLabelText),
-        cellKey: 'age',
-      ),
-      TableHeader(
-        localizations.translate(i18.common.coreCommonGender),
-        cellKey: 'gender',
-      ),
-    ];
-    final filteredHeaderList = RegistrationDeliverySingleton()
-                .beneficiaryType !=
-            BeneficiaryType.individual
-        ? headerList.where((element) => element.cellKey != 'delivery').toList()
-        : headerList;
-    final currentCycle =
-        RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
-              (e) =>
-                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
-              // Return null when no matching cycle is found
-            );
-    final household = householdMember.household;
-    final childCount =
-        getValueForTheKey(AdditionalFieldsType.children.toValue(), household);
-    final pregnantWomenCount = getValueForTheKey(
-        AdditionalFieldsType.pregnantWomen.toValue(), household);
-    final menCount = getValueForTheKey(_menCountKey, household);
-    final womenCount = getValueForTheKey(_womenCountKey, household);
-    final noOfRooms =
-        getValueForTheKey(AdditionalFieldsType.noOfRooms.toValue(), household);
-
-    final tableData = householdMember.members?.map(
-      (e) {
-        final projectBeneficiary =
-            householdMember.projectBeneficiaries?.where((element) {
-          if (RegistrationDeliverySingleton().beneficiaryType ==
-              BeneficiaryType.individual) {
-            return element.beneficiaryClientReferenceId == e.clientReferenceId;
-          } else {
-            return element.beneficiaryClientReferenceId ==
-                householdMember.household!.clientReferenceId;
-          }
-        }).toList();
-
-        final taskData = (projectBeneficiary ?? []).isNotEmpty
-            ? householdMember.tasks
-                ?.where((element) =>
-                    element.projectBeneficiaryClientReferenceId ==
-                    projectBeneficiary?.first.clientReferenceId)
-                .toList()
-            : null;
-        final referralData = (projectBeneficiary ?? []).isNotEmpty
-            ? householdMember.referrals
-                ?.where((element) =>
-                    element.projectBeneficiaryClientReferenceId ==
-                    projectBeneficiary?.first.clientReferenceId)
-                .toList()
-            : null;
-        final sideEffects = taskData != null && taskData.isNotEmpty
-            ? householdMember.sideEffects
-                ?.where((element) =>
-                    element.taskClientReferenceId ==
-                    taskData.last.clientReferenceId)
-                .toList()
-            : null;
-
-        final ageInYears = DigitDateUtils.calculateAge(
-          e.dateOfBirth != null
-              ? DigitDateUtils.getFormattedDateToDateTime(
-                    e.dateOfBirth!,
-                  ) ??
-                  DateTime.now()
-              : DateTime.now(),
-        ).years;
-        final ageInMonths = DigitDateUtils.calculateAge(
-          e.dateOfBirth != null
-              ? DigitDateUtils.getFormattedDateToDateTime(
-                    e.dateOfBirth!,
-                  ) ??
-                  DateTime.now()
-              : DateTime.now(),
-        ).months;
-
-        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAgeConvertor(
-            years: ageInYears,
-            months: ageInMonths,
-          ),
-          RegistrationDeliverySingleton().projectType,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
-        final isSideEffectRecorded = recordedSideEffect(
-          currentCycle,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
-        final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
-        final isBeneficiaryReferred = checkIfBeneficiaryReferred(
-          referralData,
-          currentCycle,
-        );
-
-        final isStatusReset = checkStatus(taskData, currentCycle);
-
-        final rowTableData = [
-          TableData(
-            [
-              e.name?.givenName,
-              e.name?.familyName,
-            ].whereNotNull().join('-'),
-            cellKey: 'beneficiary',
-          ),
-          TableData(
-            getTableCellText(
-              StatusKeys(
-                isNotEligible,
-                isBeneficiaryRefused,
-                isBeneficiaryReferred,
-                isStatusReset,
-              ),
-              taskData,
-            ),
-            cellKey: 'delivery',
-            style: TextStyle(
-              color: getTableCellTextColor(
-                isNotEligible: isNotEligible,
-                taskdata: taskData,
-                isBeneficiaryRefused:
-                    isBeneficiaryRefused || isBeneficiaryReferred,
-                isStatusReset: isStatusReset,
-                theme: theme,
-              ),
-            ),
-          ),
-          TableData(
-            e.dateOfBirth == null
-                ? ''
-                : '${DigitDateUtils.calculateAge(
-                    DigitDateUtils.getFormattedDateToDateTime(
-                          e.dateOfBirth!,
-                        ) ??
-                        DateTime.now(),
-                  ).years} ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DigitDateUtils.calculateAge(
-                    DigitDateUtils.getFormattedDateToDateTime(
-                          e.dateOfBirth!,
-                        ) ??
-                        DateTime.now(),
-                  ).months} ${localizations.translate(i18.searchBeneficiary.monthsAbbr)}',
-            cellKey: 'age',
-          ),
-          TableData(
-            e.gender?.name != null
-                ? localizations
-                    .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}')
-                : ' -- ',
-            cellKey: 'gender',
-          ),
-        ];
-
-        return TableDataRow(
-          RegistrationDeliverySingleton().beneficiaryType !=
-                  BeneficiaryType.individual
-              ? rowTableData
-                  .where((element) => element.cellKey != 'delivery')
-                  .toList()
-              : rowTableData,
-        );
-        // rowTableData
-      },
-    ).toList();
-
-    final ageInYears = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold?.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold!.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).years;
-    final ageInMonths = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold?.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold!.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).months;
-
-    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAgeConvertor(
-        years: ageInYears,
-        months: ageInMonths,
-      ),
-      RegistrationDeliverySingleton().projectType,
-      householdMember.tasks?.last,
-      householdMember.sideEffects,
-    );
-
-    final isBeneficiaryRefused =
-        checkIfBeneficiaryRefused(householdMember.tasks);
-    final projectBeneficiary = householdMember.projectBeneficiaries?.where((p) {
-      if (RegistrationDeliverySingleton().beneficiaryType ==
-          BeneficiaryType.individual) {
-        return p.beneficiaryClientReferenceId ==
-            householdMember.headOfHousehold?.clientReferenceId;
-      } else {
-        return p.beneficiaryClientReferenceId ==
-            householdMember.household?.clientReferenceId;
-      }
-    }).firstOrNull;
-
-    final tasks = householdMember.tasks?.where((t) =>
-        t.projectBeneficiaryClientReferenceId ==
-        projectBeneficiary?.clientReferenceId);
-
     return DigitCard(
       child: Column(
         children: [
@@ -301,33 +70,17 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
                 width: MediaQuery.of(context).size.width / 1.7,
                 child: VehicleCard(
                   description: [
-                    householdMember.household?.address?.doorNo,
-                    householdMember.household?.address?.addressLine1,
-                    householdMember.household?.address?.addressLine2,
-                    householdMember.household?.address?.landmark,
-                    householdMember.household?.address?.city,
-                    householdMember.household?.address?.pincode,
+                    "Vehicle No.",
+                    "Brand",
+                    "Color",
+                    "Model",
+                    "Driver Name",
                   ].whereNotNull().take(2).join(' '),
-                  subtitle:
-                      '${householdMember.household?.memberCount ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
-                      '${childCount != null ? ' | $childCount ${localizations.translate(i18_local.beneficiaryDetails.childrenLabel)}' : ''}'
-                      '${pregnantWomenCount != null ? ' | $pregnantWomenCount ${localizations.translate(i18_local.beneficiaryDetails.pregnantWomenLabel)}' : ''}'
-                      '${menCount != null ? ' | $menCount ${localizations.translate(i18_local.beneficiaryDetails.menLabel)}' : ''}'
-                      '${womenCount != null ? ' | $womenCount ${localizations.translate(i18_local.beneficiaryDetails.womenLabel)}' : ''}'
-                      '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18_local.beneficiaryDetails.roomsLabel)}' : ''}'
-                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
-                  status: getStatus(
-                      tasks ?? [],
-                      householdMember.projectBeneficiaries ?? [],
-                      RegistrationDeliverySingleton().beneficiaryType ==
-                              BeneficiaryType.individual
-                          ? isNotEligible
-                          : false,
-                      isBeneficiaryRefused),
+                  subtitle: "Subtitle",
+                  status: "Booked",
                   title: [
-                    householdMember.headOfHousehold?.name?.givenName ??
-                        localizations.translate(i18.common.coreCommonNA),
-                    householdMember.headOfHousehold?.name?.familyName,
+                    "Name" ?? localizations.translate(i18.common.coreCommonNA),
+                    "Last Name",
                   ].whereNotNull().join(' '),
                 ),
               ),
@@ -348,8 +101,8 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(
-              headerList: filteredHeaderList,
-              tableData: tableData ?? [],
+              headerList: [],
+              tableData: [] ?? [],
               columnWidth: 130,
               columnRowFixedHeight: 65,
               height: householdMember.members?.length == 1
