@@ -9,6 +9,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/custom_product_variant.dart';
+
 part 'search_vehicles.freezed.dart';
 
 typedef SearchVehiclesEmitter = Emitter<SearchVehiclesState>;
@@ -46,15 +48,16 @@ class SearchVehiclesBloc
       ProductVariantSearchModel productVariantSearchModel =
           ProductVariantSearchModel(sku: "Vehicle");
 
-      final productVariants =
-          await productVariantDataRepository.search(productVariantSearchModel);
+      final productVariants = await (productVariantDataRepository
+              as CustomProductVariantLocalRepository)
+          .customSearch(productVariantSearchModel);
 
       emit(state.copyWith(
         loading: false,
         vehicles: productVariants,
       ));
     } catch (e) {
-      emit(state.copyWith(loading: true, vehicles: []));
+      emit(state.copyWith(loading: false, vehicles: []));
     }
   }
 

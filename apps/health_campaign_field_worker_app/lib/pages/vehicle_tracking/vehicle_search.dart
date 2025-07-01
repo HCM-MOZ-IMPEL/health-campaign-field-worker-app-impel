@@ -159,9 +159,12 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {
+                          final i =
+                              searchVehiclesState.vehicles.elementAt(index);
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
                             child: ViewVehicleCard(
+                              vehicle: i,
                               onOpenPressed: () async {
                                 await context.router.push(
                                   const VehicleOverviewRoute(),
