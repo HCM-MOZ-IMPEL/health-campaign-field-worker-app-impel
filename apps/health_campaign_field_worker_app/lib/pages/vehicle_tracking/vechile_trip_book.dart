@@ -38,6 +38,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
+import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -80,71 +81,75 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      body: ScrollableContent(
-        header: const Column(
-          children: [
-            BackNavigationHelpHeaderWidget(
-              showHelp: false,
-            ),
-          ],
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: DigitCard(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: kPadding),
-                    child: Text(
-                      localizations.translate(
-                        i18_local.vehicleTracking.tripBookLabel,
-                      ),
-                      style: theme.textTheme.displayMedium,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                        child: SelectionBox<String>(
-                          isRequired: true,
-                          title: localizations.translate(
-                            i18_local.vehicleTracking.tripBookReasonLabel,
-                          ),
-                          allowMultipleSelection: false,
-                          width: 148,
-                          initialSelection: [],
-                          options: reasons,
-                          onSelectionChanged: (value) {
-                            // setState(() {
-                            //   if (value.isNotEmpty) {
-                            //     form.control(_genderKey).value = value.first;
-                            //   } else if (isEligible) {
-                            //     form.control(_genderKey).value = null;
-                            //     setState(() {
-                            //       form.control(_genderKey).setErrors({'': true});
-                            //     });
-                            //   }
-                            // });
-                          },
-                          valueMapper: (value) {
-                            return localizations.translate(value);
-                          },
-                          errorMessage: null,
+      body: BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
+          builder: (context, state) {
+        return ScrollableContent(
+          header: const Column(
+            children: [
+              BackNavigationHelpHeaderWidget(
+                showHelp: false,
+              ),
+            ],
+          ),
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: DigitCard(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: kPadding),
+                      child: Text(
+                        localizations.translate(
+                          i18_local.vehicleTracking.tripBookLabel,
                         ),
+                        style: theme.textTheme.displayMedium,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                          child: SelectionBox<String>(
+                            isRequired: true,
+                            title: localizations.translate(
+                              i18_local.vehicleTracking.tripBookReasonLabel,
+                            ),
+                            allowMultipleSelection: false,
+                            width: 148,
+                            initialSelection: [],
+                            options: reasons,
+                            onSelectionChanged: (value) {
+                              // setState(() {
+                              //   if (value.isNotEmpty) {
+                              //     form.control(_genderKey).value = value.first;
+                              //   } else if (isEligible) {
+                              //     form.control(_genderKey).value = null;
+                              //     setState(() {
+                              //       form.control(_genderKey).setErrors({'': true});
+                              //     });
+                              //   }
+                              // });
+                            },
+                            valueMapper: (value) {
+                              return localizations.translate(value);
+                            },
+                            errorMessage: null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
       bottomNavigationBar: SizedBox(
         height: 50,
         child: Card(
