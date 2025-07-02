@@ -1,0 +1,226 @@
+import 'package:digit_components/widgets/digit_dialog.dart';
+import 'package:digit_data_model/models/entities/product_variant.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/utils/utils.dart';
+
+import 'package:registration_delivery/widgets/table_card/table_card.dart';
+
+import '../../blocs/localization/app_localization.dart';
+import '../../blocs/vehicle_tracking/search_vehicle_bloc_common_wrapper.dart';
+import '../../blocs/vehicle_tracking/search_vehicles.dart';
+import '../../router/app_router.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
+
+enum VehicleStatusEnum {
+  onGoing,
+  completed,
+  cancelled,
+}
+
+@RoutePage()
+class VehicleOverviewPage extends LocalizedStatefulWidget {
+  final String vehicleNo;
+  const VehicleOverviewPage({super.key, required this.vehicleNo});
+
+  @override
+  State<VehicleOverviewPage> createState() => _VehicleOverviewPageState();
+}
+
+class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
+  late final SearchVehicleBlocWrapper searchVehicleBlocWrapper;
+  SearchVehiclesState searchVehiclesState = const SearchVehiclesState(
+    loading: false,
+    vehicles: [],
+  );
+
+  @override
+  void initState() {
+    // Initialize the BlocWrapper with instances of SearchVehicleBloc
+    searchVehicleBlocWrapper = context.read<SearchVehicleBlocWrapper>();
+    context.read<LocationBloc>().add(const LoadLocationEvent());
+    // Listen to state changes
+    searchVehicleBlocWrapper.stateChanges.listen((state) {
+      if (mounted) {
+        setState(() {
+          searchVehiclesState = state;
+        });
+      }
+    });
+    searchSelectedVehicle();
+    super.initState();
+  }
+
+  searchSelectedVehicle() {
+    searchVehicleBlocWrapper.searchVehiclesBloc.add(
+        SearchVehiclesEvent.searchByVehicleNo(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            vehicleNo: widget.vehicleNo));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var localizations = AppLocalizations.of(context);
+    return Scaffold(
+        body: ScrollableContent(
+      header: const BackNavigationHelpHeaderWidget(
+        showHelp: false,
+      ),
+      enableFixedDigitButton: true,
+      footer: DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: spacer2),
+          child: DigitButton(
+            label: localizations.translate(
+              i18_local.vehicleTracking.endTripButtonLabel,
+            ),
+            isDisabled: false,
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+            mainAxisSize: MainAxisSize.max,
+            onPressed: () {
+              DigitDialog.show(
+                context,
+                options: DigitDialogOptions(
+                  titleText: localizations.translate(
+                    i18_local.vehicleTracking.endTripTitle,
+                  ),
+                  contentText: localizations.translate(
+                    i18_local.vehicleTracking.endTripContent,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                        i18_local.vehicleTracking.endTripButtonLabel),
+                    action: (ctx) => Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pop(true),
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations
+                        .translate(i18_local.common.coreCommonCancel),
+                    action: (ctx) {},
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ]),
+      slivers: [
+        BlocBuilder<SearchVehiclesBloc, SearchVehiclesState>(
+          builder: (context, vehicleState) {
+            ProductVariantModel? selectedVehicle =
+                vehicleState.vehicles.firstOrNull;
+            return SliverToBoxAdapter(
+              child:
+                  DigitCard(margin: const EdgeInsets.all(spacer2), children: [
+                Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: SizedBox(
+                        width: 100,
+                        child: DigitButton(
+                          label: localizations.translate(
+                            i18_local.vehicleTracking.mapLabel,
+                          ),
+                          isDisabled: false,
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.medium,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(spacer2),
+                          child: Text(
+                            selectedVehicle?.sku ?? "",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                        const StatusWidget(
+                          status: VehicleStatusEnum.onGoing,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            left: spacer2,
+                            right: spacer2,
+                          ),
+                          child: Column(
+                            children: [
+                              DigitTableCard(
+                                element: {
+                                  "test": "test01",
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
+            );
+          },
+        ),
+      ],
+    ));
+  }
+}
+
+class StatusWidget extends StatelessWidget {
+  final VehicleStatusEnum status;
+  const StatusWidget({
+    super.key,
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color statusColor;
+    switch (status) {
+      case VehicleStatusEnum.onGoing:
+        statusColor = Colors.green;
+        break;
+      case VehicleStatusEnum.completed:
+        statusColor = Colors.blue;
+        break;
+      case VehicleStatusEnum.cancelled:
+        statusColor = Colors.red;
+        break;
+    }
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(spacer2),
+        child: Row(
+          children: [
+            Icon(
+              Icons.check_circle_rounded,
+              size: 15,
+              color: statusColor,
+            ),
+            const SizedBox(width: spacer1),
+            Text(status.name),
+          ],
+        ),
+      ),
+    );
+  }
+}

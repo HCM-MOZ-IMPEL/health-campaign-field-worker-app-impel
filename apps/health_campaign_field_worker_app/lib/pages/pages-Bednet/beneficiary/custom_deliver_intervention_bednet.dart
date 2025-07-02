@@ -248,7 +248,13 @@ class CustomDeliverInterventionBednetPageState
                               fetched: (productVariantsValue) {
                                 final variant = productState.whenOrNull(
                                   fetched: (productVariants) {
-                                    return productVariants;
+                                    final filteredProductVariants =
+                                        productVariants
+                                            .where((product) =>
+                                                product.sku !=
+                                                Constants.vechileSKU)
+                                            .toList();
+                                    return filteredProductVariants;
                                   },
                                 );
                                 return BlocBuilder<DigitScannerBloc,

@@ -636,6 +636,7 @@ class Home {
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
   String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 

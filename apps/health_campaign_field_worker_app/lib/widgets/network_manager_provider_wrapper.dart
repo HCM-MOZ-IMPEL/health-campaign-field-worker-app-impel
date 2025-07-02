@@ -25,6 +25,7 @@ import 'package:survey_form/models/entities/service_definition.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/custom_product_variant.dart';
 import '../data/repositories/custom_project_beneficairy.dart';
 import '../data/repositories/custom_task.dart';
 import '../data/repositories/oplog.dart';
@@ -239,6 +240,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => CustomTaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProductVariantModel, ProductVariantSearchModel>>(
+        create: (_) => CustomProductVariantLocalRepository(
+          sql,
+          ProductVariantOpLogManager(isar),
         ),
       ),
       RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(

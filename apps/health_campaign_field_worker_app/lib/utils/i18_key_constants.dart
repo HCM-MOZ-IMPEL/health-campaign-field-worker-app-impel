@@ -18,6 +18,8 @@ const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
 const deliverIntervention = DeliverIntervention();
 
+const vehicleTracking = VehicleTracking();
+
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
@@ -228,6 +230,24 @@ class HomeShowcase {
   String get supervisorMySurveyForm {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
+
+  String get vehicleTracking {
+    return 'VEHICLE_TRACKING';
+  }
+}
+
+class VehicleTracking {
+  const VehicleTracking();
+  String get vehicleOverviewLabel => 'VEHICLE_TRACKING_VEHICLE_OVERVIEW_LABEL';
+  String get mapLabel => 'VEHICLE_TRACKING_MAP_LABEL';
+  String get endTripButtonLabel => 'VEHICLE_TRACKING_END_TRIP';
+
+  String get endTripTitle => 'VEHICLE_TRACKING_END_TRIP_TITLE';
+  String get endTripContent => 'VEHICLE_TRACKING_END_TRIP_CONTENT';
+
+  String get tripBookLabel => "TRIP_BOOK_LABEL";
+  String get tripBookReasonLabel => "TRIP_BOOK_REASON_LABEL";
+  String get bookTripButtonActionLabel => "BOOK_TRIP_BUTTON_ACTION_LABEL";
 }
 
 class SelectStockShowcase {
@@ -652,6 +672,7 @@ class Home {
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
   String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 

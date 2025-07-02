@@ -132,6 +132,7 @@ class Constants {
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
   static const int maxBednetCount = 4;
+  static const String vechileSKU = 'Vehicle';
 
   static const String spaq1 = "SPAQ 1";
   static const String spaq2 = "SPAQ 2";

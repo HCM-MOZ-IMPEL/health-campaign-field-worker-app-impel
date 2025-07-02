@@ -45,6 +45,7 @@ import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
 import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/vehicle_tracking/search_vehicles.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/local/individual_global_search_smc.dart';
@@ -160,6 +161,18 @@ class MainApplicationState extends State<MainApplication>
                   );
                 },
                 lazy: false,
+              ),
+              BlocProvider(
+                create: (context) {
+                  return SearchVehiclesBloc(
+                    userUid: RegistrationDeliverySingleton().loggedInUserUuid!,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    individual: context
+                        .repository<IndividualModel, IndividualSearchModel>(),
+                    productVariantDataRepository: context.repository<
+                        ProductVariantModel, ProductVariantSearchModel>(),
+                  );
+                },
               ),
               BlocProvider(
                 create: (context) {

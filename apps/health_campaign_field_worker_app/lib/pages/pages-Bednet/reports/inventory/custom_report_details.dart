@@ -201,6 +201,10 @@ class CustomInventoryReportDetailsBednetPageState
                             ),
                           ),
                           fetched: (productVariants) {
+                            final filteredProductVariants = productVariants
+                                .where((product) =>
+                                    product.sku != Constants.vechileSKU)
+                                .toList();
                             return ScrollableContent(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -221,7 +225,7 @@ class CustomInventoryReportDetailsBednetPageState
                                   ),
                                 ),
                                 ReactiveFormBuilder(
-                                  form: () => _form(productVariants),
+                                  form: () => _form(filteredProductVariants),
                                   builder: (ctx, form, child) {
                                     return SizedBox(
                                       height:
@@ -466,7 +470,7 @@ class CustomInventoryReportDetailsBednetPageState
                                                         enabled: false,
                                                         form: form,
                                                         menuItems:
-                                                            productVariants,
+                                                            filteredProductVariants,
                                                         formControlName:
                                                             _productVariantKey,
                                                         isRequired: true,
