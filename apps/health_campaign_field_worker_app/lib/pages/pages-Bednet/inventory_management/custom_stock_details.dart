@@ -8,6 +8,7 @@ import '../../../blocs/inventory_management/stock_bloc.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/extensions/extensions.dart';
+import 'custom_stock_details_in_tabs.dart';
 import 'qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -419,15 +420,15 @@ class CustomStockDetailsBednetPageState
                                                     "",
                                               ),
                                             );
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (_) => BlocProvider.value(
-                                        //       value: context.read<StockBloc>(),
-                                        //       child: DynamicTabsPage(),
-                                        //     ),
-                                        //   ),
-                                        // );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => BlocProvider.value(
+                                              value: context.read<StockBloc>(),
+                                              child: DynamicTabsPage(),
+                                            ),
+                                          ),
+                                        );
                                       }
                                     });
                                   }
