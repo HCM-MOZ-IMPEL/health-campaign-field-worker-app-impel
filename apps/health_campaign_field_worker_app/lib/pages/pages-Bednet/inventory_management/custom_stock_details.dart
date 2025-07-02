@@ -527,19 +527,19 @@ class CustomStockDetailsBednetPageState
                                       fetched: (facilities, allFacilities) {
                                         List<FacilityModel> filteredFacilities =
                                             [];
-
                                         if (context.selectedProject.address
                                                     ?.boundaryType ==
                                                 Constants.stateBoundaryLevel ||
                                             context.selectedProject.address
                                                     ?.boundaryType ==
-                                                Constants.stateBoundaryLevel) {
+                                                Constants.administrativePost) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
                                               ? allFacilities //TODO: changed from facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.centralFacility)
+                                                      Constants
+                                                          .provincialWarehouse)
                                                   .toList()
                                               : allFacilities //TODO: changed from facilities
                                                   .where((element) =>

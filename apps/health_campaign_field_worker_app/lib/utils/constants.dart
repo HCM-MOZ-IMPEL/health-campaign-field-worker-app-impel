@@ -96,6 +96,7 @@ class Constants {
   static const String reAdministeredKey = "reAdministered";
   static const String pipeSeparator = ' || ';
   static const String spaq1String = 'SPAQ 1';
+  static const String administrativePost = 'Posto Administrativo';
   static const String centralFacility = 'Central Facility';
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
