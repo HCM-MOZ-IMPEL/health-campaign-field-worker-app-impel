@@ -139,6 +139,8 @@ class Constants {
   static const String blueVAS = "Blue VAS";
   static const String redVAS = "Red VAS";
 
+  static const String bednetSKU = "Redes Mosquiteiras";
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,

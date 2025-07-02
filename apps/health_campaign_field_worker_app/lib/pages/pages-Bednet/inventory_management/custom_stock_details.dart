@@ -396,26 +396,18 @@ class CustomStockDetailsBednetPageState
                                             .control(_productVariantKey)
                                             .value as List<ProductVariantModel>;
 
-                                        ProductVariantModel? spaq1Product =
+                                        ProductVariantModel? bednet =
                                             selectedProducts.firstWhereOrNull(
                                                 (element) =>
                                                     element.sku ==
-                                                    Constants.spaq1);
-                                        ProductVariantModel? spaq2Product =
-                                            selectedProducts.firstWhereOrNull(
-                                                (element) =>
-                                                    element.sku ==
-                                                    Constants.spaq2);
+                                                    Constants.bednetSKU);
                                         final receivedFrom = form
                                             .control(_secondaryPartyKey)
                                             .value as String;
                                         context.read<StockBloc>().add(
                                               StockSelectedEvent(
                                                 selectedProducts: [
-                                                  if (spaq1Product != null)
-                                                    spaq1Product,
-                                                  if (spaq2Product != null)
-                                                    spaq2Product,
+                                                  if (bednet != null) bednet,
                                                 ],
                                                 secondaryPartyType:
                                                     deliveryTeamSelected
@@ -469,16 +461,12 @@ class CustomStockDetailsBednetPageState
                                       )),
                                     ),
                                     fetched: (productVariants) {
-                                      ProductVariantModel? spaq1 =
-                                          productVariants
-                                              .firstWhereOrNull((element) =>
+                                      ProductVariantModel? bednet =
+                                          productVariants.firstWhereOrNull(
+                                              (element) =>
                                                   element.sku ==
-                                                  Constants.spaq1);
-                                      ProductVariantModel? spaq2 =
-                                          productVariants
-                                              .firstWhereOrNull((element) =>
-                                                  element.sku ==
-                                                  Constants.spaq2);
+                                                  Constants.bednetSKU);
+                                      if (bednet == null) return Container();
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -497,10 +485,7 @@ class CustomStockDetailsBednetPageState
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,
-                                              options: [
-                                                if (spaq1 != null) spaq1,
-                                                if (spaq2 != null) spaq2
-                                              ].map((variant) {
+                                              options: [bednet].map((variant) {
                                                 return DropdownItem(
                                                   name: localizations.translate(
                                                       variant.sku ??
