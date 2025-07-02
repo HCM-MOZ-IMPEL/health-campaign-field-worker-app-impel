@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
@@ -45,22 +47,12 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
 
   @override
   void initState() {
-    // Initialize the BlocWrapper with instances of SearchVehicleBloc
-    searchVehicleBlocWrapper = context.read<SearchVehicleBlocWrapper>();
-    context.read<LocationBloc>().add(const LoadLocationEvent());
-    // Listen to state changes
-    searchVehicleBlocWrapper.stateChanges.listen((state) {
-      if (mounted) {
-        setState(() {
-          searchVehiclesState = state;
-        });
-      }
-    });
     searchSelectedVehicle();
     super.initState();
   }
 
   searchSelectedVehicle() {
+    searchVehicleBlocWrapper = context.read<SearchVehicleBlocWrapper>();
     searchVehicleBlocWrapper.searchVehiclesBloc.add(
         SearchVehiclesEvent.searchByVehicleNo(
             projectId: RegistrationDeliverySingleton().projectId!,
@@ -70,6 +62,8 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
   @override
   Widget build(BuildContext context) {
     var localizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     return Scaffold(
         body: ScrollableContent(
       header: const BackNavigationHelpHeaderWidget(
@@ -121,6 +115,11 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           builder: (context, vehicleState) {
             ProductVariantModel? selectedVehicle =
                 vehicleState.vehicles.firstOrNull;
+            String? vehicleType = selectedVehicle?.additionalFields?.fields
+                .firstWhereOrNull(
+                  (field) => field.key == "Vehicle Type",
+                )
+                ?.value;
             return SliverToBoxAdapter(
               child:
                   DigitCard(margin: const EdgeInsets.all(spacer2), children: [
@@ -150,14 +149,14 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                           padding: const EdgeInsets.all(spacer2),
                           child: Text(
                             selectedVehicle?.sku ?? "",
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            style: textTheme.headingL,
                           ),
                         ),
                         const StatusWidget(
                           status: VehicleStatusEnum.onGoing,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(
+                        Padding(
+                          padding: const EdgeInsets.only(
                             left: spacer2,
                             right: spacer2,
                           ),
@@ -165,7 +164,9 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                             children: [
                               DigitTableCard(
                                 element: {
-                                  "test": "test01",
+                                  "Date Start": selectedVehicle
+                                      ?.auditDetails?.createdTime,
+                                  "Vehicle Type": vehicleType,
                                 },
                               ),
                             ],
