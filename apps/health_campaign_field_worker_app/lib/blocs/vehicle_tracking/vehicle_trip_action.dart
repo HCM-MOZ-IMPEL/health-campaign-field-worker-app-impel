@@ -17,21 +17,38 @@ class VehicleTripActionBloc
     extends Bloc<VehicleTripActionEvent, VehicleTripActionState> {
   final DataRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantDataRepository;
+  final DataRepository<UserActionModel, UserActionSearchModel>
+      userActionDataRepository;
 
   VehicleTripActionBloc(
     super.initialState, {
     required this.productVariantDataRepository,
+    required this.userActionDataRepository,
   }) {
-    on(_handleSubmit);
+    on(_handleStartTip);
     on(_handleSearch);
   }
 
   // Event handler for submitting a task
-  FutureOr<void> _handleSubmit(
+  FutureOr<void> _handleStartTip(
     VehicleTripActionSubmitEvent event,
     VehicleTripActionEmitter emit,
   ) async {
     // Update loading state to indicate an operation is in progress
+    emit(state.copyWith(
+      loading: true,
+    ));
+
+    try {
+      // create the userAction model with trip action as start
+      var tripBookActionModel = event.tripBookAction;
+
+      await userActionDataRepository.create(tripBookActionModel);
+    } catch (e) {
+      emit(state.copyWith(
+        loading: false,
+      ));
+    }
   }
 
   // Search for tasks and process the results
@@ -43,10 +60,10 @@ class VehicleTripActionBloc
 
 @freezed
 class VehicleTripActionEvent with _$VehicleTripActionEvent {
-  const factory VehicleTripActionEvent.handleSubmit({
+  const factory VehicleTripActionEvent.handleStartTip({
     required bool isEditing,
     required BoundaryModel boundaryModel,
-    required UserActionModel vehicle,
+    required UserActionModel tripBookAction,
     @Default(false) bool navigateToSummary,
   }) = VehicleTripActionSubmitEvent;
 
