@@ -40,6 +40,7 @@ import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
+import '../../models/entities/vehicle_tracking/trip_actions.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -99,9 +100,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                     BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
                         builder: (context, state) {
                   return DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                      padding:
-                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       children: [
                         ValueListenableBuilder(
                           valueListenable: clickedStatus,
@@ -110,7 +110,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                 builder: (context, locationState) {
                               return DigitButton(
                                 label: localizations.translate(
-                                  i18_local.vehicleTracking.endTripButtonLabel,
+                                  i18_local
+                                      .vehicleTracking.startTripButtonLabel,
                                 ),
                                 isDisabled: false,
                                 type: DigitButtonType.secondary,
@@ -184,59 +185,50 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                 }),
                 slivers: [
                   SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: DigitCard(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: kPadding),
-                            child: Text(
-                              localizations.translate(
-                                i18_local.vehicleTracking.tripBookLabel,
-                              ),
-                              style: theme.textTheme.displayMedium,
+                    child: DigitCard(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: kPadding),
+                          child: Text(
+                            localizations.translate(
+                              i18_local.vehicleTracking.tripBookLabel,
                             ),
+                            style: theme.textTheme.displayMedium,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    kPadding, 0, kPadding, 0),
-                                child: SelectionBox<String>(
-                                  isRequired: true,
-                                  title: localizations.translate(
-                                    i18_local
-                                        .vehicleTracking.tripBookReasonLabel,
-                                  ),
-                                  allowMultipleSelection: false,
-                                  width: 148,
-                                  initialSelection: [],
-                                  options: reasons,
-                                  onSelectionChanged: (value) {
-                                    // setState(() {
-                                    //   if (value.isNotEmpty) {
-                                    //     form.control(_genderKey).value = value.first;
-                                    //   } else if (isEligible) {
-                                    //     form.control(_genderKey).value = null;
-                                    //     setState(() {
-                                    //       form.control(_genderKey).setErrors({'': true});
-                                    //     });
-                                    //   }
-                                    // });
-                                  },
-                                  valueMapper: (value) {
-                                    return localizations.translate(value);
-                                  },
-                                  errorMessage: null,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding, 0, kPadding, 0),
+                              child: SelectionBox<String>(
+                                isRequired: true,
+                                title: localizations.translate(
+                                  i18_local.vehicleTracking.tripBookReasonLabel,
                                 ),
+                                allowMultipleSelection: false,
+                                width: 148,
+                                initialSelection: [],
+                                options: reasons,
+                                onSelectionChanged: (value) {
+                                  setState(() {
+                                    if (value.isNotEmpty) {
+                                      form.control(_tripBookReasonKey).value =
+                                          value.first;
+                                    }
+                                  });
+                                },
+                                valueMapper: (value) {
+                                  return localizations.translate(value);
+                                },
+                                errorMessage: null,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -283,20 +275,49 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
   ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
-    TaskModel taskModel;
-    // context.read<VehicleTripActionBloc>().add(
-    //       VehicleTripActionSubmitEvent(
-    //         isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
-    //                 RegistrationDeliverySingleton().beneficiaryType ==
-    //                     BeneficiaryType.household
-    //             ? true
-    //             : false,
-    //         boundaryModel: RegistrationDeliverySingleton().boundary!,
-    //         navigateToSummary: true,
-    //       ),
-    //     );
+    final accuracy = locationState.accuracy;
+
+    final tripBookActionModel = _getTripActionModel(lat, long, accuracy,
+        vehicleTripActionState, ProductVariantModel(id: ""));
+
+    context.read<VehicleTripActionBloc>().add(
+          VehicleTripActionSubmitEvent(
+            isEditing: false,
+            boundaryModel: RegistrationDeliverySingleton().boundary!,
+            tripBookAction: tripBookActionModel,
+            navigateToSummary: true,
+          ),
+        );
 
     // await handleSubmit(context, taskModel, deliverInterventionState);
+  }
+
+  UserActionModel _getTripActionModel(
+    double? latitude,
+    double? longitude,
+    double? locationAccuracy,
+    VehicleTripActionState vehicleTripActionState,
+    ProductVariantModel selectedVehicle,
+  ) {
+    UserActionModel tripBookAction;
+    var clientReferenceId = IdGen.i.identifier;
+
+    var vehcileNo = selectedVehicle.variation;
+    tripBookAction = UserActionModel(
+        latitude: latitude!,
+        longitude: longitude!,
+        locationAccuracy: locationAccuracy!,
+        clientReferenceId: clientReferenceId,
+        isSync: true,
+        timestamp: 0,
+        projectId: RegistrationDeliverySingleton().projectId!,
+        boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
+        action: TripActions.start.toString(),
+        additionalFields: UserActionAdditionalFields(version: 1, fields: [
+          if (vehcileNo != null) AdditionalField("vehcileNo", vehcileNo)
+        ]));
+
+    return tripBookAction;
   }
 
   FormGroup buildForm() {

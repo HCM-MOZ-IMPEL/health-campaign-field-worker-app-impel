@@ -13,6 +13,7 @@ import 'entities/roles.dart' as p6;
 import 'entities/roles_type.dart' as p7;
 import 'entities/scanner_type.dart' as p8;
 import 'entities/status.dart' as p9;
+import 'entities/vehicle_tracking/trip_actions.dart' as p10;
 
 void initializeMappers() {
   p0.DownsyncSearchModelMapper.ensureInitialized();
@@ -27,4 +28,5 @@ void initializeMappers() {
   p7.RolesTypeMapper.ensureInitialized();
   p8.ScannerTypeMapper.ensureInitialized();
   p9.StatusMapper.ensureInitialized();
+  p10.TripActionsMapper.ensureInitialized();
 }

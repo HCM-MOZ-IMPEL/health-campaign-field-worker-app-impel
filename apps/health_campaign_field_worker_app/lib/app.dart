@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart' as bloc;
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -47,6 +48,7 @@ import 'blocs/inventory_management/stock_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/vehicle_tracking/search_vehicles.dart';
+import 'blocs/vehicle_tracking/vehicle_trip_action.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/local/individual_global_search_smc.dart';
@@ -172,6 +174,17 @@ class MainApplicationState extends State<MainApplication>
                         .repository<IndividualModel, IndividualSearchModel>(),
                     productVariantDataRepository: context.repository<
                         ProductVariantModel, ProductVariantSearchModel>(),
+                  );
+                },
+              ),
+              BlocProvider(
+                create: (context) {
+                  return VehicleTripActionBloc(
+                    const VehicleTripActionState(),
+                    productVariantDataRepository: context.repository<
+                        ProductVariantModel, ProductVariantSearchModel>(),
+                    userActionDataRepository: context
+                        .repository<UserActionModel, UserActionSearchModel>(),
                   );
                 },
               ),
