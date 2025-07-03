@@ -53,11 +53,11 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
 
   @override
   void initState() {
-    searchSelectedVehicle();
+    _searchSelectedVehicle();
     super.initState();
   }
 
-  searchSelectedVehicle() {
+  _searchSelectedVehicle() {
     searchVehicleBlocWrapper = context.read<SearchVehicleBlocWrapper>();
     searchVehicleBlocWrapper.searchVehiclesBloc.add(
         SearchVehiclesEvent.searchByVehicleNo(
@@ -65,7 +65,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
             vehicleNo: widget.vehicleNo));
   }
 
-  VehicleStatusEnum getVehicleStatus(ProductVariantModel? vehicle) {
+  VehicleStatusEnum _getVehicleStatus(ProductVariantModel? vehicle) {
     String? vehicleStatus = vehicle?.additionalFields?.fields
         .firstWhereOrNull((e) => e.key == "Vehicle Status")
         ?.value;
@@ -78,7 +78,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
     }
   }
 
-  String getVehicleType(ProductVariantModel? vehicle) {
+  String? _getVehicleType(ProductVariantModel? vehicle) {
     return vehicle?.additionalFields?.fields
         .firstWhereOrNull(
           (field) => field.key == "Vehicle Type",
@@ -119,17 +119,21 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                     i18_local.vehicleTracking.endTripContent,
                   ),
                   primaryAction: DigitDialogActions(
-                    label: localizations.translate(
-                        i18_local.vehicleTracking.endTripButtonLabel),
+                      label: localizations.translate(
+                          i18_local.vehicleTracking.endTripButtonLabel),
+                      action: (ctx) {
+                        Navigator.of(
+                          context,
+                          rootNavigator: true,
+                        ).pop(true);
+                      }),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations
+                        .translate(i18_local.common.coreCommonCancel),
                     action: (ctx) => Navigator.of(
                       context,
                       rootNavigator: true,
                     ).pop(true),
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations
-                        .translate(i18_local.common.coreCommonCancel),
-                    action: (ctx) {},
                   ),
                 ),
               );
@@ -140,10 +144,16 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
       slivers: [
         BlocBuilder<SearchVehiclesBloc, SearchVehiclesState>(
           builder: (context, vehicleState) {
+            if (vehicleState.loading) {
+              return const SliverToBoxAdapter(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
             ProductVariantModel? selectedVehicle =
                 vehicleState.vehicles.firstOrNull;
-            String? vehicleType = getVehicleType(selectedVehicle);
-            VehicleStatusEnum vehicleStatus = getVehicleStatus(selectedVehicle);
+            String? vehicleType = _getVehicleType(selectedVehicle);
+            VehicleStatusEnum vehicleStatus =
+                _getVehicleStatus(selectedVehicle);
             return SliverToBoxAdapter(
               child:
                   DigitCard(margin: const EdgeInsets.all(spacer2), children: [

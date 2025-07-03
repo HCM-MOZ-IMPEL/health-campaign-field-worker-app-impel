@@ -23,7 +23,13 @@ class VehicleTripActionBloc
   }) {
     on(_handleSubmit);
     on(_handleSearch);
+    on(_handlerEndTrip);
   }
+
+  FutureOr<void> _handlerEndTrip(
+    VehicleTripActionSubmitEvent event,
+    VehicleTripActionEmitter emit,
+  ) async {}
 
   // Event handler for submitting a task
   FutureOr<void> _handleSubmit(
