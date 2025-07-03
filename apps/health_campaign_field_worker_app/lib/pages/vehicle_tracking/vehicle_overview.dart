@@ -29,6 +29,12 @@ enum VehicleStatusEnum {
   cancelled,
 }
 
+Map<VehicleStatusEnum, String> vehicleStatusMap = {
+  VehicleStatusEnum.onGoing: "On Going",
+  VehicleStatusEnum.completed: "Completed",
+  VehicleStatusEnum.cancelled: "Cancelled",
+};
+
 @RoutePage()
 class VehicleOverviewPage extends LocalizedStatefulWidget {
   final String vehicleNo;
@@ -57,6 +63,27 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
         SearchVehiclesEvent.searchByVehicleNo(
             projectId: RegistrationDeliverySingleton().projectId!,
             vehicleNo: widget.vehicleNo));
+  }
+
+  VehicleStatusEnum getVehicleStatus(ProductVariantModel? vehicle) {
+    String? vehicleStatus = vehicle?.additionalFields?.fields
+        .firstWhereOrNull((e) => e.key == "Vehicle Status")
+        ?.value;
+    if (vehicleStatus == "OnGoing") {
+      return VehicleStatusEnum.onGoing;
+    } else if (vehicleStatus == "Cancelled") {
+      return VehicleStatusEnum.cancelled;
+    } else {
+      return VehicleStatusEnum.completed;
+    }
+  }
+
+  String getVehicleType(ProductVariantModel? vehicle) {
+    return vehicle?.additionalFields?.fields
+        .firstWhereOrNull(
+          (field) => field.key == "Vehicle Type",
+        )
+        ?.value;
   }
 
   @override
@@ -115,11 +142,8 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           builder: (context, vehicleState) {
             ProductVariantModel? selectedVehicle =
                 vehicleState.vehicles.firstOrNull;
-            String? vehicleType = selectedVehicle?.additionalFields?.fields
-                .firstWhereOrNull(
-                  (field) => field.key == "Vehicle Type",
-                )
-                ?.value;
+            String? vehicleType = getVehicleType(selectedVehicle);
+            VehicleStatusEnum vehicleStatus = getVehicleStatus(selectedVehicle);
             return SliverToBoxAdapter(
               child:
                   DigitCard(margin: const EdgeInsets.all(spacer2), children: [
@@ -152,8 +176,8 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                             style: textTheme.headingL,
                           ),
                         ),
-                        const StatusWidget(
-                          status: VehicleStatusEnum.onGoing,
+                        StatusWidget(
+                          status: vehicleStatus,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
@@ -164,9 +188,12 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                             children: [
                               DigitTableCard(
                                 element: {
-                                  "Date Start": selectedVehicle
-                                      ?.auditDetails?.createdTime,
-                                  "Vehicle Type": vehicleType,
+                                  localizations.translate(
+                                    i18_local.vehicleTracking.dateStart,
+                                  ): selectedVehicle?.auditDetails?.createdTime,
+                                  localizations.translate(
+                                    i18_local.vehicleTracking.vehicleType,
+                                  ): vehicleType,
                                 },
                               ),
                             ],
@@ -200,7 +227,7 @@ class StatusWidget extends StatelessWidget {
         statusColor = Colors.green;
         break;
       case VehicleStatusEnum.completed:
-        statusColor = Colors.blue;
+        statusColor = Colors.green;
         break;
       case VehicleStatusEnum.cancelled:
         statusColor = Colors.red;
@@ -218,7 +245,7 @@ class StatusWidget extends StatelessWidget {
               color: statusColor,
             ),
             const SizedBox(width: spacer1),
-            Text(status.name),
+            Text(vehicleStatusMap[status] ?? ""),
           ],
         ),
       ),
