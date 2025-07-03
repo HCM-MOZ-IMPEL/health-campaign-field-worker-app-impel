@@ -18,8 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$VehicleTripActionEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
+    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
+            UserActionModel vehicle, bool navigateToSummary)
         handleSubmit,
     required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) =>
@@ -27,7 +27,7 @@ mixin _$VehicleTripActionEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) =>
@@ -35,7 +35,7 @@ mixin _$VehicleTripActionEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
@@ -89,7 +89,10 @@ abstract class _$$VehicleTripActionSubmitEventImplCopyWith<$Res> {
       __$$VehicleTripActionSubmitEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary});
+      {bool isEditing,
+      BoundaryModel boundaryModel,
+      UserActionModel vehicle,
+      bool navigateToSummary});
 }
 
 /// @nodoc
@@ -107,6 +110,7 @@ class __$$VehicleTripActionSubmitEventImplCopyWithImpl<$Res>
   $Res call({
     Object? isEditing = null,
     Object? boundaryModel = null,
+    Object? vehicle = null,
     Object? navigateToSummary = null,
   }) {
     return _then(_$VehicleTripActionSubmitEventImpl(
@@ -118,6 +122,10 @@ class __$$VehicleTripActionSubmitEventImplCopyWithImpl<$Res>
           ? _value.boundaryModel
           : boundaryModel // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
+      vehicle: null == vehicle
+          ? _value.vehicle
+          : vehicle // ignore: cast_nullable_to_non_nullable
+              as UserActionModel,
       navigateToSummary: null == navigateToSummary
           ? _value.navigateToSummary
           : navigateToSummary // ignore: cast_nullable_to_non_nullable
@@ -133,6 +141,7 @@ class _$VehicleTripActionSubmitEventImpl
   const _$VehicleTripActionSubmitEventImpl(
       {required this.isEditing,
       required this.boundaryModel,
+      required this.vehicle,
       this.navigateToSummary = false});
 
   @override
@@ -140,12 +149,14 @@ class _$VehicleTripActionSubmitEventImpl
   @override
   final BoundaryModel boundaryModel;
   @override
+  final UserActionModel vehicle;
+  @override
   @JsonKey()
   final bool navigateToSummary;
 
   @override
   String toString() {
-    return 'VehicleTripActionEvent.handleSubmit(isEditing: $isEditing, boundaryModel: $boundaryModel, navigateToSummary: $navigateToSummary)';
+    return 'VehicleTripActionEvent.handleSubmit(isEditing: $isEditing, boundaryModel: $boundaryModel, vehicle: $vehicle, navigateToSummary: $navigateToSummary)';
   }
 
   @override
@@ -157,13 +168,14 @@ class _$VehicleTripActionSubmitEventImpl
                 other.isEditing == isEditing) &&
             (identical(other.boundaryModel, boundaryModel) ||
                 other.boundaryModel == boundaryModel) &&
+            (identical(other.vehicle, vehicle) || other.vehicle == vehicle) &&
             (identical(other.navigateToSummary, navigateToSummary) ||
                 other.navigateToSummary == navigateToSummary));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isEditing, boundaryModel, navigateToSummary);
+  int get hashCode => Object.hash(
+      runtimeType, isEditing, boundaryModel, vehicle, navigateToSummary);
 
   @JsonKey(ignore: true)
   @override
@@ -176,36 +188,37 @@ class _$VehicleTripActionSubmitEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
+    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
+            UserActionModel vehicle, bool navigateToSummary)
         handleSubmit,
     required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) {
-    return handleSubmit(isEditing, boundaryModel, navigateToSummary);
+    return handleSubmit(isEditing, boundaryModel, vehicle, navigateToSummary);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) {
-    return handleSubmit?.call(isEditing, boundaryModel, navigateToSummary);
+    return handleSubmit?.call(
+        isEditing, boundaryModel, vehicle, navigateToSummary);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
-      return handleSubmit(isEditing, boundaryModel, navigateToSummary);
+      return handleSubmit(isEditing, boundaryModel, vehicle, navigateToSummary);
     }
     return orElse();
   }
@@ -243,15 +256,15 @@ class _$VehicleTripActionSubmitEventImpl
 }
 
 abstract class VehicleTripActionSubmitEvent implements VehicleTripActionEvent {
-  const factory VehicleTripActionSubmitEvent({
-    required final bool isEditing,
-    required final BoundaryModel boundaryModel,
-    required final UserActionModel vehicle,
-    final bool navigateToSummary,
-  }) = _$VehicleTripActionSubmitEventImpl;
+  const factory VehicleTripActionSubmitEvent(
+      {required final bool isEditing,
+      required final BoundaryModel boundaryModel,
+      required final UserActionModel vehicle,
+      final bool navigateToSummary}) = _$VehicleTripActionSubmitEventImpl;
 
   bool get isEditing;
   BoundaryModel get boundaryModel;
+  UserActionModel get vehicle;
   bool get navigateToSummary;
   @JsonKey(ignore: true)
   _$$VehicleTripActionSubmitEventImplCopyWith<
@@ -330,8 +343,8 @@ class _$VehicleTripActionSearchEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
+    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
+            UserActionModel vehicle, bool navigateToSummary)
         handleSubmit,
     required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) {
@@ -342,7 +355,7 @@ class _$VehicleTripActionSearchEventImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) {
@@ -353,7 +366,7 @@ class _$VehicleTripActionSearchEventImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            bool navigateToSummary)?
+            UserActionModel vehicle, bool navigateToSummary)?
         handleSubmit,
     TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
