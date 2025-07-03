@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 // import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -82,96 +83,220 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
 
     return Scaffold(
       body: BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
-          builder: (context, state) {
-        return ScrollableContent(
-          header: const Column(
-            children: [
-              BackNavigationHelpHeaderWidget(
-                showHelp: false,
-              ),
-            ],
-          ),
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: DigitCard(
+          builder: (context, vehicleTripActionState) {
+        return ReactiveFormBuilder(
+            form: () => buildForm(),
+            builder: (context, form, child) {
+              return ScrollableContent(
+                header: const Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: kPadding),
-                      child: Text(
-                        localizations.translate(
-                          i18_local.vehicleTracking.tripBookLabel,
-                        ),
-                        style: theme.textTheme.displayMedium,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                          child: SelectionBox<String>(
-                            isRequired: true,
-                            title: localizations.translate(
-                              i18_local.vehicleTracking.tripBookReasonLabel,
-                            ),
-                            allowMultipleSelection: false,
-                            width: 148,
-                            initialSelection: [],
-                            options: reasons,
-                            onSelectionChanged: (value) {
-                              // setState(() {
-                              //   if (value.isNotEmpty) {
-                              //     form.control(_genderKey).value = value.first;
-                              //   } else if (isEligible) {
-                              //     form.control(_genderKey).value = null;
-                              //     setState(() {
-                              //       form.control(_genderKey).setErrors({'': true});
-                              //     });
-                              //   }
-                              // });
-                            },
-                            valueMapper: (value) {
-                              return localizations.translate(value);
-                            },
-                            errorMessage: null,
-                          ),
-                        ),
-                      ],
+                    BackNavigationHelpHeaderWidget(
+                      showHelp: false,
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
-        );
+                footer:
+                    BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
+                        builder: (context, state) {
+                  return DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable: clickedStatus,
+                          builder: (context, bool isClicked, _) {
+                            return BlocBuilder<LocationBloc, LocationState>(
+                                builder: (context, locationState) {
+                              return DigitButton(
+                                label: localizations.translate(
+                                  i18_local.vehicleTracking.endTripButtonLabel,
+                                ),
+                                isDisabled: false,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                                onPressed: isClicked
+                                    ? () {}
+                                    : () async {
+                                        form.markAllAsTouched();
+                                        if (!form.valid) {
+                                          return;
+                                        }
+
+                                        final shouldSubmit =
+                                            await dialog.DigitDialog.show<bool>(
+                                          context,
+                                          options: dialog.DigitDialogOptions(
+                                            titleText: localizations.translate(
+                                              i18.deliverIntervention
+                                                  .dialogTitle,
+                                            ),
+                                            contentText:
+                                                localizations.translate(
+                                              i18.deliverIntervention
+                                                  .dialogContent,
+                                            ),
+                                            primaryAction:
+                                                dialog.DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonSubmit,
+                                              ),
+                                              action: (context) {
+                                                clickedStatus.value = true;
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop(true);
+                                              },
+                                            ),
+                                            secondaryAction:
+                                                dialog.DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonCancel,
+                                              ),
+                                              action: (context) => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(false),
+                                            ),
+                                          ),
+                                        );
+                                        if ((shouldSubmit ?? false) &&
+                                            context.mounted) {
+                                          context
+                                              .read<LocationBloc>()
+                                              .add(const LoadLocationEvent());
+                                          handleLocationState(
+                                            locationState,
+                                            context,
+                                            vehicleTripActionState,
+                                            form,
+                                            null,
+                                          );
+                                        }
+                                      },
+                              );
+                            });
+                          },
+                        ),
+                      ]);
+                }),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: DigitCard(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: kPadding),
+                            child: Text(
+                              localizations.translate(
+                                i18_local.vehicleTracking.tripBookLabel,
+                              ),
+                              style: theme.textTheme.displayMedium,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    kPadding, 0, kPadding, 0),
+                                child: SelectionBox<String>(
+                                  isRequired: true,
+                                  title: localizations.translate(
+                                    i18_local
+                                        .vehicleTracking.tripBookReasonLabel,
+                                  ),
+                                  allowMultipleSelection: false,
+                                  width: 148,
+                                  initialSelection: [],
+                                  options: reasons,
+                                  onSelectionChanged: (value) {
+                                    // setState(() {
+                                    //   if (value.isNotEmpty) {
+                                    //     form.control(_genderKey).value = value.first;
+                                    //   } else if (isEligible) {
+                                    //     form.control(_genderKey).value = null;
+                                    //     setState(() {
+                                    //       form.control(_genderKey).setErrors({'': true});
+                                    //     });
+                                    //   }
+                                    // });
+                                  },
+                                  valueMapper: (value) {
+                                    return localizations.translate(value);
+                                  },
+                                  errorMessage: null,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            });
       }),
-      bottomNavigationBar: SizedBox(
-        height: 50,
-        child: Card(
-          margin: const EdgeInsets.all(0),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-            child: Column(
-              children: [
-                DigitButton(
-                  label: localizations.translate(
-                      i18_local.vehicleTracking.bookTripButtonActionLabel),
-                  onPressed: () {},
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large,
-                  mainAxisSize: MainAxisSize.max,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
     );
+  }
+
+  void handleLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    FormGroup form,
+    IndividualModel? selectedIndividual,
+  ) {
+    if (context.mounted) {
+      DigitComponentsUtils.showDialog(
+        context,
+        localizations.translate(i18.common.locationCapturing),
+        DialogType.inProgress,
+      );
+
+      Future.delayed(const Duration(seconds: 0), () {
+        // After delay, hide the initial dialog
+        DigitComponentsUtils.hideDialog(context);
+        handleCapturedLocationState(
+          locationState,
+          context,
+          vehicleTripActionState,
+          form,
+          selectedIndividual,
+        );
+      });
+    }
+  }
+
+  Future<void> handleCapturedLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    FormGroup form,
+    IndividualModel? selectedIndividual,
+  ) async {
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    TaskModel taskModel;
+    // context.read<VehicleTripActionBloc>().add(
+    //       VehicleTripActionSubmitEvent(
+    //         isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+    //                 RegistrationDeliverySingleton().beneficiaryType ==
+    //                     BeneficiaryType.household
+    //             ? true
+    //             : false,
+    //         boundaryModel: RegistrationDeliverySingleton().boundary!,
+    //         navigateToSummary: true,
+    //       ),
+    //     );
+
+    // await handleSubmit(context, taskModel, deliverInterventionState);
   }
 
   FormGroup buildForm() {
