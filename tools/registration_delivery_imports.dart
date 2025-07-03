@@ -183,6 +183,9 @@ void _updateHome(String homeFilePath) {
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
               .toList(),
+              refusalReasonsCommentOptions: appConfiguration.refusalReasonsCommentOptions!
+              .map((e) => e.code)
+              .toList(),
           symptomsTypes:
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
@@ -298,7 +301,7 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate for localization
   var importStatement =
       "import 'package:registration_delivery/blocs/app_localization.dart' as registration_delivery_localization;";
-  var delegate = ''' 
+  var delegate = '''
       registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
       getLocalizationString(
