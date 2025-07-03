@@ -21,8 +21,7 @@ mixin _$VehicleTripActionEvent {
     required TResult Function(
             bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
         handleSubmit,
-    required TResult Function(ProductVariantModel vechicleTripSearch)
-        handleSearch,
+    required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,7 +29,7 @@ mixin _$VehicleTripActionEvent {
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult? Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,7 +37,7 @@ mixin _$VehicleTripActionEvent {
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -180,8 +179,7 @@ class _$VehicleTripActionSubmitEventImpl
     required TResult Function(
             bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
         handleSubmit,
-    required TResult Function(ProductVariantModel vechicleTripSearch)
-        handleSearch,
+    required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) {
     return handleSubmit(isEditing, boundaryModel, navigateToSummary);
   }
@@ -192,7 +190,7 @@ class _$VehicleTripActionSubmitEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult? Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) {
     return handleSubmit?.call(isEditing, boundaryModel, navigateToSummary);
   }
@@ -203,7 +201,7 @@ class _$VehicleTripActionSubmitEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -245,10 +243,12 @@ class _$VehicleTripActionSubmitEventImpl
 }
 
 abstract class VehicleTripActionSubmitEvent implements VehicleTripActionEvent {
-  const factory VehicleTripActionSubmitEvent(
-      {required final bool isEditing,
-      required final BoundaryModel boundaryModel,
-      final bool navigateToSummary}) = _$VehicleTripActionSubmitEventImpl;
+  const factory VehicleTripActionSubmitEvent({
+    required final bool isEditing,
+    required final BoundaryModel boundaryModel,
+    required final UserActionModel vehicle,
+    final bool navigateToSummary,
+  }) = _$VehicleTripActionSubmitEventImpl;
 
   bool get isEditing;
   BoundaryModel get boundaryModel;
@@ -266,7 +266,7 @@ abstract class _$$VehicleTripActionSearchEventImplCopyWith<$Res> {
           $Res Function(_$VehicleTripActionSearchEventImpl) then) =
       __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ProductVariantModel vechicleTripSearch});
+  $Res call({UserActionModel vechicleTripSearch});
 }
 
 /// @nodoc
@@ -288,7 +288,7 @@ class __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>
       vechicleTripSearch: null == vechicleTripSearch
           ? _value.vechicleTripSearch
           : vechicleTripSearch // ignore: cast_nullable_to_non_nullable
-              as ProductVariantModel,
+              as UserActionModel,
     ));
   }
 }
@@ -300,7 +300,7 @@ class _$VehicleTripActionSearchEventImpl
   const _$VehicleTripActionSearchEventImpl({required this.vechicleTripSearch});
 
   @override
-  final ProductVariantModel vechicleTripSearch;
+  final UserActionModel vechicleTripSearch;
 
   @override
   String toString() {
@@ -333,8 +333,7 @@ class _$VehicleTripActionSearchEventImpl
     required TResult Function(
             bool isEditing, BoundaryModel boundaryModel, bool navigateToSummary)
         handleSubmit,
-    required TResult Function(ProductVariantModel vechicleTripSearch)
-        handleSearch,
+    required TResult Function(UserActionModel vechicleTripSearch) handleSearch,
   }) {
     return handleSearch(vechicleTripSearch);
   }
@@ -345,7 +344,7 @@ class _$VehicleTripActionSearchEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult? Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult? Function(UserActionModel vechicleTripSearch)? handleSearch,
   }) {
     return handleSearch?.call(vechicleTripSearch);
   }
@@ -356,7 +355,7 @@ class _$VehicleTripActionSearchEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             bool navigateToSummary)?
         handleSubmit,
-    TResult Function(ProductVariantModel vechicleTripSearch)? handleSearch,
+    TResult Function(UserActionModel vechicleTripSearch)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -399,10 +398,10 @@ class _$VehicleTripActionSearchEventImpl
 
 abstract class VehicleTripActionSearchEvent implements VehicleTripActionEvent {
   const factory VehicleTripActionSearchEvent(
-          {required final ProductVariantModel vechicleTripSearch}) =
+          {required final UserActionModel vechicleTripSearch}) =
       _$VehicleTripActionSearchEventImpl;
 
-  ProductVariantModel get vechicleTripSearch;
+  UserActionModel get vechicleTripSearch;
   @JsonKey(ignore: true)
   _$$VehicleTripActionSearchEventImplCopyWith<
           _$VehicleTripActionSearchEventImpl>

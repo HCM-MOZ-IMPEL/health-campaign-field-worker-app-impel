@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -45,11 +46,12 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   const factory VehicleTripActionEvent.handleSubmit({
     required bool isEditing,
     required BoundaryModel boundaryModel,
+    required UserActionModel vehicle,
     @Default(false) bool navigateToSummary,
   }) = VehicleTripActionSubmitEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required ProductVariantModel vechicleTripSearch,
+    required UserActionModel vechicleTripSearch,
   }) = VehicleTripActionSearchEvent;
 }
 
