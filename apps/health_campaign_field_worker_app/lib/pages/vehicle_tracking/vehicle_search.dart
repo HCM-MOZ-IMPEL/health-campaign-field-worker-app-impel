@@ -166,8 +166,14 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                             child: ViewVehicleCard(
                               vehicle: i,
                               onOpenPressed: () async {
+                                String? vehicleNo = i.variation;
+                                if (vehicleNo == null) {
+                                  return;
+                                }
                                 await context.router.push(
-                                  const VehicleOverviewRoute(),
+                                  VehicleOverviewRoute(
+                                    vehicleNo: vehicleNo,
+                                  ),
                                 );
 
                                 setState(() {

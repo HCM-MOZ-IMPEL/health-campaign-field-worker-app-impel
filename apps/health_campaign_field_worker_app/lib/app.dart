@@ -44,6 +44,7 @@ import 'blocs/blocs-smc/closed/closed_household.dart';
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
 import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
+import 'blocs/inventory_management/stock_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/vehicle_tracking/search_vehicles.dart';
@@ -263,6 +264,12 @@ class MainApplicationState extends State<MainApplication>
                 create: (_) {
                   return LocationBloc(location: Location())
                     ..add(const LoadLocationEvent());
+                },
+                lazy: false,
+              ),
+              BlocProvider(
+                create: (_) {
+                  return StockBloc();
                 },
                 lazy: false,
               ),

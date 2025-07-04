@@ -6,6 +6,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/pages-Bednet/inventory_management/custom_inventory_facility_selection.dart';
 import 'package:health_campaign_field_worker_app/pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/pages/facility_selection.dart';

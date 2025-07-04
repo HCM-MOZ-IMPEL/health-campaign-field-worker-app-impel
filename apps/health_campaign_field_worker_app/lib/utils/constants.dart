@@ -99,6 +99,7 @@ class Constants {
   static const String reAdministeredKey = "reAdministered";
   static const String pipeSeparator = ' || ';
   static const String spaq1String = 'SPAQ 1';
+  static const String administrativePost = 'Posto Administrativo';
   static const String centralFacility = 'Central Facility';
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
@@ -136,6 +137,13 @@ class Constants {
   static const String supervisorUsername = 'supervisor_username';
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
+
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const String redVAS = "Red VAS";
+
+  static const String bednetSKU = "Redes Mosquiteiras";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

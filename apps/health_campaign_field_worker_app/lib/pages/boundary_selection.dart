@@ -580,7 +580,7 @@ class _BoundarySelectionPageState
                                                         );
                                                     bool isOnline =
                                                         await getIsConnected();
-
+                                                    context.boundary;
                                                     if (context.mounted) {
                                                       if (isOnline &&
                                                           isDistributor &&
