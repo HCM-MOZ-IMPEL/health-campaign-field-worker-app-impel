@@ -108,8 +108,8 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
             type: DigitButtonType.secondary,
             size: DigitButtonSize.large,
             mainAxisSize: MainAxisSize.max,
-            onPressed: () {
-              DigitDialog.show(
+            onPressed: () async {
+              final submit = await DigitDialog.show<bool>(
                 context,
                 options: DigitDialogOptions(
                   titleText: localizations.translate(
@@ -137,6 +137,11 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                   ),
                 ),
               );
+              if (context.mounted) {
+                if (submit ?? false) {
+                  context.router.push(VehicleTripBookRoute());
+                }
+              }
             },
           ),
         ),

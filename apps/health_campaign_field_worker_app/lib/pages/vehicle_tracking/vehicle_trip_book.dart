@@ -96,93 +96,86 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                     ),
                   ],
                 ),
-                footer:
-                    BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
-                        builder: (context, state) {
-                  return DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      children: [
-                        ValueListenableBuilder(
-                          valueListenable: clickedStatus,
-                          builder: (context, bool isClicked, _) {
-                            return BlocBuilder<LocationBloc, LocationState>(
-                                builder: (context, locationState) {
-                              return DigitButton(
-                                label: localizations.translate(
-                                  i18_local
-                                      .vehicleTracking.startTripButtonLabel,
-                                ),
-                                isDisabled: false,
-                                type: DigitButtonType.secondary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
-                                onPressed: isClicked
-                                    ? () {}
-                                    : () async {
-                                        form.markAllAsTouched();
-                                        if (!form.valid) {
-                                          return;
-                                        }
+                footer: DigitCard(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    children: [
+                      ValueListenableBuilder(
+                        valueListenable: clickedStatus,
+                        builder: (context, bool isClicked, _) {
+                          return BlocBuilder<LocationBloc, LocationState>(
+                              builder: (context, locationState) {
+                            return DigitButton(
+                              label: localizations.translate(
+                                i18_local.vehicleTracking.startTripButtonLabel,
+                              ),
+                              isDisabled: false,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: isClicked
+                                  ? () {}
+                                  : () async {
+                                      form.markAllAsTouched();
+                                      if (!form.valid) {
+                                        return;
+                                      }
 
-                                        final shouldSubmit =
-                                            await dialog.DigitDialog.show<bool>(
-                                          context,
-                                          options: dialog.DigitDialogOptions(
-                                            titleText: localizations.translate(
-                                              i18.deliverIntervention
-                                                  .dialogTitle,
+                                      final shouldSubmit =
+                                          await dialog.DigitDialog.show<bool>(
+                                        context,
+                                        options: dialog.DigitDialogOptions(
+                                          titleText: localizations.translate(
+                                            i18.deliverIntervention.dialogTitle,
+                                          ),
+                                          contentText: localizations.translate(
+                                            i18.deliverIntervention
+                                                .dialogContent,
+                                          ),
+                                          primaryAction:
+                                              dialog.DigitDialogActions(
+                                            label: localizations.translate(
+                                              i18.common.coreCommonSubmit,
                                             ),
-                                            contentText:
-                                                localizations.translate(
-                                              i18.deliverIntervention
-                                                  .dialogContent,
-                                            ),
-                                            primaryAction:
-                                                dialog.DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonSubmit,
-                                              ),
-                                              action: (context) {
-                                                clickedStatus.value = true;
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop(true);
-                                              },
-                                            ),
-                                            secondaryAction:
-                                                dialog.DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonCancel,
-                                              ),
-                                              action: (context) => Navigator.of(
+                                            action: (context) {
+                                              clickedStatus.value = true;
+                                              Navigator.of(
                                                 context,
                                                 rootNavigator: true,
-                                              ).pop(false),
-                                            ),
+                                              ).pop(true);
+                                            },
                                           ),
+                                          secondaryAction:
+                                              dialog.DigitDialogActions(
+                                            label: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            action: (context) => Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop(false),
+                                          ),
+                                        ),
+                                      );
+                                      if ((shouldSubmit ?? false) &&
+                                          context.mounted) {
+                                        context
+                                            .read<LocationBloc>()
+                                            .add(const LoadLocationEvent());
+                                        handleLocationState(
+                                          locationState,
+                                          context,
+                                          vehicleTripActionState,
+                                          form,
+                                          null,
                                         );
-                                        if ((shouldSubmit ?? false) &&
-                                            context.mounted) {
-                                          context
-                                              .read<LocationBloc>()
-                                              .add(const LoadLocationEvent());
-                                          handleLocationState(
-                                            locationState,
-                                            context,
-                                            vehicleTripActionState,
-                                            form,
-                                            null,
-                                          );
-                                        }
-                                      },
-                              );
-                            });
-                          },
-                        ),
-                      ]);
-                }),
+                                      }
+                                    },
+                            );
+                          });
+                        },
+                      ),
+                    ]),
                 slivers: [
                   SliverToBoxAdapter(
                     child: DigitCard(

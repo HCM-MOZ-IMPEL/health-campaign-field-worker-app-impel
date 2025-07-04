@@ -434,8 +434,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.local_taxi_rounded,
           label: i18_local.home.vehicleTrackingLabel,
           onPressed: () => {
-            context.router.push(VehicleTripBookRoute())
-            // context.router.push(const VehicleTrackingWrapperRoute()),
+            // context.router.push(VehicleTripBookRoute())
+            context.router.push(const VehicleTrackingWrapperRoute()),
           },
         ),
       ),
