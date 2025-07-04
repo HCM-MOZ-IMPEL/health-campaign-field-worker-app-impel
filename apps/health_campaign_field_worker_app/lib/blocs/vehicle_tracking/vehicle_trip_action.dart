@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/additional_fields_type.dart';
+import '../../models/entities/vehicle_tracking/trip_actions.dart';
 
 part 'vehicle_trip_action.freezed.dart';
 
@@ -31,30 +32,38 @@ class VehicleTripActionBloc
   }
 
   FutureOr<void> _handlerEndTrip(
-    VehicleTripActionSubmitEvent event,
+    VehicleTripActionEndTripEvent event,
     VehicleTripActionEmitter emit,
-  ) async {}
+  ) async {
+    emit(state.copyWith(loading: true));
+    UserActionModel tripActionModel = event.tripAction;
+    try {
+      userActionDataRepository.update(tripActionModel.copyWith(
+        action: TripActions.end.name,
+      ));
+      emit(state.copyWith(
+        loading: false,
+        tripAction: tripActionModel,
+      ));
+    } catch (e) {}
+  }
 
   // Event handler for submitting a task
   FutureOr<void> _handleStartTip(
-    VehicleTripActionSubmitEvent event,
+    VehicleTripActionStartTripEvent event,
     VehicleTripActionEmitter emit,
   ) async {
     // Update loading state to indicate an operation is in progress
-    emit(state.copyWith(
-      loading: true,
-    ));
-
+    emit(state.copyWith(loading: true));
+    var tripBookActionModel = event.tripBookAction;
     try {
       // create the userAction model with trip action as start
-      var tripBookActionModel = event.tripBookAction;
-
       await userActionDataRepository.create(tripBookActionModel);
-    } catch (e) {
       emit(state.copyWith(
         loading: false,
+        tripAction: tripBookActionModel,
       ));
-    }
+    } catch (e) {}
   }
 
   // Search for tasks and process the results
@@ -71,10 +80,17 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
     required BoundaryModel boundaryModel,
     required UserActionModel tripBookAction,
     @Default(false) bool navigateToSummary,
-  }) = VehicleTripActionSubmitEvent;
+  }) = VehicleTripActionStartTripEvent;
+
+  const factory VehicleTripActionEvent.handleEndTip({
+    required bool isEditing,
+    required BoundaryModel boundaryModel,
+    required UserActionModel tripAction,
+    @Default(false) bool navigateToSummary,
+  }) = VehicleTripActionEndTripEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required UserActionModel vechicleTripSearch,
+    required UserActionModel vehicleTripSearch,
   }) = VehicleTripActionSearchEvent;
 }
 
@@ -83,5 +99,6 @@ class VehicleTripActionState with _$VehicleTripActionState {
   const factory VehicleTripActionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
+    @Default(null) UserActionModel? tripAction,
   }) = _VehicleTripActionState;
 }
