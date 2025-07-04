@@ -243,6 +243,9 @@ class VehicleTracking {
   String get endTripButtonLabel => 'VEHICLE_TRACKING_END_TRIP';
   String get startTripButtonLabel => 'VEHICLE_TRACKING_START_TRIP';
 
+  String get startTripTitle => 'VEHICLE_TRACKING_START_TRIP_TITLE';
+  String get startTripContent => 'VEHICLE_TRACKING_START_TRIP_CONTENT';
+
   String get endTripTitle => 'VEHICLE_TRACKING_END_TRIP_TITLE';
   String get endTripContent => 'VEHICLE_TRACKING_END_TRIP_CONTENT';
 

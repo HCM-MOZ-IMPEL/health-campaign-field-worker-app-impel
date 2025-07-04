@@ -1267,13 +1267,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     VehicleTripBookRoute.name: (routeData) {
-      final args = routeData.argsAs<VehicleTripBookRouteArgs>(
-          orElse: () => const VehicleTripBookRouteArgs());
+      final args = routeData.argsAs<VehicleTripBookRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: VehicleTripBookPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          vehicleNo: args.vehicleNo,
         ),
       );
     },
@@ -5843,12 +5843,14 @@ class VehicleTripBookRoute extends PageRouteInfo<VehicleTripBookRouteArgs> {
   VehicleTripBookRoute({
     Key? key,
     RegistrationDeliveryLocalization? appLocalizations,
+    required String vehicleNo,
     List<PageRouteInfo>? children,
   }) : super(
           VehicleTripBookRoute.name,
           args: VehicleTripBookRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            vehicleNo: vehicleNo,
           ),
           initialChildren: children,
         );
@@ -5863,15 +5865,18 @@ class VehicleTripBookRouteArgs {
   const VehicleTripBookRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.vehicleNo,
   });
 
   final Key? key;
 
   final RegistrationDeliveryLocalization? appLocalizations;
 
+  final String vehicleNo;
+
   @override
   String toString() {
-    return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
   }
 }
 

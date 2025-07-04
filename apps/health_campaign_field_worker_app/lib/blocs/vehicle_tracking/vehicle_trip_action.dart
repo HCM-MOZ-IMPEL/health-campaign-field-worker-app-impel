@@ -55,7 +55,7 @@ class VehicleTripActionBloc
   ) async {
     // Update loading state to indicate an operation is in progress
     emit(state.copyWith(loading: true));
-    var tripBookActionModel = event.tripBookAction;
+    UserActionModel tripBookActionModel = event.tripBookAction;
     try {
       // create the userAction model with trip action as start
       await userActionDataRepository.create(tripBookActionModel);
@@ -63,7 +63,9 @@ class VehicleTripActionBloc
         loading: false,
         tripAction: tripBookActionModel,
       ));
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Search for tasks and process the results

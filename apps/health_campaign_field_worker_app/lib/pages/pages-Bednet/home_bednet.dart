@@ -1,5 +1,6 @@
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -564,9 +565,9 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
+            element == i18_local.home.vehicleTrackingLabel ||
             element ==
-                i18_local.home
-                    .vehicleTrackingLabel) // TODO: need to add close household inside mdms
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -624,6 +625,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -658,6 +661,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
               ],
             ),
           );
