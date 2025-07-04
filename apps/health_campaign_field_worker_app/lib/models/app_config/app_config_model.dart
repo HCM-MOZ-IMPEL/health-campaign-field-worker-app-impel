@@ -81,6 +81,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
+    @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+    required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
@@ -218,6 +220,17 @@ class DeliveryCommentOptions with _$DeliveryCommentOptions {
 
   factory DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
       _$DeliveryCommentOptionsFromJson(json);
+}
+
+@freezed
+class RefusalReasonsCommentOptions with _$RefusalReasonsCommentOptions {
+  factory RefusalReasonsCommentOptions({
+    required String name,
+    required String code,
+  }) = _RefusalReasonsCommentOptions;
+
+  factory RefusalReasonsCommentOptions.fromJson(Map<String, dynamic> json) =>
+      _$RefusalReasonsCommentOptionsFromJson(json);
 }
 
 @freezed

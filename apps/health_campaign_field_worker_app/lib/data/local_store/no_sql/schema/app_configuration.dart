@@ -57,6 +57,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
+  @Name('REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  late List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions;
+
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
 
@@ -109,6 +112,12 @@ class IdTypeOptions {
 
 @embedded
 class DeliveryCommentOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class RefusalReasonsCommentOptions {
   late String name;
   late String code;
 }
