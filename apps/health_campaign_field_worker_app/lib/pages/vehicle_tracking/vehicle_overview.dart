@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -18,21 +19,22 @@ import 'package:registration_delivery/widgets/table_card/table_card.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/vehicle_tracking/search_vehicle_bloc_common_wrapper.dart';
 import '../../blocs/vehicle_tracking/search_vehicles.dart';
+import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../router/app_router.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 enum VehicleStatusEnum {
+  none,
   onGoing,
   completed,
-  cancelled,
 }
 
 Map<VehicleStatusEnum, String> vehicleStatusMap = {
+  VehicleStatusEnum.none: "none",
   VehicleStatusEnum.onGoing: "On Going",
   VehicleStatusEnum.completed: "Completed",
-  VehicleStatusEnum.cancelled: "Cancelled",
 };
 
 @RoutePage()
@@ -65,16 +67,14 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
             vehicleNo: widget.vehicleNo));
   }
 
-  VehicleStatusEnum _getVehicleStatus(ProductVariantModel? vehicle) {
-    String? vehicleStatus = vehicle?.additionalFields?.fields
-        .firstWhereOrNull((e) => e.key == "Vehicle Status")
-        ?.value;
-    if (vehicleStatus == "OnGoing") {
+  VehicleStatusEnum _getVehicleStatus(UserActionModel? userActionModel) {
+    String? tripAction = userActionModel?.action;
+    if (tripAction == "start") {
       return VehicleStatusEnum.onGoing;
-    } else if (vehicleStatus == "Cancelled") {
-      return VehicleStatusEnum.cancelled;
-    } else {
+    } else if (tripAction == "end") {
       return VehicleStatusEnum.completed;
+    } else {
+      return VehicleStatusEnum.none;
     }
   }
 
@@ -91,134 +91,142 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
     var localizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    return Scaffold(
-        body: ScrollableContent(
-      header: const BackNavigationHelpHeaderWidget(
-        showHelp: false,
-      ),
-      enableFixedDigitButton: true,
-      footer: DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: spacer2),
-          child: DigitButton(
-            label: localizations.translate(
-              i18_local.vehicleTracking.endTripButtonLabel,
-            ),
-            isDisabled: false,
-            type: DigitButtonType.secondary,
-            size: DigitButtonSize.large,
-            mainAxisSize: MainAxisSize.max,
-            onPressed: () {
-              DigitDialog.show(
-                context,
-                options: DigitDialogOptions(
-                  titleText: localizations.translate(
-                    i18_local.vehicleTracking.endTripTitle,
-                  ),
-                  contentText: localizations.translate(
-                    i18_local.vehicleTracking.endTripContent,
-                  ),
-                  primaryAction: DigitDialogActions(
-                      label: localizations.translate(
-                          i18_local.vehicleTracking.endTripButtonLabel),
-                      action: (ctx) {
-                        Navigator.of(
+    return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
+      builder: (context, tripState) {
+        return Scaffold(
+            body: ScrollableContent(
+          header: const BackNavigationHelpHeaderWidget(
+            showHelp: false,
+          ),
+          enableFixedDigitButton: true,
+          footer:
+              DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: spacer2),
+              child: DigitButton(
+                label: localizations.translate(
+                  i18_local.vehicleTracking.endTripButtonLabel,
+                ),
+                isDisabled: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  DigitDialog.show(
+                    context,
+                    options: DigitDialogOptions(
+                      titleText: localizations.translate(
+                        i18_local.vehicleTracking.endTripTitle,
+                      ),
+                      contentText: localizations.translate(
+                        i18_local.vehicleTracking.endTripContent,
+                      ),
+                      primaryAction: DigitDialogActions(
+                          label: localizations.translate(
+                              i18_local.vehicleTracking.endTripButtonLabel),
+                          action: (ctx) {
+                            Navigator.of(
+                              context,
+                              rootNavigator: true,
+                            ).pop(true);
+                          }),
+                      secondaryAction: DigitDialogActions(
+                        label: localizations
+                            .translate(i18_local.common.coreCommonCancel),
+                        action: (ctx) => Navigator.of(
                           context,
                           rootNavigator: true,
-                        ).pop(true);
-                      }),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations
-                        .translate(i18_local.common.coreCommonCancel),
-                    action: (ctx) => Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pop(true),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ]),
-      slivers: [
-        BlocBuilder<SearchVehiclesBloc, SearchVehiclesState>(
-          builder: (context, vehicleState) {
-            if (vehicleState.loading) {
-              return const SliverToBoxAdapter(
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-            ProductVariantModel? selectedVehicle =
-                vehicleState.vehicles.firstOrNull;
-            String? vehicleType = _getVehicleType(selectedVehicle);
-            VehicleStatusEnum vehicleStatus =
-                _getVehicleStatus(selectedVehicle);
-            return SliverToBoxAdapter(
-              child:
-                  DigitCard(margin: const EdgeInsets.all(spacer2), children: [
-                Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: SizedBox(
-                        width: 100,
-                        child: DigitButton(
-                          label: localizations.translate(
-                            i18_local.vehicleTracking.mapLabel,
-                          ),
-                          isDisabled: false,
-                          type: DigitButtonType.secondary,
-                          size: DigitButtonSize.medium,
-                          mainAxisSize: MainAxisSize.max,
-                          onPressed: () {},
-                        ),
+                        ).pop(true),
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
+                  );
+                },
+              ),
+            ),
+          ]),
+          slivers: [
+            BlocBuilder<SearchVehiclesBloc, SearchVehiclesState>(
+              builder: (context, vehicleState) {
+                if (vehicleState.loading) {
+                  return const SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                ProductVariantModel? selectedVehicle =
+                    vehicleState.vehicles.firstOrNull;
+                String? vehicleType = _getVehicleType(selectedVehicle);
+                VehicleStatusEnum vehicleStatus =
+                    _getVehicleStatus(tripState.tripAction);
+                return SliverToBoxAdapter(
+                  child: DigitCard(
+                      margin: const EdgeInsets.all(spacer2),
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(spacer2),
-                          child: Text(
-                            selectedVehicle?.sku ?? "",
-                            style: textTheme.headingL,
-                          ),
-                        ),
-                        StatusWidget(
-                          status: vehicleStatus,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: spacer2,
-                            right: spacer2,
-                          ),
-                          child: Column(
-                            children: [
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(
-                                    i18_local.vehicleTracking.dateStart,
-                                  ): selectedVehicle?.auditDetails?.createdTime,
-                                  localizations.translate(
-                                    i18_local.vehicleTracking.vehicleType,
-                                  ): vehicleType,
-                                },
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: SizedBox(
+                                width: 100,
+                                child: DigitButton(
+                                  label: localizations.translate(
+                                    i18_local.vehicleTracking.mapLabel,
+                                  ),
+                                  isDisabled: false,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.medium,
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () {},
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(spacer2),
+                                  child: Text(
+                                    selectedVehicle?.sku ?? "",
+                                    style: textTheme.headingL,
+                                  ),
+                                ),
+                                StatusWidget(
+                                  status: vehicleStatus,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: spacer2,
+                                    right: spacer2,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      DigitTableCard(
+                                        element: {
+                                          localizations.translate(
+                                            i18_local.vehicleTracking.dateStart,
+                                          ): selectedVehicle
+                                              ?.auditDetails?.createdTime,
+                                          localizations.translate(
+                                            i18_local
+                                                .vehicleTracking.vehicleType,
+                                          ): vehicleType,
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ]),
-            );
-          },
-        ),
-      ],
-    ));
+                      ]),
+                );
+              },
+            ),
+          ],
+        ));
+      },
+    );
   }
 }
 
@@ -239,7 +247,7 @@ class StatusWidget extends StatelessWidget {
       case VehicleStatusEnum.completed:
         statusColor = Colors.green;
         break;
-      case VehicleStatusEnum.cancelled:
+      case VehicleStatusEnum.none:
         statusColor = Colors.red;
         break;
     }

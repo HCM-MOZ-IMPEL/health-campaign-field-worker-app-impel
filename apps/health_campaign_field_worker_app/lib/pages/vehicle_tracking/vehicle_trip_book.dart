@@ -281,7 +281,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         vehicleTripActionState, ProductVariantModel(id: ""));
 
     context.read<VehicleTripActionBloc>().add(
-          VehicleTripActionSubmitEvent(
+          VehicleTripActionStartTripEvent(
             isEditing: false,
             boundaryModel: RegistrationDeliverySingleton().boundary!,
             tripBookAction: tripBookActionModel,

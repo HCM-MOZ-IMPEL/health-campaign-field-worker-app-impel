@@ -409,7 +409,6 @@ abstract class _$AppRouter extends RootStackRouter {
           isGS1code: args.isGS1code,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
-          manualEnabled: args.manualEnabled,
         ),
       );
     },
@@ -2705,7 +2704,6 @@ class CustomDigitScannerRoute
     required bool isGS1code,
     bool singleValue = false,
     bool isEditEnabled = false,
-    bool manualEnabled = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2716,7 +2714,6 @@ class CustomDigitScannerRoute
             isGS1code: isGS1code,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
-            manualEnabled: manualEnabled,
           ),
           initialChildren: children,
         );
@@ -2735,7 +2732,6 @@ class CustomDigitScannerRouteArgs {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
-    this.manualEnabled = true,
   });
 
   final Key? key;
@@ -2750,11 +2746,9 @@ class CustomDigitScannerRouteArgs {
 
   final bool isEditEnabled;
 
-  final bool manualEnabled;
-
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 
