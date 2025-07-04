@@ -1,6 +1,9 @@
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -193,6 +196,8 @@ class Constants {
         AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -279,6 +284,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
