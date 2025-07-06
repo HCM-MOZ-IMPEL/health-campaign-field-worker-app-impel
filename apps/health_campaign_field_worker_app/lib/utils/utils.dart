@@ -1,6 +1,9 @@
 library app_utils;
 
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:health_campaign_field_worker_app/models/entities/roles_type.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -20,6 +23,8 @@ import 'package:closed_household/closed_household.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+import '../../utils/i18_key_constants.dart' as i18_local;
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
 
 import 'dart:async';
 import 'dart:io';
@@ -122,6 +127,102 @@ class CustomValidator {
 
     return null;
   }
+}
+
+bool isLGAUser() {
+  String? boundaryLevel =
+      RegistrationDeliverySingleton().selectedProject?.address?.boundaryType;
+  if (InventorySingleton().isWareHouseMgr) {
+    if (boundaryLevel == Constants.lgaBoundaryLevel) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool isHFUser(BuildContext context) {
+  try {
+    // todo : verify this make this healthFacilitySupervsior as per kebbi
+    bool isDownSyncEnabled = context.loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.healthFacilityWorker.toValue() ||
+              role.code == RolesType.healthFacilitySupervisor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
+    return isDownSyncEnabled;
+  } catch (_) {
+    return false;
+  }
+}
+
+String formatDateFromMillis(int millis) {
+  final date = DateTime.fromMillisecondsSinceEpoch(millis);
+  final day = date.day.toString().padLeft(2, '0');
+  final month = _monthShort(date.month);
+  final year = date.year;
+  return '$day $month $year';
+}
+
+String _monthShort(int month) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  return months[month - 1];
+}
+
+String getEntryTypeLabel(StockModel? stock) {
+  String label =
+      '${i18_stock.stockDetails.receivedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+
+  if (stock != null) {
+    if (stock.transactionType == "RECEIVED" &&
+        stock.transactionReason == "RETURNED") {
+      label = i18_local.stockDetails.selectTransactingPartyReturnedFrom;
+    } else if (stock.transactionType == "DISPATCHED" &&
+        stock.senderType == "STAFF") {
+      label = i18_local.stockDetails.returnedTo;
+    } else if (stock.transactionType == "DISPATCHED") {
+      label =
+          '${i18_stock.stockDetails.issuedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+    }
+  }
+
+  return label;
+}
+
+String getSecondaryPartyValue(StockModel? stock) {
+  String value = stock?.receiverId ?? "";
+
+  if (stock != null) {
+    if ((stock.transactionType == "RECEIVED" && stock.senderType == "STAFF") ||
+        (stock.transactionType == "DISPATCHED" &&
+            stock.receiverType == "STAFF")) {
+      value = stock.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == "distributorName")
+              ?.value ??
+          "Delivery Team";
+    } else {
+      value = stock.transactionType == "RECEIVED"
+          ? 'FAC_${stock.senderId}'
+          : 'FAC_${stock.receiverId}';
+    }
+  }
+
+  return value;
 }
 
 setBgRunning(bool isBgRunning) async {
