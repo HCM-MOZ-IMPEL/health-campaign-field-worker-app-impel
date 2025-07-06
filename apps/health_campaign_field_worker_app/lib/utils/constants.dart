@@ -134,6 +134,11 @@ class Constants {
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
 
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const int mlPerBottle = 30;
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
