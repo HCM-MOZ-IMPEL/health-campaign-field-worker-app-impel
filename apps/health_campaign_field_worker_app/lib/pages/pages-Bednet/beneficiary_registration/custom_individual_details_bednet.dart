@@ -223,10 +223,14 @@ class CustomIndividualDetailsBednetPageState
                             householdModel,
                             individualModel,
                             projectBeneficiaryModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             registrationDate,
                             searchQuery,
                             loading,
                             isHeadOfHousehold,
+                            householdChecklists,
+                            individualChecklists,
                           ) async {
                             // clickedStatus.value = true;
                             final individual = _getIndividualModel(
@@ -265,8 +269,12 @@ class CustomIndividualDetailsBednetPageState
                             householdModel,
                             individualModel,
                             addressModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             projectBeneficiaryModel,
                             loading,
+                            householdChecklists,
+                            individualChecklists,
                           ) async {
                             // clickedStatus.value = true;
                             isEditIndividual = true;
@@ -317,7 +325,11 @@ class CustomIndividualDetailsBednetPageState
                           addMember: (
                             addressModel,
                             householdModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             loading,
+                            householdChecklists,
+                            individualChecklists,
                           ) {
                             // clickedStatus.value = true;
                             final individual = _getIndividualModel(

@@ -137,4 +137,11 @@ class SyncRegistry implements SyncUpOperation {
       );
     }
   }
+
+  @override
+  Future<void> singleUpdate(EntityModel entity,
+      LocalRepository<EntityModel, EntitySearchModel> local) {
+    // TODO: implement singleUpdate
+    throw UnimplementedError();
+  }
 }

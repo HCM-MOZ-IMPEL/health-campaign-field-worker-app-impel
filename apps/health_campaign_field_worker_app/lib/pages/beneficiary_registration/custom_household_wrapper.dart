@@ -57,9 +57,8 @@ class CustomHouseholdWrapperPage extends StatelessWidget {
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
-
-    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
-        ServiceDefinitionSearchModel>(context);
+    final serviceDataRepo =
+        context.repository<ServiceModel, ServiceSearchModel>(context);
     final individualGlobalSearch =
         context.read<IndividualGlobalSearchRepository>();
 
@@ -106,8 +105,8 @@ class CustomHouseholdWrapperPage extends StatelessWidget {
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
               individualGlobalSearchRepository: individualGlobalSearch,
-              beneficiaryType:
-                  RegistrationDeliverySingleton().beneficiaryType!),
+              beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+              serviceDataRepository: serviceDataRepo),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

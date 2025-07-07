@@ -63,9 +63,7 @@ class VehicleTripActionBloc
         loading: false,
         tripAction: tripBookActionModel,
       ));
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   // Search for tasks and process the results

@@ -360,10 +360,14 @@ class CustomIndividualDetailsPageState
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   registrationDate,
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
@@ -433,8 +437,12 @@ class CustomIndividualDetailsPageState
                                   householdModel,
                                   individualModel,
                                   addressModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   projectBeneficiaryModel,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   isEditIndividual = true;
@@ -503,7 +511,11 @@ class CustomIndividualDetailsPageState
                                 addMember: (
                                   addressModel,
                                   householdModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(

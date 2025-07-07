@@ -141,10 +141,14 @@ class _CustomHouseholdLocationBednetPageState
                           householdModel,
                           individualModel,
                           projectBeneficiaryModel,
+                          parentClientReferenceId,
+                          relationshipType,
                           registrationDate,
                           searchQuery,
                           loading,
                           isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var addressModel = AddressModel(
                             type: AddressType.correspondence,
@@ -192,10 +196,14 @@ class _CustomHouseholdLocationBednetPageState
                           address,
                           householdModel,
                           individuals,
+                          relationshipType,
                           registrationDate,
+                          parentClientReferenceId,
                           projectBeneficiaryModel,
                           loading,
-                          headOfHousehold,
+                          isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var addressModel = address.copyWith(
                             type: AddressType.correspondence,

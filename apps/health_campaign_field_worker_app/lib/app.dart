@@ -36,6 +36,7 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
@@ -191,32 +192,34 @@ class MainApplicationState extends State<MainApplication>
               BlocProvider(
                 create: (context) {
                   return SearchHouseholdsBloc(
-                      beneficiaryType:
-                          RegistrationDeliverySingleton().beneficiaryType!,
-                      userUid:
-                          RegistrationDeliverySingleton().loggedInUserUuid!,
-                      projectId: RegistrationDeliverySingleton().projectId!,
-                      addressRepository:
-                          context.read<RegistrationDeliveryAddressRepo>(),
-                      projectBeneficiary: context.repository<
-                          ProjectBeneficiaryModel,
-                          ProjectBeneficiarySearchModel>(),
-                      householdMember: context.repository<HouseholdMemberModel,
-                          HouseholdMemberSearchModel>(),
-                      household: context
-                          .repository<HouseholdModel, HouseholdSearchModel>(),
-                      individual: context
-                          .repository<IndividualModel, IndividualSearchModel>(),
-                      taskDataRepository:
-                          context.repository<TaskModel, TaskSearchModel>(),
-                      sideEffectDataRepository: context
-                          .repository<SideEffectModel, SideEffectSearchModel>(),
-                      referralDataRepository: context
-                          .repository<ReferralModel, ReferralSearchModel>(),
-                      individualGlobalSearchRepository:
-                          context.read<IndividualGlobalSearchRepository>(),
-                      houseHoldGlobalSearchRepository:
-                          context.read<HouseHoldGlobalSearchRepository>());
+                    beneficiaryType:
+                        RegistrationDeliverySingleton().beneficiaryType!,
+                    userUid: RegistrationDeliverySingleton().loggedInUserUuid!,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    addressRepository:
+                        context.read<RegistrationDeliveryAddressRepo>(),
+                    projectBeneficiary: context.repository<
+                        ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>(),
+                    householdMember: context.repository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>(),
+                    household: context
+                        .repository<HouseholdModel, HouseholdSearchModel>(),
+                    individual: context
+                        .repository<IndividualModel, IndividualSearchModel>(),
+                    taskDataRepository:
+                        context.repository<TaskModel, TaskSearchModel>(),
+                    sideEffectDataRepository: context
+                        .repository<SideEffectModel, SideEffectSearchModel>(),
+                    referralDataRepository: context
+                        .repository<ReferralModel, ReferralSearchModel>(),
+                    individualGlobalSearchRepository:
+                        context.read<IndividualGlobalSearchRepository>(),
+                    houseHoldGlobalSearchRepository:
+                        context.read<HouseHoldGlobalSearchRepository>(),
+                    serviceDataRepository:
+                        context.repository<ServiceModel, ServiceSearchModel>(),
+                  );
                 },
               ),
 

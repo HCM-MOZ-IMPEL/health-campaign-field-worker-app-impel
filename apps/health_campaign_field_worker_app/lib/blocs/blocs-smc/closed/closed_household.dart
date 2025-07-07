@@ -16,7 +16,8 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
-import '../../../models/entities/entities_smc/identifier_types.dart';
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../models/entities/project_types.dart';
 
 part 'closed_household.freezed.dart';

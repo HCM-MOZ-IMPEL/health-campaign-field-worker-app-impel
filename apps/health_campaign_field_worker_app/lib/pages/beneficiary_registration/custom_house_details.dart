@@ -149,14 +149,18 @@ class CustomHouseDetailsPageState
                               return;
                             },
                             create: (
-                              address,
+                              addressModel,
                               householdModel,
                               individualModel,
                               projectBeneficiaryModel,
+                              parentClientReferenceId,
+                              relationshipType,
                               registrationDate,
                               searchQuery,
                               loading,
                               isHeadOfHousehold,
+                              householdChecklists,
+                              individualChecklists,
                             ) {
                               var houseModel = HouseholdModel(
                                   clientReferenceId: IdGen.i.identifier,
@@ -219,13 +223,17 @@ class CustomHouseDetailsPageState
                                   isEligible: isEligible));
                             },
                             editHousehold: (
-                              address,
+                              addressModel,
                               householdModel,
                               individuals,
+                              relationshipType,
                               registrationDate,
+                              parentClientReferenceId,
                               projectBeneficiaryModel,
                               loading,
-                              headOfHousehold,
+                              isHeadOfHousehold,
+                              householdChecklists,
+                              individualChecklists,
                             ) {
                               var houseModel = householdModel.copyWith(
                                   additionalFields: HouseholdAdditionalFields(
