@@ -67,19 +67,9 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.7,
                 child: VehicleCard(
-                  description: [
-                    "Vehicle No.",
-                    "Brand",
-                    "Color",
-                    "Model",
-                    "Driver Name",
-                  ].whereNotNull().take(5).join(' '),
-                  subtitle: "Subtitle",
+                  vehicle: widget.vehicle,
+                  appLocalizations: localizations,
                   status: "Booked",
-                  title: [
-                    "Name" ?? localizations.translate(i18.common.coreCommonNA),
-                    "Last Name",
-                  ].whereNotNull().join(' '),
                 ),
               ),
               Flexible(

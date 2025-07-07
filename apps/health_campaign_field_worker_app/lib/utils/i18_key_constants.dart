@@ -255,6 +255,9 @@ class VehicleTracking {
 
   String get dateStart => 'VEHICLE_TRACKING_DATE_START';
   String get vehicleType => 'VEHICLE_TRACKING_VEHICLE_TYPE';
+  String get brand => 'VEHICLE_BRAND';
+  String get color => 'VEHICLE_COLOR';
+  String get model => 'VEHICLE_MODEL';
 }
 
 class SelectStockShowcase {

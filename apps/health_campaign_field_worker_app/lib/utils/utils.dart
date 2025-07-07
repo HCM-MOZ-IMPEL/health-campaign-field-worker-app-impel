@@ -645,6 +645,22 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
+String? getVehicleNo(ProductVariantModel vehicle) {
+  return vehicle.variation;
+}
+
+String? getAdditionalFieldFromVehicle(
+    ProductVariantModel vehicle, String additionalFieldKey) {
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
+}
+
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   if (selectedHouseStructureTypes.contains("METAL") ||
       selectedHouseStructureTypes.contains("GLASS") ||

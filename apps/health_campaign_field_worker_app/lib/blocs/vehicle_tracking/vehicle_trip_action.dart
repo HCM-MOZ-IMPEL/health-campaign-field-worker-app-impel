@@ -38,9 +38,10 @@ class VehicleTripActionBloc
     emit(state.copyWith(loading: true));
     UserActionModel tripActionModel = event.tripAction;
     try {
-      userActionDataRepository.update(tripActionModel.copyWith(
+      tripActionModel = tripActionModel.copyWith(
         action: TripActions.end.name,
-      ));
+      );
+      userActionDataRepository.update(tripActionModel);
       emit(state.copyWith(
         loading: false,
         tripAction: tripActionModel,
