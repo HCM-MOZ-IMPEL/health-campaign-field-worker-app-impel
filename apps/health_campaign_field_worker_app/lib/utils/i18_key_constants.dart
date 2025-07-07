@@ -252,6 +252,7 @@ class VehicleTracking {
   String get tripBookLabel => "TRIP_BOOK_LABEL";
   String get tripBookReasonLabel => "TRIP_BOOK_REASON_LABEL";
   String get bookTripButtonActionLabel => "BOOK_TRIP_BUTTON_ACTION_LABEL";
+  String get othersReasonTextLabel => "BOOK_TRIP_OTHERS_REASON_TEXT_LABEL";
 
   String get dateStart => 'VEHICLE_TRACKING_DATE_START';
   String get vehicleType => 'VEHICLE_TRACKING_VEHICLE_TYPE';

@@ -20,7 +20,7 @@ class CustomProductVariantLocalRepository
                 sql.productVariant.productId.isIn(query.productId!),
               if (query.sku != null) sql.productVariant.sku.equals(query.sku!),
               if (query.variation != null)
-                sql.productVariant.variation.equals(query.variation!),
+                sql.productVariant.variation.contains(query.variation!),
             ])))
           .get();
 

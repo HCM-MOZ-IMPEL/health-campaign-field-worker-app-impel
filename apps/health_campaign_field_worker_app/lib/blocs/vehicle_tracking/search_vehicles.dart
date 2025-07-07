@@ -10,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../data/repositories/custom_product_variant.dart';
+import '../../utils/constants.dart';
 
 part 'search_vehicles.freezed.dart';
 
@@ -45,8 +46,11 @@ class SearchVehiclesBloc
       loading: true,
     ));
     try {
+      final vehicleNo = event.vehicleNo.toUpperCase();
+
       ProductVariantSearchModel productVariantSearchModel =
-          ProductVariantSearchModel(sku: "Vehicle");
+          ProductVariantSearchModel(
+              sku: Constants.vechileSKU, variation: vehicleNo);
 
       final productVariants = await (productVariantDataRepository
               as CustomProductVariantLocalRepository)
@@ -55,6 +59,7 @@ class SearchVehiclesBloc
       emit(state.copyWith(
         loading: false,
         vehicles: productVariants,
+        searchQuery: vehicleNo,
       ));
     } catch (e) {
       emit(state.copyWith(loading: false, vehicles: []));

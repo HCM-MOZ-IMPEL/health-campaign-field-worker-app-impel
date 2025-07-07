@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
+import 'package:digit_components/widgets/digit_text_field.dart';
 // import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -15,6 +16,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/blocs/auth/auth.dart';
 import 'package:health_campaign_field_worker_app/utils/constants.dart';
@@ -62,13 +64,14 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
 
   static const _tripBookReasonKey = "tripBookReason";
 
-  List<String> reasons = ["Reason1", "Reason2", "Reason3", "Reason4"];
+  List<String> reasons = ["Reason1", "Reason2", "Reason3", "Others"];
 
   // Variable to track dose administration status
   bool doseAdministered = false;
-
-  // List of controllers for form elements
-  final List _controllers = [];
+  // for others reason
+  final TextEditingController otherFieldReasonController =
+      TextEditingController();
+  bool otherSelected = false;
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
@@ -214,6 +217,15 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                       .markAsTouched();
                                   setState(() {
                                     if (value.isNotEmpty) {
+                                      if (value.first == "Others") {
+                                        setState(() {
+                                          otherSelected = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          otherSelected = false;
+                                        });
+                                      }
                                       form.control(_tripBookReasonKey).value =
                                           value.first;
                                     } else {
@@ -228,6 +240,24 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                 errorMessage: null,
                               ),
                             ),
+                            Offstage(
+                                offstage: !otherSelected,
+                                child: Padding(
+                                  padding: EdgeInsets.all(kPadding),
+                                  child: DigitTextField(
+                                      label: localizations.translate(
+                                        i18_local.vehicleTracking
+                                            .othersReasonTextLabel,
+                                      ),
+                                      isRequired: otherSelected,
+                                      controller: otherFieldReasonController,
+                                      inputFormatter: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(
+                                          "[a-zA-Z0-9]",
+                                        )),
+                                      ]),
+                                ))
                           ],
                         ),
                       ],

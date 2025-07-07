@@ -205,7 +205,7 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
       searchVehicleBlocWrapper.searchVehiclesBloc.add(
           SearchVehiclesEvent.searchByVehicleNo(
               projectId: RegistrationDeliverySingleton().projectId!,
-              vehicleNo: ""));
+              vehicleNo: searchController.text.trim()));
     }
   }
 }
