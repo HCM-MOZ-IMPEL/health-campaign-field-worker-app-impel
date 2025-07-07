@@ -16,6 +16,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -649,6 +650,10 @@ class CustomDeliverInterventionPageState
             deliveryStrategy,
           ),
           AdditionalField(_noOfRoomsSprayedKey, roomsSprayed),
+          AdditionalField(
+            Constants.sprayOperator,
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),

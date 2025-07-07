@@ -18,6 +18,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../../widgets/action_card/action_card.dart';
@@ -328,7 +329,16 @@ class _CustomHouseholdOverviewPageState
                                             getStatusAttributes(state,
                                                     deliverInterventionState)[
                                                 'textLabel'],
-                                          )
+                                          ),
+                                          localizations.translate(i18_local
+                                                  .searchBeneficiary
+                                                  .beneficiaryId):
+                                              state
+                                                  .householdMemberWrapper
+                                                  .headOfHousehold
+                                                  ?.identifiers
+                                                  ?.last
+                                                  .identifierId
                                         },
                                       ),
                                       if ((state.householdMemberWrapper

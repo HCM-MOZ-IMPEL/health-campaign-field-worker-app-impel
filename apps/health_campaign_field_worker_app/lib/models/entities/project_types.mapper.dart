@@ -25,7 +25,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
   @override
   ProjectTypes decode(dynamic value) {
     switch (value) {
-      case "IRS":
+      case "IRS-mz":
         return ProjectTypes.irs;
       case "SMC-Moz":
         return ProjectTypes.smc;
@@ -40,7 +40,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
   dynamic encode(ProjectTypes self) {
     switch (self) {
       case ProjectTypes.irs:
-        return "IRS";
+        return "IRS-mz";
       case ProjectTypes.smc:
         return "SMC-Moz";
       case ProjectTypes.bednet:

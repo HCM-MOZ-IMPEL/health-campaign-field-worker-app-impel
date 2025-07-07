@@ -317,7 +317,8 @@ class _CustomViewBeneficiaryCardState
                       '${menCount != null ? ' | $menCount ${localizations.translate(i18Local.beneficiaryDetails.menLabel)}' : ''}'
                       '${womenCount != null ? ' | $womenCount ${localizations.translate(i18Local.beneficiaryDetails.womenLabel)}' : ''}'
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
-                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
+                      '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}'
+                      '${householdMember.household?.clientAuditDetails?.lastModifiedTime != null ? '\n${DigitDateUtils.getDateFromTimestamp(householdMember.household!.clientAuditDetails!.lastModifiedTime!)}' : ''}',
                   status: getStatus(
                       tasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
