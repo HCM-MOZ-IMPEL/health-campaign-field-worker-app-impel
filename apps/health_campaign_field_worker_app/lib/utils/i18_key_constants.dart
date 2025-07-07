@@ -1000,6 +1000,7 @@ class SearchBeneficiary {
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get beneficiaryId => 'BENEFICIARY_ID';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 
