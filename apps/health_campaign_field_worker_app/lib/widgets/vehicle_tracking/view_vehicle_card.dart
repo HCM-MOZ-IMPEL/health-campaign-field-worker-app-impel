@@ -25,6 +25,7 @@ class ViewVehicleCard extends LocalizedStatefulWidget {
   final ProductVariantModel vehicle;
   final VoidCallback? onOpenPressed;
   final double? distance;
+  final VehicleStatusEnum? status;
 
   const ViewVehicleCard({
     super.key,
@@ -32,6 +33,7 @@ class ViewVehicleCard extends LocalizedStatefulWidget {
     required this.vehicle,
     this.onOpenPressed,
     this.distance,
+    this.status,
   });
 
   @override
@@ -55,38 +57,13 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return DigitCard(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.7,
-                child: VehicleCard(
-                  vehicle: widget.vehicle,
-                  appLocalizations: localizations,
-                  status: "Booked",
-                ),
-              ),
-              Flexible(
-                child: DigitOutLineButton(
-                  buttonStyle: OutlinedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ),
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: widget.onOpenPressed,
-                ),
-              ),
-            ],
-          ),
-        ],
+      child: VehicleCard(
+        vehicle: widget.vehicle,
+        appLocalizations: localizations,
+        status: widget.status,
+        buttonText: localizations.translate(i18.searchBeneficiary.iconLabel),
+        onTap: widget.onOpenPressed ?? () {},
       ),
     );
   }

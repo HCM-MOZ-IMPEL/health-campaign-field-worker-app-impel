@@ -320,8 +320,11 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
             navigateToSummary: true,
           ),
         );
-
-    context.router.push(VehicleOverviewRoute(vehicleNo: vehicleNo!));
+    context.router
+        .popUntil((route) => route.settings.name == VehicleSearchRoute.name);
+    context.router.push(
+      VehicleOverviewRoute(vehicleNo: vehicleNo!),
+    );
 
     // await handleSubmit(context, taskModel, deliverInterventionState);
   }

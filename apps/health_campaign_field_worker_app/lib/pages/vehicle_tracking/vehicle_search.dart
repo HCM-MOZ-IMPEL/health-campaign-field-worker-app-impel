@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,8 @@ import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart
 
 import '../../blocs/vehicle_tracking/search_vehicle_bloc_common_wrapper.dart';
 import '../../blocs/vehicle_tracking/search_vehicles.dart';
+import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
+import '../../widgets/vehicle_tracking/vehicle_card.dart';
 import '../../widgets/vehicle_tracking/view_vehicle_card.dart';
 import '../custom_digit_scanner.dart';
 
@@ -76,124 +79,145 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) => Scaffold(
-        body: NotificationListener<ScrollNotification>(
-          onNotification: (scrollNotification) {
-            if (scrollNotification is ScrollUpdateNotification) {
-              final metrics = scrollNotification.metrics;
-              if (metrics.atEdge && metrics.pixels != 0) {
-                triggerGlobalSearchEvent(isPagination: true);
-              }
-            }
-            return true;
-          },
-          child: ScrollableContent(
-              header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
-              ]),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(kPadding),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(kPadding),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              localizations.translate("SEARCH_VEHICLE_LABEL"),
-                              style: theme.textTheme.displayMedium,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                        ),
-                        BlocBuilder<LocationBloc, LocationState>(
-                          builder: (context, locationState) {
-                            return Column(
-                              children: [
-                                const Offstage(),
-                                DigitSearchBar(
-                                  controller: searchController,
-                                  hintText: localizations.translate(
-                                    i18.searchBeneficiary
-                                        .beneficiarySearchHintText,
-                                  ),
-                                  textCapitalization: TextCapitalization.words,
-                                  onChanged: (value) {
-                                    searchVehicleBlocWrapper.clearEvent();
-                                    if (value.isEmpty ||
-                                        value.trim().length > 2) {
-                                      triggerGlobalSearchEvent();
-                                    }
-                                  },
+    VehicleStatusEnum getVehicleStatus(UserActionModel? userActionModel) {
+      String? tripAction = userActionModel?.action;
+      if (tripAction == "start") {
+        return VehicleStatusEnum.onGoing;
+      } else if (tripAction == "end") {
+        return VehicleStatusEnum.completed;
+      } else {
+        return VehicleStatusEnum.none;
+      }
+    }
+
+    return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
+      builder: (context, tripState) {
+        VehicleStatusEnum vehicleStatus =
+            getVehicleStatus(tripState.tripAction);
+        return KeyboardVisibilityBuilder(
+          builder: (context, isKeyboardVisible) => Scaffold(
+            body: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollUpdateNotification) {
+                  final metrics = scrollNotification.metrics;
+                  if (metrics.atEdge && metrics.pixels != 0) {
+                    triggerGlobalSearchEvent(isPagination: true);
+                  }
+                }
+                return true;
+              },
+              child: ScrollableContent(
+                  header: const Column(children: [
+                    BackNavigationHelpHeaderWidget(),
+                  ]),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(kPadding),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  localizations
+                                      .translate("SEARCH_VEHICLE_LABEL"),
+                                  style: theme.textTheme.displayMedium,
+                                  textAlign: TextAlign.left,
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: kPadding * 2),
-                        if (searchVehiclesState.resultsNotFound &&
-                            !searchVehiclesState.loading)
-                          DigitInfoCard(
-                            description: localizations.translate(
-                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                              ),
                             ),
-                            title: localizations.translate(
-                              i18.searchBeneficiary.beneficiaryInfoTitle,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (searchVehiclesState.loading)
-                  const SliverFillRemaining(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, locationState) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, index) {
-                          final i =
-                              searchVehiclesState.vehicles.elementAt(index);
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewVehicleCard(
-                              vehicle: i,
-                              onOpenPressed: () async {
-                                String? vehicleNo = i.variation;
-                                if (vehicleNo == null) {
-                                  return;
-                                }
-                                await context.router.push(
-                                  VehicleOverviewRoute(
-                                    vehicleNo: vehicleNo,
-                                  ),
+                            BlocBuilder<LocationBloc, LocationState>(
+                              builder: (context, locationState) {
+                                return Column(
+                                  children: [
+                                    const Offstage(),
+                                    DigitSearchBar(
+                                      controller: searchController,
+                                      hintText: localizations.translate(
+                                        i18.searchBeneficiary
+                                            .beneficiarySearchHintText,
+                                      ),
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      onChanged: (value) {
+                                        searchVehicleBlocWrapper.clearEvent();
+                                        if (value.isEmpty ||
+                                            value.trim().length > 2) {
+                                          triggerGlobalSearchEvent();
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 );
-
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
-
-                                searchVehicleBlocWrapper.clearEvent();
                               },
                             ),
-                          );
-                        },
-                        childCount: searchVehiclesState.vehicles.length,
+                            const SizedBox(height: kPadding * 2),
+                            if (searchVehiclesState.resultsNotFound &&
+                                !searchVehiclesState.loading)
+                              DigitInfoCard(
+                                description: localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiaryInfoDescription,
+                                ),
+                                title: localizations.translate(
+                                  i18.searchBeneficiary.beneficiaryInfoTitle,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ]),
-        ),
-      ),
+                    ),
+                    if (searchVehiclesState.loading)
+                      const SliverFillRemaining(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (ctx, index) {
+                              final i =
+                                  searchVehiclesState.vehicles.elementAt(index);
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: kPadding),
+                                child: ViewVehicleCard(
+                                  vehicle: i,
+                                  status: vehicleStatus,
+                                  onOpenPressed: () async {
+                                    String? vehicleNo = i.variation;
+                                    if (vehicleNo == null) {
+                                      return;
+                                    }
+                                    await context.router.push(
+                                      VehicleOverviewRoute(
+                                        vehicleNo: vehicleNo,
+                                      ),
+                                    );
+
+                                    setState(() {
+                                      isProximityEnabled = false;
+                                    });
+                                    searchController.clear();
+
+                                    searchVehicleBlocWrapper.clearEvent();
+                                  },
+                                ),
+                              );
+                            },
+                            childCount: searchVehiclesState.vehicles.length,
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
+            ),
+          ),
+        );
+      },
     );
   }
 
