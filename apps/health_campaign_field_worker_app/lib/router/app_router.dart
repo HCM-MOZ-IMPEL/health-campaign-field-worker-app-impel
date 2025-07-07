@@ -1,4 +1,6 @@
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -15,6 +17,30 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+
+import '../blocs/inventory/custom_inventory_report.dart'
+    as custom_inventory_report;
+import '../pages/inventory/qr_scanner.dart';
+import '../pages/inventory/view_record_lga.dart';
+import '../pages/inventory/custom_manage_stock.dart';
+import '../pages/inventory/custom_transactional_details.dart';
+import '../pages/pages-Bednet/acknowledgement_bednet.dart';
+import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
+import '../pages/reports/inventory/custom_inventory_report_details.dart';
+import '../pages/reports/inventory/custom_inventory_report_selection.dart';
+import '../pages/inventory/custom_stock_details.dart';
+import '../pages/inventory/custom_stock_reconciliation.dart';
+import '../pages/inventory/custom_warehouse_details.dart';
+import '../pages/inventory/custom_min_number.dart';
+import '../pages/inventory/view_transactions_page.dart';
+import '../pages/inventory/custom_stock_details_in_tabs.dart';
+import '../pages/inventory/custom_acknowledgement.dart';
+import '../pages/inventory/view_stock_records.dart';
+import '../pages/inventory/custom_min_number.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import '../pages/inventory/view_all_transactions_page.dart';
+import '../pages/inventory/view_record_cdd.dart';
+import '../pages/inventory/qrscanner.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -67,11 +93,6 @@ import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
 export 'package:auto_route/auto_route.dart';
-import '../pages/inventory/custom_manage_stocks.dart';
-import '../pages/inventory/custom_stock_reconciliation.dart';
-import '../pages/inventory/custom_warehouse_details.dart';
-import '../pages/reports/inventory/custom_report_selection.dart';
-import '../pages/reports/inventory/custom_report_details.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
@@ -93,7 +114,6 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/ineligible_summary_page.dart';
-import '../pages/inventory/custom_stock_details.dart';
 import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
@@ -206,6 +226,30 @@ class AppRouter extends _$AppRouter {
               ),
 
               // INFO : Need to add Router of package Here
+              AutoRoute(
+                page: CustomManageStocksRoute.page,
+                path: 'custom-manage-stocks',
+              ),
+              AutoRoute(
+                page: QRScannerRoute.page,
+                path: 'qr-scanner',
+              ),
+              AutoRoute(
+                page: ViewStockRecordsLGARoute.page,
+                path: 'custom-stock-view-lga',
+              ),
+              AutoRoute(
+                page: ViewStockRecordsCDDRoute.page,
+                path: 'custom-stock-view-lga',
+              ),
+              AutoRoute(
+                page: CustomMinNumberRoute.page,
+                path: 'custom-min-number',
+              ),
+              AutoRoute(
+                page: ViewTransactionsRoute.page,
+                path: 'beneficiary-downsync-report',
+              ),
 
               // Attendance Route
               AutoRoute(
@@ -239,26 +283,32 @@ class AppRouter extends _$AppRouter {
 
               // Inventory Route
               AutoRoute(
-                page: ManageStocksRoute.page,
-                path: 'manage-stocks',
+                page: CustomStockReconciliationRoute.page,
+                path: 'custom-stock-reconciliation',
               ),
               AutoRoute(
-                page: CustomManageStocksRoute.page,
-                path: 'custom-manage-stocks',
+                page: CustomInventoryReportSelectionRoute.page,
+                path: 'custom-inventory-report-selection',
               ),
-              RedirectRoute(
-                path: 'manage-stocks',
-                redirectTo: 'custom-manage-stocks',
+              AutoRoute(
+                page: CustomInventoryReportDetailsRoute.page,
+                path: 'custom-inventory-report-details',
+              ),
+              AutoRoute(
+                page: InventoryAcknowledgementRoute.page,
+                path: 'inventory-acknowledgement',
+              ),
+              AutoRoute(
+                  page: CustomAcknowledgementRoute.page,
+                  path: 'custom-acknowledgement-stock'),
+              AutoRoute(
+                page: ViewStockRecordsRoute.page,
+                path: 'custom-stock-record-view',
               ),
               AutoRoute(
                 page: RecordStockWrapperRoute.page,
                 path: 'record-stock',
                 children: [
-                  AutoRoute(
-                    page: WarehouseDetailsRoute.page,
-                    path: 'warehouse-details',
-                    // initial: true,
-                  ),
                   AutoRoute(
                     page: CustomWarehouseDetailsRoute.page,
                     path: 'custom-warehouse-details',
@@ -276,51 +326,19 @@ class AppRouter extends _$AppRouter {
                     path: 'details',
                     redirectTo: 'custom-details',
                   ),
+                  AutoRoute(
+                    page: CustomTransactionalDetailsRoute.page,
+                    path: 'custom-transaction-details',
+                  ),
+                  AutoRoute(
+                    page: ViewAllTransactionsRoute.page,
+                    path: 'custom-all-transactions',
+                  ),
                 ],
               ),
               AutoRoute(
                 page: InventoryFacilitySelectionRoute.page,
                 path: 'inventory-select-facilities',
-              ),
-              AutoRoute(
-                page: StockReconciliationRoute.page,
-                path: 'stock-reconciliation',
-              ),
-              AutoRoute(
-                page: CustomStockReconciliationRoute.page,
-                path: 'custom-stock-reconciliation',
-              ),
-              RedirectRoute(
-                path: 'stock-reconciliation',
-                redirectTo: 'custom-stock-reconciliation',
-              ),
-              AutoRoute(
-                page: InventoryReportSelectionRoute.page,
-                path: 'inventory-report-selection',
-              ),
-              AutoRoute(
-                page: CustomInventoryReportSelectionRoute.page,
-                path: 'custom-inventory-report-selection',
-              ),
-              RedirectRoute(
-                path: 'inventory-report-selection',
-                redirectTo: 'custom-inventory-report-selection',
-              ),
-              AutoRoute(
-                page: InventoryReportDetailsRoute.page,
-                path: 'inventory-report-details',
-              ),
-              AutoRoute(
-                page: CustomInventoryReportDetailsRoute.page,
-                path: 'custom-inventory-report-details',
-              ),
-              RedirectRoute(
-                path: 'inventory-report-details',
-                redirectTo: 'custom-inventory-report-details',
-              ),
-              AutoRoute(
-                page: InventoryAcknowledgementRoute.page,
-                path: 'inventory-acknowledgement',
               ),
 
               // DSS Dashboard Routes
