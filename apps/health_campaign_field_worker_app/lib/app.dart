@@ -38,6 +38,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:survey_form/blocs/service_definition.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -53,6 +54,7 @@ import 'blocs/vehicle_tracking/vehicle_trip_action.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/local/individual_global_search_smc.dart';
+import 'data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -184,8 +186,8 @@ class MainApplicationState extends State<MainApplication>
                     const VehicleTripActionState(),
                     productVariantDataRepository: context.repository<
                         ProductVariantModel, ProductVariantSearchModel>(),
-                    userActionDataRepository: context
-                        .repository<UserActionModel, UserActionSearchModel>(),
+                    userActionLocalRepository: CustomUserActionLocalRepository(
+                        widget.sql, UserActionOpLogManager(widget.isar)),
                   );
                 },
               ),

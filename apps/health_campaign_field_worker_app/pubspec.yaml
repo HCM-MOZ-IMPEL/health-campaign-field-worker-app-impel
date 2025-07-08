@@ -82,6 +82,7 @@ dependencies:
   digit_location_tracker: ^1.0.0
   logger: ^2.5.0
   mobile_scanner: ^3.4.1
+  transit_post: 1.0.0
 
 dev_dependencies:
   flutter_test:

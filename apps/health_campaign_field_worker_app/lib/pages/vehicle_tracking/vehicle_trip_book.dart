@@ -339,6 +339,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
   ) {
     UserActionModel tripBookAction;
     var clientReferenceId = IdGen.i.identifier;
+    var startTime = DateTime.now().millisecondsSinceEpoch;
     final tripBookReason = form.control(_tripBookReasonKey).value as String?;
     tripBookAction = UserActionModel(
         latitude: latitude!,
@@ -346,7 +347,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         locationAccuracy: locationAccuracy!,
         clientReferenceId: clientReferenceId,
         isSync: true,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
+        timestamp: startTime,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
         action: TripActions.start.toValue(),
@@ -354,6 +355,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
           if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
+          AdditionalField("tripStartTime", startTime)
         ]));
 
     return tripBookAction;

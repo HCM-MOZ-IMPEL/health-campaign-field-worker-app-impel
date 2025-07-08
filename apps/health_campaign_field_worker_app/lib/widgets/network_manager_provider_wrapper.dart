@@ -23,6 +23,8 @@ import 'package:survey_form/data/repositories/remote/service.dart';
 import 'package:survey_form/data/repositories/remote/service_definition.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -30,6 +32,7 @@ import '../data/network_manager.dart';
 import '../data/repositories/custom_product_variant.dart';
 import '../data/repositories/custom_project_beneficairy.dart';
 import '../data/repositories/custom_task.dart';
+import '../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -250,6 +253,20 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => CustomTaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => UserActionLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => CustomUserActionLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
         ),
       ),
       RepositoryProvider<

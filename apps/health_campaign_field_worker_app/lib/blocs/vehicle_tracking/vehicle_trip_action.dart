@@ -6,7 +6,9 @@ import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
+import '../../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
 
@@ -18,13 +20,12 @@ class VehicleTripActionBloc
     extends Bloc<VehicleTripActionEvent, VehicleTripActionState> {
   final DataRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantDataRepository;
-  final DataRepository<UserActionModel, UserActionSearchModel>
-      userActionDataRepository;
+  final CustomUserActionLocalRepository userActionLocalRepository;
 
   VehicleTripActionBloc(
     super.initialState, {
     required this.productVariantDataRepository,
-    required this.userActionDataRepository,
+    required this.userActionLocalRepository,
   }) {
     on(_handleStartTip);
     on(_handleSearch);
@@ -39,9 +40,27 @@ class VehicleTripActionBloc
     UserActionModel tripActionModel = event.tripAction;
     try {
       tripActionModel = tripActionModel.copyWith(
-        action: TripActions.end.name,
-      );
-      userActionDataRepository.update(tripActionModel);
+          action: TripActions.end.name,
+          auditDetails: tripActionModel.auditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+          clientAuditDetails: tripActionModel.clientAuditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+          additionalFields: tripActionModel.additionalFields?.fields == null
+              ? UserActionAdditionalFields(
+                  version: 1,
+                  fields: [
+                    AdditionalField(
+                        "endTripTime", DateTime.now().millisecondsSinceEpoch)
+                  ],
+                )
+              : tripActionModel.additionalFields?.copyWith(fields: [
+                  ...tripActionModel.additionalFields!.fields,
+                  AdditionalField(
+                      "endTripTime", DateTime.now().millisecondsSinceEpoch)
+                ]));
+      await userActionLocalRepository.updateUserAction(tripActionModel);
       emit(state.copyWith(
         loading: false,
         tripAction: tripActionModel,
@@ -58,8 +77,15 @@ class VehicleTripActionBloc
     emit(state.copyWith(loading: true));
     UserActionModel tripBookActionModel = event.tripBookAction;
     try {
+      tripBookActionModel = tripBookActionModel.copyWith(
+          clientAuditDetails: ClientAuditDetails(
+              createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+              createdTime: DateTime.now().millisecondsSinceEpoch),
+          auditDetails: AuditDetails(
+              createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+              createdTime: DateTime.now().millisecondsSinceEpoch));
       // create the userAction model with trip action as start
-      await userActionDataRepository.create(tripBookActionModel);
+      await userActionLocalRepository.createUserAction(tripBookActionModel);
       emit(state.copyWith(
         loading: false,
         tripAction: tripBookActionModel,
