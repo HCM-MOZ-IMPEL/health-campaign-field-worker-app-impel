@@ -2,17 +2,20 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/models/entities/product_variant.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../blocs/localization/app_localization.dart';
 import '../../utils/utils.dart';
 
 class VehicleCard extends StatelessWidget {
   final ProductVariantModel vehicle;
+  final UserActionModel? vehicleActionModel;
   final VehicleStatusEnum? status;
   final List<String>? fields;
   final AppLocalizations appLocalizations;
@@ -30,6 +33,7 @@ class VehicleCard extends StatelessWidget {
     this.fields,
     required this.appLocalizations,
     required this.vehicle,
+    this.vehicleActionModel,
     required this.onTap,
     required this.buttonText,
     this.type = VehicleCardType.few,
@@ -43,8 +47,10 @@ class VehicleCard extends StatelessWidget {
     final brand = getAdditionalFieldFromVehicle(vehicle, "Brand");
     final model = getAdditionalFieldFromVehicle(vehicle, "Model");
     final vehicleType = getAdditionalFieldFromVehicle(vehicle, "Vehicle Type");
-    final startDate = getAdditionalFieldFromVehicle(vehicle, "Start Date");
-    final endDate = getAdditionalFieldFromVehicle(vehicle, "End Date");
+    final startDate = getAdditionalFieldFromVehicleActionModel(
+        vehicleActionModel, "tripStartTime");
+    final endDate = getAdditionalFieldFromVehicleActionModel(
+        vehicleActionModel, "endTripTime");
 
     return Stack(
       children: [
@@ -95,10 +101,11 @@ class VehicleCard extends StatelessWidget {
               fraction: 3,
               gap: 8,
               element: {
-                if (type == VehicleCardType.all)
+                if (type == VehicleCardType.all && startDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.startDate,
-                  ): startDate,
+                  ): DateFormat().format(DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(startDate))),
                 appLocalizations.translate(
                   i18_local.vehicleTracking.vehicleType,
                 ): vehicleType,
@@ -111,10 +118,11 @@ class VehicleCard extends StatelessWidget {
                 appLocalizations.translate(
                   i18_local.vehicleTracking.model,
                 ): model,
-                if (type == VehicleCardType.all)
+                if (type == VehicleCardType.all && endDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.endDate,
-                  ): endDate,
+                  ): DateFormat().format(
+                      DateTime.fromMillisecondsSinceEpoch(int.parse(endDate))),
               },
             ),
             if (description != null)

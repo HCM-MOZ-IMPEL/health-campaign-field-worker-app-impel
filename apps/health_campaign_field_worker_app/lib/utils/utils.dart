@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'package:digit_data_model/data_model.init.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
@@ -651,6 +652,19 @@ String? getVehicleNo(ProductVariantModel vehicle) {
 
 String? getAdditionalFieldFromVehicle(
     ProductVariantModel vehicle, String additionalFieldKey) {
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
+}
+
+String? getAdditionalFieldFromVehicleActionModel(
+    UserActionModel? vehicle, String additionalFieldKey) {
+  if (vehicle == null) return null;
   final additionalField = vehicle.additionalFields?.fields
       .where((field) => field.key == additionalFieldKey)
       .firstOrNull;
