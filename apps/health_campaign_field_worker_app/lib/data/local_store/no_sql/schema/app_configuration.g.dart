@@ -161,20 +161,26 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
-    r'referralReasons': PropertySchema(
+    r'privacyPolicyConfig': PropertySchema(
       id: 25,
+      name: r'privacyPolicyConfig',
+      type: IsarType.object,
+      target: r'PrivacyPolicy',
+    ),
+    r'referralReasons': PropertySchema(
+      id: 26,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -209,7 +215,11 @@ const AppConfigurationSchema = CollectionSchema(
     r'SearchHouseHoldFilters': SearchHouseHoldFiltersSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
-    r'RefusalReasons': RefusalReasonsSchema
+    r'RefusalReasons': RefusalReasonsSchema,
+    r'PrivacyPolicy': PrivacyPolicySchema,
+    r'Content': ContentSchema,
+    r'Description': DescriptionSchema,
+    r'SubDescription': SubDescriptionSchema
   },
   getId: _appConfigurationGetId,
   getLinks: _appConfigurationGetLinks,
@@ -502,6 +512,14 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final value = object.privacyPolicyConfig;
+    if (value != null) {
+      bytesCount += 3 +
+          PrivacyPolicySchema.estimateSize(
+              value, allOffsets[PrivacyPolicy]!, allOffsets);
+    }
+  }
+  {
     final list = object.referralReasons;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -672,20 +690,26 @@ void _appConfigurationSerialize(
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
-  writer.writeObjectList<ReferralReasons>(
+  writer.writeObject<PrivacyPolicy>(
     offsets[25],
+    allOffsets,
+    PrivacyPolicySchema.serialize,
+    object.privacyPolicyConfig,
+  );
+  writer.writeObjectList<ReferralReasons>(
+    offsets[26],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -822,20 +846,25 @@ AppConfiguration _appConfigurationDeserialize(
     HouseStructureTypes(),
   );
   object.id = id;
-  object.referralReasons = reader.readObjectList<ReferralReasons>(
+  object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
     offsets[25],
+    PrivacyPolicySchema.deserialize,
+    allOffsets,
+  );
+  object.referralReasons = reader.readObjectList<ReferralReasons>(
+    offsets[26],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -993,20 +1022,26 @@ P _appConfigurationDeserializeProp<P>(
         HouseStructureTypes(),
       )) as P;
     case 25:
+      return (reader.readObjectOrNull<PrivacyPolicy>(
+        offset,
+        PrivacyPolicySchema.deserialize,
+        allOffsets,
+      )) as P;
+    case 26:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3789,6 +3824,24 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      privacyPolicyConfigIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'privacyPolicyConfig',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      privacyPolicyConfigIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'privacyPolicyConfig',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       referralReasonsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4249,6 +4302,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      privacyPolicyConfig(FilterQuery<PrivacyPolicy> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'privacyPolicyConfig');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       referralReasonsElement(FilterQuery<ReferralReasons> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'referralReasons');
@@ -4686,6 +4746,13 @@ extension AppConfigurationQueryProperty
       houseStructureTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'houseStructureTypes');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, PrivacyPolicy?, QQueryOperations>
+      privacyPolicyConfigProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'privacyPolicyConfig');
     });
   }
 
