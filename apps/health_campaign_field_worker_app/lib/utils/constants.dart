@@ -1,6 +1,9 @@
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -96,6 +99,7 @@ class Constants {
   static const String reAdministeredKey = "reAdministered";
   static const String pipeSeparator = ' || ';
   static const String spaq1String = 'SPAQ 1';
+  static const String administrativePost = 'Posto Administrativo';
   static const String centralFacility = 'Central Facility';
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
@@ -133,6 +137,13 @@ class Constants {
   static const String supervisorUsername = 'supervisor_username';
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
+
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const String redVAS = "Red VAS";
+
+  static const String bednetSKU = "Redes Mosquiteiras";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -193,6 +204,8 @@ class Constants {
         AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -279,6 +292,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

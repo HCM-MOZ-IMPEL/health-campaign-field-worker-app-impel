@@ -1,5 +1,6 @@
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -44,6 +45,8 @@ import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
+
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/home/home_item_card.dart';
@@ -65,7 +68,7 @@ class HomeBednetPage extends LocalizedStatefulWidget {
 class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -73,14 +76,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -426,6 +425,17 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.buildWith(
+        child: HomeItemCard(
+          icon: Icons.local_taxi_rounded,
+          label: i18_local.home.vehicleTrackingLabel,
+          onPressed: () => {
+            // context.router.push(VehicleTripBookRoute())
+            context.router.push(const VehicleTrackingWrapperRoute()),
+          },
+        ),
+      ),
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.buildWith(
         child: HomeItemCard(
@@ -512,6 +522,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
       i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.showcaseKey,
       i18.home.warehouseManagerCheckList:
           homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
@@ -533,7 +545,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
       i18.home.mySurveyForm,
-
+      i18_local.home.vehicleTrackingLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
@@ -544,10 +556,13 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -605,6 +620,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -639,6 +656,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
               ],
             ),
           );

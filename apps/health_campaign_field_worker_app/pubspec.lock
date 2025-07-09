@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
+      sha256: "6b7c39aba4f4c26340daee8dcb8fde3823a28e3fae6065fd3abf3ed90d3c74c5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+2"
+    version: "1.0.4+1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -273,7 +273,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -372,10 +372,10 @@ packages:
     dependency: "direct main"
     description:
       name: closed_household
-      sha256: "23beebd659a3619b6ca11f1c4ae090632e7f1dde8219108b4a28a5f568c70760"
+      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.5+1"
   code_builder:
     dependency: transitive
     description:
@@ -396,26 +396,26 @@ packages:
     dependency: "direct main"
     description:
       name: complaints
-      sha256: cba8a9d32754fa28a0987d844b9b050aacb5c62a7345dfd41254f26b0bb4f0ea
+      sha256: "6c83c0f9bf9e099d958817b923ff9d1e7de777ffb6ae0cb960b816548e8fd80f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.3-dev.1-enumeration"
   connectivity_plus:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: "224a77051d52a11fbad53dd57827594d3bd24f945af28bd70bab376d68d437f0"
+      sha256: "051849e2bd7c7b3bc5844ea0d096609ddc3a859890ec3a9ac4a65a2620cc1f99"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "6.1.4"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
       name: connectivity_plus_platform_interface
-      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.4"
+    version: "2.0.1"
   convert:
     dependency: transitive
     description:
@@ -428,10 +428,10 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: aa07dbe5f2294c827b7edb9a87bba44a9c15a3cc81bc8da2ca19b37322d30080
+      sha256: "5da775aa218eaf2151c721b16c01c7676fbfdd99cebba2bf64e8b807a28ff94d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.14.1"
+    version: "1.15.0"
   cross_file:
     dependency: transitive
     description:
@@ -549,18 +549,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "6fdaa41a27b9fc2a84d9b7e238cad83d18b70d10f9fa9b797a4039365c27ce9b"
+      sha256: "85764601509108706433e241a838982b37fcce6d35abd9e9ceb4b6c712f768fc"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6-dev.3"
+    version: "1.1.1"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
+      sha256: a58aae4c9ad5fe58562706fd5a83419c3fca316821ccc38e249189663e8a0f20
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+1"
+    version: "1.0.4"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -581,10 +581,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "4bbfd96e1bc7ce4b9b9a0a92a5944ce1ee2220f9cc3c9c86c7ceb73b2988c549"
+      sha256: "10c1f7f24ba51219088023e54dfff5139ec860fa78b42d7c9970b006ddb6fac1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.6+1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -597,10 +597,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "861cf54ff775e854a3a620c13b6bc381fac97ac899f611115204fe48fa5b3eac"
+      sha256: c07a13efd5d23fe869a87f7ab12b7b82bdb0b911d4c9ed7f4bb1a5c4310847f5
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1+7"
+    version: "0.2.2+4"
   dio:
     dependency: "direct main"
     description:
@@ -773,10 +773,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: d7253d255ff10f85cfd2adaba9ac17bae878fa3ba577462451163bd9f1d1f0bf
+      sha256: "8bcfad6d7033f5ea951d15b867622a824b13812178bfec0c779b9d81de011bbb"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.4.2"
   firebase_core_web:
     dependency: transitive
     description:
@@ -1400,10 +1400,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "2b3e900966fc88ca415bf117d08750cd221685a9db42b099cf456c8a9a04c2a7"
+      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5-dev.1"
+    version: "1.0.6"
   io:
     dependency: transitive
     description:
@@ -1516,6 +1516,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.2"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      sha256: "2621da01aabaf223f8f961e751f2c943dbb374dc3559b982f200ccedadaa6999"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   logging:
     dependency: transitive
     description:
@@ -1572,6 +1580,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: "1b60b8f9d4ce0cb0e7d7bc223c955d083a0737bee66fa1fcfe5de48225e0d5b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.7"
   mocktail:
     dependency: "direct dev"
     description:
@@ -1664,10 +1680,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
+      sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.5"
+    version: "2.1.3"
   path_provider_android:
     dependency: transitive
     description:
@@ -1896,18 +1912,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "5d3ea365246978776c0d247d9dbe35ebc04b7df1b85d7f38db20ec7e4021b977"
+      sha256: "2f3587105c2229ed089a23bc7084b8a2b2fbd5b69d119e9d1b80850def33848d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+2"
+    version: "1.0.6"
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "4354d586163faa46a1880a72dfcc380025599d370a194e6f14a7bba68f17906c"
+      sha256: "8c6c266b52fea6f3fc7aafb5b1dcdb7d7d9b4dfc1b1293b7b4e935a693880dd7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.7-dev.6-enumeration"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:
@@ -2101,10 +2117,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
-      sha256: e07232b998755fe795655c56d1f5426e0190c9c435e1752d39e7b1cd33699c71
+      sha256: "1719743a4dcce8adc0b78bb215ca6bc4cb52a1ed08d0d192ce66472b96f18899"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.34"
+    version: "0.5.11+1"
   sqlparser:
     dependency: transitive
     description:
@@ -2149,10 +2165,10 @@ packages:
     dependency: "direct main"
     description:
       name: survey_form
-      sha256: e81e71beff6c4982ff6944ad34da056ea5b4adba860d9552a5eb554356dd816d
+      sha256: "26c02064d6d74928ce458fe25eb037ee9a131952f3aa6e03480b70277473b635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1+3"
+    version: "1.0.3"
   sync_http:
     dependency: transitive
     description:
@@ -2165,10 +2181,10 @@ packages:
     dependency: "direct main"
     description:
       name: sync_service
-      sha256: "992cd5889a192716c9e77fe29bd10b9f3dc771797d6a91a7a94bc34193b21444"
+      sha256: da4847fcd10ff8de25b6b722e0ba93bb93268824d903f8ff4fdc870a806ebe84
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   synchronized:
     dependency: transitive
     description:
@@ -2233,6 +2249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  transit_post:
+    dependency: "direct main"
+    description:
+      name: transit_post
+      sha256: "4d1f8ba6e01c0dd454a340e5b1c9b1f9178b8b8d5a1ea95874bfe2ca62d880ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   type_plus:
     dependency: transitive
     description:

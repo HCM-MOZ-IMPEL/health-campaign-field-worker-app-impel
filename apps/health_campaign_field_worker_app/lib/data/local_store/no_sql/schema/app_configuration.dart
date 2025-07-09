@@ -58,8 +58,8 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
-  // @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-  // late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
+  @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
 
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
@@ -90,7 +90,7 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
-  // late PrivacyPolicy? privacyPolicyConfig;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded

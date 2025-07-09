@@ -21,6 +21,7 @@ import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 
@@ -108,10 +109,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   final DashboardRemoteRepository dashboardRemoteRepository;
 
+  final BandwidthCheckRepository bandwidthCheckRepository;
+
   BuildContext context;
 
   ProjectBloc({
     LocalSecureStore? localSecureStore,
+    required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
     required this.projectStaffLocalRepository,
@@ -163,8 +167,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");

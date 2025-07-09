@@ -244,6 +244,7 @@ extension ContextUtilityExtensions on BuildContext {
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+    InventorySingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     // LocationTrackerSingleton()
@@ -256,7 +257,14 @@ extension ContextUtilityExtensions on BuildContext {
 
   BoundaryModel? get boundaryOrNull {
     try {
-      return boundary;
+      final boundaryBloc = _get<BoundaryBloc>();
+      final boundaryState = boundaryBloc.state;
+
+      final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+          .where((element) => element.value != null)
+          .lastOrNull
+          ?.value;
+      return selectedBoundary;
     } catch (_) {
       return null;
     }

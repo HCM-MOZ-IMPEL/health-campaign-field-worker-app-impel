@@ -13,7 +13,8 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../models/entities/entities_smc/identifier_types.dart';
+import '../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';

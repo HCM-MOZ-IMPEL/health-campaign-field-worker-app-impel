@@ -18,7 +18,8 @@ import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
-import '../../../models/entities/entities_smc/identifier_types.dart';
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../utils/utils.dart' as utils;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
@@ -252,10 +253,14 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   registrationDate,
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   final individual = _getIndividualModel(
                                       context,
@@ -324,8 +329,12 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   addressModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   projectBeneficiaryModel,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   isEditIndividual = true;
@@ -395,7 +404,11 @@ class CustomIndividualDetailsSMCPageState
                                 addMember: (
                                   addressModel,
                                   householdModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(

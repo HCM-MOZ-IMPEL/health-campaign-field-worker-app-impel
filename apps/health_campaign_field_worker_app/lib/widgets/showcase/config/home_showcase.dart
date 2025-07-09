@@ -43,6 +43,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.supervisorMySurveyForm,
   );
 
+  final vehicleTracking = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.vehicleTracking,
+  );
+
   final distributorSyncData = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );
