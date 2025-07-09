@@ -115,6 +115,7 @@ class Constants {
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
   static const String bednetLabel = 'BEDNET';
+  static const int apiCallLimit = 1000;
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
