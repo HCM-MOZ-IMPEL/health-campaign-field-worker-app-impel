@@ -182,50 +182,55 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 : i18.checklist.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
-                                    additionalDetails: ((attribute?[i]
-                                                        .values
-                                                        ?.firstWhereOrNull(
-                                                          (element) =>
-                                                              element ==
-                                                              yesText,
-                                                        ) !=
-                                                    null &&
-                                                controller[i].text ==
-                                                    attribute?[i]
-                                                        .values?[1]
-                                                        .trim()) ||
-                                            (attribute?[i]
-                                                        .values
-                                                        ?.firstWhereOrNull(
-                                                          (element) =>
-                                                              element
-                                                                  .toUpperCase() ==
-                                                              othersText,
-                                                        ) !=
-                                                    null &&
-                                                controller[i]
-                                                        .text
-                                                        .split(
-                                                          multiSelectionSeparator,
-                                                        )
-                                                        .firstWhereOrNull(
-                                                          (element) =>
-                                                              element
-                                                                  .toUpperCase() ==
-                                                              othersText,
-                                                        ) !=
-                                                    null &&
-                                                attribute?[i].dataType ==
-                                                    'MultiValueList'))
-                                        ? additionalController[i]
-                                                .text
-                                                .toString()
-                                                .isEmpty
-                                            ? null
-                                            : additionalController[i]
-                                                .text
-                                                .toString()
-                                        : null,
+                                    additionalDetails: (selectedServiceDefinition!
+                                                .code!
+                                                .contains('MALARIA_CASES') &&
+                                            i == 0)
+                                        ? context.boundary.code
+                                        : ((attribute?[i]
+                                                            .values
+                                                            ?.firstWhereOrNull(
+                                                              (element) =>
+                                                                  element ==
+                                                                  yesText,
+                                                            ) !=
+                                                        null &&
+                                                    controller[i].text ==
+                                                        attribute?[i]
+                                                            .values?[1]
+                                                            .trim()) ||
+                                                (attribute?[i]
+                                                            .values
+                                                            ?.firstWhereOrNull(
+                                                              (element) =>
+                                                                  element
+                                                                      .toUpperCase() ==
+                                                                  othersText,
+                                                            ) !=
+                                                        null &&
+                                                    controller[i]
+                                                            .text
+                                                            .split(
+                                                              multiSelectionSeparator,
+                                                            )
+                                                            .firstWhereOrNull(
+                                                              (element) =>
+                                                                  element
+                                                                      .toUpperCase() ==
+                                                                  othersText,
+                                                            ) !=
+                                                        null &&
+                                                    attribute?[i].dataType ==
+                                                        'MultiValueList'))
+                                            ? additionalController[i]
+                                                    .text
+                                                    .toString()
+                                                    .isEmpty
+                                                ? null
+                                                : additionalController[i]
+                                                    .text
+                                                    .toString()
+                                            : null,
                                   ));
                                 }
 

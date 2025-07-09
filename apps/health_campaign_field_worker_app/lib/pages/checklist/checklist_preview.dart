@@ -210,7 +210,10 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    e.additionalDetails != '' &&
+                                                    !(item2!.code!.contains(
+                                                                'MALARIA_CASES')) &&
+                                                            e.additionalDetails !=
+                                                                '' &&
                                                             e.additionalDetails !=
                                                                 null
                                                         ? Container(
@@ -254,6 +257,48 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                 ),
                                               ),
                                             ),
+                                        if (item2!.code!
+                                            .contains('MALARIA_CASES'))
+                                          Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    localizations.translate(
+                                                      i18.common.villageLabel,
+                                                    ),
+                                                    style: theme.textTheme
+                                                        .headlineSmall,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin:
+                                                      const EdgeInsets.only()
+                                                          .copyWith(
+                                                    top: kPadding,
+                                                    bottom: kPadding,
+                                                  ),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(localizations
+                                                        .translate((value2
+                                                                    .attributes!
+                                                                    .first
+                                                                    .additionalDetails
+                                                                as String?) ??
+                                                            'NA')),
+                                                  ),
+                                                ),
+                                                const DigitDivider(),
+                                              ],
+                                            ),
+                                          ),
                                       ].toList(),
                                     ),
                                   ),
