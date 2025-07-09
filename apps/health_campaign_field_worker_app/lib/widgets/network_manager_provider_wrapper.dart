@@ -27,6 +27,7 @@ import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/custom_project_beneficairy.dart';
 import '../data/repositories/custom_task.dart';
+import '../data/repositories/local/inventory_management/custom_stock.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -262,6 +263,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
       RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
         create: (_) => StockLocalRepository(
+          sql,
+          StockOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
+        create: (_) => CustomStockLocalRepository(
           sql,
           StockOpLogManager(isar),
         ),
