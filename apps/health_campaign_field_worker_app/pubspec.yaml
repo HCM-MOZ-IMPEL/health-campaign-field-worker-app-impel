@@ -65,7 +65,7 @@ dependencies:
   digit_data_model: 1.1.1
   registration_delivery: 1.0.7-dev.6-enumeration
   disable_battery_optimization: ^1.1.1
-  inventory_management: 1.0.6
+  inventory_management: 1.0.5-dev.1
   closed_household: ^1.0.1+1
   digit_scanner: ^1.0.5
   digit_dss: ^1.0.4
