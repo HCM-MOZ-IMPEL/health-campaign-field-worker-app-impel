@@ -128,8 +128,8 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
-    // @JsonKey(name: 'PrivacyPolicy')
-    // required List<PrivacyNoticeModel> privacyPolicyConfig,
+    @JsonKey(name: 'PrivacyPolicy')
+    required List<PrivacyNoticeModel> privacyPolicyConfig,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(
