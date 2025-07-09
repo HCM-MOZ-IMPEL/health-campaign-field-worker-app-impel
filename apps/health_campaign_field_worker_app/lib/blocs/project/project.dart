@@ -21,6 +21,7 @@ import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 
@@ -432,6 +433,87 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  // info: downloads stock data from remote , based on the user role
+  FutureOr<void> downloadStockDataBasedOnRole(
+      List<ProjectFacilityModel> projectFacilities,
+      List<FacilityModel> allFacilities,
+      String? boundaryType) async {
+    final userObject = await localSecureStore.userRequestModel;
+    final userRoles = userObject!.roles.map((e) => e.code);
+
+    Map<String, String> facilityIdUsageMap = {};
+
+    for (var element in allFacilities) {
+      facilityIdUsageMap[element.id] = element?.usage ?? "";
+    }
+
+    // info : assumption both roles will not be assigned to user
+
+    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+      // info : create entries in the local repository
+
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+        boundaryType == Constants.lgaBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    }
+  }
+
+  // info : insert data in db
+  FutureOr<void> createStockDownloadedEntries(
+      List<StockModel> stockEntries) async {
+    await (stockLocalRepository as CustomStockLocalRepository)
+        .bulkStockCreate(stockEntries);
+  }
+
+  // info:  downloads the stock data from remote repository
+
+  FutureOr<List<StockModel>> downloadStockEntries(
+      StockSearchModel stockSearchModel) async {
+    var offset = 0;
+    var initialLimit = Constants.apiCallLimit;
+
+    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
+        limit: initialLimit, offSet: offset);
+
+    return stockEntries;
+  }
+
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
@@ -615,6 +697,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ));
 
       return;
+    }
+    try {
+      final projectFacilities = await projectFacilityLocalRepository
+          .search(ProjectFacilitySearchModel());
+      final facilities =
+          await facilityLocalRepository.search(FacilitySearchModel());
+      await downloadStockDataBasedOnRole(
+          projectFacilities, facilities, event.model.address?.boundaryType);
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.projectFacilities,
+      ));
     }
 
     emit(state.copyWith(
