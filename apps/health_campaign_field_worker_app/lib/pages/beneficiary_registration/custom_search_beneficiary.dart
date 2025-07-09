@@ -19,6 +19,7 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../utils/utils.dart';
 import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
 
 import '../../router/app_router.dart';
@@ -316,7 +317,8 @@ class _CustomSearchBeneficiaryPageState
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
+                          final i = sortHouseholdVsDate(
+                                  searchHouseholdsState.householdMembers)
                               .elementAt(index);
                           final distance = calculateDistance(
                             Coordinate(
