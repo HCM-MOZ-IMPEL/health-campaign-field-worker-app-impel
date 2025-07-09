@@ -137,9 +137,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                             onPressed: () async {
                               final connectivityResult =
                                   await (Connectivity().checkConnectivity());
-                              final isOnline = connectivityResult ==
+                              final isOnline = connectivityResult.firstOrNull ==
                                       ConnectivityResult.wifi ||
-                                  connectivityResult ==
+                                  connectivityResult.firstOrNull ==
                                       ConnectivityResult.mobile;
 
                               if (!isOnline) {
