@@ -232,7 +232,7 @@ class _CustomHouseholdOverviewBednetPageState
                                           ),
                                           localizations.translate(i18_local
                                                   .searchBeneficiary
-                                                  .beneficiaryId):
+                                                  .beneficiaryIdbednet):
                                               state
                                                   .householdMemberWrapper
                                                   .headOfHousehold
