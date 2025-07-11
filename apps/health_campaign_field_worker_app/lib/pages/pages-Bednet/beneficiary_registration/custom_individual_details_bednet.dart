@@ -176,6 +176,21 @@ class CustomIndividualDetailsBednetPageState
 
                           return;
                         }
+                        final scannerBloc = context.read<DigitScannerBloc>();
+                        if (scannerBloc.state.qrCodes.isEmpty) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18_local.individualDetails
+                                    .scanVoucherAndLinkToIndividual,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+                          return;
+                        }
 
                         final submit = await DigitDialog.show<bool>(
                           context,
@@ -597,8 +612,9 @@ class CustomIndividualDetailsBednetPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          Offstage(
-                            offstage: true,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding - 4, 0, kPadding - 4, 0),
                             child: BlocBuilder<DigitScannerBloc,
                                 DigitScannerState>(
                               buildWhen: (p, c) {
