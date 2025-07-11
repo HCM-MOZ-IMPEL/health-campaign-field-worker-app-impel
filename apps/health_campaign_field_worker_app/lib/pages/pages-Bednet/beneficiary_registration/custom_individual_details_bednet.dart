@@ -177,7 +177,10 @@ class CustomIndividualDetailsBednetPageState
                           return;
                         }
                         final scannerBloc = context.read<DigitScannerBloc>();
-                        if (scannerBloc.state.qrCodes.isEmpty) {
+                        List<String> qrCodes = scannerBloc.state.qrCodes;
+                        scannerBloc
+                            .add(const DigitScannerEvent.handleScanner());
+                        if (qrCodes.isEmpty) {
                           await DigitToast.show(
                             context,
                             options: DigitToastOptions(
@@ -272,9 +275,8 @@ class CustomIndividualDetailsBednetPageState
                                   projectId: projectId!,
                                   userUuid: userId!,
                                   boundary: boundary!,
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
-                                      : null,
+                                  tag:
+                                      qrCodes.isNotEmpty ? qrCodes.first : null,
                                 ),
                               );
                               router.push(CustomBednetSummaryRoute());
@@ -302,9 +304,8 @@ class CustomIndividualDetailsBednetPageState
                               form: form,
                               oldIndividual: individualModel,
                             );
-                            final tag = scannerBloc.state.qrCodes.isNotEmpty
-                                ? scannerBloc.state.qrCodes.first
-                                : null;
+                            final tag =
+                                qrCodes.isNotEmpty ? qrCodes.first : null;
 
                             bloc.add(
                               BeneficiaryRegistrationUpdateIndividualDetailsEvent(
@@ -331,9 +332,7 @@ class CustomIndividualDetailsBednetPageState
                                         )
                                       : null,
                                 ),
-                                tag: scannerBloc.state.qrCodes.isNotEmpty
-                                    ? scannerBloc.state.qrCodes.first
-                                    : null,
+                                tag: qrCodes.isNotEmpty ? qrCodes.first : null,
                               ),
                             );
                           },
@@ -381,8 +380,8 @@ class CustomIndividualDetailsBednetPageState
                                         .loggedInUserUuid!,
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
-                                    tag: scannerBloc.state.qrCodes.isNotEmpty
-                                        ? scannerBloc.state.qrCodes.first
+                                    tag: qrCodes.isNotEmpty
+                                        ? qrCodes.first
                                         : null,
                                   ),
                                 );
