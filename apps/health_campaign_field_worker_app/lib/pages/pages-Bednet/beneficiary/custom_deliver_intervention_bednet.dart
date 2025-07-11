@@ -152,7 +152,6 @@ class CustomDeliverInterventionBednetPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     List<StepsModel> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
         return StepsModel(
