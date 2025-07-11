@@ -647,6 +647,8 @@ class Home {
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
+  String get seeMore => 'SEE_MORE';
+  String get close => 'CLOSE';
 
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
@@ -1123,6 +1125,7 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get refreshLocation => 'REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {
@@ -1222,6 +1225,13 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
   String get mobileMinLengthValidationMessageSMC =>
       'MOBILE_MIN_LENGTH_VALIDATION_SMC';
+  String get heightInvalidFormatValidationMessageSMC =>
+      'INDIVIDUAL_DETAILS_INVALID_HEIGHT';
+  String get heightLengthValidationMessageSMC =>
+      'INDIVIDUAL_DETAILS_HEIGHT_LENGTH';
+  String get heightMinLengthValidationMessageSMC =>
+      'HEIGHT_MIN_LENGTH_VALIDATION_SMC';
+  String get heightLabelTextSMC => 'HEIGHT_LABEL_TEXT';
 }
 
 class BeneficiaryDetails {
