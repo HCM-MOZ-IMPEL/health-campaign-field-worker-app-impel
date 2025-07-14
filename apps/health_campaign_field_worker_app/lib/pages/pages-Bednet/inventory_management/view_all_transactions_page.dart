@@ -57,7 +57,7 @@ class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
       result = await repository.search(StockSearchModel(
           transactionType: [TransactionType.dispatched.toValue()],
           transactionReason: [],
-          receiverId: warehouseId));
+          receiverId: warehouseId ?? ''));
       if (context.isHealthFacilitySupervisor) {
         result = result.where((stock) {
           return stock.senderType == 'WAREHOUSE';

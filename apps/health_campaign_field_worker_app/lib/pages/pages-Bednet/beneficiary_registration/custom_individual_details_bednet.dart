@@ -179,6 +179,7 @@ class CustomIndividualDetailsBednetPageState
 
                           return;
                         }
+
                         final boundaryBloc = context.read<BoundaryBloc>().state;
                         final code = boundaryBloc.boundaryList.first.code;
                         final bname = boundaryBloc.boundaryList.first.name;
@@ -194,6 +195,25 @@ class CustomIndividualDetailsBednetPageState
                           loggedInUserId: userId!,
                           returnCombinedIds: false,
                         );
+
+                        final scannerBloc = context.read<DigitScannerBloc>();
+                        List<String> qrCodes = scannerBloc.state.qrCodes;
+                        scannerBloc
+                            .add(const DigitScannerEvent.handleScanner());
+                        if (qrCodes.isEmpty) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18_local.individualDetails
+                                    .scanVoucherAndLinkToIndividual,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+                          return;
+                        }
 
                         final submit = await DigitDialog.show<bool>(
                           context,
@@ -276,9 +296,8 @@ class CustomIndividualDetailsBednetPageState
                                   projectId: projectId!,
                                   userUuid: userId!,
                                   boundary: boundary!,
-                                  tag: scannerBloc.state.qrCodes.isNotEmpty
-                                      ? scannerBloc.state.qrCodes.first
-                                      : null,
+                                  tag:
+                                      qrCodes.isNotEmpty ? qrCodes.first : null,
                                 ),
                               );
                               router.push(CustomBednetSummaryRoute());
@@ -306,9 +325,8 @@ class CustomIndividualDetailsBednetPageState
                               form: form,
                               oldIndividual: individualModel,
                             );
-                            final tag = scannerBloc.state.qrCodes.isNotEmpty
-                                ? scannerBloc.state.qrCodes.first
-                                : null;
+                            final tag =
+                                qrCodes.isNotEmpty ? qrCodes.first : null;
 
                             bloc.add(
                               BeneficiaryRegistrationUpdateIndividualDetailsEvent(
@@ -335,9 +353,7 @@ class CustomIndividualDetailsBednetPageState
                                         )
                                       : null,
                                 ),
-                                tag: scannerBloc.state.qrCodes.isNotEmpty
-                                    ? scannerBloc.state.qrCodes.first
-                                    : null,
+                                tag: qrCodes.isNotEmpty ? qrCodes.first : null,
                               ),
                             );
                           },
@@ -386,8 +402,8 @@ class CustomIndividualDetailsBednetPageState
                                         .loggedInUserUuid!,
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
-                                    tag: scannerBloc.state.qrCodes.isNotEmpty
-                                        ? scannerBloc.state.qrCodes.first
+                                    tag: qrCodes.isNotEmpty
+                                        ? qrCodes.first
                                         : null,
                                   ),
                                 );
@@ -617,8 +633,9 @@ class CustomIndividualDetailsBednetPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          Offstage(
-                            offstage: true,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding - 4, 0, kPadding - 4, 0),
                             child: BlocBuilder<DigitScannerBloc,
                                 DigitScannerState>(
                               buildWhen: (p, c) {
@@ -781,6 +798,7 @@ class CustomIndividualDetailsBednetPageState
       identifierId: beneficiaryId,
       identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
       clientReferenceId: individual.clientReferenceId,
+      individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(

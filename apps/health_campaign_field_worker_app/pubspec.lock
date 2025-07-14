@@ -372,10 +372,10 @@ packages:
     dependency: "direct main"
     description:
       name: closed_household
-      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
+      sha256: "23beebd659a3619b6ca11f1c4ae090632e7f1dde8219108b4a28a5f568c70760"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5+1"
+    version: "1.0.5"
   code_builder:
     dependency: transitive
     description:
@@ -625,14 +625,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  disk_space:
-    dependency: "direct main"
-    description:
-      name: disk_space
-      sha256: fb27eb2d09ac04784f45b95b1355538b2355c76a081eeaa8439d1a5cfa263888
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   disk_space_update:
     dependency: "direct main"
     description:
