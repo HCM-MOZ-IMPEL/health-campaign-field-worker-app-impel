@@ -68,6 +68,18 @@ class CustomValidator {
         : {'required': true};
   }
 
+  static Map<String, dynamic>? validateHeight(
+      AbstractControl<dynamic> control) {
+    final value = control.value;
+    if (value != null && value.isNotEmpty) {
+      final height = int.tryParse(value);
+      if (height == null || height < 30 || height > 250) {
+        return {'invalidHeight': true};
+      }
+    }
+    return null;
+  }
+
   static Map<String, dynamic>? requiredMin2(
     AbstractControl<dynamic> control,
   ) {
