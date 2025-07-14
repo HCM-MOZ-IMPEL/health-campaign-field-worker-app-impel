@@ -27,7 +27,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
     switch (value) {
       case "IRS":
         return ProjectTypes.irs;
-      case "SMC-Moz":
+      case "NTD-Moz":
         return ProjectTypes.smc;
       case "LLIN-Moz":
         return ProjectTypes.bednet;
@@ -42,7 +42,7 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
       case ProjectTypes.irs:
         return "IRS";
       case ProjectTypes.smc:
-        return "SMC-Moz";
+        return "NTD-Moz";
       case ProjectTypes.bednet:
         return "LLIN-Moz";
     }
