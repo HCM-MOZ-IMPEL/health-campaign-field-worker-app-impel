@@ -18,6 +18,7 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
@@ -228,7 +229,16 @@ class _CustomHouseholdOverviewBednetPageState
                                             getStatusAttributes(state,
                                                     deliverInterventionState)[
                                                 'textLabel'],
-                                          )
+                                          ),
+                                          localizations.translate(i18_local
+                                                  .searchBeneficiary
+                                                  .beneficiaryIdbednet):
+                                              state
+                                                  .householdMemberWrapper
+                                                  .headOfHousehold
+                                                  ?.identifiers
+                                                  ?.last
+                                                  .identifierId
                                         },
                                       ),
                                       if ((state.householdMemberWrapper

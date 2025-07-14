@@ -21,6 +21,8 @@ import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../models/entities/entities_smc/identifier_types.dart';
+import '../../../utils/registration_delivery/registration_delivery_utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../utils/utils.dart' hide Constants;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -68,6 +70,7 @@ class CustomIndividualDetailsBednetPageState
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
     DateTime before18Years = DateTime(now.year - 18, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
+    Set<String>? beneficiaryId;
     bool isEligible = widget.isEligible;
 
     return Scaffold(
@@ -176,6 +179,23 @@ class CustomIndividualDetailsBednetPageState
 
                           return;
                         }
+
+                        final boundaryBloc = context.read<BoundaryBloc>().state;
+                        final code = boundaryBloc.boundaryList.first.code;
+                        final bname = boundaryBloc.boundaryList.first.name;
+
+                        final locality = code == null || bname == null
+                            ? null
+                            : LocalityModel(code: code, name: bname);
+
+                        String localityCode = locality!.code;
+                        beneficiaryId =
+                            await UniqueIdGeneration().generateUniqueId(
+                          localityCode: localityCode,
+                          loggedInUserId: userId!,
+                          returnCombinedIds: false,
+                        );
+
                         final scannerBloc = context.read<DigitScannerBloc>();
                         List<String> qrCodes = scannerBloc.state.qrCodes;
                         scannerBloc
@@ -255,6 +275,7 @@ class CustomIndividualDetailsBednetPageState
                               context,
                               form: form,
                               oldIndividual: null,
+                              beneficiaryId: beneficiaryId?.first,
                             );
                             isEditIndividual = false;
                             final boundary =
@@ -349,6 +370,7 @@ class CustomIndividualDetailsBednetPageState
                             final individual = _getIndividualModel(
                               context,
                               form: form,
+                              beneficiaryId: beneficiaryId?.first,
                             );
 
                             if (context.mounted) {
@@ -720,6 +742,7 @@ class CustomIndividualDetailsBednetPageState
     BuildContext context, {
     required FormGroup form,
     IndividualModel? oldIndividual,
+    String? beneficiaryId,
   }) {
     final dob = form.control(_dobKey).value == null
         ? null
@@ -772,6 +795,8 @@ class CustomIndividualDetailsBednetPageState
         : null;
 
     identifier ??= IdentifierModel(
+      identifierId: beneficiaryId,
+      identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
       clientReferenceId: individual.clientReferenceId,
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
@@ -805,9 +830,9 @@ class CustomIndividualDetailsBednetPageState
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: "DEFAULT",
-          identifierType: "DEFAULT",
-        ),
+          identifierId: beneficiaryId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+        )
       ],
     );
 
