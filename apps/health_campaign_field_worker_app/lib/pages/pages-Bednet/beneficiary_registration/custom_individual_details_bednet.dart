@@ -21,7 +21,7 @@ import 'package:registration_delivery/utils/constants.dart';
 
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../../models/entities/entities_smc/identifier_types.dart';
+
 import '../../../utils/registration_delivery/registration_delivery_utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../utils/utils.dart' hide Constants;
