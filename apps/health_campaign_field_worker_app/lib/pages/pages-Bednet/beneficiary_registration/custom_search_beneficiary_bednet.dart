@@ -580,8 +580,7 @@ class _CustomSearchBeneficiaryBednetPageState
                 children: [
                   if (context.isRegistrar || context.isDistributor)
                     DigitElevatedButton(
-                      onPressed: searchHouseholdsState.loading ||
-                              searchHouseholdsState.searchQuery == null
+                      onPressed: searchHouseholdsState.loading
                           ? null
                           : () {
                               FocusManager.instance.primaryFocus?.unfocus();
