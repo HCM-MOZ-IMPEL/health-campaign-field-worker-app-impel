@@ -276,6 +276,67 @@ class CustomMemberCardSMC extends StatelessWidget {
               child: Column(
                 children: [
                   (isNotEligible ||
+                          isBeneficiaryRefused ||
+                          isBeneficiaryIneligible ||
+                          isBeneficiaryReferred)
+                      ? const Offstage()
+                      : !isNotEligible && isHead
+                          ? DigitElevatedButton(
+                              onPressed: (projectBeneficiaries ?? []).isEmpty
+                                  ? null
+                                  : () {
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
+
+                                      bloc.add(
+                                        HouseholdOverviewEvent
+                                            .selectedIndividual(
+                                          individualModel: individual,
+                                        ),
+                                      );
+                                      bloc.add(HouseholdOverviewReloadEvent(
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        projectBeneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                    .beneficiaryType ??
+                                                BeneficiaryType.individual,
+                                      ));
+
+                                      if ((tasks ?? []).isEmpty) {
+                                        context.router.push(
+                                            CustomDeliverInterventionHeadRoute());
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
+                                    },
+                              child: Center(
+                                child: Text(
+                                  allDosesDelivered(
+                                            tasks,
+                                            context.selectedCycle,
+                                            sideEffects,
+                                            individual,
+                                          ) &&
+                                          !checkStatusSMC(
+                                            tasks,
+                                            context.selectedCycle,
+                                          )
+                                      ? localizations.translate(
+                                          i18.householdOverView
+                                              .viewDeliveryLabel,
+                                        )
+                                      : localizations.translate(
+                                          i18_local.householdOverView
+                                              .householdOverViewActionTextSMC,
+                                        ),
+                                ),
+                              ),
+                            )
+                          : const Offstage(),
+                  (isNotEligible ||
                               isBeneficiaryRefused ||
                               isBeneficiaryIneligible ||
                               isBeneficiaryReferred) &&
