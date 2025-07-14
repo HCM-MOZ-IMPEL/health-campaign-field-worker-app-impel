@@ -23,6 +23,7 @@ import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
 import '../../../utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
 import '../../../utils/utils.dart' as utils;
+import '../../../utils/utils_smc/utils_smc.dart' as utils_smc;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
@@ -633,7 +634,7 @@ class CustomIndividualDetailsSMCPageState
                           ),
                         ]),
                         Offstage(
-                          offstage: !widget.isHeadOfHousehold,
+                          offstage: false,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding - 4, 0, kPadding - 4, 0),
@@ -646,8 +647,9 @@ class CustomIndividualDetailsSMCPageState
                                 i18_local.individualDetails.heightLabelTextSMC,
                               ),
                               validationMessages: {
-                                'height': (object) => localizations.translate(
-                                    i18_local.individualDetails
+                                'invalidHeight': (object) =>
+                                    localizations.translate(i18_local
+                                        .individualDetails
                                         .heightInvalidFormatValidationMessageSMC),
                                 'maxLength': (object) =>
                                     localizations.translate(i18_local
@@ -699,29 +701,29 @@ class CustomIndividualDetailsSMCPageState
                             ),
                           ),
                         ),
-                        Offstage(
-                          offstage: widget.isHeadOfHousehold,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding - 4, 0, kPadding - 4, 0),
-                            child: DigitTextFormField(
-                              formControlName: _beneficiaryIdKey,
-                              label: localizations.translate(
-                                i18_local.individualDetails
-                                    .previousCycleBeneficiaryLabelText,
-                              ),
-                              validationMessages: {
-                                'min3': (object) => localizations
-                                    .translate(
-                                        i18_local.common.min3CharsRequired)
-                                    .replaceAll('{}', ''),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                        ),
+                        // Offstage(
+                        //   offstage: widget.isHeadOfHousehold,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.fromLTRB(
+                        //         kPadding - 4, 0, kPadding - 4, 0),
+                        //     child: DigitTextFormField(
+                        //       formControlName: _beneficiaryIdKey,
+                        //       label: localizations.translate(
+                        //         i18_local.individualDetails
+                        //             .previousCycleBeneficiaryLabelText,
+                        //       ),
+                        //       validationMessages: {
+                        //         'min3': (object) => localizations
+                        //             .translate(
+                        //                 i18_local.common.min3CharsRequired)
+                        //             .replaceAll('{}', ''),
+                        //         'maxLength': (object) => localizations
+                        //             .translate(i18.common.maxCharsRequired)
+                        //             .replaceAll('{}', maxLength.toString()),
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -923,7 +925,9 @@ class CustomIndividualDetailsSMCPageState
       ], value: beneficiaryId),
       _heightKey: FormControl<String>(
         validators: [
+          Validators.required,
           Validators.maxLength(3),
+          Validators.delegate(utils_smc.CustomValidator.validateHeight),
         ],
         value: individual?.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == _heightKey)
