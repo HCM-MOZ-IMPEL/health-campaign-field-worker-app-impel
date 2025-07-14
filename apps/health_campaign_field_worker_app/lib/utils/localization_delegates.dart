@@ -14,6 +14,8 @@ import 'package:digit_dss/blocs/app_localization.dart'
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
 import 'package:digit_ui_components/services/AppLocalization.dart'
+    as digit_ui_component_localization;
+import 'package:digit_ui_components/services/AppLocalization.dart'
     as digit_component_localization;
 import 'package:digit_components/blocs/localization.dart'
     as component_localization;
@@ -58,6 +60,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     component_localization.ComponentLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    digit_ui_component_localization.ComponentLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
