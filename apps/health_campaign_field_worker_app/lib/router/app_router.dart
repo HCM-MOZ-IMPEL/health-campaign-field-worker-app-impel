@@ -127,6 +127,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_head.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
@@ -859,6 +860,13 @@ class AppRouter extends _$AppRouter {
                     RedirectRoute(
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention-smc',
+                    ),
+                    AutoRoute(
+                        page: CustomDeliverInterventionHeadRoute.page,
+                        path: 'custom-deliver-intervention-head'),
+                    RedirectRoute(
+                      path: 'deliver-intervention',
+                      redirectTo: 'custom-deliver-intervention-head',
                     ),
                     // AutoRoute(
                     //   page: EligibilityChecklistViewRoute.page,

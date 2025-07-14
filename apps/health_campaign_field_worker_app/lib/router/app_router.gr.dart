@@ -341,6 +341,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverInterventionHeadRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionHeadRouteArgs>(
+          orElse: () => const CustomDeliverInterventionHeadRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionHeadPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomDeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
           orElse: () => const CustomDeliverInterventionRouteArgs());
@@ -2486,6 +2498,50 @@ class CustomDeliverInterventionBednetRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverInterventionHeadPage]
+class CustomDeliverInterventionHeadRoute
+    extends PageRouteInfo<CustomDeliverInterventionHeadRouteArgs> {
+  CustomDeliverInterventionHeadRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionHeadRoute.name,
+          args: CustomDeliverInterventionHeadRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionHeadRoute';
+
+  static const PageInfo<CustomDeliverInterventionHeadRouteArgs> page =
+      PageInfo<CustomDeliverInterventionHeadRouteArgs>(name);
+}
+
+class CustomDeliverInterventionHeadRouteArgs {
+  const CustomDeliverInterventionHeadRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionHeadRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
