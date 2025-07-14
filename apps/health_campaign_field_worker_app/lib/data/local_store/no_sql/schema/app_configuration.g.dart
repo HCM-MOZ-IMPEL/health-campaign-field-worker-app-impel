@@ -168,24 +168,30 @@ const AppConfigurationSchema = CollectionSchema(
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
+
+
       id: 26,
+
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
+
       id: 27,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
+
       id: 28,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
+
       id: 29,
       name: r'symptomsTypes',
       type: IsarType.objectList,
@@ -717,6 +723,7 @@ void _appConfigurationSerialize(
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
+
     offsets[26],
     allOffsets,
     PrivacyPolicySchema.serialize,
@@ -725,16 +732,19 @@ void _appConfigurationSerialize(
   writer.writeObjectList<ReferralReasons>(
     offsets[27],
     allOffsets,
-    ReferralReasonsSchema.serialize,
-    object.referralReasons,
+    PrivacyPolicySchema.serialize,
+    object.privacyPolicyConfig,
   );
+ 
   writer.writeObjectList<RefusalReasons>(
+
     offsets[28],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
+
     offsets[29],
     allOffsets,
     SymptomsTypesSchema.serialize,
@@ -880,23 +890,27 @@ AppConfiguration _appConfigurationDeserialize(
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
+
     offsets[26],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
+
     offsets[27],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
+
     offsets[28],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
+
     offsets[29],
     SymptomsTypesSchema.deserialize,
     allOffsets,
@@ -1061,12 +1075,14 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         HouseStructureTypes(),
       )) as P;
+
     case 26:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
+
     case 27:
       return (reader.readObjectList<ReferralReasons>(
         offset,
@@ -1074,6 +1090,7 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         ReferralReasons(),
       )) as P;
+
     case 28:
       return (reader.readObjectList<RefusalReasons>(
         offset,
@@ -1081,6 +1098,7 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         RefusalReasons(),
       )) as P;
+
     case 29:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
