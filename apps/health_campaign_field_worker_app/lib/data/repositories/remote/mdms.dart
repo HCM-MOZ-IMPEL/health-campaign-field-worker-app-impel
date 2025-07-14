@@ -254,11 +254,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =
@@ -279,14 +279,14 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
-    // final List<DeliveryCommentOptions>? deliveryCommentOptionsSmc =
-    //     element?.deliveryCommentOptionsSmc.map((element) {
-    //   final deliveryCommentOption = DeliveryCommentOptions()
-    //     ..name = element.name
-    //     ..code = element.code;
+    final List<DeliveryCommentOptions>? deliveryCommentOptionsSmc =
+        element?.deliveryCommentOptionsSmc.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
 
-    //   return deliveryCommentOption;
-    // }).toList();
+      return deliveryCommentOption;
+    }).toList();
 
     final List<Interfaces>? interfaceList =
         element?.backendInterface.first.interface.map((e) {
@@ -315,7 +315,7 @@ class MdmsRepository {
     appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-    // appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
+    appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
     appConfiguration.householdMemberDeletionReasonOptions =

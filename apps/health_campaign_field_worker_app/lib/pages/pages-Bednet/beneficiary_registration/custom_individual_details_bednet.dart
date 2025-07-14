@@ -758,6 +758,7 @@ class CustomIndividualDetailsBednetPageState
 
     identifier ??= IdentifierModel(
       clientReferenceId: individual.clientReferenceId,
+      individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(

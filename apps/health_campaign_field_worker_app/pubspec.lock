@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
+      sha256: "6b7c39aba4f4c26340daee8dcb8fde3823a28e3fae6065fd3abf3ed90d3c74c5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+2"
+    version: "1.0.4+1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -273,7 +273,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -404,18 +404,18 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: "224a77051d52a11fbad53dd57827594d3bd24f945af28bd70bab376d68d437f0"
+      sha256: "051849e2bd7c7b3bc5844ea0d096609ddc3a859890ec3a9ac4a65a2620cc1f99"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "6.1.4"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
       name: connectivity_plus_platform_interface
-      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.4"
+    version: "2.0.1"
   convert:
     dependency: transitive
     description:
@@ -428,10 +428,10 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: aa07dbe5f2294c827b7edb9a87bba44a9c15a3cc81bc8da2ca19b37322d30080
+      sha256: "5da775aa218eaf2151c721b16c01c7676fbfdd99cebba2bf64e8b807a28ff94d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.14.1"
+    version: "1.15.0"
   cross_file:
     dependency: transitive
     description:
@@ -557,10 +557,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
+      sha256: a58aae4c9ad5fe58562706fd5a83419c3fca316821ccc38e249189663e8a0f20
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+1"
+    version: "1.0.4"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -581,10 +581,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "4bbfd96e1bc7ce4b9b9a0a92a5944ce1ee2220f9cc3c9c86c7ceb73b2988c549"
+      sha256: "10c1f7f24ba51219088023e54dfff5139ec860fa78b42d7c9970b006ddb6fac1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.6+1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -597,10 +597,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "861cf54ff775e854a3a620c13b6bc381fac97ac899f611115204fe48fa5b3eac"
+      sha256: c07a13efd5d23fe869a87f7ab12b7b82bdb0b911d4c9ed7f4bb1a5c4310847f5
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1+7"
+    version: "0.2.2+4"
   dio:
     dependency: "direct main"
     description:
@@ -625,14 +625,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  disk_space:
-    dependency: "direct main"
-    description:
-      name: disk_space
-      sha256: fb27eb2d09ac04784f45b95b1355538b2355c76a081eeaa8439d1a5cfa263888
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   disk_space_update:
     dependency: "direct main"
     description:
@@ -773,10 +765,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: d7253d255ff10f85cfd2adaba9ac17bae878fa3ba577462451163bd9f1d1f0bf
+      sha256: "8bcfad6d7033f5ea951d15b867622a824b13812178bfec0c779b9d81de011bbb"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.4.2"
   firebase_core_web:
     dependency: transitive
     description:
@@ -1680,10 +1672,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
+      sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.5"
+    version: "2.1.3"
   path_provider_android:
     dependency: transitive
     description:
@@ -2117,10 +2109,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
-      sha256: e07232b998755fe795655c56d1f5426e0190c9c435e1752d39e7b1cd33699c71
+      sha256: "1719743a4dcce8adc0b78bb215ca6bc4cb52a1ed08d0d192ce66472b96f18899"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.34"
+    version: "0.5.11+1"
   sqlparser:
     dependency: transitive
     description:

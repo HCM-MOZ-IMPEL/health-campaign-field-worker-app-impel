@@ -200,6 +200,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                         if (selectedVehicle != null)
                           VehicleCard(
                             vehicle: selectedVehicle,
+                            vehicleActionModel: tripState.tripAction,
                             appLocalizations: localizations,
                             status: vehicleStatus,
                             type: VehicleCardType.all,

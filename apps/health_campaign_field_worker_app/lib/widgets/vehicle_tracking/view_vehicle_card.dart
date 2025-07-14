@@ -1,23 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:health_campaign_field_worker_app/widgets/beneficiary/custom_beneficiary_card.dart';
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/models/entities/status.dart';
-import 'package:registration_delivery/models/entities/task.dart';
-import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:registration_delivery/utils/utils.dart';
 import '../localized.dart';
-import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 
 import 'vehicle_card.dart';
 
