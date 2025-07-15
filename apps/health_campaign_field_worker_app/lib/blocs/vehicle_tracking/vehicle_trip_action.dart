@@ -117,7 +117,7 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   }) = VehicleTripActionEndTripEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required UserActionModel vehicleTripSearch,
+    required String vehicleNo,
   }) = VehicleTripActionSearchEvent;
 }
 

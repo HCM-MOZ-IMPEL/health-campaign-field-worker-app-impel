@@ -24,7 +24,7 @@ mixin _$VehicleTripActionEvent {
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)
         handleEndTip,
-    required TResult Function(UserActionModel vehicleTripSearch) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,7 +35,7 @@ mixin _$VehicleTripActionEvent {
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,7 +46,7 @@ mixin _$VehicleTripActionEvent {
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -208,7 +208,7 @@ class _$VehicleTripActionStartTripEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)
         handleEndTip,
-    required TResult Function(UserActionModel vehicleTripSearch) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
     return handleStartTip(
         isEditing, boundaryModel, tripBookAction, navigateToSummary);
@@ -223,7 +223,7 @@ class _$VehicleTripActionStartTripEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
     return handleStartTip?.call(
         isEditing, boundaryModel, tripBookAction, navigateToSummary);
@@ -238,7 +238,7 @@ class _$VehicleTripActionStartTripEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleStartTip != null) {
@@ -416,7 +416,7 @@ class _$VehicleTripActionEndTripEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)
         handleEndTip,
-    required TResult Function(UserActionModel vehicleTripSearch) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
     return handleEndTip(
         isEditing, boundaryModel, tripAction, navigateToSummary);
@@ -431,7 +431,7 @@ class _$VehicleTripActionEndTripEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
     return handleEndTip?.call(
         isEditing, boundaryModel, tripAction, navigateToSummary);
@@ -446,7 +446,7 @@ class _$VehicleTripActionEndTripEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleEndTip != null) {
@@ -516,7 +516,7 @@ abstract class _$$VehicleTripActionSearchEventImplCopyWith<$Res> {
           $Res Function(_$VehicleTripActionSearchEventImpl) then) =
       __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({UserActionModel vehicleTripSearch});
+  $Res call({String vehicleNo});
 }
 
 /// @nodoc
@@ -532,13 +532,13 @@ class __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vehicleTripSearch = null,
+    Object? vehicleNo = null,
   }) {
     return _then(_$VehicleTripActionSearchEventImpl(
-      vehicleTripSearch: null == vehicleTripSearch
-          ? _value.vehicleTripSearch
-          : vehicleTripSearch // ignore: cast_nullable_to_non_nullable
-              as UserActionModel,
+      vehicleNo: null == vehicleNo
+          ? _value.vehicleNo
+          : vehicleNo // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -547,14 +547,14 @@ class __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>
 
 class _$VehicleTripActionSearchEventImpl
     implements VehicleTripActionSearchEvent {
-  const _$VehicleTripActionSearchEventImpl({required this.vehicleTripSearch});
+  const _$VehicleTripActionSearchEventImpl({required this.vehicleNo});
 
   @override
-  final UserActionModel vehicleTripSearch;
+  final String vehicleNo;
 
   @override
   String toString() {
-    return 'VehicleTripActionEvent.handleSearch(vehicleTripSearch: $vehicleTripSearch)';
+    return 'VehicleTripActionEvent.handleSearch(vehicleNo: $vehicleNo)';
   }
 
   @override
@@ -562,12 +562,12 @@ class _$VehicleTripActionSearchEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VehicleTripActionSearchEventImpl &&
-            (identical(other.vehicleTripSearch, vehicleTripSearch) ||
-                other.vehicleTripSearch == vehicleTripSearch));
+            (identical(other.vehicleNo, vehicleNo) ||
+                other.vehicleNo == vehicleNo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, vehicleTripSearch);
+  int get hashCode => Object.hash(runtimeType, vehicleNo);
 
   @JsonKey(ignore: true)
   @override
@@ -586,9 +586,9 @@ class _$VehicleTripActionSearchEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)
         handleEndTip,
-    required TResult Function(UserActionModel vehicleTripSearch) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
-    return handleSearch(vehicleTripSearch);
+    return handleSearch(vehicleNo);
   }
 
   @override
@@ -600,9 +600,9 @@ class _$VehicleTripActionSearchEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
-    return handleSearch?.call(vehicleTripSearch);
+    return handleSearch?.call(vehicleNo);
   }
 
   @override
@@ -614,11 +614,11 @@ class _$VehicleTripActionSearchEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripAction, bool navigateToSummary)?
         handleEndTip,
-    TResult Function(UserActionModel vehicleTripSearch)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
-      return handleSearch(vehicleTripSearch);
+      return handleSearch(vehicleNo);
     }
     return orElse();
   }
@@ -661,10 +661,9 @@ class _$VehicleTripActionSearchEventImpl
 
 abstract class VehicleTripActionSearchEvent implements VehicleTripActionEvent {
   const factory VehicleTripActionSearchEvent(
-          {required final UserActionModel vehicleTripSearch}) =
-      _$VehicleTripActionSearchEventImpl;
+      {required final String vehicleNo}) = _$VehicleTripActionSearchEventImpl;
 
-  UserActionModel get vehicleTripSearch;
+  String get vehicleNo;
   @JsonKey(ignore: true)
   _$$VehicleTripActionSearchEventImplCopyWith<
           _$VehicleTripActionSearchEventImpl>
