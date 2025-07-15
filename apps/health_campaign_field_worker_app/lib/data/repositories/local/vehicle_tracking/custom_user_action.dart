@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -53,9 +54,59 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
   @override
   DataModelType get type => DataModelType.userAction;
 
-  @override
-  FutureOr<List<UserActionModel>> search(UserActionSearchModel query) {
-    // TODO: implement search
-    throw UnimplementedError();
+  FutureOr<List<UserActionModel>> searchUserAction(String? action) {
+    return retryLocalCallOperation<List<UserActionModel>>(() async {
+      final selectQuery = sql.select(sql.userAction).join(
+        [
+          leftOuterJoin(
+            sql.address,
+            sql.address.relatedClientReferenceId.equalsExp(sql.userAction.id),
+          ),
+        ],
+      );
+
+      final results = await (selectQuery
+            ..where(
+              buildAnd(
+                [
+                  if (action != null)
+                    sql.userAction.action.isIn([action])
+                  else
+                    const Constant(true),
+                  // if (query.isPermanent != null)
+                  //   sql.facility.isPermanent.equals(
+                  //     query.isPermanent!,
+                  //   ),
+                ],
+              ),
+            ))
+          .get();
+
+      return results.map((e) {
+        final userActionModel = e.readTable(sql.userAction);
+        String? additionalField = userActionModel.additionalFields;
+        Map<String, dynamic>? additionalFieldsMap =
+            additionalField == null ? null : json.decode(additionalField);
+
+        return UserActionModel(
+          latitude: double.parse(userActionModel.latitude),
+          longitude: double.parse(userActionModel.longitude),
+          locationAccuracy: double.parse(userActionModel.locationAccuracy),
+          clientReferenceId: userActionModel.clientReferenceId,
+          isSync: userActionModel.isSync,
+          timestamp: userActionModel.timestamp,
+          projectId: userActionModel.projectId,
+          boundaryCode: userActionModel.boundaryCode,
+          action: userActionModel.action,
+          additionalFields: additionalFieldsMap == null
+              ? null
+              : UserActionAdditionalFields(
+                  version: 1,
+                  fields: additionalFieldsMap.entries
+                      .map((e) => AdditionalField(e.key, e.value))
+                      .toList()),
+        );
+      }).toList();
+    });
   }
 }

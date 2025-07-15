@@ -28,6 +28,7 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
+import '../../utils/utils.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -346,7 +347,10 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     var startTime = DateTime.now().millisecondsSinceEpoch;
     final tripBookReason = form.control(_tripBookReasonKey).value as String?;
 
-    if (latitude == null || longitude == null || locationAccuracy == null) {
+    if (latitude == null ||
+        longitude == null ||
+        locationAccuracy == null ||
+        vehicleNo == null) {
       return null;
     }
     tripBookAction = UserActionModel(
@@ -358,9 +362,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         timestamp: startTime,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
-        action: TripActions.start.toValue(),
+        action: vehicleCustomAction(TripActions.start, vehicleNo),
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
-          if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
+          AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
           AdditionalField("tripStartTime", startTime)

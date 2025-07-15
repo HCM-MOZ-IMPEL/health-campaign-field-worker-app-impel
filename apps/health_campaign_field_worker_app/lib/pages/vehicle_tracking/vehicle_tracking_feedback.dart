@@ -187,6 +187,7 @@ class VehicleTripFeedbackPageState
                                                       boundaryModel:
                                                           RegistrationDeliverySingleton()
                                                               .boundary!,
+                                                      vehicleNo: vehicleNo,
                                                       tripAction: tripAction),
                                                 );
                                             context.router.push(
