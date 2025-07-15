@@ -102,12 +102,8 @@ class VehicleTripFeedbackPageState
                   form.control(_tripFeedbackCommentKey).value as String?;
               return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
                 builder: (context, vehicleTripActionState) {
-                  UserActionModel tripAction = _getTripActionModel(
-                      locationState,
-                      vehicleTripActionState,
-                      vehicleNo,
-                      tripEvaluation,
-                      tripComment);
+                  UserActionModel? tripAction = _getTripActionModel(
+                      vehicleTripActionState, tripEvaluation, tripComment);
                   return ScrollableContent(
                     header: const Column(
                       children: [
@@ -126,7 +122,7 @@ class VehicleTripFeedbackPageState
                               return DigitButton(
                                   label: localizations.translate(
                                     i18_local
-                                        .vehicleTracking.startTripButtonLabel,
+                                        .vehicleTracking.endTripButtonLabel,
                                   ),
                                   isDisabled: false,
                                   type: DigitButtonType.secondary,
@@ -191,8 +187,11 @@ class VehicleTripFeedbackPageState
                                                       boundaryModel:
                                                           RegistrationDeliverySingleton()
                                                               .boundary!,
-                                                      tripAction: tripAction!),
+                                                      tripAction: tripAction),
                                                 );
+                                            context.router.push(
+                                              VehicleAcknowledgementRoute(),
+                                            );
                                           }
                                         });
                             },
@@ -327,48 +326,43 @@ class VehicleTripFeedbackPageState
     );
   }
 
-  UserActionModel _getTripActionModel(
-    LocationState? locationState,
+  UserActionModel? _getTripActionModel(
     VehicleTripActionState vehicleTripActionState,
-    String? vehicleNo,
     String? tripEvaluation,
     String? tripComment,
   ) {
-    UserActionModel tripBookAction;
-    var clientReferenceId = IdGen.i.identifier;
-    var startTime = DateTime.now().millisecondsSinceEpoch;
+    UserActionModel? tripBookAction = vehicleTripActionState.tripAction;
 
-    double? latitude = locationState?.latitude;
-    double? longitude = locationState?.longitude;
-    double? locationAccuracy = locationState?.accuracy;
+    if (tripBookAction == null) {
+      return null;
+    }
 
-    tripBookAction = UserActionModel(
-        latitude: latitude!,
-        longitude: longitude!,
-        locationAccuracy: locationAccuracy!,
-        clientReferenceId: clientReferenceId,
-        isSync: true,
-        timestamp: startTime,
-        projectId: RegistrationDeliverySingleton().projectId!,
-        boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
-        action: TripActions.start.toValue(),
+    Set keys = {
+      _tripFeedbackCommentKey,
+      _tripFeedbackEvaluationKey,
+    };
+
+    List<AdditionalField> additionalFields =
+        tripBookAction.additionalFields?.fields ?? [];
+
+    additionalFields =
+        additionalFields.whereNot((e) => keys.contains(e)).toList();
+
+    tripBookAction = tripBookAction.copyWith(
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
-          if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
-          if (tripComment != null)
-            AdditionalField(_tripFeedbackCommentKey, tripComment),
-          AdditionalField("tripFeedbackComment", startTime),
-          if (tripEvaluation != null)
-            AdditionalField(_tripFeedbackEvaluationKey, tripEvaluation),
-          AdditionalField("tripFeedbackEvaluation", startTime),
-        ]));
+      ...additionalFields,
+      if (tripComment != null)
+        AdditionalField(_tripFeedbackCommentKey, tripComment),
+      if (tripEvaluation != null)
+        AdditionalField(_tripFeedbackEvaluationKey, tripEvaluation),
+    ]));
 
     return tripBookAction;
   }
 
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _tripFeedbackCommentKey:
-          FormControl<String>(validators: [Validators.required]),
+      _tripFeedbackCommentKey: FormControl<String>(),
       _tripFeedbackEvaluationKey:
           FormControl<String>(validators: [Validators.required]),
     });

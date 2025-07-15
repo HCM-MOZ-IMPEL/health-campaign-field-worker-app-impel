@@ -256,6 +256,11 @@ class VehicleTracking {
   String get feedbackLabel => "VEHICLE_TRACKING_FEEDBACK_LABEL";
 
   String get tripComment => "VEHICLE_TRACKING_TRIP_COMMENT";
+  String get tipSubmitted => "VEHICLE_TRACKING_TIP_SUBMITTED";
+
+  String get acknowledgementLabel => "VEHICLE_TRACKING_ACKNOWLEDGEMENT_LABEL";
+  String get acknowledgementDescription =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_DESCRIPTION";
 
   String get startDate => 'VEHICLE_TRACKING_START_DATE';
   String get endDate => 'VEHICLE_TRACKING_END_DATE';

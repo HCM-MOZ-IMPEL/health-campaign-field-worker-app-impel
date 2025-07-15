@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:digit_components/widgets/digit_text_field.dart';
@@ -10,37 +9,21 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/blocs/auth/auth.dart';
-import 'package:health_campaign_field_worker_app/utils/constants.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/utils.dart';
-
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
-import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../router/app_router.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18_local;
-import '../../../models/entities/additional_fields_type.dart'
-    as additional_fields_local;
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/app_config/app_config_model.dart';
@@ -301,7 +284,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         DialogType.inProgress,
       );
 
-      Future.delayed(const Duration(seconds: 0), () {
+      Future.delayed(const Duration(seconds: 1), () {
         // After delay, hide the initial dialog
         DigitComponentsUtils.hideDialog(context);
         handleCapturedLocationState(
@@ -326,8 +309,12 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     final long = locationState.longitude;
     final accuracy = locationState.accuracy;
 
-    final tripBookActionModel = _getTripActionModel(
+    UserActionModel? tripBookActionModel = _getTripActionModel(
         lat, long, accuracy, vehicleTripActionState, vehicleNo, form);
+
+    if (tripBookActionModel == null) {
+      return;
+    }
 
     context.read<VehicleTripActionBloc>().add(
           VehicleTripActionStartTripEvent(
@@ -346,7 +333,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     // await handleSubmit(context, taskModel, deliverInterventionState);
   }
 
-  UserActionModel _getTripActionModel(
+  UserActionModel? _getTripActionModel(
     double? latitude,
     double? longitude,
     double? locationAccuracy,
@@ -358,10 +345,14 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     var clientReferenceId = IdGen.i.identifier;
     var startTime = DateTime.now().millisecondsSinceEpoch;
     final tripBookReason = form.control(_tripBookReasonKey).value as String?;
+
+    if (latitude == null || longitude == null || locationAccuracy == null) {
+      return null;
+    }
     tripBookAction = UserActionModel(
-        latitude: latitude!,
-        longitude: longitude!,
-        locationAccuracy: locationAccuracy!,
+        latitude: latitude,
+        longitude: longitude,
+        locationAccuracy: locationAccuracy,
         clientReferenceId: clientReferenceId,
         isSync: true,
         timestamp: startTime,
