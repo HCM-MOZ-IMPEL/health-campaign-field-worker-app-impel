@@ -159,6 +159,7 @@ import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
+import '../pages/vehicle_tracking/vehicle_acknowledgement.dart';
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
@@ -902,13 +903,6 @@ class AppRouter extends _$AppRouter {
                       redirectTo: 'custom-deliver-intervention-smc',
                     ),
                     AutoRoute(
-                        page: CustomDeliverInterventionHeadRoute.page,
-                        path: 'custom-deliver-intervention-head'),
-                    RedirectRoute(
-                      path: 'deliver-intervention-head',
-                      redirectTo: 'custom-deliver-intervention-head',
-                    ),
-                    AutoRoute(
                       page: EligibilityChecklistViewRoute.page,
                       path: 'eligibility-checklist',
                     ),
@@ -985,9 +979,6 @@ class AppRouter extends _$AppRouter {
                       page: DoseAdministeredVerificationRoute.page,
                       path: 'dose-administered-verification',
                     ),
-                    AutoRoute(
-                        page: ConductMobilityControlAssessmentRoute.page,
-                        path: 'conduct-mobility-control-assessment'),
                   ],
                 ),
               ]),
@@ -1392,6 +1383,14 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                   page: VehicleTripBookRoute.page,
                   path: 'vehicle-trip-book',
+                ),
+                AutoRoute(
+                  page: VehicleTripFeedbackRoute.page,
+                  path: 'vehicle-trip-feedback',
+                ),
+                AutoRoute(
+                  page: VehicleAcknowledgementRoute.page,
+                  path: 'vehicle-acknowledgement',
                 )
               ]),
 

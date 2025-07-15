@@ -45,9 +45,6 @@ class VehicleAcknowledgementPageState
         label: localizations.translate(
           i18_local.vehicleTracking.tipSubmitted,
         ),
-        subLabel: localizations.translate(
-          i18_local.vehicleTracking.acknowledgementSubLabel,
-        ),
         enableBackToSearch: false,
         actionLabel: localizations
             .translate(i18_local.acknowledgementSuccess.actionLabelText),

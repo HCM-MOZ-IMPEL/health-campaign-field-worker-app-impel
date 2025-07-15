@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:digit_components/widgets/digit_text_field.dart';
@@ -14,25 +13,13 @@ import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/blocs/auth/auth.dart';
-import 'package:health_campaign_field_worker_app/utils/constants.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/utils.dart';
-
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
-import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../router/app_router.dart';
@@ -40,7 +27,6 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
-import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/app_config/app_config_model.dart';
@@ -329,7 +315,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         DialogType.inProgress,
       );
 
-      Future.delayed(const Duration(seconds: 0), () {
+      Future.delayed(const Duration(seconds: 1), () {
         // After delay, hide the initial dialog
         DigitComponentsUtils.hideDialog(context);
         handleCapturedLocationState(
@@ -400,9 +386,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
       return null;
     }
     tripBookAction = UserActionModel(
-        latitude: latitude!,
-        longitude: longitude!,
-        locationAccuracy: locationAccuracy!,
+        latitude: latitude,
+        longitude: longitude,
+        locationAccuracy: locationAccuracy,
         clientReferenceId: clientReferenceId,
         isSync: true,
         timestamp: startTime,
