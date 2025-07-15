@@ -261,6 +261,8 @@ class VehicleTracking {
   String get acknowledgementLabel => "VEHICLE_TRACKING_ACKNOWLEDGEMENT_LABEL";
   String get acknowledgementDescription =>
       "VEHICLE_TRACKING_ACKNOWLEDGEMENT_DESCRIPTION";
+  String get acknowledgementSubLabel =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_SUB_LABEL";
 
   String get startDate => 'VEHICLE_TRACKING_START_DATE';
   String get endDate => 'VEHICLE_TRACKING_END_DATE';
