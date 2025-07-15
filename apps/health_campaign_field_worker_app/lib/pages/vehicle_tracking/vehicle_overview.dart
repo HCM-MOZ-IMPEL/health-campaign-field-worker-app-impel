@@ -218,7 +218,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                             vehicleActionModel: tripState.tripAction,
                             appLocalizations: localizations,
                             status: vehicleStatus,
-                            type: VehicleCardType.all,
+                            type: VehicleCardType.info,
                             buttonText: localizations.translate(
                               i18_local.vehicleTracking.mapLabel,
                             ),

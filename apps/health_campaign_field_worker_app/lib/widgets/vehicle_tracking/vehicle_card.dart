@@ -36,7 +36,7 @@ class VehicleCard extends StatelessWidget {
     this.vehicleActionModel,
     required this.onTap,
     required this.buttonText,
-    this.type = VehicleCardType.few,
+    this.type = VehicleCardType.search,
   });
 
   @override
@@ -54,22 +54,23 @@ class VehicleCard extends StatelessWidget {
 
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            width: 100,
-            child: DigitButton(
-              label: buttonText,
-              isDisabled: false,
-              type: DigitButtonType.secondary,
-              size: DigitButtonSize.medium,
-              mainAxisSize: MainAxisSize.max,
-              onPressed: () {
-                onTap();
-              },
+        if (!(type == VehicleCardType.info))
+          Align(
+            alignment: Alignment.topRight,
+            child: SizedBox(
+              width: 100,
+              child: DigitButton(
+                label: buttonText,
+                isDisabled: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.medium,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  onTap();
+                },
+              ),
             ),
           ),
-        ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +102,7 @@ class VehicleCard extends StatelessWidget {
               fraction: 3,
               gap: 8,
               element: {
-                if (type == VehicleCardType.all && startDate != null)
+                if (type == VehicleCardType.info && startDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.startDate,
                   ): DateFormat().format(DateTime.fromMillisecondsSinceEpoch(
@@ -118,7 +119,7 @@ class VehicleCard extends StatelessWidget {
                 appLocalizations.translate(
                   i18_local.vehicleTracking.model,
                 ): model,
-                if (type == VehicleCardType.all && endDate != null)
+                if (type == VehicleCardType.info && endDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.endDate,
                   ): DateFormat().format(
@@ -184,10 +185,7 @@ class StatusWidget extends StatelessWidget {
   }
 }
 
-enum VehicleCardType {
-  few,
-  all,
-}
+enum VehicleCardType { info, search }
 
 enum VehicleStatusEnum {
   none,
