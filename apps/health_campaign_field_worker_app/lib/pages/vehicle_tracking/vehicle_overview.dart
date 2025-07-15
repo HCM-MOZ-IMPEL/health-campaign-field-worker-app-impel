@@ -100,7 +100,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           action: (ctx) => Navigator.of(
             context,
             rootNavigator: true,
-          ).pop(true),
+          ).pop(false),
         ),
       ),
     );
@@ -136,13 +136,15 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           action: (ctx) => Navigator.of(
             context,
             rootNavigator: true,
-          ).pop(true),
+          ).pop(false),
         ),
       ),
     );
     if (context.mounted && tripAction != null) {
-      context.router
-          .push(VehicleTripFeedbackRoute(vehicleNo: widget.vehicleNo));
+      if (submit ?? false) {
+        context.router
+            .push(VehicleTripFeedbackRoute(vehicleNo: widget.vehicleNo));
+      }
       // if (submit ?? false) {
       //   context.read<VehicleTripActionBloc>().add(
       //         VehicleTripActionEndTripEvent(
@@ -218,7 +220,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                             vehicleActionModel: tripState.tripAction,
                             appLocalizations: localizations,
                             status: vehicleStatus,
-                            type: VehicleCardType.all,
+                            type: VehicleCardType.info,
                             buttonText: localizations.translate(
                               i18_local.vehicleTracking.mapLabel,
                             ),
