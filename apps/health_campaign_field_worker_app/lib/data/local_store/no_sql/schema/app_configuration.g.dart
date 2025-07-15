@@ -161,32 +161,44 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
-    r'houseStructureTypes': PropertySchema(
+    r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS': PropertySchema(
       id: 25,
+      name: r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+      type: IsarType.objectList,
+      target: r'VehicleTrackingReasons',
+    ),
+    r'VEHICLE_TRACKING_TRIP_REASONS': PropertySchema(
+      id: 26,
+      name: r'VEHICLE_TRACKING_TRIP_REASONS',
+      type: IsarType.objectList,
+      target: r'VehicleTrackingReasons',
+    ),
+    r'houseStructureTypes': PropertySchema(
+      id: 27,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 26,
+      id: 28,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 27,
+      id: 29,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 28,
+      id: 30,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 29,
+      id: 31,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -219,6 +231,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'FirebaseConfig': FirebaseConfigSchema,
     r'SymptomsTypes': SymptomsTypesSchema,
     r'SearchHouseHoldFilters': SearchHouseHoldFiltersSchema,
+    r'VehicleTrackingReasons': VehicleTrackingReasonsSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
     r'RefusalReasons': RefusalReasonsSchema,
@@ -518,6 +531,34 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.vehicleTrackingTripEvaluationReasons;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[VehicleTrackingReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += VehicleTrackingReasonsSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.vehicleTrackingTripReasons;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[VehicleTrackingReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += VehicleTrackingReasonsSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.houseStructureTypes;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -710,32 +751,44 @@ void _appConfigurationSerialize(
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
-  writer.writeObjectList<HouseStructureTypes>(
+  writer.writeObjectList<VehicleTrackingReasons>(
     offsets[25],
+    allOffsets,
+    VehicleTrackingReasonsSchema.serialize,
+    object.vehicleTrackingTripEvaluationReasons,
+  );
+  writer.writeObjectList<VehicleTrackingReasons>(
+    offsets[26],
+    allOffsets,
+    VehicleTrackingReasonsSchema.serialize,
+    object.vehicleTrackingTripReasons,
+  );
+  writer.writeObjectList<HouseStructureTypes>(
+    offsets[27],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[26],
+    offsets[28],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[29],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[30],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[31],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -872,32 +925,46 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     TransportTypes(),
   );
-  object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
+  object.vehicleTrackingTripEvaluationReasons =
+      reader.readObjectList<VehicleTrackingReasons>(
     offsets[25],
+    VehicleTrackingReasonsSchema.deserialize,
+    allOffsets,
+    VehicleTrackingReasons(),
+  );
+  object.vehicleTrackingTripReasons =
+      reader.readObjectList<VehicleTrackingReasons>(
+    offsets[26],
+    VehicleTrackingReasonsSchema.deserialize,
+    allOffsets,
+    VehicleTrackingReasons(),
+  );
+  object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
+    offsets[27],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[26],
+    offsets[28],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[29],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[30],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[31],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1055,33 +1122,47 @@ P _appConfigurationDeserializeProp<P>(
         TransportTypes(),
       )) as P;
     case 25:
+      return (reader.readObjectList<VehicleTrackingReasons>(
+        offset,
+        VehicleTrackingReasonsSchema.deserialize,
+        allOffsets,
+        VehicleTrackingReasons(),
+      )) as P;
+    case 26:
+      return (reader.readObjectList<VehicleTrackingReasons>(
+        offset,
+        VehicleTrackingReasonsSchema.deserialize,
+        allOffsets,
+        VehicleTrackingReasons(),
+      )) as P;
+    case 27:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 26:
+    case 28:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 27:
+    case 29:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 28:
+    case 30:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 29:
+    case 31:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3808,6 +3889,220 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'VEHICLE_TRACKING_TRIP_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'VEHICLE_TRACKING_TRIP_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VEHICLE_TRACKING_TRIP_REASONS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       houseStructureTypesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4449,6 +4744,21 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripEvaluationReasonsElement(
+          FilterQuery<VehicleTrackingReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vehicleTrackingTripReasonsElement(FilterQuery<VehicleTrackingReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'VEHICLE_TRACKING_TRIP_REASONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       houseStructureTypesElement(FilterQuery<HouseStructureTypes> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'houseStructureTypes');
@@ -4900,6 +5210,20 @@ extension AppConfigurationQueryProperty
       transportTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'TRANSPORT_TYPES');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<VehicleTrackingReasons>?,
+      QQueryOperations> vehicleTrackingTripEvaluationReasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<VehicleTrackingReasons>?,
+      QQueryOperations> vehicleTrackingTripReasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'VEHICLE_TRACKING_TRIP_REASONS');
     });
   }
 
