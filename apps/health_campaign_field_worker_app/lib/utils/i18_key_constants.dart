@@ -1020,6 +1020,7 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get refreshLocation => 'HOUSEHOLD_REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {

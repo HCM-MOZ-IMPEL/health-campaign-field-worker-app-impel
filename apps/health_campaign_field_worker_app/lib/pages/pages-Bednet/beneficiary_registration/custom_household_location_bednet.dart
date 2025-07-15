@@ -292,7 +292,8 @@ class _CustomHouseholdLocationBednetPageState
                                     icon: Icons.refresh,
                                     iconSize: 20,
                                     iconText: localizations.translate(
-                                      i18.householdLocation.refreshLocation,
+                                      i18_local
+                                          .householdLocation.refreshLocation,
                                     ),
                                     onPressed: () {
                                       _isManualRefresh = true;
