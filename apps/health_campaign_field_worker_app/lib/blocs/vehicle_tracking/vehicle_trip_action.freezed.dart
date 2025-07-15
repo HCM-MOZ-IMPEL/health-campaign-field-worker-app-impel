@@ -21,8 +21,12 @@ mixin _$VehicleTripActionEvent {
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)
         handleStartTip,
-    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)
+    required TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)
         handleEndTip,
     required TResult Function(String vehicleNo) handleSearch,
   }) =>
@@ -32,8 +36,12 @@ mixin _$VehicleTripActionEvent {
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult? Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult? Function(String vehicleNo)? handleSearch,
   }) =>
@@ -43,8 +51,12 @@ mixin _$VehicleTripActionEvent {
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
@@ -205,8 +217,12 @@ class _$VehicleTripActionStartTripEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)
         handleStartTip,
-    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)
+    required TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)
         handleEndTip,
     required TResult Function(String vehicleNo) handleSearch,
   }) {
@@ -220,8 +236,12 @@ class _$VehicleTripActionStartTripEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult? Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult? Function(String vehicleNo)? handleSearch,
   }) {
@@ -235,8 +255,12 @@ class _$VehicleTripActionStartTripEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
@@ -312,6 +336,7 @@ abstract class _$$VehicleTripActionEndTripEventImplCopyWith<$Res> {
   $Res call(
       {bool isEditing,
       BoundaryModel boundaryModel,
+      String vehicleNo,
       UserActionModel tripAction,
       bool navigateToSummary});
 }
@@ -331,6 +356,7 @@ class __$$VehicleTripActionEndTripEventImplCopyWithImpl<$Res>
   $Res call({
     Object? isEditing = null,
     Object? boundaryModel = null,
+    Object? vehicleNo = null,
     Object? tripAction = null,
     Object? navigateToSummary = null,
   }) {
@@ -343,6 +369,10 @@ class __$$VehicleTripActionEndTripEventImplCopyWithImpl<$Res>
           ? _value.boundaryModel
           : boundaryModel // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
+      vehicleNo: null == vehicleNo
+          ? _value.vehicleNo
+          : vehicleNo // ignore: cast_nullable_to_non_nullable
+              as String,
       tripAction: null == tripAction
           ? _value.tripAction
           : tripAction // ignore: cast_nullable_to_non_nullable
@@ -362,6 +392,7 @@ class _$VehicleTripActionEndTripEventImpl
   const _$VehicleTripActionEndTripEventImpl(
       {required this.isEditing,
       required this.boundaryModel,
+      required this.vehicleNo,
       required this.tripAction,
       this.navigateToSummary = false});
 
@@ -370,6 +401,8 @@ class _$VehicleTripActionEndTripEventImpl
   @override
   final BoundaryModel boundaryModel;
   @override
+  final String vehicleNo;
+  @override
   final UserActionModel tripAction;
   @override
   @JsonKey()
@@ -377,7 +410,7 @@ class _$VehicleTripActionEndTripEventImpl
 
   @override
   String toString() {
-    return 'VehicleTripActionEvent.handleEndTip(isEditing: $isEditing, boundaryModel: $boundaryModel, tripAction: $tripAction, navigateToSummary: $navigateToSummary)';
+    return 'VehicleTripActionEvent.handleEndTip(isEditing: $isEditing, boundaryModel: $boundaryModel, vehicleNo: $vehicleNo, tripAction: $tripAction, navigateToSummary: $navigateToSummary)';
   }
 
   @override
@@ -389,6 +422,8 @@ class _$VehicleTripActionEndTripEventImpl
                 other.isEditing == isEditing) &&
             (identical(other.boundaryModel, boundaryModel) ||
                 other.boundaryModel == boundaryModel) &&
+            (identical(other.vehicleNo, vehicleNo) ||
+                other.vehicleNo == vehicleNo) &&
             (identical(other.tripAction, tripAction) ||
                 other.tripAction == tripAction) &&
             (identical(other.navigateToSummary, navigateToSummary) ||
@@ -396,8 +431,8 @@ class _$VehicleTripActionEndTripEventImpl
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isEditing, boundaryModel, tripAction, navigateToSummary);
+  int get hashCode => Object.hash(runtimeType, isEditing, boundaryModel,
+      vehicleNo, tripAction, navigateToSummary);
 
   @JsonKey(ignore: true)
   @override
@@ -413,13 +448,17 @@ class _$VehicleTripActionEndTripEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)
         handleStartTip,
-    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)
+    required TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)
         handleEndTip,
     required TResult Function(String vehicleNo) handleSearch,
   }) {
     return handleEndTip(
-        isEditing, boundaryModel, tripAction, navigateToSummary);
+        isEditing, boundaryModel, vehicleNo, tripAction, navigateToSummary);
   }
 
   @override
@@ -428,13 +467,17 @@ class _$VehicleTripActionEndTripEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult? Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult? Function(String vehicleNo)? handleSearch,
   }) {
     return handleEndTip?.call(
-        isEditing, boundaryModel, tripAction, navigateToSummary);
+        isEditing, boundaryModel, vehicleNo, tripAction, navigateToSummary);
   }
 
   @override
@@ -443,15 +486,19 @@ class _$VehicleTripActionEndTripEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleEndTip != null) {
       return handleEndTip(
-          isEditing, boundaryModel, tripAction, navigateToSummary);
+          isEditing, boundaryModel, vehicleNo, tripAction, navigateToSummary);
     }
     return orElse();
   }
@@ -496,11 +543,13 @@ abstract class VehicleTripActionEndTripEvent implements VehicleTripActionEvent {
   const factory VehicleTripActionEndTripEvent(
       {required final bool isEditing,
       required final BoundaryModel boundaryModel,
+      required final String vehicleNo,
       required final UserActionModel tripAction,
       final bool navigateToSummary}) = _$VehicleTripActionEndTripEventImpl;
 
   bool get isEditing;
   BoundaryModel get boundaryModel;
+  String get vehicleNo;
   UserActionModel get tripAction;
   bool get navigateToSummary;
   @JsonKey(ignore: true)
@@ -583,8 +632,12 @@ class _$VehicleTripActionSearchEventImpl
     required TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)
         handleStartTip,
-    required TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)
+    required TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)
         handleEndTip,
     required TResult Function(String vehicleNo) handleSearch,
   }) {
@@ -597,8 +650,12 @@ class _$VehicleTripActionSearchEventImpl
     TResult? Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult? Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult? Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult? Function(String vehicleNo)? handleSearch,
   }) {
@@ -611,8 +668,12 @@ class _$VehicleTripActionSearchEventImpl
     TResult Function(bool isEditing, BoundaryModel boundaryModel,
             UserActionModel tripBookAction, bool navigateToSummary)?
         handleStartTip,
-    TResult Function(bool isEditing, BoundaryModel boundaryModel,
-            UserActionModel tripAction, bool navigateToSummary)?
+    TResult Function(
+            bool isEditing,
+            BoundaryModel boundaryModel,
+            String vehicleNo,
+            UserActionModel tripAction,
+            bool navigateToSummary)?
         handleEndTip,
     TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),

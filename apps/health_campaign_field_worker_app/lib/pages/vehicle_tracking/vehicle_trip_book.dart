@@ -31,6 +31,7 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
+import '../../utils/utils.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -397,7 +398,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         action: TripActions.start.toValue(),
         beneficiaryTag: vehicleNo,
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
-          if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
+          AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
           if (otherFieldReason != null)

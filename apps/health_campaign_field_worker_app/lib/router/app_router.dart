@@ -164,6 +164,7 @@ import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 import '../pages/vehicle_tracking/vehicle_trip_book.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_feedback.dart';
 
 part 'app_router.gr.dart';
 
@@ -1000,6 +1001,14 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                   page: VehicleTripBookRoute.page,
                   path: 'vehicle-trip-book',
+                ),
+                AutoRoute(
+                  page: VehicleTripFeedbackRoute.page,
+                  path: 'vehicle-trip-feedback',
+                ),
+                AutoRoute(
+                  page: VehicleAcknowledgementRoute.page,
+                  path: 'vehicle-acknowledgement',
                 )
               ]),
 

@@ -11,6 +11,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
+import '../../utils/utils.dart';
 
 part 'vehicle_trip_action.freezed.dart';
 
@@ -120,6 +121,7 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   const factory VehicleTripActionEvent.handleEndTip({
     required bool isEditing,
     required BoundaryModel boundaryModel,
+    required String vehicleNo,
     required UserActionModel tripAction,
     @Default(false) bool navigateToSummary,
   }) = VehicleTripActionEndTripEvent;
