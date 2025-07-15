@@ -1277,6 +1277,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VehicleTripFeedbackRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleTripFeedbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleTripFeedbackPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          vehicleNo: args.vehicleNo,
+        ),
+      );
+    },
     ViewAllTransactionsRoute.name: (routeData) {
       final args = routeData.argsAs<ViewAllTransactionsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -5877,6 +5888,50 @@ class VehicleTripBookRouteArgs {
   @override
   String toString() {
     return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
+  }
+}
+
+/// generated route for
+/// [VehicleTripFeedbackPage]
+class VehicleTripFeedbackRoute
+    extends PageRouteInfo<VehicleTripFeedbackRouteArgs> {
+  VehicleTripFeedbackRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String vehicleNo,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleTripFeedbackRoute.name,
+          args: VehicleTripFeedbackRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            vehicleNo: vehicleNo,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleTripFeedbackRoute';
+
+  static const PageInfo<VehicleTripFeedbackRouteArgs> page =
+      PageInfo<VehicleTripFeedbackRouteArgs>(name);
+}
+
+class VehicleTripFeedbackRouteArgs {
+  const VehicleTripFeedbackRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.vehicleNo,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String vehicleNo;
+
+  @override
+  String toString() {
+    return 'VehicleTripFeedbackRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
   }
 }
 

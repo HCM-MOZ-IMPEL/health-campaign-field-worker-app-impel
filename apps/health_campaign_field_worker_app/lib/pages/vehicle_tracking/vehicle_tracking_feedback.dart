@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:digit_components/widgets/digit_text_field.dart';
@@ -64,6 +65,7 @@ class VehicleTripFeedbackPageState
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
+  static const _tripFeedbackEvaluationKey = "tripFeedbackEvaluation";
   static const _tripFeedbackCommentKey = "tripFeedbackComment";
 
   List<String> evaluationReasons = ["Reason1", "Reason2", "Reason3", "Others"];
@@ -87,254 +89,243 @@ class VehicleTripFeedbackPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.digitTextTheme(context);
     final vehicleNo = widget.vehicleNo;
 
     return Scaffold(
-      body: BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
-          builder: (context, vehicleTripActionState) {
+      body: BlocBuilder<LocationBloc, LocationState>(
+          builder: (context, locationState) {
         return ReactiveFormBuilder(
             form: () => buildForm(),
             builder: (context, form, child) {
-              return ScrollableContent(
-                header: const Column(
-                  children: [
-                    BackNavigationHelpHeaderWidget(
-                      showHelp: false,
-                    ),
-                  ],
-                ),
-                footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    children: [
-                      ValueListenableBuilder(
-                        valueListenable: clickedStatus,
-                        builder: (context, bool isClicked, _) {
-                          return BlocBuilder<LocationBloc, LocationState>(
-                              builder: (context, locationState) {
-                            return DigitButton(
-                              label: localizations.translate(
-                                i18_local.vehicleTracking.startTripButtonLabel,
-                              ),
-                              isDisabled: false,
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.large,
-                              mainAxisSize: MainAxisSize.max,
-                              onPressed: isClicked
-                                  ? () {}
-                                  : () async {
-                                      form.markAllAsTouched();
-                                      if (!form.valid) {
-                                        return;
-                                      }
-
-                                      final shouldSubmit =
-                                          await dialog.DigitDialog.show<bool>(
-                                        context,
-                                        options: dialog.DigitDialogOptions(
-                                          titleText: localizations.translate(
-                                            i18.deliverIntervention.dialogTitle,
-                                          ),
-                                          contentText: localizations.translate(
-                                            i18.deliverIntervention
-                                                .dialogContent,
-                                          ),
-                                          primaryAction:
-                                              dialog.DigitDialogActions(
-                                            label: localizations.translate(
-                                              i18.common.coreCommonSubmit,
-                                            ),
-                                            action: (context) {
-                                              clickedStatus.value = true;
-                                              Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop(true);
-                                            },
-                                          ),
-                                          secondaryAction:
-                                              dialog.DigitDialogActions(
-                                            label: localizations.translate(
-                                              i18.common.coreCommonCancel,
-                                            ),
-                                            action: (context) => Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pop(false),
-                                          ),
-                                        ),
-                                      );
-                                      if ((shouldSubmit ?? false) &&
-                                          context.mounted) {}
-                                    },
-                            );
-                          });
-                        },
-                      ),
-                    ]),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: DigitCard(
+              final tripEvaluation =
+                  form.control(_tripFeedbackEvaluationKey).value as String?;
+              final tripComment =
+                  form.control(_tripFeedbackCommentKey).value as String?;
+              return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
+                builder: (context, vehicleTripActionState) {
+                  UserActionModel tripAction = _getTripActionModel(
+                      locationState,
+                      vehicleTripActionState,
+                      vehicleNo,
+                      tripEvaluation,
+                      tripComment);
+                  return ScrollableContent(
+                    header: const Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: kPadding),
-                          child: Text(
-                            localizations.translate(
-                              i18_local.vehicleTracking.tripBookLabel,
-                            ),
-                            style: theme.textTheme.displayMedium,
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: SelectionBox<String>(
-                                isRequired: true,
-                                title: localizations.translate(
-                                  i18_local.vehicleTracking.tripBookReasonLabel,
-                                ),
-                                allowMultipleSelection: false,
-                                width: 148,
-                                equalWidthOptions: true,
-                                options: evaluationReasons,
-                                onSelectionChanged: (value) {
-                                  form
-                                      .control(_tripFeedbackCommentKey)
-                                      .markAsTouched();
-                                  setState(() {
-                                    if (value.isNotEmpty) {
-                                      if (value.first == "Others") {
-                                        setState(() {
-                                          otherSelected = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          otherSelected = false;
-                                        });
-                                      }
-                                      form
-                                          .control(_tripFeedbackCommentKey)
-                                          .value = value.first;
-                                    } else {
-                                      form
-                                          .control(_tripFeedbackCommentKey)
-                                          .value = null;
-                                    }
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations.translate(value);
-                                },
-                                errorMessage: null,
-                              ),
-                            ),
-                            Offstage(
-                                offstage: !otherSelected,
-                                child: Padding(
-                                  padding: EdgeInsets.all(kPadding),
-                                  child: DigitTextField(
-                                      label: localizations.translate(
-                                        i18_local.vehicleTracking
-                                            .othersReasonTextLabel,
-                                      ),
-                                      isRequired: otherSelected,
-                                      controller: otherFieldReasonController,
-                                      inputFormatter: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                          "[a-zA-Z0-9]",
-                                        )),
-                                      ]),
-                                ))
-                          ],
+                        BackNavigationHelpHeaderWidget(
+                          showHelp: false,
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    footer: DigitCard(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        children: [
+                          ValueListenableBuilder(
+                            valueListenable: clickedStatus,
+                            builder: (context, bool isClicked, _) {
+                              return DigitButton(
+                                  label: localizations.translate(
+                                    i18_local
+                                        .vehicleTracking.startTripButtonLabel,
+                                  ),
+                                  isDisabled: false,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: isClicked
+                                      ? () {}
+                                      : () async {
+                                          form.markAllAsTouched();
+                                          if (!form.valid) {
+                                            return;
+                                          }
+
+                                          final shouldSubmit = await dialog
+                                              .DigitDialog.show<bool>(
+                                            context,
+                                            options: dialog.DigitDialogOptions(
+                                              titleText:
+                                                  localizations.translate(
+                                                i18.deliverIntervention
+                                                    .dialogTitle,
+                                              ),
+                                              contentText:
+                                                  localizations.translate(
+                                                i18.deliverIntervention
+                                                    .dialogContent,
+                                              ),
+                                              primaryAction:
+                                                  dialog.DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonSubmit,
+                                                ),
+                                                action: (context) {
+                                                  clickedStatus.value = true;
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(true);
+                                                },
+                                              ),
+                                              secondaryAction:
+                                                  dialog.DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonCancel,
+                                                ),
+                                                action: (context) =>
+                                                    Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop(false),
+                                              ),
+                                            ),
+                                          );
+                                          if ((shouldSubmit ?? false) &&
+                                              context.mounted &&
+                                              tripAction != null) {
+                                            context
+                                                .read<VehicleTripActionBloc>()
+                                                .add(
+                                                  VehicleTripActionEndTripEvent(
+                                                      isEditing: true,
+                                                      boundaryModel:
+                                                          RegistrationDeliverySingleton()
+                                                              .boundary!,
+                                                      tripAction: tripAction!),
+                                                );
+                                          }
+                                        });
+                            },
+                          ),
+                        ]),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: DigitCard(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: kPadding),
+                              child: Text(
+                                localizations.translate(
+                                  i18_local.vehicleTracking.feedbackLabel,
+                                ),
+                                style: theme.textTheme.displayMedium,
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                DigitTextFormField(
+                                  label: localizations.translate(
+                                    i18_local.vehicleTracking.tripComment,
+                                  ),
+                                  validationMessages: {
+                                    "required": (control) {
+                                      return localizations.translate(
+                                        '${i18_local.vehicleTracking.tripComment}_IS_REQUIRED',
+                                      );
+                                    },
+                                  },
+                                  textCapitalization: TextCapitalization.none,
+                                  formControlName: _tripFeedbackCommentKey,
+                                  isRequired: false,
+                                  keyboardType: TextInputType.text,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding, 0, kPadding, 0),
+                                  child: SelectionBox<String>(
+                                    isRequired: true,
+                                    title: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.tripBookReasonLabel,
+                                    ),
+                                    allowMultipleSelection: false,
+                                    width: 148,
+                                    equalWidthOptions: true,
+                                    options: evaluationReasons,
+                                    onSelectionChanged: (value) {
+                                      form
+                                          .control(_tripFeedbackEvaluationKey)
+                                          .markAsTouched();
+                                      setState(() {
+                                        if (value.isNotEmpty) {
+                                          if (value.first == "Others") {
+                                            setState(() {
+                                              otherSelected = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              otherSelected = false;
+                                            });
+                                          }
+                                          form
+                                              .control(
+                                                  _tripFeedbackEvaluationKey)
+                                              .value = value.first;
+                                        } else {
+                                          form
+                                              .control(
+                                                  _tripFeedbackEvaluationKey)
+                                              .value = null;
+                                        }
+                                      });
+                                    },
+                                    valueMapper: (value) {
+                                      return localizations.translate(value);
+                                    },
+                                    errorMessage: null,
+                                  ),
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(kPadding),
+                                //   child: DigitTextField(
+                                //       label: localizations.translate(
+                                //         i18_local
+                                //             .vehicleTracking.othersReasonTextLabel,
+                                //       ),
+                                //       isRequired: otherSelected,
+                                //       controller: otherFieldReasonController,
+                                //       inputFormatter: [
+                                //         FilteringTextInputFormatter.allow(RegExp(
+                                //           "[a-zA-Z0-9]",
+                                //         )),
+                                //       ]),
+                                // )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               );
             });
       }),
     );
   }
 
-  void handleLocationState(
-    LocationState locationState,
-    BuildContext context,
-    VehicleTripActionState vehicleTripActionState,
-    FormGroup form,
-    String? vehicleNo,
-  ) {
-    if (context.mounted) {
-      DigitComponentsUtils.showDialog(
-        context,
-        localizations.translate(i18.common.locationCapturing),
-        DialogType.inProgress,
-      );
-
-      Future.delayed(const Duration(seconds: 0), () {
-        // After delay, hide the initial dialog
-        DigitComponentsUtils.hideDialog(context);
-        handleCapturedLocationState(
-          locationState,
-          context,
-          vehicleTripActionState,
-          form,
-          vehicleNo,
-        );
-      });
-    }
-  }
-
-  Future<void> handleCapturedLocationState(
-    LocationState locationState,
-    BuildContext context,
-    VehicleTripActionState vehicleTripActionState,
-    FormGroup form,
-    String? vehicleNo,
-  ) async {
-    final lat = locationState.latitude;
-    final long = locationState.longitude;
-    final accuracy = locationState.accuracy;
-
-    final tripBookActionModel = _getTripActionModel(
-        lat, long, accuracy, vehicleTripActionState, vehicleNo, form);
-
-    context.read<VehicleTripActionBloc>().add(
-          VehicleTripActionStartTripEvent(
-            isEditing: false,
-            boundaryModel: RegistrationDeliverySingleton().boundary!,
-            tripBookAction: tripBookActionModel,
-            navigateToSummary: true,
-          ),
-        );
-    context.router
-        .popUntil((route) => route.settings.name == VehicleSearchRoute.name);
-    context.router.push(
-      VehicleOverviewRoute(vehicleNo: vehicleNo!),
-    );
-
-    // await handleSubmit(context, taskModel, deliverInterventionState);
-  }
-
   UserActionModel _getTripActionModel(
-    double? latitude,
-    double? longitude,
-    double? locationAccuracy,
+    LocationState? locationState,
     VehicleTripActionState vehicleTripActionState,
     String? vehicleNo,
-    FormGroup form,
+    String? tripEvaluation,
+    String? tripComment,
   ) {
     UserActionModel tripBookAction;
     var clientReferenceId = IdGen.i.identifier;
     var startTime = DateTime.now().millisecondsSinceEpoch;
-    final tripBookReason =
-        form.control(_tripFeedbackCommentKey).value as String?;
+
+    double? latitude = locationState?.latitude;
+    double? longitude = locationState?.longitude;
+    double? locationAccuracy = locationState?.accuracy;
+
     tripBookAction = UserActionModel(
         latitude: latitude!,
         longitude: longitude!,
@@ -347,9 +338,12 @@ class VehicleTripFeedbackPageState
         action: TripActions.start.toValue(),
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
           if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
-          if (tripBookReason != null)
-            AdditionalField(_tripFeedbackCommentKey, tripBookReason),
-          AdditionalField("tripStartTime", startTime)
+          if (tripComment != null)
+            AdditionalField(_tripFeedbackCommentKey, tripComment),
+          AdditionalField("tripFeedbackComment", startTime),
+          if (tripEvaluation != null)
+            AdditionalField(_tripFeedbackEvaluationKey, tripEvaluation),
+          AdditionalField("tripFeedbackEvaluation", startTime),
         ]));
 
     return tripBookAction;
@@ -358,6 +352,8 @@ class VehicleTripFeedbackPageState
   FormGroup buildForm() {
     return fb.group(<String, Object>{
       _tripFeedbackCommentKey:
+          FormControl<String>(validators: [Validators.required]),
+      _tripFeedbackEvaluationKey:
           FormControl<String>(validators: [Validators.required]),
     });
   }
