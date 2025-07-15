@@ -41,7 +41,9 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
+import '../../models/app_config/app_config_model.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
@@ -63,8 +65,6 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
   bool? shouldSubmit = false;
 
   static const _tripBookReasonKey = "tripBookReason";
-
-  List<String> reasons = ["Reason1", "Reason2", "Reason3", "Others"];
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -200,46 +200,63 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: SelectionBox<String>(
-                                isRequired: true,
-                                title: localizations.translate(
-                                  i18_local.vehicleTracking.tripBookReasonLabel,
-                                ),
-                                allowMultipleSelection: false,
-                                width: 148,
-                                equalWidthOptions: true,
-                                options: reasons,
-                                onSelectionChanged: (value) {
-                                  form
-                                      .control(_tripBookReasonKey)
-                                      .markAsTouched();
-                                  setState(() {
-                                    if (value.isNotEmpty) {
-                                      if (value.first == "Others") {
-                                        setState(() {
-                                          otherSelected = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          otherSelected = false;
-                                        });
-                                      }
-                                      form.control(_tripBookReasonKey).value =
-                                          value.first;
-                                    } else {
-                                      form.control(_tripBookReasonKey).value =
-                                          null;
-                                    }
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations.translate(value);
-                                },
-                                errorMessage: null,
-                              ),
-                            ),
+                                padding: const EdgeInsets.fromLTRB(
+                                    kPadding, 0, kPadding, 0),
+                                child: BlocBuilder<AppInitializationBloc,
+                                        AppInitializationState>(
+                                    builder: (context, state) {
+                                  if (state is! AppInitialized) {
+                                    return const Offstage();
+                                  }
+
+                                  final vehicleTrackingTripReasons = state
+                                      .appConfiguration
+                                      .vehicleTrackingTripReasons;
+
+                                  return SelectionBox<String>(
+                                    isRequired: true,
+                                    title: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.tripBookReasonLabel,
+                                    ),
+                                    allowMultipleSelection: false,
+                                    width: 148,
+                                    equalWidthOptions: true,
+                                    options: vehicleTrackingTripReasons
+                                            ?.map((reason) => reason.code)
+                                            .toList() ??
+                                        [],
+                                    onSelectionChanged: (value) {
+                                      form
+                                          .control(_tripBookReasonKey)
+                                          .markAsTouched();
+                                      setState(() {
+                                        if (value.isNotEmpty) {
+                                          if (value.first == "Others") {
+                                            setState(() {
+                                              otherSelected = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              otherSelected = false;
+                                            });
+                                          }
+                                          form
+                                              .control(_tripBookReasonKey)
+                                              .value = value.first;
+                                        } else {
+                                          form
+                                              .control(_tripBookReasonKey)
+                                              .value = null;
+                                        }
+                                      });
+                                    },
+                                    valueMapper: (value) {
+                                      return localizations.translate(value);
+                                    },
+                                    errorMessage: null,
+                                  );
+                                })),
                             Offstage(
                                 offstage: !otherSelected,
                                 child: Padding(

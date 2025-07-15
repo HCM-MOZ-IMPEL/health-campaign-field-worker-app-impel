@@ -393,6 +393,26 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.vehicleTrackingTripReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripReasons?.map((e) {
+      final vehicleTrackingTripReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripReasons;
+    }).toList();
+
+    appConfiguration.vehicleTrackingTripEvaluationReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripEvaluationReasons?.map((e) {
+      final vehicleTrackingTripEvaluationReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripEvaluationReasons;
+    }).toList();
+
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
       isar.rowVersionLists.putAllSync(rowVersionList);
