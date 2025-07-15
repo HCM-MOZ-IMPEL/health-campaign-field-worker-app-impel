@@ -92,7 +92,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
           action: (ctx) => Navigator.of(
             context,
             rootNavigator: true,
-          ).pop(true),
+          ).pop(false),
         ),
       ),
     );
