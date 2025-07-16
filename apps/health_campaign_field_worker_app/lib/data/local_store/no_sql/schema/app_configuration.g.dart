@@ -162,43 +162,43 @@ const AppConfigurationSchema = CollectionSchema(
       target: r'TransportTypes',
     ),
     r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
       type: IsarType.objectList,
       target: r'VehicleTrackingReasons',
     ),
     r'VEHICLE_TRACKING_TRIP_REASONS': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'VEHICLE_TRACKING_TRIP_REASONS',
       type: IsarType.objectList,
       target: r'VehicleTrackingReasons',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 26,
+      id: 28,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 27,
+      id: 29,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 28,
+      id: 30,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 29,
+      id: 31,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -752,44 +752,43 @@ void _appConfigurationSerialize(
     object.transportTypes,
   );
   writer.writeObjectList<VehicleTrackingReasons>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     VehicleTrackingReasonsSchema.serialize,
     object.vehicleTrackingTripEvaluationReasons,
   );
   writer.writeObjectList<VehicleTrackingReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     VehicleTrackingReasonsSchema.serialize,
     object.vehicleTrackingTripReasons,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[26],
+    offsets[28],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[29],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
-
   writer.writeObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[30],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[31],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -928,44 +927,44 @@ AppConfiguration _appConfigurationDeserialize(
   );
   object.vehicleTrackingTripEvaluationReasons =
       reader.readObjectList<VehicleTrackingReasons>(
-    offsets[24],
+    offsets[25],
     VehicleTrackingReasonsSchema.deserialize,
     allOffsets,
     VehicleTrackingReasons(),
   );
   object.vehicleTrackingTripReasons =
       reader.readObjectList<VehicleTrackingReasons>(
-    offsets[25],
+    offsets[26],
     VehicleTrackingReasonsSchema.deserialize,
     allOffsets,
     VehicleTrackingReasons(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[26],
+    offsets[27],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[26],
+    offsets[28],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[29],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[30],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[31],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1122,13 +1121,6 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 24:
-      return (reader.readObjectList<VehicleTrackingReasons>(
-        offset,
-        VehicleTrackingReasonsSchema.deserialize,
-        allOffsets,
-        VehicleTrackingReasons(),
-      )) as P;
     case 25:
       return (reader.readObjectList<VehicleTrackingReasons>(
         offset,
@@ -1137,27 +1129,40 @@ P _appConfigurationDeserializeProp<P>(
         VehicleTrackingReasons(),
       )) as P;
     case 26:
+      return (reader.readObjectList<VehicleTrackingReasons>(
+        offset,
+        VehicleTrackingReasonsSchema.deserialize,
+        allOffsets,
+        VehicleTrackingReasons(),
+      )) as P;
+    case 27:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 27:
+    case 28:
+      return (reader.readObjectOrNull<PrivacyPolicy>(
+        offset,
+        PrivacyPolicySchema.deserialize,
+        allOffsets,
+      )) as P;
+    case 29:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 28:
+    case 30:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 29:
+    case 31:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,

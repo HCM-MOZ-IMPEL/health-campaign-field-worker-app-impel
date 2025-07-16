@@ -564,8 +564,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
+            element == i18.home.db ||
             element ==
-                i18.home.db) // TODO: need to add close household inside mdms
+                i18.home
+                    .vehicleTrackingLabel) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
