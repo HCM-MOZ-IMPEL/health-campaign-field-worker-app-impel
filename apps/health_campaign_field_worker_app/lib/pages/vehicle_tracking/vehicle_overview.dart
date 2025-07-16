@@ -167,6 +167,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
         _searchSelectedVehicleActionModel();
         VehicleStatusEnum vehicleStatus =
             _getVehicleStatus(tripState.tripAction);
+        UserActionModel? vehicleActionModel = tripState.tripAction;
         return Scaffold(
             body: ScrollableContent(
           header: const BackNavigationHelpHeaderWidget(
@@ -217,7 +218,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                         if (selectedVehicle != null)
                           VehicleCard(
                             vehicle: selectedVehicle,
-                            vehicleActionModel: tripState.tripAction,
+                            vehicleActionModel: vehicleActionModel,
                             appLocalizations: localizations,
                             status: vehicleStatus,
                             type: VehicleCardType.info,

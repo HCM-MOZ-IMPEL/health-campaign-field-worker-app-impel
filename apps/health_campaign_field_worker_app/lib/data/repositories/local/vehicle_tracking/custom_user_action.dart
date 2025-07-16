@@ -84,32 +84,34 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
 
       return results.map((e) {
         final userActionModel = e.readTable(sql.userAction);
-        String? additionalField = userActionModel.additionalFields;
+        String? additionalFieldString = userActionModel.additionalFields;
         Map<String, dynamic>? additionalFieldsMap =
-            additionalField == null ? null : json.decode(additionalField);
-
+            additionalFieldString == null
+                ? null
+                : json.decode(additionalFieldString);
+        List<dynamic>? additionalField = additionalFieldsMap?["fields"];
         return UserActionModel(
-          latitude: double.parse(userActionModel.latitude),
-          longitude: double.parse(userActionModel.longitude),
-          locationAccuracy: double.parse(userActionModel.locationAccuracy),
-          clientReferenceId: userActionModel.clientReferenceId,
-          isSync: userActionModel.isSync,
-          timestamp: userActionModel.timestamp,
-          nonRecoverableError: userActionModel.nonRecoverableError,
-          tenantId: userActionModel.tenantId,
-          id: userActionModel.id,
-          rowVersion: userActionModel.rowVersion,
-          projectId: userActionModel.projectId,
-          boundaryCode: userActionModel.boundaryCode,
-          action: userActionModel.action,
-          additionalFields: additionalFieldsMap == null
-              ? null
-              : UserActionAdditionalFields(
-                  version: 1,
-                  fields: additionalFieldsMap.entries
-                      .map((e) => AdditionalField(e.key, e.value))
-                      .toList()),
-        );
+            latitude: double.parse(userActionModel.latitude),
+            longitude: double.parse(userActionModel.longitude),
+            locationAccuracy: double.parse(userActionModel.locationAccuracy),
+            clientReferenceId: userActionModel.clientReferenceId,
+            isSync: userActionModel.isSync,
+            timestamp: userActionModel.timestamp,
+            nonRecoverableError: userActionModel.nonRecoverableError,
+            tenantId: userActionModel.tenantId,
+            id: userActionModel.id,
+            rowVersion: userActionModel.rowVersion,
+            projectId: userActionModel.projectId,
+            boundaryCode: userActionModel.boundaryCode,
+            action: userActionModel.action,
+            additionalFields: additionalField == null
+                ? null
+                : UserActionAdditionalFields(
+                    version: 1,
+                    fields: additionalField
+                        .map((e) => AdditionalField(e["key"], e["value"]))
+                        .toList(),
+                  ));
       }).toList();
     });
   }
