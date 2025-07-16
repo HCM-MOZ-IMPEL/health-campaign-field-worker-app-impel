@@ -81,8 +81,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
-    // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-    // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
@@ -132,8 +132,8 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
-    // @JsonKey(name: 'PrivacyPolicy')
-    // required List<PrivacyNoticeModel> privacyPolicyConfig,
+    @JsonKey(name: 'PrivacyPolicy')
+    required List<PrivacyNoticeModel> privacyPolicyConfig,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(

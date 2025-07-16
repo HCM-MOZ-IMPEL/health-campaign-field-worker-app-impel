@@ -1030,6 +1030,7 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get refreshLocation => 'HOUSEHOLD_REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {
@@ -1043,6 +1044,7 @@ class SearchBeneficiary {
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get beneficiaryIdbednet => 'BENEFICIARY_ID_BEDNET';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 

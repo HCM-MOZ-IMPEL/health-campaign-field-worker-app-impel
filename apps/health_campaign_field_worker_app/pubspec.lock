@@ -372,10 +372,10 @@ packages:
     dependency: "direct main"
     description:
       name: closed_household
-      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
+      sha256: "23beebd659a3619b6ca11f1c4ae090632e7f1dde8219108b4a28a5f568c70760"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5+1"
+    version: "1.0.5"
   code_builder:
     dependency: transitive
     description:
@@ -404,18 +404,18 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: "224a77051d52a11fbad53dd57827594d3bd24f945af28bd70bab376d68d437f0"
+      sha256: "051849e2bd7c7b3bc5844ea0d096609ddc3a859890ec3a9ac4a65a2620cc1f99"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "6.1.4"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
       name: connectivity_plus_platform_interface
-      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      sha256: "42657c1715d48b167930d5f34d00222ac100475f73d10162ddf43e714932f204"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.4"
+    version: "2.0.1"
   convert:
     dependency: transitive
     description:
@@ -625,14 +625,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  disk_space:
-    dependency: "direct main"
-    description:
-      name: disk_space
-      sha256: fb27eb2d09ac04784f45b95b1355538b2355c76a081eeaa8439d1a5cfa263888
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   disk_space_update:
     dependency: "direct main"
     description:
@@ -1400,10 +1392,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "0f8cd2635b08afb1aa2c3bd104c18615d5ab33aa693fc06e13c3d43af71782c2"
+      sha256: f295e5d88daf6197b5a0ab2e011f122b102c52c526420a0865f7a4ed6409a6af
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.7-dev.1"
   io:
     dependency: transitive
     description:

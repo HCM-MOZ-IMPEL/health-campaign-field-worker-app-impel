@@ -53,8 +53,10 @@ import 'blocs/vehicle_tracking/search_vehicles.dart';
 import 'blocs/vehicle_tracking/vehicle_trip_action.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/remote_client.dart';
 import 'data/repositories/local/individual_global_search_smc.dart';
 import 'data/repositories/local/vehicle_tracking/custom_user_action.dart';
+import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -403,6 +405,12 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
+
                             mdmsRepository: MdmsRepository(widget.client),
                             dashboardRemoteRepository:
                                 DashboardRemoteRepository(widget.client),

@@ -282,6 +282,8 @@ class CustomHouseHoldDetailsBednetPageState
                                     context.millisecondsSinceEpoch(),
                               ),
                               address: addressModel,
+                              householdType:
+                                  RegistrationDeliverySingleton().householdType,
                             );
 
                             bloc.add(

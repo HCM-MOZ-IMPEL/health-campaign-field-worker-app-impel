@@ -940,8 +940,10 @@ mixin _$HCMWrapperModel {
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
-      throw _privateConstructorUsedError; // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -1010,6 +1012,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1055,6 +1059,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1106,6 +1111,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value.deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
@@ -1189,6 +1198,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1232,6 +1243,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1283,6 +1295,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value._deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
@@ -1363,6 +1379,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1399,6 +1417,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
@@ -1506,11 +1525,17 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
 
-// @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+  final List<DeliveryCommentOptions> _deliveryCommentOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc {
+    if (_deliveryCommentOptionsSmc is EqualUnmodifiableListView)
+      return _deliveryCommentOptionsSmc;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentOptionsSmc);
+  }
+
   final List<BackendInterface> _backendInterface;
-// @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface {
@@ -1661,7 +1686,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1690,6 +1715,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentOptionsSmc, _deliveryCommentOptionsSmc) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
@@ -1735,6 +1762,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_checklistTypes),
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
         const DeepCollectionEquality().hash(_transportTypes),
@@ -1786,6 +1814,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1844,8 +1874,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
-  @override // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc;
+  @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
   @override
@@ -2066,6 +2098,9 @@ mixin _$CommonMastersWrapperModel {
   List<CommonMasterModel> get genderType => throw _privateConstructorUsedError;
   @JsonKey(name: 'StateInfo')
   List<StateInfoModel> get stateInfo => throw _privateConstructorUsedError;
+  @JsonKey(name: 'PrivacyPolicy')
+  List<PrivacyNoticeModel> get privacyPolicyConfig =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2081,7 +2116,9 @@ abstract class $CommonMastersWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
+      @JsonKey(name: 'PrivacyPolicy')
+      List<PrivacyNoticeModel> privacyPolicyConfig});
 }
 
 /// @nodoc
@@ -2100,6 +2137,7 @@ class _$CommonMastersWrapperModelCopyWithImpl<$Res,
   $Res call({
     Object? genderType = null,
     Object? stateInfo = null,
+    Object? privacyPolicyConfig = null,
   }) {
     return _then(_value.copyWith(
       genderType: null == genderType
@@ -2110,6 +2148,10 @@ class _$CommonMastersWrapperModelCopyWithImpl<$Res,
           ? _value.stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
               as List<StateInfoModel>,
+      privacyPolicyConfig: null == privacyPolicyConfig
+          ? _value.privacyPolicyConfig
+          : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
+              as List<PrivacyNoticeModel>,
     ) as $Val);
   }
 }
@@ -2125,7 +2167,9 @@ abstract class _$$CommonMastersWrapperModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
+      @JsonKey(name: 'PrivacyPolicy')
+      List<PrivacyNoticeModel> privacyPolicyConfig});
 }
 
 /// @nodoc
@@ -2143,6 +2187,7 @@ class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
   $Res call({
     Object? genderType = null,
     Object? stateInfo = null,
+    Object? privacyPolicyConfig = null,
   }) {
     return _then(_$CommonMastersWrapperModelImpl(
       genderType: null == genderType
@@ -2153,6 +2198,10 @@ class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
           ? _value._stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
               as List<StateInfoModel>,
+      privacyPolicyConfig: null == privacyPolicyConfig
+          ? _value._privacyPolicyConfig
+          : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
+              as List<PrivacyNoticeModel>,
     ));
   }
 }
@@ -2163,10 +2212,12 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
   const _$CommonMastersWrapperModelImpl(
       {@JsonKey(name: 'GenderType')
       required final List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo')
-      required final List<StateInfoModel> stateInfo})
+      @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
+      @JsonKey(name: 'PrivacyPolicy')
+      required final List<PrivacyNoticeModel> privacyPolicyConfig})
       : _genderType = genderType,
-        _stateInfo = stateInfo;
+        _stateInfo = stateInfo,
+        _privacyPolicyConfig = privacyPolicyConfig;
 
   factory _$CommonMastersWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommonMastersWrapperModelImplFromJson(json);
@@ -2189,9 +2240,19 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
     return EqualUnmodifiableListView(_stateInfo);
   }
 
+  final List<PrivacyNoticeModel> _privacyPolicyConfig;
+  @override
+  @JsonKey(name: 'PrivacyPolicy')
+  List<PrivacyNoticeModel> get privacyPolicyConfig {
+    if (_privacyPolicyConfig is EqualUnmodifiableListView)
+      return _privacyPolicyConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_privacyPolicyConfig);
+  }
+
   @override
   String toString() {
-    return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo)';
+    return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo, privacyPolicyConfig: $privacyPolicyConfig)';
   }
 
   @override
@@ -2202,7 +2263,9 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._genderType, _genderType) &&
             const DeepCollectionEquality()
-                .equals(other._stateInfo, _stateInfo));
+                .equals(other._stateInfo, _stateInfo) &&
+            const DeepCollectionEquality()
+                .equals(other._privacyPolicyConfig, _privacyPolicyConfig));
   }
 
   @JsonKey(ignore: true)
@@ -2210,7 +2273,8 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_genderType),
-      const DeepCollectionEquality().hash(_stateInfo));
+      const DeepCollectionEquality().hash(_stateInfo),
+      const DeepCollectionEquality().hash(_privacyPolicyConfig));
 
   @JsonKey(ignore: true)
   @override
@@ -2229,11 +2293,12 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
 
 abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
   const factory _CommonMastersWrapperModel(
-          {@JsonKey(name: 'GenderType')
-          required final List<CommonMasterModel> genderType,
-          @JsonKey(name: 'StateInfo')
-          required final List<StateInfoModel> stateInfo}) =
-      _$CommonMastersWrapperModelImpl;
+      {@JsonKey(name: 'GenderType')
+      required final List<CommonMasterModel> genderType,
+      @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
+      @JsonKey(name: 'PrivacyPolicy')
+      required final List<PrivacyNoticeModel>
+          privacyPolicyConfig}) = _$CommonMastersWrapperModelImpl;
 
   factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) =
       _$CommonMastersWrapperModelImpl.fromJson;
@@ -2244,6 +2309,9 @@ abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
   @override
   @JsonKey(name: 'StateInfo')
   List<StateInfoModel> get stateInfo;
+  @override
+  @JsonKey(name: 'PrivacyPolicy')
+  List<PrivacyNoticeModel> get privacyPolicyConfig;
   @override
   @JsonKey(ignore: true)
   _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>

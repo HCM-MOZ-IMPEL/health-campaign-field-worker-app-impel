@@ -1,5 +1,6 @@
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
@@ -68,7 +69,7 @@ class HomeBednetPage extends LocalizedStatefulWidget {
 class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -76,14 +77,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -405,6 +402,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -565,7 +564,6 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18_local.home.vehicleTrackingLabel ||
             element ==
                 i18.home.db) // TODO: need to add close household inside mdms
         .toList();
