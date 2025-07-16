@@ -3,6 +3,7 @@ import 'package:attendance_management/models/entities/attendance_log.dart';
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
@@ -82,6 +83,10 @@ class EntityMapper extends EntityMapperListener {
 
       case "complaints":
         final entity = PgrServiceModelMapper.fromJson(entityString);
+        return entity;
+
+      case "userAction":
+        final entity = UserActionModelMapper.fromJson(entityString);
         return entity;
 
       default:

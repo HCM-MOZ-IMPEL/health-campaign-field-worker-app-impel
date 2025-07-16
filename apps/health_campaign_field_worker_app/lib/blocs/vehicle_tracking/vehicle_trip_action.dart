@@ -79,12 +79,17 @@ class VehicleTripActionBloc
     UserActionModel tripBookActionModel = event.tripBookAction;
     try {
       tripBookActionModel = tripBookActionModel.copyWith(
-          clientAuditDetails: ClientAuditDetails(
-              createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-              createdTime: DateTime.now().millisecondsSinceEpoch),
-          auditDetails: AuditDetails(
-              createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-              createdTime: DateTime.now().millisecondsSinceEpoch));
+        clientAuditDetails: ClientAuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+        auditDetails: AuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+      );
       // create the userAction model with trip action as start
       await userActionLocalRepository.createUserAction(tripBookActionModel);
       emit(state.copyWith(

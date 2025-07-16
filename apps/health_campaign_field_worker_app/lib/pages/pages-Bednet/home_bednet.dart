@@ -626,7 +626,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -662,7 +662,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );

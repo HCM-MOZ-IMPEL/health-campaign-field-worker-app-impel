@@ -27,6 +27,7 @@ import 'package:survey_form/data/repositories/remote/service.dart';
 import 'package:survey_form/data/repositories/remote/service_definition.dart';
 import 'package:sync_service/data/repositories/sync/sync_up.dart';
 import 'package:sync_service/utils/utils.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -36,6 +37,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/repositories/remote/user_action.dart';
 import '../data/sync_registry.dart';
 import '../data/sync_service_mapper.dart';
 import 'environment_config.dart';
@@ -204,8 +206,7 @@ class Constants {
         AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
-      LocationTrackerLocalBaseRepository(
-          sql, LocationTrackerOpLogManager(isar)),
+      UserActionLocalRepository(sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -293,7 +294,7 @@ class Constants {
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userLocation)
-          LocationTrackerRemoteRepository(dio, actionMap: actions),
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
