@@ -360,6 +360,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         clientReferenceId: clientReferenceId,
         isSync: true,
         timestamp: startTime,
+        tenantId: RegistrationDeliverySingleton().tenantId,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
         action: vehicleCustomAction(TripActions.start, vehicleNo),
