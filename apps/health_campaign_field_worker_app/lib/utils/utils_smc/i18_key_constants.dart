@@ -834,6 +834,22 @@ class DeliverIntervention {
   String get beneficiaryIneligibleDescription => 'BENEFICIARY_INELIGIBLE_DESC';
   String get beneficiaryReferralDescription => 'BENEFICIARY_REFERRAL_DESC';
   String get spaqRedirectionScreenDescription => 'SPAQ_REDIRECTED_SCREEN_DESC';
+  String get conductMobilityAssessmentText1 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT1';
+  String get conductMobilityAssessmentText2 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT2';
+  String get conductMobilityAssessmentText3 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT3';
+  String get conductMobilityAssessmentText4 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT4';
+  String get conductMobilityAssessmentText5 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT5';
+  String get conductMobilityAssessmentText6 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT6';
+  String get conductMobilityAssessmentText7 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT7';
+  String get conductMobilityAssessmentText8 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT8';
 }
 
 class AcknowledgementSuccess {
