@@ -69,6 +69,7 @@ import '../pages/pages-Bednet/inventory_management/view_record_lga.dart';
 import '../pages/pages-Bednet/inventory_management/view_stock_records.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
+import '../pages/pages-SMC/beneficiary/conduct_mobility_control_assessment.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 
@@ -945,6 +946,9 @@ class AppRouter extends _$AppRouter {
                       page: DoseAdministeredVerificationRoute.page,
                       path: 'dose-administered-verification',
                     ),
+                    AutoRoute(
+                        page: ConductMobilityControlAssessmentRoute.page,
+                        path: 'conduct-mobility-control-assessment'),
                   ],
                 ),
               ]),

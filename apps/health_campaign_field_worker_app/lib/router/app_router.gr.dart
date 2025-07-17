@@ -98,6 +98,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ConductMobilityControlAssessmentRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConductMobilityControlAssessmentPage(),
+      );
+    },
     ConsentHouseholdAcknowledgementBednetRoute.name: (routeData) {
       final args =
           routeData.argsAs<ConsentHouseholdAcknowledgementBednetRouteArgs>(
@@ -1633,6 +1639,20 @@ class ComplaintsAcknowledgementRouteArgs {
   String toString() {
     return 'ComplaintsAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [ConductMobilityControlAssessmentPage]
+class ConductMobilityControlAssessmentRoute extends PageRouteInfo<void> {
+  const ConductMobilityControlAssessmentRoute({List<PageRouteInfo>? children})
+      : super(
+          ConductMobilityControlAssessmentRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ConductMobilityControlAssessmentRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
