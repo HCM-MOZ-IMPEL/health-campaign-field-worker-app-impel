@@ -1,7 +1,9 @@
+import 'package:complaints/complaints.dart';
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -16,6 +18,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
@@ -686,6 +689,31 @@ void setPackagesSingleton(BuildContext context) {
             context.projectTypeCode ?? ProjectTypes.irs.toValue();
         final filteredDashboardConfig = context.filterDashboardConfig(
             dashboardConfigSchema ?? [], projectTypeCode);
+
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(

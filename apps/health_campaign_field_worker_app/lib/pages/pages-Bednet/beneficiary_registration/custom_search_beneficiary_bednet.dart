@@ -26,6 +26,8 @@ import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart
 import '../../../widgets/widgets_bednet/status_filter_bednet.dart';
 import '../custom_qr_scanner.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local_SMC;
+import '../../../blocs/blocs-smc/searchBeneficiary/search_households_smc.dart'
+    as searchHouseholdSMCBloc;
 
 @RoutePage()
 class CustomSearchBeneficiaryBednetPage extends LocalizedStatefulWidget {
@@ -215,9 +217,18 @@ class _CustomSearchBeneficiaryBednetPageState
                                 onChanged: (value) {
                                   blocWrapper.clearEvent();
                                   if (isSearchByBeneficaryIdEnabled &&
-                                      isBeneficiaryIdValid(value.trim())) {
+                                      isBeneficiaryIdValid(value.trim()) &&
+                                      searchController.text.trim().length ==
+                                          14) {
                                     searchByBeneficiaryId(
                                         beneficiaryId: value.trim());
+                                  } else if (isSearchByBeneficaryIdEnabled &&
+                                      !isBeneficiaryIdValid(value.trim())) {
+                                    blocWrapper.clearEvent();
+                                    context
+                                        .read<IndividualGlobalSearchSMCBloc>()
+                                        .add(const searchHouseholdSMCBloc
+                                            .SearchHouseholdsSMCEvent.clear());
                                   } else if (!isSearchByBeneficaryIdEnabled &&
                                       (value.isEmpty ||
                                           value.trim().length > 2)) {
@@ -336,23 +347,11 @@ class _CustomSearchBeneficiaryBednetPageState
                       ),
                       const SizedBox(height: kPadding * 2),
                       if (searchHouseholdsState.resultsNotFound &&
-                          !searchHouseholdsState.loading)
+                          !searchHouseholdsState.loading &&
+                          !isSearchByBeneficaryIdEnabled)
                         DigitInfoCard(
                           description: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
-                          title: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoTitle,
-                          ),
-                        ),
-                      if (isSearchByBeneficaryIdEnabled &&
-                          searchController.text.trim().isNotEmpty &&
-                          !isBeneficiaryIdValidPattern(
-                              searchController.text.trim()))
-                        DigitInfoCard(
-                          description: localizations.translate(
-                            i18_local_SMC.searchBeneficiary
-                                .beneficiaryIdValidInfoDescription,
                           ),
                           title: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoTitle,
@@ -503,7 +502,7 @@ class _CustomSearchBeneficiaryBednetPageState
                                   );
 
                                   if ((i.tasks != null &&
-                                          i.tasks?.last.status ==
+                                          i.tasks?.lastOrNull!.status ==
                                               Status.closeHousehold.toValue() &&
                                           (i.tasks ?? []).isNotEmpty) ||
                                       (i.projectBeneficiaries ?? []).isEmpty) {
@@ -555,7 +554,8 @@ class _CustomSearchBeneficiaryBednetPageState
                 ),
               if (isSearchByBeneficaryIdEnabled &&
                   searchController.text.trim().isNotEmpty &&
-                  !isBeneficiaryIdValid(searchController.text.trim()))
+                  isBeneficiaryIdValid(searchController.text.trim()) &&
+                  searchHouseholdsSMCState.resultsNotFound)
                 SliverList(
                     delegate: SliverChildBuilderDelegate((ctx, index) {
                   return DigitInfoCard(

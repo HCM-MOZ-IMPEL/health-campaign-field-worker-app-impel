@@ -333,18 +333,20 @@ class _CustomViewBeneficiaryCardBednetState
                   ].whereNotNull().join(' '),
                 ),
               ),
-              Flexible(
-                child: DigitOutLineButton(
-                  buttonStyle: OutlinedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+              // TODO : verify this once the flow is final , if need to allow to click even if delivery flow done
+              if (householdMember.tasks?.isEmpty ?? true)
+                Flexible(
+                  child: DigitOutLineButton(
+                    buttonStyle: OutlinedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
+                    label: localizations
+                        .translate(i18.searchBeneficiary.iconLabel),
+                    onPressed: widget.onOpenPressed,
                   ),
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: widget.onOpenPressed,
                 ),
-              ),
             ],
           ),
           Offstage(

@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
+import 'package:digit_data_model/models/entities/identifier_types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -22,6 +23,7 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:collection/src/iterable_extensions.dart';
 
 @RoutePage()
 class CustomBednetSummaryPage extends LocalizedStatefulWidget {
@@ -353,6 +355,37 @@ class CustomBednetSummaryPageState
                                                     '')
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),
+                              ),
+                              LabelValuePair(
+                                label: localizations.translate(i18_local
+                                    .searchBeneficiary.beneficiaryIdbednet),
+                                value: householdState.maybeWhen(
+                                    orElse: () => localizations
+                                        .translate(i18.common.coreCommonNA),
+                                    summary: (
+                                      navigateToRoot,
+                                      householdModel,
+                                      individualModel,
+                                      projectBeneficiaryModel,
+                                      parentClientReferenceId,
+                                      relationshipType,
+                                      registrationDate,
+                                      addressModel,
+                                      loading,
+                                      isHeadOfHousehold,
+                                      householdChecklists,
+                                      individualChecklists,
+                                    ) =>
+                                        individualModel?.identifiers
+                                            ?.firstWhereOrNull((id) =>
+                                                id.identifierType ==
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue())
+                                            ?.identifierId
+                                            .toString() ??
+                                        localizations.translate(
+                                            i18.common.coreCommonNA)),
                               ),
                             ]),
                       ),

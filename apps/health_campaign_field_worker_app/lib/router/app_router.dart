@@ -1,3 +1,4 @@
+import 'package:complaints/router/complaints_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
@@ -17,6 +18,7 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
@@ -160,6 +162,8 @@ import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_feedback.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 import '../pages/vehicle_tracking/vehicle_trip_book.dart';
+import 'package:survey_form/blocs/app_localization.dart';
+import 'package:complaints/blocs/localization/app_localization.dart';
 
 part 'app_router.gr.dart';
 
@@ -172,6 +176,8 @@ part 'app_router.gr.dart';
     DashboardRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
+    ComplaintsRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {

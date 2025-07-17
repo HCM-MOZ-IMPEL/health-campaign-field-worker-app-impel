@@ -29,10 +29,10 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
     // Check if the filter contains status for registered or not registered
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
-      var BeneficiarySelectQuery =
-          await BeneficiaryIdSearch(selectQuery, params, super.sql);
+      var beneficiarySelectQuery =
+          await beneficiaryIdSearch(selectQuery, params, super.sql);
 
-      var filterSelectQuery = BeneficiarySelectQuery;
+      var filterSelectQuery = beneficiarySelectQuery;
 
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
@@ -40,7 +40,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
               await filterSearch(filterSelectQuery, params, filter, super.sql);
         }
       } else {
-        filterSelectQuery = BeneficiarySelectQuery;
+        filterSelectQuery = beneficiarySelectQuery;
       }
 
       if (filterSelectQuery == null) {
@@ -62,10 +62,10 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return _returnIndividualModel(results, count);
       }
     } else if (params.filter!.isNotEmpty && params.filter != null) {
-      var BeneficiarySelectQuery =
-          await BeneficiaryIdSearch(selectQuery, params, super.sql);
+      var beneficiarySelectQuery =
+          await beneficiaryIdSearch(selectQuery, params, super.sql);
 
-      var filterSelectQuery = BeneficiarySelectQuery;
+      var filterSelectQuery = beneficiarySelectQuery;
 
       // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
@@ -74,7 +74,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
               await filterSearch(filterSelectQuery, params, filter, super.sql);
         }
       } else {
-        filterSelectQuery = BeneficiarySelectQuery;
+        filterSelectQuery = beneficiarySelectQuery;
       }
 
       // Return empty list if no results found
@@ -166,11 +166,11 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
         return {"data": data, "total_count": count};
       }
     } else {
-      var BeneficiarySelectQuery =
-          await BeneficiaryIdSearch(selectQuery, params, super.sql);
+      var beneficiarySelectQuery =
+          await beneficiaryIdSearch(selectQuery, params, super.sql);
 
       // Return empty list if no results found
-      if (BeneficiarySelectQuery == null) {
+      if (beneficiarySelectQuery == null) {
         return [];
       } else {
         // Get total count if offset is zero and filters are applied
@@ -178,12 +178,12 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
             params.filter != null &&
             params.filter!.isNotEmpty) {
           count =
-              await _getTotalCount(BeneficiarySelectQuery, params, super.sql);
+              await _getTotalCount(beneficiarySelectQuery, params, super.sql);
         }
-        await BeneficiarySelectQuery.limit(params.limit ?? 50,
+        await beneficiarySelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
-        final results = await BeneficiarySelectQuery.get();
+        final results = await beneficiarySelectQuery.get();
 
         return _returnIndividualModel(results, count);
       }
@@ -191,7 +191,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
   }
 
   // Function to perform BeneficiaryId search based on provided parameters
-  BeneficiaryIdSearch(selectQuery, GlobalSearchParametersSMC params,
+  beneficiaryIdSearch(selectQuery, GlobalSearchParametersSMC params,
       LocalSqlDataStore sql) async {
     if (params.beneficiaryId == null || params.beneficiaryId!.isEmpty) {
       return selectQuery;
@@ -367,7 +367,7 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
   joinIdentifier(LocalSqlDataStore sql) {
     return leftOuterJoin(
       sql.identifier,
-      sql.identifier.clientReferenceId.equalsExp(
+      sql.identifier.individualClientReferenceId.equalsExp(
         sql.individual.clientReferenceId,
       ),
     );

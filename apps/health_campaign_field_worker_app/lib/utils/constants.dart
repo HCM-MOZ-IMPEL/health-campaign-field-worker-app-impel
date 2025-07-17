@@ -1,9 +1,11 @@
+import 'package:complaints/complaints.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -25,6 +27,7 @@ import 'package:survey_form/data/repositories/local/service_definition.dart';
 import 'package:survey_form/data/repositories/oplog/oplog.dart';
 import 'package:survey_form/data/repositories/remote/service.dart';
 import 'package:survey_form/data/repositories/remote/service_definition.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/data/repositories/sync/sync_up.dart';
 import 'package:sync_service/utils/utils.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
@@ -339,14 +342,17 @@ class Constants {
     SyncServiceSingleton().registries?.registerSyncRegistries({
       DataModelType.complaints: (remote) => SyncRegistry(remote),
     });
-    // LocationTrackerSingleton()
-    //     .setTenantId(tenantId: envConfig.variables.tenantId);
+    LocationTrackerSingleton()
+        .setTenantId(tenantId: envConfig.variables.tenantId);
 
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+    ComplaintsSingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
 
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
   }

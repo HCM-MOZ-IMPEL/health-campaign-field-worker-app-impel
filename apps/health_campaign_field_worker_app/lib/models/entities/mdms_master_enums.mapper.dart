@@ -76,9 +76,9 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
       case "SEARCH_HOUSEHOLD_FILTERS_BEDNET":
         return MasterEnums.searchHouseHoldFiltersBednet;
       case "VEHICLE_TRACKING_TRIP_REASONS":
-        return MasterEnums.vechileTrackingTripReasons;
+        return MasterEnums.vehicleTrackingTripReasons;
       case "VEHICLE_TRACKING_TRIP_EVALUATION_REASONS":
-        return MasterEnums.vechileTrackingTripEvaluationReasons;
+        return MasterEnums.vehicleTrackingTripEvaluationReasons;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
@@ -141,9 +141,9 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SEARCH_HOUSEHOLD_FILTERS_SMC";
       case MasterEnums.searchHouseHoldFiltersBednet:
         return "SEARCH_HOUSEHOLD_FILTERS_BEDNET";
-      case MasterEnums.vechileTrackingTripReasons:
+      case MasterEnums.vehicleTrackingTripReasons:
         return "VEHICLE_TRACKING_TRIP_REASONS";
-      case MasterEnums.vechileTrackingTripEvaluationReasons:
+      case MasterEnums.vehicleTrackingTripEvaluationReasons:
         return "VEHICLE_TRACKING_TRIP_EVALUATION_REASONS";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";

@@ -107,8 +107,9 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
-                    MasterEnums.vechileTrackingTripEvaluationReasons.toValue(),
-                    MasterEnums.vechileTrackingTripReasons.toValue(),
+                    MasterEnums.searchHouseHoldFiltersBednet.toValue(),
+                    MasterEnums.vehicleTrackingTripEvaluationReasons.toValue(),
+                    MasterEnums.vehicleTrackingTripReasons.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

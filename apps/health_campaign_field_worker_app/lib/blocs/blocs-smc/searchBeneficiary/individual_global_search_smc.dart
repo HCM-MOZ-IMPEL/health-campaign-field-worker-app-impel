@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:health_campaign_field_worker_app/blocs/blocs-smc/searchBeneficiary/search_households_smc.dart'
     as searchHouseholdsSMC;
@@ -98,11 +99,17 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           clientReferenceId: houseHoldIds,
         ),
       );
+
+      // added a fix to search project beneficiary if beneficiaryType household or individual
+
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
-              beneficiaryClientReferenceId:
-                  individualsList.map((e) => e.clientReferenceId).toList()));
+              beneficiaryClientReferenceId: RegistrationDeliverySingleton()
+                          .beneficiaryType ==
+                      BeneficiaryType.household
+                  ? householdList.map((e) => e.clientReferenceId).toList()
+                  : individualsList.map((e) => e.clientReferenceId).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -248,11 +255,16 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
         ),
       );
 
+      // added a fix to search project beneficiary if beneficiaryType household or individual
+
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
-              beneficiaryClientReferenceId:
-                  individualsList.map((e) => e.clientReferenceId).toList()));
+              beneficiaryClientReferenceId: RegistrationDeliverySingleton()
+                          .beneficiaryType ==
+                      BeneficiaryType.household
+                  ? householdList.map((e) => e.clientReferenceId).toList()
+                  : individualsList.map((e) => e.clientReferenceId).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -322,19 +334,27 @@ class IndividualGlobalSearchSMCBloc extends SearchHouseholdsSMCBloc {
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
 
-      // Filter beneficiaries based on individual client reference IDs
-      filteredBeneficiaries = projectBeneficiariesList
-          .where((element) =>
-              membersIds.contains(element.beneficiaryClientReferenceId))
-          .toList();
+      // add beneficiaryType filter condition as for householdType only one projectBeneficiary present
 
-      // Filter tasks based on project beneficiary client reference IDs
-      for (var beneficiary in filteredBeneficiaries) {
-        var tasksForBeneficiary = taskList.where((element) =>
-            beneficiary.clientReferenceId ==
-            element.projectBeneficiaryClientReferenceId);
+      if (RegistrationDeliverySingleton().beneficiaryType ==
+          BeneficiaryType.household) {
+        filteredTasks.addAll(taskList);
+        filteredBeneficiaries.addAll(projectBeneficiariesList);
+      } else {
+        // Filter beneficiaries based on individual client reference IDs
+        filteredBeneficiaries = projectBeneficiariesList
+            .where((element) =>
+                membersIds.contains(element.beneficiaryClientReferenceId))
+            .toList();
 
-        filteredTasks.addAll(tasksForBeneficiary);
+        // Filter tasks based on project beneficiary client reference IDs
+        for (var beneficiary in filteredBeneficiaries) {
+          var tasksForBeneficiary = taskList.where((element) =>
+              beneficiary.clientReferenceId ==
+              element.projectBeneficiaryClientReferenceId);
+
+          filteredTasks.addAll(tasksForBeneficiary);
+        }
       }
 
       // Find the head of the household

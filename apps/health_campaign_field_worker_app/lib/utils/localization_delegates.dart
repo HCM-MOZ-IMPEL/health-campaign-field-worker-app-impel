@@ -23,6 +23,8 @@ import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
+import 'package:closed_household/blocs/app_localization.dart'
+    as closed_household_localization;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -80,6 +82,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    closed_household_localization.ClosedHouseholdLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
