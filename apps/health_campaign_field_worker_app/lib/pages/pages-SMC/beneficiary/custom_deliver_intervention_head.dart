@@ -26,7 +26,7 @@ import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
