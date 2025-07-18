@@ -32,7 +32,8 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import '../../../widgets/widgets_bednet/custom_resource_beneficiary_card.dart';
-import '../../pages-bednet/custom_qr_scanner.dart';
+// import '../custom_digit_scanner.dart';
+import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomDeliverInterventionHeadPage extends LocalizedStatefulWidget {
@@ -117,7 +118,7 @@ class CustomDeliverInterventionHeadPageState
               householdMemberWrapper: householdMember),
         );
     context.router.push(
-        CustomHouseholdAcknowledgementBednetRoute(enableViewHousehold: false));
+        CustomHouseholdAcknowledgementSMCRoute(enableViewHousehold: false));
   }
 
   void handleLocationState(
@@ -623,7 +624,7 @@ class CustomDeliverInterventionHeadPageState
                                                           kPadding,
                                                           0),
                                                       child: scannerState
-                                                              .qrCodes
+                                                              .barCodes
                                                               .isNotEmpty
                                                           ? Row(
                                                               mainAxisAlignment:
@@ -639,8 +640,9 @@ class CustomDeliverInterventionHeadPageState
                                                                   child: Text(
                                                                     localizations
                                                                         .translate(
-                                                                      i18.deliverIntervention
-                                                                          .voucherCode,
+                                                                      i18_local
+                                                                          .deliverIntervention
+                                                                          .bednetScannedCode,
                                                                     ),
                                                                     style: theme
                                                                         .textTheme
@@ -685,7 +687,7 @@ class CustomDeliverInterventionHeadPageState
                                                                             isEditEnabled:
                                                                                 true,
                                                                             manualEnabled:
-                                                                                false,
+                                                                                true,
                                                                           ),
                                                                           settings:
                                                                               const RouteSettings(name: '/qr-scanner'),
@@ -728,7 +730,7 @@ class CustomDeliverInterventionHeadPageState
                                                                       isEditEnabled:
                                                                           true,
                                                                       manualEnabled:
-                                                                          false,
+                                                                          true,
                                                                     ),
                                                                     settings:
                                                                         const RouteSettings(
@@ -989,6 +991,7 @@ class CustomDeliverInterventionHeadPageState
             AdditionalFieldsType.doseIndex.toValue(),
             "0${dose ?? 1}",
           ),
+          AdditionalField('head_bednet_delivery', true),
           AdditionalField(
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
