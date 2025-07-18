@@ -744,7 +744,13 @@ class DeliverIntervention {
 
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
-
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+  String get patternValidationFailed => 'PATTERN_VALIDATION_FAILED';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
+  String get scanBednet => 'SCAN_THE_BEDNET';
+  String get bednetScannedCode => 'BEDNET_SCANNED_CODES';
   String get deliveryCommentLabelSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
   String get reasonForRedoseLabel =>
