@@ -532,121 +532,29 @@ initializeAllMappers() async {
   await Future.wait(initializations);
 }
 
-DeliveryDoseCriteria? fetchProductVariantBednetHead(
-    ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel,
-    HouseholdModel? householdModel) {
-  if (currentDelivery != null) {
-    var individualAgeInMonths = 0;
-    var gender;
-    var roomCount;
-    var memberCount;
-    String? structureType;
+bool isHeadBednetDelivered(List<TaskModel>? tasks) {
+  if (tasks == null || tasks.isEmpty) return false;
+  return tasks.any((task) {
+    if (task == null) return false;
+    final additionalFields = task.additionalFields?.fields;
+    if (additionalFields == null || additionalFields.isEmpty) return false;
 
-    if (individualModel != null) {
-      final individualAge = DigitDateUtils.calculateAge(
-        DigitDateUtils.getFormattedDateToDateTime(
-              individualModel.dateOfBirth!,
-            ) ??
-            DateTime.now(),
+    try {
+      final headBednetField = additionalFields.firstWhere(
+        (field) => field != null && field.key == 'head_bednet_delivery',
+        orElse: () => AdditionalField('', null),
       );
-      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
-    }
-    if (householdModel != null && householdModel.additionalFields != null) {
-      memberCount = householdModel.memberCount;
-      roomCount = int.tryParse(householdModel.additionalFields?.fields
-              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
-          '1')!;
-      structureType = householdModel.additionalFields?.fields
-          .where((h) =>
-              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
-          .firstOrNull
-          ?.value
-          .toString();
-    }
+      final fieldValue = headBednetField.value;
+      if (fieldValue == null) return false;
 
-    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final condition = criteria.condition;
-      if (condition != null) {
-        if (condition.contains('and')) {
-          final conditions = condition.split('and');
-
-          List expressionParser = [];
-          for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
-                'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
-              },
-            );
-            final error = expression.parse;
-            expressionParser.add(error["value"]);
-          }
-
-          return expressionParser.where((element) => element == true).length ==
-              conditions.length;
-        } else if (condition.contains('or')) {
-          final conditions = condition.split('or');
-
-          List expressionParser = [];
-          for (var element in conditions) {
-            final expression = CustomFormulaParser.parseCondition(element, {
-              if (individualModel != null && individualAgeInMonths != 0)
-                'age': individualAgeInMonths,
-              if (gender != null) 'gender': gender,
-              if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
-            }, stringKeys: [
-              'type_of_structure'
-            ]);
-            final error = expression;
-            expressionParser.add(error["value"]);
-          }
-
-          return expressionParser.where((element) => element == true).isNotEmpty
-              ? true
-              : false;
-        } else {
-          final conditions = condition.split(
-              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
-
-          List expressionParser = [];
-          for (var element in conditions) {
-            final expression = CustomFormulaParser.parseCondition(element, {
-              if (individualModel != null && individualAgeInMonths != 0)
-                'age': individualAgeInMonths,
-              if (gender != null) 'gender': gender,
-              if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
-            }, stringKeys: [
-              'type_of_structure'
-            ]);
-            final error = expression;
-            expressionParser.add(error["value"]);
-          }
-
-          return expressionParser.where((element) => element == true).length ==
-              conditions.length;
-        }
-      }
-
+      return fieldValue == true ||
+          fieldValue == 'true' ||
+          fieldValue.toString().toLowerCase() == 'true';
+    } catch (e) {
       return false;
-    }).toList();
-
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
-  }
-
-  return null;
+    }
+  });
 }
 
 int getSyncCount(List<OpLog> oplogs) {
