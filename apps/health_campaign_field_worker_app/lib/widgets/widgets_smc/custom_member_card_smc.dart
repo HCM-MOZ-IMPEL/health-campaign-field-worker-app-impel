@@ -19,7 +19,8 @@ import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
-import '../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
+import '../../utils/utils_smc/utils_smc.dart'
+    show checkStatusSMC, isHeadBednetDelivered;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -281,60 +282,77 @@ class CustomMemberCardSMC extends StatelessWidget {
                           isBeneficiaryReferred)
                       ? const Offstage()
                       : !isNotEligible && isHead
-                          ? DigitElevatedButton(
-                              onPressed: (projectBeneficiaries ?? []).isEmpty
-                                  ? null
-                                  : () {
-                                      final bloc =
-                                          context.read<HouseholdOverviewBloc>();
+                          ? isHeadBednetDelivered(tasks)
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DigitIconButton(
+                                    icon: Icons.check_circle,
+                                    iconText: localizations.translate(
+                                      i18_local.householdOverView
+                                          .headBednetDeliveredSuccess,
+                                    ),
+                                    iconSize: 20,
+                                    iconTextColor: DigitTheme
+                                        .instance.colorScheme.onSurfaceVariant,
+                                    iconColor: DigitTheme
+                                        .instance.colorScheme.onSurfaceVariant,
+                                  ),
+                                )
+                              : DigitElevatedButton(
+                                  onPressed: (projectBeneficiaries ?? [])
+                                          .isEmpty
+                                      ? null
+                                      : () {
+                                          final bloc = context
+                                              .read<HouseholdOverviewBloc>();
 
-                                      bloc.add(
-                                        HouseholdOverviewEvent
-                                            .selectedIndividual(
-                                          individualModel: individual,
-                                        ),
-                                      );
-                                      bloc.add(HouseholdOverviewReloadEvent(
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                    .beneficiaryType ??
-                                                BeneficiaryType.individual,
-                                      ));
+                                          bloc.add(
+                                            HouseholdOverviewEvent
+                                                .selectedIndividual(
+                                              individualModel: individual,
+                                            ),
+                                          );
+                                          bloc.add(HouseholdOverviewReloadEvent(
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!,
+                                            projectBeneficiaryType:
+                                                RegistrationDeliverySingleton()
+                                                        .beneficiaryType ??
+                                                    BeneficiaryType.individual,
+                                          ));
 
-                                      if ((tasks ?? []).isEmpty) {
-                                        context.router.push(
-                                            CustomDeliverInterventionHeadRoute());
-                                      } else {
-                                        context.router
-                                            .push(BeneficiaryDetailsRoute());
-                                      }
-                                    },
-                              child: Center(
-                                child: Text(
-                                  allDosesDelivered(
-                                            tasks,
-                                            context.selectedCycle,
-                                            sideEffects,
-                                            individual,
-                                          ) &&
-                                          !checkStatusSMC(
-                                            tasks,
-                                            context.selectedCycle,
-                                          )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
-                                      : localizations.translate(
-                                          i18_local.householdOverView
-                                              .householdOverViewActionTextSMC,
-                                        ),
-                                ),
-                              ),
-                            )
+                                          if ((tasks ?? []).isEmpty) {
+                                            context.router.push(
+                                                CustomDeliverInterventionHeadRoute());
+                                          } else {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          }
+                                        },
+                                  child: Center(
+                                    child: Text(
+                                      allDosesDelivered(
+                                                tasks,
+                                                context.selectedCycle,
+                                                sideEffects,
+                                                individual,
+                                              ) &&
+                                              !checkStatusSMC(
+                                                tasks,
+                                                context.selectedCycle,
+                                              )
+                                          ? localizations.translate(
+                                              i18.householdOverView
+                                                  .viewDeliveryLabel,
+                                            )
+                                          : localizations.translate(
+                                              i18_local.householdOverView
+                                                  .householdOverViewActionTextSMC,
+                                            ),
+                                    ),
+                                  ),
+                                )
                           : const Offstage(),
                   (isNotEligible ||
                               isBeneficiaryRefused ||
