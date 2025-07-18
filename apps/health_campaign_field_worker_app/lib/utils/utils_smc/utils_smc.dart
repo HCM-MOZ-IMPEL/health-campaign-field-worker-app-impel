@@ -12,6 +12,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
@@ -21,6 +22,7 @@ import 'package:closed_household/closed_household.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+import 'package:formula_parser/formula_parser.dart';
 
 import 'dart:async';
 import 'dart:io';
@@ -35,6 +37,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -527,6 +530,123 @@ initializeAllMappers() async {
     Future(() => referral_reconciliation_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
+}
+
+DeliveryDoseCriteria? fetchProductVariantBednetHead(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel) {
+  if (currentDelivery != null) {
+    var individualAgeInMonths = 0;
+    var gender;
+    var roomCount;
+    var memberCount;
+    String? structureType;
+
+    if (individualModel != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
+
+      gender = individualModel.gender?.index;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
+    }
+
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
 }
 
 int getSyncCount(List<OpLog> oplogs) {
