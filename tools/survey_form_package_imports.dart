@@ -16,11 +16,10 @@ void insertCaseCondition(List<String> lines, String caseCondition) {
 // Define the main function
 void main() {
   // Get the current directory path
-  var appDir = Directory.current.path;
+  var appDir = Directory.current.parent.path;
 
   // Define the paths for the application root and the files to be modified
   var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';
-  var appFile = appRoot + '/app.dart';
   var localizationDelegatesFilePath =
       appRoot + '/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
@@ -32,55 +31,58 @@ void main() {
       appRoot + '/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = appRoot + '/data/repositories/sync/sync_down.dart';
   var homeFilePath = appRoot + '/pages/home.dart';
-  var extensionsFilePath = appRoot + '/utils/extensions/extensions.dart';
+  var projectFilePath = appRoot + '/blocs/project/project.dart';
+  var authenticatedFilePath = appRoot + '/pages/authenticated.dart';
   var contextUtilityFilePath =
       appRoot + '/utils/extensions/context_utility.dart';
+  var appFilePath = appRoot + '/app.dart';
+  var extensionFilePath = appRoot + '/utils/extensions/extensions.dart';
 
-  // Set boundary in the context utility file
-  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
+  _updateExtensionFilePath(extensionFilePath);
 
-  // Add the scanner bloc to the app file
-  _addScannerBlocToAppFile(appFile);
+  _updateAppFile(appFilePath);
 
-  //  Create the localization delegates file
-  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+  // Initialise Boundarycode in surveyFormSingleton class
+  _updateContextUtilityFile(contextUtilityFilePath);
 
-  // Add registration to home file
+  // Add Imports and service definition repo
+  _addprojectFilePath(projectFilePath);
+
+  _addauthenticatedFilePath(authenticatedFilePath);
+
+  // Add surveyForm to home file
   _updateHome(homeFilePath);
 
-  // Update the sync_down.dart file
-  _updateSyncDownFile(syncDownFilePath);
-
-  // Add registration routes and import to the router file
-  _addRegistrationRoutesAndImportToRouterFile(routerFilePath);
+  // Add surveyForm routes and import to the router file
+  _addSurveyFormRoutesAndImportToRouterFile(routerFilePath);
 
   // Add new case statements to the entity_mapper.dart file
   _updateEntityMapperFile(entityMapperFilePath);
 
-  // Add the repositories to the network manager provider wrapper
+  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
           networkManagerProviderWrapperFilePath);
 
-  // Add the registration_delivery related constants to the constants file
-  _addRegNDeliveryConstantsToConstantsFile(
-      constantsFilePath: constantsFilePath);
+  _addSurveyFormConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  // Add the registration_delivery related mappers to the utils file
-  _addRegNDeliveryMapperToUtilsFile(utilsFilePath: utilsFilePath);
+  _addSurveyFormMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   _formatFiles([
-    appFile,
-    localizationDelegatesFilePath,
-    networkManagerProviderWrapperFilePath,
+    homeFilePath,
+    syncDownFilePath,
+    entityMapperFilePath,
+    routerFilePath,
     constantsFilePath,
     utilsFilePath,
-    routerFilePath,
-    entityMapperFilePath,
-    syncDownFilePath,
-    homeFilePath,
-    extensionsFilePath,
+    networkManagerProviderWrapperFilePath,
+    localizationDelegatesFilePath,
+    projectFilePath,
+    authenticatedFilePath,
     contextUtilityFilePath,
+    appFilePath,
+    extensionFilePath
   ]);
 }
 
@@ -91,24 +93,48 @@ void _formatFiles(List<String> filePaths) {
   }
 }
 
-void _addScannerBlocToAppFile(String appFilePath) {
-  var importStatement = "import 'package:digit_scanner/blocs/scanner.dart';";
+void _updateExtensionFilePath(extensionFilePath) {
+  var importStatement = '''
+      import 'package:survey_form/utils/utils.dart';''';
 
-  var scannerBlocData = '''
-    BlocProvider(
-       create: (_) {
-          return DigitScannerBloc(
-              const DigitScannerState(),
-            );
-          },
-          lazy: false,
-       ),
-  ''';
+  // Check if the extension.dart file exists
+  var extensionFile = File(extensionFilePath);
+  if (!extensionFile.existsSync()) {
+    print('Error: project file does not exist at path: $extensionFilePath');
+    return;
+  }
+
+  // Read the authenticated.dart file
+  var extensionFileContent = extensionFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!extensionFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    extensionFileContent = importStatement + '\n' + extensionFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  extensionFile.writeAsStringSync(extensionFileContent);
+}
+
+void _updateAppFile(appFilePath) {
+  var importStatement = '''
+      import 'package:survey_form/survey_form.dart';''';
+
+  var ServiceDefinitionRepository =
+      '''serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            serviceDefinitionLocalRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),''';
 
   // Check if the app.dart file exists
   var appFile = File(appFilePath);
   if (!appFile.existsSync()) {
-    print('Error: App file does not exist at path: $appFile');
+    print('Error: project file does not exist at path: $appFilePath');
     return;
   }
 
@@ -116,96 +142,340 @@ void _addScannerBlocToAppFile(String appFilePath) {
   var appFileContent = appFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!appFileContent.contains(importStatement)) {
+  if (!appFileContent.contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     appFileContent = importStatement + '\n' + appFileContent;
     print('The import statement was added.');
   } else {
     print('The import statement already exists.');
   }
 
-  // Insert the data to be added
-  appFileContent = insertData(appFileContent,
-      '// INFO : Need to add bloc of package Here', scannerBlocData);
+  // Check if the new cases already exist in the file
+  if (!appFileContent
+      .contains(ServiceDefinitionRepository.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = appFileContent.indexOf('ProjectBloc(');
+    caseInsertionIndex += 'ProjectBloc('.length;
+    if (caseInsertionIndex != -1) {
+      appFileContent = appFileContent.substring(0, caseInsertionIndex) +
+          ServiceDefinitionRepository +
+          '\n' +
+          appFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
 
-  // Write the updated content back to the app.dart file
   appFile.writeAsStringSync(appFileContent);
+}
+
+void _updateContextUtilityFile(String contextUtilityFilepath) {
+  var surveyFormBoundary =
+      '''SurveyFormSingleton().setBoundary(boundary: selectedBoundary);''';
+
+  // Check if the context_utility.dart file exists
+  var contextUtilityFile = File(contextUtilityFilepath);
+  if (!contextUtilityFile.existsSync()) {
+    print(
+        'Error: Context Utility file does not exist at path: $contextUtilityFilepath');
+    return;
+  }
+
+  // Read the context_utility.dart file
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Insert the data to be added
+  contextUtilityFileContent = insertData(contextUtilityFileContent,
+      '// INFO: Set Boundary for packages', surveyFormBoundary);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+}
+
+void _addauthenticatedFilePath(String authenticatedFilePath) {
+  var importStatement = '''
+      import 'package:survey_form/survey_form.dart';''';
+
+  var providers = '''BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
+                      ),''';
+
+  // Check if the authenticated.dart file exists
+  var authenticatedFile = File(authenticatedFilePath);
+  if (!authenticatedFile.existsSync()) {
+    print('Error: project file does not exist at path: $authenticatedFilePath');
+    return;
+  }
+
+  // Read the authenticated.dart file
+  var authenticatedFileContent = authenticatedFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!authenticatedFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    authenticatedFileContent =
+        importStatement + '\n' + authenticatedFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the new cases already exist in the file
+  if (!authenticatedFileContent
+      .contains(providers.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = authenticatedFileContent.indexOf('providers: [');
+    caseInsertionIndex += 'providers: ['.length;
+    if (caseInsertionIndex != -1) {
+      authenticatedFileContent =
+          authenticatedFileContent.substring(0, caseInsertionIndex) +
+              providers +
+              '\n' +
+              authenticatedFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
+
+  authenticatedFile.writeAsStringSync(authenticatedFileContent);
+}
+
+void _addprojectFilePath(String projectFilePath) {
+  var importStatement = '''
+      import 'package:survey_form/survey_form.dart';''';
+
+  var ServicedefinitionRepo = '''/// Service Definition Repositories
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionRemoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionLocalRepository;''';
+
+  var projectBloc = '''required this.serviceDefinitionRemoteRepository,
+  required this.serviceDefinitionLocalRepository,''';
+
+  var loadServicedefinition =
+      '''FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+    final configs = await isar.appConfigurations.where().findAll();
+    final userObject = await localSecureStore.userRequestModel;
+    List<String> codes = [];
+    for (UserRoleModel elements in userObject!.roles) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+        for (final project in projects) {
+          codes.add(
+          '\${project.name}.\$element.\${elements.code.snakeCase.toUpperCase()}',
+        );
+        }
+      });
+    }
+
+    final serviceDefinition = await serviceDefinitionRemoteRepository
+        .search(ServiceDefinitionSearchModel(
+      tenantId: envConfig.variables.tenantId,
+      code: codes,
+    ));
+
+    for (var element in serviceDefinition) {
+      await serviceDefinitionLocalRepository.create(
+        element,
+        createOpLog: false,
+      );
+    }
+  }''';
+
+  var loadfunctions = '''try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }''';
+
+  // Check if the project.dart file exists
+  var projectFile = File(projectFilePath);
+  if (!projectFile.existsSync()) {
+    print('Error: project file does not exist at path: $projectFilePath');
+    return;
+  }
+
+  // Read the project.dart file
+  var projectFileContent = projectFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!projectFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    projectFileContent = importStatement + '\n' + projectFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the Service Definition repo already exist in the file
+  if (!projectFileContent
+      .contains(ServicedefinitionRepo.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the Service Definition Repo
+    var caseInsertionIndex = projectFileContent.indexOf(
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex +=
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          ServicedefinitionRepo +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
+      print('The Service Definition repo were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The Service Definition Repo already exist.');
+  }
+
+  // Check if the Project Bloc already exist in the file
+  if (!projectFileContent.contains(projectBloc.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the Project Bloc
+    var caseInsertionIndex = projectFileContent.indexOf('ProjectBloc({');
+    caseInsertionIndex += 'ProjectBloc({'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          projectBloc +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
+      print('The Project Bloc were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The Project Bloc already exist.');
+  }
+
+  // Check if the load service definition function already exist in the file
+  if (!projectFileContent
+      .contains(loadServicedefinition.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the load service definition function
+    var caseInsertionIndex = projectFileContent.indexOf(
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex +=
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          loadServicedefinition +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
+      print('The load service definition function were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The load service definition function already exist.');
+  }
+
+  // Check if the load functions calling already exist in the file
+  if (!projectFileContent
+      .contains(loadfunctions.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the load function calling
+    var caseInsertionIndex = projectFileContent
+        .indexOf('// INFO : Need to add project load functions');
+    caseInsertionIndex += '// INFO : Need to add project load functions'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          loadfunctions +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
+      print('The load function calling were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The load function calling already exist.');
+  }
+
+  // Write the updated content back to the project.dart file
+  projectFile.writeAsStringSync(projectFileContent);
 }
 
 void _updateHome(String homeFilePath) {
   var importStatement = '''
-      import 'package:registration_delivery/registration_delivery.dart';
-      import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+      import 'package:survey_form/survey_form.dart';
+      import 'package:survey_form/router/survey_form_router.gm.dart';
       ''';
 
   var homeItemsData = '''
-    i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.buildWith(
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
-          icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
-          onPressed: () async {
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
+          enableCustomIcon: true,
+          customIcon: mySurveyFormSvg,
+          icon: Icons.checklist,
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
   ''';
 
   var showCaseData = '''
-        i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.showcaseKey,
+       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
   ''';
 
   var itemsLabel = '''
-  i18.home.beneficiaryLabel,
+        i18.home.mySurveyForm,
   ''';
 
   // Define the data to be added
   var singletonData = '''
-    RegistrationDeliverySingleton().setInitialData(
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
+    SurveyFormSingleton().setInitialData(
           projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
-          referralReasons:
-              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
+          roles: context.read<AuthBloc>().state.maybeMap(
+            orElse: () => const Offstage(),
+            authenticated: (res) {
+              return res.userModel.roles
+                  .map((e) => e.code.snakeCase.toUpperCase())
+                  .toList();
+            }),
         );
   ''';
 
   var localRepoData = '''
-    context.read<LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-    context.read<LocalRepository<ProjectBeneficiaryModel,ProjectBeneficiarySearchModel>>(),
-    context.read<LocalRepository<HouseholdMemberModel,HouseholdMemberSearchModel>>(),
-    context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-    context.read<LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-    context.read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+    context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
   ''';
 
   var remoteRepoData = '''
-     context.read<RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-     context.read<RemoteRepository<ProjectBeneficiaryModel,ProjectBeneficiarySearchModel>>(),
-     context.read<RemoteRepository<HouseholdMemberModel,HouseholdMemberSearchModel>>(),
-     context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-     context.read<RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-     context.read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+    context.read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
   ''';
 
   // Check if the home.dart file exists
@@ -264,468 +534,12 @@ String insertData(String fileContent, String marker, String data) {
   return fileContent;
 }
 
-void _setBoundaryInContextUtilityFile(
-    String extensionsFilePath, String contextUtilityFilePath) {
-  // Define the lines to be added
-  var importStatement =
-      "import 'package:registration_delivery/registration_delivery.dart';";
-  var boundaryStatement =
-      'RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);';
-
-  // Update the extensions.dart file
-  var extensionsFile = File(extensionsFilePath);
-  var extensionsFileContent = extensionsFile.readAsStringSync();
-  if (!extensionsFileContent.contains(importStatement)) {
-    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
-    extensionsFile.writeAsStringSync(extensionsFileContent);
-    print('Updated the extensions.dart file.');
-  }
-
-  // Update the context_utility.dart file
-  var contextUtilityFile = File(contextUtilityFilePath);
-  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
-
-  // Use the insertData method to insert the boundaryStatement
-  contextUtilityFileContent = insertData(contextUtilityFileContent,
-      '// INFO: Set Boundary for packages', boundaryStatement);
-
-  // Write the updated content back to the context_utility.dart file
-  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
-  print('Updated the context_utility.dart file.');
-}
-
-void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
-  // Define the import statement and delegate for localization
-  var importStatement =
-      "import 'package:registration_delivery/blocs/app_localization.dart' as registration_delivery_localization;";
-  var delegate = '''
-      registration_delivery_localization.RegistrationDeliveryLocalization
-        .getDelegate(
-      getLocalizationString(
-        isar,
-        selectedLocale,
-      ),
-      appConfig.languages!,
-    ),
-    ''';
-
-  // Read the localization delegates file
-  var localizationDelegatesFile = File(localizationDelegatesFilePath);
-  var localizationDelegatesFileContent =
-      localizationDelegatesFile.readAsStringSync();
-
-  var normalizedFileContent =
-      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statement and delegate already exist in the file
-  // If not, add them to the file
-  if (!normalizedFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    localizationDelegatesFileContent =
-        '$importStatement\n$localizationDelegatesFileContent';
-    print('The import statement was added.');
-  }
-
-  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
-    var lastDelegateIndex =
-        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
-    if (lastDelegateIndex != -1) {
-      localizationDelegatesFileContent =
-          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
-              '\n  $delegate' +
-              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
-      print('The delegate was added.');
-    }
-  }
-
-  // Write the updated content back to the file
-  localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
-}
-
-void _updateSyncDownFile(String syncDownFilePath) {
-  // Define the import statement and the new case statements
-  var importStatement =
-      "import 'package:registration_delivery/registration_delivery.dart';";
-  var newCases = '''
-      case DataModelType.household:
-            responseEntities = await remote.search(HouseholdSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HouseholdModel;
-              final responseEntity =
-                  responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                final addressAdditionalId = responseEntity?.address?.id == null
-                    ? null
-                    : AdditionalId(
-                        idType: 'householdAddressId',
-                        id: responseEntity!.address!.id!,
-                      );
-
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: [
-                      if (addressAdditionalId != null) addressAdditionalId,
-                    ],
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                    nonRecoverableError: element.nonRecoverableError,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
-          case DataModelType.householdMember:
-            responseEntities = await remote.search(HouseholdMemberSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdMemberModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HouseholdMemberModel;
-              final responseEntity = responseEntities
-                  .whereType<HouseholdMemberModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
-          case DataModelType.sideEffect:
-            responseEntities = await remote.search(SideEffectSearchModel(
-              clientReferenceId: entities
-                  .whereType<SideEffectModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as SideEffectModel;
-              var responseEntity = responseEntities
-                  .whereType<SideEffectModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-          case DataModelType.referral:
-            responseEntities = await remote.search(ReferralSearchModel(
-              clientReferenceId: entities
-                  .whereType<ReferralModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as ReferralModel;
-              var responseEntity =
-                  responseEntities.whereType<ReferralModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-          case DataModelType.projectBeneficiary:
-            responseEntities =
-                await remote.search(ProjectBeneficiarySearchModel(
-              clientReferenceId: entities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as ProjectBeneficiaryModel;
-              final responseEntity = responseEntities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-          case DataModelType.task:
-            responseEntities = await remote.search(TaskSearchModel(
-              clientReferenceId: entities
-                  .whereType<TaskModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final taskModel = element.entity as TaskModel;
-              var responseEntity =
-                  responseEntities.whereType<TaskModel>().firstWhereOrNull(
-                        (e) =>
-                            e.clientReferenceId == taskModel.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: taskModel.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: responseEntity?.resources
-                        ?.map((e) {
-                          final id = e.id;
-                          if (id == null) return null;
-
-                          return AdditionalId(
-                            idType: 'taskResourceId',
-                            id: id,
-                          );
-                        })
-                        .whereNotNull()
-                        .toList(),
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(taskModel.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    taskModel.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-''';
-
-  // Check if the sync_down file exists
-  var syncDownFile = File(syncDownFilePath);
-
-  if (!syncDownFile.existsSync()) {
-    print('Error: Sync Down file does not exist at path: $syncDownFilePath');
-    return;
-  }
-
-  // Read the sync_down file
-  var syncDownFileContent = syncDownFile.readAsStringSync();
-
-  // Check if the import statement already exists and add it if not
-  if (!syncDownFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    syncDownFileContent = importStatement + '\n' + syncDownFileContent;
-    print('The import statement was added to sync_down.dart.');
-  } else {
-    print('The import statement already exists in sync_down.dart.');
-  }
-
-  // Insert the new case statements
-  if (!syncDownFileContent.contains('DataModelType.stock') &&
-      !syncDownFileContent.contains('DataModelType.stockReconciliation')) {
-    // Find the position to insert the new cases within the switch statement
-    var switchIndex =
-        syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
-    if (switchIndex != -1) {
-      var caseInsertionIndex =
-          syncDownFileContent.indexOf('default:', switchIndex);
-      if (caseInsertionIndex != -1) {
-        syncDownFileContent =
-            syncDownFileContent.substring(0, caseInsertionIndex) +
-                newCases +
-                '\n' +
-                syncDownFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
-
-        // Write the updated content back to the file
-        syncDownFile.writeAsStringSync(syncDownFileContent);
-      } else {
-        print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
-        return;
-      }
-    } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
-      return;
-    }
-  } else {
-    print('The new cases already exist in sync_down.dart.');
-  }
-}
-
 void _updateEntityMapperFile(String entityMapperFilePath) {
   // Define the import statement and new case statements
-  var importStatement =
-      "import 'package:registration_delivery/registration_delivery.dart';";
+  var importStatement = "import 'package:survey_form/survey_form.dart';";
   var newCases = '''
-      case "household":
-        final entity = HouseholdModelMapper.fromJson(entityString);
-        return entity;
-
-      case "householdMember":
-        final entity = HouseholdMemberModelMapper.fromJson(entityString);
-        return entity;
-
-      case "projectBeneficiary":
-        final entity = ProjectBeneficiaryModelMapper.fromJson(entityString);
-        return entity;
-
-      case "task":
-        final entity = TaskModelMapper.fromJson(entityString);
-        return entity;
-
-      case "sideEffect":
-        final entity = SideEffectModelMapper.fromJson(entityString);
-        return entity;
-
-      case "referral":
-        final entity = ReferralModelMapper.fromJson(entityString);
+      case "service":
+        final entity = ServiceModelMapper.fromJson(entityString);
         return entity;
 ''';
 
@@ -751,12 +565,8 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   }
 
   // Check if the new cases already exist in the file
-  if (!entityMapperFileContent.contains('case "household":') &&
-      !entityMapperFileContent.contains('case "householdMember":') &&
-      !entityMapperFileContent.contains('case "projectBeneficiary":') &&
-      !entityMapperFileContent.contains('case "task":') &&
-      !entityMapperFileContent.contains('case "sideEffect":') &&
-      !entityMapperFileContent.contains('case "referral":')) {
+  if (!entityMapperFileContent
+      .contains('case "service":'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases (before the default case)
     var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
     if (caseInsertionIndex != -1) {
@@ -778,101 +588,32 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   }
 }
 
-void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
-  // Define the registration route lines
-  var registrationRoutes = '''
-    AutoRoute(
-            page: RegistrationDeliveryWrapperRoute.page,
-            path: 'registration-delivery-wrapper',
+void _addSurveyFormRoutesAndImportToRouterFile(String routerFilePath) {
+  // Define the SurveyForm route lines
+  var surveyFormRoutes = '''
+    // SurveyForm Route
+        AutoRoute(
+            page: SurveyFormWrapperRoute.page,
+            path: 'surveyForm',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
-
-              AutoRoute(
-                page: FacilitySelectionRoute.page,
-                 path: 'select-facilities',
-              ),
-
-              /// Beneficiary Registration
-              AutoRoute(
-                page: BeneficiaryRegistrationWrapperRoute.page,
-                path: 'beneficiary-registration',
-                children: [
-                  AutoRoute(
-                      page: IndividualDetailsRoute.page,
-                      path: 'individual-details'),
-                  AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
-                  AutoRoute(
-                    page: HouseholdLocationRoute.page,
-                    path: 'household-location',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryAcknowledgementRoute.page,
-                    path: 'beneficiary-acknowledgement',
-                  ),
-                ],
+                page: SurveyformRoute.page,
+                path: '',
               ),
               AutoRoute(
-                page: BeneficiaryWrapperRoute.page,
-                path: 'beneficiary',
-                children: [
-                  AutoRoute(
-                    page: HouseholdOverviewRoute.page,
-                    path: 'overview',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryDetailsRoute.page,
-                    path: 'beneficiary-details',
-                  ),
-                  AutoRoute(
-                    page: DeliverInterventionRoute.page,
-                    path: 'deliver-intervention',
-                  ),
-                  AutoRoute(
-                    page: SideEffectsRoute.page,
-                    path: 'side-effects',
-                  ),
-                  AutoRoute(
-                    page: ReferBeneficiaryRoute.page,
-                    path: 'refer-beneficiary',
-                  ),
-                  AutoRoute(
-                    page: DoseAdministeredRoute.page,
-                    path: 'dose-administered',
-                  ),
-                  AutoRoute(
-                    page: SplashAcknowledgementRoute.page,
-                    path: 'splash-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: ReasonForDeletionRoute.page,
-                    path: 'reason-for-deletion',
-                  ),
-                  AutoRoute(
-                    page: RecordPastDeliveryDetailsRoute.page,
-                    path: 'record-past-delivery-details',
-                  ),
-                  AutoRoute(
-                    page: HouseholdAcknowledgementRoute.page,
-                    path: 'household-acknowledgement',
-                  ),
-                ],
-              ),
+                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
             ]),
   ''';
 
   // Define the import statement
   var importStatement1 =
-      "import 'package:registration_delivery/router/registration_delivery_router.gm.dart';";
+      "import 'package:survey_form/router/survey_form_router.dart';";
   // Define the import statement
   var importStatement2 =
-      "import 'package:registration_delivery/router/registration_delivery_router.dart';";
+      "import 'package:survey_form/router/survey_form_router.gm.dart';";
 
   // Check if the router file exists
   var routerFile = File(routerFilePath);
@@ -885,11 +626,8 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
   // Read the router file
   var routerFileContent = routerFile.readAsStringSync();
 
-  // Normalize the whitespace in the file content
-  var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
-
   // Check if the import statement already exists
-  if (!normalizedFileContent
+  if (!routerFileContent
       .contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
     // Add the import statement at the beginning of the file
     routerFileContent = importStatement1 + '\n' + routerFileContent;
@@ -899,7 +637,7 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
   }
 
   // Check if the import statement already exists
-  if (!normalizedFileContent
+  if (!routerFileContent
       .contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
     // Add the import statement at the beginning of the file
     routerFileContent = importStatement2 + '\n' + routerFileContent;
@@ -907,8 +645,9 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
   } else {
     print('The import statement already exists.');
   }
-  // Check if the RegistrationDeliveryRoute module already exists
-  if (!routerFileContent.contains('RegistrationDeliveryRoute')) {
+  // Check if the surveyFormRoute module already exists
+  if (!routerFileContent
+      .contains('SurveyFormRoute'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the module
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
@@ -918,9 +657,12 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
         var modulesEndIndex =
             routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
-            ' RegistrationDeliveryRoute,' +
+            'SurveyFormRoute,' +
             routerFileContent.substring(modulesEndIndex);
-        print('The RegistrationDeliveryRoute module was added.');
+
+        // Write the updated content back to the project.dart file
+        routerFile.writeAsStringSync(routerFileContent);
+        print('The SurveyFormRoute module was added.');
       } else {
         print('Error: Could not find the end of the modules list.');
         return;
@@ -930,41 +672,41 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
       return;
     }
   } else {
-    print('The RegistrationDeliveryRoute module already exists.');
+    print('The SurveyFormRoute module already exists.');
   }
 
-  // Check if the registration routes already exist in the file
-  if (!normalizedFileContent
-      .contains(registrationRoutes.replaceAll(RegExp(r'\s'), ''))) {
+  // Check if the SurveyForm routes already exist in the file
+  if (!routerFileContent
+      .contains(surveyFormRoutes.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the routes
     var insertionIndex = routerFileContent
         .indexOf('// INFO : Need to add Router of package Here');
     if (insertionIndex != -1) {
       routerFileContent = routerFileContent.substring(0, insertionIndex) +
           '// INFO : Need to add Router of package Here\n' +
-          registrationRoutes +
+          surveyFormRoutes +
           routerFileContent.substring(insertionIndex +
               '// INFO : Need to add Router of package Here'.length);
-      print('The registration routes were added.');
-
-      // Write the updated content back to the file
-      routerFile.writeAsStringSync(routerFileContent);
+      print('The surveyForm routes were added.');
     } else {
       print('Error: Could not find the insertion point.');
       return;
     }
   } else {
-    print('The registration routes already exist.');
+    print('The surveyForm routes already exist.');
   }
+  // Write the updated content back to the file
+  routerFile.writeAsStringSync(routerFileContent);
 }
 
-void _addRegNDeliveryMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the registration_delivery related lines
-  var dataModelImportStatement = [
-    "import 'package:registration_delivery/registration_delivery.init.dart' as registration_delivery_mappers;"
+void _addSurveyFormMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the surveyForm related lines
+  var surveyFormImportStatement = [
+    '''import 'package:survey_form/survey_form.init.dart'
+    as surveyForm_mappers;'''
   ];
-  var dataModelInitializationStatement =
-      "Future(() => registration_delivery_mappers.initializeMappers()),";
+  var surveyFormInitializationStatement =
+      "Future(() => surveyForm_mappers.initializeMappers()),";
 
   // Check if the utils.dart file exists
   var utilsFile = File(utilsFilePath);
@@ -978,7 +720,7 @@ void _addRegNDeliveryMapperToUtilsFile({required String utilsFilePath}) {
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
-      .contains(dataModelImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+      .contains(surveyFormImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
     var libraryIndex = utilsFileContent.indexOf('library app_utils;');
     if (libraryIndex != -1) {
       var endOfLibrary = libraryIndex +
@@ -986,7 +728,7 @@ void _addRegNDeliveryMapperToUtilsFile({required String utilsFilePath}) {
           1;
       utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
           '\n' +
-          dataModelImportStatement[0] +
+          surveyFormImportStatement[0] +
           utilsFileContent.substring(endOfLibrary + 1);
       print('The import statement was added.');
     }
@@ -994,13 +736,13 @@ void _addRegNDeliveryMapperToUtilsFile({required String utilsFilePath}) {
     print('The import statement already exists.');
   }
 
-  if (!utilsFileContent.contains(dataModelInitializationStatement)) {
-    // Add the RegistrationDelivery related initialization statement to the file
+  if (!utilsFileContent.contains(surveyFormInitializationStatement)) {
+    // Add the surveyForm related initialization statement to the file
     var initializeAllMappersIndex =
         utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
-          'Error: Could not find a place to insert the RegistrationDelivery initialization statement.');
+          'Error: Could not find a place to insert the survey form initialization statement.');
       return;
     }
     var endOfInitializeAllMappers = initializeAllMappersIndex +
@@ -1009,59 +751,51 @@ void _addRegNDeliveryMapperToUtilsFile({required String utilsFilePath}) {
     utilsFileContent =
         utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
             '\n    ' +
-            dataModelInitializationStatement +
+            surveyFormInitializationStatement +
             utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print('RegistrationDelivery initialization statement added to utils.dart');
+
+    print('Survey Form initialization statement added to utils.dart');
+  } else {
+    print('The Survey Form initialization statement already exists.');
   }
 
   // Write the updated content back to the utils.dart file
   utilsFile.writeAsStringSync(utilsFileContent);
 }
 
-void _addRegNDeliveryConstantsToConstantsFile(
+void _addSurveyFormConstantsToConstantsFile(
     {required String constantsFilePath}) {
   // Define the import statements
   var importStatements = [
-    "import 'package:registration_delivery/registration_delivery.dart';",
+    "import 'package:survey_form/survey_form.dart';",
   ];
 
-  // Define the additional line to be added
-  var registrationDeliveryConfiguration = '''
-  RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+  // Define the Survey Form configuration
+  var SurveyFormConfiguration = '''
+SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
   ''';
 
-  var localRepositories = [
+  // Define the local and remote repositories
+  var localRepository = [
     '''
-      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
-      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      ProjectBeneficiaryLocalRepository(
+ServiceDefinitionLocalRepository(
         sql,
-        ProjectBeneficiaryOpLogManager(
-          isar,
-        ),
+        ServiceDefinitionOpLogManager(isar),
       ),
-      TaskLocalRepository(sql, TaskOpLogManager(isar)),
-      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
-      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
-    '''
+      ServiceLocalRepository(
+        sql,
+        ServiceOpLogManager(isar),
+      ),
+  '''
   ];
 
-  // Define the remote repositories of registration_delivery
-  var remoteRepositoriesOfRegistration = [
+  var remoteRepository = [
     '''
-    if (value == DataModelType.household)
-      HouseholdRemoteRepository(dio, actionMap: actions),
-    if (value == DataModelType.projectBeneficiary)
-      ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
-    if (value == DataModelType.task)
-      TaskRemoteRepository(dio, actionMap: actions),
-    if (value == DataModelType.householdMember)
-      HouseholdMemberRemoteRepository(dio, actionMap: actions),
-    if (value == DataModelType.sideEffect)
-      SideEffectRemoteRepository(dio, actionMap: actions),
-    if (value == DataModelType.referral)
-      ReferralRemoteRepository(dio, actionMap: actions),
-    '''
+if (value == DataModelType.serviceDefinition)
+          ServiceDefinitionRemoteRepository(dio, actionMap: actions),
+if (value == DataModelType.service)
+          ServiceRemoteRepository(dio, actionMap: actions),
+  '''
   ];
 
   // Check if the constants.dart file exists
@@ -1074,11 +808,11 @@ void _addRegNDeliveryConstantsToConstantsFile(
   // Read the constants.dart file
   var constantsFileContent = constantsFile.readAsStringSync();
 
-  // Normalize the whitespace in the file content and the registration_delivery configuration
+  // Normalize the whitespace in the file content and the Survey Form configuration
   var normalizedFileContent =
       constantsFileContent.replaceAll(RegExp(r'\s'), '');
-  var normalizedRegistrationConfiguration =
-      registrationDeliveryConfiguration.replaceAll(RegExp(r'\s'), '');
+  var normalizedSurveyFormConfiguration =
+      SurveyFormConfiguration.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statements already exist in the file
   for (var importStatement in importStatements) {
@@ -1090,10 +824,10 @@ void _addRegNDeliveryConstantsToConstantsFile(
     }
   }
 
-  // Check if the registration_delivery configuration already exists in the file
+  // Check if the Survey Form configuration already exists in the file
   // If not, add it to the file
-  if (!normalizedFileContent.contains(normalizedRegistrationConfiguration)) {
-    // Find the setInitialDataOfPackages method and add the registration_delivery configuration inside it
+  if (!normalizedFileContent.contains(normalizedSurveyFormConfiguration)) {
+    // Find the setInitialDataOfPackages method and add the Survey Form configuration inside it
     var setInitialDataOfPackagesIndex =
         constantsFileContent.indexOf('void setInitialDataOfPackages() {');
     if (setInitialDataOfPackagesIndex != -1) {
@@ -1104,9 +838,9 @@ void _addRegNDeliveryConstantsToConstantsFile(
           1;
       constantsFileContent =
           constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
-              '\n  $registrationDeliveryConfiguration' +
+              '\n  $SurveyFormConfiguration' +
               constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
-      print('The registration_delivery configuration was added.');
+      print('The Survey Form configuration was added.');
     }
   }
 
@@ -1120,7 +854,7 @@ void _addRegNDeliveryConstantsToConstantsFile(
     constantsFileContent =
         constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
             '\n' +
-            localRepositories.join('\n') +
+            localRepository.join('\n') +
             constantsFileContent.substring(endOfGetLocalRepositories - 1);
     print('The local repositories were added.');
   }
@@ -1138,7 +872,7 @@ void _addRegNDeliveryConstantsToConstantsFile(
             .indexOf(']') +
         endOfGetRemoteRepositories;
     constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
-        remoteRepositoriesOfRegistration.join('\n') +
+        remoteRepository.join('\n') +
         constantsFileContent.substring(endOfAddAll);
     print('The remote repositories were added.');
   }
@@ -1151,26 +885,46 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:registration_delivery/registration_delivery.dart';",
+    "import 'package:survey_form/survey_form.dart';",
   ];
   var localRepositories = [
-    "RepositoryProvider<LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(create: (_) => HouseholdMemberLocalRepository(sql,HouseholdMemberOpLogManager(isar),),),",
-    "RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(create: (_) => HouseholdLocalRepository(sql,HouseholdOpLogManager(isar),),),",
-    "RepositoryProvider<LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>>(create: (_) => ProjectBeneficiaryLocalRepository(sql,ProjectBeneficiaryOpLogManager(isar),),),",
-    "RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(create: (_) => TaskLocalRepository(sql,TaskOpLogManager(isar),),),",
-    "RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(create: (_) => ReferralLocalRepository(sql,ReferralOpLogManager(isar),),),",
-    "RepositoryProvider<LocalRepository<SideEffectModel, SideEffectSearchModel>>(create: (_) => SideEffectLocalRepository(sql,SideEffectOpLogManager(isar),),),",
-    "RepositoryProvider<RegistrationDeliveryAddressRepo>(create: (_) => RegistrationDeliveryAddressRepo(sql,AddressOpLogManager(isar),),),",
+    '''RepositoryProvider<
+        LocalRepository<ServiceDefinitionModel,
+            ServiceDefinitionSearchModel>>(
+      create: (_) => ServiceDefinitionLocalRepository(
+        sql,
+        ServiceDefinitionOpLogManager(
+          isar,
+        ),
+      ),
+    ),
+    RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+      create: (_) => ServiceLocalRepository(
+        sql,
+        ServiceOpLogManager(isar),
+      ),
+    )'''
   ];
 
-// Define the remote repositories of DataModel
-  var remoteRepositoriesOfRegistrationDelivery = [
-    "if (value == DataModelType.household) RepositoryProvider<RemoteRepository<HouseholdModel, HouseholdSearchModel>>(create: (_) => HouseholdRemoteRepository(dio, actionMap: actions,),),",
-    "if (value == DataModelType.householdMember) RepositoryProvider<RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(create: (_) => HouseholdMemberRemoteRepository(dio, actionMap: actions,),),",
-    "if (value == DataModelType.projectBeneficiary) RepositoryProvider<RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>>(create: (_) => ProjectBeneficiaryRemoteRepository(dio, actionMap: actions,),),",
-    "if (value == DataModelType.task) RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(create: (_) => TaskRemoteRepository(dio, actionMap: actions,),),",
-    "if (value == DataModelType.referral) RepositoryProvider<RemoteRepository<ReferralModel, ReferralSearchModel>>(create: (_) => ReferralRemoteRepository(dio, actionMap: actions,),),",
-    "if (value == DataModelType.sideEffect) RepositoryProvider<RemoteRepository<SideEffectModel, SideEffectSearchModel>>(create: (_) => SideEffectRemoteRepository(dio, actionMap: actions,),),",
+// Define the remote repositories of Survey Form
+  var remoteRepositoriesOfSurveyForm = [
+    '''if (value == DataModelType.service)
+    RepositoryProvider<
+        RemoteRepository<ServiceModel, ServiceSearchModel>>(
+      create: (_) => ServiceRemoteRepository(
+        dio,
+        actionMap: actions,
+      ),
+    ),
+    if (value == DataModelType.serviceDefinition)
+      RepositoryProvider<
+          RemoteRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionRemoteRepository(
+          dio,
+          actionMap: actions,
+        ),
+      )'''
   ];
 
 // Read the network_manager_provider_wrapper.dart file
@@ -1208,52 +962,94 @@ void _addRepoToNetworkManagerProviderWrapper(
         print('The import statement already exists.');
       }
     }
-  }
 
-  // Normalize the whitespace in the file content and the remote repository of DataModel
-  var normalizedFileContent =
-      networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
+    // Normalize the whitespace in the file content and the remote repository of Survey Form
+    var normalizedFileContent =
+        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
-  for (var repositoryProvider in localRepositories) {
-    var normalizedLocalRepositoryOfDataModel =
-        repositoryProvider.replaceAll(RegExp(r'\s'), '');
+    for (var repositoryProvider in localRepositories) {
+      var normalizedLocalRepositoryOfSurveyForm =
+          repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
-    if (!normalizedFileContent.contains(normalizedLocalRepositoryOfDataModel)) {
-      // Add the local repository provider to the file
-      networkManagerProviderWrapperFileContent =
-          networkManagerProviderWrapperFileContent.replaceFirst(
-              '];', '  $repositoryProvider\n];');
-      print('The local repository provider was added: $repositoryProvider');
-    } else {
-      print('The local repository provider already exists.');
+      if (!normalizedFileContent
+          .contains(normalizedLocalRepositoryOfSurveyForm)) {
+        // Add the local repository provider to the file
+        networkManagerProviderWrapperFileContent =
+            networkManagerProviderWrapperFileContent.replaceFirst(
+                '];', '  $repositoryProvider\n];');
+        print('The local repository provider was added: $repositoryProvider');
+      } else {
+        print('The local repository provider already exists.');
+      }
     }
+
+// Check if the remote repository of Survey Form already exists in the file
+    for (var remoteRepositoryOfSurveyForm in remoteRepositoriesOfSurveyForm) {
+      var normalizedRemoteRepositoryOfSurveyForm =
+          remoteRepositoryOfSurveyForm.replaceAll(RegExp(r'\s'), '');
+
+      if (!normalizedFileContent
+          .contains(normalizedRemoteRepositoryOfSurveyForm)) {
+        // Add the remote repository of Survey Form to the _getRemoteRepositories method
+        var replacementString =
+            networkManagerProviderWrapperFileContent.contains(']);')
+                ? '  $remoteRepositoryOfSurveyForm,\n]);'
+                : '  $remoteRepositoryOfSurveyForm\n]);';
+        networkManagerProviderWrapperFileContent =
+            networkManagerProviderWrapperFileContent.replaceFirst(
+                ']);', replacementString);
+        print(
+            'The remote repository of Survey Form was added: $remoteRepositoryOfSurveyForm');
+      } else {
+        print('The remote repository of Survey Form already exists.');
+      }
+    }
+
+    // Write the updated content back to the file
+    networkManagerProviderWrapperFile
+        .writeAsStringSync(networkManagerProviderWrapperFileContent);
+  }
+}
+
+void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
+  // Define the import statement and delegate for localization
+  var importStatement =
+      "import 'package:survey_form/blocs/app_localization.dart' as surveyForm_localization;";
+  var delegate = '''surveyForm_localization.SurveyFormLocalization.getDelegate(
+  LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+  appConfig.languages!,
+  ),''';
+
+  // Read the localization delegates file
+  var localizationDelegatesFile = File(localizationDelegatesFilePath);
+  var localizationDelegatesFileContent =
+      localizationDelegatesFile.readAsStringSync();
+
+  var normalizedFileContent =
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    localizationDelegatesFileContent =
+        '$importStatement\n$localizationDelegatesFileContent';
+    print('The import statement was added.');
   }
 
-// Check if the remote repository of DataModel already exists in the file
-  for (var remoteRepositoryOfRegistrationDelivery
-      in remoteRepositoriesOfRegistrationDelivery) {
-    var normalizedRemoteRepositoryOfRegistrationDelivery =
-        remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent
-        .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
-      // Add the remote repository of DataModel to the _getRemoteRepositories method
-      var replacementString =
-          networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfRegistrationDelivery\n]);'
-              : '  $remoteRepositoryOfRegistrationDelivery\n]);';
-      networkManagerProviderWrapperFileContent =
-          networkManagerProviderWrapperFileContent.replaceFirst(
-              ']);', replacementString);
-      print(
-          'The remote repository of DataModel was added: $remoteRepositoryOfRegistrationDelivery');
-    } else {
-      print('The remote repository of DataModel already exists.');
+  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
+    var lastDelegateIndex =
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+    if (lastDelegateIndex != -1) {
+      localizationDelegatesFileContent =
+          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
+              '\n  $delegate' +
+              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
+      print('The delegate was added.');
     }
   }
 
   // Write the updated content back to the file
-  networkManagerProviderWrapperFile
-      .writeAsStringSync(networkManagerProviderWrapperFileContent);
+  localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
 }
