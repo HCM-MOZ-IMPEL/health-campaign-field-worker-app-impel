@@ -37,6 +37,7 @@ import '../pages/pages-Bednet/beneficiary/custom_refused_delivery_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/dose_administered_verification_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/consent_household_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/past_delivery_smc.dart';
+import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 
 import '../pages/pages-Bednet/beneficiary_registration/custom_beneficiary_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_house_details_bednet.dart';
@@ -869,10 +870,10 @@ class AppRouter extends _$AppRouter {
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention-head',
                     ),
-                    // AutoRoute(
-                    //   page: EligibilityChecklistViewRoute.page,
-                    //   path: 'eligibility-checklist',
-                    // ),
+                    AutoRoute(
+                      page: EligibilityChecklistViewRoute.page,
+                      path: 'eligibility-checklist',
+                    ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
