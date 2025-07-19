@@ -1,3 +1,5 @@
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
@@ -173,6 +175,7 @@ part 'app_router.gr.dart';
     DashboardRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
