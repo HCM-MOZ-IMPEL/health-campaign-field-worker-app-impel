@@ -1,5 +1,7 @@
 library i18;
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/individual.dart';
+
 const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
@@ -739,6 +741,7 @@ class DeliverIntervention {
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
+  String get individualHeight => 'INDIVIDUAL_HEIGHT_IN_CM';
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
