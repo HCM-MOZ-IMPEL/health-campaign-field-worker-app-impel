@@ -29,6 +29,7 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
+import '../../../utils/utils_smc/utils_smc.dart' show fetchProductVariantSMC;
 
 @RoutePage()
 class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
@@ -275,7 +276,7 @@ class CustomDeliverInterventionSMCPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              ? (fetchProductVariant(
+                              ? (fetchProductVariantSMC(
                                       RegistrationDeliverySingleton()
                                               .selectedProject
                                               ?.additionalDetails
@@ -930,7 +931,7 @@ class CustomDeliverInterventionSMCPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariant(
+          : fetchProductVariantSMC(
                       RegistrationDeliverySingleton()
                           .selectedProject
                           ?.additionalDetails

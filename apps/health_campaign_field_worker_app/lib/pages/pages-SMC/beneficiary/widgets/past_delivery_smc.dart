@@ -13,6 +13,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../../models/entities/project_types.dart';
+import '../../../../utils/utils_smc/utils_smc.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
@@ -50,7 +51,7 @@ Widget buildTableContent(
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
-      fetchProductVariant(item, individualModel, householdModel)
+      fetchProductVariantSMC(item, individualModel, householdModel)
           ?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
@@ -79,11 +80,11 @@ Widget buildTableContent(
           element: {
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(item, individualModel, householdModel)
+            ): fetchProductVariantSMC(item, individualModel, householdModel)
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariant(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantSMC(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
                 : null,
           },
         ),
@@ -91,13 +92,14 @@ Widget buildTableContent(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)
+        fetchProductVariantSMC(item, individualModel, householdModel)
                     ?.productVariants !=
                 null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariant(item, individualModel, householdModel)!
+                  ...fetchProductVariantSMC(
+                          item, individualModel, householdModel)!
                       .productVariants!
                       .map(
                     (e) {
@@ -113,7 +115,7 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(
+                        fetchProductVariantSMC(
                                         item, individualModel, householdModel)
                                     ?.productVariants
                                     ?.indexOf(e) ==
@@ -133,13 +135,13 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height:
-                    ((fetchProductVariant(item, individualModel, householdModel)
-                                        ?.productVariants ??
-                                    [])
-                                .length +
-                            1) *
-                        cellHeight,
+                height: ((fetchProductVariantSMC(
+                                        item, individualModel, householdModel)
+                                    ?.productVariants ??
+                                [])
+                            .length +
+                        1) *
+                    cellHeight,
               )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],
