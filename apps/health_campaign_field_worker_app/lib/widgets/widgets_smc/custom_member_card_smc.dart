@@ -20,7 +20,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 import '../../utils/utils_smc/utils_smc.dart'
-    show checkStatusSMC, isHeadBednetDelivered;
+    show checkStatusSMC, isHeadBednetDelivered, isSMCDelivered;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -276,20 +276,80 @@ class CustomMemberCardSMC extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
+                  isHead
+                      ? isHeadBednetDelivered(tasks)
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: DigitIconButton(
+                                icon: Icons.check_circle,
+                                iconText: localizations.translate(
+                                  i18_local.householdOverView
+                                      .headBednetDeliveredSuccess,
+                                ),
+                                iconSize: 20,
+                                iconTextColor: DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant,
+                                iconColor: DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant,
+                              ),
+                            )
+                          : DigitElevatedButton(
+                              onPressed: (projectBeneficiaries ?? []).isEmpty
+                                  ? null
+                                  : () {
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
+
+                                      bloc.add(
+                                        HouseholdOverviewEvent
+                                            .selectedIndividual(
+                                          individualModel: individual,
+                                        ),
+                                      );
+                                      bloc.add(HouseholdOverviewReloadEvent(
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        projectBeneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                    .beneficiaryType ??
+                                                BeneficiaryType.individual,
+                                      ));
+
+                                      if ((tasks ?? []).isEmpty ||
+                                          isSMCDelivered(tasks)) {
+                                        context.router.push(
+                                            CustomDeliverInterventionHeadRoute());
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
+                                    },
+                              child: Center(
+                                child: Text(
+                                  localizations.translate(
+                                    i18_local.householdOverView
+                                        .headBednetDeliveryAction,
+                                  ),
+                                ),
+                              ),
+                            )
+                      : const Offstage(),
                   (isNotEligible ||
-                          isBeneficiaryRefused ||
-                          isBeneficiaryIneligible ||
-                          isBeneficiaryReferred)
+                              isBeneficiaryRefused ||
+                              isBeneficiaryIneligible ||
+                              isBeneficiaryReferred) &&
+                          checkStatusSMC(tasks, context.selectedCycle)
                       ? const Offstage()
-                      : !isNotEligible && isHead
-                          ? isHeadBednetDelivered(tasks)
+                      : !isNotEligible
+                          ? isSMCDelivered(tasks)
                               ? Align(
                                   alignment: Alignment.centerLeft,
                                   child: DigitIconButton(
                                     icon: Icons.check_circle,
                                     iconText: localizations.translate(
                                       i18_local.householdOverView
-                                          .headBednetDeliveredSuccess,
+                                          .tracomaDeliveredSuccess,
                                     ),
                                     iconSize: 20,
                                     iconTextColor: DigitTheme
@@ -322,9 +382,14 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                     BeneficiaryType.individual,
                                           ));
 
-                                          if ((tasks ?? []).isEmpty) {
+                                          if ((tasks ?? []).isEmpty ||
+                                              isHeadBednetDelivered(tasks)) {
                                             context.router.push(
-                                                CustomDeliverInterventionHeadRoute());
+                                                EligibilityChecklistViewRoute(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              individual: individual,
+                                            ));
                                           } else {
                                             context.router.push(
                                                 BeneficiaryDetailsRoute());
@@ -332,93 +397,13 @@ class CustomMemberCardSMC extends StatelessWidget {
                                         },
                                   child: Center(
                                     child: Text(
-                                      allDosesDelivered(
-                                                tasks,
-                                                context.selectedCycle,
-                                                sideEffects,
-                                                individual,
-                                              ) &&
-                                              !checkStatusSMC(
-                                                tasks,
-                                                context.selectedCycle,
-                                              )
-                                          ? localizations.translate(
-                                              i18.householdOverView
-                                                  .viewDeliveryLabel,
-                                            )
-                                          : localizations.translate(
-                                              i18_local.householdOverView
-                                                  .householdOverViewActionTextSMC,
-                                            ),
+                                      localizations.translate(
+                                        i18_local.householdOverView
+                                            .tracomaDeliveryAction,
+                                      ),
                                     ),
                                   ),
                                 )
-                          : const Offstage(),
-                  (isNotEligible ||
-                              isBeneficiaryRefused ||
-                              isBeneficiaryIneligible ||
-                              isBeneficiaryReferred) &&
-                          checkStatusSMC(tasks, context.selectedCycle)
-                      ? const Offstage()
-                      : !isNotEligible
-                          ? DigitElevatedButton(
-                              onPressed: (projectBeneficiaries ?? []).isEmpty
-                                  ? null
-                                  : () {
-                                      final bloc =
-                                          context.read<HouseholdOverviewBloc>();
-
-                                      bloc.add(
-                                        HouseholdOverviewEvent
-                                            .selectedIndividual(
-                                          individualModel: individual,
-                                        ),
-                                      );
-                                      bloc.add(HouseholdOverviewReloadEvent(
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                    .beneficiaryType ??
-                                                BeneficiaryType.individual,
-                                      ));
-
-                                      if ((tasks ?? []).isEmpty) {
-                                        context.router
-                                            .push(EligibilityChecklistViewRoute(
-                                          projectBeneficiaryClientReferenceId:
-                                              projectBeneficiaryClientReferenceId,
-                                          individual: individual,
-                                        ));
-                                      } else {
-                                        context.router
-                                            .push(BeneficiaryDetailsRoute());
-                                      }
-                                    },
-                              child: Center(
-                                child: Text(
-                                  allDosesDelivered(
-                                            tasks,
-                                            context.selectedCycle,
-                                            sideEffects,
-                                            individual,
-                                          ) &&
-                                          !checkStatusSMC(
-                                            tasks,
-                                            context.selectedCycle,
-                                          )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
-                                      : localizations.translate(
-                                          i18_local.householdOverView
-                                              .householdOverViewActionTextSMC,
-                                        ),
-                                ),
-                              ),
-                            )
                           : const Offstage(),
                 ],
               ),
