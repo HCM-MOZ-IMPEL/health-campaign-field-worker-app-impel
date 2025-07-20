@@ -120,6 +120,8 @@ class Constants {
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
   static const String bednetLabel = 'BEDNET';
+  static const String height = 'height';
+  static const String weight = 'weight';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
