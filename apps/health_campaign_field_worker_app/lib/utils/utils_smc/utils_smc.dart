@@ -557,6 +557,31 @@ bool isHeadBednetDelivered(List<TaskModel>? tasks) {
   });
 }
 
+bool isSMCDelivered(List<TaskModel>? tasks) {
+  if (tasks == null || tasks.isEmpty) return false;
+  return tasks.any((task) {
+    if (task == null) return false;
+    final additionalFields = task.additionalFields?.fields;
+    if (additionalFields == null || additionalFields.isEmpty) return false;
+
+    try {
+      final smcDileveredField = additionalFields.firstWhere(
+        (field) => field != null && field.key == 'smc_delivered',
+        orElse: () => AdditionalField('', null),
+      );
+
+      final fieldValue = smcDileveredField.value;
+      if (fieldValue == null) return false;
+
+      return fieldValue == true ||
+          fieldValue == 'true' ||
+          fieldValue.toString().toLowerCase() == 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+}
+
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
     if (element.syncedDown == false && element.syncedUp == true) {
