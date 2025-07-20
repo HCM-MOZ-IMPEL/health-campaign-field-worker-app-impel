@@ -606,10 +606,13 @@ class HouseholdOverView {
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+  String get tracomaDeliveryAction => 'DELIVER_TRACOMA';
+  String get headBednetDeliveryAction => 'DELIVER_BEDNET';
 
   String get householdOverViewDeliveredIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_SMC';
   String get headBednetDeliveredSuccess => 'HEAD_BEDNET_DELIVERED';
+  String get tracomaDeliveredSuccess => 'TRACOMA_DELIVERED';
   String get householdOverViewNotEligibleIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_SMC';
   String get householdOverViewBeneficiaryReferredLabelSMC =>
