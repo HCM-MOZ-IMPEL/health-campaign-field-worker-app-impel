@@ -856,6 +856,10 @@ class AppRouter extends _$AppRouter {
                     ),
                     AutoRoute(
                       page: DeliverInterventionRoute.page,
+                      path: 'deliver-intervention-head',
+                    ),
+                    AutoRoute(
+                      page: DeliverInterventionRoute.page,
                       path: 'deliver-intervention',
                     ),
                     AutoRoute(
@@ -870,7 +874,7 @@ class AppRouter extends _$AppRouter {
                         page: CustomDeliverInterventionHeadRoute.page,
                         path: 'custom-deliver-intervention-head'),
                     RedirectRoute(
-                      path: 'deliver-intervention',
+                      path: 'deliver-intervention-head',
                       redirectTo: 'custom-deliver-intervention-head',
                     ),
                     AutoRoute(
