@@ -97,9 +97,34 @@ class _CustomBeneficiaryProgressBarBednetState
             );
             List<TaskModel> allTasks =
                 await taskRepository.progressBarSearch(taskSearchQuery);
-            List<TaskModel> results = allTasks
-                .where((task) => isHeadBednetDelivered([task]))
-                .toList();
+            // List<TaskModel> results = allTasks
+            //     .where((task) => isHeadBednetDelivered([task]))
+            //     .toList();
+            List<TaskModel> results = allTasks.where((task) {
+              if (task == null) return false;
+              final additionalFields = task.additionalFields?.fields;
+              if (additionalFields == null || additionalFields.isEmpty) {
+                return false;
+              }
+
+              try {
+                final headBednetField = additionalFields.firstWhereOrNull(
+                  (field) =>
+                      field != null && field.key == Constants.headBednetDeliver,
+                );
+
+                if (headBednetField == null) return false;
+
+                final fieldValue = headBednetField.value;
+                if (fieldValue == null) return false;
+
+                return fieldValue == true ||
+                    fieldValue == Constants.trueString ||
+                    fieldValue.toString().toLowerCase() == Constants.trueString;
+              } catch (e) {
+                return false;
+              }
+            }).toList();
             final groupedEntries = results.groupListsBy(
               (element) => element.projectBeneficiaryClientReferenceId,
             );
