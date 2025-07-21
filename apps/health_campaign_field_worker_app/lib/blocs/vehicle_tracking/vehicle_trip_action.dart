@@ -41,7 +41,7 @@ class VehicleTripActionBloc
     UserActionModel tripActionModel = event.tripAction;
     try {
       tripActionModel = tripActionModel.copyWith(
-          action: vehicleCustomAction(TripActions.end, event.vehicleNo),
+          action: TripActions.end.toValue(),
           auditDetails: tripActionModel.auditDetails?.copyWith(
               lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
               lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
@@ -105,7 +105,8 @@ class VehicleTripActionBloc
     VehicleTripActionEmitter emit,
   ) async {
     List<UserActionModel> vehicleUserActions =
-        await userActionLocalRepository.searchUserAction(event.customAction);
+        await userActionLocalRepository.searchUserAction(
+            action: TripActions.start.toValue(), vehicleNo: event.vehicleNo);
     emit(state.copyWith(
       loading: false,
       tripAction: vehicleUserActions.firstOrNull,
@@ -131,7 +132,7 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   }) = VehicleTripActionEndTripEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required String customAction,
+    required String vehicleNo,
   }) = VehicleTripActionSearchEvent;
 }
 

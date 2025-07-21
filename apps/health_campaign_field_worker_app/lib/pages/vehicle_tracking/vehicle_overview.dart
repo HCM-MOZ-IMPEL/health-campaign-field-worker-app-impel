@@ -59,9 +59,8 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
 
   _searchSelectedVehicleActionModel() {
     final vehicleTripActionBloc = context.read<VehicleTripActionBloc>();
-    vehicleTripActionBloc.add(VehicleTripActionEvent.handleSearch(
-        customAction:
-            vehicleCustomAction(TripActions.start, widget.vehicleNo)));
+    vehicleTripActionBloc
+        .add(VehicleTripActionEvent.handleSearch(vehicleNo: widget.vehicleNo));
   }
 
   VehicleStatusEnum _getVehicleStatus(UserActionModel? userActionModel) {

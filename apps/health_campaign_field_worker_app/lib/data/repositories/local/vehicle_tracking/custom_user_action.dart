@@ -54,7 +54,8 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
   @override
   DataModelType get type => DataModelType.userAction;
 
-  FutureOr<List<UserActionModel>> searchUserAction(String? action) {
+  FutureOr<List<UserActionModel>> searchUserAction(
+      {String? action, String? vehicleNo}) {
     return retryLocalCallOperation<List<UserActionModel>>(() async {
       final selectQuery = sql.select(sql.userAction).join(
         [
@@ -71,6 +72,10 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
                 [
                   if (action != null)
                     sql.userAction.action.isIn([action])
+                  else
+                    const Constant(true),
+                  if (vehicleNo != null)
+                    sql.userAction.beneficiaryTag.isIn([vehicleNo])
                   else
                     const Constant(true),
                   // if (query.isPermanent != null)
@@ -104,6 +109,8 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
             projectId: userActionModel.projectId,
             boundaryCode: userActionModel.boundaryCode,
             action: userActionModel.action,
+            beneficiaryTag: userActionModel.beneficiaryTag,
+            resourceTag: userActionModel.resourceTag,
             additionalFields: additionalField == null
                 ? null
                 : UserActionAdditionalFields(
