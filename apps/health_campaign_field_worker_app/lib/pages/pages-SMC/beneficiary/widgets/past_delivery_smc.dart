@@ -10,6 +10,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../../models/entities/project_types.dart';
@@ -53,6 +54,10 @@ Widget buildTableContent(
   final productVariants =
       fetchProductVariantSMC(item, individualModel, householdModel)
           ?.productVariants;
+  final condtions =
+      fetchProductVariantSMC(item, individualModel, householdModel)
+          ?.condition
+          ?.split('and');
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -78,14 +83,25 @@ Widget buildTableContent(
           padding: const EdgeInsets.only(bottom: kPadding / 2),
           fraction: 2.5,
           element: {
-            localizations.translate(
-              i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariantSMC(item, individualModel, householdModel)
-                        ?.productVariants
-                        ?.firstOrNull !=
-                    null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantSMC(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
-                : null,
+            // localizations.translate(
+            //   i18_local.beneficiaryDetails.beneficiaryHeight,
+            // ): fetchProductVariantSMC(item, individualModel, householdModel)
+            //             ?.productVariants
+            //             ?.firstOrNull !=
+            //         null
+            //     ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantSMC(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
+            //     : null,
+            if ((condtions?.length ?? 0) > 2)
+              localizations.translate(
+                condtions![condtions.length - 1].contains(Constants.height)
+                    ? i18_local.beneficiaryDetails.beneficiaryHeight
+                    : i18_local.beneficiaryDetails.beneficiaryHeight,
+                //[TODO: Condition need to be handled in generic way,]
+              ): '${condtions.length > 3 ? convertToRange(condtions[2], condtions[3]) : condtions[2].replaceAll(Constants.height, "").replaceAll(Constants.weight, "")}  ${localizations.translate(
+                condtions[condtions.length - 1].contains(Constants.height)
+                    ? i18_local.beneficiaryDetails.beneficiaryHeightCm
+                    : i18_local.beneficiaryDetails.beneficiaryHeightCm,
+              )}'
           },
         ),
         const Divider(
