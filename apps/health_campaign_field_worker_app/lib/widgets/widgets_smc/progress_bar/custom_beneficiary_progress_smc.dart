@@ -11,6 +11,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../data/repositories/custom_task.dart';
+import '../../../utils/constants.dart';
 import '../../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBarSMC extends StatefulWidget {
@@ -88,8 +89,35 @@ class _CustomBeneficiaryProgressBarSMCState
             plannedStartDate: gte.millisecondsSinceEpoch,
             projectId: projectId,
           );
-          List<TaskModel> results =
+          // List<TaskModel> results =
+          //     await taskRepository.progressBarSearch(taskSearchQuery);
+          List<TaskModel> allTasks =
               await taskRepository.progressBarSearch(taskSearchQuery);
+          // List<TaskModel> results = allTasks
+          //     .where((task) => isHeadBednetDelivered([task]))
+          //     .toList();
+          List<TaskModel> results = allTasks.where((task) {
+            if (task == null) return false;
+            final additionalFields = task.additionalFields?.fields;
+            if (additionalFields == null || additionalFields.isEmpty)
+              return false;
+
+            try {
+              final smcField = additionalFields.firstWhereOrNull(
+                (field) => field != null && field.key == Constants.smcDeliver,
+              );
+
+              if (smcField == null) return false;
+              final fieldValue = smcField.value;
+              if (fieldValue == null) return false;
+
+              return fieldValue == true ||
+                  fieldValue == Constants.trueString ||
+                  fieldValue.toString().toLowerCase() == Constants.trueString;
+            } catch (e) {
+              return false;
+            }
+          }).toList();
           final groupedEntries = results.groupListsBy(
             (element) => element.projectBeneficiaryClientReferenceId,
           );
