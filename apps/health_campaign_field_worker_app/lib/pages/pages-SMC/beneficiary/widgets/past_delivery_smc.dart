@@ -83,25 +83,10 @@ Widget buildTableContent(
           padding: const EdgeInsets.only(bottom: kPadding / 2),
           fraction: 2.5,
           element: {
-            // localizations.translate(
-            //   i18_local.beneficiaryDetails.beneficiaryHeight,
-            // ): fetchProductVariantSMC(item, individualModel, householdModel)
-            //             ?.productVariants
-            //             ?.firstOrNull !=
-            //         null
-            //     ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantSMC(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
-            //     : null,
-            if ((condtions?.length ?? 0) > 2)
+            if ((condtions?.length ?? 0) >= 2)
               localizations.translate(
-                condtions![condtions.length - 1].contains(Constants.height)
-                    ? i18_local.beneficiaryDetails.beneficiaryHeight
-                    : i18_local.beneficiaryDetails.beneficiaryHeight,
-                //[TODO: Condition need to be handled in generic way,]
-              ): '${condtions.length > 3 ? convertToRange(condtions[2], condtions[3]) : condtions[2].replaceAll(Constants.height, "").replaceAll(Constants.weight, "")}  ${localizations.translate(
-                condtions[condtions.length - 1].contains(Constants.height)
-                    ? i18_local.beneficiaryDetails.beneficiaryHeightCm
-                    : i18_local.beneficiaryDetails.beneficiaryHeightCm,
-              )}'
+                i18_local.beneficiaryDetails.beneficiaryHeight,
+              ): '${convertToRange(condtions)} ${localizations.translate(i18_local.beneficiaryDetails.beneficiaryHeightCm)}'
           },
         ),
         const Divider(
