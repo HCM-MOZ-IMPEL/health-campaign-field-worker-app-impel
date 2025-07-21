@@ -70,7 +70,7 @@ class SearchVehiclesBloc
     SearchVehiclesClearEvent event,
     SearchVehiclesEmitter emit,
   ) async {
-    emit(state.copyWith(vehicles: []));
+    emit(state.copyWith(vehicles: [], loading: false));
   }
 }
 
@@ -106,6 +106,6 @@ class SearchVehiclesState with _$SearchVehiclesState {
 
     if (searchQuery?.isEmpty ?? true && tag == null) return false;
 
-    return true;
+    return vehicles.isEmpty;
   }
 }

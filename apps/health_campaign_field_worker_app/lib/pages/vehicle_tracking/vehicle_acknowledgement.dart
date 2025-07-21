@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/vehicle_tracking/search_vehicle_bloc_common_wrapper.dart';
 import '../../router/app_router.dart';
 import '../../widgets/localized.dart';
 
@@ -32,12 +34,15 @@ class VehicleAcknowledgementPageState
             )),
             DigitElevatedButton(
               child: Text(localizations
-                  .translate(i18_local.acknowledgementSuccess.goToHome)),
+                  .translate(i18_local.acknowledgementSuccess.actionLabelText)),
               onPressed: () {
+                final vehicleSearchbloc =
+                    context.read<SearchVehicleBlocWrapper>();
+                vehicleSearchbloc.clearEvent();
                 context.router.popUntil(
                   (route) => route.settings.name == VehicleSearchRoute.name,
                 );
-                context.pushRoute(VehicleSearchRoute());
+                // context.pushRoute(VehicleSearchRoute());
               },
             ),
           ],

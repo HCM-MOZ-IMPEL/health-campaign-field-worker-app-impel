@@ -149,7 +149,8 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                         ),
                         const SizedBox(height: kPadding * 2),
                         if (searchVehiclesState.resultsNotFound &&
-                            !searchVehiclesState.loading)
+                            !searchVehiclesState.loading &&
+                            searchController.text.length > 2)
                           DigitInfoCard(
                             description: localizations.translate(
                               i18.searchBeneficiary.beneficiaryInfoDescription,
