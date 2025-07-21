@@ -25,6 +25,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
 import 'widgets/past_delivery_smc.dart';
 
@@ -73,11 +74,20 @@ class CustomBeneficiaryDetailsSMCPageState
                       .toList();
 
           // Extracting task data related to the selected project beneficiary
-          final taskData = state.householdMemberWrapper.tasks
-              ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary?.first?.clientReferenceId)
-              .toList();
+          // final taskData = state.householdMemberWrapper.tasks
+          //     ?.where((element) =>
+          //         element.projectBeneficiaryClientReferenceId ==
+          //         projectBeneficiary?.first?.clientReferenceId)
+          //     .toList();
+          final taskData = (() {
+            final data = state.householdMemberWrapper.tasks
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first?.clientReferenceId)
+                .toList();
+
+            return isHeadBednetDelivered(data) ? null : data;
+          })();
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
