@@ -11,6 +11,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../../../data/repositories/custom_project_beneficairy.dart';
 import '../../../data/repositories/custom_task.dart';
 import '../../../utils/extensions/extensions.dart';
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBarBednet extends StatefulWidget {
@@ -94,8 +95,11 @@ class _CustomBeneficiaryProgressBarBednetState
               plannedStartDate: gte.millisecondsSinceEpoch,
               projectId: projectId,
             );
-            List<TaskModel> results =
+            List<TaskModel> allTasks =
                 await taskRepository.progressBarSearch(taskSearchQuery);
+            List<TaskModel> results = allTasks
+                .where((task) => isHeadBednetDelivered([task]))
+                .toList();
             final groupedEntries = results.groupListsBy(
               (element) => element.projectBeneficiaryClientReferenceId,
             );
@@ -109,52 +113,51 @@ class _CustomBeneficiaryProgressBarBednetState
           }
         },
       );
-    }
-    //  else {
-    //   projectBeneficairyRepository.listenToChanges(
-    //     query: ProjectBeneficiarySearchModel(
-    //       projectId: [projectId ?? ''],
-    //       beneficiaryRegistrationDateLte: lte,
-    //       beneficiaryRegistrationDateGte: gte,
-    //     ),
-    //     listener: (data) async {
-    //       if (mounted) {
-    //         final now = DateTime.now();
-    //         final gte = DateTime(
-    //           now.year,
-    //           now.month,
-    //           now.day,
-    //         );
-    //         final lte = DateTime(
-    //           now.year,
-    //           now.month,
-    //           now.day,
-    //           23,
-    //           59,
-    //           59,
-    //           999,
-    //         );
-    //         ProjectBeneficiarySearchModel projectBeneficiarySearchModel =
-    //             ProjectBeneficiarySearchModel(
-    //           beneficiaryRegistrationDateLte: lte,
-    //           beneficiaryRegistrationDateGte: gte,
-    //           projectId: [projectId ?? ''],
-    //         );
-    //         List<ProjectBeneficiaryModel> results =
-    //             await projectBeneficairyRepository.progressBarSearch(
-    //                 projectBeneficiarySearchModel, loggedInUserUuid);
+    } else {
+      projectBeneficairyRepository.listenToChanges(
+        query: ProjectBeneficiarySearchModel(
+          projectId: [projectId ?? ''],
+          beneficiaryRegistrationDateLte: lte,
+          beneficiaryRegistrationDateGte: gte,
+        ),
+        listener: (data) async {
+          if (mounted) {
+            final now = DateTime.now();
+            final gte = DateTime(
+              now.year,
+              now.month,
+              now.day,
+            );
+            final lte = DateTime(
+              now.year,
+              now.month,
+              now.day,
+              23,
+              59,
+              59,
+              999,
+            );
+            ProjectBeneficiarySearchModel projectBeneficiarySearchModel =
+                ProjectBeneficiarySearchModel(
+              beneficiaryRegistrationDateLte: lte,
+              beneficiaryRegistrationDateGte: gte,
+              projectId: [projectId ?? ''],
+            );
+            List<ProjectBeneficiaryModel> results =
+                await projectBeneficairyRepository.progressBarSearch(
+                    projectBeneficiarySearchModel, loggedInUserUuid);
 
-    //         if (mounted) {
-    //           setState(() {
-    //             if (mounted) {
-    //               current = results.length;
-    //             }
-    //           });
-    //         }
-    //       }
-    //     },
-    //   );
-    // }
+            if (mounted) {
+              setState(() {
+                if (mounted) {
+                  current = results.length;
+                }
+              });
+            }
+          }
+        },
+      );
+    }
 
     super.didChangeDependencies();
   }
