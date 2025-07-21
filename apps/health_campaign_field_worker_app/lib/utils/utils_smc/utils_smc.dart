@@ -751,66 +751,58 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
   return null;
 }
 
-String convertToRange(String? condition1, String? condition2) {
-  // Function to extract the number from a condition
+String convertToRange(List<String>? conditions) {
+  if (conditions == null || conditions.isEmpty) {
+    return '';
+  }
+
   double extractNumber(String? condition, double defaultValue) {
     if (condition == null || condition.isEmpty) {
-      return defaultValue; // Return default if condition is null or empty
+      return defaultValue;
     }
-    final RegExp regExp =
-        RegExp(r'\d+(\.\d+)?'); // Support integers and decimals
+    final RegExp regExp = RegExp(r'\d+(\.\d+)?');
     final match = regExp.firstMatch(condition);
-
     return match != null ? double.parse(match.group(0)!) : defaultValue;
   }
 
-  // Determine the adjustment factors based on the condition type
-  double adjustNumber(String condition, double number, bool isNum1) {
-    if (condition.contains("age") || condition.contains("height")) {
-      return isNum1 ? number + 1 : number - 1; // Adjust for age and height
-    } else if (condition.contains("weight")) {
-      return isNum1 ? number + 0.1 : number - 0.1; // Adjust decimals for weight
+  if (conditions.length == 2) {
+    String firstCondition = conditions[0];
+    String secondCondition = conditions[1];
+
+    if (firstCondition.contains('age') &&
+        secondCondition.contains('age') &&
+        firstCondition.contains('<') &&
+        secondCondition.contains('<')) {
+      double ageLimit = extractNumber(secondCondition, 6);
+      double heightLimit = (ageLimit * 8) - 0;
+      return "0-${heightLimit.toInt()}";
     }
 
-    return number; // No adjustment for other conditions
-  }
-
-  // Format the number for weight to preserve `.0`
-  String formatNumberForWeight(double number) {
-    return number.toStringAsFixed(1); // Keep one decimal place for weight
-  }
-
-  // Format the number for other conditions
-  String formatNumber(double number) {
-    if (number == number.toInt()) {
-      return number.toInt().toString(); // Return as integer if no decimal part
+    if (secondCondition.contains('height') && secondCondition.contains('>')) {
+      double minHeight = extractNumber(secondCondition, 138);
+      return ">${minHeight.toInt()}";
     }
-
-    return number.toString(); // Return as is for decimals
   }
 
-  // Extract numbers from conditions
+  String? condition1, condition2;
+
+  if (conditions.length == 3) {
+    condition1 = conditions[1];
+    condition2 = conditions[2];
+  } else if (conditions.length >= 4) {
+    condition1 = conditions[2];
+    condition2 = conditions[3];
+  }
+
+  if (condition1 == null || condition2 == null) {
+    return '';
+  }
+
   double num1 = extractNumber(condition1, 0);
-  double num2 = extractNumber(condition2, 0);
-
-  // Apply adjustments based on the condition type
-  if (condition1 != null) {
-    num1 = adjustNumber(condition1, num1, true);
-  }
-  if (condition2 != null) {
-    num2 = adjustNumber(condition2, num2, false);
-  }
-
-  // Sort the numbers to ensure the smaller number is on the left
+  double num2 = extractNumber(condition2, 100);
   List<double> numbers = [num1, num2]..sort();
 
-  // Format the output based on the condition type
-  if ((condition1?.contains("weight") ?? false) ||
-      (condition2?.contains("weight") ?? false)) {
-    return "${formatNumberForWeight(numbers[0])}-${formatNumberForWeight(numbers[1])}";
-  }
-
-  return "${formatNumber(numbers[0])}-${formatNumber(numbers[1])}";
+  return "${numbers[0].toInt()}-${numbers[1].toInt()}";
 }
 
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
