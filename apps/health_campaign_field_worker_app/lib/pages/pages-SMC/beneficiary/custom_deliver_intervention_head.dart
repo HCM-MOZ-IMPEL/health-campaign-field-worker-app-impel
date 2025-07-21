@@ -287,7 +287,6 @@ class CustomDeliverInterventionHeadPageState
                                                                   barcodes =
                                                                   scannerState
                                                                       .barCodes;
-
                                                               List<AdditionalField>
                                                                   codeAdditionalFields =
                                                                   [];
@@ -687,7 +686,7 @@ class CustomDeliverInterventionHeadPageState
                                                                             isEditEnabled:
                                                                                 true,
                                                                             manualEnabled:
-                                                                                true,
+                                                                                false,
                                                                           ),
                                                                           settings:
                                                                               const RouteSettings(name: '/qr-scanner'),
@@ -730,7 +729,7 @@ class CustomDeliverInterventionHeadPageState
                                                                       isEditEnabled:
                                                                           true,
                                                                       manualEnabled:
-                                                                          true,
+                                                                          false,
                                                                     ),
                                                                     settings:
                                                                         const RouteSettings(
