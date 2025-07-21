@@ -729,6 +729,8 @@ class DeliverIntervention {
 
   String get deliverInteventionAdministeredLabel =>
       'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
+  String get deliverInterventionTracomaLabel =>
+      'DELIVER_INTERVENTION_TRACOMA_LABEL';
 
   String get deliverInterventionResourceLabelSMC =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL_SMC';
@@ -748,6 +750,8 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+  String get quantityDistributedLabelTracoma =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_TRACOMA';
 
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
@@ -1277,6 +1281,7 @@ class BeneficiaryDetails {
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get beneficiaryHeight => 'BENEFICIARY_HEIGHT';
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
