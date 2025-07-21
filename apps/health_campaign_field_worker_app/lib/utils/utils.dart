@@ -676,10 +676,6 @@ String? getAdditionalFieldFromVehicleActionModel(
   return additionalField.value.toString();
 }
 
-String vehicleCustomAction(TripActions action, String vehicleNo) {
-  return "$vehicleNo||${action.toValue()}";
-}
-
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   if (selectedHouseStructureTypes.contains("METAL") ||
       selectedHouseStructureTypes.contains("GLASS") ||

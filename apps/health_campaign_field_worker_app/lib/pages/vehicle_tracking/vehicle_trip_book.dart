@@ -363,7 +363,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         tenantId: RegistrationDeliverySingleton().tenantId,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
-        action: vehicleCustomAction(TripActions.start, vehicleNo),
+        action: TripActions.start.toValue(),
+        beneficiaryTag: vehicleNo,
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
           AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)

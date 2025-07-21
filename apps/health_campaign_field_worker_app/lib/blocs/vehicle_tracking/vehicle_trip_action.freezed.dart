@@ -28,7 +28,7 @@ mixin _$VehicleTripActionEvent {
             UserActionModel tripAction,
             bool navigateToSummary)
         handleEndTip,
-    required TResult Function(String customAction) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,7 +43,7 @@ mixin _$VehicleTripActionEvent {
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(String customAction)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,7 +58,7 @@ mixin _$VehicleTripActionEvent {
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult Function(String customAction)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -224,7 +224,7 @@ class _$VehicleTripActionStartTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)
         handleEndTip,
-    required TResult Function(String customAction) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
     return handleStartTip(
         isEditing, boundaryModel, tripBookAction, navigateToSummary);
@@ -243,7 +243,7 @@ class _$VehicleTripActionStartTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(String customAction)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
     return handleStartTip?.call(
         isEditing, boundaryModel, tripBookAction, navigateToSummary);
@@ -262,7 +262,7 @@ class _$VehicleTripActionStartTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult Function(String customAction)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleStartTip != null) {
@@ -455,7 +455,7 @@ class _$VehicleTripActionEndTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)
         handleEndTip,
-    required TResult Function(String customAction) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
     return handleEndTip(
         isEditing, boundaryModel, vehicleNo, tripAction, navigateToSummary);
@@ -474,7 +474,7 @@ class _$VehicleTripActionEndTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(String customAction)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
     return handleEndTip?.call(
         isEditing, boundaryModel, vehicleNo, tripAction, navigateToSummary);
@@ -493,7 +493,7 @@ class _$VehicleTripActionEndTripEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult Function(String customAction)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleEndTip != null) {
@@ -565,7 +565,7 @@ abstract class _$$VehicleTripActionSearchEventImplCopyWith<$Res> {
           $Res Function(_$VehicleTripActionSearchEventImpl) then) =
       __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String customAction});
+  $Res call({String vehicleNo});
 }
 
 /// @nodoc
@@ -581,12 +581,12 @@ class __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? customAction = null,
+    Object? vehicleNo = null,
   }) {
     return _then(_$VehicleTripActionSearchEventImpl(
-      customAction: null == customAction
-          ? _value.customAction
-          : customAction // ignore: cast_nullable_to_non_nullable
+      vehicleNo: null == vehicleNo
+          ? _value.vehicleNo
+          : vehicleNo // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -596,14 +596,14 @@ class __$$VehicleTripActionSearchEventImplCopyWithImpl<$Res>
 
 class _$VehicleTripActionSearchEventImpl
     implements VehicleTripActionSearchEvent {
-  const _$VehicleTripActionSearchEventImpl({required this.customAction});
+  const _$VehicleTripActionSearchEventImpl({required this.vehicleNo});
 
   @override
-  final String customAction;
+  final String vehicleNo;
 
   @override
   String toString() {
-    return 'VehicleTripActionEvent.handleSearch(customAction: $customAction)';
+    return 'VehicleTripActionEvent.handleSearch(vehicleNo: $vehicleNo)';
   }
 
   @override
@@ -611,12 +611,12 @@ class _$VehicleTripActionSearchEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VehicleTripActionSearchEventImpl &&
-            (identical(other.customAction, customAction) ||
-                other.customAction == customAction));
+            (identical(other.vehicleNo, vehicleNo) ||
+                other.vehicleNo == vehicleNo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, customAction);
+  int get hashCode => Object.hash(runtimeType, vehicleNo);
 
   @JsonKey(ignore: true)
   @override
@@ -639,9 +639,9 @@ class _$VehicleTripActionSearchEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)
         handleEndTip,
-    required TResult Function(String customAction) handleSearch,
+    required TResult Function(String vehicleNo) handleSearch,
   }) {
-    return handleSearch(customAction);
+    return handleSearch(vehicleNo);
   }
 
   @override
@@ -657,9 +657,9 @@ class _$VehicleTripActionSearchEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult? Function(String customAction)? handleSearch,
+    TResult? Function(String vehicleNo)? handleSearch,
   }) {
-    return handleSearch?.call(customAction);
+    return handleSearch?.call(vehicleNo);
   }
 
   @override
@@ -675,11 +675,11 @@ class _$VehicleTripActionSearchEventImpl
             UserActionModel tripAction,
             bool navigateToSummary)?
         handleEndTip,
-    TResult Function(String customAction)? handleSearch,
+    TResult Function(String vehicleNo)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
-      return handleSearch(customAction);
+      return handleSearch(vehicleNo);
     }
     return orElse();
   }
@@ -722,10 +722,9 @@ class _$VehicleTripActionSearchEventImpl
 
 abstract class VehicleTripActionSearchEvent implements VehicleTripActionEvent {
   const factory VehicleTripActionSearchEvent(
-          {required final String customAction}) =
-      _$VehicleTripActionSearchEventImpl;
+      {required final String vehicleNo}) = _$VehicleTripActionSearchEventImpl;
 
-  String get customAction;
+  String get vehicleNo;
   @JsonKey(ignore: true)
   _$$VehicleTripActionSearchEventImplCopyWith<
           _$VehicleTripActionSearchEventImpl>
