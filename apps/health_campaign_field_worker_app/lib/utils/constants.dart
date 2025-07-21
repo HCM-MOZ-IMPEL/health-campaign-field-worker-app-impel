@@ -147,6 +147,9 @@ class Constants {
   static const String redVAS = "Red VAS";
   static const int apiCallLimit = 1000;
   static const String isSMCDelivered = 'smc_delivered';
+  static const String headBednetDeliver = 'head_bednet_delivery';
+  static const String trueString = 'true';
+  static const String smcDeliver = 'smc_delivered';
 
   static const String bednetSKU = "Redes Mosquiteiras";
 
