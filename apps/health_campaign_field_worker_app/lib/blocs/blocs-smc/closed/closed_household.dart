@@ -98,6 +98,7 @@ class ClosedHouseholdBloc
         tenantId: event.tenantId.toString(),
         longitude: event.longitude,
         latitude: event.latitude,
+        householdType: RegistrationDeliverySingleton().householdType,
         clientAuditDetails: ClientAuditDetails(
           createdBy: event.loggedInUserUuid!,
           createdTime: DateTime.now().millisecondsSinceEpoch,
@@ -147,6 +148,7 @@ class ClosedHouseholdBloc
         ),
       );
       var identifier = IdentifierModel(
+        individualClientReferenceId: individual.clientReferenceId,
         clientReferenceId: individual.clientReferenceId,
         tenantId: event.tenantId,
         rowVersion: 1,

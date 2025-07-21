@@ -355,6 +355,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabelSMC,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
