@@ -1084,10 +1084,7 @@ class CustomDeliverInterventionHeadPageState
       _quantityDistributedKey: FormArray<int>([
         ..._controllers.mapIndexed(
           (i, e) => FormControl<int>(
-            value: RegistrationDeliverySingleton().beneficiaryType !=
-                    BeneficiaryType.individual
-                ? bednetCount
-                : 0,
+            value: bednetCount > 0 ? bednetCount : 0,
             validators: [Validators.min(1)],
           ),
         ),
