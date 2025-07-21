@@ -1282,6 +1282,7 @@ class BeneficiaryDetails {
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
   String get beneficiaryHeight => 'BENEFICIARY_HEIGHT';
+  String get beneficiaryHeightCm => 'cm';
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
