@@ -62,127 +62,173 @@ class _CustomBeneficiaryProgressBarBednetState
       999,
     );
 
-    if (context.isDistributor) {
-      taskRepository.listenToChanges(
-        query: TaskSearchModel(
-          status: Status.administeredSuccess.toValue(),
-          projectId: projectId,
-          createdBy: loggedInUserUuid,
-          plannedEndDate: lte.millisecondsSinceEpoch,
-          plannedStartDate: gte.millisecondsSinceEpoch,
-        ),
-        listener: (taskData) async {
-          if (mounted) {
-            final now = DateTime.now();
-            final gte = DateTime(
-              now.year,
-              now.month,
-              now.day,
-            );
-            final lte = DateTime(
-              now.year,
-              now.month,
-              now.day,
-              23,
-              59,
-              59,
-              999,
-            );
-            TaskSearchModel taskSearchQuery = TaskSearchModel(
-              status: Status.administeredSuccess.toValue(),
-              createdBy: loggedInUserUuid,
-              plannedEndDate: lte.millisecondsSinceEpoch,
-              plannedStartDate: gte.millisecondsSinceEpoch,
-              projectId: projectId,
-            );
-            List<TaskModel> allTasks =
-                await taskRepository.progressBarSearch(taskSearchQuery);
-            // List<TaskModel> results = allTasks
-            //     .where((task) => isHeadBednetDelivered([task]))
-            //     .toList();
-            List<TaskModel> results = allTasks.where((task) {
-              if (task == null) return false;
-              final additionalFields = task.additionalFields?.fields;
-              if (additionalFields == null || additionalFields.isEmpty) {
-                return false;
-              }
-
-              try {
-                final headBednetField = additionalFields.firstWhereOrNull(
-                  (field) =>
-                      field != null && field.key == Constants.headBednetDeliver,
-                );
-
-                if (headBednetField == null) return false;
-
-                final fieldValue = headBednetField.value;
-                if (fieldValue == null) return false;
-
-                return fieldValue == true ||
-                    fieldValue == Constants.trueString ||
-                    fieldValue.toString().toLowerCase() == Constants.trueString;
-              } catch (e) {
-                return false;
-              }
-            }).toList();
-            final groupedEntries = results.groupListsBy(
-              (element) => element.projectBeneficiaryClientReferenceId,
-            );
-            if (mounted) {
-              setState(() {
-                if (mounted) {
-                  current = groupedEntries.entries.length;
-                }
-              });
+    // if (context.isDistributor) {
+    taskRepository.listenToChanges(
+      query: TaskSearchModel(
+        status: Status.administeredSuccess.toValue(),
+        projectId: projectId,
+        createdBy: loggedInUserUuid,
+        plannedEndDate: lte.millisecondsSinceEpoch,
+        plannedStartDate: gte.millisecondsSinceEpoch,
+      ),
+      listener: (taskData) async {
+        if (mounted) {
+          final now = DateTime.now();
+          final gte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+          );
+          final lte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            23,
+            59,
+            59,
+            999,
+          );
+          TaskSearchModel taskSearchQuery = TaskSearchModel(
+            status: Status.administeredSuccess.toValue(),
+            createdBy: loggedInUserUuid,
+            plannedEndDate: lte.millisecondsSinceEpoch,
+            plannedStartDate: gte.millisecondsSinceEpoch,
+            projectId: projectId,
+          );
+          List<TaskModel> allTasks =
+              await taskRepository.progressBarSearch(taskSearchQuery);
+          // List<TaskModel> results = allTasks
+          //     .where((task) => isHeadBednetDelivered([task]))
+          //     .toList();
+          List<TaskModel> results = allTasks.where((task) {
+            if (task == null) return false;
+            final additionalFields = task.additionalFields?.fields;
+            if (additionalFields == null || additionalFields.isEmpty) {
+              return false;
             }
-          }
-        },
-      );
-    } else {
-      projectBeneficairyRepository.listenToChanges(
-        query: ProjectBeneficiarySearchModel(
-          projectId: [projectId ?? ''],
-          beneficiaryRegistrationDateLte: lte,
-          beneficiaryRegistrationDateGte: gte,
-        ),
-        listener: (data) async {
-          if (mounted) {
-            final now = DateTime.now();
-            final gte = DateTime(
-              now.year,
-              now.month,
-              now.day,
-            );
-            final lte = DateTime(
-              now.year,
-              now.month,
-              now.day,
-              23,
-              59,
-              59,
-              999,
-            );
-            ProjectBeneficiarySearchModel projectBeneficiarySearchModel =
-                ProjectBeneficiarySearchModel(
-              beneficiaryRegistrationDateLte: lte,
-              beneficiaryRegistrationDateGte: gte,
-              projectId: [projectId ?? ''],
-            );
-            List<ProjectBeneficiaryModel> results =
-                await projectBeneficairyRepository.progressBarSearch(
-                    projectBeneficiarySearchModel, loggedInUserUuid);
 
-            if (mounted) {
-              setState(() {
-                if (mounted) {
-                  current = results.length;
-                }
-              });
+            try {
+              final headBednetField = additionalFields.firstWhereOrNull(
+                (field) =>
+                    field != null && field.key == Constants.headBednetDeliver,
+              );
+
+              if (headBednetField == null) return false;
+
+              final fieldValue = headBednetField.value;
+              if (fieldValue == null) return false;
+
+              return fieldValue == true ||
+                  fieldValue == Constants.trueString ||
+                  fieldValue.toString().toLowerCase() == Constants.trueString;
+            } catch (e) {
+              return false;
             }
+          }).toList();
+          final groupedEntries = results.groupListsBy(
+            (element) => element.projectBeneficiaryClientReferenceId,
+          );
+          if (mounted) {
+            setState(() {
+              if (mounted) {
+                current = groupedEntries.entries.length;
+              }
+            });
           }
-        },
-      );
-    }
+        }
+      },
+    );
+    // }
+    // else {
+    //   projectBeneficairyRepository.listenToChanges(
+    //     query: ProjectBeneficiarySearchModel(
+    //       projectId: [projectId ?? ''],
+    //       beneficiaryRegistrationDateLte: lte,
+    //       beneficiaryRegistrationDateGte: gte,
+    //     ),
+    //     listener: (data) async {
+    //       if (mounted) {
+    //         final now = DateTime.now();
+    //         final gte = DateTime(
+    //           now.year,
+    //           now.month,
+    //           now.day,
+    //         );
+    //         final lte = DateTime(
+    //           now.year,
+    //           now.month,
+    //           now.day,
+    //           23,
+    //           59,
+    //           59,
+    //           999,
+    //         );
+    //         ProjectBeneficiarySearchModel projectBeneficiarySearchModel =
+    //             ProjectBeneficiarySearchModel(
+    //           beneficiaryRegistrationDateLte: lte,
+    //           beneficiaryRegistrationDateGte: gte,
+    //           projectId: [projectId ?? ''],
+    //         );
+    //         List<ProjectBeneficiaryModel> results =
+    //             await projectBeneficairyRepository.progressBarSearch(
+    //                 projectBeneficiarySearchModel, loggedInUserUuid);
+
+    //         if (mounted) {
+    //           setState(() {
+    //             if (mounted) {
+    //               current = results.length;
+    //             }
+    //           });
+    //         }
+    //       }
+    //     },
+    //   );
+    // }
+    // else {
+    //   projectBeneficairyRepository.listenToChanges(
+    //     query: ProjectBeneficiarySearchModel(
+    //       projectId: [projectId ?? ''],
+    //       beneficiaryRegistrationDateLte: lte,
+    //       beneficiaryRegistrationDateGte: gte,
+    //     ),
+    //     listener: (data) async {
+    //       if (mounted) {
+    //         final now = DateTime.now();
+    //         final gte = DateTime(
+    //           now.year,
+    //           now.month,
+    //           now.day,
+    //         );
+    //         final lte = DateTime(
+    //           now.year,
+    //           now.month,
+    //           now.day,
+    //           23,
+    //           59,
+    //           59,
+    //           999,
+    //         );
+    //         ProjectBeneficiarySearchModel projectBeneficiarySearchModel =
+    //             ProjectBeneficiarySearchModel(
+    //           beneficiaryRegistrationDateLte: lte,
+    //           beneficiaryRegistrationDateGte: gte,
+    //           projectId: [projectId ?? ''],
+    //         );
+    //         List<ProjectBeneficiaryModel> results =
+    //             await projectBeneficairyRepository.progressBarSearch(
+    //                 projectBeneficiarySearchModel, loggedInUserUuid);
+
+    //         if (mounted) {
+    //           setState(() {
+    //             if (mounted) {
+    //               current = results.length;
+    //             }
+    //           });
+    //         }
+    //       }
+    //     },
+    //   );
+    // }
 
     super.didChangeDependencies();
   }
