@@ -731,7 +731,9 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
   String get deliverInterventionTracomaLabel =>
       'DELIVER_INTERVENTION_TRACOMA_LABEL';
-
+  String get mobilityControlLabel => 'MOBILITY_CONTROL_ASSESSMENT_LABEL';
+  String get mobilityControlQuestion => 'MOBILITY_CONTROL_QUESTION';
+  String get noCheckboxSelect => 'NO_CHECKBOX_SELECT_MESSAGE';
   String get deliverInterventionResourceLabelSMC =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL_SMC';
 
