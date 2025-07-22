@@ -751,6 +751,25 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
   return null;
 }
 
+bool checkEligibleBasedOnAgeAndHeight(
+    DeliverInterventionState deliverInterventionState,
+    ProjectTypeModel? projectType,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel) {
+  final currentCycle =
+      deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
+  final currentDose =
+      deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
+  final item =
+      projectType?.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+  final conditions =
+      fetchProductVariantSMC(item, individualModel, householdModel)
+          ?.condition
+          ?.split('and');
+
+  return conditions == null ? true : false;
+}
+
 String convertToRange(List<String>? conditions) {
   if (conditions == null || conditions.isEmpty) {
     return '';
@@ -784,12 +803,25 @@ String convertToRange(List<String>? conditions) {
     }
   }
 
-  String? condition1, condition2;
-
   if (conditions.length == 3) {
-    condition1 = conditions[1];
-    condition2 = conditions[2];
-  } else if (conditions.length >= 4) {
+    String lastCondition = conditions[2];
+    if (lastCondition.contains('height') &&
+        lastCondition.contains('<') &&
+        lastCondition.indexOf('<') < lastCondition.indexOf('height')) {
+      double minHeight = extractNumber(lastCondition, 138);
+      return ">${minHeight.toInt()}";
+    }
+
+    String condition1 = conditions[1];
+    String condition2 = conditions[2];
+    double num1 = extractNumber(condition1, 0);
+    double num2 = extractNumber(condition2, 100);
+    List<double> numbers = [num1, num2]..sort();
+    return "${numbers[0].toInt()}-${numbers[1].toInt()}";
+  }
+
+  String? condition1, condition2;
+  if (conditions.length >= 4) {
     condition1 = conditions[2];
     condition2 = conditions[3];
   }
@@ -801,7 +833,6 @@ String convertToRange(List<String>? conditions) {
   double num1 = extractNumber(condition1, 0);
   double num2 = extractNumber(condition2, 100);
   List<double> numbers = [num1, num2]..sort();
-
   return "${numbers[0].toInt()}-${numbers[1].toInt()}";
 }
 
