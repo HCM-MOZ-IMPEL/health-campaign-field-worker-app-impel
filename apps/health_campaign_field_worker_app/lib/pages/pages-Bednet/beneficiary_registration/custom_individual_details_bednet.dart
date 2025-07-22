@@ -324,6 +324,7 @@ class CustomIndividualDetailsBednetPageState
                               context,
                               form: form,
                               oldIndividual: individualModel,
+                              beneficiaryId: beneficiaryId?.first,
                             );
                             // final tag =
                             //     qrCodes.isNotEmpty ? qrCodes.first : null;
@@ -791,9 +792,16 @@ class CustomIndividualDetailsBednetPageState
       ),
     );
 
+// Assuming this first identifier is uniqueBeneficiaryId
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
         ? individual.identifiers!.first
         : null;
+    var isUniqueBeneficiaryId = identifier == null
+        ? false
+        : identifier.identifierType ==
+                IdentifierTypes.uniqueBeneficiaryID.toValue()
+            ? true
+            : false;
 
     identifier ??= IdentifierModel(
       identifierId: beneficiaryId,
@@ -830,10 +838,12 @@ class CustomIndividualDetailsBednetPageState
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
-        identifier.copyWith(
-          identifierId: beneficiaryId,
-          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        )
+        isEditIndividual && isUniqueBeneficiaryId
+            ? identifier
+            : identifier.copyWith(
+                identifierId: beneficiaryId,
+                identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+              )
       ],
     );
 

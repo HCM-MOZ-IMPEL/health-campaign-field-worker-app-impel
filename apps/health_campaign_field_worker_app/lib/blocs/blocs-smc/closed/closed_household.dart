@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaign_field_worker_app/utils/registration_delivery/registration_delivery_utils.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -60,12 +61,12 @@ class ClosedHouseholdBloc
     try {
       String localityCode = locality!.code;
 
-      Set<String> beneficiaryId = {};
-      // await UniqueIdGeneration().generateUniqueId(
-      //   localityCode: localityCode,
-      //   loggedInUserId: event.loggedInUserUuid!,
-      //   returnCombinedIds: false,
-      // );
+      Set<String> beneficiaryId = await UniqueIdGeneration().generateUniqueId(
+        localityCode: localityCode,
+        loggedInUserId: event.loggedInUserUuid!,
+        returnCombinedIds: false,
+      );
+
       var address = AddressModel(
         latitude: event.latitude,
         longitude: event.longitude,
@@ -312,7 +313,8 @@ class ClosedHouseholdBloc
       return IdentifierTypes.defaultID.toValue();
     }
 
-    return event.projectTypeCode == ProjectTypes.smc.toValue()
+    return event.projectTypeCode == ProjectTypes.smc.toValue() ||
+            event.projectTypeCode == ProjectTypes.bednet.toValue()
         ? IdentifierTypes.uniqueBeneficiaryID.toValue()
         : IdentifierTypes.defaultID.toValue();
   }
@@ -323,7 +325,8 @@ class ClosedHouseholdBloc
       return IdentifierTypes.defaultID.toValue();
     }
 
-    return event.projectTypeCode == ProjectTypes.smc.toValue()
+    return event.projectTypeCode == ProjectTypes.smc.toValue() ||
+            event.projectTypeCode == ProjectTypes.bednet.toValue()
         ? beneficiaryId.first
         : IdentifierTypes.defaultID.toValue();
   }
