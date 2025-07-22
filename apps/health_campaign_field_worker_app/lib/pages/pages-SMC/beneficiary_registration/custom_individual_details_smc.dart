@@ -845,17 +845,17 @@ class CustomIndividualDetailsSMCPageState
             ],
     );
 
-    final previousBeneficiaryId =
-        form.control(_beneficiaryIdKey).value as String?;
+    // final previousBeneficiaryId =
+    //     form.control(_beneficiaryIdKey).value as String?;
     final height = form.control(_heightKey).value as String?;
 
-    individual = individual.copyWith(
-        additionalFields:
-            previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
-                ? IndividualAdditionalFields(version: 1, fields: [
-                    AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
-                  ])
-                : null);
+    // individual = individual.copyWith(
+    //     additionalFields:
+    //         previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
+    //             ? IndividualAdditionalFields(version: 1, fields: [
+    //                 AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
+    //               ])
+    //             : null);
     individual = individual.copyWith(
         additionalFields: height != null && height.isNotEmpty
             ? IndividualAdditionalFields(
@@ -890,9 +890,9 @@ class CustomIndividualDetailsSMCPageState
       },
     );
 
-    final beneficiaryId = individual?.additionalFields?.fields
-        .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
-        ?.value;
+    // final beneficiaryId = individual?.additionalFields?.fields
+    //     .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
+    //     ?.value;
 
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
@@ -919,10 +919,10 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _beneficiaryIdKey: FormControl<String>(validators: [
-        Validators.delegate(utils.CustomValidator.requiredMin3),
-        Validators.maxLength(200),
-      ], value: beneficiaryId),
+      // _beneficiaryIdKey: FormControl<String>(validators: [
+      //   Validators.delegate(utils.CustomValidator.requiredMin3),
+      //   Validators.maxLength(200),
+      // ], value: beneficiaryId),
       _heightKey: FormControl<String>(
         validators: [
           Validators.required,
