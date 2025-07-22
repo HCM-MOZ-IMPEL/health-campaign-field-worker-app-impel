@@ -34,12 +34,12 @@ class ConductMobilityControlAssessmentPage extends LocalizedStatefulWidget {
 
 class _ConductMobilityControlAssessmentPageState
     extends LocalizedState<ConductMobilityControlAssessmentPage> {
-  final List<Map<String, String>> controlAssessmentQuestions = [
-    {"key": "checkbox1", "value": "checkbox_1"},
-    {"key": "checkbox2", "value": "checkbox_2"},
-    {"key": "checkbox3", "value": "checkbox_3"},
-    {"key": "checkbox4", "value": "checkbox_4"},
-    {"key": "checkbox5", "value": "checkbox_5"},
+  final List<String> controlAssessmentQuestions = [
+    "checkbox_1",
+    "checkbox_2",
+    "checkbox_3",
+    "checkbox_4",
+    "checkbox_5",
   ];
 
   final Map<String, bool> checkboxStates = {};
@@ -50,7 +50,7 @@ class _ConductMobilityControlAssessmentPageState
   void initState() {
     super.initState();
     for (var item in controlAssessmentQuestions) {
-      checkboxStates[item['value']!] = false;
+      checkboxStates[item] = false;
     }
   }
 
@@ -197,10 +197,9 @@ class _ConductMobilityControlAssessmentPageState
                             ),
                           ),
                           ...controlAssessmentQuestions.map((item) {
-                            final checkboxValue = item['value']!;
                             return ListTile(
                               title: Text(
-                                checkboxValue,
+                                item,
                                 style: theme.textTheme.bodyLarge,
                               ),
                               leading: SizedBox(
@@ -209,11 +208,9 @@ class _ConductMobilityControlAssessmentPageState
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: DigitCheckbox(
-                                    value:
-                                        checkboxStates[checkboxValue] ?? false,
+                                    value: checkboxStates[item] ?? false,
                                     onChanged: (bool? value) => setState(() =>
-                                        checkboxStates[checkboxValue] =
-                                            value ?? false),
+                                        checkboxStates[item] = value ?? false),
                                   ),
                                 ),
                               ),
