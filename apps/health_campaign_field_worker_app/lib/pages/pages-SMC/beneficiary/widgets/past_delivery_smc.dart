@@ -54,7 +54,7 @@ Widget buildTableContent(
   final productVariants =
       fetchProductVariantSMC(item, individualModel, householdModel)
           ?.productVariants;
-  final condtions =
+  final conditions =
       fetchProductVariantSMC(item, individualModel, householdModel)
           ?.condition
           ?.split('and');
@@ -83,10 +83,10 @@ Widget buildTableContent(
           padding: const EdgeInsets.only(bottom: kPadding / 2),
           fraction: 2.5,
           element: {
-            if ((condtions?.length ?? 0) >= 2)
+            if ((conditions?.length ?? 0) >= 2)
               localizations.translate(
                 i18_local.beneficiaryDetails.beneficiaryHeight,
-              ): '${convertToRange(condtions)} ${localizations.translate(i18_local.beneficiaryDetails.beneficiaryHeightCm)}'
+              ): '${convertToRange(conditions)} ${localizations.translate(i18_local.beneficiaryDetails.beneficiaryHeightCm)}'
           },
         ),
         const Divider(
