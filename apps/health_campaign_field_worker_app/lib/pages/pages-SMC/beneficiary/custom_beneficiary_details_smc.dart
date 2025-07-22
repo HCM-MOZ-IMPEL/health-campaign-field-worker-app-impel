@@ -157,6 +157,12 @@ class CustomBeneficiaryDetailsSMCPageState
                             final projectType =
                                 RegistrationDeliverySingleton().projectType;
                             final cycles = projectType?.cycles;
+                            final isBeneficiaryIneligible =
+                                checkEligibleBasedOnAgeAndHeight(
+                                    deliverState,
+                                    projectType,
+                                    state.selectedIndividual,
+                                    state.householdMemberWrapper.household);
 
                             return cycles != null && cycles.isNotEmpty
                                 ? deliverState.hasCycleArrived
@@ -165,74 +171,83 @@ class CustomBeneficiaryDetailsSMCPageState
                                             0, kPadding, 0, 0),
                                         padding: const EdgeInsets.fromLTRB(
                                             kPadding, 0, kPadding, 0),
-                                        child: DigitElevatedButton(
-                                          onPressed: () async {
-                                            final selectedCycle =
-                                                cycles.firstWhereOrNull((c) =>
-                                                    c.id == deliverState.cycle);
-                                            if (selectedCycle != null) {
-                                              bloc.add(
-                                                DeliverInterventionEvent
-                                                    .selectFutureCycleDose(
-                                                  dose: deliverState.dose,
-                                                  cycle:
-                                                      RegistrationDeliverySingleton()
-                                                          .projectType!
-                                                          .cycles!
-                                                          .firstWhere((c) =>
-                                                              c.id ==
-                                                              deliverState
-                                                                  .cycle),
-                                                  individualModel:
-                                                      state.selectedIndividual,
-                                                ),
-                                              );
-                                              await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  titlePadding:
-                                                      const EdgeInsets.fromLTRB(
-                                                    kPadding,
-                                                    0,
-                                                    kPadding,
-                                                    0,
-                                                  ),
-                                                  titleText: localizations
-                                                      .translate(i18
-                                                          .beneficiaryDetails
-                                                          .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                      deliverState,
+                                        child: isBeneficiaryIneligible == true
+                                            ? Text('USER_NOT_ELIGIBLE')
+                                            : DigitElevatedButton(
+                                                onPressed: () async {
+                                                  final selectedCycle = cycles
+                                                      .firstWhereOrNull((c) =>
+                                                          c.id ==
+                                                          deliverState.cycle);
+                                                  if (selectedCycle != null) {
+                                                    bloc.add(
+                                                      DeliverInterventionEvent
+                                                          .selectFutureCycleDose(
+                                                        dose: deliverState.dose,
+                                                        cycle:
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType!
+                                                                .cycles!
+                                                                .firstWhere((c) =>
+                                                                    c.id ==
+                                                                    deliverState
+                                                                        .cycle),
+                                                        individualModel: state
+                                                            .selectedIndividual,
+                                                      ),
+                                                    );
+                                                    await DigitDialog.show<
+                                                        bool>(
                                                       context,
-                                                      variant,
-                                                      state.selectedIndividual,
-                                                      state
-                                                          .householdMemberWrapper
-                                                          .household),
-                                                  barrierDismissible: true,
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .beneficiaryDetails
-                                                            .ctaProceed),
-                                                    action: (ctx) {
-                                                      Navigator.of(ctx).pop();
-                                                      router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    },
+                                                      options:
+                                                          DigitDialogOptions(
+                                                        titlePadding:
+                                                            const EdgeInsets
+                                                                .fromLTRB(
+                                                          kPadding,
+                                                          0,
+                                                          kPadding,
+                                                          0,
+                                                        ),
+                                                        titleText: localizations
+                                                            .translate(i18
+                                                                .beneficiaryDetails
+                                                                .resourcesTobeDelivered),
+                                                        content: buildTableContent(
+                                                            deliverState,
+                                                            context,
+                                                            variant,
+                                                            state
+                                                                .selectedIndividual,
+                                                            state
+                                                                .householdMemberWrapper
+                                                                .household),
+                                                        barrierDismissible:
+                                                            true,
+                                                        primaryAction:
+                                                            DigitDialogActions(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .beneficiaryDetails
+                                                                  .ctaProceed),
+                                                          action: (ctx) {
+                                                            Navigator.of(ctx)
+                                                                .pop();
+                                                            router.push(
+                                                              DeliverInterventionRoute(),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                child: Center(
+                                                  child: Text(
+                                                    '${localizations.translate(i18_local.beneficiaryDetails.recordCycleSMC)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
                                                   ),
                                                 ),
-                                              );
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              '${localizations.translate(i18_local.beneficiaryDetails.recordCycleSMC)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
-                                            ),
-                                          ),
-                                        ),
+                                              ),
                                       )
                                     : const SizedBox.shrink()
                                 : DigitCard(
