@@ -195,7 +195,8 @@ class CustomDeliverInterventionSMCPageState
                   navigateToSummary: true,
                   householdMemberWrapper: householdMember),
             );
-        context.router.push(DeliverySummaryRoute());
+        // context.router.push(DeliverySummaryRoute());
+        context.router.push(ConductMobilityControlAssessmentRoute());
       }
     }
   }
