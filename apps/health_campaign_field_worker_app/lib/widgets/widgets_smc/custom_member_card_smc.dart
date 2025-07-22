@@ -217,61 +217,57 @@ class CustomMemberCardSMC extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: kPadding / 2,
             ),
-            child: Offstage(
-              offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryIneligible ||
-                      isBeneficiaryReferred
-                  ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.info_rounded,
-                        iconSize: 20,
-                        iconText: localizations.translate(
-                          isHead
-                              ? i18_local.householdOverView
-                                  .householdOverViewHouseholderHeadLabelSMC
-                              : (isNotEligible || isBeneficiaryIneligible)
-                                  ? i18_local.householdOverView
-                                      .householdOverViewNotEligibleIconLabelSMC
-                                  : isBeneficiaryReferred
-                                      ? i18_local.householdOverView
-                                          .householdOverViewBeneficiaryReferredLabelSMC
-                                      : isBeneficiaryRefused
-                                          ? i18_local.householdOverView
-                                              .householdOverViewBeneficiaryRefusedLabelSMC
-                                          : i18_local.householdOverView
-                                              .householdOverViewNotDeliveredIconLabelSMC,
-                        ),
-                        iconTextColor: theme.colorScheme.error,
-                        iconColor: theme.colorScheme.error,
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.check_circle,
-                        iconText: localizations.translate(
-                          i18_local.householdOverView
-                              .householdOverViewDeliveredIconLabelSMC,
-                        ),
-                        iconSize: 20,
-                        iconTextColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        iconColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-            ),
+            // child: Offstage(
+            //   offstage: beneficiaryType != BeneficiaryType.individual,
+            //   child: !isDelivered ||
+            //           isNotEligible ||
+            //           isBeneficiaryRefused ||
+            //           isBeneficiaryIneligible ||
+            //           isBeneficiaryReferred
+            //       ? Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: DigitIconButton(
+            //             icon: Icons.info_rounded,
+            //             iconSize: 20,
+            //             iconText: localizations.translate(
+            //               isHead
+            //                   ? i18_local.householdOverView
+            //                       .householdOverViewHouseholderHeadLabelSMC
+            //                   : (isNotEligible || isBeneficiaryIneligible)
+            //                       ? i18_local.householdOverView
+            //                           .householdOverViewNotEligibleIconLabelSMC
+            //                       : isBeneficiaryReferred
+            //                           ? i18_local.householdOverView
+            //                               .householdOverViewBeneficiaryReferredLabelSMC
+            //                           : isBeneficiaryRefused
+            //                               ? i18_local.householdOverView
+            //                                   .householdOverViewBeneficiaryRefusedLabelSMC
+            //                               : i18_local.householdOverView
+            //                                   .householdOverViewNotDeliveredIconLabelSMC,
+            //             ),
+            //             iconTextColor: theme.colorScheme.error,
+            //             iconColor: theme.colorScheme.error,
+            //           ),
+            //         )
+            //       : Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: DigitIconButton(
+            //             icon: Icons.check_circle,
+            //             iconText: localizations.translate(
+            //               i18_local.householdOverView
+            //                   .householdOverViewDeliveredIconLabelSMC,
+            //             ),
+            //             iconSize: 20,
+            //             iconTextColor:
+            //                 DigitTheme.instance.colorScheme.onSurfaceVariant,
+            //             iconColor:
+            //                 DigitTheme.instance.colorScheme.onSurfaceVariant,
+            //           ),
+            //         ),
+            // ),
           ),
           Offstage(
-            offstage: beneficiaryType != BeneficiaryType.individual ||
-                isNotEligible ||
-                isBeneficiaryRefused ||
-                isBeneficiaryIneligible ||
-                isBeneficiaryReferred,
+            offstage: false,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Column(
@@ -281,7 +277,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                           ? Align(
                               alignment: Alignment.centerLeft,
                               child: DigitIconButton(
-                                icon: Icons.check_circle,
+                                icon: Icons.info_rounded,
                                 iconText: localizations.translate(
                                   i18_local.householdOverView
                                       .headBednetDeliveredSuccess,
@@ -340,13 +336,29 @@ class CustomMemberCardSMC extends StatelessWidget {
                               isBeneficiaryIneligible ||
                               isBeneficiaryReferred) &&
                           checkStatusSMC(tasks, context.selectedCycle)
-                      ? const Offstage()
+                      ? isNotEligible
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: DigitIconButton(
+                                icon: Icons.info_rounded,
+                                iconText: localizations.translate(
+                                  i18_local.householdOverView
+                                      .tracomaDeliveredNotEligible,
+                                ),
+                                iconSize: 20,
+                                iconTextColor:
+                                    DigitTheme.instance.colorScheme.error,
+                                iconColor:
+                                    DigitTheme.instance.colorScheme.error,
+                              ),
+                            )
+                          : Offstage()
                       : !isNotEligible
                           ? isSMCDelivered(tasks)
                               ? Align(
                                   alignment: Alignment.centerLeft,
                                   child: DigitIconButton(
-                                    icon: Icons.check_circle,
+                                    icon: Icons.info_rounded,
                                     iconText: localizations.translate(
                                       i18_local.householdOverView
                                           .tracomaDeliveredSuccess,
