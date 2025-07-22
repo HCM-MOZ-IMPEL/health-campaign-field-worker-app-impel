@@ -613,6 +613,7 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_SMC';
   String get headBednetDeliveredSuccess => 'HEAD_BEDNET_DELIVERED';
   String get tracomaDeliveredSuccess => 'TRACOMA_DELIVERED';
+  String get tracomaDeliveredNotEligible => 'NOT_ELIGIBLE';
   String get householdOverViewNotEligibleIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_SMC';
   String get householdOverViewBeneficiaryReferredLabelSMC =>
