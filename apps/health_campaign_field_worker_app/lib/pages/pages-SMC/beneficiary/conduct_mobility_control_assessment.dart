@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
+import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
+// import 'package:registration_delivery/blocs/app_initialization/app_initialization.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
@@ -34,24 +36,13 @@ class ConductMobilityControlAssessmentPage extends LocalizedStatefulWidget {
 
 class _ConductMobilityControlAssessmentPageState
     extends LocalizedState<ConductMobilityControlAssessmentPage> {
-  final List<String> controlAssessmentQuestions = [
-    "checkbox_1",
-    "checkbox_2",
-    "checkbox_3",
-    "checkbox_4",
-    "checkbox_5",
-  ];
-
+  List<String> controlAssessmentQuestions = [];
   final Map<String, bool> checkboxStates = {};
-
   final clickedStatus = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
-    for (var item in controlAssessmentQuestions) {
-      checkboxStates[item] = false;
-    }
   }
 
   @override
@@ -196,30 +187,59 @@ class _ConductMobilityControlAssessmentPageState
                                   .deliverIntervention.mobilityControlQuestion,
                             ),
                           ),
-                          ...controlAssessmentQuestions.map((item) {
-                            return ListTile(
-                              title: Text(
-                                item,
-                                style: theme.textTheme.bodyLarge,
-                              ),
-                              leading: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: DigitCheckbox(
-                                    value: checkboxStates[item] ?? false,
-                                    onChanged: (bool? value) => setState(() =>
-                                        checkboxStates[item] = value ?? false),
-                                  ),
-                                ),
-                              ),
-                              contentPadding: EdgeInsets.zero,
-                              horizontalTitleGap: 8,
-                              minLeadingWidth: 24,
-                              minVerticalPadding: 0,
-                            );
-                          }).toList(),
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                orElse: () => const Offstage(),
+                                initialized: (appConfiguration, _, __) {
+                                  final symptomTypesOptions =
+                                      appConfiguration.symptomsTypes ?? [];
+                                  controlAssessmentQuestions =
+                                      symptomTypesOptions
+                                          .map((e) => e.code)
+                                          .toList();
+
+                                  for (var item in controlAssessmentQuestions) {
+                                    if (!checkboxStates.containsKey(item)) {
+                                      checkboxStates[item] = false;
+                                    }
+                                  }
+
+                                  return Column(
+                                    children:
+                                        controlAssessmentQuestions.map((item) {
+                                      return ListTile(
+                                        title: Text(
+                                          localizations.translate(item),
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                        leading: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: DigitCheckbox(
+                                              value:
+                                                  checkboxStates[item] ?? false,
+                                              onChanged: (bool? value) =>
+                                                  setState(() =>
+                                                      checkboxStates[item] =
+                                                          value ?? false),
+                                            ),
+                                          ),
+                                        ),
+                                        contentPadding: EdgeInsets.zero,
+                                        horizontalTitleGap: 8,
+                                        minLeadingWidth: 24,
+                                        minVerticalPadding: 0,
+                                      );
+                                    }).toList(),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           const SizedBox(height: 16),
                         ],
                       ),
