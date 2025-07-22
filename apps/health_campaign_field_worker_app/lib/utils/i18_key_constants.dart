@@ -253,6 +253,16 @@ class VehicleTracking {
   String get tripBookReasonLabel => "TRIP_BOOK_REASON_LABEL";
   String get bookTripButtonActionLabel => "BOOK_TRIP_BUTTON_ACTION_LABEL";
   String get othersReasonTextLabel => "BOOK_TRIP_OTHERS_REASON_TEXT_LABEL";
+  String get feedbackLabel => "VEHICLE_TRACKING_FEEDBACK_LABEL";
+
+  String get tripComment => "VEHICLE_TRACKING_TRIP_COMMENT";
+  String get tipSubmitted => "VEHICLE_TRACKING_TIP_SUBMITTED";
+
+  String get acknowledgementLabel => "VEHICLE_TRACKING_ACKNOWLEDGEMENT_LABEL";
+  String get acknowledgementDescription =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_DESCRIPTION";
+  String get acknowledgementSubLabel =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_SUB_LABEL";
 
   String get startDate => 'VEHICLE_TRACKING_START_DATE';
   String get endDate => 'VEHICLE_TRACKING_END_DATE';
@@ -1020,6 +1030,7 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get refreshLocation => 'HOUSEHOLD_REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {
@@ -1033,6 +1044,7 @@ class SearchBeneficiary {
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get beneficiaryIdbednet => 'BENEFICIARY_ID_BEDNET';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 

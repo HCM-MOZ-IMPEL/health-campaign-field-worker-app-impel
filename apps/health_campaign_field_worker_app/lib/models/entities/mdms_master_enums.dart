@@ -55,6 +55,10 @@ enum MasterEnums {
   searchHouseHoldFiltersSMC,
   @MappableValue("SEARCH_HOUSEHOLD_FILTERS_BEDNET")
   searchHouseHoldFiltersBednet,
+  @MappableValue("VEHICLE_TRACKING_TRIP_REASONS")
+  vechileTrackingTripReasons,
+  @MappableValue("VEHICLE_TRACKING_TRIP_EVALUATION_REASONS")
+  vechileTrackingTripEvaluationReasons,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")

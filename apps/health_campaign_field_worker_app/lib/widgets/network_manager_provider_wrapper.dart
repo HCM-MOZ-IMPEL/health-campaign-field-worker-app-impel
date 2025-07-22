@@ -36,6 +36,7 @@ import '../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/repositories/remote/user_action.dart';
 import '../models/downsync/downsync.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:inventory_management/inventory_management.dart';
@@ -126,7 +127,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
     return [
       RepositoryProvider<
           LocalRepository<UserActionModel, UserActionSearchModel>>(
-        create: (_) => LocationTrackerLocalBaseRepository(
+        create: (_) => UserActionLocalRepository(
           sql,
           LocationTrackerOpLogManager(isar),
         ),
@@ -557,8 +558,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.userLocation)
           RepositoryProvider<
               RemoteRepository<UserActionModel, UserActionSearchModel>>(
-            create: (_) =>
-                LocationTrackerRemoteRepository(dio, actionMap: actions),
+            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

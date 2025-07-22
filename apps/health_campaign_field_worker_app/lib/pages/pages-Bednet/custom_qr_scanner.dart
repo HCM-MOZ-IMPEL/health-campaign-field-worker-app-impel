@@ -23,6 +23,8 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
   final int quantity;
   final bool isGS1code;
+  final List<GS1Barcode> gs1CodeList;
+
   final bool isEditEnabled;
   final bool manualEnabled;
 
@@ -31,6 +33,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     super.appLocalizations,
     required this.quantity,
     required this.isGS1code,
+    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
     this.manualEnabled = true,
@@ -70,6 +73,13 @@ class _CustomDigitScannerPageState
           .add(const DigitScannerEvent.handleScanner());
     }
     super.initState();
+    if (widget.gs1CodeList.isNotEmpty) {
+      result = widget.gs1CodeList;
+    } else if (!widget.isEditEnabled) {
+      context
+          .read<DigitScannerBloc>()
+          .add(const DigitScannerEvent.handleScanner());
+    }
   }
 
   @override
@@ -160,7 +170,7 @@ class _CustomDigitScannerPageState
                             ),
                           ),
                         ),
-                        if (widget.isGS1code)
+                        if (!widget.manualEnabled)
                           const SizedBox.shrink()
                         else
                           Align(
@@ -185,8 +195,8 @@ class _CustomDigitScannerPageState
                                 TextButton(
                                   onPressed: () {
                                     context.read<DigitScannerBloc>().add(
-                                          const DigitScannerEvent.handleScanner(
-                                            barCode: [],
+                                          DigitScannerEvent.handleScanner(
+                                            barCode: result,
                                             qrCode: [],
                                           ),
                                         );

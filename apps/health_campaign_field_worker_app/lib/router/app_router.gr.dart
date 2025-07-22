@@ -427,7 +427,6 @@ abstract class _$AppRouter extends RootStackRouter {
           isGS1code: args.isGS1code,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
-          manualEnabled: args.manualEnabled,
         ),
       );
     },
@@ -1272,6 +1271,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VehicleAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleAcknowledgementRouteArgs>(
+          orElse: () => const VehicleAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     VehicleOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleOverviewRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1304,6 +1314,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: VehicleTripBookPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          vehicleNo: args.vehicleNo,
+        ),
+      );
+    },
+    VehicleTripFeedbackRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleTripFeedbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleTripFeedbackPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           vehicleNo: args.vehicleNo,
@@ -2797,7 +2818,6 @@ class CustomDigitScannerRoute
     required bool isGS1code,
     bool singleValue = false,
     bool isEditEnabled = false,
-    bool manualEnabled = true,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2808,7 +2828,6 @@ class CustomDigitScannerRoute
             isGS1code: isGS1code,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
-            manualEnabled: manualEnabled,
           ),
           initialChildren: children,
         );
@@ -2827,7 +2846,6 @@ class CustomDigitScannerRouteArgs {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
-    this.manualEnabled = true,
   });
 
   final Key? key;
@@ -2842,11 +2860,9 @@ class CustomDigitScannerRouteArgs {
 
   final bool isEditEnabled;
 
-  final bool manualEnabled;
-
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 
@@ -5895,6 +5911,45 @@ class UserQRDetailsRouteArgs {
 }
 
 /// generated route for
+/// [VehicleAcknowledgementPage]
+class VehicleAcknowledgementRoute
+    extends PageRouteInfo<VehicleAcknowledgementRouteArgs> {
+  VehicleAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleAcknowledgementRoute.name,
+          args: VehicleAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleAcknowledgementRoute';
+
+  static const PageInfo<VehicleAcknowledgementRouteArgs> page =
+      PageInfo<VehicleAcknowledgementRouteArgs>(name);
+}
+
+class VehicleAcknowledgementRouteArgs {
+  const VehicleAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'VehicleAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [VehicleOverviewPage]
 class VehicleOverviewRoute extends PageRouteInfo<VehicleOverviewRouteArgs> {
   VehicleOverviewRoute({
@@ -6024,6 +6079,50 @@ class VehicleTripBookRouteArgs {
   @override
   String toString() {
     return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
+  }
+}
+
+/// generated route for
+/// [VehicleTripFeedbackPage]
+class VehicleTripFeedbackRoute
+    extends PageRouteInfo<VehicleTripFeedbackRouteArgs> {
+  VehicleTripFeedbackRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String vehicleNo,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleTripFeedbackRoute.name,
+          args: VehicleTripFeedbackRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            vehicleNo: vehicleNo,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleTripFeedbackRoute';
+
+  static const PageInfo<VehicleTripFeedbackRouteArgs> page =
+      PageInfo<VehicleTripFeedbackRouteArgs>(name);
+}
+
+class VehicleTripFeedbackRouteArgs {
+  const VehicleTripFeedbackRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.vehicleNo,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String vehicleNo;
+
+  @override
+  String toString() {
+    return 'VehicleTripFeedbackRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
   }
 }
 

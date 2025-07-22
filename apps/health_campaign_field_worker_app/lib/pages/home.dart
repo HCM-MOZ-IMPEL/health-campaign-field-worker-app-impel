@@ -5,6 +5,7 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -584,6 +585,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -616,6 +619,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
               ],
             ),
           );

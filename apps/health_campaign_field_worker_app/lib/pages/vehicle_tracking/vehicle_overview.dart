@@ -22,6 +22,7 @@ import '../../blocs/vehicle_tracking/search_vehicles.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
 import '../../router/app_router.dart';
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
@@ -56,14 +57,101 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
             vehicleNo: widget.vehicleNo));
   }
 
+  _searchSelectedVehicleActionModel() {
+    final vehicleTripActionBloc = context.read<VehicleTripActionBloc>();
+    vehicleTripActionBloc
+        .add(VehicleTripActionEvent.handleSearch(vehicleNo: widget.vehicleNo));
+  }
+
   VehicleStatusEnum _getVehicleStatus(UserActionModel? userActionModel) {
-    String? tripAction = userActionModel?.action;
+    String? tripAction = userActionModel?.action.split("||").last;
     if (tripAction == "start") {
       return VehicleStatusEnum.onGoing;
     } else if (tripAction == "end") {
       return VehicleStatusEnum.completed;
     } else {
       return VehicleStatusEnum.none;
+    }
+  }
+
+  _vehicleStartTrip() async {
+    var localizations = AppLocalizations.of(context);
+    final submit = await DigitDialog.show<bool>(
+      context,
+      options: DigitDialogOptions(
+        titleText: localizations.translate(
+          i18_local.vehicleTracking.startTripTitle,
+        ),
+        contentText: localizations.translate(
+          i18_local.vehicleTracking.startTripContent,
+        ),
+        primaryAction: DigitDialogActions(
+            label: localizations
+                .translate(i18_local.vehicleTracking.startTripButtonLabel),
+            action: (ctx) {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pop(true);
+            }),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(i18_local.common.coreCommonCancel),
+          action: (ctx) => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+        ),
+      ),
+    );
+    if (context.mounted) {
+      if (submit ?? false) {
+        context.router.push(VehicleTripBookRoute(vehicleNo: widget.vehicleNo));
+      }
+    }
+  }
+
+  _vehicleEndTrip(UserActionModel? tripAction) async {
+    var localizations = AppLocalizations.of(context);
+    final submit = await DigitDialog.show<bool>(
+      context,
+      options: DigitDialogOptions(
+        titleText: localizations.translate(
+          i18_local.vehicleTracking.endTripTitle,
+        ),
+        contentText: localizations.translate(
+          i18_local.vehicleTracking.endTripContent,
+        ),
+        primaryAction: DigitDialogActions(
+            label: localizations
+                .translate(i18_local.vehicleTracking.endTripButtonLabel),
+            action: (ctx) {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pop(true);
+            }),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(i18_local.common.coreCommonCancel),
+          action: (ctx) => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+        ),
+      ),
+    );
+    if (context.mounted && tripAction != null) {
+      if (submit ?? false) {
+        context.router
+            .push(VehicleTripFeedbackRoute(vehicleNo: widget.vehicleNo));
+      }
+      // if (submit ?? false) {
+      //   context.read<VehicleTripActionBloc>().add(
+      //         VehicleTripActionEndTripEvent(
+      //             isEditing: true,
+      //             boundaryModel: RegistrationDeliverySingleton().boundary!,
+      //             tripAction: tripAction!),
+      //       );
+      // }
     }
   }
 
@@ -75,8 +163,10 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
     return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
       builder: (context, tripState) {
         _searchSelectedVehicle();
+        _searchSelectedVehicleActionModel();
         VehicleStatusEnum vehicleStatus =
             _getVehicleStatus(tripState.tripAction);
+        UserActionModel? vehicleActionModel = tripState.tripAction;
         return Scaffold(
             body: ScrollableContent(
           header: const BackNavigationHelpHeaderWidget(
@@ -101,83 +191,10 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () async {
                           if (vehicleStatus == VehicleStatusEnum.none) {
-                            final submit = await DigitDialog.show<bool>(
-                              context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(
-                                  i18_local.vehicleTracking.startTripTitle,
-                                ),
-                                contentText: localizations.translate(
-                                  i18_local.vehicleTracking.startTripContent,
-                                ),
-                                primaryAction: DigitDialogActions(
-                                    label: localizations.translate(i18_local
-                                        .vehicleTracking.startTripButtonLabel),
-                                    action: (ctx) {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    }),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                      i18_local.common.coreCommonCancel),
-                                  action: (ctx) => Navigator.of(
-                                    context,
-                                    rootNavigator: true,
-                                  ).pop(true),
-                                ),
-                              ),
-                            );
-                            if (context.mounted) {
-                              if (submit ?? false) {
-                                context.router.push(VehicleTripBookRoute(
-                                    vehicleNo: widget.vehicleNo));
-                              }
-                            }
+                            _vehicleStartTrip();
                           } else if (vehicleStatus ==
                               VehicleStatusEnum.onGoing) {
-                            final submit = await DigitDialog.show<bool>(
-                              context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(
-                                  i18_local.vehicleTracking.endTripTitle,
-                                ),
-                                contentText: localizations.translate(
-                                  i18_local.vehicleTracking.endTripContent,
-                                ),
-                                primaryAction: DigitDialogActions(
-                                    label: localizations.translate(i18_local
-                                        .vehicleTracking.endTripButtonLabel),
-                                    action: (ctx) {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    }),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                      i18_local.common.coreCommonCancel),
-                                  action: (ctx) => Navigator.of(
-                                    context,
-                                    rootNavigator: true,
-                                  ).pop(true),
-                                ),
-                              ),
-                            );
-                            if (context.mounted &&
-                                tripState.tripAction != null) {
-                              if (submit ?? false) {
-                                context.read<VehicleTripActionBloc>().add(
-                                      VehicleTripActionEndTripEvent(
-                                          isEditing: true,
-                                          boundaryModel:
-                                              RegistrationDeliverySingleton()
-                                                  .boundary!,
-                                          tripAction: tripState.tripAction!),
-                                    );
-                              }
-                            }
+                            _vehicleEndTrip(tripState.tripAction);
                           }
                         },
                       ),
@@ -200,10 +217,10 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                         if (selectedVehicle != null)
                           VehicleCard(
                             vehicle: selectedVehicle,
-                            vehicleActionModel: tripState.tripAction,
+                            vehicleActionModel: vehicleActionModel,
                             appLocalizations: localizations,
                             status: vehicleStatus,
-                            type: VehicleCardType.all,
+                            type: VehicleCardType.info,
                             buttonText: localizations.translate(
                               i18_local.vehicleTracking.mapLabel,
                             ),

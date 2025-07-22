@@ -48,6 +48,7 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/entities/project_types.dart';
 import '../models/entities/status.dart';
+import '../models/entities/vehicle_tracking/trip_actions.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';

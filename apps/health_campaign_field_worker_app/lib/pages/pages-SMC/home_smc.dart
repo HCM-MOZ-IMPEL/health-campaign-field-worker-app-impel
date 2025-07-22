@@ -1,5 +1,6 @@
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
@@ -671,6 +672,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -705,6 +708,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
               ],
             ),
           );
