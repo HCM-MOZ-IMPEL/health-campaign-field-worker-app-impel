@@ -644,7 +644,8 @@ class CustomIndividualDetailsSMCPageState
                               maxLength: 3,
                               isRequired: true,
                               label: localizations.translate(
-                                i18_local.individualDetails.heightLabelTextSMC,
+                                i18_local
+                                    .individualDetails.heightLabelTextTracoma,
                               ),
                               validationMessages: {
                                 'invalidHeight': (object) =>

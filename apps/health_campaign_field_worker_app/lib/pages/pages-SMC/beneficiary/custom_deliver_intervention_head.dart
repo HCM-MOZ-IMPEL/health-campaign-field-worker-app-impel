@@ -529,7 +529,7 @@ class CustomDeliverInterventionHeadPageState
                                                         localizations.translate(
                                                                 i18_local
                                                                     .deliverIntervention
-                                                                    .bednetCountText):
+                                                                    .bednetCountHeadText):
                                                             bednetCount,
                                                       },
                                                     ),

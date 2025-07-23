@@ -40,7 +40,8 @@ Widget buildTableContent(
       cellKey: 'dose',
     ),
     TableHeader(
-      localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+      localizations
+          .translate(i18_local.beneficiaryDetails.beneficiaryResourcesTracoma),
       cellKey: 'resources',
     ),
   ];
