@@ -210,9 +210,9 @@ class CustomBeneficiaryDetailsSMCPageState
                                                           0,
                                                         ),
                                                         titleText: localizations
-                                                            .translate(i18
+                                                            .translate(i18_local
                                                                 .beneficiaryDetails
-                                                                .resourcesTobeDelivered),
+                                                                .resourcesTobeDeliveredTracoma),
                                                         content: buildTableContent(
                                                             deliverState,
                                                             context,
@@ -244,7 +244,7 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 },
                                                 child: Center(
                                                   child: Text(
-                                                    '${localizations.translate(i18_local.beneficiaryDetails.recordCycleSMC)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
+                                                    '${localizations.translate(i18_local.beneficiaryDetails.recordCycleTracoma)}',
                                                   ),
                                                 ),
                                               ),
