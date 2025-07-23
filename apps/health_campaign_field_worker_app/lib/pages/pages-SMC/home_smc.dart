@@ -183,7 +183,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                           children: [
                             CustomBeneficiaryProgressBarSMC(
                               label: localizations.translate(
-                                i18.home.progressIndicatorTitle,
+                                i18.home.progressIndicatorTitleTracoma,
                               ),
                               prefixLabel: localizations.translate(
                                 i18.home.progressIndicatorPrefixLabel,
@@ -192,7 +192,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                             if (_isCardExpanded)
                               CustomBeneficiaryProgressBarBednet(
                                 label: localizations.translate(
-                                  i18.home.progressIndicatorTitle,
+                                  i18.home.progressIndicatorTitleHeadBednet,
                                 ),
                                 prefixLabel: localizations.translate(
                                   i18.home.progressIndicatorPrefixLabel,
