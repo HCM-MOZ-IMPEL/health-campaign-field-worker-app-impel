@@ -417,6 +417,20 @@ String? getAgeConditionString(String condition, BuildContext context) {
   return finalCondition;
 }
 
+List<HouseholdMemberWrapper> sortHouseholdVsDate(
+    List<HouseholdMemberWrapper> listHousehold,
+    {bool order = false}) {
+  final sortedHouseholdByDate = [...listHousehold]..sort((a, b) {
+      final aTime =
+          a.members?.firstOrNull?.clientAuditDetails?.lastModifiedTime ?? 0;
+      final bTime =
+          b.members?.firstOrNull?.clientAuditDetails?.lastModifiedTime ?? 0;
+      return order ? bTime.compareTo(aTime) : aTime.compareTo(bTime);
+    });
+
+  return sortedHouseholdByDate;
+}
+
 String? getAgeConditionStringFromVariant(
     DeliveryProductVariant productVariant, List<ProductVariantModel>? variant) {
   String? finalCondition;

@@ -90,7 +90,7 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
-  // late PrivacyPolicy? privacyPolicyConfig;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
