@@ -51,8 +51,7 @@ class CustomHouseholdAcknowledgementBednetPageState
                       ),
                     );
                 // Pop twice to navigate back to the previous screen
-                parent.popUntilRouteWithName(
-                    CustomSearchBeneficiaryBednetRoute.name);
+                context.router.replaceAll([HomeRoute()]);
               },
               secondaryAction: () {
                 final wrapper = context

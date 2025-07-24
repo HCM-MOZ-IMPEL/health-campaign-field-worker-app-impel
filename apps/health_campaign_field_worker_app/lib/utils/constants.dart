@@ -148,6 +148,7 @@ class Constants {
   static const String blueVAS = "Blue VAS";
   static const String redVAS = "Red VAS";
   static const int apiCallLimit = 1000;
+  static const int beneficiaryIdLength = 14;
 
   static const String bednetSKU = "Redes Mosquiteiras";
 

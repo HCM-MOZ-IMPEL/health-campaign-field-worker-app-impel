@@ -215,15 +215,23 @@ class _CustomSearchBeneficiaryBednetPageState
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
-                                  blocWrapper.clearEvent();
                                   if (isSearchByBeneficaryIdEnabled &&
                                       isBeneficiaryIdValid(value.trim()) &&
                                       searchController.text.trim().length ==
-                                          14) {
+                                          Constants.beneficiaryIdLength) {
                                     searchByBeneficiaryId(
                                         beneficiaryId: value.trim());
                                   } else if (isSearchByBeneficaryIdEnabled &&
-                                      !isBeneficiaryIdValid(value.trim())) {
+                                      searchController.text.trim().length <
+                                          Constants.beneficiaryIdLength) {
+                                    blocWrapper.clearEvent();
+                                    context
+                                        .read<IndividualGlobalSearchSMCBloc>()
+                                        .add(const searchHouseholdSMCBloc
+                                            .SearchHouseholdsSMCEvent.clear());
+                                  } else if (isSearchByBeneficaryIdEnabled &&
+                                      !isBeneficiaryIdValidPattern(
+                                          searchController.text.trim())) {
                                     blocWrapper.clearEvent();
                                     context
                                         .read<IndividualGlobalSearchSMCBloc>()
@@ -484,6 +492,20 @@ class _CustomSearchBeneficiaryBednetPageState
                   builder: (context, searchSMCstate) {
                     if (searchSMCstate.loading) {
                       return Center(child: CircularProgressIndicator());
+                    } else if (isSearchByBeneficaryIdEnabled &&
+                        searchController.text.trim().isNotEmpty &&
+                        (!isBeneficiaryIdValid(searchController.text.trim()) ||
+                            searchSMCstate.householdMembers.isEmpty)) {
+                      return SliverToBoxAdapter(
+                        child: DigitInfoCard(
+                          title: localizations.translate(
+                            i18.searchBeneficiary.beneficiaryInfoTitle,
+                          ),
+                          description: localizations.translate(
+                            i18.searchBeneficiary.beneficiaryInfoDescription,
+                          ),
+                        ),
+                      );
                     } else {
                       return SliverList(
                         delegate: SliverChildBuilderDelegate(

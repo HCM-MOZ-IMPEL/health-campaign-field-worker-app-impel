@@ -109,6 +109,15 @@ class _CustomDigitScannerPageState
                             initialCameraLensDirection: _cameraLensDirection,
                             onCameraLensDirectionChanged: (value) =>
                                 _cameraLensDirection = value,
+                            onBackButtonPressed: () {
+                              context
+                                  .read<DigitScannerBloc>()
+                                  .add(const DigitScannerEvent.handleScanner(
+                                    barCode: [],
+                                    qrCode: [],
+                                  ));
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ),
                         Positioned(
@@ -242,6 +251,7 @@ class _CustomDigitScannerPageState
                                     localizations,
                                     widget.quantity,
                                   );
+                                  return;
                                 } else if (state.qrCodes.length >
                                     widget.quantity) {
                                   await DigitToast.show(

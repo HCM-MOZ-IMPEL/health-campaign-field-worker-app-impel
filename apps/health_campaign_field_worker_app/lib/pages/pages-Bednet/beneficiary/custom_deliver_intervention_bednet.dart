@@ -69,6 +69,7 @@ class CustomDeliverInterventionBednetPageState
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
+  bool submitAttempted = false;
 
   @override
   void initState() {
@@ -146,6 +147,26 @@ class CustomDeliverInterventionBednetPageState
             projectBeneficiary,
             codeAdditionalFields);
       });
+    }
+  }
+
+  bool isCommentRequired(int bednetCount, int bednetScanned) {
+    if (bednetScanned < bednetCount) {
+      return true;
+    }
+    return false;
+  }
+
+  updateDeliveryCommentValidation(
+      FormGroup form, int bednetCount, int bednetScanned) {
+    if (bednetScanned == bednetCount) {
+      form.control(_deliveryCommentKey).setValidators([], autoValidate: true);
+    } else if (submitAttempted) {
+      form.control(_deliveryCommentKey).setValidators([
+        Validators.required,
+        Validators.minLength(0),
+        Validators.maxLength(2),
+      ], autoValidate: true);
     }
   }
 
@@ -259,6 +280,8 @@ class CustomDeliverInterventionBednetPageState
                                 return BlocBuilder<DigitScannerBloc,
                                         DigitScannerState>(
                                     builder: (context, scannerState) {
+                                  bednetScanned = scannerState.barCodes.length;
+
                                   return ReactiveFormBuilder(
                                     form: () => buildForm(
                                       context,
@@ -266,6 +289,8 @@ class CustomDeliverInterventionBednetPageState
                                       variant,
                                     ),
                                     builder: (context, form, child) {
+                                      updateDeliveryCommentValidation(
+                                          form, bednetCount, bednetScanned);
                                       return ScrollableContent(
                                         enableFixedButton: true,
                                         footer: BlocBuilder<
@@ -295,10 +320,37 @@ class CustomDeliverInterventionBednetPageState
                                                               if (!form.valid) {
                                                                 return;
                                                               }
+                                                              submitAttempted =
+                                                                  true;
                                                               bednetScanned =
                                                                   scannerState
                                                                       .barCodes
                                                                       .length;
+                                                              final deliveryComment = form
+                                                                      .control(
+                                                                          _deliveryCommentKey)
+                                                                      .value
+                                                                      ?.toString() ??
+                                                                  '';
+
+                                                              if (bednetScanned <
+                                                                      bednetCount &&
+                                                                  deliveryComment
+                                                                      .isEmpty) {
+                                                                await DigitToast
+                                                                    .show(
+                                                                  context,
+                                                                  options:
+                                                                      DigitToastOptions(
+                                                                    localizations.translate(i18_local
+                                                                        .deliverIntervention
+                                                                        .bednetScanLessThanCount),
+                                                                    true,
+                                                                    theme,
+                                                                  ),
+                                                                );
+                                                                return;
+                                                              }
 
                                                               final List<
                                                                       GS1Barcode>
@@ -685,10 +737,11 @@ class CustomDeliverInterventionBednetPageState
                                                                 .deliveryCommentLabel,
                                                           ),
                                                           form: form,
-                                                          enabled:
-                                                              deliveryCommentRequired,
+                                                          enabled: true,
                                                           isRequired:
-                                                              deliveryCommentRequired,
+                                                              isCommentRequired(
+                                                                  bednetCount,
+                                                                  bednetScanned),
                                                           menuItems:
                                                               deliveryCommentOptions
                                                                   .map((e) {

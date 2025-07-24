@@ -74,7 +74,9 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
                 child: SizedBox(
                   height: kPadding * 5,
                   child: ReactiveTextField(
-                    readOnly: readOnly,
+                    readOnly: true,
+                    enableInteractiveSelection: false,
+                    showCursor: false,
                     textAlign: TextAlign.center,
                     formControlName: formControlName,
                     decoration: InputDecoration(

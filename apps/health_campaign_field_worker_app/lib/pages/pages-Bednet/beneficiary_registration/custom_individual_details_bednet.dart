@@ -319,7 +319,8 @@ class CustomIndividualDetailsBednetPageState
 
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
-
+                            final boundary =
+                                RegistrationDeliverySingleton().boundary;
                             final individual = _getIndividualModel(
                               context,
                               form: form,
@@ -355,6 +356,15 @@ class CustomIndividualDetailsBednetPageState
                                       : null,
                                 ),
                                 // tag: qrCodes.isNotEmpty ? qrCodes.first : null,
+                              ),
+                            );
+                            bloc.add(
+                              BeneficiaryRegistrationSummaryEvent(
+                                projectId: projectId!,
+                                userUuid: userId!,
+                                boundary: boundary!,
+                                // tag:
+                                //     qrCodes.isNotEmpty ? qrCodes.first : null,
                               ),
                             );
                           },
