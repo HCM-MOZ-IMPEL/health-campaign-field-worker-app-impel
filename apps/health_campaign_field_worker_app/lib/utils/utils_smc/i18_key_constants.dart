@@ -744,6 +744,8 @@ class DeliverIntervention {
 
   String get deliveryCommentLabelSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
+  String get refusalReasonCommentLabelSMC =>
+      'DELIVER_INTERVENTION_REFUSAL_REASON_COMMENT_LABEL_SMC';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>

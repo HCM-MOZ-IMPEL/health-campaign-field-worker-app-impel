@@ -43,6 +43,7 @@ class _CustomHouseholdLocationBednetPageState
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
+  bool _isManualRefresh = false;
 
   @override
   void initState() {
@@ -101,19 +102,19 @@ class _CustomHouseholdLocationBednetPageState
                 final lng = locationState.longitude;
                 final accuracy = locationState.accuracy;
 
-                form.control(_latKey).value ??= lat;
-                form.control(_lngKey).value ??= lng;
-                form.control(_accuracyKey).value ??= accuracy;
+                form.control(_latKey).value = lat;
+                form.control(_lngKey).value = lng;
+                form.control(_accuracyKey).value = accuracy;
+                _isManualRefresh = false;
               }
             },
             listenWhen: (previous, current) {
               final lat = form.control(_latKey).value;
               final lng = form.control(_lngKey).value;
-              final accuracy = form.control(_accuracyKey).value;
+              final acc = form.control(_accuracyKey).value;
 
-              return lat != null || lng != null || accuracy != null
-                  ? false
-                  : true;
+              final isFirstTime = lat == null || lng == null || acc == null;
+              return isFirstTime || _isManualRefresh;
             },
             child: ScrollableContent(
               enableFixedButton: true,
@@ -263,16 +264,46 @@ class _CustomHouseholdLocationBednetPageState
                             ),
                           ),
                           householdLocationShowcaseData.gpsAccuracy.buildWith(
-                            child: CustomDigitTextFormField(
-                              suffixString: localizations.translate(
-                                i18_local.common.metersLabel,
-                              ),
-                              readOnly: true,
-                              formControlName: _accuracyKey,
-                              label: localizations.translate(
-                                  i18.householdLocation.gpsAccuracyLabel),
-                              colorCondition: (value) =>
-                                  value != null && value > 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomDigitTextFormField(
+                                  suffixString: localizations.translate(
+                                    i18_local.common.metersLabel,
+                                  ),
+                                  readOnly: true,
+                                  formControlName: _accuracyKey,
+                                  label: localizations.translate(
+                                      i18.householdLocation.gpsAccuracyLabel),
+                                  colorCondition: (value) =>
+                                      value != null && value > 5,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DigitIconButton(
+                                    icon: Icons.refresh,
+                                    iconSize: 20,
+                                    iconText: localizations.translate(
+                                      i18.householdLocation.refreshLocation,
+                                    ),
+                                    onPressed: () {
+                                      _isManualRefresh = true;
+
+                                      DigitComponentsUtils()
+                                          .showLocationCapturingDialog(
+                                        context,
+                                        localizations.translate(
+                                            i18_local.common.locationCapturing),
+                                        DigitSyncDialogType.inProgress,
+                                      );
+
+                                      context
+                                          .read<LocationBloc>()
+                                          .add(const LoadLocationEvent());
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ]),
