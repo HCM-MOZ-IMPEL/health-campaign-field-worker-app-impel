@@ -39,10 +39,8 @@ class VehicleAcknowledgementPageState
                 final vehicleSearchbloc =
                     context.read<SearchVehicleBlocWrapper>();
                 vehicleSearchbloc.clearEvent();
-                context.router.popUntil(
-                  (route) => route.settings.name == VehicleSearchRoute.name,
-                );
-                // context.pushRoute(VehicleSearchRoute());
+                final parent = context.router.parent() as StackRouter;
+                parent.maybePop();
               },
             ),
           ],

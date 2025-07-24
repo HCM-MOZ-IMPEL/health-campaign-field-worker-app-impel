@@ -303,7 +303,17 @@ class VehicleTripFeedbackPageState
                                             return localizations
                                                 .translate(value);
                                           },
-                                          errorMessage: null,
+                                          errorMessage: form
+                                                      .control(
+                                                          _tripFeedbackEvaluationKey)
+                                                      .hasErrors &&
+                                                  form
+                                                      .control(
+                                                          _tripFeedbackEvaluationKey)
+                                                      .touched
+                                              ? localizations.translate(
+                                                  i18.common.corecommonRequired)
+                                              : null,
                                         );
                                       })),
                                   // Padding(
