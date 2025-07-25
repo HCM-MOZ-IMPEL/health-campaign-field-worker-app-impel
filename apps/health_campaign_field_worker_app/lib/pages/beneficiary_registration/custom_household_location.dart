@@ -283,7 +283,8 @@ class _CustomHouseholdLocationPageState
                                     icon: Icons.refresh,
                                     iconSize: 20,
                                     iconText: localizations.translate(
-                                      i18.householdLocation.refreshLocation,
+                                      i18Local
+                                          .householdLocation.refreshLocation,
                                     ),
                                     onPressed: () {
                                       _isManualRefresh = true;

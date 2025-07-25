@@ -967,7 +967,7 @@ class HouseholdLocation {
 
   String get householdLocationAccuracyText =>
       'HOUSEHOLD_LOCATION_ACCURACY_LABEL_TEXT';
-
+  String get refreshLocation => 'REFRESH_LOCATION_LABEL';
   String get householdLocationDescriptionText =>
       'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 

@@ -182,10 +182,7 @@ void _updateHome(String homeFilePath) {
               .toList(),
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
-              .toList(),
-              refusalReasonsCommentOptions: appConfiguration.refusalReasonsCommentOptions!
-              .map((e) => e.code)
-              .toList(),
+              .toList(),  
           symptomsTypes:
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
