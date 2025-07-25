@@ -278,12 +278,13 @@ class _CustomHouseholdLocationPageState
                                       value != null && value > 5,
                                 ),
                                 Align(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: Alignment.center,
                                   child: DigitIconButton(
                                     icon: Icons.refresh,
                                     iconSize: 20,
                                     iconText: localizations.translate(
-                                      i18.householdLocation.refreshLocation,
+                                      i18Local
+                                          .householdLocation.refreshLocation,
                                     ),
                                     onPressed: () {
                                       _isManualRefresh = true;

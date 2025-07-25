@@ -52,8 +52,6 @@ class CustomDeliverInterventionSMCPageState
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
-  static const _refusalReasonCommentKey = 'refusalReason';
-
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
   static const _defaultQuantity = 1;
@@ -712,64 +710,6 @@ class CustomDeliverInterventionSMCPageState
                                               ),
                                             ),
                                           ),
-                                          IgnorePointer(
-                                            ignoring: !doseAdministered,
-                                            child: DigitCard(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Opacity(
-                                                    opacity: doseAdministered
-                                                        ? 1
-                                                        : 0.5,
-                                                    child: BlocBuilder<
-                                                        AppInitializationBloc,
-                                                        AppInitializationState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is! AppInitialized) {
-                                                          return const Offstage();
-                                                        }
-
-                                                        final refusalReasonCommentOptionsSmc =
-                                                            // state
-                                                            //         .appConfiguration
-                                                            //         .deliveryCommentOptionsSmc ??
-                                                            <RefusalReasonsCommentOptions>[];
-
-                                                        return DigitReactiveDropdown<
-                                                            String>(
-                                                          label: localizations
-                                                              .translate(
-                                                            i18_local
-                                                                .deliverIntervention
-                                                                .refusalReasonCommentLabelSMC,
-                                                          ),
-                                                          menuItems:
-                                                              refusalReasonCommentOptionsSmc
-                                                                  .map((e) {
-                                                            return e.code;
-                                                          }).toList(),
-                                                          formControlName:
-                                                              _refusalReasonCommentKey,
-                                                          isRequired:
-                                                              doseAdministered,
-                                                          valueMapper: (value) =>
-                                                              localizations
-                                                                  .translate(
-                                                            value,
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -881,8 +821,6 @@ class CustomDeliverInterventionSMCPageState
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
-    final refusalReason =
-        form.control(_refusalReasonCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -965,12 +903,6 @@ class CustomDeliverInterventionSMCPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
-          if (refusalReason != null &&
-              refusalReason.trim().toString().isNotEmpty)
-            AdditionalField(
-              AdditionalFieldsType.refusalReason.toValue(),
-              refusalReason,
-            ),
         ],
       ),
     );
@@ -1036,25 +968,6 @@ class CustomDeliverInterventionSMCPageState
                 ? bloc.tasks?.last.additionalFields?.fields
                     .where((a) =>
                         a.key == AdditionalFieldsType.deliveryComment.toValue())
-                    .first
-                    .value
-                : ''
-            : null,
-        validators: [],
-      ),
-      _refusalReasonCommentKey: FormControl<String>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.last.additionalFields?.fields
-                            .where((a) =>
-                                a.key ==
-                                AdditionalFieldsType.refusalReason.toValue())
-                            .toList() ??
-                        [])
-                    .isNotEmpty
-                ? bloc.tasks?.last.additionalFields?.fields
-                    .where((a) =>
-                        a.key == AdditionalFieldsType.refusalReason.toValue())
                     .first
                     .value
                 : ''

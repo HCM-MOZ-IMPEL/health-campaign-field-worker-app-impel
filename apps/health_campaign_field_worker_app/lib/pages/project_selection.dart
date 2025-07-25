@@ -388,10 +388,6 @@ void setPackagesSingleton(BuildContext context) {
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
               .toList(),
-          refusalReasonsCommentOptions: appConfiguration
-              .refusalReasonsCommentOptions!
-              .map((e) => e.code)
-              .toList(),
           symptomsTypes:
               appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter:
