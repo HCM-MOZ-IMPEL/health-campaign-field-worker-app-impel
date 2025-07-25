@@ -55,7 +55,6 @@ class CustomDeliverInterventionBednetPageState
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
-  static const _refusalReasonCommentKey = 'refusalReason';
   static const _doseAdministrationKey = 'doseAdministered';
   final clickedStatus = ValueNotifier<bool>(false);
   var bednetCount = 0;
@@ -64,7 +63,6 @@ class CustomDeliverInterventionBednetPageState
 
   // Variable to track dose administration status
   bool deliveryCommentRequired = false;
-  bool refusalReasonCommentRequired = false;
 
   // List of controllers for form elements
   final List _controllers = [];
@@ -835,68 +833,6 @@ class CustomDeliverInterventionBednetPageState
                                                   ],
                                                 ),
                                               ),
-                                              DigitCard(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    BlocBuilder<
-                                                        AppInitializationBloc,
-                                                        AppInitializationState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is! AppInitialized) {
-                                                          return const Offstage();
-                                                        }
-
-                                                        final refusalReasonsCommentOptions = state
-                                                                .appConfiguration
-                                                                .refusalReasonsCommentOptions ??
-                                                            <RefusalReasonsCommentOptions>[];
-
-                                                        return DigitReactiveSearchDropdown<
-                                                            String>(
-                                                          label: localizations
-                                                              .translate(
-                                                            i18.deliverIntervention
-                                                                .refusalReasonCommentLabel,
-                                                          ),
-                                                          form: form,
-                                                          enabled:
-                                                              refusalReasonCommentRequired,
-                                                          isRequired:
-                                                              refusalReasonCommentRequired,
-                                                          menuItems:
-                                                              refusalReasonsCommentOptions
-                                                                  .map((e) {
-                                                            return e.code;
-                                                          }).toList(),
-                                                          formControlName:
-                                                              _refusalReasonCommentKey,
-                                                          valueMapper: (value) =>
-                                                              localizations
-                                                                  .translate(
-                                                            value,
-                                                          ),
-                                                          emptyText: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .noMatchFound),
-                                                          validationMessage:
-                                                              localizations
-                                                                  .translate(
-                                                            i18.common
-                                                                .corecommonRequired,
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
                                             ],
                                           ),
                                         ],
@@ -1012,8 +948,6 @@ class CustomDeliverInterventionBednetPageState
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
-    final refusalReason =
-        form.control(_refusalReasonCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -1026,10 +960,6 @@ class CustomDeliverInterventionBednetPageState
                 deliveryComment: deliveryComment != null &&
                         deliveryComment.trim().toString().isNotEmpty
                     ? deliveryComment
-                    : null,
-                refusalReason: refusalReason != null &&
-                        refusalReason.trim().toString().isNotEmpty
-                    ? refusalReason
                     : null,
                 taskId: task?.id,
                 tenantId: RegistrationDeliverySingleton().tenantId,
@@ -1099,12 +1029,6 @@ class CustomDeliverInterventionBednetPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
-          if (refusalReason != null &&
-              refusalReason.trim().toString().isNotEmpty)
-            AdditionalField(
-              AdditionalFieldsType.refusalReason.toValue(),
-              refusalReason,
-            ),
           if (codes != null && codes.isNotEmpty) ...codes
         ],
       ),
@@ -1172,25 +1096,6 @@ class CustomDeliverInterventionBednetPageState
                 ? bloc.tasks?.lastOrNull?.additionalFields?.fields
                     .where((a) =>
                         a.key == AdditionalFieldsType.deliveryComment.toValue())
-                    .first
-                    .value
-                : ''
-            : null,
-        validators: [],
-      ),
-      _refusalReasonCommentKey: FormControl<String>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.lastOrNull?.additionalFields?.fields
-                            .where((a) =>
-                                a.key ==
-                                AdditionalFieldsType.refusalReason.toValue())
-                            .toList() ??
-                        [])
-                    .isNotEmpty
-                ? bloc.tasks?.lastOrNull?.additionalFields?.fields
-                    .where((a) =>
-                        a.key == AdditionalFieldsType.refusalReason.toValue())
                     .first
                     .value
                 : ''
