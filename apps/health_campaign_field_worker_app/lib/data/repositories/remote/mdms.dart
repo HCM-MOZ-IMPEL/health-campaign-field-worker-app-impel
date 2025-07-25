@@ -279,14 +279,14 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
-    final List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions =
-        element?.refusalReasonsCommentOptions.map((element) {
-      final refusalReasonsCommentOptions = RefusalReasonsCommentOptions()
-        ..name = element.name
-        ..code = element.code;
+    // final List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions =
+    //     element?.refusalReasonsCommentOptions.map((element) {
+    //   final refusalReasonsCommentOptions = RefusalReasonsCommentOptions()
+    //     ..name = element.name
+    //     ..code = element.code;
 
-      return refusalReasonsCommentOptions;
-    }).toList();
+    //   return refusalReasonsCommentOptions;
+    // }).toList();
 
     final List<Interfaces>? interfaceList =
         element?.backendInterface.first.interface.map((e) {
@@ -315,8 +315,8 @@ class MdmsRepository {
     appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-    appConfiguration.refusalReasonsCommentOptions =
-        refusalReasonsCommentOptions;
+    // appConfiguration.refusalReasonsCommentOptions =
+    //     refusalReasonsCommentOptions;
 
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;

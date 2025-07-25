@@ -13,6 +13,8 @@ enum MasterEnums {
   referralReasons,
   @MappableValue("HOUSE_STRUCTURE_TYPES")
   houseStructureTypes,
+  // @MappableValue("REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR")
+  // refusalReasonsComments,
   @MappableValue("REFUSAL_REASONS")
   refusalReasons,
   @MappableValue("BANDWIDTH_BATCH_SIZE")

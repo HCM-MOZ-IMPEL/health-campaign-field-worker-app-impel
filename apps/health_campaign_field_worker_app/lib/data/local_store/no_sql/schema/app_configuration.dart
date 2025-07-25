@@ -60,8 +60,8 @@ class AppConfiguration {
 
   // @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   // late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
-  @Name('REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
-  late List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions;
+  // @Name('REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  // late List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions;
 
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
