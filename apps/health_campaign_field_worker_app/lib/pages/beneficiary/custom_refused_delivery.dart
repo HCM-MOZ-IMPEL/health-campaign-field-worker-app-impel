@@ -14,6 +14,8 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -38,7 +40,8 @@ class CustomRefusedDeliveryPageState
   static const _reasonOfRefusal = 'reasonOfRefusal';
   static const _deliveryCommentKey = 'deliveryComment';
   static const othersText = "OTHERS";
-
+  static const _refusalReasonDropdownKey = 'refusalReasonDropdown';
+  bool showRefusalReasonDropdown = false;
   @override
   void initState() {
     final registrationState = context.read<HouseholdOverviewBloc>().state;
@@ -89,6 +92,19 @@ class CustomRefusedDeliveryPageState
                                   .control(_reasonOfRefusal)
                                   .setErrors({'': true});
                             });
+                          }
+                          if (form.control(_reasonOfRefusal).value ==
+                              Constants.beneficiaryRefused) {
+                            final dropdownControl =
+                                form.control(_refusalReasonDropdownKey);
+                            dropdownControl
+                                .setValidators([Validators.required]);
+                            dropdownControl.markAsTouched();
+                            dropdownControl.updateValueAndValidity();
+
+                            if (dropdownControl.value == null) {
+                              return;
+                            }
                           }
 
                           if (!form.valid) return;
@@ -143,15 +159,15 @@ class CustomRefusedDeliveryPageState
                                   householdMemberWrapper:
                                       registrationState.householdMemberWrapper,
                                   task: _getTaskModel(
-                                    oldTask,
-                                    projectBeneficiary
-                                        ?.first?.clientReferenceId,
-                                    status,
-                                    reasonOfRefusal,
-                                    refusalComment,
-                                    registrationState.householdMemberWrapper
-                                        .members?.first.address?.first,
-                                  ),
+                                      oldTask,
+                                      projectBeneficiary
+                                          ?.first?.clientReferenceId,
+                                      status,
+                                      reasonOfRefusal,
+                                      refusalComment,
+                                      registrationState.householdMemberWrapper
+                                          .members?.first.address?.first,
+                                      form),
                                   isEditing: (registrationState
                                                       .householdMemberWrapper
                                                       .tasks ??
@@ -242,6 +258,21 @@ class CustomRefusedDeliveryPageState
                                             form
                                                 .control(_reasonOfRefusal)
                                                 .value = value.first;
+                                            showRefusalReasonDropdown = value
+                                                    .first ==
+                                                Constants.beneficiaryRefused;
+                                            final dropdownControl =
+                                                form.control(
+                                                    _refusalReasonDropdownKey);
+                                            if (showRefusalReasonDropdown) {
+                                              dropdownControl.setValidators([]);
+                                              dropdownControl.setErrors({});
+                                            } else {
+                                              dropdownControl.clearValidators();
+                                              dropdownControl.reset();
+                                            }
+                                            dropdownControl
+                                                .updateValueAndValidity();
                                           } else {
                                             form
                                                 .control(_reasonOfRefusal)
@@ -267,6 +298,55 @@ class CustomRefusedDeliveryPageState
                                           ? localizations.translate(
                                               i18.common.corecommonRequired)
                                           : null,
+                                    ),
+                                  ),
+                                ),
+                                Offstage(
+                                  offstage: !showRefusalReasonDropdown,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: kPadding),
+                                    child: BlocBuilder<AppInitializationBloc,
+                                        AppInitializationState>(
+                                      builder: (context, state) {
+                                        if (state is! AppInitialized)
+                                          return const Offstage();
+
+                                        final beneficiaryRefusalReasonOptions =
+                                            state.appConfiguration
+                                                    .deliveryCommentOptions ??
+                                                [];
+
+                                        return DigitReactiveSearchDropdown<
+                                            String>(
+                                          label: localizations.translate(
+                                            i18_local.deliverIntervention
+                                                .beneficiaryRefusalReasonDropdownLabel,
+                                          ),
+                                          form: form,
+                                          enabled: true,
+                                          isRequired: true,
+                                          onSelected: (value) {
+                                            form
+                                                .control(
+                                                    _refusalReasonDropdownKey)
+                                                .value = value;
+                                          },
+                                          menuItems:
+                                              beneficiaryRefusalReasonOptions
+                                                  .map((e) => e.code)
+                                                  .toList(),
+                                          formControlName:
+                                              _refusalReasonDropdownKey,
+                                          valueMapper: (value) =>
+                                              localizations.translate(value),
+                                          emptyText: localizations.translate(
+                                              i18.common.noMatchFound),
+                                          validationMessage:
+                                              localizations.translate(i18
+                                                  .common.corecommonRequired),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -297,6 +377,7 @@ class CustomRefusedDeliveryPageState
       _reasonOfRefusal:
           FormControl<String>(value: null, validators: [Validators.required]),
       _deliveryCommentKey: FormControl<String>(value: null),
+      _refusalReasonDropdownKey: FormControl<String>(value: null),
     });
   }
 
@@ -306,7 +387,8 @@ class CustomRefusedDeliveryPageState
       String status,
       String? reasonOfRefusal,
       String? refusalComment,
-      AddressModel? address) {
+      AddressModel? address,
+      FormGroup form) {
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
     task ??= TaskModel(
@@ -330,6 +412,8 @@ class CustomRefusedDeliveryPageState
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
+    final refusalReasonDropdownValue =
+        form.control(_refusalReasonDropdownKey).value as String?;
 
     task = task.copyWith(
       status: status,
@@ -348,6 +432,12 @@ class CustomRefusedDeliveryPageState
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               refusalComment,
+            ),
+          if (refusalReasonDropdownValue != null &&
+              refusalReasonDropdownValue.isNotEmpty)
+            AdditionalField(
+              Constants.beneficiaryRefusedReason,
+              refusalReasonDropdownValue,
             ),
         ],
       ),
