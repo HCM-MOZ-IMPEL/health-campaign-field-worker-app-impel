@@ -1155,6 +1155,7 @@ class BeneficiaryDetails {
   String get menLabel => 'MEN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+  String get sprayOperatorDetail => 'SPRAY_OPERATOR_DETAILS';
   String get roomsVsSprayedValidation =>
       'SPRAYED_ROOMS_CANNOT_EXCEED_TOTAL_ROOMS';
 
