@@ -1328,6 +1328,8 @@ class DeliverIntervention {
 
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
+  String get beneficiaryRefusalReasonDropdownLabel =>
+      'BENEFICIARY_REFUSED_DROPDOWN';
 
   String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
   String get infoWrittenInChildCard =>
