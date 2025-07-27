@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
@@ -331,7 +332,7 @@ class Constants {
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);
-
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);

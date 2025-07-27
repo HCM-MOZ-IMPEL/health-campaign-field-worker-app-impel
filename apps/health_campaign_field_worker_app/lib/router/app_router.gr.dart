@@ -396,6 +396,7 @@ abstract class _$AppRouter extends RootStackRouter {
     //       isGS1code: args.isGS1code,
     //       singleValue: args.singleValue,
     //       isEditEnabled: args.isEditEnabled,
+    //       manualEnabled: args.manualEnabled,
     //     ),
     //   );
     // },
@@ -1294,10 +1295,11 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DashboardRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
+    ...SurveyFormRoute().pagesMap,
   };
 }
 
-// /// generated route for
+/// generated route for
 // /// [AcknowledgementBednetPage]
 // class AcknowledgementBednetRoute
 //     extends PageRouteInfo<AcknowledgementBednetRouteArgs> {
@@ -1632,7 +1634,7 @@ class ConsentHouseholdAcknowledgementBednetRouteArgs {
   }
 }
 
-// /// generated route for
+/// generated route for
 // /// [ConsentHouseholdAcknowledgementPage]
 // class ConsentHouseholdAcknowledgementRoute
 //     extends PageRouteInfo<ConsentHouseholdAcknowledgementRouteArgs> {
@@ -1651,7 +1653,7 @@ class ConsentHouseholdAcknowledgementBednetRouteArgs {
 //           initialChildren: children,
 //         );
 
-//   static const String name = 'ConsentHouseholdAcknowledgementRoute';
+// static const String name = 'ConsentHouseholdAcknowledgementRoute';
 
 //   static const PageInfo<ConsentHouseholdAcknowledgementRouteArgs> page =
 //       PageInfo<ConsentHouseholdAcknowledgementRouteArgs>(name);

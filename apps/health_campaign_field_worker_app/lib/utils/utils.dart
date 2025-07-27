@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
+
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:health_campaign_field_worker_app/models/entities/roles_type.dart';
 import 'package:inventory_management/models/entities/stock.dart';
@@ -641,6 +643,7 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
+    Future(() => surveyForm_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
