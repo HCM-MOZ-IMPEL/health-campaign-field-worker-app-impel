@@ -134,6 +134,8 @@ class Constants {
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
   static const String sprayOperator = 'spray_operator';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String beneficiaryRefusedReason = 'beneficiary_refused_reason';
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
 
