@@ -389,24 +389,25 @@ class CustomDeliverInterventionPageState
                                                             .deliverIntervention
                                                             .currentCycle),
                                                   ),
-                                                DigitStepper(
-                                                  activeStep:
-                                                      deliveryInterventionState
-                                                              .dose -
-                                                          1,
-                                                  stepRadius: 12.5,
-                                                  steps: steps,
-                                                  maxStepReached: 3,
-                                                  lineLength:
-                                                      (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                ),
+                                                if (steps.isNotEmpty)
+                                                  DigitStepper(
+                                                    activeStep:
+                                                        deliveryInterventionState
+                                                                .dose -
+                                                            1,
+                                                    stepRadius: 12.5,
+                                                    steps: steps,
+                                                    maxStepReached: 3,
+                                                    lineLength: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            12.5 *
+                                                                2 *
+                                                                steps.length -
+                                                            50) /
+                                                        (steps.length - 1),
+                                                  ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
                                                   formControlName:
