@@ -942,8 +942,9 @@ mixin _$HCMWrapperModel {
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError; // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
 // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
-// @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
-// required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
+  @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  List<RefusalReasonsCommentOptions> get refusalReasonsCommentOptions =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -1006,6 +1007,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+      List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1047,6 +1050,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? refusalReasonsCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1097,6 +1101,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      refusalReasonsCommentOptions: null == refusalReasonsCommentOptions
+          ? _value.refusalReasonsCommentOptions
+          : refusalReasonsCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<RefusalReasonsCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1170,6 +1178,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+      List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1209,6 +1219,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? refusalReasonsCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1259,6 +1270,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      refusalReasonsCommentOptions: null == refusalReasonsCommentOptions
+          ? _value._refusalReasonsCommentOptions
+          : refusalReasonsCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<RefusalReasonsCommentOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1329,6 +1344,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+      required final List<RefusalReasonsCommentOptions>
+          refusalReasonsCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1361,6 +1379,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _refusalReasonsCommentOptions = refusalReasonsCommentOptions,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
@@ -1467,13 +1486,19 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
 // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
 // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
-// @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
-// required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
-  final List<BackendInterface> _backendInterface;
+  final List<RefusalReasonsCommentOptions> _refusalReasonsCommentOptions;
 // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
 // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
-// @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
-// required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
+  @override
+  @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  List<RefusalReasonsCommentOptions> get refusalReasonsCommentOptions {
+    if (_refusalReasonsCommentOptions is EqualUnmodifiableListView)
+      return _refusalReasonsCommentOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_refusalReasonsCommentOptions);
+  }
+
+  final List<BackendInterface> _backendInterface;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface {
@@ -1600,7 +1625,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, refusalReasonsCommentOptions: $refusalReasonsCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1629,6 +1654,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
+            const DeepCollectionEquality().equals(
+                other._refusalReasonsCommentOptions,
+                _refusalReasonsCommentOptions) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
@@ -1668,6 +1696,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_checklistTypes),
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_refusalReasonsCommentOptions),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
         const DeepCollectionEquality().hash(_transportTypes),
@@ -1716,6 +1745,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+      required final List<RefusalReasonsCommentOptions>
+          refusalReasonsCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1772,8 +1804,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   List<DeliveryCommentOptions> get deliveryCommentOptions;
   @override // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
 // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
-// @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
-// required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
+  @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  List<RefusalReasonsCommentOptions> get refusalReasonsCommentOptions;
+  @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
   @override

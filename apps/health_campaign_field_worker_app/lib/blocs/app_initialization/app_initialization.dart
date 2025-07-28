@@ -106,7 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
-                    // MasterEnums.refusalReasonsComments.toValue(),
+                    MasterEnums.refusalReasonsComments.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

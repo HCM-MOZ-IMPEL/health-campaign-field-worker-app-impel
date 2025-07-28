@@ -33,6 +33,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.referralReasons;
       case "HOUSE_STRUCTURE_TYPES":
         return MasterEnums.houseStructureTypes;
+      case "REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR":
+        return MasterEnums.refusalReasonsComments;
       case "REFUSAL_REASONS":
         return MasterEnums.refusalReasons;
       case "BANDWIDTH_BATCH_SIZE":
@@ -95,6 +97,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "REFERRAL_REASONS";
       case MasterEnums.houseStructureTypes:
         return "HOUSE_STRUCTURE_TYPES";
+      case MasterEnums.refusalReasonsComments:
+        return "REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR";
       case MasterEnums.refusalReasons:
         return "REFUSAL_REASONS";
       case MasterEnums.bandWidthBatchSize:
