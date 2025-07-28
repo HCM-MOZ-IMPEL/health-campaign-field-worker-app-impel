@@ -314,7 +314,7 @@ class CustomRefusedDeliveryPageState
 
                                         final beneficiaryRefusalReasonOptions =
                                             state.appConfiguration
-                                                    .deliveryCommentOptions ??
+                                                    .refusalReasonsCommentOptions ??
                                                 [];
 
                                         return DigitReactiveSearchDropdown<
