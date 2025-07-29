@@ -65,7 +65,7 @@ class HomeBednetPage extends LocalizedStatefulWidget {
 class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -73,14 +73,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });

@@ -239,8 +239,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 

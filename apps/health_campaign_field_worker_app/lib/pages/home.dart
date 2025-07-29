@@ -5,9 +5,12 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:recase/recase.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -64,7 +67,7 @@ class HomePage extends LocalizedStatefulWidget {
 class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -72,17 +75,15 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
+    //// Function to set initial Data required for the packages to run
+    setPackagesSingleton(context);
   }
 
   //  Be sure to cancel subscription after you are done
@@ -623,6 +624,171 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
     }
   }
+}
+
+void setPackagesSingleton(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+      orElse: () {},
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
+      ) {
+        final filteredDashboardConfig = filterDashboardConfig(
+            dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
+        loadLocalization(context, appConfiguration);
+        // INFO : Need to add singleton of package Here
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+
+        AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId ?? '',
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+
+        ReferralReconSingleton().setInitialData(
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilitySupervisor.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
+        );
+
+        RegistrationDeliverySingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+          referralReasons:
+              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+          searchHouseHoldFilter: [],
+          searchCLFFilters: [],
+          houseStructureTypes: [],
+          refusalReasons: [],
+          loggedInUser: context.loggedInUserModel,
+        );
+
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) =>
+                    role.code == RolesType.distributor.toValue() ||
+                    role.code == RolesType.communityDistributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
+        LocationTrackerSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) =>
+                    role.code == RolesType.distributor.toValue() ||
+                    role.code == RolesType.communityDistributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+        InventorySingleton().setBoundary(boundary: context.boundary);
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+        ComplaintsSingleton().setBoundary(boundary: context.boundary);
+      });
 }
 
 // Function to set initial Data required for the packages to run
