@@ -158,8 +158,7 @@ class _CustomHouseholdOverviewPageState
                                           style: theme.textTheme.displayMedium,
                                         ),
                                       ),
-                                      if (!isSuccessfulOrInEligible(
-                                          state, deliverState))
+                                      if (!isInEligible(state, deliverState))
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: DigitIconButton(
@@ -720,6 +719,25 @@ class _CustomHouseholdOverviewPageState
       return true;
     }
 
+    if (status == Status.administeredFailed.toValue()) {
+      final reasonField = lastTask?.additionalFields?.fields.firstWhereOrNull(
+          (field) =>
+              field.key == AdditionalFieldsType.reasonOfRefusal.toValue());
+
+      return reasonField?.value == "INCOMPATIBLE";
+    }
+
+    return false;
+  }
+
+  bool isInEligible(HouseholdOverviewState state,
+      DeliverInterventionState deliverInterventionState) {
+    if (deliverInterventionState.tasks == null ||
+        (deliverInterventionState.tasks?.isEmpty ?? true)) {
+      return false;
+    }
+    final lastTask = deliverInterventionState.tasks?.last;
+    final status = lastTask?.status;
     if (status == Status.administeredFailed.toValue()) {
       final reasonField = lastTask?.additionalFields?.fields.firstWhereOrNull(
           (field) =>
