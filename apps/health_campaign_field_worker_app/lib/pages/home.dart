@@ -706,13 +706,14 @@ void setPackagesSingleton(BuildContext context) {
               .toList(),
           houseStructureTypes:
               appConfiguration.houseStructureTypes!.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons!.map((e) => e.code).toList(),
           symptomsTypes:
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
           searchHouseHoldFilter: [],
           searchCLFFilters: [],
-          refusalReasons: [],
           loggedInUser: context.loggedInUserModel,
         );
 
