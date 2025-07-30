@@ -464,27 +464,27 @@ class CustomStockDetailsPageState
                                           .control(_deliveryTeamKey)
                                           .value as String?;
 
-                                      int spaq1 = 0;
-                                      int spaq2 = 0;
+                                      // int spaq1 = 0;
+                                      // int spaq2 = 0;
 
-                                      int totalQuantity = 0;
-                                      int totalRemainingQuantityInMl =
-                                          context.spaq1;
+                                      // int totalQuantity = 0;
+                                      // int totalRemainingQuantityInMl =
+                                      //     context.spaq1;
 
-                                      int totalExpectedUnusedBottles =
-                                          totalRemainingQuantityInMl ~/
-                                              Constants.mlPerBottle;
+                                      // int totalExpectedUnusedBottles =
+                                      //     totalRemainingQuantityInMl ~/
+                                      //         Constants.mlPerBottle;
 
-                                      int totalExpectedPartialQuantityInMl =
-                                          totalRemainingQuantityInMl %
-                                              Constants.mlPerBottle;
+                                      // int totalExpectedPartialQuantityInMl =
+                                      //     totalRemainingQuantityInMl %
+                                      //         Constants.mlPerBottle;
 
-                                      int totalExpectedPartialBottles =
-                                          totalRemainingQuantityInMl %
-                                                      Constants.mlPerBottle !=
-                                                  0
-                                              ? 1
-                                              : 0;
+                                      // int totalExpectedPartialBottles =
+                                      //     totalRemainingQuantityInMl %
+                                      //                 Constants.mlPerBottle !=
+                                      //             0
+                                      //         ? 1
+                                      //         : 0;
 
                                       // totalQuantity = quantity != null
                                       //     ? int.parse(
@@ -492,8 +492,8 @@ class CustomStockDetailsPageState
                                       //       )
                                       //     : 0;
 
-                                      spaq1 =
-                                          totalQuantity * Constants.mlPerBottle;
+                                      // spaq1 =
+                                      //     totalQuantity * Constants.mlPerBottle;
 
                                       // if (spaq1 >
                                       //         totalRemainingQuantityInMl &&
