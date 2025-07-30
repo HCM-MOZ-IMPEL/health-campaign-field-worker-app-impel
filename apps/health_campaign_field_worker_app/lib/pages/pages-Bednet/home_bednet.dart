@@ -432,7 +432,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
+              context.router.push(const CustomComplaintsInboxWrapperRoute()),
         ),
       ),
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
