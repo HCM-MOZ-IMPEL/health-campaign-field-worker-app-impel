@@ -562,12 +562,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final projectTypeCode = getProjectTypeCode(event.model);
-        final dashboardConfig = await isar.dashboardConfigSchemaLists
+        final dashboardConfigSchemaList = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
             .dashboardConfigsIsNotNull()
             .dashboardConfigsIsNotEmpty()
             .findAll();
+        // fix added for for irs after version upgrade as , now we have dashboardConfigSchemaLists from ISAR
+        final dashboardConfig = dashboardConfigSchemaList.first.dashboardConfigs
+                ?.where((config) => config.projectTypeCode == projectTypeCode)
+                .toList() ??
+            [];
 
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
@@ -598,7 +603,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs?.first.charts ?? [],
+            dashboardConfig?.first.charts ?? [],
             startDate,
             endDate,
             isar,

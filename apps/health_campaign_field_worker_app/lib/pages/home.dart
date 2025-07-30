@@ -320,15 +320,15 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
-      // i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.bar_chart_sharp,
-      //     label: i18.home.dashboard,
-      //     onPressed: () {
-      //       context.router.push(const UserDashboardRoute());
-      //     },
-      //   ),
-      // ),
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
       // INFO : Need to add home items of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
@@ -475,17 +475,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -506,7 +495,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -518,7 +506,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
-
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
