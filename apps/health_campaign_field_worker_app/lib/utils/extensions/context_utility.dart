@@ -248,6 +248,8 @@ extension ContextUtilityExtensions on BuildContext {
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     // LocationTrackerSingleton()
     //     .setBoundaryName(boundaryName: selectedBoundary.code!);
+    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
+
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.code!);
     ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);

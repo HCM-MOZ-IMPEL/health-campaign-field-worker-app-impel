@@ -1271,6 +1271,7 @@ class InventoryReportDetails {
   const InventoryReportDetails();
   String get partialReturnedQuantityLabel =>
       "INVENTORY_REPORT_DETAILS_PARTIAL_RETURNED_QUANTITY_LABEL";
+  String get stockIdLabel => 'STOCK_ID_LABEL';
 
   String get commentIsRequiredText => "COMMENT_IS_REQUIRED_TEXT";
 

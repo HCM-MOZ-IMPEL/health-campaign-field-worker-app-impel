@@ -515,6 +515,7 @@ class CustomInventoryReportDetailsPageState
                                                 'wastedBlistersReturned';
                                             const transactingPartyKey =
                                                 'transactingParty';
+                                            const stockIdKey = 'stockId';
 
                                             return _ReportDetailsContent(
                                               title: title,
@@ -528,6 +529,16 @@ class CustomInventoryReportDetailsPageState
                                                     ),
                                                     key: dateKey,
                                                     width: 100,
+                                                  ),
+                                                  DigitGridColumn(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18_local
+                                                          .inventoryReportDetails
+                                                          .stockIdLabel,
+                                                    ),
+                                                    key: stockIdKey,
+                                                    width: 150,
                                                   ),
                                                   DigitGridColumn(
                                                     label: quantityLabel,
@@ -583,6 +594,11 @@ class CustomInventoryReportDetailsPageState
                                                           DigitGridCell(
                                                             key: dateKey,
                                                             value: entry.key,
+                                                          ),
+                                                          DigitGridCell(
+                                                            key: stockIdKey,
+                                                            value:
+                                                                model.id ?? '',
                                                           ),
                                                           DigitGridCell(
                                                             key: quantityKey,
@@ -689,6 +705,7 @@ class CustomInventoryReportDetailsPageState
                                                 'stockInHand';
                                             const manualCountKey =
                                                 'manualCount';
+                                            const stockIdKey = 'stockId';
 
                                             return _ReportDetailsContent(
                                               title: title,
@@ -702,6 +719,16 @@ class CustomInventoryReportDetailsPageState
                                                     ),
                                                     key: dateKey,
                                                     width: 100,
+                                                  ),
+                                                  DigitGridColumn(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18_local
+                                                          .inventoryReportDetails
+                                                          .stockIdLabel,
+                                                    ),
+                                                    key: stockIdKey,
+                                                    width: 150,
                                                   ),
                                                   DigitGridColumn(
                                                     label:
@@ -759,6 +786,11 @@ class CustomInventoryReportDetailsPageState
                                                           DigitGridCell(
                                                             key: dateKey,
                                                             value: entry.key,
+                                                          ),
+                                                          DigitGridCell(
+                                                            key: stockIdKey,
+                                                            value:
+                                                                model.id ?? '',
                                                           ),
                                                           DigitGridCell(
                                                             key: receivedKey,
