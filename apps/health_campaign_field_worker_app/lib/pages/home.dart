@@ -712,7 +712,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
-          searchHouseHoldFilter: [],
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters!
+              .map((e) => e.code)
+              .toList(),
           searchCLFFilters: [],
           loggedInUser: context.loggedInUserModel,
         );
