@@ -509,6 +509,7 @@ class _CustomSearchBeneficiaryPageState
           limit: isPagination
               ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     } else {
@@ -533,6 +534,7 @@ class _CustomSearchBeneficiaryPageState
           limit: isPagination
               ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     }

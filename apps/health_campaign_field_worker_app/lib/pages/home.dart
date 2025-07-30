@@ -5,6 +5,7 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
 import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 import 'package:inventory_management/inventory_management.dart';
@@ -349,6 +350,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
@@ -399,6 +402,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
