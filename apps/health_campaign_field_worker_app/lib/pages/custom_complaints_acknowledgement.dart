@@ -6,19 +6,19 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 @RoutePage()
-class ComplaintsAcknowledgementPage extends LocalizedStatefulWidget {
-  const ComplaintsAcknowledgementPage({
+class CustomComplaintsAcknowledgementPage extends LocalizedStatefulWidget {
+  const CustomComplaintsAcknowledgementPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<ComplaintsAcknowledgementPage> createState() =>
+  State<CustomComplaintsAcknowledgementPage> createState() =>
       _ComplaintsAcknowledgementPageState();
 }
 
 class _ComplaintsAcknowledgementPageState
-    extends LocalizedState<ComplaintsAcknowledgementPage> {
+    extends LocalizedState<CustomComplaintsAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

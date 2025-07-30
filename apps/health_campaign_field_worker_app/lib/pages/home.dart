@@ -1,3 +1,6 @@
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 
@@ -330,6 +333,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const CustomComplaintsInboxWrapperRoute()),
+        ),
+      ),
+
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
@@ -423,7 +436,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
+              context.router.push(const CustomComplaintsInboxWrapperRoute()),
         ),
       ),
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
@@ -476,6 +489,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
       // INFO : Need to add showcase keys of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.showcaseKey,
+
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
 
@@ -546,6 +562,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
 
@@ -577,6 +596,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
