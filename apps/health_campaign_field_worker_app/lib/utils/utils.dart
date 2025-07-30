@@ -6,6 +6,7 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema
 import 'package:health_campaign_field_worker_app/models/entities/roles_type.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/utils.dart';
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -643,6 +644,7 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers()),
     Future(() => surveyForm_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
