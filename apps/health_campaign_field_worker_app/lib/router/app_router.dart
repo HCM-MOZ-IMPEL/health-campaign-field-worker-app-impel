@@ -1,6 +1,5 @@
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
@@ -19,6 +18,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:complaints/models/pgr_complaints.dart';
 
 import '../blocs/inventory/custom_inventory_report.dart'
     as custom_inventory_report;
@@ -82,8 +82,6 @@ import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
-
-import '../pages/complaints_acknowledgement.dart';
 
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -160,6 +158,18 @@ import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 
+import '../pages/complaints/inbox/custom_complaints_details_view.dart';
+import '../pages/complaints/inbox/custom_complaints_inbox.dart';
+import '../pages/complaints/inbox/custom_complaints_inbox_filter.dart';
+import '../pages/complaints/inbox/custom_complaints_inbox_search.dart';
+import '../pages/complaints/inbox/custom_complaints_inbox_sort.dart';
+import '../pages/complaints/inbox/custom_complaints_inbox_wrapper.dart';
+import '../pages/complaints/registration/custom_complaint_type.dart';
+import '../pages/complaints/registration/custom_complaints_details.dart';
+import '../pages/complaints/registration/custom_complaints_location.dart';
+import '../pages/complaints/registration/custom_complaints_registration_wrapper.dart';
+import '../pages/custom_complaints_acknowledgement.dart';
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(
@@ -229,6 +239,62 @@ class AppRouter extends _$AppRouter {
               ),
 
               // INFO : Need to add Router of package Here
+              AutoRoute(
+                page: CustomComplaintsInboxWrapperRoute.page,
+                path: 'complaints-inbox',
+                children: [
+                  AutoRoute(
+                    page: CustomComplaintsInboxRoute.page,
+                    path: 'complaints-inbox-items',
+                    initial: true,
+                  ),
+                  AutoRoute(
+                    page: CustomComplaintsInboxFilterRoute.page,
+                    path: 'complaints-inbox-filter',
+                  ),
+                  AutoRoute(
+                    page: CustomComplaintsInboxSearchRoute.page,
+                    path: 'complaints-inbox-search',
+                  ),
+                  AutoRoute(
+                    page: CustomComplaintsInboxSortRoute.page,
+                    path: 'complaints-inbox-sort',
+                  ),
+                  AutoRoute(
+                    //CustomComplaintsDetailsViewPage
+                    page: CustomComplaintsDetailsViewRoute.page,
+                    path: 'complaints-inbox-view-details',
+                  ),
+                ],
+              ),
+
+              /// Complaints registration
+              AutoRoute(
+                page: CustomComplaintsRegistrationWrapperRoute.page,
+                path: 'complaints-registration',
+                children: [
+                  AutoRoute(
+                    page: CustomComplaintTypeRoute.page,
+                    path: 'complaints-type',
+                    initial: true,
+                  ),
+                  AutoRoute(
+                    page: CustomComplaintsLocationRoute.page,
+                    path: 'complaints-location',
+                  ),
+                  AutoRoute(
+                    page: CustomComplaintsDetailsRoute.page,
+                    path: 'complaints-details',
+                  ),
+                ],
+              ),
+
+              /// Complaints Acknowledgemnet
+              AutoRoute(
+                page: CustomComplaintsAcknowledgementRoute.page,
+                path: 'complaints-acknowledgement',
+              ),
+
               AutoRoute(
                 page: CustomManageStocksRoute.page,
                 path: 'custom-manage-stocks',
@@ -631,7 +697,7 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                   page: AcknowledgementRoute.page, path: 'acknowledgement'),
               AutoRoute(
-                page: ComplaintsAcknowledgementRoute.page,
+                page: CustomComplaintsAcknowledgementRoute.page,
                 path: 'complaints-acknowledgement',
               ),
               AutoRoute(
@@ -641,28 +707,28 @@ class AppRouter extends _$AppRouter {
 
               /// Complaints Inbox
               AutoRoute(
-                page: ComplaintsInboxWrapperRoute.page,
+                page: CustomComplaintsInboxWrapperRoute.page,
                 path: 'complaints-inbox',
                 children: [
                   AutoRoute(
-                    page: ComplaintsInboxRoute.page,
+                    page: CustomComplaintsInboxRoute.page,
                     path: 'complaints-inbox-items',
                     initial: true,
                   ),
                   AutoRoute(
-                    page: ComplaintsInboxFilterRoute.page,
+                    page: CustomComplaintsInboxFilterRoute.page,
                     path: 'complaints-inbox-filter',
                   ),
                   AutoRoute(
-                    page: ComplaintsInboxSearchRoute.page,
+                    page: CustomComplaintsInboxSearchRoute.page,
                     path: 'complaints-inbox-search',
                   ),
                   AutoRoute(
-                    page: ComplaintsInboxSortRoute.page,
+                    page: CustomComplaintsInboxSortRoute.page,
                     path: 'complaints-inbox-sort',
                   ),
                   AutoRoute(
-                    page: ComplaintsDetailsViewRoute.page,
+                    page: CustomComplaintsDetailsViewRoute.page,
                     path: 'complaints-inbox-view-details',
                   ),
                 ],
@@ -670,20 +736,20 @@ class AppRouter extends _$AppRouter {
 
               /// Complaints registration
               AutoRoute(
-                page: ComplaintsRegistrationWrapperRoute.page,
+                page: CustomComplaintsRegistrationWrapperRoute.page,
                 path: 'complaints-registration',
                 children: [
                   AutoRoute(
-                    page: ComplaintTypeRoute.page,
+                    page: CustomComplaintTypeRoute.page,
                     path: 'complaints-type',
                     initial: true,
                   ),
                   AutoRoute(
-                    page: ComplaintsLocationRoute.page,
+                    page: CustomComplaintsLocationRoute.page,
                     path: 'complaints-location',
                   ),
                   AutoRoute(
-                    page: ComplaintsDetailsRoute.page,
+                    page: CustomComplaintsDetailsRoute.page,
                     path: 'complaints-details',
                   ),
                 ],
@@ -1126,7 +1192,7 @@ class AppRouter extends _$AppRouter {
               ]),
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
-            page: ComplaintsAcknowledgementRoute.page,
+            page: CustomComplaintsAcknowledgementRoute.page,
             path: 'complaints-acknowledgement',
           ),
           AutoRoute(
@@ -1136,28 +1202,28 @@ class AppRouter extends _$AppRouter {
 
           /// Complaints Inbox
           AutoRoute(
-            page: ComplaintsInboxWrapperRoute.page,
+            page: CustomComplaintsInboxWrapperRoute.page,
             path: 'complaints-inbox',
             children: [
               AutoRoute(
-                page: ComplaintsInboxRoute.page,
+                page: CustomComplaintsInboxRoute.page,
                 path: 'complaints-inbox-items',
                 initial: true,
               ),
               AutoRoute(
-                page: ComplaintsInboxFilterRoute.page,
+                page: CustomComplaintsInboxFilterRoute.page,
                 path: 'complaints-inbox-filter',
               ),
               AutoRoute(
-                page: ComplaintsInboxSearchRoute.page,
+                page: CustomComplaintsInboxSearchRoute.page,
                 path: 'complaints-inbox-search',
               ),
               AutoRoute(
-                page: ComplaintsInboxSortRoute.page,
+                page: CustomComplaintsInboxSortRoute.page,
                 path: 'complaints-inbox-sort',
               ),
               AutoRoute(
-                page: ComplaintsDetailsViewRoute.page,
+                page: CustomComplaintsDetailsViewRoute.page,
                 path: 'complaints-inbox-view-details',
               ),
             ],
@@ -1165,20 +1231,20 @@ class AppRouter extends _$AppRouter {
 
           /// Complaints registration
           AutoRoute(
-            page: ComplaintsRegistrationWrapperRoute.page,
+            page: CustomComplaintsRegistrationWrapperRoute.page,
             path: 'complaints-registration',
             children: [
               AutoRoute(
-                page: ComplaintTypeRoute.page,
+                page: CustomComplaintTypeRoute.page,
                 path: 'complaints-type',
                 initial: true,
               ),
               AutoRoute(
-                page: ComplaintsLocationRoute.page,
+                page: CustomComplaintsLocationRoute.page,
                 path: 'complaints-location',
               ),
               AutoRoute(
-                page: ComplaintsDetailsRoute.page,
+                page: CustomComplaintsDetailsRoute.page,
                 path: 'complaints-details',
               ),
             ],
@@ -1692,7 +1758,7 @@ class AppRouter extends _$AppRouter {
 
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
-            page: ComplaintsAcknowledgementRoute.page,
+            page: CustomComplaintsAcknowledgementRoute.page,
             path: 'complaints-acknowledgement',
           ),
 
@@ -1712,28 +1778,28 @@ class AppRouter extends _$AppRouter {
 
           /// Complaints Inbox
           AutoRoute(
-            page: ComplaintsInboxWrapperRoute.page,
+            page: CustomComplaintsInboxWrapperRoute.page,
             path: 'complaints-inbox',
             children: [
               AutoRoute(
-                page: ComplaintsInboxRoute.page,
+                page: CustomComplaintsInboxRoute.page,
                 path: 'complaints-inbox-items',
                 initial: true,
               ),
               AutoRoute(
-                page: ComplaintsInboxFilterRoute.page,
+                page: CustomComplaintsInboxFilterRoute.page,
                 path: 'complaints-inbox-filter',
               ),
               AutoRoute(
-                page: ComplaintsInboxSearchRoute.page,
+                page: CustomComplaintsInboxSearchRoute.page,
                 path: 'complaints-inbox-search',
               ),
               AutoRoute(
-                page: ComplaintsInboxSortRoute.page,
+                page: CustomComplaintsInboxSortRoute.page,
                 path: 'complaints-inbox-sort',
               ),
               AutoRoute(
-                page: ComplaintsDetailsViewRoute.page,
+                page: CustomComplaintsDetailsViewRoute.page,
                 path: 'complaints-inbox-view-details',
               ),
             ],
@@ -1741,20 +1807,20 @@ class AppRouter extends _$AppRouter {
 
           /// Complaints registration
           AutoRoute(
-            page: ComplaintsRegistrationWrapperRoute.page,
+            page: CustomComplaintsRegistrationWrapperRoute.page,
             path: 'complaints-registration',
             children: [
               AutoRoute(
-                page: ComplaintTypeRoute.page,
+                page: CustomComplaintTypeRoute.page,
                 path: 'complaints-type',
                 initial: true,
               ),
               AutoRoute(
-                page: ComplaintsLocationRoute.page,
+                page: CustomComplaintsLocationRoute.page,
                 path: 'complaints-location',
               ),
               AutoRoute(
-                page: ComplaintsDetailsRoute.page,
+                page: CustomComplaintsDetailsRoute.page,
                 path: 'complaints-details',
               ),
             ],
