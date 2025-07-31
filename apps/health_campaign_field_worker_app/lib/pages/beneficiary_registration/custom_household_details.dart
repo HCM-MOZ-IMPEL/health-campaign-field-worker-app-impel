@@ -361,6 +361,8 @@ class CustomHouseHoldDetailsPageState
                                   lastModifiedTime:
                                       context.millisecondsSinceEpoch(),
                                 ),
+                                householdType: RegistrationDeliverySingleton()
+                                    .householdType,
                                 auditDetails: AuditDetails(
                                   createdBy: RegistrationDeliverySingleton()
                                       .loggedInUserUuid
