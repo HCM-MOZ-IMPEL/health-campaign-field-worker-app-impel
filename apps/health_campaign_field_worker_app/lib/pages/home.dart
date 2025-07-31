@@ -432,7 +432,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               : InventorySingleton().isDistributor
                   ? i18.home.specialCaseCheckList
                   : i18.home.myCheckList,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomChecklistWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
