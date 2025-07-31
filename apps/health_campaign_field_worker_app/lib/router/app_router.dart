@@ -13,7 +13,11 @@ import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
-
+import '../pages/checklist/custom_checklist.dart';
+import '../pages/checklist/custom_checklist_boundary_view.dart';
+import '../pages/checklist/custom_checklist_preview.dart';
+import '../pages/checklist/custom_checklist_view.dart';
+import '../pages/checklist/custom_checklist_wrapper.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +185,6 @@ part 'app_router.gr.dart';
     DashboardRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
-    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -512,7 +515,9 @@ class AppRouter extends _$AppRouter {
                           page: BeneficiaryChecklistRoute.page,
                           path: 'beneficiary-checklist',
                         ),
-                        AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                        // AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                        AutoRoute(
+                            page: CustomChecklistViewRoute.page, path: 'view'),
                         AutoRoute(
                           page: IneligibleSummaryRoute.page,
                           path: 'ineligible-beneficiary-summary',
@@ -623,7 +628,11 @@ class AppRouter extends _$AppRouter {
                           path: 'household-acknowledgement',
                           redirectTo: 'custom-household-acknowledgement',
                         ),
-                        AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                        // AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                        AutoRoute(
+                          page: CustomChecklistViewRoute.page,
+                          path: 'view',
+                        ),
                         AutoRoute(
                           page: DeliverySummaryRoute.page,
                           path: 'delivery-summary',
@@ -676,23 +685,42 @@ class AppRouter extends _$AppRouter {
                   ]),
 
               // SurveyForm Route
+              // AutoRoute(
+              //     page: SurveyFormWrapperRoute.page,
+              //     path: 'surveyForm',
+              //     children: [
+              //       AutoRoute(
+              //         page: SurveyformRoute.page,
+              //         path: '',
+              //       ),
+              //       AutoRoute(
+              //           page: SurveyFormBoundaryViewRoute.page,
+              //           path: 'view-boundary'),
+              //       AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              //       AutoRoute(
+              //           page: SurveyFormPreviewRoute.page, path: 'preview'),
+              //       AutoRoute(
+              //           page: SurveyFormAcknowledgementRoute.page,
+              //           path: 'surveyForm-acknowledgement'),
+              //     ]),
+
+              //checklist Route
               AutoRoute(
-                  page: SurveyFormWrapperRoute.page,
-                  path: 'surveyForm',
+                  page: CustomChecklistWrapperRoute.page,
+                  path: 'checklist',
                   children: [
                     AutoRoute(
-                      page: SurveyformRoute.page,
+                      page: CustomChecklistRoute.page,
                       path: '',
                     ),
                     AutoRoute(
-                        page: SurveyFormBoundaryViewRoute.page,
+                        page: CustomChecklistBoundaryViewRoute.page,
                         path: 'view-boundary'),
-                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
-                        page: SurveyFormPreviewRoute.page, path: 'preview'),
+                        page: CustomChecklistViewRoute.page, path: 'view'),
                     AutoRoute(
-                        page: SurveyFormAcknowledgementRoute.page,
-                        path: 'surveyForm-acknowledgement'),
+                        page: CustomChecklistPreviewRoute.page,
+                        path: 'preview'),
                   ]),
               AutoRoute(
                   page: AcknowledgementRoute.page, path: 'acknowledgement'),
@@ -1173,22 +1201,39 @@ class AppRouter extends _$AppRouter {
           ),
 
           // SurveyForm Route
+          // AutoRoute(
+          //     page: SurveyFormWrapperRoute.page,
+          //     path: 'surveyForm',
+          //     children: [
+          //       AutoRoute(
+          //         page: SurveyformRoute.page,
+          //         path: '',
+          //       ),
+          //       AutoRoute(
+          //           page: SurveyFormBoundaryViewRoute.page,
+          //           path: 'view-boundary'),
+          //       AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+          //       AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+          //       AutoRoute(
+          //           page: SurveyFormAcknowledgementRoute.page,
+          //           path: 'surveyForm-acknowledgement'),
+          //     ]),
+
+          //checklist Route
           AutoRoute(
-              page: SurveyFormWrapperRoute.page,
-              path: 'surveyForm',
+              page: CustomChecklistWrapperRoute.page,
+              path: 'checklist',
               children: [
                 AutoRoute(
-                  page: SurveyformRoute.page,
+                  page: CustomChecklistRoute.page,
                   path: '',
                 ),
                 AutoRoute(
-                    page: SurveyFormBoundaryViewRoute.page,
+                    page: CustomChecklistBoundaryViewRoute.page,
                     path: 'view-boundary'),
-                AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
-                AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+                AutoRoute(page: CustomChecklistViewRoute.page, path: 'view'),
                 AutoRoute(
-                    page: SurveyFormAcknowledgementRoute.page,
-                    path: 'surveyForm-acknowledgement'),
+                    page: CustomChecklistPreviewRoute.page, path: 'preview'),
               ]),
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
@@ -1738,22 +1783,39 @@ class AppRouter extends _$AppRouter {
           ),
 
           // SurveyForm Route
+          // AutoRoute(
+          //     page: SurveyFormWrapperRoute.page,
+          //     path: 'surveyForm',
+          //     children: [
+          //       AutoRoute(
+          //         page: SurveyformRoute.page,
+          //         path: '',
+          //       ),
+          //       AutoRoute(
+          //           page: SurveyFormBoundaryViewRoute.page,
+          //           path: 'view-boundary'),
+          //       AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+          //       AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+          //       AutoRoute(
+          //           page: SurveyFormAcknowledgementRoute.page,
+          //           path: 'surveyForm-acknowledgement'),
+          //     ]),
+
+          //checklist Route
           AutoRoute(
-              page: SurveyFormWrapperRoute.page,
-              path: 'surveyForm',
+              page: CustomChecklistWrapperRoute.page,
+              path: 'checklist',
               children: [
                 AutoRoute(
-                  page: SurveyformRoute.page,
+                  page: CustomChecklistRoute.page,
                   path: '',
                 ),
                 AutoRoute(
-                    page: SurveyFormBoundaryViewRoute.page,
+                    page: CustomChecklistBoundaryViewRoute.page,
                     path: 'view-boundary'),
-                AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
-                AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+                AutoRoute(page: CustomChecklistViewRoute.page, path: 'view'),
                 AutoRoute(
-                    page: SurveyFormAcknowledgementRoute.page,
-                    path: 'surveyForm-acknowledgement'),
+                    page: CustomChecklistPreviewRoute.page, path: 'preview'),
               ]),
 
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),

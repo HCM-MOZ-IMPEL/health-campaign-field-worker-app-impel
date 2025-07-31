@@ -407,7 +407,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.warehouseManagerCheckList,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomChecklistWrapperRoute()),
         ),
       ),
 
@@ -419,7 +419,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           label: context.isDistributor
               ? i18.home.specialCaseCheckList
               : i18.home.myCheckList,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomChecklistWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
