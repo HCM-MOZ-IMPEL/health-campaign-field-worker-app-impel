@@ -47,6 +47,7 @@ class VehicleCard extends StatelessWidget {
     final brand = getAdditionalFieldFromVehicle(vehicle, "Brand");
     final model = getAdditionalFieldFromVehicle(vehicle, "Model");
     final vehicleType = getAdditionalFieldFromVehicle(vehicle, "Vehicle Type");
+    final driverName = getAdditionalFieldFromVehicle(vehicle, "Driver Name");
     final startDate = getAdditionalFieldFromVehicleActionModel(
         vehicleActionModel, "tripStartTime");
     final endDate = getAdditionalFieldFromVehicleActionModel(
@@ -119,6 +120,9 @@ class VehicleCard extends StatelessWidget {
                 appLocalizations.translate(
                   i18_local.vehicleTracking.model,
                 ): model,
+                appLocalizations.translate(
+                  i18_local.vehicleTracking.driverName,
+                ): driverName ?? "-",
                 if (type == VehicleCardType.info && endDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.endDate,

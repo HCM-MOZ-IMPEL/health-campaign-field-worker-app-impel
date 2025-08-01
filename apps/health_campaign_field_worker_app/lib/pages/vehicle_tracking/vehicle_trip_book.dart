@@ -9,6 +9,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -49,12 +50,11 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
   bool? shouldSubmit = false;
 
   static const _tripBookReasonKey = "tripBookReason";
+  static const _otherFieldReasonKey = "otherFieldReason";
 
   // Variable to track dose administration status
   bool doseAdministered = false;
   // for others reason
-  final TextEditingController otherFieldReasonController =
-      TextEditingController();
   bool otherSelected = false;
 
 // Initialize the currentStep variable to keep track of the current step in a process.
@@ -108,6 +108,14 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                   : () async {
                                       form.markAllAsTouched();
                                       if (!form.valid) {
+                                        Toast.showToast(
+                                          context,
+                                          type: ToastType.error,
+                                          message: localizations.translate(
+                                            i18_local.vehicleTracking
+                                                .commentRequired,
+                                          ),
+                                        );
                                         return;
                                       }
 
@@ -216,13 +224,25 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                           .markAsTouched();
                                       setState(() {
                                         if (value.isNotEmpty) {
-                                          if (value.first == "Others") {
+                                          if (value.first == "OTHERS") {
                                             setState(() {
                                               otherSelected = true;
+                                              form
+                                                  .control(_otherFieldReasonKey)
+                                                  .setValidators(
+                                                [Validators.required],
+                                                autoValidate: true,
+                                              );
                                             });
                                           } else {
                                             setState(() {
                                               otherSelected = false;
+                                              form
+                                                  .control(_otherFieldReasonKey)
+                                                  .setValidators(
+                                                [],
+                                                autoValidate: true,
+                                              );
                                             });
                                           }
                                           form
@@ -244,20 +264,29 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                             Offstage(
                                 offstage: !otherSelected,
                                 child: Padding(
-                                  padding: EdgeInsets.all(kPadding),
-                                  child: DigitTextField(
-                                      label: localizations.translate(
-                                        i18_local.vehicleTracking
-                                            .othersReasonTextLabel,
-                                      ),
-                                      isRequired: otherSelected,
-                                      controller: otherFieldReasonController,
-                                      inputFormatter: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                          "[a-zA-Z0-9]",
-                                        )),
-                                      ]),
+                                  padding: const EdgeInsets.all(kPadding),
+                                  child: ReactiveWrapperField(
+                                      formControlName: _otherFieldReasonKey,
+                                      builder: (field) {
+                                        return InputField(
+                                          label: localizations.translate(
+                                            i18_local.vehicleTracking
+                                                .othersReasonTextLabel,
+                                          ),
+                                          isRequired: otherSelected,
+                                          onChange: (value) {
+                                            field.control.markAsTouched();
+                                            field.control.value = value;
+                                          },
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                              "[a-zA-Z0-9]",
+                                            )),
+                                          ],
+                                          type: InputType.text,
+                                        );
+                                      }),
                                 ))
                           ],
                         ),
@@ -346,6 +375,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     var clientReferenceId = IdGen.i.identifier;
     var startTime = DateTime.now().millisecondsSinceEpoch;
     final tripBookReason = form.control(_tripBookReasonKey).value as String?;
+    final otherFieldReason =
+        form.control(_otherFieldReasonKey).value as String?;
 
     if (latitude == null ||
         longitude == null ||
@@ -369,6 +400,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
           AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
+          if (otherFieldReason != null)
+            AdditionalField(_otherFieldReasonKey, otherFieldReason),
           AdditionalField("tripStartTime", startTime)
         ]));
 
@@ -379,6 +412,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     return fb.group(<String, Object>{
       _tripBookReasonKey:
           FormControl<String>(validators: [Validators.required]),
+      _otherFieldReasonKey: FormControl<String>(
+        validators: [],
+      )
     });
   }
 }

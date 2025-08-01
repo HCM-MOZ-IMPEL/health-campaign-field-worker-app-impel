@@ -258,6 +258,8 @@ class VehicleTracking {
   String get tripComment => "VEHICLE_TRACKING_TRIP_COMMENT";
   String get tipSubmitted => "VEHICLE_TRACKING_TIP_SUBMITTED";
 
+  String get commentRequired => "VEHICLE_TRACKING_COMMENT_REQUIRED";
+
   String get acknowledgementLabel => "VEHICLE_TRACKING_ACKNOWLEDGEMENT_LABEL";
   String get acknowledgementDescription =>
       "VEHICLE_TRACKING_ACKNOWLEDGEMENT_DESCRIPTION";
@@ -270,6 +272,7 @@ class VehicleTracking {
   String get brand => 'VEHICLE_BRAND';
   String get color => 'VEHICLE_COLOR';
   String get model => 'VEHICLE_MODEL';
+  String get driverName => 'VEHICLE_DRIVER_NAME';
 }
 
 class SelectStockShowcase {
