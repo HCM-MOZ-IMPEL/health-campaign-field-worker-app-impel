@@ -520,10 +520,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-      i18.home.mySurveyForm,
-
       i18.home.beneficiaryLabel,
       i18.home.closedHouseHoldLabel,
+      i18.home.mySurveyForm,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
