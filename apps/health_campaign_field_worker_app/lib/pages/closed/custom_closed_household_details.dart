@@ -41,6 +41,7 @@ class CustomClosedHouseholdDetailsPageState
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
+  bool _isManualRefresh = false;
 
   @override
   void initState() {
@@ -76,18 +77,19 @@ class CustomClosedHouseholdDetailsPageState
             final lat = locationState.latitude;
             final lng = locationState.longitude;
             final accuracy = locationState.accuracy;
-            form.control(_latKey).value ??= lat;
-            form.control(_lngKey).value ??= lng;
-            form.control(_accuracyKey).value ??= accuracy;
+            form.control(_latKey).value = lat;
+            form.control(_lngKey).value = lng;
+            form.control(_accuracyKey).value = accuracy;
+            _isManualRefresh = false;
           },
           listenWhen: (previous, current) {
             final lat = form.control(_latKey).value;
             final lng = form.control(_lngKey).value;
-            final accuracy = form.control(_accuracyKey).value;
+            final acc = form.control(_accuracyKey).value;
 
-            return lat != null || lng != null || accuracy != null
-                ? false
-                : true;
+            final isFirstTime = lat == null || lng == null || acc == null;
+
+            return isFirstTime || _isManualRefresh;
           },
           child: BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
               builder: (context, state) {
@@ -163,17 +165,47 @@ class CustomClosedHouseholdDetailsPageState
                             ),
                             readOnly: true,
                           ),
-                          CustomDigitTextFormField(
-                            suffixString: localizations.translate(
-                              i18_local.common.metersLabel,
-                            ),
-                            readOnly: true,
-                            formControlName: _accuracyKey,
-                            colorCondition: (value) =>
-                                value != null && value > 5,
-                            label: localizations.translate(
-                              i18.closeHousehold.accuracyLabel,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomDigitTextFormField(
+                                suffixString: localizations.translate(
+                                  i18_local.common.metersLabel,
+                                ),
+                                readOnly: true,
+                                formControlName: _accuracyKey,
+                                colorCondition: (value) =>
+                                    value != null && value > 5,
+                                label: localizations.translate(
+                                  i18.closeHousehold.accuracyLabel,
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: DigitIconButton(
+                                  icon: Icons.refresh,
+                                  iconSize: 20,
+                                  iconText: localizations.translate(
+                                    i18_local.householdLocation.refreshLocation,
+                                  ),
+                                  onPressed: () {
+                                    _isManualRefresh = true;
+
+                                    DigitComponentsUtils()
+                                        .showLocationCapturingDialog(
+                                      context,
+                                      localizations.translate(
+                                          i18_local.common.locationCapturing),
+                                      DigitSyncDialogType.inProgress,
+                                    );
+
+                                    context
+                                        .read<LocationBloc>()
+                                        .add(const LoadLocationEvent());
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           DigitTextFormField(
                             formControlName: _householdHeadNameKey,
