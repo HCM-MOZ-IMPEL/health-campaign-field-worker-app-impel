@@ -465,12 +465,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // info : create entries in the local repository
 
       await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
-        boundaryType == Constants.lgaBoundaryLevel) {
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) ||
+        userRoles.contains(RolesType.spaqManager.toValue()) ||
+        userRoles.contains(RolesType.teamSupervisor.toValue()) &&
+            boundaryType == Constants.districtBoundaryLevel) {
       List<String> receiverIds =
           projectFacilities.map((e) => e.facilityId).toList();
       receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+          .where((e) => facilityIdUsageMap[e] == Constants.districWarehouse)
           .toList();
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds,

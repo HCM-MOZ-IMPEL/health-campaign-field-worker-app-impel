@@ -111,6 +111,7 @@ class Constants {
   static const String districtBoundaryLevel = 'Distrito';
   static const String administrativeProviceBoundaryLevel =
       'Posto Administrativo';
+
   static const String warehouse = "Warehouse";
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';

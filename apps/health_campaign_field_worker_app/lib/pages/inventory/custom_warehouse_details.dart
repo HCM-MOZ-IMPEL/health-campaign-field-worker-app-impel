@@ -87,22 +87,24 @@ class CustomWarehouseDetailsPageState
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allfacilities) {
                       if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.stateBoundaryLevel) {
+                          Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.stateFacility,
+                                  element.usage ==
+                                      Constants.provincialWarehouse ||
+                                  element.usage == Constants.nationalWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
                       } else if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.lgaBoundaryLevel) {
+                          Constants.districtBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.lgaFacility,
+                                  element.usage == Constants.districWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty
@@ -112,7 +114,11 @@ class CustomWarehouseDetailsPageState
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.healthFacility,
+                                  element.usage == Constants.districWarehouse ||
+                                  element.usage ==
+                                      Constants.nationalWarehouse ||
+                                  element.usage ==
+                                      Constants.provincialWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty

@@ -53,15 +53,10 @@ class CustomStockDetailsPageState
     extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
-  // static const _transactionQuantityKey = 'quantity';
-  // static const _transactionPartialQuantityKey = 'partialQuantity';
-  // static const _transactionReasonKey = 'transactionReason';
-  // static const _waybillNumberKey = 'waybillNumber';
-  // static const _waybillQuantityKey = 'waybillQuantity';
-  // static const _batchNumberKey = 'batchNumberKey';
+
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
-  // static const _commentsKey = 'comments';
+
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
@@ -1088,24 +1083,45 @@ class CustomStockDetailsPageState
                                         List<FacilityModel> filteredFacilities =
                                             [];
 
-                                        if (context.selectedProject.address
-                                                ?.boundaryType ==
-                                            Constants.stateBoundaryLevel) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
-                                              ? allFacilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.centralFacility)
-                                                  .toList()
-                                              : facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.lgaFacility)
-                                                  .toList();
+                                        if (isWareHouseMgr &&
+                                            context.selectedProject.address
+                                                    ?.boundaryType ==
+                                                Constants
+                                                    .provincialBoundaryLevel) {
+                                          if (entryType ==
+                                              StockRecordEntryType.receipt) {
+                                            filteredFacilities = allFacilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                        Constants
+                                                            .nationalWarehouse ||
+                                                    element.usage ==
+                                                        Constants
+                                                            .provincialWarehouse)
+                                                .toList();
+                                          } else {
+                                            // add district facilities
+                                            filteredFacilities.addAll(
+                                                allFacilities
+                                                    .where((element) =>
+                                                        element.usage ==
+                                                        Constants
+                                                            .districWarehouse)
+                                                    .toList());
+                                            if (entryType ==
+                                                StockRecordEntryType.dispatch) {
+                                              filteredFacilities.addAll(
+                                                  allFacilities
+                                                      .where((element) =>
+                                                          element.usage ==
+                                                          Constants
+                                                              .provincialWarehouse)
+                                                      .toList());
+                                            }
+                                          }
                                         } else if (context.selectedProject
                                                 .address?.boundaryType ==
-                                            Constants.lgaBoundaryLevel) {
+                                            Constants.districtBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
                                               ? facilities
