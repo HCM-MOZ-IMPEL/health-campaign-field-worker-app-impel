@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
@@ -133,6 +134,8 @@ class Constants {
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
   static const String sprayOperator = 'spray_operator';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String beneficiaryRefusedReason = 'beneficiary_refused_reason';
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
 
@@ -331,7 +334,7 @@ class Constants {
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);
-
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);

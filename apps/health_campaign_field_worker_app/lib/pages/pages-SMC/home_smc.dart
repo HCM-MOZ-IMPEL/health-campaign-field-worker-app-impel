@@ -71,7 +71,7 @@ class HomeSMCPage extends LocalizedStatefulWidget {
 class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -79,14 +79,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -419,7 +415,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomChecklistWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
@@ -428,7 +424,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
+              context.router.push(const CustomComplaintsInboxWrapperRoute()),
         ),
       ),
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(

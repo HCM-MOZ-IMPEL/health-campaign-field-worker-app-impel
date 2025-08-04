@@ -1155,6 +1155,7 @@ class BeneficiaryDetails {
   String get menLabel => 'MEN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+  String get sprayOperatorDetail => 'SPRAY_OPERATOR_DETAILS';
   String get roomsVsSprayedValidation =>
       'SPRAYED_ROOMS_CANNOT_EXCEED_TOTAL_ROOMS';
 
@@ -1270,6 +1271,7 @@ class InventoryReportDetails {
   const InventoryReportDetails();
   String get partialReturnedQuantityLabel =>
       "INVENTORY_REPORT_DETAILS_PARTIAL_RETURNED_QUANTITY_LABEL";
+  String get stockIdLabel => 'STOCK_ID_LABEL';
 
   String get commentIsRequiredText => "COMMENT_IS_REQUIRED_TEXT";
 
@@ -1327,6 +1329,8 @@ class DeliverIntervention {
 
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
+  String get beneficiaryRefusalReasonDropdownLabel =>
+      'BENEFICIARY_REFUSED_DROPDOWN';
 
   String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
   String get infoWrittenInChildCard =>

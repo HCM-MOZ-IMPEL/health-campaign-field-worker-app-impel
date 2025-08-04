@@ -28,6 +28,7 @@ class DownsyncLocalRepository
   FutureOr<void> update(
     DownsyncModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     final downSyncCompanion = entity.companion;
 

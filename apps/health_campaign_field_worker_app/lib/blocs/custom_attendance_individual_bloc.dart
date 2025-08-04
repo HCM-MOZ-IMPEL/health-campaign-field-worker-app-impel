@@ -60,6 +60,27 @@ class CustomAttendanceIndividualBloc extends Bloc<
                         EnumValues.longitude.toValue(): event.longitude,
                       Constants.commentsKey: event.comment ?? '',
                     }),
+                AttendanceLogModel(
+                    individualId: e.individualId,
+                    registerId: e.registerId,
+                    tenantId: e.tenantId,
+                    type: EnumValues.exit.toValue(),
+                    status: e.status == 0
+                        ? EnumValues.inactive.toValue()
+                        : EnumValues.active.toValue(),
+                    time: e.status == 0
+                        ? event.exitTime
+                        : e.status == 0.5
+                            ? halfDay
+                            : event.exitTime,
+                    uploadToServer: (event.createOplog ?? false),
+                    additionalDetails: {
+                      if (event.latitude != null)
+                        EnumValues.latitude.toValue(): event.latitude,
+                      if (event.longitude != null)
+                        EnumValues.longitude.toValue(): event.longitude,
+                      Constants.commentsKey: event.comment ?? '',
+                    })
               ]);
             }
           });

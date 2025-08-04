@@ -72,9 +72,10 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                         const SMCWrapperRoute(),
                       ]);
                     } else if (isProjectTypeIRS(context)) {
-                      context.router.replaceAll([
-                        const IRSWrapperRoute(),
-                      ]);
+                      // context.router.replaceAll([
+                      //   const IRSWrapperRoute(),
+                      // ]);
+                      context.router.maybePop();
                     } else {
                       context.router.replaceAll([
                         const BednetWrapperRoute(),
