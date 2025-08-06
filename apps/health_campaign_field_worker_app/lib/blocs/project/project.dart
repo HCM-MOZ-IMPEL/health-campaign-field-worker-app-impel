@@ -465,10 +465,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // info : create entries in the local repository
 
       await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) ||
-        userRoles.contains(RolesType.spaqManager.toValue()) ||
-        userRoles.contains(RolesType.teamSupervisor.toValue()) &&
-            boundaryType == Constants.districtBoundaryLevel) {
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
       List<String> receiverIds =
           projectFacilities.map((e) => e.facilityId).toList();
       receiverIds = receiverIds
@@ -483,7 +481,36 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       // info : create entries in the local repository
       await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+    } else if (userRoles.contains(RolesType.spaqManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) =>
+              facilityIdUsageMap[e] == Constants.operationalBaseWarehouse)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.teamSupervisor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
       final receiverIds = [context.loggedInUserUuid];
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds,
