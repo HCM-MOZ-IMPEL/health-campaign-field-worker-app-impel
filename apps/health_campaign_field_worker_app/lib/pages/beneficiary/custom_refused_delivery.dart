@@ -428,7 +428,7 @@ class CustomRefusedDeliveryPageState
             AdditionalFieldsType.reasonOfRefusal.toValue(),
             reasonOfRefusal,
           ),
-          if (refusalComment != null)
+          if (refusalComment != null && refusalComment.isNotEmpty)
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               refusalComment,
