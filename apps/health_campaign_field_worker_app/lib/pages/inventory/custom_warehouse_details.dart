@@ -75,6 +75,7 @@ class CustomWarehouseDetailsPageState
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
     final textTheme = theme.digitTextTheme(context);
+    bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -93,31 +94,34 @@ class CustomWarehouseDetailsPageState
                       if (ctx.selectedProject.address?.boundaryType ==
                           Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage ==
-                                      Constants.provincialWarehouse ||
-                                  element.usage == Constants.nationalWarehouse,
-                            )
+                            .where((element) =>
+                                element.usage == Constants.provincialWarehouse)
                             .toList();
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
                       } else if (ctx.selectedProject.address?.boundaryType ==
                           Constants.districtBoundaryLevel) {
-                        List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage == Constants.districWarehouse ||
+                        if (isWareHouseMgr) {
+                          List<FacilityModel> filteredFacilities = facilities
+                              .where((element) =>
+                                  element.usage == Constants.districWarehouse)
+                              .toList();
+                          facilities = filteredFacilities.isEmpty
+                              ? facilities
+                              : filteredFacilities;
+                        } else if (context.isSpaqManager) {
+                          List<FacilityModel> filteredFacilities = facilities
+                              .where((element) =>
                                   element.usage ==
-                                      Constants.operationalBaseWarehouse,
-                            )
-                            .toList();
-                        facilities = filteredFacilities.isEmpty
-                            ? facilities
-                            : filteredFacilities;
+                                  Constants.operationalBaseWarehouse)
+                              .toList();
+                          facilities = filteredFacilities.isEmpty
+                              ? facilities
+                              : filteredFacilities;
+                        }
                       } else {
-                        List<FacilityModel> filteredFacilities = facilities
+                        List<FacilityModel> filteredFacilities = allfacilities
                             .where((element) =>
                                 element.usage == Constants.districWarehouse ||
                                 element.usage == Constants.nationalWarehouse ||
@@ -306,9 +310,8 @@ class CustomWarehouseDetailsPageState
                                                     );
                                                     if ((InventorySingleton()
                                                                 .isWareHouseMgr &&
-                                                            !isLGAUser() &&
-                                                            !isHFUser(
-                                                                context) &&
+                                                            !context
+                                                                .isDistrictWarehouseManager &&
                                                             !context.isCDD &&
                                                             !context
                                                                 .isTeamSupervisor) ||
