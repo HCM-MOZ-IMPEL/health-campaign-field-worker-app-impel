@@ -1258,6 +1258,7 @@ class StockDetails {
   String get quantityReturnedMaxError =>
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get cddCodeLabel => 'CDD_CODE_LABEL';
+  String get teamSupervisorCodeLabel => 'TEAM_SUPERVISOR_CODE_LABEL';
 }
 
 class StockReconciliationDetails {
