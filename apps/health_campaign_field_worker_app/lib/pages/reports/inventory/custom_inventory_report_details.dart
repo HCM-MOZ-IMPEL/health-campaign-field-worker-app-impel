@@ -222,91 +222,106 @@ class CustomInventoryReportDetailsPageState
                                               ),
                                             ),
                                             builder: (context, state) {
-                                              final facilities = state
-                                                      .whenOrNull(
-                                                    fetched: (facilities,
-                                                        allfacilities) {
-                                                      if (ctx
-                                                              .selectedProject
-                                                              .address
-                                                              ?.boundaryType ==
-                                                          Constants
-                                                              .stateBoundaryLevel) {
-                                                        List<FacilityModel>
-                                                            filteredFacilities =
-                                                            facilities
-                                                                .where(
-                                                                  (element) =>
-                                                                      element
-                                                                          .usage ==
-                                                                      Constants
-                                                                          .stateFacility,
-                                                                )
+                                              final facilities =
+                                                  state.whenOrNull(
+                                                        fetched: (facilities,
+                                                            allfacilities) {
+                                                          if (context
+                                                                  .selectedProject
+                                                                  .address
+                                                                  ?.boundaryType ==
+                                                              Constants
+                                                                  .provincialBoundaryLevel) {
+                                                            List<FacilityModel> filteredFacilities = facilities
+                                                                .where((element) =>
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .provincialWarehouse ||
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .nationalWarehouse)
                                                                 .toList();
-                                                        facilities =
-                                                            filteredFacilities
-                                                                    .isEmpty
-                                                                ? facilities
-                                                                : filteredFacilities;
-                                                      } else if (ctx
-                                                              .selectedProject
-                                                              .address
-                                                              ?.boundaryType ==
-                                                          Constants
-                                                              .lgaBoundaryLevel) {
-                                                        List<FacilityModel>
-                                                            filteredFacilities =
-                                                            facilities
-                                                                .where(
-                                                                  (element) =>
-                                                                      element
-                                                                          .usage ==
-                                                                      Constants
-                                                                          .lgaFacility,
-                                                                )
+                                                            facilities =
+                                                                filteredFacilities
+                                                                        .isEmpty
+                                                                    ? facilities
+                                                                    : filteredFacilities;
+                                                          } else if (context
+                                                                  .selectedProject
+                                                                  .address
+                                                                  ?.boundaryType ==
+                                                              Constants
+                                                                  .districtBoundaryLevel) {
+                                                            List<FacilityModel> filteredFacilities = facilities
+                                                                .where((element) =>
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .districWarehouse ||
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .operationalBaseWarehouse)
                                                                 .toList();
-                                                        facilities =
-                                                            filteredFacilities
-                                                                    .isEmpty
-                                                                ? facilities
-                                                                : filteredFacilities;
-                                                      } else {
-                                                        List<FacilityModel>
-                                                            filteredFacilities =
-                                                            facilities
-                                                                .where(
-                                                                  (element) =>
-                                                                      element
-                                                                          .usage ==
-                                                                      Constants
-                                                                          .healthFacility,
-                                                                )
+                                                            facilities =
+                                                                filteredFacilities
+                                                                        .isEmpty
+                                                                    ? facilities
+                                                                    : filteredFacilities;
+                                                          } else {
+                                                            List<FacilityModel> filteredFacilities = facilities
+                                                                .where((element) =>
+                                                                    element.usage == Constants.districWarehouse ||
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .nationalWarehouse ||
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .operationalBaseWarehouse ||
+                                                                    element.usage ==
+                                                                        Constants
+                                                                            .provincialWarehouse)
                                                                 .toList();
-                                                        facilities =
-                                                            filteredFacilities
-                                                                    .isEmpty
-                                                                ? facilities
-                                                                : filteredFacilities;
-                                                      }
-                                                      final teamFacilities = [
-                                                        FacilityModel(
-                                                          id: 'Delivery Team',
-                                                          name: 'Delivery Team',
-                                                        ),
-                                                      ];
-                                                      teamFacilities.addAll(
-                                                        facilities,
-                                                      );
+                                                            facilities =
+                                                                filteredFacilities
+                                                                        .isEmpty
+                                                                    ? facilities
+                                                                    : filteredFacilities;
+                                                          }
+                                                          final teamFacilities =
+                                                              [
+                                                            if (context
+                                                                    .isDistributor &&
+                                                                !InventorySingleton()
+                                                                    .isWareHouseMgr)
+                                                              FacilityModel(
+                                                                id: 'Delivery Team',
+                                                                name:
+                                                                    'Delivery Team',
+                                                              ),
+                                                            if (context
+                                                                    .isTeamSupervisor &&
+                                                                !InventorySingleton()
+                                                                    .isWareHouseMgr)
+                                                              FacilityModel(
+                                                                id: 'Supervisor',
+                                                                name:
+                                                                    'Supervisor',
+                                                              ),
+                                                          ];
+                                                          teamFacilities.addAll(
+                                                            facilities,
+                                                          );
 
-                                                      return context
-                                                                  .isDistributor &&
-                                                              !InventorySingleton()
-                                                                  .isWareHouseMgr
-                                                          ? teamFacilities
-                                                          : facilities;
-                                                    },
-                                                  ) ??
-                                                  [];
+                                                          return (context.isDistributor &&
+                                                                      !InventorySingleton()
+                                                                          .isWareHouseMgr) ||
+                                                                  (context.isTeamSupervisor &&
+                                                                      !InventorySingleton()
+                                                                          .isWareHouseMgr)
+                                                              ? teamFacilities
+                                                              : facilities;
+                                                        },
+                                                      ) ??
+                                                      [];
 
                                               return InkWell(
                                                 onTap: () async {
