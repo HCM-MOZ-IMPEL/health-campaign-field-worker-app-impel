@@ -1102,7 +1102,7 @@ class CustomStockDetailsPageState
                                                     .provincialBoundaryLevel) {
                                           if (entryType ==
                                               StockRecordEntryType.receipt) {
-                                            filteredFacilities = allFacilities
+                                            filteredFacilities = facilities
                                                 .where((element) =>
                                                     element.usage ==
                                                         Constants
@@ -1174,6 +1174,7 @@ class CustomStockDetailsPageState
                                             filteredFacilities.add(
                                               FacilityModel(
                                                 id: 'Supervisor',
+                                                name: 'Supervisor',
                                                 additionalFields:
                                                     FacilityAdditionalFields(
                                                   version: 1,
@@ -1212,6 +1213,7 @@ class CustomStockDetailsPageState
                                             filteredFacilities.add(
                                               FacilityModel(
                                                 id: 'Delivery Team',
+                                                name: 'Delivery Team',
                                                 additionalFields:
                                                     FacilityAdditionalFields(
                                                   version: 1,
@@ -1232,11 +1234,7 @@ class CustomStockDetailsPageState
                                                   .toList());
                                             }
                                           }
-                                        } else if (context.selectedProject
-                                                    .address?.boundaryType ==
-                                                Constants
-                                                    .districtBoundaryLevel &&
-                                            isCdd) {
+                                        } else if (isCdd) {
                                           if (entryType ==
                                                   StockRecordEntryType
                                                       .receipt ||
@@ -1246,6 +1244,7 @@ class CustomStockDetailsPageState
                                             filteredFacilities.add(
                                               FacilityModel(
                                                 id: 'Supervisor',
+                                                name: 'Supervisor',
                                                 additionalFields:
                                                     FacilityAdditionalFields(
                                                   version: 1,
