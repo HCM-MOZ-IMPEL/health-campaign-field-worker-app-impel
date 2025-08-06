@@ -346,16 +346,17 @@ class CustomStockReconciliationPageState
                                               if (context.selectedProject
                                                       .address?.boundaryType ==
                                                   Constants
-                                                      .stateBoundaryLevel) {
+                                                      .provincialBoundaryLevel) {
                                                 List<FacilityModel>
                                                     filteredFacilities =
                                                     facilities
-                                                        .where(
-                                                          (element) =>
-                                                              element.usage ==
-                                                              Constants
-                                                                  .stateFacility,
-                                                        )
+                                                        .where((element) =>
+                                                            element.usage ==
+                                                                Constants
+                                                                    .provincialWarehouse ||
+                                                            element.usage ==
+                                                                Constants
+                                                                    .nationalWarehouse)
                                                         .toList();
                                                 facilities =
                                                     filteredFacilities.isEmpty
@@ -363,16 +364,18 @@ class CustomStockReconciliationPageState
                                                         : filteredFacilities;
                                               } else if (context.selectedProject
                                                       .address?.boundaryType ==
-                                                  Constants.lgaBoundaryLevel) {
+                                                  Constants
+                                                      .districtBoundaryLevel) {
                                                 List<FacilityModel>
                                                     filteredFacilities =
                                                     facilities
-                                                        .where(
-                                                          (element) =>
-                                                              element.usage ==
-                                                              Constants
-                                                                  .lgaFacility,
-                                                        )
+                                                        .where((element) =>
+                                                            element.usage ==
+                                                                Constants
+                                                                    .districWarehouse ||
+                                                            element.usage ==
+                                                                Constants
+                                                                    .operationalBaseWarehouse)
                                                         .toList();
                                                 facilities =
                                                     filteredFacilities.isEmpty
@@ -382,12 +385,17 @@ class CustomStockReconciliationPageState
                                                 List<FacilityModel>
                                                     filteredFacilities =
                                                     facilities
-                                                        .where(
-                                                          (element) =>
-                                                              element.usage ==
-                                                              Constants
-                                                                  .healthFacility,
-                                                        )
+                                                        .where((element) =>
+                                                            element.usage == Constants.districWarehouse ||
+                                                            element.usage ==
+                                                                Constants
+                                                                    .nationalWarehouse ||
+                                                            element.usage ==
+                                                                Constants
+                                                                    .operationalBaseWarehouse ||
+                                                            element.usage ==
+                                                                Constants
+                                                                    .provincialWarehouse)
                                                         .toList();
                                                 facilities =
                                                     filteredFacilities.isEmpty
@@ -395,10 +403,20 @@ class CustomStockReconciliationPageState
                                                         : filteredFacilities;
                                               }
                                               final teamFacilities = [
-                                                FacilityModel(
-                                                  id: 'Delivery Team',
-                                                  name: 'Delivery Team',
-                                                ),
+                                                if (context.isDistributor &&
+                                                    !InventorySingleton()
+                                                        .isWareHouseMgr)
+                                                  FacilityModel(
+                                                    id: 'Delivery Team',
+                                                    name: 'Delivery Team',
+                                                  ),
+                                                if (context.isTeamSupervisor &&
+                                                    !InventorySingleton()
+                                                        .isWareHouseMgr)
+                                                  FacilityModel(
+                                                    id: 'Supervisor',
+                                                    name: 'Supervisor',
+                                                  ),
                                               ];
                                               teamFacilities.addAll(
                                                 facilities,
@@ -410,11 +428,20 @@ class CustomStockReconciliationPageState
                                                       final stockReconciliationBloc =
                                                           context.read<
                                                               StockReconciliationBloc>();
+                                                      final facilitiesToShow = (context
+                                                                      .isDistributor &&
+                                                                  !InventorySingleton()
+                                                                      .isWareHouseMgr) ||
+                                                              (context.isTeamSupervisor &&
+                                                                  !InventorySingleton()
+                                                                      .isWareHouseMgr)
+                                                          ? teamFacilities
+                                                          : facilities;
                                                       final facility = await context
                                                               .router
                                                               .push(InventoryFacilitySelectionRoute(
                                                                   facilities:
-                                                                      facilities))
+                                                                      facilitiesToShow))
                                                           as FacilityModel?;
 
                                                       if (facility == null)
