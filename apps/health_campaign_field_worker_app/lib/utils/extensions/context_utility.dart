@@ -123,6 +123,40 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isDistrictWarehouseManager {
+    try {
+      String? boundaryLevel = selectedProject.address?.boundaryType;
+
+      if (boundaryLevel == Constants.districtBoundaryLevel) {
+        bool warehouseManager = loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.warehouseManager.toValue(),
+            )
+            .toList()
+            .isNotEmpty;
+        return warehouseManager;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isTeamSupervisor {
+    try {
+      bool teamSupervisor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return teamSupervisor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isCommunitySupervisor {
     try {
       bool communitySupervisor = loggedInUserRoles
