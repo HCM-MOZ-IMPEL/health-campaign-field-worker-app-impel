@@ -76,7 +76,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _deliveryTeamKey = 'deliveryTeam';
   List<InventoryTransportTypes> transportTypes = [];
 
-  static const _transactionQuantityPartialKey = 'quantityPartial';
+  // static const _transactionQuantityPartialKey = 'quantityPartial';
 
   static const _transactionQuantityWastedKey = 'quantityWasted';
 
@@ -162,7 +162,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     ]),
           // _waybillQuantityKey:
           //     FormControl<String>(validators: [Validators.required]),
-          _transactionQuantityPartialKey: FormControl<int>(validators: []),
+          // _transactionQuantityPartialKey: FormControl<int>(validators: []),
 
           _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
@@ -445,16 +445,16 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         break;
     }
 
-    if ((entryType == StockRecordEntryType.dispatch &&
-            context.isCommunityDistributor) ||
-        entryType == StockRecordEntryType.returned) {
-      form.control(_transactionQuantityPartialKey).setValidators([
-        Validators.number(),
-        Validators.required,
-        Validators.min(0),
-        Validators.max(1000000),
-      ], autoValidate: true);
-    }
+    // if ((entryType == StockRecordEntryType.dispatch &&
+    //         context.isCommunityDistributor) ||
+    //     entryType == StockRecordEntryType.returned) {
+    //   form.control(_transactionQuantityPartialKey).setValidators([
+    //     Validators.number(),
+    //     Validators.required,
+    //     Validators.min(0),
+    //     Validators.max(1000000),
+    //   ], autoValidate: true);
+    // }
 
     if (entryType == StockRecordEntryType.dispatch &&
         context.isCommunityDistributor) {
@@ -616,64 +616,64 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           );
                         }),
                     // TODO:
-                    if ((entryType == StockRecordEntryType.dispatch &&
-                            context.isCommunityDistributor) ||
-                        entryType == StockRecordEntryType.returned)
-                      ReactiveWrapperField(
-                          formControlName: _transactionQuantityPartialKey,
-                          validationMessages: {
-                            "number": (object) => localizations.translate(
-                                  '${quantityCountLabel}_ERROR',
-                                ),
-                            "max": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MAX_ERROR',
-                                ),
-                            "min": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MIN_ERROR',
-                                ),
-                          },
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                quantityPartialCountLabel,
-                              ),
-                              isRequired: true,
-                              child: BaseDigitFormInput(
-                                errorMessage: field.errorText,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]'),
-                                  ),
-                                  LengthLimitingTextInputFormatter(9),
-                                ],
-                                onChange: (val) {
-                                  field.control.markAsTouched();
+                    // if ((entryType == StockRecordEntryType.dispatch &&
+                    //         context.isCommunityDistributor) ||
+                    //     entryType == StockRecordEntryType.returned)
+                    //   ReactiveWrapperField(
+                    //       formControlName: _transactionQuantityPartialKey,
+                    //       validationMessages: {
+                    //         "number": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_ERROR',
+                    //             ),
+                    //         "max": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_MAX_ERROR',
+                    //             ),
+                    //         "min": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_MIN_ERROR',
+                    //             ),
+                    //       },
+                    //       showErrors: (control) =>
+                    //           control.invalid && control.touched,
+                    //       builder: (field) {
+                    //         return LabeledField(
+                    //           label: localizations.translate(
+                    //             quantityPartialCountLabel,
+                    //           ),
+                    //           isRequired: true,
+                    //           child: BaseDigitFormInput(
+                    //             errorMessage: field.errorText,
+                    //             keyboardType:
+                    //                 const TextInputType.numberWithOptions(
+                    //               decimal: true,
+                    //             ),
+                    //             inputFormatters: [
+                    //               FilteringTextInputFormatter.allow(
+                    //                 RegExp(r'[0-9]'),
+                    //               ),
+                    //               LengthLimitingTextInputFormatter(9),
+                    //             ],
+                    //             onChange: (val) {
+                    //               field.control.markAsTouched();
 
-                                  if (val == "") {
-                                    field.control.value = null;
+                    //               if (val == "") {
+                    //                 field.control.value = null;
 
-                                    return;
-                                  }
+                    //                 return;
+                    //               }
 
-                                  if (int.parse(val) > 10000000000) {
-                                    field.control.value = 10000;
-                                  } else {
-                                    if (val != '') {
-                                      field.control.value = int.parse(val);
-                                    } else {
-                                      field.control.value = null;
-                                    }
-                                  }
-                                },
-                              ),
-                            );
-                          }),
+                    //               if (int.parse(val) > 10000000000) {
+                    //                 field.control.value = 10000;
+                    //               } else {
+                    //                 if (val != '') {
+                    //                   field.control.value = int.parse(val);
+                    //                 } else {
+                    //                   field.control.value = null;
+                    //                 }
+                    //               }
+                    //             },
+                    //           ),
+                    //         );
+                    //       }),
 
                     if (entryType == StockRecordEntryType.dispatch &&
                         context.isCommunityDistributor)
@@ -874,9 +874,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           if (form.control(_commentsKey).value != null)
             AdditionalField('comments', form.control(_commentsKey).value),
 
-          if (form.control(_transactionQuantityPartialKey).value != null)
-            AdditionalField('partialBlistersReturned',
-                form.control(_transactionQuantityPartialKey).value),
+          // if (form.control(_transactionQuantityPartialKey).value != null)
+          //   AdditionalField('partialBlistersReturned',
+          //       form.control(_transactionQuantityPartialKey).value),
 
           if (form.control(_transactionQuantityWastedKey).value != null)
             AdditionalField('wastedBlistersReturned',
