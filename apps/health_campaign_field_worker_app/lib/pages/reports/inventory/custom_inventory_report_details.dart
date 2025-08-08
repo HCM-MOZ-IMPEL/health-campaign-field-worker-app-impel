@@ -539,6 +539,8 @@ class CustomInventoryReportDetailsPageState
                                             const quantityKey = 'quantity';
                                             const partialQuantityKey =
                                                 'partialBlistersReturned';
+                                            const emptyQuantityKey =
+                                                'emptyBottlesRetured';
                                             const wastedQuantityKey =
                                                 'wastedBlistersReturned';
                                             const transactingPartyKey =
@@ -587,8 +589,8 @@ class CustomInventoryReportDetailsPageState
                                                       label: localizations
                                                           .translate(i18_local
                                                               .stockDetails
-                                                              .quantityPartialReturnedLabel),
-                                                      key: partialQuantityKey,
+                                                              .emptyReturnedLabel),
+                                                      key: emptyQuantityKey,
                                                       width: 200,
                                                     ),
                                                   if (widget.reportType ==
@@ -649,13 +651,13 @@ class CustomInventoryReportDetailsPageState
                                                                       .isCommunityDistributor))
                                                             DigitGridCell(
                                                               key:
-                                                                  partialQuantityKey,
+                                                                  emptyQuantityKey,
                                                               value: model.additionalFields ==
                                                                       null
                                                                   ? "0"
                                                                   : (model.additionalFields!
                                                                               .fields
-                                                                              .firstWhereOrNull((e) => e.key == partialQuantityKey)
+                                                                              .firstWhereOrNull((e) => e.key == emptyQuantityKey)
                                                                               ?.value ??
                                                                           '')
                                                                       .toString(),

@@ -1229,6 +1229,7 @@ class StockDetails {
 
   String get countDialogSuccess =>
       'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+  String get selectMrnNumberLabel => 'SELECT_MRN_NUMBER_LABEL';
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
@@ -1244,6 +1245,7 @@ class StockDetails {
   String get viewCreatedTransactionLabel => 'VIEW_CREATED_TRANSACTION';
   String get quantityPartialReturnedLabel =>
       'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
+  String get emptyReturnedLabel => 'STOCK_REPORT_EMPTY_QUANTITY_RETURNED';
   String get quantityEmptyReturnedLabel =>
       'STOCK_DETAILS_EMPTY_QUANTITY_RETURNED';
   String get quantityWastedReturnedLabel =>
