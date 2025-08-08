@@ -1244,6 +1244,8 @@ class StockDetails {
   String get viewCreatedTransactionLabel => 'VIEW_CREATED_TRANSACTION';
   String get quantityPartialReturnedLabel =>
       'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
+  String get quantityEmptyReturnedLabel =>
+      'STOCK_DETAILS_EMPTY_QUANTITY_RETURNED';
   String get quantityWastedReturnedLabel =>
       'STOCK_DETAILS_WASTED_QUANTITY_RETURNED';
   String get quantityUnusedReturnedLabel =>
