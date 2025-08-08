@@ -10,6 +10,7 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -307,14 +308,16 @@ class _ViewStockRecordsLGAPageState
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              const Expanded(child: Text('MIN Number')),
+                              Expanded(
+                                  child: Text(localizations.translate(i18_local
+                                      .acknowledgementSuccess.minNumberLabel))),
                               Expanded(child: Text(widget.mrnNumber)),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Expanded(child: Text('Received from')),
+                              const Expanded(child: Text('Recebido de')),
                               // TODO : verify this , showing senderId here
                               Expanded(
                                 child: Text(localizations
@@ -364,7 +367,8 @@ class _ViewStockRecordsLGAPageState
                                 const SizedBox(height: 12),
                                 InputField(
                                   type: InputType.text,
-                                  label: 'Waybill Number *',
+                                  label:
+                                      '${localizations.translate(i18.stockDetails.waybillNumberLabel)}*',
                                   initialValue: stock.wayBillNumber ?? '',
                                   isDisabled: true,
                                   readOnly: true,
@@ -372,7 +376,9 @@ class _ViewStockRecordsLGAPageState
                                 const SizedBox(height: 12),
                                 InputField(
                                   type: InputType.text,
-                                  label: 'Batch Number',
+                                  label: localizations.translate(
+                                    i18_local.stockDetails.batchNumberLabel,
+                                  ),
                                   initialValue: stock.additionalFields?.fields
                                           .firstWhere(
                                             (field) =>
@@ -389,7 +395,8 @@ class _ViewStockRecordsLGAPageState
                                 const SizedBox(height: 12),
                                 InputField(
                                   type: InputType.text,
-                                  label: 'Quantity Sent by Warehouse *',
+                                  label:
+                                      '${localizations.translate(i18_local.stockDetails.quantitySentByWarehouse)}*',
                                   initialValue: stock.quantity ?? '',
                                   isDisabled: true,
                                   readOnly: true,
@@ -399,7 +406,8 @@ class _ViewStockRecordsLGAPageState
                                   formControlName: 'quantityReceived',
                                   builder: (field) => InputField(
                                     type: InputType.text,
-                                    label: 'Actual Quantity Received *',
+                                    label:
+                                        '${localizations.translate(i18_local.stockDetails.actualQuantityReceived)}*',
                                     errorMessage: field.errorText,
                                     keyboardType: TextInputType.number,
                                     onChange: (value) {
@@ -429,7 +437,8 @@ class _ViewStockRecordsLGAPageState
                                   builder: (field) => InputField(
                                     isRequired: _commentsRequired,
                                     type: InputType.textArea,
-                                    label: 'Comments',
+                                    label:
+                                        '${localizations.translate(i18.stockDetails.commentsLabel)}',
                                     errorMessage: field.errorText,
                                     onChange: (value) =>
                                         field.control.value = value,

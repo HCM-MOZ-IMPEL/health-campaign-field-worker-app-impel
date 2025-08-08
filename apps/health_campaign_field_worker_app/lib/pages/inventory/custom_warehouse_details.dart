@@ -345,8 +345,8 @@ class CustomWarehouseDetailsPageState
                                     ),
                                     if ((InventorySingleton().isDistributor ||
                                             context.isTeamSupervisor) &&
-                                        stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
+                                        stockState.entryType ==
+                                            StockRecordEntryType.receipt)
                                       DigitButton(
                                         label: "Scan Resource",
                                         onPressed: _handleSubmission,

@@ -347,8 +347,8 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 12),
                   InputField(
                     type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.waybillNumberText),
+                    label: localizations
+                        .translate(i18.stockDetails.waybillNumberLabel),
                     initialValue: stock.wayBillNumber ?? '',
                     isDisabled: true,
                     readOnly: true,
@@ -356,8 +356,8 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 12),
                   InputField(
                     type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.batchNumberText),
+                    label: localizations
+                        .translate(i18_local.stockDetails.batchNumberText),
                     initialValue: stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'batchNumber',
@@ -384,8 +384,8 @@ class _ViewStockRecordsCDDPageState
                     formControlName: 'quantityReceived',
                     builder: (field) => InputField(
                       type: InputType.text,
-                      label: localizations.translate(i18_local
-                          .inventoryReportDetails.actualQuantityReceived),
+                      label: localizations.translate(
+                          i18_local.stockDetails.actualQuantityReceived),
                       errorMessage: field.errorText,
                       keyboardType: TextInputType.number,
                       onChange: (value) {
@@ -407,8 +407,8 @@ class _ViewStockRecordsCDDPageState
                     formControlName: 'comments',
                     builder: (field) => InputField(
                       type: InputType.textArea,
-                      label: localizations.translate(
-                          i18_local.inventoryReportDetails.commentsText),
+                      label:
+                          '${localizations.translate(i18.stockDetails.commentsLabel)}',
                       errorMessage: field.errorText,
                       onChange: (value) => field.control.value = value,
                     ),
@@ -472,9 +472,7 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Expanded(
-                          child: Text(localizations.translate(i18_local
-                              .inventoryReportDetails.receivedFromText))),
+                      Expanded(child: Text('Recebido de')),
                       Expanded(
                         child: Text(localizations
                             .translate('FAC_$senderIdToShowOnTab')),

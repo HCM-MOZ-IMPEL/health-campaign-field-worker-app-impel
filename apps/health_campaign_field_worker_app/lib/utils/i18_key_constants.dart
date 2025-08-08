@@ -1220,8 +1220,12 @@ class StockDetails {
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 
   String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
-
+  String get quantitySentByWarehouse =>
+      'STOCK_QUANTITY_SENT_BY_WAREHOUSE_LABEL';
+  String get batchNumberText => 'BATCH_NUMBER_TEXT';
+  String get actualQuantityReceived => 'STOCK_QUANTITY_ACTUAL_RECEIVED_LABEL';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
+  String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
 
   String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
 
