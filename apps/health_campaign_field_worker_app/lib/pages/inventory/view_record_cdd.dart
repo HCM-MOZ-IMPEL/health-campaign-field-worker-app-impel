@@ -472,7 +472,9 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Expanded(child: Text('Recebido de')),
+                      Expanded(
+                          child: Text(localizations.translate(i18_local
+                              .inventoryReportDetails.receivedFromText))),
                       Expanded(
                         child: Text(localizations
                             .translate('FAC_$senderIdToShowOnTab')),
