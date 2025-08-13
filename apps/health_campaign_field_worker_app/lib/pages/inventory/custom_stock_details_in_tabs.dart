@@ -54,6 +54,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   bool _isInitializing = true;
   String? senderIdToShowOnTab = '';
   bool isSubmitClicked = false;
+  List<String> skuList = [];
 
 // fields to capture stock metadata
   String? senderId;
@@ -1108,6 +1109,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       if (submit && context.mounted) {
         isSubmitClicked = true;
 
+        Map<String, int> currentProductSkuCount =
+            context.getAllProductSkuCounts();
+
         int currentSpaq1Count = context.spaq1;
 
         int currentSpaq2Count = context.spaq2;
@@ -1140,6 +1144,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           String? productName = stockModel.additionalFields?.fields
               .firstWhereOrNull((element) => element.key == 'productName')
               ?.value;
+          if (currentProductSkuCount.isNotEmpty) {
+            skuList = currentProductSkuCount.keys.toList();
+          }
 
           // Custom logic based on productName
 
