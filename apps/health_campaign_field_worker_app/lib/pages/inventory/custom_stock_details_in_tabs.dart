@@ -1112,13 +1112,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         Map<String, int> currentProductSkuCount =
             context.getAllProductSkuCounts();
 
-        int currentSpaq1Count = context.spaq1;
+        // int currentSpaq1Count = context.spaq1;
 
-        int currentSpaq2Count = context.spaq2;
+        // int currentSpaq2Count = context.spaq2;
+        Map<String, int> skuCountUpdates = {};
 
-        int spaq1Count = 0;
+        // int spaq1Count = 0;
 
-        int spaq2Count = 0;
+        // int spaq2Count = 0;
 
         for (var productName in selectedProducts) {
           await _saveCurrentTabData(productName, entryType);
@@ -1151,23 +1152,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           // Custom logic based on productName
 
           if (entryType == StockRecordEntryType.dispatch) {
-            if (productName == Constants.spaq1 &&
-                (currentSpaq1Count + totalQty < 0)) {
-              await DigitToast.show(
-                context,
-                options: DigitToastOptions(
-                    localizations.translate(context.isCDD
-                        ? i18_local
-                            .beneficiaryDetails.validationForExcessStockReturn
-                        : i18_local.beneficiaryDetails
-                            .validationForExcessStockDispatch),
-                    true,
-                    theme),
-              );
-              isSubmitClicked = false;
-              return;
-            } else if (productName == Constants.spaq2 &&
-                (currentSpaq2Count + totalQty < 0)) {
+            if (skuList.contains(productName) &&
+                (currentProductSkuCount[productName]! + totalQty < 0)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -1182,13 +1168,33 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               isSubmitClicked = false;
               return;
             }
+            // else if (productName == Constants.spaq2 &&
+            //     (currentSpaq2Count + totalQty < 0)) {
+            //   await DigitToast.show(
+            //     context,
+            //     options: DigitToastOptions(
+            //         localizations.translate(context.isCDD
+            //             ? i18_local
+            //                 .beneficiaryDetails.validationForExcessStockReturn
+            //             : i18_local.beneficiaryDetails
+            //                 .validationForExcessStockDispatch),
+            //         true,
+            //         theme),
+            //   );
+            //   isSubmitClicked = false;
+            //   return;
+            // }
           }
 
-          if (productName == Constants.spaq1) {
-            spaq1Count = totalQty;
-          } else if (productName == Constants.spaq2) {
-            spaq2Count = totalQty;
+          if (skuList.contains(productName)) {
+            skuCountUpdates[productName!] = totalQty;
           }
+
+          // if (productName == Constants.spaq1) {
+          //   spaq1Count = totalQty;
+          // } else if (productName == Constants.spaq2) {
+          //   spaq2Count = totalQty;
+          // }
 
           final bloc = RecordStockBloc(
             stockRepository: context.repository<StockModel, StockSearchModel>(),
@@ -1220,11 +1226,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         }
 
         context.read<AuthBloc>().add(
-              AuthAddSpaqCountsEvent(
-                spaq1Count: spaq1Count,
-                spaq2Count: spaq2Count,
-                blueVasCount: 0,
-                redVasCount: 0,
+              AuthUpdateProductSkuCountsEvent(
+                skuCountUpdates: skuCountUpdates,
               ),
             );
 
