@@ -40,12 +40,12 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       final allModules = event.module.split(',');
       var boundaryModule;
 
-      if (boundaryModuleCheck) {
-        final boundaryModuleIndex =
-            allModules.indexOf(Constants.boundaryLocalizationPath);
-        boundaryModule = allModules[boundaryModuleIndex];
-        allModules.removeAt(boundaryModuleIndex);
-      }
+      // if (boundaryModuleCheck) {
+      //   final boundaryModuleIndex =
+      //       allModules.indexOf(Constants.boundaryLocalizationPath);
+      //   boundaryModule = allModules[boundaryModuleIndex];
+      //   allModules.removeAt(boundaryModuleIndex);
+      // }
 
       try {
         var localizationList;
