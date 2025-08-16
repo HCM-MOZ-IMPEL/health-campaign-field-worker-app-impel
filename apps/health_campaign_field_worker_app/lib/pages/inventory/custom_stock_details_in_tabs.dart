@@ -1152,8 +1152,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           // Custom logic based on productName
 
           if (entryType == StockRecordEntryType.dispatch) {
-            if (skuList.contains(productName) &&
-                (currentProductSkuCount[productName]! + totalQty < 0)) {
+            if ((skuList.contains(productName) &&
+                    // ignore: unnecessary_null_comparison
+                    (currentProductSkuCount[productName]! + totalQty < 0)) ||
+                (currentProductSkuCount[productName] == null)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
