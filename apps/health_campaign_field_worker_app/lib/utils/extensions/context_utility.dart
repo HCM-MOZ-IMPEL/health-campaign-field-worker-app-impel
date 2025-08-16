@@ -327,7 +327,7 @@ extension ContextUtilityExtensions on BuildContext {
         return productSkuCounts;
       },
     );
-    return counts ?? <String, int>{};
+    return counts ?? {};
   }
 
   bool get isCDD {
