@@ -21,8 +21,15 @@ class LocalSecureStore {
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
   List<String> keysToKeep = [
-    'spaq1',
-    'spaq2'
+    'Sumishield',
+    'Fludora',
+    'DDT',
+    'Deltametrina',
+    'FICAM',
+    'Vectron',
+    '2 GUARD',
+    'Klypson 500 WG',
+    'Actellic'
   ]; //TODO : add the product sku to prevent from delete after logout
   final storage = const FlutterSecureStorage();
 
