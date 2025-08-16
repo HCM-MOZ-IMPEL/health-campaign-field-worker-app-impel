@@ -31,6 +31,7 @@ import '../pages/inventory/view_record_lga.dart';
 import '../pages/inventory/custom_manage_stock.dart';
 import '../pages/inventory/custom_transactional_details.dart';
 import '../pages/pages-Bednet/acknowledgement_bednet.dart';
+import '../pages/pages-Bednet/custom_qr_scanner.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/reports/inventory/custom_inventory_report_details.dart';
 import '../pages/reports/inventory/custom_inventory_report_selection.dart';
@@ -398,10 +399,10 @@ class AppRouter extends _$AppRouter {
                     path: 'details',
                     redirectTo: 'custom-details',
                   ),
-                  AutoRoute(
-                    page: CustomTransactionalDetailsRoute.page,
-                    path: 'custom-transaction-details',
-                  ),
+                  // AutoRoute(
+                  //   page: CustomTransactionalDetailsRoute.page,
+                  //   path: 'custom-transaction-details',
+                  // ),
                   AutoRoute(
                     page: ViewAllTransactionsRoute.page,
                     path: 'custom-all-transactions',
