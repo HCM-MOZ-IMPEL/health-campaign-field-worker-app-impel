@@ -58,12 +58,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
       final userIndividualId = await localSecureStore.userIndividualId;
-      final productVarient =
+      final productVariant =
           await productVariantLocalRepository.search(ProductVariantSearchModel(
-        boundaryCode: RegistrationDeliverySingleton().boundary?.code,
+        tenantId: envConfig.variables.tenantId,
       ));
       final productSkuCounts =
-          await localSecureStore.getAllProductSkuCounts(productVarient);
+          await localSecureStore.getAllProductSkuCounts(productVariant);
 
       if (accessToken == null ||
           refreshToken == null ||
@@ -110,12 +110,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "enabled": true,
       });
       await localSecureStore.setBoundaryRefetch(true);
-      final productVarient =
+      final productVariant =
           await productVariantLocalRepository.search(ProductVariantSearchModel(
-        boundaryCode: RegistrationDeliverySingleton().boundary?.code,
+        tenantId: envConfig.variables.tenantId,
       ));
       final productSkuCounts =
-          await localSecureStore.getAllProductSkuCounts(productVarient);
+          await localSecureStore.getAllProductSkuCounts(productVariant);
 
       await localSecureStore.setRoleActions(actionsWrapper);
       if (result.userRequestModel.roles
@@ -174,13 +174,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthEmitter emit,
   ) async {
     try {
-      final productVarient = await productVariantLocalRepository.search(
-        ProductVariantSearchModel(
-          boundaryCode: RegistrationDeliverySingleton().boundary?.code,
-        ),
-      );
+      final productVariant =
+          await productVariantLocalRepository.search(ProductVariantSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ));
       Map<String, int> currentCounts =
-          await localSecureStore.getAllProductSkuCounts(productVarient);
+          await localSecureStore.getAllProductSkuCounts(productVariant);
 
       Map<String, int> additionCounts = event.skuCountUpdates;
 
