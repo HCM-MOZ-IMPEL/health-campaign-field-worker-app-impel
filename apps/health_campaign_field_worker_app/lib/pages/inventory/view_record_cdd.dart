@@ -265,8 +265,8 @@ class _ViewStockRecordsCDDPageState
                 ?.value;
 
             if (skuList.contains(productName)) {
-              skuCountUpdates =
-                  setCurrentSkuCount(skuCountUpdates, productName, totalQty);
+              skuCountUpdates[productName] =
+                  (skuCountUpdates[productName] ?? 0) + totalQty;
             }
 
             // if (productName == Constants.spaq1) {

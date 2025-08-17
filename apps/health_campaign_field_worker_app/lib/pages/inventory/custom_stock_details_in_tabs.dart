@@ -1062,6 +1062,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     if (!isSubmitClicked) {
+      context
+          .read<AuthBloc>()
+          .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
       final lastProduct = products.last.sku ?? '';
 
       final theme = Theme.of(context);

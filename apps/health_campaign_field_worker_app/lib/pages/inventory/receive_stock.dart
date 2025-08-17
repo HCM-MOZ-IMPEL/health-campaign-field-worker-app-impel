@@ -25,11 +25,11 @@ import '../../utils/utils.dart';
 import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()
-class ViewStockRecordsLGAPage extends LocalizedStatefulWidget {
+class ReceiveStockPage extends LocalizedStatefulWidget {
   final String mrnNumber;
   final List<StockModel> stockRecords;
 
-  const ViewStockRecordsLGAPage({
+  const ReceiveStockPage({
     super.key,
     super.appLocalizations,
     required this.mrnNumber,
@@ -37,12 +37,10 @@ class ViewStockRecordsLGAPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ViewStockRecordsLGAPage> createState() =>
-      _ViewStockRecordsLGAPageState();
+  State<ReceiveStockPage> createState() => _ViewStockRecordsLGAPageState();
 }
 
-class _ViewStockRecordsLGAPageState
-    extends LocalizedState<ViewStockRecordsLGAPage> {
+class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
   late final FormGroup _form;
   late final Map<String, int> _issuedQuantities;
   bool _commentsRequired = false;
@@ -201,6 +199,10 @@ class _ViewStockRecordsLGAPageState
 
         bloc.close();
 
+        context
+            .read<AuthBloc>()
+            .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
+
         //TODO: old
         // context.read<RecordStockBloc>().add(
         //       RecordStockSaveStockDetailsEvent(
@@ -216,9 +218,13 @@ class _ViewStockRecordsLGAPageState
         final totalQty =
             int.parse(_form.control('quantityReceived').value.toString());
 
-        Map<String, int> skuCountUpdates = context.getAllProductSkuCounts();
-        if (skuCountUpdates.isNotEmpty) {
-          skuList = skuCountUpdates.keys.toList();
+        // Map<String, int> skuCounts = ;
+        Map<String, int> skuCounts = context
+            .getAllProductSkuCounts()
+            .map((key, value) => MapEntry(key, value));
+
+        if (skuCounts.isNotEmpty) {
+          skuList = skuCounts.keys.toList();
         }
 
         // int spaq1Count = context.spaq1;
@@ -231,8 +237,7 @@ class _ViewStockRecordsLGAPageState
             ?.value;
         // Custom logic based on productName
         if (skuList.contains(productName)) {
-          skuCountUpdates =
-              setCurrentSkuCount(skuCountUpdates, productName, totalQty);
+          skuCounts[productName] = (skuCounts[productName] ?? 0) + totalQty;
         }
         // if (productName == Constants.spaq1) {
         //   spaq1Count = totalQty;
@@ -257,7 +262,7 @@ class _ViewStockRecordsLGAPageState
         // }
         context.read<AuthBloc>().add(
               AuthUpdateProductSkuCountsEvent(
-                skuCountUpdates: skuCountUpdates,
+                skuCountUpdates: skuCounts,
               ),
             );
         await Future.delayed(const Duration(milliseconds: 500));
@@ -342,7 +347,8 @@ class _ViewStockRecordsLGAPageState
                     final productName = stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'productName',
-                              orElse: () => AdditionalField('productName', ''),
+                              orElse: () =>
+                                  const AdditionalField('productName', ''),
                             )
                             .value
                             ?.toString() ??
@@ -391,7 +397,7 @@ class _ViewStockRecordsLGAPageState
                                           .firstWhere(
                                             (field) =>
                                                 field.key == 'batchNumber',
-                                            orElse: () => AdditionalField(
+                                            orElse: () => const AdditionalField(
                                                 'batchNumber', ''),
                                           )
                                           .value

@@ -716,7 +716,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)
+            Map<String, int>? productSkuCounts)
         authenticated,
     required TResult Function(String? error) error,
   }) =>
@@ -731,7 +731,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult? Function(String? error)? error,
   }) =>
@@ -746,7 +746,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -845,7 +845,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)
+            Map<String, int>? productSkuCounts)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -863,7 +863,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -881,7 +881,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -980,7 +980,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)
+            Map<String, int>? productSkuCounts)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -998,7 +998,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -1016,7 +1016,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1082,7 +1082,7 @@ abstract class _$$AuthAuthenticatedStateImplCopyWith<$Res> {
       UserRequestModel userModel,
       RoleActionsWrapperModel actionsWrapper,
       String? individualId,
-      Map<String, int> productSkuCounts});
+      Map<String, int>? productSkuCounts});
 
   $UserRequestModelCopyWith<$Res> get userModel;
   $RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper;
@@ -1105,7 +1105,7 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
     Object? userModel = null,
     Object? actionsWrapper = null,
     Object? individualId = freezed,
-    Object? productSkuCounts = null,
+    Object? productSkuCounts = freezed,
   }) {
     return _then(_$AuthAuthenticatedStateImpl(
       accessToken: null == accessToken
@@ -1128,10 +1128,10 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
           ? _value.individualId
           : individualId // ignore: cast_nullable_to_non_nullable
               as String?,
-      productSkuCounts: null == productSkuCounts
+      productSkuCounts: freezed == productSkuCounts
           ? _value._productSkuCounts
           : productSkuCounts // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
+              as Map<String, int>?,
     ));
   }
 
@@ -1162,7 +1162,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
       required this.userModel,
       required this.actionsWrapper,
       this.individualId,
-      required final Map<String, int> productSkuCounts})
+      final Map<String, int>? productSkuCounts})
       : _productSkuCounts = productSkuCounts;
 
   @override
@@ -1175,12 +1175,14 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   final RoleActionsWrapperModel actionsWrapper;
   @override
   final String? individualId;
-  final Map<String, int> _productSkuCounts;
+  final Map<String, int>? _productSkuCounts;
   @override
-  Map<String, int> get productSkuCounts {
+  Map<String, int>? get productSkuCounts {
+    final value = _productSkuCounts;
+    if (value == null) return null;
     if (_productSkuCounts is EqualUnmodifiableMapView) return _productSkuCounts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_productSkuCounts);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
@@ -1235,7 +1237,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)
+            Map<String, int>? productSkuCounts)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -1254,7 +1256,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -1273,7 +1275,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1325,20 +1327,19 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
 
 abstract class AuthAuthenticatedState implements AuthState {
   const factory AuthAuthenticatedState(
-          {required final String accessToken,
-          required final String refreshToken,
-          required final UserRequestModel userModel,
-          required final RoleActionsWrapperModel actionsWrapper,
-          final String? individualId,
-          required final Map<String, int> productSkuCounts}) =
-      _$AuthAuthenticatedStateImpl;
+      {required final String accessToken,
+      required final String refreshToken,
+      required final UserRequestModel userModel,
+      required final RoleActionsWrapperModel actionsWrapper,
+      final String? individualId,
+      final Map<String, int>? productSkuCounts}) = _$AuthAuthenticatedStateImpl;
 
   String get accessToken;
   String get refreshToken;
   UserRequestModel get userModel;
   RoleActionsWrapperModel get actionsWrapper;
   String? get individualId;
-  Map<String, int> get productSkuCounts;
+  Map<String, int>? get productSkuCounts;
   @JsonKey(ignore: true)
   _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1417,7 +1418,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)
+            Map<String, int>? productSkuCounts)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -1435,7 +1436,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -1453,7 +1454,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
-            Map<String, int> productSkuCounts)?
+            Map<String, int>? productSkuCounts)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),

@@ -27,7 +27,7 @@ import 'package:complaints/models/pgr_complaints.dart';
 import '../blocs/inventory/custom_inventory_report.dart'
     as custom_inventory_report;
 import '../pages/inventory/qr_scanner.dart';
-import '../pages/inventory/view_record_lga.dart';
+import '../pages/inventory/receive_stock.dart';
 import '../pages/inventory/custom_manage_stock.dart';
 import '../pages/inventory/custom_transactional_details.dart';
 import '../pages/pages-Bednet/acknowledgement_bednet.dart';
@@ -308,7 +308,7 @@ class AppRouter extends _$AppRouter {
                 path: 'qr-scanner',
               ),
               AutoRoute(
-                page: ViewStockRecordsLGARoute.page,
+                page: ReceiveStockRoute.page,
                 path: 'custom-stock-view-lga',
               ),
               AutoRoute(

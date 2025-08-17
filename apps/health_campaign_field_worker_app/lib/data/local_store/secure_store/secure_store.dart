@@ -171,19 +171,14 @@ class LocalSecureStore {
 
       for (final key in skuKeys) {
         final skuMapString = await storage.read(key: key);
+        result[key] = 0;
         if (skuMapString != null) {
           try {
             final Map<String, dynamic> skuMap = json.decode(skuMapString);
             if (skuMap[user.uuid] != null) {
               result[key] = skuMap[user.uuid] as int;
-            } else {
-              result[key] = 0;
             }
-          } catch (_) {
-            result[key] = 0;
-          }
-        } else {
-          result[key] = 0;
+          } catch (_) {}
         }
       }
 

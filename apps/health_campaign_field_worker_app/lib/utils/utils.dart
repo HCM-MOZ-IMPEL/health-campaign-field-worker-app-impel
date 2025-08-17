@@ -232,17 +232,6 @@ List<String> extractAllSkus(List<ProductVariantModel> variants) {
   return variants.map((variant) => variant.sku).whereType<String>().toList();
 }
 
-Map<String, int> setCurrentSkuCount(
-    Map<String, int> skuCount, String sku, int currentCount) {
-  for (var sku in skuCount.keys) {
-    skuCount[sku] = 0;
-  }
-  if (skuCount.containsKey(sku)) {
-    skuCount[sku] = currentCount;
-  }
-  return skuCount;
-}
-
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);

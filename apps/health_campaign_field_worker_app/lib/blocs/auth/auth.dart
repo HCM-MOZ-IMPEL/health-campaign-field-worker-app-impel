@@ -15,6 +15,7 @@ import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/typedefs.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 part 'auth.freezed.dart';
@@ -58,12 +59,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
       final userIndividualId = await localSecureStore.userIndividualId;
-      final productVariant =
-          await productVariantLocalRepository.search(ProductVariantSearchModel(
-        tenantId: envConfig.variables.tenantId,
-      ));
-      final productSkuCounts =
-          await localSecureStore.getAllProductSkuCounts(productVariant);
 
       if (accessToken == null ||
           refreshToken == null ||
@@ -77,7 +72,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: userObject,
           individualId: userIndividualId,
           actionsWrapper: actionsList,
-          productSkuCounts: productSkuCounts,
         ));
       }
     } catch (_) {
@@ -110,13 +104,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "enabled": true,
       });
       await localSecureStore.setBoundaryRefetch(true);
-      final productVariant =
-          await productVariantLocalRepository.search(ProductVariantSearchModel(
-        tenantId: envConfig.variables.tenantId,
-      ));
-      final productSkuCounts =
-          await localSecureStore.getAllProductSkuCounts(productVariant);
-
       await localSecureStore.setRoleActions(actionsWrapper);
       if (result.userRequestModel.roles
           .where((role) =>
@@ -135,12 +122,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(
         AuthAuthenticatedState(
-            accessToken: result.accessToken,
-            refreshToken: result.refreshToken,
-            userModel: result.userRequestModel,
-            actionsWrapper: actionsWrapper,
-            individualId: await localSecureStore.userIndividualId,
-            productSkuCounts: productSkuCounts),
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          userModel: result.userRequestModel,
+          actionsWrapper: actionsWrapper,
+          individualId: await localSecureStore.userIndividualId,
+        ),
       );
     } on DioException catch (error) {
       emit(const AuthErrorState());
@@ -251,7 +238,7 @@ class AuthState with _$AuthState {
     required UserRequestModel userModel,
     required RoleActionsWrapperModel actionsWrapper,
     String? individualId,
-    required Map<String, int> productSkuCounts,
+    Map<String, int>? productSkuCounts,
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;
