@@ -168,12 +168,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       Map<String, int> currentCounts =
           await localSecureStore.getAllProductSkuCounts(productVariant);
 
-      Map<String, int> additionCounts = event.skuCountUpdates;
+      if (event.skuCountUpdates != null) {
+        Map<String, int>? additionCounts = event.skuCountUpdates;
 
-      for (final sku in additionCounts.keys) {
-        final existingCount = currentCounts[sku] ?? 0;
-        final addition = additionCounts[sku] ?? 0;
-        currentCounts[sku] = existingCount + addition;
+        for (final sku in additionCounts!.keys) {
+          // final existingCount = currentCounts[sku] ?? 0;
+          final addition = additionCounts[sku] ?? 0;
+          currentCounts[sku] = addition;
+        }
       }
 
       await localSecureStore.setProductSkuCounts(currentCounts);
@@ -216,7 +218,7 @@ class AuthEvent with _$AuthEvent {
   }) = AuthLoginEvent;
 
   const factory AuthEvent.updateProductSkuCounts({
-    required Map<String, int> skuCountUpdates,
+    Map<String, int>? skuCountUpdates,
   }) = AuthUpdateProductSkuCountsEvent;
 
   const factory AuthEvent.autoLogin({
