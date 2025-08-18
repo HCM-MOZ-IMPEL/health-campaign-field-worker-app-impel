@@ -83,6 +83,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
   @override
   void initState() {
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     super.initState();
     _initializeData();
   }
@@ -1062,9 +1065,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     if (!isSubmitClicked) {
-      context
-          .read<AuthBloc>()
-          .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
       final lastProduct = products.last.sku ?? '';
 
       final theme = Theme.of(context);
@@ -1112,13 +1112,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       if (submit && context.mounted) {
         isSubmitClicked = true;
 
-        Map<String, int> currentProductSkuCount =
-            context.getAllProductSkuCounts();
+        Map<String, int> skuCounts = context
+            .getAllProductSkuCounts()
+            .map((key, value) => MapEntry(key, value));
 
         // int currentSpaq1Count = context.spaq1;
 
         // int currentSpaq2Count = context.spaq2;
-        Map<String, int> skuCountUpdates = {};
+        // Map<String, int> skuCountUpdates = {};
 
         // int spaq1Count = 0;
 
@@ -1148,17 +1149,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           String? productName = stockModel.additionalFields?.fields
               .firstWhereOrNull((element) => element.key == 'productName')
               ?.value;
-          if (currentProductSkuCount.isNotEmpty) {
-            skuList = currentProductSkuCount.keys.toList();
+          if (skuCounts.isNotEmpty) {
+            skuList = skuCounts.keys.toList();
           }
-
-          // Custom logic based on productName
 
           if (entryType == StockRecordEntryType.dispatch) {
             if ((skuList.contains(productName) &&
                     // ignore: unnecessary_null_comparison
-                    (currentProductSkuCount[productName]! + totalQty < 0)) ||
-                (currentProductSkuCount[productName] == null)) {
+                    (skuCounts[productName]! + totalQty < 0)) ||
+                (skuCounts[productName] == null)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -1173,33 +1172,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               isSubmitClicked = false;
               return;
             }
-            // else if (productName == Constants.spaq2 &&
-            //     (currentSpaq2Count + totalQty < 0)) {
-            //   await DigitToast.show(
-            //     context,
-            //     options: DigitToastOptions(
-            //         localizations.translate(context.isCDD
-            //             ? i18_local
-            //                 .beneficiaryDetails.validationForExcessStockReturn
-            //             : i18_local.beneficiaryDetails
-            //                 .validationForExcessStockDispatch),
-            //         true,
-            //         theme),
-            //   );
-            //   isSubmitClicked = false;
-            //   return;
-            // }
           }
 
           if (skuList.contains(productName)) {
-            skuCountUpdates[productName!] = totalQty;
+            skuCounts[productName!] = (skuCounts[productName] ?? 0) + totalQty;
           }
-
-          // if (productName == Constants.spaq1) {
-          //   spaq1Count = totalQty;
-          // } else if (productName == Constants.spaq2) {
-          //   spaq2Count = totalQty;
-          // }
 
           final bloc = RecordStockBloc(
             stockRepository: context.repository<StockModel, StockSearchModel>(),
@@ -1232,7 +1209,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
         context.read<AuthBloc>().add(
               AuthUpdateProductSkuCountsEvent(
-                skuCountUpdates: skuCountUpdates,
+                skuCountUpdates: skuCounts,
               ),
             );
 

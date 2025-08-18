@@ -50,6 +50,9 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
   @override
   void initState() {
     super.initState();
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     _issuedQuantities = {
       for (final stock in widget.stockRecords)
         stock.additionalFields?.fields
@@ -199,10 +202,6 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
 
         bloc.close();
 
-        context
-            .read<AuthBloc>()
-            .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
-
         //TODO: old
         // context.read<RecordStockBloc>().add(
         //       RecordStockSaveStockDetailsEvent(
@@ -218,7 +217,6 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
         final totalQty =
             int.parse(_form.control('quantityReceived').value.toString());
 
-        // Map<String, int> skuCounts = ;
         Map<String, int> skuCounts = context
             .getAllProductSkuCounts()
             .map((key, value) => MapEntry(key, value));
@@ -227,39 +225,12 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
           skuList = skuCounts.keys.toList();
         }
 
-        // int spaq1Count = context.spaq1;
-        // int spaq2Count = context.spaq2;
-
-        // int blueVasCount = context.blueVas;
-        // int redVasCount = context.redVas;
         String productName = stock.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == "productName")
             ?.value;
-        // Custom logic based on productName
         if (skuList.contains(productName)) {
           skuCounts[productName] = (skuCounts[productName] ?? 0) + totalQty;
         }
-        // if (productName == Constants.spaq1) {
-        //   spaq1Count = totalQty;
-        //   spaq2Count = 0;
-        //   redVasCount = 0;
-        //   blueVasCount = 0;
-        // } else if (productName == Constants.spaq2) {
-        //   spaq2Count = totalQty;
-        //   spaq1Count = 0;
-        //   redVasCount = 0;
-        //   blueVasCount = 0;
-        // } else if (productName == Constants.blueVAS) {
-        //   blueVasCount = totalQty;
-        //   spaq1Count = 0;
-        //   spaq2Count = 0;
-        //   redVasCount = 0;
-        // } else {
-        //   blueVasCount = 0;
-        //   spaq1Count = 0;
-        //   spaq2Count = 0;
-        //   redVasCount = totalQty;
-        // }
         context.read<AuthBloc>().add(
               AuthUpdateProductSkuCountsEvent(
                 skuCountUpdates: skuCounts,
