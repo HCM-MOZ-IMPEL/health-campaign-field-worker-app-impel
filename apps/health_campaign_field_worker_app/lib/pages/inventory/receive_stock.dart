@@ -263,6 +263,8 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
     // and this flow is for stock receipt for LGA
     final senderIdToShowOnTab = widget.stockRecords.first.senderId;
     bool commentRequired = false;
+    var isDistributorOrTeamSupervisor =
+        context.isCDD || context.isTeamSupervisor ? false : true;
 
     return Scaffold(
       body: ScrollableContent(
@@ -350,34 +352,37 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                InputField(
-                                  type: InputType.text,
-                                  label:
-                                      '${localizations.translate(i18.stockDetails.waybillNumberLabel)}*',
-                                  initialValue: stock.wayBillNumber ?? '',
-                                  isDisabled: true,
-                                  readOnly: true,
-                                ),
-                                const SizedBox(height: 12),
-                                InputField(
-                                  type: InputType.text,
-                                  label: localizations.translate(
-                                    i18_local.stockDetails.batchNumberLabel,
+                                if (isDistributorOrTeamSupervisor) ...[
+                                  InputField(
+                                    type: InputType.text,
+                                    label:
+                                        '${localizations.translate(i18.stockDetails.waybillNumberLabel)}*',
+                                    initialValue: stock.wayBillNumber ?? '',
+                                    isDisabled: true,
+                                    readOnly: true,
                                   ),
-                                  initialValue: stock.additionalFields?.fields
-                                          .firstWhere(
-                                            (field) =>
-                                                field.key == 'batchNumber',
-                                            orElse: () => const AdditionalField(
-                                                'batchNumber', ''),
-                                          )
-                                          .value
-                                          ?.toString() ??
-                                      '',
-                                  isDisabled: true,
-                                  readOnly: true,
-                                ),
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
+                                  InputField(
+                                    type: InputType.text,
+                                    label: localizations.translate(
+                                      i18_local.stockDetails.batchNumberLabel,
+                                    ),
+                                    initialValue: stock.additionalFields?.fields
+                                            .firstWhere(
+                                              (field) =>
+                                                  field.key == 'batchNumber',
+                                              orElse: () =>
+                                                  const AdditionalField(
+                                                      'batchNumber', ''),
+                                            )
+                                            .value
+                                            ?.toString() ??
+                                        '',
+                                    isDisabled: true,
+                                    readOnly: true,
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
                                 InputField(
                                   type: InputType.text,
                                   label:
@@ -391,10 +396,11 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                                   formControlName: 'quantityReceived',
                                   builder: (field) => InputField(
                                     type: InputType.text,
-                                    label:
-                                        '${localizations.translate(i18_local.stockDetails.actualQuantityReceived)}*',
+                                    label: localizations.translate(i18_local
+                                        .stockDetails.actualQuantityReceived),
                                     errorMessage: field.errorText,
                                     keyboardType: TextInputType.number,
+                                    isRequired: true,
                                     onChange: (value) {
                                       if (value != null && value.isNotEmpty) {
                                         field.control.value =
@@ -405,11 +411,16 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                                     },
                                   ),
                                   validationMessages: {
-                                    'required': (_) => 'Quantity is required',
+                                    'required': (_) => localizations.translate(
+                                        i18_local
+                                            .stockDetails.qantityRequiredError),
                                     'min': (_) => 'Must be at least 1',
-                                    'number': (_) => 'Must be a valid number',
-                                    'maxIssued': (_) =>
-                                        'Received quantity cannot be more than issued quantity',
+                                    'number': (_) => localizations.translate(
+                                        i18_local
+                                            .stockDetails.validNumberError),
+                                    'maxIssued': (_) => localizations.translate(
+                                        i18_local.stockDetails
+                                            .receivedQuantityError),
                                   },
                                 ),
                                 const SizedBox(height: 12),
@@ -417,7 +428,9 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                                   formControlName: 'comments',
                                   validationMessages: {
                                     'requiredIfShort': (_) =>
-                                        'Comments are required if quantity received is less than issued',
+                                        localizations.translate(i18_local
+                                            .stockDetails
+                                            .commentRequiredErrorLessQuantity),
                                   },
                                   builder: (field) => InputField(
                                     isRequired: _commentsRequired,
