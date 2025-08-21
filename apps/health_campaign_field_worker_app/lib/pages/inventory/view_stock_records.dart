@@ -91,6 +91,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
 
   Widget _buildStockRecordTab(StockModel stock) {
     final senderIdToShowOnTab = stock.senderId;
+    var isDistributorOrTeamSupervisor =
+        context.isCDD || context.isTeamSupervisor ? false : true;
 
     String? emptyQuantity = stock.additionalFields?.fields
         .firstWhereOrNull((e) => e.key == "emptyBottlesRetured")
@@ -176,7 +178,7 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  if (InventorySingleton().isDistributor != true) ...[
+                  if (isDistributorOrTeamSupervisor) ...[
                     // Waybill Number
                     InputField(
                       type: InputType.text,
