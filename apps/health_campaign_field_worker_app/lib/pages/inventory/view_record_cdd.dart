@@ -51,6 +51,9 @@ class _ViewStockRecordsCDDPageState
 
   @override
   void initState() {
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     super.initState();
     _forms = widget.stockRecords
         .map((_) => FormGroup({
@@ -92,14 +95,19 @@ class _ViewStockRecordsCDDPageState
                     quantityReceived < stockQuantity)) &&
             (currentComment == null || currentComment.trim() == '')) {
           await DigitToast.show(context,
-              options: DigitToastOptions('Comment is required', true, theme));
+              options: DigitToastOptions(
+                  localizations.translate(
+                      i18_local.stockDetails.commentRequiredErrorLessQuantity),
+                  true,
+                  theme));
           return;
         }
         if (quantityReceived == null ||
             (quantityReceived is int && quantityReceived > stockQuantity)) {
           await DigitToast.show(context,
               options: DigitToastOptions(
-                  'Received quantity can not be more than issued quantity',
+                  localizations
+                      .translate(i18_local.stockDetails.receivedQuantityError),
                   true,
                   theme));
           return;
@@ -250,50 +258,23 @@ class _ViewStockRecordsCDDPageState
                 .value
                 .toString());
 
-            Map<String, int> skuCountUpdates = context.getAllProductSkuCounts();
-            if (skuCountUpdates.isNotEmpty) {
-              skuList = skuCountUpdates.keys.toList();
+            Map<String, int> skuCounts = context
+                .getAllProductSkuCounts()
+                .map((key, value) => MapEntry(key, value));
+            if (skuCounts.isNotEmpty) {
+              skuList = skuCounts.keys.toList();
             }
-
-            // int spaq1Count = context.spaq1;
-            // int spaq2Count = context.spaq2;
-
-            // int blueVasCount = context.blueVas;
-            // int redVasCount = context.redVas;
             String productName = stock.additionalFields?.fields
                 .firstWhereOrNull((element) => element.key == "productName")
                 ?.value;
 
             if (skuList.contains(productName)) {
-              skuCountUpdates[productName] =
-                  (skuCountUpdates[productName] ?? 0) + totalQty;
+              skuCounts[productName] = (skuCounts[productName] ?? 0) + totalQty;
             }
-
-            // if (productName == Constants.spaq1) {
-            //   spaq1Count = totalQty;
-            //   spaq2Count = 0;
-            //   redVasCount = 0;
-            //   blueVasCount = 0;
-            // } else if (productName == Constants.spaq2) {
-            //   spaq2Count = totalQty;
-            //   spaq1Count = 0;
-            //   redVasCount = 0;
-            //   blueVasCount = 0;
-            // } else if (productName == Constants.blueVAS) {
-            //   blueVasCount = totalQty;
-            //   spaq1Count = 0;
-            //   spaq2Count = 0;
-            //   redVasCount = 0;
-            // } else {
-            //   blueVasCount = 0;
-            //   spaq1Count = 0;
-            //   spaq2Count = 0;
-            //   redVasCount = totalQty;
-            // }
 
             context.read<AuthBloc>().add(
                   AuthUpdateProductSkuCountsEvent(
-                    skuCountUpdates: skuCountUpdates,
+                    skuCountUpdates: skuCounts,
                   ),
                 );
 
@@ -366,7 +347,7 @@ class _ViewStockRecordsCDDPageState
                   InputField(
                     type: InputType.text,
                     label: localizations
-                        .translate(i18_local.stockDetails.batchNumberText),
+                        .translate(i18_local.stockDetails.batchNumberLabel),
                     initialValue: stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'batchNumber',
@@ -406,9 +387,11 @@ class _ViewStockRecordsCDDPageState
                       },
                     ),
                     validationMessages: {
-                      'required': (_) => 'Quantity is required',
+                      'required': (_) => localizations.translate(
+                          i18_local.stockDetails.qantityRequiredError),
                       'min': (_) => 'Must be at least 1',
-                      'number': (_) => 'Must be a valid number',
+                      'number': (_) => localizations
+                          .translate(i18_local.stockDetails.validNumberError),
                     },
                   ),
                   const SizedBox(height: 12),
