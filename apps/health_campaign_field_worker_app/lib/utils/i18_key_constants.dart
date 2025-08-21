@@ -1224,7 +1224,14 @@ class StockDetails {
       'STOCK_QUANTITY_SENT_BY_WAREHOUSE_LABEL';
   String get batchNumberText => 'BATCH_NUMBER_TEXT';
   String get actualQuantityReceived => 'STOCK_QUANTITY_ACTUAL_RECEIVED_LABEL';
+  String get commentRequiredErrorLessQuantity =>
+      'COMMENT_IS_REQUIRED_WHEN_QUANTITY_IS_LESS';
+  String get qantityRequiredError => 'STOCK_QUANTITY_REQUIRED_ERROR';
+  String get receivedQuantityError =>
+      'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
+  String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
+  String get scanResources => 'STOCK_SCAN_RESOURCES';
   String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
 
   String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
