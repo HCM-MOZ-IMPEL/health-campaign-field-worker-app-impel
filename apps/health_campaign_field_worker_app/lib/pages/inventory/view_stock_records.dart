@@ -173,8 +173,9 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Stock Details',
+                  Text(
+                    localizations
+                        .translate(i18_local.stockDetails.stockDetailsText),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),

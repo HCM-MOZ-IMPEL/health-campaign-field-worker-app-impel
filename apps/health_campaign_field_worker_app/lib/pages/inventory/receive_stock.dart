@@ -286,9 +286,10 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Stock Receipt Details',
-                            style: TextStyle(
+                          Text(
+                            localizations.translate(i18_local
+                                .stockDetails.stockDetailsReceiptLabel),
+                            style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 12),

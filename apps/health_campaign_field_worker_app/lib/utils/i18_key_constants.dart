@@ -1217,6 +1217,9 @@ class StockDetails {
       'STOCK_DETAILS_RETURNED_FROM';
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
+  String get stockDetailsReceiptLabel => 'STOCK_DETAILS_RECIPT_HEADING_LABEL';
+  String get selectRecord => 'PLEASE_SELECT_A_RECORD';
+  String get stockDetailsText => 'STOCK_DETAILS_TEXT';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 
   String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
