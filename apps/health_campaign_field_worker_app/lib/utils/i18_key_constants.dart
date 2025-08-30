@@ -1233,6 +1233,7 @@ class StockDetails {
   String get receivedQuantityError =>
       'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
   String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
+  String get minNumber => 'STOCK_MIN_QUANTITY_REQUIRED';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
   String get scanResources => 'STOCK_SCAN_RESOURCES';
   String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
@@ -1244,6 +1245,7 @@ class StockDetails {
   String get countDialogSuccess =>
       'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
   String get selectMrnNumberLabel => 'SELECT_MRN_NUMBER_LABEL';
+  String get noTransactionFound => 'STOCK_NO_TRANCTION_FOUND';
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';

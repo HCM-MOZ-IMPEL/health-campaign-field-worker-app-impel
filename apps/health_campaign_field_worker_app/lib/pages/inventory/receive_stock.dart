@@ -415,7 +415,8 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                                     'required': (_) => localizations.translate(
                                         i18_local
                                             .stockDetails.qantityRequiredError),
-                                    'min': (_) => 'Must be at least 1',
+                                    'min': (_) => localizations.translate(
+                                        i18_local.stockDetails.minNumber),
                                     'number': (_) => localizations.translate(
                                         i18_local
                                             .stockDetails.validNumberError),

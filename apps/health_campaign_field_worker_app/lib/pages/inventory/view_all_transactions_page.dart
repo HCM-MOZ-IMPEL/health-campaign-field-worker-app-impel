@@ -14,12 +14,14 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../blocs/inventory/stock_bloc.dart';
 import '../../blocs/localization/app_localization.dart';
+import 'package:inventory_management/widgets/localized.dart';
 import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/action_card/all_transactions_card.dart';
 import '../../widgets/custom_back_navigation.dart';
 import 'receive_stock.dart';
 import 'package:collection/collection.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class ViewAllTransactionsScreen extends StatefulWidget {
@@ -173,7 +175,7 @@ class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
           ),
           children: [
             if (filteredStock.isEmpty)
-              const Center(child: Text('No transactions available.'))
+              const Center(child: Text('nenhuma transação encontrada'))
             else
               Container(
                 decoration: BoxDecoration(
