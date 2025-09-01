@@ -881,6 +881,11 @@ class CustomStockDetailsPageState
                                             isRequired: true,
 
                                             child: MultiSelectDropDown(
+                                              clearAllText:
+                                                  localizations.translate(
+                                                i18_local
+                                                    .stockDetails.clearAllText,
+                                              ),
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,

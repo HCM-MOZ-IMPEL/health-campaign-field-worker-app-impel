@@ -541,6 +541,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
                           validationMessages: {
+                            "required": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberRequired),
                             "maxLength": (object) => localizations.translate(
                                 i18_local.stockDetails.wayBillNumberMaxError),
                             "minLength": (object) => localizations.translate(

@@ -1291,6 +1291,7 @@ class StockDetails {
 
   String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
   String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+  String get clearAllText => 'PRODUCT_CLEAR_ALL_TEXT';
   String get quantityReturnedMaxError =>
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get cddCodeLabel => 'CDD_CODE_LABEL';
@@ -1298,6 +1299,7 @@ class StockDetails {
 
   String get wayBillNumberMinError => 'STOCK_WAYBILL_MIN_ERROR';
   String get wayBillNumberMaxError => 'STOCK_WAYBILL_MAX_ERROR';
+  String get wayBillNumberRequired => 'STOCK_WAYBILL_EMPTY_REQUIRED_ERROR';
 }
 
 class StockReconciliationDetails {
