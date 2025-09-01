@@ -540,6 +540,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     if (isWareHouseMgr)
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
+                          validationMessages: {
+                            "maxLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMaxError),
+                            "minLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMinError),
+                          },
                           builder: (field) {
                             return InputField(
                               type: InputType.text,
@@ -605,7 +611,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                 FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9]'),
                                 ),
-                                LengthLimitingTextInputFormatter(9),
+                                LengthLimitingTextInputFormatter(6),
                               ],
                               onChange: (val) {
                                 field.control.markAsTouched();
