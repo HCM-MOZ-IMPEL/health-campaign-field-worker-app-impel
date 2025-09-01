@@ -5,8 +5,6 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../utils/i18_key_constants.dart' as i18_local;
@@ -57,7 +55,7 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
       appBar: AppBar(
         bottom: TabBar(
           labelColor: Colors.white,
-          indicator: BoxDecoration(
+          indicator: const BoxDecoration(
             border: Border(
               left: BorderSide(color: Colors.orange),
               right: BorderSide(color: Colors.orange),
@@ -70,14 +68,14 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
           isScrollable: true,
           tabs: widget.stockRecords
               .map((stock) => Tab(
-                    text: stock.additionalFields?.fields
+                    text: localizations.translate(stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'productName',
                               orElse: () => AdditionalField('productName', ''),
                             )
                             .value
                             ?.toString() ??
-                        '',
+                        ''),
                   ))
               .toList(),
         ),
@@ -90,7 +88,6 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
   }
 
   Widget _buildStockRecordTab(StockModel stock) {
-    final senderIdToShowOnTab = stock.senderId;
     var isDistributorOrTeamSupervisor =
         context.isCDD || context.isTeamSupervisor ? false : true;
 
@@ -117,14 +114,18 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                 children: [
                   Text(
                     localizations.translate(i18.stockDetails.returnedPageTitle),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
-                          child: Text(localizations.translate(i18_local
-                              .acknowledgementSuccess.mrnNumberLabel))),
+                          child: Text(localizations.translate(
+                              (stock.transactionType == "RECEIVED" ||
+                                      stock.transactionReason == "RETURNED")
+                                  ? i18_local.stockDetails.mrnNumberLabel
+                                  : i18_local.stockDetails.minNumberLabel))),
                       Expanded(child: Text(widget.mrnNumber)),
                     ],
                   ),
@@ -134,15 +135,15 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                       const Expanded(child: Text('Resource')),
                       Expanded(
                         child: Text(
-                          stock.additionalFields?.fields
+                          localizations.translate(stock.additionalFields?.fields
                                   .firstWhere(
                                     (field) => field.key == 'productName',
-                                    orElse: () =>
-                                        AdditionalField('productName', ''),
+                                    orElse: () => const AdditionalField(
+                                        'productName', ''),
                                   )
                                   .value
                                   ?.toString() ??
-                              '',
+                              ''),
                         ),
                       ),
                     ],
