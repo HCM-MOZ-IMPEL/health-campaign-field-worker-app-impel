@@ -14,17 +14,17 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../blocs/inventory/stock_bloc.dart';
 import '../../blocs/localization/app_localization.dart';
-import 'package:inventory_management/widgets/localized.dart';
 import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/action_card/all_transactions_card.dart';
 import '../../widgets/custom_back_navigation.dart';
 import 'receive_stock.dart';
+import '../../widgets/localized.dart';
 import 'package:collection/collection.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class ViewAllTransactionsScreen extends StatefulWidget {
+class ViewAllTransactionsScreen extends LocalizedStatefulWidget {
   final String? warehouseId;
   const ViewAllTransactionsScreen({super.key, required this.warehouseId});
 
@@ -33,7 +33,8 @@ class ViewAllTransactionsScreen extends StatefulWidget {
       _ViewAllTransactionsScreenState();
 }
 
-class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
+class _ViewAllTransactionsScreenState
+    extends LocalizedState<ViewAllTransactionsScreen> {
   @override
   void initState() {
     super.initState();
@@ -175,7 +176,9 @@ class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
           ),
           children: [
             if (filteredStock.isEmpty)
-              const Center(child: Text('nenhuma transação encontrada'))
+              Center(
+                  child: Text(localizations
+                      .translate(i18_local.stockDetails.noTransactionFound)))
             else
               Container(
                 decoration: BoxDecoration(
@@ -189,7 +192,10 @@ class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 16.0),
-                      Text("Select the MIN number", style: textTheme.headingL),
+                      Text(
+                          localizations.translate(
+                              i18_local.stockDetails.selectMRNNumber),
+                          style: textTheme.headingL),
                       const SizedBox(height: 16.0),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.7,

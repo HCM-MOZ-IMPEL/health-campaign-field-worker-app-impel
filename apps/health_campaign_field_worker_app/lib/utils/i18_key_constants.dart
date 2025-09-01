@@ -1295,6 +1295,9 @@ class StockDetails {
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get cddCodeLabel => 'CDD_CODE_LABEL';
   String get teamSupervisorCodeLabel => 'TEAM_SUPERVISOR_CODE_LABEL';
+
+  String get wayBillNumberMinError => 'STOCK_WAYBILL_MIN_ERROR';
+  String get wayBillNumberMaxError => 'STOCK_WAYBILL_MAX_ERROR';
 }
 
 class StockReconciliationDetails {
