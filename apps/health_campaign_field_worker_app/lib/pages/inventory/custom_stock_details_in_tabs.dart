@@ -54,6 +54,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   bool _isInitializing = true;
   String? senderIdToShowOnTab = '';
   bool isSubmitClicked = false;
+  List<String> skuList = [];
 
 // fields to capture stock metadata
   String? senderId;
@@ -82,6 +83,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
   @override
   void initState() {
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     super.initState();
     _initializeData();
   }
@@ -489,8 +493,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Expanded(child: Text('Resource')),
-                        Expanded(child: Text(productName)),
+                        Expanded(
+                            child: Text(localizations
+                                .translate(i18_local.stockDetails.resource))),
+                        Expanded(
+                            child: Text(localizations.translate(productName))),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -523,8 +530,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Stock Details',
+                    Text(
+                      localizations
+                          .translate(i18_local.stockDetails.stockDetailsText),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -532,6 +540,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     if (isWareHouseMgr)
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
+                          validationMessages: {
+                            "required": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberRequired),
+                            "maxLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMaxError),
+                            "minLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMinError),
+                          },
                           builder: (field) {
                             return InputField(
                               type: InputType.text,
@@ -597,7 +613,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                 FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9]'),
                                 ),
-                                LengthLimitingTextInputFormatter(9),
+                                LengthLimitingTextInputFormatter(6),
                               ],
                               onChange: (val) {
                                 field.control.markAsTouched();
@@ -1108,13 +1124,18 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       if (submit && context.mounted) {
         isSubmitClicked = true;
 
-        int currentSpaq1Count = context.spaq1;
+        Map<String, int> skuCounts = context
+            .getAllProductSkuCounts()
+            .map((key, value) => MapEntry(key, value));
 
-        int currentSpaq2Count = context.spaq2;
+        // int currentSpaq1Count = context.spaq1;
 
-        int spaq1Count = 0;
+        // int currentSpaq2Count = context.spaq2;
+        // Map<String, int> skuCountUpdates = {};
 
-        int spaq2Count = 0;
+        // int spaq1Count = 0;
+
+        // int spaq2Count = 0;
 
         for (var productName in selectedProducts) {
           await _saveCurrentTabData(productName, entryType);
@@ -1140,27 +1161,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           String? productName = stockModel.additionalFields?.fields
               .firstWhereOrNull((element) => element.key == 'productName')
               ?.value;
-
-          // Custom logic based on productName
+          if (skuCounts.isNotEmpty) {
+            skuList = skuCounts.keys.toList();
+          }
 
           if (entryType == StockRecordEntryType.dispatch) {
-            if (productName == Constants.spaq1 &&
-                (currentSpaq1Count + totalQty < 0)) {
-              await DigitToast.show(
-                context,
-                options: DigitToastOptions(
-                    localizations.translate(context.isCDD
-                        ? i18_local
-                            .beneficiaryDetails.validationForExcessStockReturn
-                        : i18_local.beneficiaryDetails
-                            .validationForExcessStockDispatch),
-                    true,
-                    theme),
-              );
-              isSubmitClicked = false;
-              return;
-            } else if (productName == Constants.spaq2 &&
-                (currentSpaq2Count + totalQty < 0)) {
+            if ((skuList.contains(productName) &&
+                    // ignore: unnecessary_null_comparison
+                    (skuCounts[productName]! + totalQty < 0)) ||
+                (skuCounts[productName] == null)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -1177,10 +1186,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             }
           }
 
-          if (productName == Constants.spaq1) {
-            spaq1Count = totalQty;
-          } else if (productName == Constants.spaq2) {
-            spaq2Count = totalQty;
+          if (skuList.contains(productName)) {
+            skuCounts[productName!] = (skuCounts[productName] ?? 0) + totalQty;
           }
 
           final bloc = RecordStockBloc(
@@ -1213,11 +1220,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         }
 
         context.read<AuthBloc>().add(
-              AuthAddSpaqCountsEvent(
-                spaq1Count: spaq1Count,
-                spaq2Count: spaq2Count,
-                blueVasCount: 0,
-                redVasCount: 0,
+              AuthUpdateProductSkuCountsEvent(
+                skuCountUpdates: skuCounts,
               ),
             );
 
@@ -1247,7 +1251,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           controller: _tabController,
           isScrollable: true,
           tabs: selectedProducts
-              .map((product) => Tab(text: product.toUpperCase()))
+              .map((product) =>
+                  Tab(text: localizations.translate(product).toUpperCase()))
               .toList(),
         ),
       ),

@@ -545,6 +545,7 @@ class _CustomSearchBeneficiaryPageState
       Status.delivered.toValue(): Status.delivered,
       // Status.notDelivered.toValue(): Status.notDelivered,
       Status.visited.toValue(): Status.visited,
+      Status.notAdministered.toValue(): Status.notAdministered,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
       Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,

@@ -96,6 +96,14 @@ class _CustomHouseholdLocationPageState
                         DigitComponentsUtils().hideDialog(context);
                       });
                     }
+                  },
+                  editHousehold: (value) {
+                    if (locationState.accuracy != null) {
+                      //Hide the dialog after 1 seconds
+                      Future.delayed(const Duration(seconds: 1), () {
+                        DigitComponentsUtils().hideDialog(context);
+                      });
+                    }
                   });
               if (locationState.accuracy != null) {
                 final lat = locationState.latitude;

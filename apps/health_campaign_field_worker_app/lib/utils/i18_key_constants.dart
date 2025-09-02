@@ -699,6 +699,12 @@ class AcknowledgementSuccess {
 
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get materialIssueHeading => "MATERIAL_ISSUE_HEADING";
+  String get materialReturnDescription => "MATERIAL_RETURN_DESCRIPTION";
+  String get materialReturnHeading => "MATERIAL_RETURN_HEADING";
+  String get materialReceiveDescription => "MATERIAL_RECEIVE_DESCRIPTION";
+  String get materialIssueDescription => "MATERIAL_ISSUE_DESCRIPTION";
+  String get materialReceiveHeading => "MATERIAL_RECEIVE_HEADING";
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
@@ -1215,8 +1221,21 @@ class StockDetails {
   const StockDetails();
   String get selectTransactingPartyReturnedFrom =>
       'STOCK_DETAILS_RETURNED_FROM';
+
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+
+  String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
+  String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
+
+  String get resource => 'STOCK_DETAILS_RESOURCE';
+  String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
+  String get stockDetailsReceiptLabel => 'STOCK_DETAILS_RECIPT_HEADING_LABEL';
+  String get selectRecord => 'PLEASE_SELECT_A_RECORD';
+  String get stockDetailsText => 'STOCK_DETAILS_TEXT';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 
   String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
@@ -1224,7 +1243,15 @@ class StockDetails {
       'STOCK_QUANTITY_SENT_BY_WAREHOUSE_LABEL';
   String get batchNumberText => 'BATCH_NUMBER_TEXT';
   String get actualQuantityReceived => 'STOCK_QUANTITY_ACTUAL_RECEIVED_LABEL';
+  String get commentRequiredErrorLessQuantity =>
+      'COMMENT_IS_REQUIRED_WHEN_QUANTITY_IS_LESS';
+  String get qantityRequiredError => 'STOCK_QUANTITY_REQUIRED_ERROR';
+  String get receivedQuantityError =>
+      'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
+  String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
+  String get minNumber => 'STOCK_MIN_QUANTITY_REQUIRED';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
+  String get scanResources => 'STOCK_SCAN_RESOURCES';
   String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
 
   String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
@@ -1234,6 +1261,7 @@ class StockDetails {
   String get countDialogSuccess =>
       'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
   String get selectMrnNumberLabel => 'SELECT_MRN_NUMBER_LABEL';
+  String get noTransactionFound => 'STOCK_NO_TRANCTION_FOUND';
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
@@ -1263,10 +1291,15 @@ class StockDetails {
 
   String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
   String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+  String get clearAllText => 'PRODUCT_CLEAR_ALL_TEXT';
   String get quantityReturnedMaxError =>
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get cddCodeLabel => 'CDD_CODE_LABEL';
   String get teamSupervisorCodeLabel => 'TEAM_SUPERVISOR_CODE_LABEL';
+
+  String get wayBillNumberMinError => 'STOCK_WAYBILL_MIN_ERROR';
+  String get wayBillNumberMaxError => 'STOCK_WAYBILL_MAX_ERROR';
+  String get wayBillNumberRequired => 'STOCK_WAYBILL_EMPTY_REQUIRED_ERROR';
 }
 
 class StockReconciliationDetails {

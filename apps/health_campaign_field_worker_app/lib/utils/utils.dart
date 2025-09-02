@@ -228,6 +228,10 @@ String getSecondaryPartyValue(StockModel? stock) {
   return value;
 }
 
+List<String> extractAllSkus(List<ProductVariantModel> variants) {
+  return variants.map((variant) => variant.sku).whereType<String>().toList();
+}
+
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);

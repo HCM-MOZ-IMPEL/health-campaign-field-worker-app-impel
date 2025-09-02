@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/data/repositories/local/inventory_management/custom_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:logger/logger.dart';
-
+import '../../utils/i18_key_constants.dart' as i18_local;
+import 'package:inventory_management/widgets/localized.dart';
 import '../../blocs/inventory/stock_bloc.dart';
 import '../../router/app_router.dart';
 import 'view_stock_records.dart'; // Import your view stock page
@@ -70,7 +71,9 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
           }
 
           if (groupedData.isEmpty) {
-            return const Center(child: Text('No transactions available.'));
+            return const Center(
+                child: Text(
+                    'nenhuma transação encontrada')); // text : no transaction found
           }
 
           return ListView.builder(
