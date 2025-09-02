@@ -296,15 +296,18 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                           Row(
                             children: [
                               Expanded(
-                                  child: Text(localizations.translate(i18_local
-                                      .acknowledgementSuccess.minNumberLabel))),
+                                  child: Text(localizations.translate(
+                                      i18_local.stockDetails.mrnNumberLabel))),
                               Expanded(child: Text(widget.mrnNumber)),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Expanded(child: Text('Recebido de')),
+                              Expanded(
+                                  child: Text(localizations.translate(i18_local
+                                      .inventoryReportDetails
+                                      .receivedFromText))),
                               // TODO : verify this , showing senderId here
                               Expanded(
                                 child: Text(localizations
@@ -337,7 +340,7 @@ class _ViewStockRecordsLGAPageState extends LocalizedState<ReceiveStockPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  productName,
+                                  localizations.translate(productName),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

@@ -183,7 +183,9 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
                           const SizedBox(height: 16.0),
                           Text(
                               localizations.translate(
-                                  i18_local.stockDetails.selectMrnNumberLabel),
+                                  widget.type == StockRecordEntryType.dispatch
+                                      ? i18_local.stockDetails.selectMINNumber
+                                      : i18_local.stockDetails.selectMRNNumber),
                               style: textTheme.headingL),
                           const SizedBox(height: 16.0),
                           SizedBox(
@@ -248,7 +250,7 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
                                         final quantity =
                                             (s.quantity ?? 0).toString();
                                         return {
-                                          'name': name,
+                                          'name': localizations.translate(name),
                                           'quantity': quantity,
                                         };
                                       }).toList(),

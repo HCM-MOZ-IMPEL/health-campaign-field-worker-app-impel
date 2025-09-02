@@ -699,6 +699,12 @@ class AcknowledgementSuccess {
 
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get materialIssueHeading => "MATERIAL_ISSUE_HEADING";
+  String get materialReturnDescription => "MATERIAL_RETURN_DESCRIPTION";
+  String get materialReturnHeading => "MATERIAL_RETURN_HEADING";
+  String get materialReceiveDescription => "MATERIAL_RECEIVE_DESCRIPTION";
+  String get materialIssueDescription => "MATERIAL_ISSUE_DESCRIPTION";
+  String get materialReceiveHeading => "MATERIAL_RECEIVE_HEADING";
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
@@ -1215,6 +1221,16 @@ class StockDetails {
   const StockDetails();
   String get selectTransactingPartyReturnedFrom =>
       'STOCK_DETAILS_RETURNED_FROM';
+
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+
+  String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
+  String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
+
+  String get resource => 'STOCK_DETAILS_RESOURCE';
+  String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get stockDetailsReceiptLabel => 'STOCK_DETAILS_RECIPT_HEADING_LABEL';
@@ -1275,10 +1291,15 @@ class StockDetails {
 
   String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
   String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+  String get clearAllText => 'PRODUCT_CLEAR_ALL_TEXT';
   String get quantityReturnedMaxError =>
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get cddCodeLabel => 'CDD_CODE_LABEL';
   String get teamSupervisorCodeLabel => 'TEAM_SUPERVISOR_CODE_LABEL';
+
+  String get wayBillNumberMinError => 'STOCK_WAYBILL_MIN_ERROR';
+  String get wayBillNumberMaxError => 'STOCK_WAYBILL_MAX_ERROR';
+  String get wayBillNumberRequired => 'STOCK_WAYBILL_EMPTY_REQUIRED_ERROR';
 }
 
 class StockReconciliationDetails {
