@@ -1224,12 +1224,16 @@ class StockDetails {
 
   String get minNumberLabel => 'MIN_NUMBER_LABEL';
   String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get stockReturnedPageTitle => 'STOCK_DETAILS_RETURNED_PAGE_TITLE';
 
   String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
   String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
 
   String get resource => 'STOCK_DETAILS_RESOURCE';
   String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+  String get stockUnit => 'STOCK_TRANSACTION_UNIT';
+  String get stockScannedError => 'STOCK_QR_ALREADY_SCANNED_ERROR';
+  String get quantityDispatchedLabel => 'STOCK_DETAILS_QUANTITY_DISPATCHED';
 
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
@@ -1374,6 +1378,8 @@ class DeliverIntervention {
   String get bednetCountText => "BEDNET_COUNT_TEXT";
   String get beneficiaryRefusalReasonDropdownLabel =>
       'BENEFICIARY_REFUSED_DROPDOWN';
+
+  String get deliverInterventionLabel => 'DELIVERY_INTERVENTION_LABEL';
 
   String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
   String get infoWrittenInChildCard =>

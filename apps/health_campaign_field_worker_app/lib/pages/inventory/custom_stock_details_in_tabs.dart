@@ -421,7 +421,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         if (productName == Constants.spaq1 || productName == Constants.spaq2) {
           quantityCountLabel = InventorySingleton().isWareHouseMgr
               ? i18.stockDetails.quantitySentLabel
-              : i18.stockDetails.quantityReturnedLabel;
+              : i18_local.stockDetails.quantityDispatchedLabel;
 
           quantityPartialCountLabel =
               i18_local.stockDetails.quantityPartialReturnedLabel;
@@ -431,11 +431,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         } else {
           quantityCountLabel = InventorySingleton().isWareHouseMgr
               ? i18.stockDetails.quantitySentLabel
-              : i18.stockDetails.quantityReturnedLabel;
+              : i18_local.stockDetails.quantityDispatchedLabel;
         }
         break;
       case StockRecordEntryType.returned:
-        pageTitle = i18.stockDetails.returnedPageTitle;
+        pageTitle = i18_local.stockDetails.stockReturnedPageTitle;
         if (productName == Constants.spaq1 || productName == Constants.spaq2) {
           quantityCountLabel =
               i18_local.stockDetails.quantityUnusedReturnedLabel;
