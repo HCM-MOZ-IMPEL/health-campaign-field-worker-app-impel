@@ -1250,6 +1250,7 @@ class StockDetails {
       'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
   String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
   String get minNumber => 'STOCK_MIN_QUANTITY_REQUIRED';
+  String get stockRecordsHeading => 'STOCK_RECEIVED_RECORDS_HEADING';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
   String get scanResources => 'STOCK_SCAN_RESOURCES';
   String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
