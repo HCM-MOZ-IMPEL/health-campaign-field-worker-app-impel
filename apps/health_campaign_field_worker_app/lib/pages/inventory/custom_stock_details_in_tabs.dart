@@ -261,6 +261,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         ? secondartParty.split(Constants.pipeSeparator).first
         : null;
 
+    String? senderName = primaryType == 'STAFF'
+        ? state.facilityModel!.id.split(Constants.pipeSeparator).first
+        : null;
+
     return StockModel(
       id: null,
       facilityId: receivedFrom,
@@ -283,6 +287,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           AdditionalField('materialNoteNumber', _sharedMRN),
           if (distributorName != null)
             AdditionalField('distributorName', distributorName),
+          if (senderName != null)
+            AdditionalField('teamSupervisorName', senderName),
         ],
       ),
       referenceId: context.projectId,
