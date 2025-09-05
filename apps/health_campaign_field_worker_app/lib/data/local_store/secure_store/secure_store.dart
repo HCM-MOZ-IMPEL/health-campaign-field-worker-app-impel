@@ -20,16 +20,28 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
+
+  static const sumishieldKey = 'Sumishield';
+  static const fludoraKey = 'Fludora';
+  static const ddtKey = 'DDT';
+  static const deltametrinaKey = 'Deltametrina';
+  static const ficamKey = 'FICAM';
+  static const vectronKey = 'Vectron';
+  static const guard_1_Key = '2 GUARD';
+  static const klypson500WGKey = 'Klypson 500 WG';
+  static const actellicKey = 'Actellic';
+
   List<String> keysToKeep = [
-    'Sumishield',
-    'Fludora',
-    'DDT',
-    'Deltametrina',
-    'FICAM',
-    'Vectron',
-    '2 GUARD',
-    'Klypson 500 WG',
-    'Actellic'
+    sumishieldKey,
+    fludoraKey,
+    ddtKey,
+    deltametrinaKey,
+    ficamKey,
+    vectronKey,
+    vectronKey,
+    guard_1_Key,
+    klypson500WGKey,
+    actellicKey
   ]; //TODO : add the product sku to prevent from delete after logout
   final storage = const FlutterSecureStorage();
 

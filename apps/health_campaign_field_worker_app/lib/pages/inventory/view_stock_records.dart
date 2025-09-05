@@ -113,7 +113,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    localizations.translate(i18.stockDetails.returnedPageTitle),
+                    localizations.translate(
+                        '${getEntryTypeLabel(widget.stockRecords.firstOrNull)}${i18_local.stockDetails.viewStockTitle}'),
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -215,8 +216,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                   // Quantity
                   InputField(
                     type: InputType.text,
-                    label:
-                        '${localizations.translate(i18.stockDetails.quantityReturnedLabel)}*',
+                    label: localizations.translate(
+                        '${getEntryTypeLabel(widget.stockRecords.firstOrNull)}${i18_local.stockDetails.viewStockQuantity}'),
                     initialValue: stock.quantity ?? '',
                     isDisabled: true,
                     readOnly: true,

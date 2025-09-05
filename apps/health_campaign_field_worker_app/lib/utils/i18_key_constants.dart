@@ -1224,12 +1224,19 @@ class StockDetails {
 
   String get minNumberLabel => 'MIN_NUMBER_LABEL';
   String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get stockReturnedPageTitle => 'STOCK_DETAILS_RETURNED_PAGE_TITLE';
 
   String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
   String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
 
+  String get viewStockQuantity => '_STOCK_QUANTITY_VIEW';
+  String get viewStockTitle => '_STOCK_VIEW_TITLE';
+
   String get resource => 'STOCK_DETAILS_RESOURCE';
   String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+  String get stockUnit => 'STOCK_TRANSACTION_UNIT';
+  String get stockScannedError => 'STOCK_QR_ALREADY_SCANNED_ERROR';
+  String get quantityDispatchedLabel => 'STOCK_DETAILS_QUANTITY_DISPATCHED';
 
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
@@ -1250,6 +1257,7 @@ class StockDetails {
       'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
   String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
   String get minNumber => 'STOCK_MIN_QUANTITY_REQUIRED';
+  String get stockRecordsHeading => 'STOCK_RECEIVED_RECORDS_HEADING';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
   String get scanResources => 'STOCK_SCAN_RESOURCES';
   String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
@@ -1373,6 +1381,8 @@ class DeliverIntervention {
   String get bednetCountText => "BEDNET_COUNT_TEXT";
   String get beneficiaryRefusalReasonDropdownLabel =>
       'BENEFICIARY_REFUSED_DROPDOWN';
+
+  String get deliverInterventionLabel => 'DELIVERY_INTERVENTION_LABEL';
 
   String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
   String get infoWrittenInChildCard =>

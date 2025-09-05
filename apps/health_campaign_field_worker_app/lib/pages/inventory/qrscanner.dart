@@ -16,6 +16,7 @@ import '../../router/app_router.dart';
 import '../../utils/extensions/extensions.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class QRScannerPage extends LocalizedStatefulWidget {
@@ -98,7 +99,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                 ?.toString() ??
             'N/A';
         if (minStock == mrnNumber) {
-          _showError('Stock already received');
+          _showError(localizations
+              .translate(i18_local.stockDetails.stockScannedError));
           return;
         }
       }
