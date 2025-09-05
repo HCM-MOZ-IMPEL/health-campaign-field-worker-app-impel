@@ -1229,6 +1229,9 @@ class StockDetails {
   String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
   String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
 
+  String get viewStockQuantity => '_STOCK_QUANTITY_VIEW';
+  String get viewStockTitle => '_STOCK_VIEW_TITLE';
+
   String get resource => 'STOCK_DETAILS_RESOURCE';
   String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
   String get stockUnit => 'STOCK_TRANSACTION_UNIT';
