@@ -422,7 +422,8 @@ class _ViewStockRecordsCDDPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stock Records - ${widget.mrnNumber}'),
+        title: Text(
+            '${localizations.translate(i18_local.stockDetails.stockRecordsHeading)} - ${widget.mrnNumber}'),
         bottom: TabBar(
           controller: _tabController,
           tabs: widget.stockRecords.map((stock) {
