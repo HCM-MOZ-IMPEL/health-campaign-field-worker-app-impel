@@ -610,7 +610,7 @@ class MainApplicationState extends State<MainApplication>
                                                   const EdgeInsets.all(8.0),
                                               child: Center(
                                                 child: AutoSizeText(
-                                                  'Formação'.toUpperCase(),
+                                                  'Salama Pidom'.toUpperCase(),
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     fontSize: 50,
