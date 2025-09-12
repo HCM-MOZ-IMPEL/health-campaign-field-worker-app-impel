@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
+import '../../../utils/utils.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';
@@ -19,13 +20,29 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
-  static const spaq1Key = 'spaq1';
-  static const spaq2Key = 'spaq2';
-  static const blueVasKey = 'blueVas';
-  static const redVasKey = 'redVas';
 
-  List<String> keysToKeep = [spaq1Key, spaq2Key, blueVasKey, redVasKey];
+  static const sumishieldKey = 'Sumishield';
+  static const fludoraKey = 'Fludora';
+  static const ddtKey = 'DDT';
+  static const deltametrinaKey = 'Deltametrina';
+  static const ficamKey = 'FICAM';
+  static const vectronKey = 'Vectron';
+  static const guard_1_Key = '2 GUARD';
+  static const klypson500WGKey = 'Klypson 500 WG';
+  static const actellicKey = 'Actellic';
 
+  List<String> keysToKeep = [
+    sumishieldKey,
+    fludoraKey,
+    ddtKey,
+    deltametrinaKey,
+    ficamKey,
+    vectronKey,
+    vectronKey,
+    guard_1_Key,
+    klypson500WGKey,
+    actellicKey
+  ]; //TODO : add the product sku to prevent from delete after logout
   final storage = const FlutterSecureStorage();
 
   static LocalSecureStore get instance => _instance;
@@ -152,145 +169,64 @@ class LocalSecureStore {
     }
   }
 
-  Future<int> get spaq1 async {
+  Future<Map<String, int>> getAllProductSkuCounts(
+      List<ProductVariantModel> selectedProducts) async {
     final userBody = await storage.read(key: userObjectKey);
-    if (userBody == null) return 0;
-    final spaq1MapString = await storage.read(key: spaq1Key);
-
-    if (spaq1MapString == null) return 0;
+    if (userBody == null) return {};
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
 
-      Map<String, dynamic> spaq1Map = json.decode(spaq1MapString);
+      final skuKeys = extractAllSkus(selectedProducts);
 
-      return spaq1Map[user.uuid] != null ? spaq1Map[user.uuid] as int : 0;
+      final Map<String, int> result = {};
+
+      for (final key in skuKeys) {
+        final skuMapString = await storage.read(key: key);
+        result[key] = 0;
+        if (skuMapString != null) {
+          try {
+            final Map<String, dynamic> skuMap = json.decode(skuMapString);
+            if (skuMap[user.uuid] != null) {
+              result[key] = skuMap[user.uuid] as int;
+            }
+          } catch (_) {}
+        }
+      }
+
+      return result;
     } catch (_) {
-      return 0;
+      return {};
     }
   }
 
-  Future<int> get spaq2 async {
-    final userBody = await storage.read(key: userObjectKey);
-    if (userBody == null) return 0;
-    final spaq2MapString = await storage.read(key: spaq2Key);
-
-    if (spaq2MapString == null) return 0;
-
-    try {
-      final user = UserRequestModel.fromJson(json.decode(userBody));
-
-      Map<String, dynamic> spaq2Map = json.decode(spaq2MapString);
-
-      return spaq2Map[user.uuid] != null ? spaq2Map[user.uuid] as int : 0;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-// for VAS
-  Future<int> get blueVas async {
-    final userBody = await storage.read(key: userObjectKey);
-    if (userBody == null) return 0;
-    final blueVasMapString = await storage.read(key: blueVasKey);
-
-    if (blueVasMapString == null) return 0;
-
-    try {
-      final user = UserRequestModel.fromJson(json.decode(userBody));
-
-      Map<String, dynamic> blueVasMap = json.decode(blueVasMapString);
-
-      return blueVasMap[user.uuid] != null ? blueVasMap[user.uuid] as int : 0;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-  Future<int> get redVas async {
-    final userBody = await storage.read(key: userObjectKey);
-    if (userBody == null) return 0;
-    final redVasMapString = await storage.read(key: redVasKey);
-
-    if (redVasMapString == null) return 0;
-
-    try {
-      final user = UserRequestModel.fromJson(json.decode(userBody));
-
-      Map<String, dynamic> redVasMap = json.decode(redVasMapString);
-
-      return redVasMap[user.uuid] != null ? redVasMap[user.uuid] as int : 0;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-  Future<void> setSpaqCounts(
-      int spaq1, int spaq2, int blueVas, int redVas) async {
+  Future<void> setProductSkuCounts(Map<String, int> skuCounts) async {
     final userBody = await storage.read(key: userObjectKey);
     if (userBody == null) return;
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
 
-      final spaq1MapString = await storage.read(key: spaq1Key);
-      final spaq2MapString = await storage.read(key: spaq2Key);
-      final blueVasMapString = await storage.read(key: blueVasKey);
-      final redVasMapString = await storage.read(key: redVasKey);
-      Map<String, dynamic> spaq1Map = {};
-      Map<String, dynamic> spaq2Map = {};
+      for (final entry in skuCounts.entries) {
+        final skuKey = entry.key;
+        final count = entry.value;
 
-      Map<String, dynamic> blueVasMap = {};
-      Map<String, dynamic> redVasMap = {};
+        final skuMapString = await storage.read(key: skuKey);
+        Map<String, dynamic> skuMap = {};
 
-      if (spaq1MapString != null) {
-        try {
-          spaq1Map = json.decode(spaq1MapString);
-        } catch (_) {}
+        if (skuMapString != null) {
+          try {
+            skuMap = json.decode(skuMapString);
+          } catch (_) {}
+        }
+
+        skuMap[user.uuid] = count;
+
+        await storage.write(
+          key: skuKey,
+          value: json.encode(skuMap),
+        );
       }
-
-      if (spaq2MapString != null) {
-        try {
-          spaq2Map = json.decode(spaq2MapString);
-        } catch (_) {}
-      }
-
-      if (blueVasMapString != null) {
-        try {
-          blueVasMap = json.decode(blueVasMapString);
-        } catch (_) {}
-      }
-
-      if (redVasMapString != null) {
-        try {
-          redVasMap = json.decode(redVasMapString);
-        } catch (_) {}
-      }
-
-      spaq1Map[user.uuid] = spaq1;
-      spaq2Map[user.uuid] = spaq2;
-
-      blueVasMap[user.uuid] = blueVas;
-      redVasMap[user.uuid] = redVas;
-
-      await storage.write(
-        key: spaq1Key,
-        value: json.encode(spaq1Map),
-      );
-
-      await storage.write(
-        key: spaq2Key,
-        value: json.encode(spaq2Map),
-      );
-
-      await storage.write(
-        key: blueVasKey,
-        value: json.encode(blueVasMap),
-      );
-      await storage.write(
-        key: redVasKey,
-        value: json.encode(redVasMap),
-      );
     } catch (_) {
       return;
     }

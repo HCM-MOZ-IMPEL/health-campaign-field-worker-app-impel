@@ -54,6 +54,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   bool _isInitializing = true;
   String? senderIdToShowOnTab = '';
   bool isSubmitClicked = false;
+  List<String> skuList = [];
 
 // fields to capture stock metadata
   String? senderId;
@@ -76,12 +77,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _deliveryTeamKey = 'deliveryTeam';
   List<InventoryTransportTypes> transportTypes = [];
 
-  static const _transactionQuantityPartialKey = 'quantityPartial';
+  static const _transactionQuantityEmptyKey = 'quantityEmpty';
 
   static const _transactionQuantityWastedKey = 'quantityWasted';
 
   @override
   void initState() {
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     super.initState();
     _initializeData();
   }
@@ -162,7 +166,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     ]),
           // _waybillQuantityKey:
           //     FormControl<String>(validators: [Validators.required]),
-          _transactionQuantityPartialKey: FormControl<int>(validators: []),
+          _transactionQuantityEmptyKey: FormControl<int>(validators: []),
 
           _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
@@ -257,6 +261,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         ? secondartParty.split(Constants.pipeSeparator).first
         : null;
 
+    String? senderName = primaryType == 'STAFF'
+        ? state.facilityModel!.id.split(Constants.pipeSeparator).first
+        : null;
+
     return StockModel(
       id: null,
       facilityId: receivedFrom,
@@ -279,6 +287,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           AdditionalField('materialNoteNumber', _sharedMRN),
           if (distributorName != null)
             AdditionalField('distributorName', distributorName),
+          if (senderName != null)
+            AdditionalField('teamSupervisorName', senderName),
         ],
       ),
       referenceId: context.projectId,
@@ -391,6 +401,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     String pageTitle;
 
     String quantityPartialCountLabel = "";
+    String quantityEmptyCountLabel = "";
 
     String quantityWastedCountLabel = "";
 
@@ -410,7 +421,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         if (productName == Constants.spaq1 || productName == Constants.spaq2) {
           quantityCountLabel = InventorySingleton().isWareHouseMgr
               ? i18.stockDetails.quantitySentLabel
-              : i18.stockDetails.quantityReturnedLabel;
+              : i18_local.stockDetails.quantityDispatchedLabel;
 
           quantityPartialCountLabel =
               i18_local.stockDetails.quantityPartialReturnedLabel;
@@ -420,11 +431,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         } else {
           quantityCountLabel = InventorySingleton().isWareHouseMgr
               ? i18.stockDetails.quantitySentLabel
-              : i18.stockDetails.quantityReturnedLabel;
+              : i18_local.stockDetails.quantityDispatchedLabel;
         }
         break;
       case StockRecordEntryType.returned:
-        pageTitle = i18.stockDetails.returnedPageTitle;
+        pageTitle = i18_local.stockDetails.stockReturnedPageTitle;
         if (productName == Constants.spaq1 || productName == Constants.spaq2) {
           quantityCountLabel =
               i18_local.stockDetails.quantityUnusedReturnedLabel;
@@ -432,6 +443,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               i18_local.stockDetails.quantityPartialReturnedLabel;
         } else {
           quantityCountLabel = i18.stockDetails.quantityReturnedLabel;
+          quantityEmptyCountLabel =
+              i18_local.stockDetails.quantityEmptyReturnedLabel;
         }
         break;
       case StockRecordEntryType.loss:
@@ -448,7 +461,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     if ((entryType == StockRecordEntryType.dispatch &&
             context.isCommunityDistributor) ||
         entryType == StockRecordEntryType.returned) {
-      form.control(_transactionQuantityPartialKey).setValidators([
+      form.control(_transactionQuantityEmptyKey).setValidators([
         Validators.number(),
         Validators.required,
         Validators.min(0),
@@ -486,8 +499,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Expanded(child: Text('Resource')),
-                        Expanded(child: Text(productName)),
+                        Expanded(
+                            child: Text(localizations
+                                .translate(i18_local.stockDetails.resource))),
+                        Expanded(
+                            child: Text(localizations.translate(productName))),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -520,8 +536,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Stock Details',
+                    Text(
+                      localizations
+                          .translate(i18_local.stockDetails.stockDetailsText),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -529,6 +546,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     if (isWareHouseMgr)
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
+                          validationMessages: {
+                            "required": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberRequired),
+                            "maxLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMaxError),
+                            "minLength": (object) => localizations.translate(
+                                i18_local.stockDetails.wayBillNumberMinError),
+                          },
                           builder: (field) {
                             return InputField(
                               type: InputType.text,
@@ -594,7 +619,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                 FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9]'),
                                 ),
-                                LengthLimitingTextInputFormatter(9),
+                                LengthLimitingTextInputFormatter(6),
                               ],
                               onChange: (val) {
                                 field.control.markAsTouched();
@@ -620,7 +645,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                             context.isCommunityDistributor) ||
                         entryType == StockRecordEntryType.returned)
                       ReactiveWrapperField(
-                          formControlName: _transactionQuantityPartialKey,
+                          formControlName: _transactionQuantityEmptyKey,
                           validationMessages: {
                             "number": (object) => localizations.translate(
                                   '${quantityCountLabel}_ERROR',
@@ -637,7 +662,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           builder: (field) {
                             return LabeledField(
                               label: localizations.translate(
-                                quantityPartialCountLabel,
+                                quantityEmptyCountLabel,
                               ),
                               isRequired: true,
                               child: BaseDigitFormInput(
@@ -874,9 +899,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           if (form.control(_commentsKey).value != null)
             AdditionalField('comments', form.control(_commentsKey).value),
 
-          if (form.control(_transactionQuantityPartialKey).value != null)
-            AdditionalField('partialBlistersReturned',
-                form.control(_transactionQuantityPartialKey).value),
+          if (form.control(_transactionQuantityEmptyKey).value != null)
+            AdditionalField('emptyBottlesRetured',
+                form.control(_transactionQuantityEmptyKey).value),
 
           if (form.control(_transactionQuantityWastedKey).value != null)
             AdditionalField('wastedBlistersReturned',
@@ -1105,13 +1130,18 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       if (submit && context.mounted) {
         isSubmitClicked = true;
 
-        int currentSpaq1Count = context.spaq1;
+        Map<String, int> skuCounts = context
+            .getAllProductSkuCounts()
+            .map((key, value) => MapEntry(key, value));
 
-        int currentSpaq2Count = context.spaq2;
+        // int currentSpaq1Count = context.spaq1;
 
-        int spaq1Count = 0;
+        // int currentSpaq2Count = context.spaq2;
+        // Map<String, int> skuCountUpdates = {};
 
-        int spaq2Count = 0;
+        // int spaq1Count = 0;
+
+        // int spaq2Count = 0;
 
         for (var productName in selectedProducts) {
           await _saveCurrentTabData(productName, entryType);
@@ -1137,27 +1167,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           String? productName = stockModel.additionalFields?.fields
               .firstWhereOrNull((element) => element.key == 'productName')
               ?.value;
-
-          // Custom logic based on productName
+          if (skuCounts.isNotEmpty) {
+            skuList = skuCounts.keys.toList();
+          }
 
           if (entryType == StockRecordEntryType.dispatch) {
-            if (productName == Constants.spaq1 &&
-                (currentSpaq1Count + totalQty < 0)) {
-              await DigitToast.show(
-                context,
-                options: DigitToastOptions(
-                    localizations.translate(context.isCDD
-                        ? i18_local
-                            .beneficiaryDetails.validationForExcessStockReturn
-                        : i18_local.beneficiaryDetails
-                            .validationForExcessStockDispatch),
-                    true,
-                    theme),
-              );
-              isSubmitClicked = false;
-              return;
-            } else if (productName == Constants.spaq2 &&
-                (currentSpaq2Count + totalQty < 0)) {
+            if ((skuList.contains(productName) &&
+                    // ignore: unnecessary_null_comparison
+                    (skuCounts[productName]! + totalQty < 0)) ||
+                (skuCounts[productName] == null)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -1174,10 +1192,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             }
           }
 
-          if (productName == Constants.spaq1) {
-            spaq1Count = totalQty;
-          } else if (productName == Constants.spaq2) {
-            spaq2Count = totalQty;
+          if (skuList.contains(productName)) {
+            skuCounts[productName!] = (skuCounts[productName] ?? 0) + totalQty;
           }
 
           final bloc = RecordStockBloc(
@@ -1210,11 +1226,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         }
 
         context.read<AuthBloc>().add(
-              AuthAddSpaqCountsEvent(
-                spaq1Count: spaq1Count,
-                spaq2Count: spaq2Count,
-                blueVasCount: 0,
-                redVasCount: 0,
+              AuthUpdateProductSkuCountsEvent(
+                skuCountUpdates: skuCounts,
               ),
             );
 
@@ -1244,7 +1257,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           controller: _tabController,
           isScrollable: true,
           tabs: selectedProducts
-              .map((product) => Tab(text: product.toUpperCase()))
+              .map((product) =>
+                  Tab(text: localizations.translate(product).toUpperCase()))
               .toList(),
         ),
       ),

@@ -15,6 +15,7 @@ import 'package:health_campaign_field_worker_app/widgets/action_card/min_number_
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
@@ -151,8 +152,9 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please select a record"),
+                        SnackBar(
+                          content: Text(localizations
+                              .translate(i18_local.stockDetails.selectRecord)),
                           duration: Duration(seconds: 1),
                         ),
                       );
@@ -172,12 +174,18 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: groupedEntries.isEmpty
-                    ? const Center(child: Text("No transactions found."))
+                    ? Center(
+                        child: Text(localizations.translate(
+                            i18_local.stockDetails.noTransactionFound)))
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 16.0),
-                          Text("Select the MRN number",
+                          Text(
+                              localizations.translate(
+                                  widget.type == StockRecordEntryType.dispatch
+                                      ? i18_local.stockDetails.selectMINNumber
+                                      : i18_local.stockDetails.selectMRNNumber),
                               style: textTheme.headingL),
                           const SizedBox(height: 16.0),
                           SizedBox(
@@ -242,7 +250,7 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
                                         final quantity =
                                             (s.quantity ?? 0).toString();
                                         return {
-                                          'name': name,
+                                          'name': localizations.translate(name),
                                           'quantity': quantity,
                                         };
                                       }).toList(),

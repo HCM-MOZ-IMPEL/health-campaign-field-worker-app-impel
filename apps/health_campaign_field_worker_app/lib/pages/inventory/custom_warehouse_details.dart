@@ -44,10 +44,12 @@ class CustomWarehouseDetailsPageState
   static const _warehouseKey = 'warehouse';
   static const _teamCodeKey = 'teamCode';
   bool deliveryTeamSelected = false;
+  bool supervisorSelected = false;
   String? selectedFacilityId;
   TextEditingController controller1 = TextEditingController();
 
-  FormGroup buildForm(bool isDistributor, RecordStockState stockState) =>
+  FormGroup buildForm(bool isDistributor, bool isTeamSupervisor,
+          RecordStockState stockState) =>
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
@@ -55,14 +57,16 @@ class CustomWarehouseDetailsPageState
               .translate(InventorySingleton().boundary!.code ?? ''),
         ),
         _warehouseKey: FormControl<String>(
-          validators: isDistributor ? [] : [Validators.required],
+          validators:
+              isDistributor || isTeamSupervisor ? [] : [Validators.required],
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ??
               context.loggedInUser.userName.toString() +
                   Constants.pipeSeparator +
                   context.loggedInUserUuid,
-          validators: isDistributor ? [Validators.required] : [],
+          validators:
+              isDistributor || isTeamSupervisor ? [Validators.required] : [],
         ),
       });
 
@@ -71,6 +75,7 @@ class CustomWarehouseDetailsPageState
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
     final textTheme = theme.digitTextTheme(context);
+    bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -87,50 +92,69 @@ class CustomWarehouseDetailsPageState
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allfacilities) {
                       if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.stateBoundaryLevel) {
+                          Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage == Constants.stateFacility,
-                            )
+                            .where((element) =>
+                                element.usage == Constants.provincialWarehouse)
                             .toList();
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
                       } else if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.lgaBoundaryLevel) {
-                        List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage == Constants.lgaFacility,
-                            )
-                            .toList();
-                        facilities = filteredFacilities.isEmpty
-                            ? facilities
-                            : filteredFacilities;
+                          Constants.districtBoundaryLevel) {
+                        if (isWareHouseMgr) {
+                          List<FacilityModel> filteredFacilities = facilities
+                              .where((element) =>
+                                  element.usage == Constants.districWarehouse)
+                              .toList();
+                          facilities = filteredFacilities.isEmpty
+                              ? facilities
+                              : filteredFacilities;
+                        } else if (context.isSpaqManager) {
+                          List<FacilityModel> filteredFacilities = facilities
+                              .where((element) =>
+                                  element.usage ==
+                                  Constants.operationalBaseWarehouse)
+                              .toList();
+                          facilities = filteredFacilities.isEmpty
+                              ? facilities
+                              : filteredFacilities;
+                        }
                       } else {
-                        List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage == Constants.healthFacility,
-                            )
+                        List<FacilityModel> filteredFacilities = allfacilities
+                            .where((element) =>
+                                element.usage == Constants.districWarehouse ||
+                                element.usage == Constants.nationalWarehouse ||
+                                element.usage ==
+                                    Constants.operationalBaseWarehouse ||
+                                element.usage == Constants.provincialWarehouse)
                             .toList();
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
                       }
                       final teamFacilities = [
-                        FacilityModel(
-                          id: 'Delivery Team',
-                          name: 'Delivery Team',
-                        ),
+                        if (context.isDistributor &&
+                            !InventorySingleton().isWareHouseMgr)
+                          FacilityModel(
+                            id: 'Delivery Team',
+                            name: 'Delivery Team',
+                          ),
+                        if (context.isTeamSupervisor &&
+                            !InventorySingleton().isWareHouseMgr)
+                          FacilityModel(
+                            id: 'Supervisor',
+                            name: 'Supervisor',
+                          ),
                       ];
                       teamFacilities.addAll(
                         facilities,
                       );
 
-                      return context.isDistributor &&
-                              !InventorySingleton().isWareHouseMgr
+                      return (context.isDistributor &&
+                                  !InventorySingleton().isWareHouseMgr) ||
+                              (context.isTeamSupervisor &&
+                                  !InventorySingleton().isWareHouseMgr)
                           ? teamFacilities
                           : facilities;
                     },
@@ -148,6 +172,8 @@ class CustomWarehouseDetailsPageState
                       return ReactiveFormBuilder(
                         form: () => buildForm(
                             InventorySingleton().isDistributor! &&
+                                !InventorySingleton().isWareHouseMgr!,
+                            context.isTeamSupervisor &&
                                 !InventorySingleton().isWareHouseMgr!,
                             stockState),
                         builder: (context, form, child) {
@@ -192,20 +218,28 @@ class CustomWarehouseDetailsPageState
                                                       .control(_teamCodeKey)
                                                       .value as String?;
 
-                                                  final facility =
-                                                      InventorySingleton()
-                                                              .isDistributor
-                                                          ? FacilityModel(
-                                                              id: teamCode ??
-                                                                  'Delivery Team',
-                                                            )
-                                                          : selectedFacilityId !=
-                                                                  null
-                                                              ? FacilityModel(
-                                                                  id: selectedFacilityId
-                                                                      .toString(),
-                                                                )
-                                                              : null;
+                                                  FacilityModel? facility;
+                                                  if (InventorySingleton()
+                                                      .isDistributor!) {
+                                                    facility = FacilityModel(
+                                                      id: teamCode ??
+                                                          'Delivery Team',
+                                                    );
+                                                  } else if (context
+                                                      .isTeamSupervisor) {
+                                                    facility = FacilityModel(
+                                                      id: teamCode ??
+                                                          'Supervisor',
+                                                    );
+                                                  } else if (selectedFacilityId !=
+                                                      null) {
+                                                    facility = FacilityModel(
+                                                      id: selectedFacilityId
+                                                          .toString(),
+                                                    );
+                                                  } else {
+                                                    facility = null;
+                                                  }
 
                                                   context
                                                       .read<DigitScannerBloc>()
@@ -225,7 +259,8 @@ class CustomWarehouseDetailsPageState
                                                             .facilityRequired,
                                                       ),
                                                     );
-                                                  } else if (deliveryTeamSelected &&
+                                                  } else if ((deliveryTeamSelected ||
+                                                          supervisorSelected) &&
                                                       (teamCode == null ||
                                                           teamCode
                                                               .trim()
@@ -244,34 +279,42 @@ class CustomWarehouseDetailsPageState
                                                       RecordStockSaveTransactionDetailsEvent(
                                                         dateOfRecord:
                                                             dateOfRecord,
-                                                        facilityModel: InventorySingleton()
-                                                                    .isDistributor! &&
-                                                                !InventorySingleton()
-                                                                    .isWareHouseMgr!
+                                                        facilityModel: (InventorySingleton()
+                                                                        .isDistributor! &&
+                                                                    !InventorySingleton()
+                                                                        .isWareHouseMgr!) ||
+                                                                (context.isTeamSupervisor &&
+                                                                    !InventorySingleton()
+                                                                        .isWareHouseMgr!)
                                                             ? FacilityModel(
                                                                 id: teamCode
                                                                     .toString(),
                                                               )
                                                             : facility,
-                                                        primaryId: InventorySingleton()
-                                                                .isDistributor
+                                                        primaryId: (InventorySingleton()
+                                                                    .isDistributor ||
+                                                                context
+                                                                    .isTeamSupervisor)
                                                             ? (teamCode ?? '')
                                                                 .split(Constants
                                                                     .pipeSeparator)
                                                                 .last
                                                             : facility.id,
-                                                        primaryType:
-                                                            context.isCDD
-                                                                ? "STAFF"
-                                                                : "WAREHOUSE",
+                                                        primaryType: (context
+                                                                    .isCDD ||
+                                                                context
+                                                                    .isTeamSupervisor)
+                                                            ? "STAFF"
+                                                            : "WAREHOUSE",
                                                       ),
                                                     );
                                                     if ((InventorySingleton()
                                                                 .isWareHouseMgr &&
-                                                            !isLGAUser() &&
-                                                            !isHFUser(
-                                                                context) &&
-                                                            !context.isCDD) ||
+                                                            !context
+                                                                .isDistrictWarehouseManager &&
+                                                            !context.isCDD &&
+                                                            !context
+                                                                .isTeamSupervisor) ||
                                                         (recordStockBloc.state
                                                                 .entryType ==
                                                             StockRecordEntryType
@@ -285,8 +328,10 @@ class CustomWarehouseDetailsPageState
                                                       );
                                                     } else {
                                                       context.router.push(ViewAllTransactionsRoute(
-                                                          warehouseId: InventorySingleton()
-                                                                  .isDistributor
+                                                          warehouseId: (InventorySingleton()
+                                                                      .isDistributor ||
+                                                                  context
+                                                                      .isTeamSupervisor)
                                                               ? (teamCode ?? '')
                                                                   .split(Constants
                                                                       .pipeSeparator)
@@ -298,11 +343,13 @@ class CustomWarehouseDetailsPageState
                                         );
                                       },
                                     ),
-                                    if (InventorySingleton().isDistributor &&
-                                        stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
+                                    if ((InventorySingleton().isDistributor ||
+                                            context.isTeamSupervisor) &&
+                                        stockState.entryType ==
+                                            StockRecordEntryType.receipt)
                                       DigitButton(
-                                        label: "Scan Resource",
+                                        label: localizations.translate(i18_local
+                                            .stockDetails.scanResources),
                                         onPressed: _handleSubmission,
                                         type: DigitButtonType.primary,
                                         mainAxisSize: MainAxisSize.max,
@@ -315,9 +362,12 @@ class CustomWarehouseDetailsPageState
                                   margin: const EdgeInsets.all(spacer2),
                                   children: [
                                     Text(
-                                      InventorySingleton().isDistributor! &&
-                                              !InventorySingleton()
-                                                  .isWareHouseMgr!
+                                      (InventorySingleton().isDistributor! &&
+                                                  !InventorySingleton()
+                                                      .isWareHouseMgr!) ||
+                                              (context.isTeamSupervisor &&
+                                                  !InventorySingleton()
+                                                      .isWareHouseMgr!)
                                           ? localizations.translate(
                                               i18.stockDetails
                                                   .transactionDetailsLabel,
@@ -370,7 +420,8 @@ class CustomWarehouseDetailsPageState
                                             readOnly: true,
                                           );
                                         }),
-                                    if (!InventorySingleton().isDistributor)
+                                    if (!InventorySingleton().isDistributor &&
+                                        !context.isTeamSupervisor)
                                       InkWell(
                                         onTap: () async {
                                           // clearQRCodes();
@@ -399,10 +450,18 @@ class CustomWarehouseDetailsPageState
                                           if (facility.id == 'Delivery Team') {
                                             setState(() {
                                               deliveryTeamSelected = true;
+                                              supervisorSelected = false;
+                                            });
+                                          } else if (facility.id ==
+                                              'Supervisor') {
+                                            setState(() {
+                                              supervisorSelected = true;
+                                              deliveryTeamSelected = false;
                                             });
                                           } else {
                                             setState(() {
                                               deliveryTeamSelected = false;
+                                              supervisorSelected = false;
                                             });
                                           }
                                         },
@@ -437,7 +496,8 @@ class CustomWarehouseDetailsPageState
                                               }),
                                         ),
                                       ),
-                                    if (InventorySingleton().isDistributor)
+                                    if (InventorySingleton().isDistributor ||
+                                        context.isTeamSupervisor)
                                       ReactiveWrapperField(
                                           formControlName: _teamCodeKey,
                                           builder: (field) {
@@ -445,14 +505,19 @@ class CustomWarehouseDetailsPageState
                                               type: InputType.text,
                                               isDisabled: true,
                                               label: localizations.translate(
-                                                i18_local
-                                                    .stockDetails.cddCodeLabel,
+                                                InventorySingleton()
+                                                        .isDistributor
+                                                    ? i18_local.stockDetails
+                                                        .cddCodeLabel
+                                                    : i18_local.stockDetails
+                                                        .teamSupervisorCodeLabel,
                                               ),
                                               initialValue: form
                                                   .control(_teamCodeKey)
                                                   .value,
                                               isRequired: InventorySingleton()
-                                                  .isDistributor,
+                                                      .isDistributor ||
+                                                  context.isTeamSupervisor,
                                             );
                                           })
                                   ]),
@@ -476,7 +541,7 @@ class CustomWarehouseDetailsPageState
   }
 
   void _handleSubmission() {
-    if (InventorySingleton().isDistributor) {
+    if (InventorySingleton().isDistributor || context.isTeamSupervisor) {
       context.router.push(QRScannerRoute());
     }
   }

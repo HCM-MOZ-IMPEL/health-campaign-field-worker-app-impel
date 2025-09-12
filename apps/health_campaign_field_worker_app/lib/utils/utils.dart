@@ -171,18 +171,18 @@ String formatDateFromMillis(int millis) {
 
 String _monthShort(int month) {
   const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
   ];
   return months[month - 1];
 }
@@ -226,6 +226,10 @@ String getSecondaryPartyValue(StockModel? stock) {
   }
 
   return value;
+}
+
+List<String> extractAllSkus(List<ProductVariantModel> variants) {
+  return variants.map((variant) => variant.sku).whereType<String>().toList();
 }
 
 setBgRunning(bool isBgRunning) async {

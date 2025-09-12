@@ -38,6 +38,8 @@ class CustomInventoryReportSelectionPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+    var reconciliationVisibility =
+        context.isCDD || context.isTeamSupervisor ? false : true;
 
     return Scaffold(
       body: ScrollableContent(
@@ -125,8 +127,8 @@ class CustomInventoryReportSelectionPageState
                       ),
                     ),
                   ),
-                if (!context.isCDD) const SizedBox(height: spacer4),
-                if (!context.isCDD)
+                if (reconciliationVisibility) const SizedBox(height: spacer4),
+                if (reconciliationVisibility)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: spacer2),
                     child: MenuCard(

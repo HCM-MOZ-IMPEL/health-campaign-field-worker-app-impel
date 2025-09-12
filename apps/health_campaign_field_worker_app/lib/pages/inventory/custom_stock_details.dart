@@ -53,17 +53,13 @@ class CustomStockDetailsPageState
     extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
-  // static const _transactionQuantityKey = 'quantity';
-  // static const _transactionPartialQuantityKey = 'partialQuantity';
-  // static const _transactionReasonKey = 'transactionReason';
-  // static const _waybillNumberKey = 'waybillNumber';
-  // static const _waybillQuantityKey = 'waybillQuantity';
-  // static const _batchNumberKey = 'batchNumberKey';
+
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
-  // static const _commentsKey = 'comments';
+
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
+  bool supervisorSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
 
@@ -99,7 +95,9 @@ class CustomStockDetailsPageState
       _typeOfTransportKey: FormControl<String>(),
       // _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
-        validators: deliveryTeamSelected ? [Validators.required] : [],
+        validators: deliveryTeamSelected || supervisorSelected
+            ? [Validators.required]
+            : [],
       ),
     });
   }
@@ -120,6 +118,9 @@ class CustomStockDetailsPageState
     final isHealthFacilitySupervisor = context.isHealthFacilitySupervisor;
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    bool isSpaqManager = context.isSpaqManager;
+    bool isTeamSupervisor = context.isTeamSupervisor;
+    bool isCdd = context.isCDD;
 
     List<String> _selectedVariants = [];
 
@@ -309,7 +310,8 @@ class CustomStockDetailsPageState
                                     );
                                     return;
                                   }
-                                  if (deliveryTeamSelected &&
+                                  if ((deliveryTeamSelected ||
+                                          supervisorSelected) &&
                                       form
                                           .control(_deliveryTeamKey)
                                           .value
@@ -337,7 +339,8 @@ class CustomStockDetailsPageState
                                       .control(_deliveryTeamKey)
                                       .value as String?;
 
-                                  if (deliveryTeamSelected &&
+                                  if ((deliveryTeamSelected ||
+                                          supervisorSelected) &&
                                       (form
                                                   .control(
                                                     _deliveryTeamKey,
@@ -547,7 +550,8 @@ class CustomStockDetailsPageState
                                         case StockRecordEntryType.loss:
                                         case StockRecordEntryType.damaged:
                                         case StockRecordEntryType.returned:
-                                          if (deliveryTeamSelected) {
+                                          if (deliveryTeamSelected ||
+                                              supervisorSelected) {
                                             senderId = deliveryTeamName;
                                             senderType = "STAFF";
                                           } else {
@@ -559,7 +563,8 @@ class CustomStockDetailsPageState
 
                                           break;
                                         case StockRecordEntryType.dispatch:
-                                          if (deliveryTeamSelected) {
+                                          if (deliveryTeamSelected ||
+                                              supervisorSelected) {
                                             receiverId = deliveryTeamName;
                                             receiverType = "STAFF";
                                           } else {
@@ -723,10 +728,12 @@ class CustomStockDetailsPageState
                                                 selectedProducts:
                                                     selectedProducts,
                                                 secondaryPartyType:
-                                                    deliveryTeamSelected
+                                                    deliveryTeamSelected ||
+                                                            supervisorSelected
                                                         ? "STAFF"
                                                         : "WAREHOUSE",
-                                                receivedFrom: (deliveryTeamSelected
+                                                receivedFrom: (deliveryTeamSelected ||
+                                                            supervisorSelected
                                                         ? deliveryTeamName
                                                         : selectedFacilityId) ??
                                                     "",
@@ -874,6 +881,11 @@ class CustomStockDetailsPageState
                                             isRequired: true,
 
                                             child: MultiSelectDropDown(
+                                              clearAllText:
+                                                  localizations.translate(
+                                                i18_local
+                                                    .stockDetails.clearAllText,
+                                              ),
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,
@@ -1088,54 +1100,202 @@ class CustomStockDetailsPageState
                                         List<FacilityModel> filteredFacilities =
                                             [];
 
-                                        if (context.selectedProject.address
-                                                ?.boundaryType ==
-                                            Constants.stateBoundaryLevel) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
-                                              ? allFacilities
+                                        if (isWareHouseMgr &&
+                                            context.selectedProject.address
+                                                    ?.boundaryType ==
+                                                Constants
+                                                    .provincialBoundaryLevel) {
+                                          if (entryType ==
+                                              StockRecordEntryType.receipt) {
+                                            filteredFacilities = facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                        Constants
+                                                            .nationalWarehouse ||
+                                                    element.usage ==
+                                                        Constants
+                                                            .provincialWarehouse)
+                                                .toList();
+                                          } else {
+                                            // add district facilities
+                                            filteredFacilities.addAll(facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                    Constants.districWarehouse)
+                                                .toList());
+                                            if (entryType ==
+                                                StockRecordEntryType.dispatch) {
+                                              filteredFacilities.addAll(facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.centralFacility)
-                                                  .toList()
-                                              : facilities
+                                                      Constants
+                                                          .provincialWarehouse)
+                                                  .toList());
+                                            }
+                                          }
+                                        } else if (isWareHouseMgr &&
+                                            context.selectedProject.address
+                                                    ?.boundaryType ==
+                                                Constants
+                                                    .districtBoundaryLevel) {
+                                          if (entryType ==
+                                              StockRecordEntryType.receipt) {
+                                            filteredFacilities = facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                    Constants
+                                                        .provincialWarehouse)
+                                                .toList();
+                                          } else {
+                                            filteredFacilities.addAll(facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                    Constants
+                                                        .operationalBaseWarehouse)
+                                                .toList());
+                                            if (entryType ==
+                                                StockRecordEntryType.dispatch) {
+                                              filteredFacilities.addAll(facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.lgaFacility)
-                                                  .toList();
+                                                      Constants
+                                                          .provincialWarehouse)
+                                                  .toList());
+                                            }
+                                          }
                                         } else if (context.selectedProject
-                                                .address?.boundaryType ==
-                                            Constants.lgaBoundaryLevel) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
-                                              ? facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.stateFacility)
-                                                  .toList()
-                                              : facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.healthFacility)
-                                                  .toList();
-                                        } else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.healthFacility)
-                                                  .toList()
-                                              : entryType ==
-                                                      StockRecordEntryType
-                                                          .receipt
-                                                  ? facilities
+                                                    .address?.boundaryType ==
+                                                Constants
+                                                    .districtBoundaryLevel &&
+                                            isSpaqManager) {
+                                          if (entryType ==
+                                              StockRecordEntryType.receipt) {
+                                            filteredFacilities = facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                    Constants.districWarehouse)
+                                                .toList();
+                                          } else {
+                                            filteredFacilities.add(
+                                              FacilityModel(
+                                                id: 'Supervisor',
+                                                name: 'Supervisor',
+                                                additionalFields:
+                                                    FacilityAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    const AdditionalField(
+                                                        'type', 'Supervisor')
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                            if (entryType ==
+                                                StockRecordEntryType.dispatch) {
+                                              filteredFacilities.addAll(
+                                                  facilities
                                                       .where((element) =>
                                                           element.usage ==
-                                                          Constants.lgaFacility)
-                                                      .toList()
-                                                  : [];
+                                                          Constants
+                                                              .districWarehouse)
+                                                      .toList());
+                                            }
+                                          }
+                                        } else if (context.selectedProject
+                                                    .address?.boundaryType ==
+                                                Constants
+                                                    .districtBoundaryLevel &&
+                                            isTeamSupervisor) {
+                                          if (entryType ==
+                                              StockRecordEntryType.receipt) {
+                                            filteredFacilities = facilities
+                                                .where((element) =>
+                                                    element.usage ==
+                                                    Constants
+                                                        .operationalBaseWarehouse)
+                                                .toList();
+                                          } else {
+                                            filteredFacilities.add(
+                                              FacilityModel(
+                                                id: 'Delivery Team',
+                                                name: 'Delivery Team',
+                                                additionalFields:
+                                                    FacilityAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    const AdditionalField(
+                                                        'type', 'CDD Team')
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                            if (entryType ==
+                                                StockRecordEntryType.dispatch) {
+                                              filteredFacilities.addAll(facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .operationalBaseWarehouse)
+                                                  .toList());
+                                            }
+                                          }
+                                        } else if (isCdd) {
+                                          if (entryType ==
+                                                  StockRecordEntryType
+                                                      .receipt ||
+                                              entryType ==
+                                                  StockRecordEntryType
+                                                      .dispatch) {
+                                            filteredFacilities.add(
+                                              FacilityModel(
+                                                id: 'Supervisor',
+                                                name: 'Supervisor',
+                                                additionalFields:
+                                                    FacilityAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    const AdditionalField(
+                                                        'type', 'Supervisor')
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }
                                         }
+
+                                        // else if (context.selectedProject.address
+                                        //         ?.boundaryType ==
+                                        //     Constants.districtBoundaryLevel) {
+                                        //   filteredFacilities = entryType ==
+                                        //           StockRecordEntryType.receipt
+                                        //       ? facilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.stateFacility)
+                                        //           .toList()
+                                        //       : facilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.healthFacility)
+                                        //           .toList();
+                                        // } else {
+                                        //   filteredFacilities = context
+                                        //           .isDistributor
+                                        //       ? facilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.healthFacility)
+                                        //           .toList()
+                                        //       : entryType ==
+                                        //               StockRecordEntryType
+                                        //                   .receipt
+                                        //           ? facilities
+                                        //               .where((element) =>
+                                        //                   element.usage ==
+                                        //                   Constants.lgaFacility)
+                                        //               .toList()
+                                        //           : [];
+                                        // }
 
                                         facilities =
                                             context.isHealthFacilitySupervisor &&
@@ -1198,11 +1358,17 @@ class CustomStockDetailsPageState
                                                     'Delivery Team') {
                                                   setState(() {
                                                     deliveryTeamSelected = true;
+                                                    supervisorSelected = false;
                                                   });
+                                                } else if (facility.id ==
+                                                    'Supervisor') {
+                                                  supervisorSelected = true;
+                                                  deliveryTeamSelected = false;
                                                 } else {
                                                   setState(() {
                                                     deliveryTeamSelected =
                                                         false;
+                                                    supervisorSelected = false;
                                                   });
                                                 }
                                               },
@@ -1255,7 +1421,8 @@ class CustomStockDetailsPageState
                               ),
                               // TODO: as this case i need to set when occurring
                               Visibility(
-                                visible: deliveryTeamSelected,
+                                visible:
+                                    deliveryTeamSelected || supervisorSelected,
                                 child: ReactiveWrapperField(
                                     formControlName: _deliveryTeamKey,
                                     builder: (field) {
@@ -1292,7 +1459,8 @@ class CustomStockDetailsPageState
                                               i18.stockReconciliationDetails
                                                   .teamCodeLabel,
                                             ),
-                                            isRequired: deliveryTeamSelected,
+                                            isRequired: deliveryTeamSelected ||
+                                                supervisorSelected,
                                             controller: textController,
                                             suffixIcon: Icons.qr_code_2,
                                             onSuffixTap: (value) {

@@ -369,7 +369,7 @@ class CustomDeliverInterventionPageState
                                               children: [
                                                 Text(
                                                   localizations.translate(
-                                                    i18.deliverIntervention
+                                                    i18Local.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
                                                   style: theme

@@ -221,59 +221,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) =>
-                  role.code == RolesType.teamSupervisor.toValue() ||
-                  role.code == RolesType.attendanceStaff.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          if (individual.isNotEmpty) {
-            final attendanceRegisters = await attendanceRemoteRepository.search(
-              AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
-            );
-            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-            for (final register in attendanceRegisters) {
-              if (register.attendees != null &&
-                  (register.attendees ?? []).isNotEmpty) {
-                try {
-                  final individuals = await individualRemoteRepository.search(
-                    IndividualSearchModel(
-                      id: register.attendees!
-                          .map((e) => e.individualId!)
-                          .toList(),
-                    ),
-                  );
-                  await individualLocalRepository.bulkCreate(individuals);
-                  final logs = await attendanceLogRemoteRepository.search(
-                    AttendanceLogSearchModel(
-                      registerId: register.id,
-                    ),
-                  );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
-                } catch (_) {
-                  emit(state.copyWith(
-                    loading: false,
-                    syncError: ProjectSyncErrorType.project,
-                  ));
-
-                  return;
-                }
-              }
-            }
-          }
-        }
-
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -466,11 +413,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       await createStockDownloadedEntries(stockEntriesDownloaded);
     } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
-        boundaryType == Constants.lgaBoundaryLevel) {
+        boundaryType == Constants.districtBoundaryLevel) {
       List<String> receiverIds =
           projectFacilities.map((e) => e.facilityId).toList();
       receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+          .where((e) => facilityIdUsageMap[e] == Constants.districWarehouse)
           .toList();
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds,
@@ -481,7 +428,36 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       // info : create entries in the local repository
       await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+    } else if (userRoles.contains(RolesType.spaqManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) =>
+              facilityIdUsageMap[e] == Constants.operationalBaseWarehouse)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.teamSupervisor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
       final receiverIds = [context.loggedInUserUuid];
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds,
@@ -551,6 +527,50 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      if (context.loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.districtSupervisor.toValue() ||
+                role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty) {
+        final attendanceRegisters = await attendanceRemoteRepository.search(
+          AttendanceRegisterSearchModel(
+            staffId: context.loggedInIndividualId,
+            referenceId: event.model.id,
+            localityCode: event.model.address?.boundary,
+          ),
+        );
+        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+        for (final register in attendanceRegisters) {
+          if (register.attendees != null &&
+              (register.attendees ?? []).isNotEmpty) {
+            try {
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  id: register.attendees!.map((e) => e.individualId!).toList(),
+                ),
+              );
+              await individualLocalRepository.bulkCreate(individuals);
+              final logs = await attendanceLogRemoteRepository.search(
+                AttendanceLogSearchModel(
+                  registerId: register.id,
+                ),
+              );
+              await attendanceLogLocalRepository.bulkCreate(logs);
+            } catch (_) {
+              emit(state.copyWith(
+                loading: false,
+                syncError: ProjectSyncErrorType.project,
+              ));
+
+              return;
+            }
+          }
+        }
+      }
       try {
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)

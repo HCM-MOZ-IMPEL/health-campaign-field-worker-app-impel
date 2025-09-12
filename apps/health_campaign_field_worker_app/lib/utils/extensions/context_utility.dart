@@ -123,6 +123,40 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isDistrictWarehouseManager {
+    try {
+      String? boundaryLevel = selectedProject.address?.boundaryType;
+
+      if (boundaryLevel == Constants.districtBoundaryLevel) {
+        bool warehouseManager = loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.warehouseManager.toValue(),
+            )
+            .toList()
+            .isNotEmpty;
+        return warehouseManager;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isTeamSupervisor {
+    try {
+      bool teamSupervisor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return teamSupervisor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isCommunitySupervisor {
     try {
       bool communitySupervisor = loggedInUserRoles
@@ -279,104 +313,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
-  int get spaq1 {
+  Map<String, int> getAllProductSkuCounts() {
     final authBloc = _get<AuthBloc>();
-    final spaq1 = authBloc.state.whenOrNull(
+    final counts = authBloc.state.whenOrNull(
       authenticated: (
         accessToken,
         refreshToken,
         userModel,
         actionsWrapper,
         individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
+        productSkuCounts,
       ) {
-        return spaq1;
+        return productSkuCounts;
       },
     );
-
-    if (spaq1 == null) {
-      return 0;
-    }
-
-    return spaq1;
-  }
-
-  int get spaq2 {
-    final authBloc = _get<AuthBloc>();
-    final spaq2 = authBloc.state.whenOrNull(
-      authenticated: (
-        accessToken,
-        refreshToken,
-        userModel,
-        actionsWrapper,
-        individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
-      ) {
-        return spaq2;
-      },
-    );
-
-    if (spaq2 == null) {
-      return 0;
-    }
-
-    return spaq2;
-  }
-
-  int get blueVas {
-    final authBloc = _get<AuthBloc>();
-    final blueVas = authBloc.state.whenOrNull(
-      authenticated: (
-        accessToken,
-        refreshToken,
-        userModel,
-        actionsWrapper,
-        individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
-      ) {
-        return blueVas;
-      },
-    );
-
-    if (blueVas == null) {
-      return 0;
-    }
-
-    return blueVas;
-  }
-
-  int get redVas {
-    final authBloc = _get<AuthBloc>();
-    final redVas = authBloc.state.whenOrNull(
-      authenticated: (
-        accessToken,
-        refreshToken,
-        userModel,
-        actionsWrapper,
-        individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
-      ) {
-        return redVas;
-      },
-    );
-
-    if (redVas == null) {
-      return 0;
-    }
-
-    return redVas;
+    return counts ?? {};
   }
 
   bool get isCDD {
@@ -399,10 +350,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
+        productSkuCounts,
       ) {
         return userModel.roles;
       },
@@ -424,10 +372,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
+        productSkuCounts,
       ) {
         return individualId;
       },
@@ -466,10 +411,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actions,
         individualId,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
+        productSkuCounts,
       ) {
         return userModel;
       },

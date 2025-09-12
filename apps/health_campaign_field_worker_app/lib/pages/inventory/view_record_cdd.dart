@@ -22,6 +22,7 @@ import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/utils.dart';
 
 @RoutePage()
 class ViewStockRecordsCDDPage extends LocalizedStatefulWidget {
@@ -46,9 +47,13 @@ class _ViewStockRecordsCDDPageState
   late final List<FormGroup> _forms;
   late TabController _tabController;
   bool isSubmitClicked = false;
+  List<String> skuList = [];
 
   @override
   void initState() {
+    context
+        .read<AuthBloc>()
+        .add(const AuthUpdateProductSkuCountsEvent(skuCountUpdates: {}));
     super.initState();
     _forms = widget.stockRecords
         .map((_) => FormGroup({
@@ -90,14 +95,19 @@ class _ViewStockRecordsCDDPageState
                     quantityReceived < stockQuantity)) &&
             (currentComment == null || currentComment.trim() == '')) {
           await DigitToast.show(context,
-              options: DigitToastOptions('Comment is required', true, theme));
+              options: DigitToastOptions(
+                  localizations.translate(
+                      i18_local.stockDetails.commentRequiredErrorLessQuantity),
+                  true,
+                  theme));
           return;
         }
         if (quantityReceived == null ||
             (quantityReceived is int && quantityReceived > stockQuantity)) {
           await DigitToast.show(context,
               options: DigitToastOptions(
-                  'Received quantity can not be more than issued quantity',
+                  localizations
+                      .translate(i18_local.stockDetails.receivedQuantityError),
                   true,
                   theme));
           return;
@@ -248,43 +258,23 @@ class _ViewStockRecordsCDDPageState
                 .value
                 .toString());
 
-            int spaq1Count = context.spaq1;
-            int spaq2Count = context.spaq2;
-
-            int blueVasCount = context.blueVas;
-            int redVasCount = context.redVas;
+            Map<String, int> skuCounts = context
+                .getAllProductSkuCounts()
+                .map((key, value) => MapEntry(key, value));
+            if (skuCounts.isNotEmpty) {
+              skuList = skuCounts.keys.toList();
+            }
             String productName = stock.additionalFields?.fields
                 .firstWhereOrNull((element) => element.key == "productName")
                 ?.value;
 
-            if (productName == Constants.spaq1) {
-              spaq1Count = totalQty;
-              spaq2Count = 0;
-              redVasCount = 0;
-              blueVasCount = 0;
-            } else if (productName == Constants.spaq2) {
-              spaq2Count = totalQty;
-              spaq1Count = 0;
-              redVasCount = 0;
-              blueVasCount = 0;
-            } else if (productName == Constants.blueVAS) {
-              blueVasCount = totalQty;
-              spaq1Count = 0;
-              spaq2Count = 0;
-              redVasCount = 0;
-            } else {
-              blueVasCount = 0;
-              spaq1Count = 0;
-              spaq2Count = 0;
-              redVasCount = totalQty;
+            if (skuList.contains(productName)) {
+              skuCounts[productName] = (skuCounts[productName] ?? 0) + totalQty;
             }
 
             context.read<AuthBloc>().add(
-                  AuthAddSpaqCountsEvent(
-                    spaq1Count: spaq1Count,
-                    spaq2Count: spaq2Count,
-                    blueVasCount: blueVasCount,
-                    redVasCount: redVasCount,
+                  AuthUpdateProductSkuCountsEvent(
+                    skuCountUpdates: skuCounts,
                   ),
                 );
 
@@ -347,8 +337,8 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 12),
                   InputField(
                     type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.waybillNumberText),
+                    label: localizations
+                        .translate(i18.stockDetails.waybillNumberLabel),
                     initialValue: stock.wayBillNumber ?? '',
                     isDisabled: true,
                     readOnly: true,
@@ -356,8 +346,8 @@ class _ViewStockRecordsCDDPageState
                   const SizedBox(height: 12),
                   InputField(
                     type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.batchNumberText),
+                    label: localizations
+                        .translate(i18_local.stockDetails.batchNumberLabel),
                     initialValue: stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'batchNumber',
@@ -384,8 +374,8 @@ class _ViewStockRecordsCDDPageState
                     formControlName: 'quantityReceived',
                     builder: (field) => InputField(
                       type: InputType.text,
-                      label: localizations.translate(i18_local
-                          .inventoryReportDetails.actualQuantityReceived),
+                      label: localizations.translate(
+                          i18_local.stockDetails.actualQuantityReceived),
                       errorMessage: field.errorText,
                       keyboardType: TextInputType.number,
                       onChange: (value) {
@@ -397,9 +387,12 @@ class _ViewStockRecordsCDDPageState
                       },
                     ),
                     validationMessages: {
-                      'required': (_) => 'Quantity is required',
-                      'min': (_) => 'Must be at least 1',
-                      'number': (_) => 'Must be a valid number',
+                      'required': (_) => localizations.translate(
+                          i18_local.stockDetails.qantityRequiredError),
+                      'min': (_) => localizations
+                          .translate(i18_local.stockDetails.minNumber),
+                      'number': (_) => localizations
+                          .translate(i18_local.stockDetails.validNumberError),
                     },
                   ),
                   const SizedBox(height: 12),
@@ -407,8 +400,8 @@ class _ViewStockRecordsCDDPageState
                     formControlName: 'comments',
                     builder: (field) => InputField(
                       type: InputType.textArea,
-                      label: localizations.translate(
-                          i18_local.inventoryReportDetails.commentsText),
+                      label:
+                          '${localizations.translate(i18.stockDetails.commentsLabel)}',
                       errorMessage: field.errorText,
                       onChange: (value) => field.control.value = value,
                     ),
@@ -429,7 +422,8 @@ class _ViewStockRecordsCDDPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stock Records - ${widget.mrnNumber}'),
+        title: Text(
+            '${localizations.translate(i18_local.stockDetails.stockRecordsHeading)} - ${widget.mrnNumber}'),
         bottom: TabBar(
           controller: _tabController,
           tabs: widget.stockRecords.map((stock) {

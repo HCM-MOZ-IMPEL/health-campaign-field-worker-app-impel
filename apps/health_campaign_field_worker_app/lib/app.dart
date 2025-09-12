@@ -269,6 +269,9 @@ class MainApplicationState extends State<MainApplication>
                   individualRemoteRepository: ctx.read<
                       RemoteRepository<IndividualModel,
                           IndividualSearchModel>>(),
+                  productVariantLocalRepository: ctx.read<
+                      LocalRepository<ProductVariantModel,
+                          ProductVariantSearchModel>>(),
                 )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
@@ -607,7 +610,7 @@ class MainApplicationState extends State<MainApplication>
                                                   const EdgeInsets.all(8.0),
                                               child: Center(
                                                 child: AutoSizeText(
-                                                  'Formação'.toUpperCase(),
+                                                  'Salama Pidom'.toUpperCase(),
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     fontSize: 50,
@@ -676,9 +679,8 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___, ____, _____, ______,
-                                        _______, ________, _________) =>
-                                    [
+                                authenticated:
+                                    (_, __, ___, ____, _____, ______) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),
