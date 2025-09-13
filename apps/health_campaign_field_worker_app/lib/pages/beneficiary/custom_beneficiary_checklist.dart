@@ -83,7 +83,7 @@ class _CustomBeneficiaryChecklistPageState
                     // Note: always correct the projectType code here if any change made in project types
                     .where((element) => element.code
                         .toString()
-                        .contains('IRSMisau.TRAINING_SUPERVISION.DISTRIBUTOR'))
+                        .contains('IRS.TRAINING_SUPERVISION.DISTRIBUTOR'))
                     .toList()
                     .first;
 
