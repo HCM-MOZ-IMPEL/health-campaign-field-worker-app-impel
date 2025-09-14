@@ -858,10 +858,12 @@ class CustomIndividualDetailsPageState
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
-        identifier.copyWith(
-          identifierId: beneficiaryId,
-          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        )
+        isEditIndividual
+            ? identifier
+            : identifier.copyWith(
+                identifierId: beneficiaryId,
+                identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+              )
       ],
     );
 

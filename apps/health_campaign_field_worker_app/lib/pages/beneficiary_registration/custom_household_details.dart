@@ -160,7 +160,10 @@ class CustomHouseHoldDetailsPageState
                                   ),
                                 ],
                               ),
-                              address: memberWrapper.household?.address,
+                              address: (memberWrapper.tasks ?? []).isNotEmpty
+                                  ? memberWrapper.tasks?.last.address
+                                  : memberWrapper.household?.address
+                                      ?.copyWith(id: null),
                             ),
                             isEditing: (memberWrapper.tasks ?? []).isNotEmpty &&
                                     RegistrationDeliverySingleton()
