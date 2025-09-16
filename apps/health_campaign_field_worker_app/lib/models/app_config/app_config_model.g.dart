@@ -124,6 +124,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      refusalReasonsCommentOptions:
+          (json['REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR'] as List<dynamic>)
+              .map((e) => RefusalReasonsCommentOptions.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
       backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
           .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -179,6 +184,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
+      'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR':
+          instance.refusalReasonsCommentOptions,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
@@ -215,6 +222,9 @@ _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
       stateInfo: (json['StateInfo'] as List<dynamic>)
           .map((e) => StateInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      privacyPolicyConfig: (json['PrivacyPolicy'] as List<dynamic>)
+          .map((e) => PrivacyNoticeModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
@@ -222,6 +232,7 @@ Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
     <String, dynamic>{
       'GenderType': instance.genderType,
       'StateInfo': instance.stateInfo,
+      'PrivacyPolicy': instance.privacyPolicyConfig,
     };
 
 _$CommonMasterModelImpl _$$CommonMasterModelImplFromJson(
@@ -330,6 +341,20 @@ _$DeliveryCommentOptionsImpl _$$DeliveryCommentOptionsImplFromJson(
 
 Map<String, dynamic> _$$DeliveryCommentOptionsImplToJson(
         _$DeliveryCommentOptionsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+    };
+
+_$RefusalReasonsCommentOptionsImpl _$$RefusalReasonsCommentOptionsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RefusalReasonsCommentOptionsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+    );
+
+Map<String, dynamic> _$$RefusalReasonsCommentOptionsImplToJson(
+        _$RefusalReasonsCommentOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,

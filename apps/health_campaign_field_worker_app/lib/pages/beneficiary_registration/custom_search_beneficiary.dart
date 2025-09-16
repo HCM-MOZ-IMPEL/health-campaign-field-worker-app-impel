@@ -19,6 +19,7 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../utils/utils.dart';
 import '../../widgets/beneficiary/custom_view_beneficiary_card.dart';
 
 import '../../router/app_router.dart';
@@ -316,7 +317,8 @@ class _CustomSearchBeneficiaryPageState
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
+                          final i = sortHouseholdVsDate(
+                                  searchHouseholdsState.householdMembers)
                               .elementAt(index);
                           final distance = calculateDistance(
                             Coordinate(
@@ -507,6 +509,7 @@ class _CustomSearchBeneficiaryPageState
           limit: isPagination
               ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     } else {
@@ -531,6 +534,7 @@ class _CustomSearchBeneficiaryPageState
           limit: isPagination
               ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     }
@@ -541,6 +545,7 @@ class _CustomSearchBeneficiaryPageState
       Status.delivered.toValue(): Status.delivered,
       // Status.notDelivered.toValue(): Status.notDelivered,
       Status.visited.toValue(): Status.visited,
+      Status.notAdministered.toValue(): Status.notAdministered,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
       Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,

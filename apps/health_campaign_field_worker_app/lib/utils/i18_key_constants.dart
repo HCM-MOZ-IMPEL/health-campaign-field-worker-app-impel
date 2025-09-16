@@ -45,6 +45,7 @@ const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
 const attendance = Attendance();
+const inventoryReportDetails = InventoryReportDetails();
 
 const referralReconciliation = ReferralReconciliation();
 
@@ -258,6 +259,10 @@ class WarehouseDetailsShowcase {
 
   String get warehouseName {
     return 'WAREHOUSE_DETAILS_SHOWCASE_WAREHOUSE_NAME';
+  }
+
+  String get dateOfReturn {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RETURN';
   }
 }
 
@@ -694,12 +699,28 @@ class AcknowledgementSuccess {
 
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get materialIssueHeading => "MATERIAL_ISSUE_HEADING";
+  String get materialReturnDescription => "MATERIAL_RETURN_DESCRIPTION";
+  String get materialReturnHeading => "MATERIAL_RETURN_HEADING";
+  String get materialReceiveDescription => "MATERIAL_RECEIVE_DESCRIPTION";
+  String get materialIssueDescription => "MATERIAL_ISSUE_DESCRIPTION";
+  String get materialReceiveHeading => "MATERIAL_RECEIVE_HEADING";
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get mrrnNumberDescription => "MRRN_NUMBER_DESCRIPTION";
+  String get mrrnNumberHeading => "MRRN_NUMBER_HEADING";
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get minNumberDescription => "MIN_NUMBER_DESCRIPTION";
+  String get minNumberHeading => "MIN_NUMBER_HEADING";
+  String get mrnNumberDescription => "MRN_NUMBER_DESCRIPTION";
+  String get mrnNumberHeading => "MRN_NUMBER_HEADING";
+  String get viewtransactions => 'VIEW_TRANSACTIONS';
+  String get createNewTransactions => 'CREATE_NEW_TRANSACTION';
 }
 
 class ProjectSelection {
@@ -952,7 +973,7 @@ class HouseholdLocation {
 
   String get householdLocationAccuracyText =>
       'HOUSEHOLD_LOCATION_ACCURACY_LABEL_TEXT';
-
+  String get refreshLocation => 'REFRESH_LOCATION_LABEL';
   String get householdLocationDescriptionText =>
       'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 
@@ -985,6 +1006,7 @@ class SearchBeneficiary {
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get beneficiaryId => 'BENEFICIARY_ID';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 
@@ -1139,6 +1161,7 @@ class BeneficiaryDetails {
   String get menLabel => 'MEN_LABEL';
 
   String get noOfRoomsSprayed => 'DELIVERY_ROOMS_SPRAYED';
+  String get sprayOperatorDetail => 'SPRAY_OPERATOR_DETAILS';
   String get roomsVsSprayedValidation =>
       'SPRAYED_ROOMS_CANNOT_EXCEED_TOTAL_ROOMS';
 
@@ -1188,17 +1211,56 @@ class BeneficiaryDetails {
 
   String get invalidChildPregnantWomenCount =>
       'INVALID_CHILD_PREGNANT_WOMEN_COUNT';
+  String get validationForExcessStockReturn =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";
+  String get validationForExcessStockDispatch =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_DISPATCH";
 }
 
 class StockDetails {
   const StockDetails();
+  String get selectTransactingPartyReturnedFrom =>
+      'STOCK_DETAILS_RETURNED_FROM';
+
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get stockReturnedPageTitle => 'STOCK_DETAILS_RETURNED_PAGE_TITLE';
+
+  String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
+  String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
+
+  String get viewStockQuantity => '_STOCK_QUANTITY_VIEW';
+  String get viewStockTitle => '_STOCK_VIEW_TITLE';
+
+  String get resource => 'STOCK_DETAILS_RESOURCE';
+  String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+  String get stockUnit => 'STOCK_TRANSACTION_UNIT';
+  String get stockScannedError => 'STOCK_QR_ALREADY_SCANNED_ERROR';
+  String get quantityDispatchedLabel => 'STOCK_DETAILS_QUANTITY_DISPATCHED';
+
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
+  String get stockDetailsReceiptLabel => 'STOCK_DETAILS_RECIPT_HEADING_LABEL';
+  String get selectRecord => 'PLEASE_SELECT_A_RECORD';
+  String get stockDetailsText => 'STOCK_DETAILS_TEXT';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
 
   String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
-
+  String get quantitySentByWarehouse =>
+      'STOCK_QUANTITY_SENT_BY_WAREHOUSE_LABEL';
+  String get batchNumberText => 'BATCH_NUMBER_TEXT';
+  String get actualQuantityReceived => 'STOCK_QUANTITY_ACTUAL_RECEIVED_LABEL';
+  String get commentRequiredErrorLessQuantity =>
+      'COMMENT_IS_REQUIRED_WHEN_QUANTITY_IS_LESS';
+  String get qantityRequiredError => 'STOCK_QUANTITY_REQUIRED_ERROR';
+  String get receivedQuantityError =>
+      'STOCK_QUANTITY_NOT_RECEIVED_MORE_THAT_ISSUED_ERROR';
+  String get validNumberError => 'STOCK_QUANTITY_VALID_NUMBER_ERROR';
+  String get minNumber => 'STOCK_MIN_QUANTITY_REQUIRED';
+  String get stockRecordsHeading => 'STOCK_RECEIVED_RECORDS_HEADING';
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
+  String get scanResources => 'STOCK_SCAN_RESOURCES';
+  String get stockReceivedFrom => 'STOCK_DETAILS_RECIEVED_FROM_LABEL';
 
   String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
 
@@ -1206,18 +1268,79 @@ class StockDetails {
 
   String get countDialogSuccess =>
       'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+  String get selectMrnNumberLabel => 'SELECT_MRN_NUMBER_LABEL';
+  String get noTransactionFound => 'STOCK_NO_TRANCTION_FOUND';
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
 
   String get selectProductBednetLabel => 'SELECT_PRODUCT_BEDNET_LABEL';
   String get stockIssuedBednetDetailsLabel => 'ISSUED_STOCK_BEDNET_DETAILS';
+  String get manageStockLabel => 'STOCK_DETAILS_MANAGE_STOCK_LABEL';
+  String get recordStockIssuedDescription =>
+      'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
+  String get recordStockReturnedDescription =>
+      'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
+  String get createNewTransactionLabel => 'CREATE_NEW_TRANSACTION';
+  String get viewCreatedTransactionLabel => 'VIEW_CREATED_TRANSACTION';
+  String get quantityPartialReturnedLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
+  String get emptyReturnedLabel => 'STOCK_REPORT_EMPTY_QUANTITY_RETURNED';
+  String get quantityEmptyReturnedLabel =>
+      'STOCK_DETAILS_EMPTY_QUANTITY_RETURNED';
+  String get quantityWastedReturnedLabel =>
+      'STOCK_DETAILS_WASTED_QUANTITY_RETURNED';
+  String get quantityUnusedReturnedLabel =>
+      'STOCK_DETAILS_UNUSED_QUANTITY_RETURNED';
+  String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
+  String get batchNumberLabel {
+    return 'STOCK_DETAILS_BATCH_NUMBER';
+  }
+
+  String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
+  String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+  String get clearAllText => 'PRODUCT_CLEAR_ALL_TEXT';
+  String get quantityReturnedMaxError =>
+      'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
+  String get cddCodeLabel => 'CDD_CODE_LABEL';
+  String get teamSupervisorCodeLabel => 'TEAM_SUPERVISOR_CODE_LABEL';
+
+  String get wayBillNumberMinError => 'STOCK_WAYBILL_MIN_ERROR';
+  String get wayBillNumberMaxError => 'STOCK_WAYBILL_MAX_ERROR';
+  String get wayBillNumberRequired => 'STOCK_WAYBILL_EMPTY_REQUIRED_ERROR';
 }
 
 class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
+  String get commentRequiredError => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+  String get partialReturnedQuantityLabel =>
+      "INVENTORY_REPORT_DETAILS_PARTIAL_RETURNED_QUANTITY_LABEL";
+  String get stockIdLabel => 'STOCK_ID_LABEL';
+
+  String get commentIsRequiredText => "COMMENT_IS_REQUIRED_TEXT";
+
+  String get checkTheQuantityReceivedText =>
+      'CHECK_THE_QUANTITY_RECEIEVED_TEXT';
+
+  String get stockReceiptDetailsText => 'STOCK_RECEIPT_DETAILS_TEXT';
+
+  String get receivedFromText => 'RECEIVED_FROM_TEXT';
+
+  String get quantityReceivedByWarehouse => 'QUANTITY_RECEIVED_BY_WAREHOUSE';
+
+  String get actualQuantityReceived => 'ACTUAL_QUANTITY_RECEIVED';
+
+  String get commentsText => 'COMMENTS_TEXT';
+
+  String get waybillNumberText => 'WAYBILL_NUMBER_TEXT';
+
+  String get batchNumberText => 'BATCH_NUMBER_TEXT';
 }
 
 class PrivacyPolicy {
@@ -1256,6 +1379,10 @@ class DeliverIntervention {
 
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
+  String get beneficiaryRefusalReasonDropdownLabel =>
+      'BENEFICIARY_REFUSED_DROPDOWN';
+
+  String get deliverInterventionLabel => 'DELIVERY_INTERVENTION_LABEL';
 
   String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
   String get infoWrittenInChildCard =>

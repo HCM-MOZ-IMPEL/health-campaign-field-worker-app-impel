@@ -390,6 +390,23 @@ class CustomDeliverySummaryPageState
                                           localizations.translate(
                                               i18.common.coreCommonNA),
                                 ),
+                                if (deliverState.oldTask?.status ==
+                                    Status.administeredSuccess.toValue())
+                                  LabelValuePair(
+                                    label: localizations.translate(i18Local
+                                        .beneficiaryDetails
+                                        .sprayOperatorDetail),
+                                    value: deliverState
+                                            .oldTask?.additionalFields?.fields
+                                            .where((d) =>
+                                                d.key ==
+                                                Constants.sprayOperator)
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        localizations
+                                            .translate(i18.common.coreCommonNA),
+                                  ),
                               ]),
                         );
                       }),

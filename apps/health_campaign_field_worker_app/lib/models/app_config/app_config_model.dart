@@ -83,6 +83,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
     // required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+    @JsonKey(name: 'REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+    required List<RefusalReasonsCommentOptions> refusalReasonsCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
@@ -128,8 +130,8 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
-    // @JsonKey(name: 'PrivacyPolicy')
-    // required List<PrivacyNoticeModel> privacyPolicyConfig,
+    @JsonKey(name: 'PrivacyPolicy')
+    required List<PrivacyNoticeModel> privacyPolicyConfig,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(
@@ -224,6 +226,17 @@ class DeliveryCommentOptions with _$DeliveryCommentOptions {
 
   factory DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
       _$DeliveryCommentOptionsFromJson(json);
+}
+
+@freezed
+class RefusalReasonsCommentOptions with _$RefusalReasonsCommentOptions {
+  factory RefusalReasonsCommentOptions({
+    required String name,
+    required String code,
+  }) = _RefusalReasonsCommentOptions;
+
+  factory RefusalReasonsCommentOptions.fromJson(Map<String, dynamic> json) =>
+      _$RefusalReasonsCommentOptionsFromJson(json);
 }
 
 @freezed

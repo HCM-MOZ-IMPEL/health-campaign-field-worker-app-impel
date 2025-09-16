@@ -19,6 +19,9 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:survey_form/survey_form.dart';
 
+import '../../models/entities/project_types.dart';
+import '../../utils/extensions/extensions.dart';
+
 @RoutePage()
 class CustomBeneficiaryChecklistPage extends LocalizedStatefulWidget {
   final String? beneficiaryClientRefId;
@@ -77,6 +80,7 @@ class _CustomBeneficiaryChecklistPageState
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
                 selectedServiceDefinition = value.serviceDefinitionList
+                    // Note: always correct the projectType code here if any change made in project types
                     .where((element) => element.code
                         .toString()
                         .contains('IRS.TRAINING_SUPERVISION.DISTRIBUTOR'))

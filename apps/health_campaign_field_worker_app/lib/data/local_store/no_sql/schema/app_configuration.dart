@@ -60,6 +60,8 @@ class AppConfiguration {
 
   // @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   // late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
+  @Name('REFUSAL_REASONS_COMMENT_OPTIONS_POPULATOR')
+  late List<RefusalReasonsCommentOptions>? refusalReasonsCommentOptions;
 
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
@@ -90,7 +92,7 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
-  // late PrivacyPolicy? privacyPolicyConfig;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
@@ -119,6 +121,12 @@ class IdTypeOptions {
 
 @embedded
 class DeliveryCommentOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class RefusalReasonsCommentOptions {
   late String name;
   late String code;
 }

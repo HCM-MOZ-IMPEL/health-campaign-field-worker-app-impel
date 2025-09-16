@@ -21,6 +21,7 @@ import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 
@@ -163,8 +164,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -219,59 +221,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) =>
-                  role.code == RolesType.teamSupervisor.toValue() ||
-                  role.code == RolesType.attendanceStaff.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          if (individual.isNotEmpty) {
-            final attendanceRegisters = await attendanceRemoteRepository.search(
-              AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
-            );
-            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-            for (final register in attendanceRegisters) {
-              if (register.attendees != null &&
-                  (register.attendees ?? []).isNotEmpty) {
-                try {
-                  final individuals = await individualRemoteRepository.search(
-                    IndividualSearchModel(
-                      id: register.attendees!
-                          .map((e) => e.individualId!)
-                          .toList(),
-                    ),
-                  );
-                  await individualLocalRepository.bulkCreate(individuals);
-                  final logs = await attendanceLogRemoteRepository.search(
-                    AttendanceLogSearchModel(
-                      registerId: register.id,
-                    ),
-                  );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
-                } catch (_) {
-                  emit(state.copyWith(
-                    loading: false,
-                    syncError: ProjectSyncErrorType.project,
-                  ));
-
-                  return;
-                }
-              }
-            }
-          }
-        }
-
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -432,6 +381,116 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  // info: downloads stock data from remote , based on the user role
+  FutureOr<void> downloadStockDataBasedOnRole(
+      List<ProjectFacilityModel> projectFacilities,
+      List<FacilityModel> allFacilities,
+      String? boundaryType) async {
+    final userObject = await localSecureStore.userRequestModel;
+    final userRoles = userObject!.roles.map((e) => e.code);
+
+    Map<String, String> facilityIdUsageMap = {};
+
+    for (var element in allFacilities) {
+      facilityIdUsageMap[element.id] = element?.usage ?? "";
+    }
+
+    // info : assumption both roles will not be assigned to user
+
+    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+      // info : create entries in the local repository
+
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.districWarehouse)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.spaqManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) =>
+              facilityIdUsageMap[e] == Constants.operationalBaseWarehouse)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.teamSupervisor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    }
+  }
+
+  // info : insert data in db
+  FutureOr<void> createStockDownloadedEntries(
+      List<StockModel> stockEntries) async {
+    await (stockLocalRepository as CustomStockLocalRepository)
+        .bulkStockCreate(stockEntries);
+  }
+
+  // info:  downloads the stock data from remote repository
+
+  FutureOr<List<StockModel>> downloadStockEntries(
+      StockSearchModel stockSearchModel) async {
+    var offset = 0;
+    var initialLimit = Constants.apiCallLimit;
+
+    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
+        limit: initialLimit, offSet: offset);
+
+    return stockEntries;
+  }
+
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
@@ -468,6 +527,50 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      if (context.loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.districtSupervisor.toValue() ||
+                role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty) {
+        final attendanceRegisters = await attendanceRemoteRepository.search(
+          AttendanceRegisterSearchModel(
+            staffId: context.loggedInIndividualId,
+            referenceId: event.model.id,
+            localityCode: event.model.address?.boundary,
+          ),
+        );
+        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+        for (final register in attendanceRegisters) {
+          if (register.attendees != null &&
+              (register.attendees ?? []).isNotEmpty) {
+            try {
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  id: register.attendees!.map((e) => e.individualId!).toList(),
+                ),
+              );
+              await individualLocalRepository.bulkCreate(individuals);
+              final logs = await attendanceLogRemoteRepository.search(
+                AttendanceLogSearchModel(
+                  registerId: register.id,
+                ),
+              );
+              await attendanceLogLocalRepository.bulkCreate(logs);
+            } catch (_) {
+              emit(state.copyWith(
+                loading: false,
+                syncError: ProjectSyncErrorType.project,
+              ));
+
+              return;
+            }
+          }
+        }
+      }
       try {
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)
@@ -479,12 +582,17 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final projectTypeCode = getProjectTypeCode(event.model);
-        final dashboardConfig = await isar.dashboardConfigSchemaLists
+        final dashboardConfigSchemaList = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
             .dashboardConfigsIsNotNull()
             .dashboardConfigsIsNotEmpty()
             .findAll();
+        // fix added for for irs after version upgrade as , now we have dashboardConfigSchemaLists from ISAR
+        final dashboardConfig = dashboardConfigSchemaList.first.dashboardConfigs
+                ?.where((config) => config.projectTypeCode == projectTypeCode)
+                .toList() ??
+            [];
 
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
@@ -515,7 +623,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs?.first.charts ?? [],
+            dashboardConfig?.first.charts ?? [],
             startDate,
             endDate,
             isar,
@@ -615,6 +723,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ));
 
       return;
+    }
+    try {
+      final projectFacilities = await projectFacilityLocalRepository
+          .search(ProjectFacilitySearchModel());
+      final facilities =
+          await facilityLocalRepository.search(FacilitySearchModel());
+      await downloadStockDataBasedOnRole(
+          projectFacilities, facilities, event.model.address?.boundaryType);
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.projectFacilities,
+      ));
     }
 
     emit(state.copyWith(

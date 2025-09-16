@@ -5,7 +5,7 @@ part 'project_types.mapper.dart';
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum ProjectTypes {
-  @MappableValue("IRS")
+  @MappableValue("IRS-misau")
   irs,
   @MappableValue("SMC-Moz")
   smc,

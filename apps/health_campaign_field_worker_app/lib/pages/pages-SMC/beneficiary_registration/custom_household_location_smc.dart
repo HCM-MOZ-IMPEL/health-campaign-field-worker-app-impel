@@ -44,7 +44,6 @@ class _CustomHouseholdLocationSMCPageState
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
-
   @override
   void initState() {
     final regState = context.read<BeneficiaryRegistrationBloc>().state;
@@ -96,7 +95,6 @@ class _CustomHouseholdLocationSMCPageState
                 final lat = locationState.latitude;
                 final lng = locationState.longitude;
                 final accuracy = locationState.accuracy;
-
                 form.control(_latKey).value ??= lat;
                 form.control(_lngKey).value ??= lng;
                 form.control(_accuracyKey).value ??= accuracy;
@@ -106,7 +104,6 @@ class _CustomHouseholdLocationSMCPageState
               final lat = form.control(_latKey).value;
               final lng = form.control(_lngKey).value;
               final accuracy = form.control(_accuracyKey).value;
-
               return lat != null || lng != null || accuracy != null
                   ? false
                   : true;

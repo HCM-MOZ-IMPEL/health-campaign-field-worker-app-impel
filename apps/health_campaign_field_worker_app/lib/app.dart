@@ -1,3 +1,5 @@
+import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:survey_form/survey_form.dart';
 import 'dart:math';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -43,6 +45,7 @@ import 'blocs/blocs-smc/closed/closed_household.dart';
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
 import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
+import 'blocs/inventory/stock_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -154,10 +157,20 @@ class MainApplicationState extends State<MainApplication>
               ),
 
               BlocProvider(
-                create: (_) {
-                  return DigitScannerBloc(
-                    const DigitScannerState(),
+                create: (context) {
+                  return RecordStockBloc(
+                    stockRepository:
+                        context.repository<StockModel, StockSearchModel>(),
+                    RecordStockCreateState(
+                      entryType: StockRecordEntryType.receipt,
+                      projectId: InventorySingleton().projectId,
+                    ),
                   );
+                },
+              ),
+              BlocProvider(
+                create: (_) {
+                  return StockBloc();
                 },
                 lazy: false,
               ),
@@ -256,6 +269,9 @@ class MainApplicationState extends State<MainApplication>
                   individualRemoteRepository: ctx.read<
                       RemoteRepository<IndividualModel,
                           IndividualSearchModel>>(),
+                  productVariantLocalRepository: ctx.read<
+                      LocalRepository<ProductVariantModel,
+                          ProductVariantSearchModel>>(),
                 )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
@@ -594,7 +610,7 @@ class MainApplicationState extends State<MainApplication>
                                                   const EdgeInsets.all(8.0),
                                               child: Center(
                                                 child: AutoSizeText(
-                                                  'Formação'.toUpperCase(),
+                                                  'Salama Pidom'.toUpperCase(),
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     fontSize: 50,
@@ -663,7 +679,8 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___, ____, _____) => [
+                                authenticated:
+                                    (_, __, ___, ____, _____, ______) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),

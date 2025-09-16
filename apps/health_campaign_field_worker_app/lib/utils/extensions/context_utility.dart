@@ -123,6 +123,40 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isDistrictWarehouseManager {
+    try {
+      String? boundaryLevel = selectedProject.address?.boundaryType;
+
+      if (boundaryLevel == Constants.districtBoundaryLevel) {
+        bool warehouseManager = loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.warehouseManager.toValue(),
+            )
+            .toList()
+            .isNotEmpty;
+        return warehouseManager;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isTeamSupervisor {
+    try {
+      bool teamSupervisor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return teamSupervisor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isCommunitySupervisor {
     try {
       bool communitySupervisor = loggedInUserRoles
@@ -248,6 +282,8 @@ extension ContextUtilityExtensions on BuildContext {
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     // LocationTrackerSingleton()
     //     .setBoundaryName(boundaryName: selectedBoundary.code!);
+    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
+
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.code!);
     ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
@@ -277,6 +313,23 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  Map<String, int> getAllProductSkuCounts() {
+    final authBloc = _get<AuthBloc>();
+    final counts = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
+        return productSkuCounts;
+      },
+    );
+    return counts ?? {};
+  }
+
   bool get isCDD {
     return loggedInUserRoles
         .where(
@@ -291,8 +344,14 @@ extension ContextUtilityExtensions on BuildContext {
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel.roles;
       },
     );
@@ -307,8 +366,14 @@ extension ContextUtilityExtensions on BuildContext {
   String? get loggedInIndividualId {
     final authBloc = _get<AuthBloc>();
     final individualUUID = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return individualId;
       },
     );
@@ -340,8 +405,14 @@ extension ContextUtilityExtensions on BuildContext {
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actions, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actions,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel;
       },
     );

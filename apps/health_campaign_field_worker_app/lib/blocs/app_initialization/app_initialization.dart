@@ -106,6 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.refusalReasonsComments.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -113,7 +114,7 @@ class AppInitializationBloc
                   masterDetails: getMasterDetailsModel([
                     MasterEnums.stateInfo.toValue(),
                     MasterEnums.genderType.toValue(),
-                    // MasterEnums.privacyPolicy.toValue(),
+                    MasterEnums.privacyPolicy.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

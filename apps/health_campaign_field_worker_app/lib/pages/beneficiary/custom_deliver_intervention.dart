@@ -16,6 +16,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -368,7 +369,7 @@ class CustomDeliverInterventionPageState
                                               children: [
                                                 Text(
                                                   localizations.translate(
-                                                    i18.deliverIntervention
+                                                    i18Local.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
                                                   style: theme
@@ -388,24 +389,25 @@ class CustomDeliverInterventionPageState
                                                             .deliverIntervention
                                                             .currentCycle),
                                                   ),
-                                                DigitStepper(
-                                                  activeStep:
-                                                      deliveryInterventionState
-                                                              .dose -
-                                                          1,
-                                                  stepRadius: 12.5,
-                                                  steps: steps,
-                                                  maxStepReached: 3,
-                                                  lineLength:
-                                                      (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                ),
+                                                if (steps.isNotEmpty)
+                                                  DigitStepper(
+                                                    activeStep:
+                                                        deliveryInterventionState
+                                                                .dose -
+                                                            1,
+                                                    stepRadius: 12.5,
+                                                    steps: steps,
+                                                    maxStepReached: 3,
+                                                    lineLength: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            12.5 *
+                                                                2 *
+                                                                steps.length -
+                                                            50) /
+                                                        (steps.length - 1),
+                                                  ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
                                                   formControlName:
@@ -649,6 +651,10 @@ class CustomDeliverInterventionPageState
             deliveryStrategy,
           ),
           AdditionalField(_noOfRoomsSprayedKey, roomsSprayed),
+          AdditionalField(
+            Constants.sprayOperator,
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),

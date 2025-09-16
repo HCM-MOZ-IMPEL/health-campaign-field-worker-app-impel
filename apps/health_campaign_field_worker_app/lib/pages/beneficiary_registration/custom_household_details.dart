@@ -160,7 +160,10 @@ class CustomHouseHoldDetailsPageState
                                   ),
                                 ],
                               ),
-                              address: memberWrapper.household?.address,
+                              address: (memberWrapper.tasks ?? []).isNotEmpty
+                                  ? memberWrapper.tasks?.last.address
+                                  : memberWrapper.household?.address
+                                      ?.copyWith(id: null),
                             ),
                             isEditing: (memberWrapper.tasks ?? []).isNotEmpty &&
                                     RegistrationDeliverySingleton()
@@ -361,6 +364,8 @@ class CustomHouseHoldDetailsPageState
                                   lastModifiedTime:
                                       context.millisecondsSinceEpoch(),
                                 ),
+                                householdType: RegistrationDeliverySingleton()
+                                    .householdType,
                                 auditDetails: AuditDetails(
                                   createdBy: RegistrationDeliverySingleton()
                                       .loggedInUserUuid

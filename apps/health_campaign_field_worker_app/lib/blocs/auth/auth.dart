@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
@@ -13,6 +14,8 @@ import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../utils/typedefs.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 part 'auth.freezed.dart';
@@ -24,12 +27,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LocalSecureStore localSecureStore;
   final AuthRepository authRepository;
   final MdmsRepository mdmsRepository;
+  final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
 
   AuthBloc({
     required this.authRepository,
     required this.mdmsRepository,
+    required this.productVariantLocalRepository,
     required this.individualRemoteRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
@@ -37,6 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
+    on(_onUpdateProductSkuCounts);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -52,6 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
       final userIndividualId = await localSecureStore.userIndividualId;
+
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
@@ -96,7 +104,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "enabled": true,
       });
       await localSecureStore.setBoundaryRefetch(true);
-
       await localSecureStore.setRoleActions(actionsWrapper);
       if (result.userRequestModel.roles
           .where((role) =>
@@ -148,6 +155,58 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
     emit(const AuthUnauthenticatedState());
   }
+
+  FutureOr<void> _onUpdateProductSkuCounts(
+    AuthUpdateProductSkuCountsEvent event,
+    AuthEmitter emit,
+  ) async {
+    try {
+      final productVariant =
+          await productVariantLocalRepository.search(ProductVariantSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ));
+      Map<String, int> currentCounts =
+          await localSecureStore.getAllProductSkuCounts(productVariant);
+
+      if (event.skuCountUpdates != null) {
+        Map<String, int>? additionCounts = event.skuCountUpdates;
+
+        for (final sku in additionCounts!.keys) {
+          // final existingCount = currentCounts[sku] ?? 0;
+          final addition = additionCounts[sku] ?? 0;
+          currentCounts[sku] = addition;
+        }
+      }
+
+      await localSecureStore.setProductSkuCounts(currentCounts);
+
+      final accessToken = await localSecureStore.accessToken;
+      final refreshToken = await localSecureStore.refreshToken;
+      final userObject = await localSecureStore.userRequestModel;
+      final actionsList = await localSecureStore.savedActions;
+      final userIndividualId = await localSecureStore.userIndividualId;
+
+      if (accessToken == null ||
+          refreshToken == null ||
+          userObject == null ||
+          actionsList == null) {
+        emit(const AuthUnauthenticatedState());
+      } else {
+        emit(AuthAuthenticatedState(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          userModel: userObject,
+          individualId: userIndividualId,
+          actionsWrapper: actionsList,
+          productSkuCounts: currentCounts,
+        ));
+      }
+    } catch (_) {
+      await localSecureStore.deleteAll();
+      emit(const AuthUnauthenticatedState());
+      rethrow;
+    }
+  }
 }
 
 @freezed
@@ -157,6 +216,10 @@ class AuthEvent with _$AuthEvent {
     required String password,
     required String tenantId,
   }) = AuthLoginEvent;
+
+  const factory AuthEvent.updateProductSkuCounts({
+    Map<String, int>? skuCountUpdates,
+  }) = AuthUpdateProductSkuCountsEvent;
 
   const factory AuthEvent.autoLogin({
     required String tenantId,
@@ -177,6 +240,7 @@ class AuthState with _$AuthState {
     required UserRequestModel userModel,
     required RoleActionsWrapperModel actionsWrapper,
     String? individualId,
+    Map<String, int>? productSkuCounts,
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;

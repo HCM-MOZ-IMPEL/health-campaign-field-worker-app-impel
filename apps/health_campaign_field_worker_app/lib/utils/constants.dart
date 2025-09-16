@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
@@ -110,11 +111,16 @@ class Constants {
   static const String districtBoundaryLevel = 'Distrito';
   static const String administrativeProviceBoundaryLevel =
       'Posto Administrativo';
+  static const String operationalBaseWarehouse = 'Operational Base';
+  static const String teamLead = 'Team Lead';
+  static const String sprayOperatorFacility = 'Spray Operator';
+
   static const String warehouse = "Warehouse";
   static const String nationalWarehouse = 'National Warehouse';
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
   static const String bednetLabel = 'BEDNET';
+  static const int apiCallLimit = 1000;
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
@@ -131,8 +137,16 @@ class Constants {
   static const String byHand = 'Em mão';
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
+  static const String sprayOperator = 'spray_operator';
+  static const String beneficiaryRefused = 'BENEFICIARY_REFUSED';
+  static const String beneficiaryRefusedReason = 'beneficiary_refused_reason';
   static const int maxBednetCount = 4;
   static const String vechileSKU = 'Vehicle';
+
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const int mlPerBottle = 30;
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -324,7 +338,7 @@ class Constants {
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);
-
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
