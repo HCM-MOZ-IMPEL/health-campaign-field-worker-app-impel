@@ -160,6 +160,13 @@ class CustomWarehouseDetailsPageState
                     },
                   ) ??
                   [];
+
+              final mappedFacilities = facilityState.whenOrNull(
+                    fetched: (facilities, allfacilities) {
+                      return facilities;
+                    },
+                  ) ??
+                  [];
               final stockState = recordStockBloc.state;
 
               return Scaffold(
@@ -336,7 +343,9 @@ class CustomWarehouseDetailsPageState
                                                                   .split(Constants
                                                                       .pipeSeparator)
                                                                   .last
-                                                              : selectedFacilityId));
+                                                              : selectedFacilityId,
+                                                          mappedFacilities:
+                                                              mappedFacilities));
                                                     }
                                                   }
                                                 },

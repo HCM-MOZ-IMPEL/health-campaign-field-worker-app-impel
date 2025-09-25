@@ -161,6 +161,21 @@ bool isHFUser(BuildContext context) {
   }
 }
 
+bool isTeamSupervisor(BuildContext context) {
+  try {
+    bool value = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.teamSupervisor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
+    return value;
+  } catch (_) {
+    return false;
+  }
+}
+
 String formatDateFromMillis(int millis) {
   final date = DateTime.fromMillisecondsSinceEpoch(millis);
   final day = date.day.toString().padLeft(2, '0');

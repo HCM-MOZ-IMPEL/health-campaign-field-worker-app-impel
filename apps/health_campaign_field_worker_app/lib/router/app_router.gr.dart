@@ -1422,6 +1422,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ViewAllTransactionsScreen(
           key: args.key,
           warehouseId: args.warehouseId,
+          mappedFacilities: args.mappedFacilities,
         ),
       );
     },
@@ -6498,12 +6499,14 @@ class ViewAllTransactionsRoute
   ViewAllTransactionsRoute({
     Key? key,
     required String? warehouseId,
+    required List<FacilityModel>? mappedFacilities,
     List<PageRouteInfo>? children,
   }) : super(
           ViewAllTransactionsRoute.name,
           args: ViewAllTransactionsRouteArgs(
             key: key,
             warehouseId: warehouseId,
+            mappedFacilities: mappedFacilities,
           ),
           initialChildren: children,
         );
@@ -6518,15 +6521,18 @@ class ViewAllTransactionsRouteArgs {
   const ViewAllTransactionsRouteArgs({
     this.key,
     required this.warehouseId,
+    required this.mappedFacilities,
   });
 
   final Key? key;
 
   final String? warehouseId;
 
+  final List<FacilityModel>? mappedFacilities;
+
   @override
   String toString() {
-    return 'ViewAllTransactionsRouteArgs{key: $key, warehouseId: $warehouseId}';
+    return 'ViewAllTransactionsRouteArgs{key: $key, warehouseId: $warehouseId, mappedFacilities: $mappedFacilities}';
   }
 }
 

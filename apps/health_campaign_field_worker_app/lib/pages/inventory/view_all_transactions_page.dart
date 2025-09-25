@@ -26,7 +26,9 @@ import '../../utils/i18_key_constants.dart' as i18_local;
 @RoutePage()
 class ViewAllTransactionsScreen extends LocalizedStatefulWidget {
   final String? warehouseId;
-  const ViewAllTransactionsScreen({super.key, required this.warehouseId});
+  final List<FacilityModel>? mappedFacilities;
+  const ViewAllTransactionsScreen(
+      {super.key, required this.warehouseId, required this.mappedFacilities});
 
   @override
   State<ViewAllTransactionsScreen> createState() =>
@@ -50,6 +52,7 @@ class _ViewAllTransactionsScreenState
         context.read<LocalRepository<StockModel, StockSearchModel>>()
             as CustomStockLocalRepository;
     String? warehouseId = widget.warehouseId;
+    final mappedFacilities = widget.mappedFacilities ?? [];
 
     List<StockModel> result;
     List<StockModel> receivedResult;
@@ -62,9 +65,17 @@ class _ViewAllTransactionsScreenState
           transactionType: [TransactionType.dispatched.toValue()],
           transactionReason: [],
           receiverId: warehouseId == null ? [] : [warehouseId]));
-      if (isHFUser(context)) {
+      if (isTeamSupervisor(context) || context.isSpaqManager) {
         result = result.where((stock) {
           return stock.senderType == 'WAREHOUSE';
+        }).toList();
+      } else if (context.isDistrictWarehouseManager) {
+        result = result.where((stock) {
+          final senderId = stock.senderId;
+          return mappedFacilities.firstWhereOrNull((facility) {
+                return facility.id == senderId;
+              })?.usage ==
+              Constants.provincialWarehouse;
         }).toList();
       }
       receivedResult = await repository.search(StockSearchModel(
