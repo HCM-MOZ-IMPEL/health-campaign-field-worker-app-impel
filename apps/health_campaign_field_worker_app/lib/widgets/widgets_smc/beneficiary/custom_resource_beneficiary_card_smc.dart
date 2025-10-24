@@ -11,23 +11,28 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import '../../localized.dart';
+import '../../widgets_bednet/custom_digit_integer_form_picker.dart';
 import '../custom_digit_reactive_dropdown_smc.dart';
 
 class CustomResourceBeneficiaryCardSMC extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
+  final void Function() onQuantityUpdate;
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
+  final int azmDose;
   final bool isAdministered;
   final void Function(bool) checkDoseAdministration;
 
   const CustomResourceBeneficiaryCardSMC(
       {super.key,
       super.appLocalizations,
+      required this.onQuantityUpdate,
       required this.onDelete,
       required this.cardIndex,
       required this.form,
       required this.totalItems,
+      required this.azmDose,
       this.isAdministered = false,
       required this.checkDoseAdministration});
 
@@ -88,11 +93,30 @@ class CustomResourceBeneficiaryCardSMCState
           //   formControlName: 'quantityDistributed.${widget.cardIndex}',
           //   form: widget.form,
           //   label: localizations.translate(
-          //     i18.deliverIntervention.quantityDistributedLabel,
+          //     i18_local.deliverIntervention.quantityDistributedLabelTracoma,
           //   ),
           //   minimum: 0,
-          //   maximum: 3,
+          //   maximum: widget.azmDose,
+          //   buttonWidth: 50,
+          //   onChange: () {
+          //     widget.onQuantityUpdate();
+          //   },
           // ),
+          CustomDigitIntegerFormPicker(
+            incrementer: true,
+            readOnly: false,
+            formControlName: 'quantityDistributed.${widget.cardIndex}',
+            form: widget.form,
+            label: localizations.translate(
+              i18_local.deliverIntervention.quantityDistributedLabelTracoma,
+            ),
+            minimum: widget.azmDose,
+            // maximum: widget.azmDose,
+            buttonWidth: 50,
+            onChange: () {
+              widget.onQuantityUpdate();
+            },
+          ),
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,

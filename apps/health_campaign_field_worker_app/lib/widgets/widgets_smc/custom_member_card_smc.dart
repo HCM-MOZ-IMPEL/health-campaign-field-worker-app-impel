@@ -19,7 +19,8 @@ import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
-import '../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
+import '../../utils/utils_smc/utils_smc.dart'
+    show checkStatusSMC, isHeadBednetDelivered, isSMCDelivered;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -216,73 +217,79 @@ class CustomMemberCardSMC extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: kPadding / 2,
             ),
-            child: Offstage(
-              offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryIneligible ||
-                      isBeneficiaryReferred
-                  ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.info_rounded,
-                        iconSize: 20,
-                        iconText: localizations.translate(
-                          isHead
-                              ? i18_local.householdOverView
-                                  .householdOverViewHouseholderHeadLabelSMC
-                              : (isNotEligible || isBeneficiaryIneligible)
-                                  ? i18_local.householdOverView
-                                      .householdOverViewNotEligibleIconLabelSMC
-                                  : isBeneficiaryReferred
-                                      ? i18_local.householdOverView
-                                          .householdOverViewBeneficiaryReferredLabelSMC
-                                      : isBeneficiaryRefused
-                                          ? i18_local.householdOverView
-                                              .householdOverViewBeneficiaryRefusedLabelSMC
-                                          : i18_local.householdOverView
-                                              .householdOverViewNotDeliveredIconLabelSMC,
-                        ),
-                        iconTextColor: theme.colorScheme.error,
-                        iconColor: theme.colorScheme.error,
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.check_circle,
-                        iconText: localizations.translate(
-                          i18_local.householdOverView
-                              .householdOverViewDeliveredIconLabelSMC,
-                        ),
-                        iconSize: 20,
-                        iconTextColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        iconColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-            ),
+            // child: Offstage(
+            //   offstage: beneficiaryType != BeneficiaryType.individual,
+            //   child: !isDelivered ||
+            //           isNotEligible ||
+            //           isBeneficiaryRefused ||
+            //           isBeneficiaryIneligible ||
+            //           isBeneficiaryReferred
+            //       ? Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: DigitIconButton(
+            //             icon: Icons.info_rounded,
+            //             iconSize: 20,
+            //             iconText: localizations.translate(
+            //               isHead
+            //                   ? i18_local.householdOverView
+            //                       .householdOverViewHouseholderHeadLabelSMC
+            //                   : (isNotEligible || isBeneficiaryIneligible)
+            //                       ? i18_local.householdOverView
+            //                           .householdOverViewNotEligibleIconLabelSMC
+            //                       : isBeneficiaryReferred
+            //                           ? i18_local.householdOverView
+            //                               .householdOverViewBeneficiaryReferredLabelSMC
+            //                           : isBeneficiaryRefused
+            //                               ? i18_local.householdOverView
+            //                                   .householdOverViewBeneficiaryRefusedLabelSMC
+            //                               : i18_local.householdOverView
+            //                                   .householdOverViewNotDeliveredIconLabelSMC,
+            //             ),
+            //             iconTextColor: theme.colorScheme.error,
+            //             iconColor: theme.colorScheme.error,
+            //           ),
+            //         )
+            //       : Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: DigitIconButton(
+            //             icon: Icons.check_circle,
+            //             iconText: localizations.translate(
+            //               i18_local.householdOverView
+            //                   .householdOverViewDeliveredIconLabelSMC,
+            //             ),
+            //             iconSize: 20,
+            //             iconTextColor:
+            //                 DigitTheme.instance.colorScheme.onSurfaceVariant,
+            //             iconColor:
+            //                 DigitTheme.instance.colorScheme.onSurfaceVariant,
+            //           ),
+            //         ),
+            // ),
           ),
           Offstage(
-            offstage: beneficiaryType != BeneficiaryType.individual ||
-                isNotEligible ||
-                isBeneficiaryRefused ||
-                isBeneficiaryIneligible ||
-                isBeneficiaryReferred,
+            offstage: false,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  (isNotEligible ||
-                              isBeneficiaryRefused ||
-                              isBeneficiaryIneligible ||
-                              isBeneficiaryReferred) &&
-                          checkStatusSMC(tasks, context.selectedCycle)
-                      ? const Offstage()
-                      : !isNotEligible
-                          ? DigitElevatedButton(
+                  isHead
+                      ? isHeadBednetDelivered(tasks)
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: DigitIconButton(
+                                icon: Icons.info_rounded,
+                                iconText: localizations.translate(
+                                  i18_local.householdOverView
+                                      .headBednetDeliveredSuccess,
+                                ),
+                                iconSize: 20,
+                                iconTextColor: DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant,
+                                iconColor: DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant,
+                              ),
+                            )
+                          : DigitElevatedButton(
                               onPressed: (projectBeneficiaries ?? []).isEmpty
                                   ? null
                                   : () {
@@ -305,13 +312,10 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      if ((tasks ?? []).isEmpty) {
-                                        // context.router
-                                        //     .push(EligibilityChecklistViewRoute(
-                                        //   projectBeneficiaryClientReferenceId:
-                                        //       projectBeneficiaryClientReferenceId,
-                                        //   individual: individual,
-                                        // ));
+                                      if ((tasks ?? []).isEmpty ||
+                                          isSMCDelivered(tasks)) {
+                                        context.router.push(
+                                            CustomDeliverInterventionHeadRoute());
                                       } else {
                                         context.router
                                             .push(BeneficiaryDetailsRoute());
@@ -319,27 +323,99 @@ class CustomMemberCardSMC extends StatelessWidget {
                                     },
                               child: Center(
                                 child: Text(
-                                  allDosesDelivered(
-                                            tasks,
-                                            context.selectedCycle,
-                                            sideEffects,
-                                            individual,
-                                          ) &&
-                                          !checkStatusSMC(
-                                            tasks,
-                                            context.selectedCycle,
-                                          )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
-                                      : localizations.translate(
-                                          i18_local.householdOverView
-                                              .householdOverViewActionTextSMC,
-                                        ),
+                                  localizations.translate(
+                                    i18_local.householdOverView
+                                        .headBednetDeliveryAction,
+                                  ),
                                 ),
                               ),
                             )
+                      : const Offstage(),
+                  (isNotEligible ||
+                              isBeneficiaryRefused ||
+                              isBeneficiaryIneligible ||
+                              isBeneficiaryReferred) &&
+                          checkStatusSMC(tasks, context.selectedCycle)
+                      ? isNotEligible
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: DigitIconButton(
+                                icon: Icons.info_rounded,
+                                iconText: localizations.translate(
+                                  i18_local.householdOverView
+                                      .tracomaDeliveredNotEligible,
+                                ),
+                                iconSize: 20,
+                                iconTextColor:
+                                    DigitTheme.instance.colorScheme.error,
+                                iconColor:
+                                    DigitTheme.instance.colorScheme.error,
+                              ),
+                            )
+                          : Offstage()
+                      : !isNotEligible
+                          ? isSMCDelivered(tasks)
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DigitIconButton(
+                                    icon: Icons.info_rounded,
+                                    iconText: localizations.translate(
+                                      i18_local.householdOverView
+                                          .tracomaDeliveredSuccess,
+                                    ),
+                                    iconSize: 20,
+                                    iconTextColor: DigitTheme
+                                        .instance.colorScheme.onSurfaceVariant,
+                                    iconColor: DigitTheme
+                                        .instance.colorScheme.onSurfaceVariant,
+                                  ),
+                                )
+                              : DigitElevatedButton(
+                                  onPressed: (projectBeneficiaries ?? [])
+                                          .isEmpty
+                                      ? null
+                                      : () {
+                                          final bloc = context
+                                              .read<HouseholdOverviewBloc>();
+
+                                          bloc.add(
+                                            HouseholdOverviewEvent
+                                                .selectedIndividual(
+                                              individualModel: individual,
+                                            ),
+                                          );
+                                          bloc.add(HouseholdOverviewReloadEvent(
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!,
+                                            projectBeneficiaryType:
+                                                RegistrationDeliverySingleton()
+                                                        .beneficiaryType ??
+                                                    BeneficiaryType.individual,
+                                          ));
+
+                                          if ((tasks ?? []).isEmpty ||
+                                              isHeadBednetDelivered(tasks)) {
+                                            context.router.push(
+                                                EligibilityChecklistViewRoute(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              individual: individual,
+                                            ));
+                                          } else {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          }
+                                        },
+                                  child: Center(
+                                    child: Text(
+                                      localizations.translate(
+                                        i18_local.householdOverView
+                                            .tracomaDeliveryAction,
+                                      ),
+                                    ),
+                                  ),
+                                )
                           : const Offstage(),
                 ],
               ),

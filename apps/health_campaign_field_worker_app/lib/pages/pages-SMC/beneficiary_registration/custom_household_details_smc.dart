@@ -461,8 +461,8 @@ class CustomHouseHoldDetailsSMCPageState
                               editHousehold: (value) => localizations
                                   .translate(i18.common.coreCommonSave),
                             ) ??
-                            localizations
-                                .translate(i18.householdDetails.actionLabel),
+                            localizations.translate(
+                                i18_local.householdDetails.actionLabelTracoma),
                       ),
                     ),
                   ),

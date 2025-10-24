@@ -1,5 +1,6 @@
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -56,6 +57,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_bednet.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -70,6 +72,7 @@ class HomeSMCPage extends LocalizedStatefulWidget {
 
 class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool skipProgressBar = false;
+  bool _isCardExpanded = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
   @override
@@ -171,12 +174,70 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBarSMC(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: spacer2,
                         ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
+                        child: Column(
+                          children: [
+                            CustomBeneficiaryProgressBarSMC(
+                              label: localizations.translate(
+                                i18.home.progressIndicatorTitleTracoma,
+                              ),
+                              prefixLabel: localizations.translate(
+                                i18.home.progressIndicatorPrefixLabel,
+                              ),
+                            ),
+                            if (_isCardExpanded)
+                              CustomBeneficiaryProgressBarBednet(
+                                label: localizations.translate(
+                                  i18.home.progressIndicatorTitleHeadBednet,
+                                ),
+                                prefixLabel: localizations.translate(
+                                  i18.home.progressIndicatorPrefixLabel,
+                                ),
+                              ),
+                            Container(
+                              height: 24,
+                              margin: const EdgeInsets.all(4),
+                              child: Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _isCardExpanded = !_isCardExpanded;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        _isCardExpanded
+                                            ? localizations
+                                                .translate(i18.home.close)
+                                            : localizations
+                                                .translate(i18.home.seeMore),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                              Color.fromARGB(255, 251, 154, 7),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Icon(
+                                        _isCardExpanded
+                                            ? Icons.keyboard_arrow_up
+                                            : Icons.keyboard_arrow_down,
+                                        size: 20,
+                                        color: Colors.orange,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
               ],
@@ -563,22 +624,6 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
-
-    widgetList.add(homeShowcaseData.db.buildWith(
-      child: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.home.db,
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
-              ),
-            ),
-          );
-        },
-      ),
-    ));
 
     return _HomeItemDataModel(
       widgetList,

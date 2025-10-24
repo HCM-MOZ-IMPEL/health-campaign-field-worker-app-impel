@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -20,7 +21,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
 import '../../../utils/utils.dart' as utils;
+import '../../../utils/utils_smc/utils_smc.dart' as utils_smc;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
@@ -52,6 +55,7 @@ class CustomIndividualDetailsSMCPageState
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
   static const _beneficiaryIdKey = 'beneficiaryId';
+  static const _heightKey = 'height';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -162,13 +166,15 @@ class CustomIndividualDetailsSMCPageState
                                   : LocalityModel(code: code, name: bname);
 
                               String localityCode = locality!.code;
+                              final userId = RegistrationDeliverySingleton()
+                                  .loggedInUserUuid;
 
-                              beneficiaryId = {};
-                              //     await UniqueIdGeneration().generateUniqueId(
-                              //   localityCode: localityCode,
-                              //   loggedInUserId: context.loggedInUserUuid,
-                              //   returnCombinedIds: false,
-                              // );
+                              beneficiaryId =
+                                  await UniqueIdGeneration().generateUniqueId(
+                                localityCode: localityCode,
+                                loggedInUserId: userId!,
+                                returnCombinedIds: false,
+                              );
 
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
@@ -185,8 +191,6 @@ class CustomIndividualDetailsSMCPageState
                                       .setErrors({'': true});
                                 });
                               }
-                              final userId = RegistrationDeliverySingleton()
-                                  .loggedInUserUuid;
                               final projectId =
                                   RegistrationDeliverySingleton().projectId;
                               form.markAllAsTouched();
@@ -266,8 +270,8 @@ class CustomIndividualDetailsSMCPageState
                                       context,
                                       form: form,
                                       oldIndividual: null,
-                                      beneficiaryId: beneficiaryId!.first);
-                                  isEditIndividual = false;
+                                      beneficiaryId: beneficiaryId?.first);
+                                  // isEditIndividual = false;
                                   final boundary =
                                       RegistrationDeliverySingleton().boundary;
 
@@ -344,6 +348,7 @@ class CustomIndividualDetailsSMCPageState
                                     context,
                                     form: form,
                                     oldIndividual: individualModel,
+                                    beneficiaryId: beneficiaryId?.first,
                                   );
 
                                   final tag =
@@ -412,9 +417,10 @@ class CustomIndividualDetailsSMCPageState
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
-                                      context,
-                                      form: form,
-                                      beneficiaryId: beneficiaryId!.first);
+                                    context,
+                                    form: form,
+                                    beneficiaryId: beneficiaryId?.first,
+                                  );
 
                                   bloc.add(
                                     BeneficiaryRegistrationAddMemberEvent(
@@ -521,15 +527,15 @@ class CustomIndividualDetailsSMCPageState
                             },
                           ),
                           // solution customisation
-                          // Offstage(
-                          //   offstage: !widget.isHeadOfHousehold,
-                          //   child: DigitCheckbox(
-                          //     label: localizations.translate(
-                          //       i18.individualDetails.checkboxLabelText,
-                          //     ),
-                          //     value: widget.isHeadOfHousehold,
-                          //   ),
-                          // ),
+                          Offstage(
+                            offstage: !widget.isHeadOfHousehold,
+                            child: DigitCheckbox(
+                              label: localizations.translate(
+                                i18.individualDetails.checkboxLabelText,
+                              ),
+                              value: widget.isHeadOfHousehold,
+                            ),
+                          ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -628,6 +634,40 @@ class CustomIndividualDetailsSMCPageState
                           ),
                         ]),
                         Offstage(
+                          offstage: false,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding - 4, 0, kPadding - 4, 0),
+                            child: DigitTextFormField(
+                              keyboardType: TextInputType.number,
+                              formControlName: _heightKey,
+                              maxLength: 3,
+                              isRequired: true,
+                              label: localizations.translate(
+                                i18_local
+                                    .individualDetails.heightLabelTextTracoma,
+                              ),
+                              validationMessages: {
+                                'invalidHeight': (object) =>
+                                    localizations.translate(i18_local
+                                        .individualDetails
+                                        .heightInvalidFormatValidationMessageSMC),
+                                'maxLength': (object) =>
+                                    localizations.translate(i18_local
+                                        .individualDetails
+                                        .heightLengthValidationMessageSMC),
+                                'minLength': (object) =>
+                                    localizations.translate(i18_local
+                                        .individualDetails
+                                        .heightMinLengthValidationMessageSMC),
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                            ),
+                          ),
+                        ),
+                        Offstage(
                           offstage: !widget.isHeadOfHousehold,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(
@@ -662,29 +702,29 @@ class CustomIndividualDetailsSMCPageState
                             ),
                           ),
                         ),
-                        Offstage(
-                          offstage: widget.isHeadOfHousehold,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding - 4, 0, kPadding - 4, 0),
-                            child: DigitTextFormField(
-                              formControlName: _beneficiaryIdKey,
-                              label: localizations.translate(
-                                i18_local.individualDetails
-                                    .previousCycleBeneficiaryLabelText,
-                              ),
-                              validationMessages: {
-                                'min3': (object) => localizations
-                                    .translate(
-                                        i18_local.common.min3CharsRequired)
-                                    .replaceAll('{}', ''),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                        ),
+                        // Offstage(
+                        //   offstage: widget.isHeadOfHousehold,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.fromLTRB(
+                        //         kPadding - 4, 0, kPadding - 4, 0),
+                        //     child: DigitTextFormField(
+                        //       formControlName: _beneficiaryIdKey,
+                        //       label: localizations.translate(
+                        //         i18_local.individualDetails
+                        //             .previousCycleBeneficiaryLabelText,
+                        //       ),
+                        //       validationMessages: {
+                        //         'min3': (object) => localizations
+                        //             .translate(
+                        //                 i18_local.common.min3CharsRequired)
+                        //             .replaceAll('{}', ''),
+                        //         'maxLength': (object) => localizations
+                        //             .translate(i18.common.maxCharsRequired)
+                        //             .replaceAll('{}', maxLength.toString()),
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -754,6 +794,7 @@ class CustomIndividualDetailsSMCPageState
         : null;
 
     identifier ??= IdentifierModel(
+      individualClientReferenceId: individual.clientReferenceId,
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
@@ -795,7 +836,7 @@ class CustomIndividualDetailsSMCPageState
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
-      identifiers: isEditIndividual
+      identifiers: isEditIndividual && identifier.identifierId != null
           ? identifiers
           : [
               identifier.copyWith(
@@ -805,16 +846,22 @@ class CustomIndividualDetailsSMCPageState
             ],
     );
 
-    final previousBeneficiaryId =
-        form.control(_beneficiaryIdKey).value as String?;
+    // final previousBeneficiaryId =
+    //     form.control(_beneficiaryIdKey).value as String?;
+    final height = form.control(_heightKey).value as String?;
 
+    // individual = individual.copyWith(
+    //     additionalFields:
+    //         previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
+    //             ? IndividualAdditionalFields(version: 1, fields: [
+    //                 AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
+    //               ])
+    //             : null);
     individual = individual.copyWith(
-        additionalFields:
-            previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
-                ? IndividualAdditionalFields(version: 1, fields: [
-                    AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
-                  ])
-                : null);
+        additionalFields: height != null && height.isNotEmpty
+            ? IndividualAdditionalFields(
+                version: 1, fields: [AdditionalField(_heightKey, height)])
+            : null);
 
     return individual;
   }
@@ -844,9 +891,9 @@ class CustomIndividualDetailsSMCPageState
       },
     );
 
-    final beneficiaryId = individual?.additionalFields?.fields
-        .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
-        ?.value;
+    // final beneficiaryId = individual?.additionalFields?.fields
+    //     .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
+    //     ?.value;
 
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
@@ -873,10 +920,20 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _beneficiaryIdKey: FormControl<String>(validators: [
-        Validators.delegate(utils.CustomValidator.requiredMin3),
-        Validators.maxLength(200),
-      ], value: beneficiaryId),
+      // _beneficiaryIdKey: FormControl<String>(validators: [
+      //   Validators.delegate(utils.CustomValidator.requiredMin3),
+      //   Validators.maxLength(200),
+      // ], value: beneficiaryId),
+      _heightKey: FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.maxLength(3),
+          Validators.delegate(utils_smc.CustomValidator.validateHeight),
+        ],
+        value: individual?.additionalFields?.fields
+            .firstWhereOrNull((element) => element.key == _heightKey)
+            ?.value,
+      ),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
         Validators.delegate(utils.CustomValidator.validMobileNumber),

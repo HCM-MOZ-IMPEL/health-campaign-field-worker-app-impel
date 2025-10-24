@@ -24,6 +24,7 @@ import 'package:survey_form/survey_form.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
 @RoutePage()
@@ -363,6 +364,17 @@ class CustomHouseholdOverviewSMCPageState
                                                       DateTime.now()
                                                           .millisecondsSinceEpoch,
                                             );
+                                    final item = RegistrationDeliverySingleton()
+                                        .projectType
+                                        ?.cycles?[0]
+                                        .deliveries?[0];
+                                    final conditions = fetchProductVariantSMC(
+                                            item,
+                                            e,
+                                            state.householdMemberWrapper
+                                                .household)
+                                        ?.condition
+                                        ?.split('and');
 
                                     final isBeneficiaryRefused =
                                         checkIfBeneficiaryRefused(
@@ -522,23 +534,25 @@ class CustomHouseholdOverviewSMCPageState
                                           ),
                                         );
                                       },
-                                      isNotEligible: RegistrationDeliverySingleton()
-                                                  .projectType
-                                                  ?.cycles !=
-                                              null
-                                          ? !checkEligibilityForAgeAndSideEffect(
-                                              DigitDOBAgeConvertor(
-                                                years: ageInYears,
-                                                months: ageInMonths,
-                                              ),
-                                              RegistrationDeliverySingleton()
-                                                  .projectType,
-                                              (taskData ?? []).isNotEmpty
-                                                  ? taskData?.lastOrNull
-                                                  : null,
-                                              sideEffectData,
-                                            )
-                                          : false,
+                                      isNotEligible: conditions == null
+                                          ? true
+                                          : RegistrationDeliverySingleton()
+                                                      .projectType
+                                                      ?.cycles !=
+                                                  null
+                                              ? !checkEligibilityForAgeAndSideEffect(
+                                                  DigitDOBAgeConvertor(
+                                                    years: ageInYears,
+                                                    months: ageInMonths,
+                                                  ),
+                                                  RegistrationDeliverySingleton()
+                                                      .projectType,
+                                                  (taskData ?? []).isNotEmpty
+                                                      ? taskData?.lastOrNull
+                                                      : null,
+                                                  sideEffectData,
+                                                )
+                                              : false,
                                       name:
                                           '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                       years: (e.dateOfBirth == null

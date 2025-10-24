@@ -1,3 +1,5 @@
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
@@ -37,6 +39,7 @@ import '../pages/pages-Bednet/beneficiary/custom_refused_delivery_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/dose_administered_verification_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/consent_household_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/past_delivery_smc.dart';
+import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 
 import '../pages/pages-Bednet/beneficiary_registration/custom_beneficiary_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_house_details_bednet.dart';
@@ -69,6 +72,7 @@ import '../pages/pages-Bednet/inventory_management/view_record_lga.dart';
 import '../pages/pages-Bednet/inventory_management/view_stock_records.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
+import '../pages/pages-SMC/beneficiary/conduct_mobility_control_assessment.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 
@@ -127,6 +131,7 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_head.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
@@ -170,6 +175,7 @@ part 'app_router.gr.dart';
     DashboardRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -850,6 +856,10 @@ class AppRouter extends _$AppRouter {
                     ),
                     AutoRoute(
                       page: DeliverInterventionRoute.page,
+                      path: 'deliver-intervention-head',
+                    ),
+                    AutoRoute(
+                      page: DeliverInterventionRoute.page,
                       path: 'deliver-intervention',
                     ),
                     AutoRoute(
@@ -860,10 +870,17 @@ class AppRouter extends _$AppRouter {
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention-smc',
                     ),
-                    // AutoRoute(
-                    //   page: EligibilityChecklistViewRoute.page,
-                    //   path: 'eligibility-checklist',
-                    // ),
+                    AutoRoute(
+                        page: CustomDeliverInterventionHeadRoute.page,
+                        path: 'custom-deliver-intervention-head'),
+                    RedirectRoute(
+                      path: 'deliver-intervention-head',
+                      redirectTo: 'custom-deliver-intervention-head',
+                    ),
+                    AutoRoute(
+                      page: EligibilityChecklistViewRoute.page,
+                      path: 'eligibility-checklist',
+                    ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
@@ -937,6 +954,9 @@ class AppRouter extends _$AppRouter {
                       page: DoseAdministeredVerificationRoute.page,
                       path: 'dose-administered-verification',
                     ),
+                    AutoRoute(
+                        page: ConductMobilityControlAssessmentRoute.page,
+                        path: 'conduct-mobility-control-assessment'),
                   ],
                 ),
               ]),

@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
@@ -119,6 +120,8 @@ class Constants {
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
   static const String bednetLabel = 'BEDNET';
+  static const String height = 'height';
+  static const String weight = 'weight';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
@@ -143,6 +146,10 @@ class Constants {
   static const String blueVAS = "Blue VAS";
   static const String redVAS = "Red VAS";
   static const int apiCallLimit = 1000;
+  static const String isSMCDelivered = 'smc_delivered';
+  static const String headBednetDeliver = 'head_bednet_delivery';
+  static const String trueString = 'true';
+  static const String smcDeliver = 'smc_delivered';
 
   static const String bednetSKU = "Redes Mosquiteiras";
 
@@ -340,7 +347,7 @@ class Constants {
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);
-
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);

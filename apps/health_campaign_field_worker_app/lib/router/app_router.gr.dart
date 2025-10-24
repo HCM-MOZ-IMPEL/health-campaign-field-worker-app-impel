@@ -98,6 +98,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ConductMobilityControlAssessmentRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConductMobilityControlAssessmentPage(),
+      );
+    },
     ConsentHouseholdAcknowledgementBednetRoute.name: (routeData) {
       final args =
           routeData.argsAs<ConsentHouseholdAcknowledgementBednetRouteArgs>(
@@ -335,6 +341,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomDeliverInterventionBednetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    CustomDeliverInterventionHeadRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionHeadRouteArgs>(
+          orElse: () => const CustomDeliverInterventionHeadRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionHeadPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -1092,6 +1110,21 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    EligibilityChecklistViewRoute.name: (routeData) {
+      final args = routeData.argsAs<EligibilityChecklistViewRouteArgs>(
+          orElse: () => const EligibilityChecklistViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EligibilityChecklistViewPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          individual: args.individual,
+          projectBeneficiaryClientReferenceId:
+              args.projectBeneficiaryClientReferenceId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HomeBednetRoute.name: (routeData) {
       final args = routeData.argsAs<HomeBednetRouteArgs>(
           orElse: () => const HomeBednetRouteArgs());
@@ -1329,6 +1362,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DashboardRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
+    ...SurveyFormRoute().pagesMap,
   };
 }
 
@@ -1621,6 +1655,20 @@ class ComplaintsAcknowledgementRouteArgs {
   String toString() {
     return 'ComplaintsAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [ConductMobilityControlAssessmentPage]
+class ConductMobilityControlAssessmentRoute extends PageRouteInfo<void> {
+  const ConductMobilityControlAssessmentRoute({List<PageRouteInfo>? children})
+      : super(
+          ConductMobilityControlAssessmentRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ConductMobilityControlAssessmentRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -2486,6 +2534,50 @@ class CustomDeliverInterventionBednetRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverInterventionHeadPage]
+class CustomDeliverInterventionHeadRoute
+    extends PageRouteInfo<CustomDeliverInterventionHeadRouteArgs> {
+  CustomDeliverInterventionHeadRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionHeadRoute.name,
+          args: CustomDeliverInterventionHeadRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionHeadRoute';
+
+  static const PageInfo<CustomDeliverInterventionHeadRouteArgs> page =
+      PageInfo<CustomDeliverInterventionHeadRouteArgs>(name);
+}
+
+class CustomDeliverInterventionHeadRouteArgs {
+  const CustomDeliverInterventionHeadRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionHeadRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
@@ -5250,6 +5342,61 @@ class DoseAdministeredVerificationRouteArgs {
   @override
   String toString() {
     return 'DoseAdministeredVerificationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [EligibilityChecklistViewPage]
+class EligibilityChecklistViewRoute
+    extends PageRouteInfo<EligibilityChecklistViewRouteArgs> {
+  EligibilityChecklistViewRoute({
+    Key? key,
+    String? referralClientRefId,
+    IndividualModel? individual,
+    String? projectBeneficiaryClientReferenceId,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EligibilityChecklistViewRoute.name,
+          args: EligibilityChecklistViewRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            individual: individual,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EligibilityChecklistViewRoute';
+
+  static const PageInfo<EligibilityChecklistViewRouteArgs> page =
+      PageInfo<EligibilityChecklistViewRouteArgs>(name);
+}
+
+class EligibilityChecklistViewRouteArgs {
+  const EligibilityChecklistViewRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.individual,
+    this.projectBeneficiaryClientReferenceId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? referralClientRefId;
+
+  final IndividualModel? individual;
+
+  final String? projectBeneficiaryClientReferenceId;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'EligibilityChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, appLocalizations: $appLocalizations}';
   }
 }
 

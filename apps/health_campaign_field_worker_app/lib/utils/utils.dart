@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
+
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -598,6 +600,7 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
+    Future(() => surveyForm_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
