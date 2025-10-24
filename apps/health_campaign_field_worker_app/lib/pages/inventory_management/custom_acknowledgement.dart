@@ -10,10 +10,10 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/localized.dart';
-import '../../../router/app_router.dart';
-import '../../../widgets/digit_ui_component/custom_panel_card.dart';
+import '../../router/app_router.dart';
+import '../../widgets/digit_ui_component/custom_panel_card.dart';
 
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomAcknowledgementPage extends LocalizedStatefulWidget {

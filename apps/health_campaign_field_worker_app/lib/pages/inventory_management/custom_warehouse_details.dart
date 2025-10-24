@@ -15,15 +15,15 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../../utils/constants.dart';
-import '../../../utils/extensions/extensions.dart';
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
 
-import '../../../widgets/custom_back_navigation.dart';
+import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()
 class CustomWarehouseDetailsBednetPage extends LocalizedStatefulWidget {

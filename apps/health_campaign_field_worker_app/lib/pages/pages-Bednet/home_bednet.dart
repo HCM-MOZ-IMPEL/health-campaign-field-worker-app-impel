@@ -541,9 +541,9 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
-      if (!context.isDistributor) i18.home.manageStockLabel,
-      if (!context.isDistributor) i18.home.stockReconciliationLabel,
-      if (!context.isDistributor) i18.home.viewReportsLabel,
+      // if (!context.isDistributor) i18.home.manageStockLabel,
+      // if (!context.isDistributor) i18.home.stockReconciliationLabel,
+      // if (!context.isDistributor) i18.home.viewReportsLabel,
       i18.home.mySurveyForm,
       i18_local.home.vehicleTrackingLabel,
       i18.home.closedHouseHoldLabel,

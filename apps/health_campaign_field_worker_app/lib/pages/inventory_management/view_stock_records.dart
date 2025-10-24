@@ -12,7 +12,7 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../../utils/utils.dart';
+import '../../utils/utils.dart';
 
 @RoutePage()
 class ViewStockRecordsPage extends LocalizedStatefulWidget {

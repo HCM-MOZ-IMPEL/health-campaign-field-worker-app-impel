@@ -24,6 +24,8 @@ import 'package:survey_form/router/survey_form_router.gm.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/inventory_management/custom_manage_stock.dart';
+import '../pages/inventory_management/view_transactions_page.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-Bednet/acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/bednetwrapper.dart';
@@ -59,17 +61,17 @@ import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
 
-import '../pages/pages-Bednet/inventory_management/custom_acknowledgement.dart';
-import '../pages/pages-Bednet/inventory_management/custom_inventory_facility_selection.dart';
-import '../pages/pages-Bednet/inventory_management/custom_min_number.dart';
-import '../pages/pages-Bednet/inventory_management/custom_stock_details.dart';
-import '../pages/pages-Bednet/inventory_management/custom_warehouse_details.dart';
-import '../pages/pages-Bednet/inventory_management/qr_scanner.dart';
-import '../pages/pages-Bednet/inventory_management/qrscanner.dart';
-import '../pages/pages-Bednet/inventory_management/view_all_transactions_page.dart';
-import '../pages/pages-Bednet/inventory_management/view_record_cdd.dart';
-import '../pages/pages-Bednet/inventory_management/view_record_lga.dart';
-import '../pages/pages-Bednet/inventory_management/view_stock_records.dart';
+import '../pages/inventory_management/custom_acknowledgement.dart';
+import '../pages/inventory_management/custom_inventory_facility_selection.dart';
+import '../pages/inventory_management/custom_min_number.dart';
+import '../pages/inventory_management/custom_stock_details.dart';
+import '../pages/inventory_management/custom_warehouse_details.dart';
+import '../pages/inventory_management/qr_scanner.dart';
+import '../pages/inventory_management/qrscanner.dart';
+import '../pages/inventory_management/view_all_transactions_page.dart';
+import '../pages/inventory_management/view_record_cdd.dart';
+import '../pages/inventory_management/view_record_lga.dart';
+import '../pages/inventory_management/view_stock_records.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
 import '../pages/pages-SMC/beneficiary/conduct_mobility_control_assessment.dart';
@@ -286,19 +288,19 @@ class AppRouter extends _$AppRouter {
                   //   path: 'warehouse-details',
                   //   // initial: true,
                   // ),
-                  AutoRoute(
-                    page: CustomWarehouseDetailsRoute.page,
-                    path: 'custom-warehouse-details',
-                    initial: true,
-                  ),
+                  // AutoRoute(
+                  //   page: CustomWarehouseDetailsRoute.page,
+                  //   path: 'custom-warehouse-details',
+                  //   initial: true,
+                  // ),
                   AutoRoute(
                     page: StockDetailsRoute.page,
                     path: 'details',
                   ),
-                  AutoRoute(
-                    page: CustomStockDetailsRoute.page,
-                    path: 'custom-details',
-                  ),
+                  // AutoRoute(
+                  //   page: CustomStockDetailsRoute.page,
+                  //   path: 'custom-details',
+                  // ),
                   RedirectRoute(
                     path: 'details',
                     redirectTo: 'custom-details',
@@ -706,6 +708,37 @@ class AppRouter extends _$AppRouter {
           ),
           AutoRoute(page: ProfileRoute.page, path: 'profile'),
           AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          // Inventory Routes
+          AutoRoute(
+            page: CustomManageStocksRoute.page,
+            path: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+            page: QRScannerRoute.page,
+            path: 'qr-scanner',
+          ),
+          AutoRoute(
+            page: ReceiveStockRoute.page,
+            path: 'custom-stock-view-lga',
+          ),
+          AutoRoute(
+            page: ViewStockRecordsCDDRoute.page,
+            path: 'custom-stock-view-lga',
+          ),
+
+          AutoRoute(
+            page: CustomMinNumberRoute.page,
+            path: 'custom-min-number',
+          ),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
+          AutoRoute(
+            page: ViewTransactionsRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
+
           AutoRoute(
             page: BeneficiariesReportRoute.page,
             path: 'beneficiary-downsync-report',
@@ -1288,6 +1321,37 @@ class AppRouter extends _$AppRouter {
               path: 'boundary-selection-view'),
           AutoRoute(page: ProfileRoute.page, path: 'profile'),
           AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+          // Inventory Routes
+          AutoRoute(
+            page: CustomManageStocksRoute.page,
+            path: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+            page: QRScannerRoute.page,
+            path: 'qr-scanner',
+          ),
+          AutoRoute(
+            page: ReceiveStockRoute.page,
+            path: 'custom-stock-view-lga',
+          ),
+          AutoRoute(
+            page: ViewStockRecordsCDDRoute.page,
+            path: 'custom-stock-view-lga',
+          ),
+
+          AutoRoute(
+            page: CustomMinNumberRoute.page,
+            path: 'custom-min-number',
+          ),
+          AutoRoute(
+            page: BeneficiariesReportRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
+          AutoRoute(
+            page: ViewTransactionsRoute.page,
+            path: 'beneficiary-downsync-report',
+          ),
+
           AutoRoute(
             page: BeneficiariesReportRoute.page,
             path: 'beneficiary-downsync-report',

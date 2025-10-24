@@ -11,9 +11,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/widgets/localized.dart';
-import '../../../data/repositories/local/inventory_management/custom_stock.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/extensions/extensions.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
+import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
 
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;

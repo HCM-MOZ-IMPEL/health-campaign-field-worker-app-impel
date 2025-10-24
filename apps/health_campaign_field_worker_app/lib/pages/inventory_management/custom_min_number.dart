@@ -17,9 +17,9 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
-import '../../../data/repositories/local/inventory_management/custom_stock.dart';
-import '../../../router/app_router.dart';
-import '../../../widgets/custom_back_navigation.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
+import '../../router/app_router.dart';
+import '../../widgets/custom_back_navigation.dart';
 
 import 'package:logger/logger.dart';
 
