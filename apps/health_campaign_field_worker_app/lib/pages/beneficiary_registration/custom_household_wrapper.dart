@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
@@ -16,6 +17,7 @@ import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/survey_form.dart';
 
 @RoutePage()
 class CustomHouseholdWrapperPage extends StatelessWidget {
@@ -55,9 +57,10 @@ class CustomHouseholdWrapperPage extends StatelessWidget {
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
-
-    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
-        ServiceDefinitionSearchModel>(context);
+    final serviceDataRepo =
+        context.repository<ServiceModel, ServiceSearchModel>(context);
+    final individualGlobalSearch =
+        context.read<IndividualGlobalSearchRepository>();
 
     return MultiBlocProvider(
       providers: [
@@ -101,8 +104,9 @@ class CustomHouseholdWrapperPage extends StatelessWidget {
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
-              beneficiaryType:
-                  RegistrationDeliverySingleton().beneficiaryType!),
+              individualGlobalSearchRepository: individualGlobalSearch,
+              beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+              serviceDataRepository: serviceDataRepo),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

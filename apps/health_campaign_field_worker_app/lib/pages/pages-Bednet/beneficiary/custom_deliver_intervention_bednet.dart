@@ -152,7 +152,6 @@ class CustomDeliverInterventionBednetPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     List<StepsModel> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
         return StepsModel(
@@ -248,7 +247,13 @@ class CustomDeliverInterventionBednetPageState
                               fetched: (productVariantsValue) {
                                 final variant = productState.whenOrNull(
                                   fetched: (productVariants) {
-                                    return productVariants;
+                                    final filteredProductVariants =
+                                        productVariants
+                                            .where((product) =>
+                                                product.sku !=
+                                                Constants.vechileSKU)
+                                            .toList();
+                                    return filteredProductVariants;
                                   },
                                 );
                                 return BlocBuilder<DigitScannerBloc,
@@ -637,130 +642,15 @@ class CustomDeliverInterventionBednetPageState
                                                           kPadding,
                                                           0),
                                                       child: scannerState
-                                                              .qrCodes
+                                                              .barCodes
                                                               .isNotEmpty
-                                                          ? Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      3,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      i18.deliverIntervention
-                                                                          .voucherCode,
-                                                                    ),
-                                                                    style: theme
-                                                                        .textTheme
-                                                                        .headlineSmall,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                    bottom:
-                                                                        kPadding *
-                                                                            2,
-                                                                  ),
-                                                                  child:
-                                                                      IconButton(
-                                                                    color: theme
-                                                                        .colorScheme
-                                                                        .secondary,
-                                                                    icon: const Icon(
-                                                                        Icons
-                                                                            .edit),
-                                                                    onPressed:
-                                                                        () {
-                                                                      final quantity =
-                                                                          (((form.control(_quantityDistributedKey) as FormArray).value)?[0])
-                                                                              as int;
-
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .push(
-                                                                        //[TODO: Add the route to auto_route]
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              CustomDigitScannerPage(
-                                                                            quantity:
-                                                                                quantity,
-                                                                            isGS1code:
-                                                                                true,
-                                                                            singleValue:
-                                                                                quantity < 2,
-                                                                            isEditEnabled:
-                                                                                true,
-                                                                            manualEnabled:
-                                                                                false,
-                                                                          ),
-                                                                          settings:
-                                                                              const RouteSettings(name: '/qr-scanner'),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ],
-
-                                                              // ignore: no-empty-block
-                                                            )
-                                                          : DigitOutlineIconButton(
-                                                              buttonStyle:
-                                                                  OutlinedButton
-                                                                      .styleFrom(
-                                                                shape:
-                                                                    const RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .zero,
-                                                                ),
-                                                              ),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .push(
-                                                                  // [TODO: Add the route to auto_route]
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            CustomDigitScannerPage(
-                                                                      quantity:
-                                                                          bednetCount,
-                                                                      isGS1code:
-                                                                          true,
-                                                                      singleValue:
-                                                                          bednetCount <
-                                                                              2,
-                                                                      isEditEnabled:
-                                                                          true,
-                                                                      manualEnabled:
-                                                                          false,
-                                                                    ),
-                                                                    settings:
-                                                                        const RouteSettings(
-                                                                            name:
-                                                                                '/qr-scanner'),
-                                                                  ),
-                                                                );
-                                                              },
-                                                              icon:
-                                                                  Icons.qr_code,
-                                                              label:
-                                                                  localizations
-                                                                      .translate(
-                                                                i18_local
-                                                                    .deliverIntervention
-                                                                    .scanBednet,
-                                                              ),
-                                                            ),
+                                                          ? _scannerButtonWithQRCode(
+                                                              context,
+                                                              form,
+                                                              scannerState
+                                                                  .barCodes)
+                                                          : _scannerButtonWithoutQRCode(
+                                                              context),
                                                     ),
                                                   ],
                                                 ),
@@ -843,6 +733,85 @@ class CustomDeliverInterventionBednetPageState
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _scannerButtonWithQRCode(
+      BuildContext context, FormGroup form, List<GS1Barcode> gs1CodeList) {
+    ThemeData theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 3,
+          child: Text(
+            localizations.translate(
+              i18.deliverIntervention.voucherCode,
+            ),
+            style: theme.textTheme.headlineSmall,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: kPadding * 2,
+          ),
+          child: IconButton(
+            color: theme.colorScheme.secondary,
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              final quantity =
+                  (((form.control(_quantityDistributedKey) as FormArray)
+                      .value)?[0]) as int;
+
+              Navigator.of(context).push(
+                //[TODO: Add the route to auto_route]
+                MaterialPageRoute(
+                  builder: (context) => CustomDigitScannerPage(
+                      quantity: quantity,
+                      isGS1code: true,
+                      singleValue: quantity < 2,
+                      isEditEnabled: true,
+                      manualEnabled: true,
+                      gs1CodeList: gs1CodeList),
+                  settings: const RouteSettings(name: '/qr-scanner'),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+
+      // ignore: no-empty-block
+    );
+  }
+
+  Widget _scannerButtonWithoutQRCode(BuildContext context) {
+    return DigitOutlineIconButton(
+      buttonStyle: OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          // [TODO: Add the route to auto_route]
+          MaterialPageRoute(
+            builder: (context) => CustomDigitScannerPage(
+              quantity: bednetCount,
+              isGS1code: true,
+              singleValue: bednetCount < 2,
+              isEditEnabled: true,
+              manualEnabled: true,
+              gs1CodeList: const [],
+            ),
+            settings: const RouteSettings(name: '/qr-scanner'),
+          ),
+        );
+      },
+      icon: Icons.qr_code,
+      label: localizations.translate(
+        i18_local.deliverIntervention.scanBednet,
       ),
     );
   }

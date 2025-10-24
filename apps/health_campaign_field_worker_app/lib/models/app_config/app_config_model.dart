@@ -96,6 +96,10 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
     @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
     List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+    @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+    List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+    @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+    List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -333,6 +337,18 @@ class CallSupportList with _$CallSupportList {
 
   factory CallSupportList.fromJson(Map<String, dynamic> json) =>
       _$CallSupportListFromJson(json);
+}
+
+@freezed
+class VehicleTrackingReasons with _$VehicleTrackingReasons {
+  factory VehicleTrackingReasons({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _VehicleTrackingReasons;
+
+  factory VehicleTrackingReasons.fromJson(Map<String, dynamic> json) =>
+      _$VehicleTrackingReasonsFromJson(json);
 }
 
 @freezed

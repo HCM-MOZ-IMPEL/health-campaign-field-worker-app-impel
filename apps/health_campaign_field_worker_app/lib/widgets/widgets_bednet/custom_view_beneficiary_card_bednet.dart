@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/widgets/beneficiary/custom_beneficiary_card.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
@@ -160,7 +160,7 @@ class _CustomViewBeneficiaryCardBednetState
         ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAge(
+          DigitDOBAgeConvertor(
             years: ageInYears,
             months: ageInMonths,
           ),
@@ -266,7 +266,7 @@ class _CustomViewBeneficiaryCardBednetState
     ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAge(
+      DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
       ),

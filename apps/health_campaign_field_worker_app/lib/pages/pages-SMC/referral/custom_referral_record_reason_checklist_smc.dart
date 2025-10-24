@@ -15,6 +15,7 @@ import 'package:referral_reconciliation/blocs/referral_recon_service_definition.
 import 'package:referral_reconciliation/utils/i18_key_constants.dart' as i18;
 import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../utils/extensions/extensions.dart';
 
@@ -47,7 +48,7 @@ class _CustomReferralReasonChecklistSMCPageState
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -95,7 +96,7 @@ class _CustomReferralReasonChecklistSMCPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -355,7 +356,7 @@ class _CustomReferralReasonChecklistSMCPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -464,7 +465,7 @@ class _CustomReferralReasonChecklistSMCPageState
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -642,7 +643,7 @@ class _CustomReferralReasonChecklistSMCPageState
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

@@ -254,11 +254,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =
@@ -391,6 +391,26 @@ class MdmsRepository {
         ..active = e.active;
 
       return reasonTypes;
+    }).toList();
+
+    appConfiguration.vehicleTrackingTripReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripReasons?.map((e) {
+      final vehicleTrackingTripReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripReasons;
+    }).toList();
+
+    appConfiguration.vehicleTrackingTripEvaluationReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripEvaluationReasons?.map((e) {
+      final vehicleTrackingTripEvaluationReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripEvaluationReasons;
     }).toList();
 
     isar.writeTxnSync(() {

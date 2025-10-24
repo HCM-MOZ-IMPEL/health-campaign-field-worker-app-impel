@@ -18,6 +18,8 @@ import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../utils/utils.dart' as utils;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
@@ -161,12 +163,12 @@ class CustomIndividualDetailsSMCPageState
 
                               String localityCode = locality!.code;
 
-                              beneficiaryId =
-                                  await UniqueIdGeneration().generateUniqueId(
-                                localityCode: localityCode,
-                                loggedInUserId: context.loggedInUserUuid,
-                                returnCombinedIds: false,
-                              );
+                              beneficiaryId = {};
+                              //     await UniqueIdGeneration().generateUniqueId(
+                              //   localityCode: localityCode,
+                              //   loggedInUserId: context.loggedInUserUuid,
+                              //   returnCombinedIds: false,
+                              // );
 
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
@@ -251,10 +253,14 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   registrationDate,
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   final individual = _getIndividualModel(
                                       context,
@@ -323,8 +329,12 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   addressModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   projectBeneficiaryModel,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   isEditIndividual = true;
@@ -394,7 +404,11 @@ class CustomIndividualDetailsSMCPageState
                                 addMember: (
                                   addressModel,
                                   householdModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
@@ -838,7 +852,7 @@ class CustomIndividualDetailsSMCPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(CustomValidator.requiredMin),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
@@ -846,7 +860,7 @@ class CustomIndividualDetailsSMCPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(CustomValidator.requiredMin),
           Validators.maxLength(200),
         ],
         value: individual?.name?.familyName ?? '',
@@ -860,12 +874,12 @@ class CustomIndividualDetailsSMCPageState
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _beneficiaryIdKey: FormControl<String>(validators: [
-        utils.CustomValidator.requiredMin3,
+        Validators.delegate(utils.CustomValidator.requiredMin3),
         Validators.maxLength(200),
       ], value: beneficiaryId),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        utils.CustomValidator.validMobileNumber,
+        Validators.delegate(utils.CustomValidator.validMobileNumber),
         Validators.maxLength(9),
       ]),
     });

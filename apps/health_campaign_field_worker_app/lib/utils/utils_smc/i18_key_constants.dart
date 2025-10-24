@@ -635,6 +635,8 @@ class Home {
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
@@ -1224,7 +1226,7 @@ class IndividualDetails {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
-
+  String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';

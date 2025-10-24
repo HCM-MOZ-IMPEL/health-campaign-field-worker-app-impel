@@ -16,6 +16,8 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../models/entities/project_types.dart';
 
 part 'closed_household.freezed.dart';
@@ -58,11 +60,12 @@ class ClosedHouseholdBloc
     try {
       String localityCode = locality!.code;
 
-      Set<String> beneficiaryId = await UniqueIdGeneration().generateUniqueId(
-        localityCode: localityCode,
-        loggedInUserId: event.loggedInUserUuid!,
-        returnCombinedIds: false,
-      );
+      Set<String> beneficiaryId = {};
+      // await UniqueIdGeneration().generateUniqueId(
+      //   localityCode: localityCode,
+      //   loggedInUserId: event.loggedInUserUuid!,
+      //   returnCombinedIds: false,
+      // );
       var address = AddressModel(
         latitude: event.latitude,
         longitude: event.longitude,

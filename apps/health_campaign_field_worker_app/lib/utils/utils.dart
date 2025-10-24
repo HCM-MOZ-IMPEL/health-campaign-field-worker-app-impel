@@ -1,6 +1,9 @@
 library app_utils;
 
+import 'package:digit_data_model/data_model.init.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -41,13 +44,16 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
 import '../models/entities/project_types.dart';
 import '../models/entities/status.dart';
+import '../models/entities/vehicle_tracking/trip_actions.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
+
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -136,8 +142,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -187,6 +193,32 @@ String maskString(String input) {
 
 List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
   return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
+}
+
+String formatDateFromMillis(int millis) {
+  final date = DateTime.fromMillisecondsSinceEpoch(millis);
+  final day = date.day.toString().padLeft(2, '0');
+  final month = _monthShort(date.month);
+  final year = date.year;
+  return '$day $month $year';
+}
+
+String _monthShort(int month) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  return months[month - 1];
 }
 
 Timer makePeriodicTimer(
@@ -517,6 +549,47 @@ getSelectedLanguage(AppInitialized state, int index) {
   return isSelected;
 }
 
+String getSecondaryPartyValue(StockModel? stock) {
+  String value = stock?.receiverId ?? "";
+
+  if (stock != null) {
+    if ((stock.transactionType == "RECEIVED" && stock.senderType == "STAFF") ||
+        (stock.transactionType == "DISPATCHED" &&
+            stock.receiverType == "STAFF")) {
+      value = stock.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == "distributorName")
+              ?.value ??
+          "Delivery Team";
+    } else {
+      value = stock.transactionType == "RECEIVED"
+          ? 'FAC_${stock.senderId}'
+          : 'FAC_${stock.receiverId}';
+    }
+  }
+
+  return value;
+}
+
+String getEntryTypeLabel(StockModel? stock) {
+  String label =
+      '${i18_stock.stockDetails.receivedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+
+  if (stock != null) {
+    if (stock.transactionType == "RECEIVED" &&
+        stock.transactionReason == "RETURNED") {
+      label = i18_local.stockDetails.selectTransactingPartyReturnedFrom;
+    } else if (stock.transactionType == "DISPATCHED" &&
+        stock.senderType == "STAFF") {
+      label = i18_local.stockDetails.returnedTo;
+    } else if (stock.transactionType == "DISPATCHED") {
+      label =
+          '${i18_stock.stockDetails.issuedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+    }
+  }
+
+  return label;
+}
+
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
@@ -572,6 +645,35 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+String? getVehicleNo(ProductVariantModel vehicle) {
+  return vehicle.variation;
+}
+
+String? getAdditionalFieldFromVehicle(
+    ProductVariantModel vehicle, String additionalFieldKey) {
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
+}
+
+String? getAdditionalFieldFromVehicleActionModel(
+    UserActionModel? vehicle, String additionalFieldKey) {
+  if (vehicle == null) return null;
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
 }
 
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {

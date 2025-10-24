@@ -15,6 +15,8 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/pages/beneficiary/widgets/record_delivery_cycle.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -277,7 +279,8 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 ?.givenName ??
                                             '--',
                                     localizations.translate(
-                                      i18.beneficiaryDetails.beneficiaryId,
+                                      i18_local
+                                          .beneficiaryDetails.beneficiaryId,
                                     ): state.selectedIndividual?.identifiers
                                             ?.lastWhere(
                                               (e) =>

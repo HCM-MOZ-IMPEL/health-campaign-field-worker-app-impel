@@ -138,10 +138,14 @@ class _CustomHouseholdLocationSMCPageState
                           householdModel,
                           individualModel,
                           projectBeneficiaryModel,
+                          parentClientReferenceId,
+                          relationshipType,
                           registrationDate,
                           searchQuery,
                           loading,
                           isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var addressModel = AddressModel(
                             type: AddressType.correspondence,
@@ -190,10 +194,14 @@ class _CustomHouseholdLocationSMCPageState
                           address,
                           householdModel,
                           individuals,
+                          relationshipType,
                           registrationDate,
+                          parentClientReferenceId,
                           projectBeneficiaryModel,
                           loading,
-                          headOfHousehold,
+                          isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var addressModel = address.copyWith(
                             type: AddressType.correspondence,
@@ -298,7 +306,7 @@ class _CustomHouseholdLocationSMCPageState
         validators: [Validators.required],
       ),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(CustomValidator.requiredMin),
       ]),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,

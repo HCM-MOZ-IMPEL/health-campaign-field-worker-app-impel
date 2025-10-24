@@ -1,5 +1,6 @@
 library app_utils;
 
+import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -41,7 +42,6 @@ import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/app_config/app_config_model.dart';
-import '../../models/data_model.init.dart';
 import '../../models/entities/project_types.dart';
 import '../../models/entities/status.dart';
 import '../../router/app_router.dart';
@@ -136,8 +136,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 

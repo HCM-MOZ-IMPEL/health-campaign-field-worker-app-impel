@@ -2,13 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/models/entities/beneficiary_type.dart';
-import 'package:digit_data_model/models/entities/identifier_types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../models/entities/entities_smc/identifier_types.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
@@ -115,7 +115,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
 
   getSubText(HouseholdMemberWrapper? wrapper) {
     return wrapper != null
-        ? '${localizations.translate(i18.beneficiaryDetails.beneficiaryId)}\n'
+        ? '${localizations.translate(i18_local.beneficiaryDetails.beneficiaryId)}\n'
             '${wrapper.members?.lastOrNull!.name!.givenName} - '
             '${wrapper.members?.lastOrNull!.identifiers!.lastWhereOrNull(
                   (e) =>

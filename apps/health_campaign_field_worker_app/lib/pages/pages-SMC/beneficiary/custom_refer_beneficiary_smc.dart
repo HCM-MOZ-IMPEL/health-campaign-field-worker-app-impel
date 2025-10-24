@@ -489,7 +489,7 @@ class CustomReferBeneficiarySMCPageState
       _referralComments: FormControl<String>(value: null),
       _referralCode: FormControl<String>(validators: [
         Validators.required,
-        CustomValidator.requiredMin2,
+        Validators.delegate(CustomValidator.requiredMin2),
       ]),
     });
   }

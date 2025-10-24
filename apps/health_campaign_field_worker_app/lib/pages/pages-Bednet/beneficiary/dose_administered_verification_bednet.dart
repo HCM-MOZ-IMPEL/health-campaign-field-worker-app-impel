@@ -17,6 +17,8 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 
 import '../../../blocs/localization/app_localization.dart';
 import '../../../models/entities/additional_fields_type.dart';
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
