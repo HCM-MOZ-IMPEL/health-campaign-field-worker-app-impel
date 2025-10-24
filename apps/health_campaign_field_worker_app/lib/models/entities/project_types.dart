@@ -7,7 +7,7 @@ part 'project_types.mapper.dart';
 enum ProjectTypes {
   @MappableValue("IRS")
   irs,
-  @MappableValue("NTD-Moz")
+  @MappableValue("SMC-Moz")
   smc,
   @MappableValue("LLIN-Moz")
   bednet,

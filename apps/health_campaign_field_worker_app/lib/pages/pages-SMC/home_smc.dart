@@ -183,58 +183,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                           children: [
                             CustomBeneficiaryProgressBarSMC(
                               label: localizations.translate(
-                                i18.home.progressIndicatorTitleTracoma,
+                                i18.home.progressIndicatorTitle,
                               ),
                               prefixLabel: localizations.translate(
                                 i18.home.progressIndicatorPrefixLabel,
-                              ),
-                            ),
-                            if (_isCardExpanded)
-                              CustomBeneficiaryProgressBarBednet(
-                                label: localizations.translate(
-                                  i18.home.progressIndicatorTitleHeadBednet,
-                                ),
-                                prefixLabel: localizations.translate(
-                                  i18.home.progressIndicatorPrefixLabel,
-                                ),
-                              ),
-                            Container(
-                              height: 24,
-                              margin: const EdgeInsets.all(4),
-                              child: Center(
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _isCardExpanded = !_isCardExpanded;
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        _isCardExpanded
-                                            ? localizations
-                                                .translate(i18.home.close)
-                                            : localizations
-                                                .translate(i18.home.seeMore),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              Color.fromARGB(255, 251, 154, 7),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Icon(
-                                        _isCardExpanded
-                                            ? Icons.keyboard_arrow_up
-                                            : Icons.keyboard_arrow_down,
-                                        size: 20,
-                                        color: Colors.orange,
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ),
                             ),
                           ],

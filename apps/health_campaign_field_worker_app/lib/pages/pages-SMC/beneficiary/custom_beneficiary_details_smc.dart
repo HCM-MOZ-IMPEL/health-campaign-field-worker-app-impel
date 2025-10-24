@@ -17,7 +17,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
-import '../../../utils/constants.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -25,7 +24,6 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
 import 'widgets/past_delivery_smc.dart';
 
@@ -74,20 +72,11 @@ class CustomBeneficiaryDetailsSMCPageState
                       .toList();
 
           // Extracting task data related to the selected project beneficiary
-          // final taskData = state.householdMemberWrapper.tasks
-          //     ?.where((element) =>
-          //         element.projectBeneficiaryClientReferenceId ==
-          //         projectBeneficiary?.first?.clientReferenceId)
-          //     .toList();
-          final taskData = (() {
-            final data = state.householdMemberWrapper.tasks
-                ?.where((element) =>
-                    element.projectBeneficiaryClientReferenceId ==
-                    projectBeneficiary?.first?.clientReferenceId)
-                .toList();
-
-            return isHeadBednetDelivered(data) ? null : data;
-          })();
+          final taskData = state.householdMemberWrapper.tasks
+              ?.where((element) =>
+                  element.projectBeneficiaryClientReferenceId ==
+                  projectBeneficiary?.first?.clientReferenceId)
+              .toList();
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
@@ -157,12 +146,6 @@ class CustomBeneficiaryDetailsSMCPageState
                             final projectType =
                                 RegistrationDeliverySingleton().projectType;
                             final cycles = projectType?.cycles;
-                            final isBeneficiaryIneligible =
-                                checkEligibleBasedOnAgeAndHeight(
-                                    deliverState,
-                                    projectType,
-                                    state.selectedIndividual,
-                                    state.householdMemberWrapper.household);
 
                             return cycles != null && cycles.isNotEmpty
                                 ? deliverState.hasCycleArrived
@@ -171,83 +154,74 @@ class CustomBeneficiaryDetailsSMCPageState
                                             0, kPadding, 0, 0),
                                         padding: const EdgeInsets.fromLTRB(
                                             kPadding, 0, kPadding, 0),
-                                        child: isBeneficiaryIneligible == true
-                                            ? Text('USER_NOT_ELIGIBLE')
-                                            : DigitElevatedButton(
-                                                onPressed: () async {
-                                                  final selectedCycle = cycles
-                                                      .firstWhereOrNull((c) =>
-                                                          c.id ==
-                                                          deliverState.cycle);
-                                                  if (selectedCycle != null) {
-                                                    bloc.add(
-                                                      DeliverInterventionEvent
-                                                          .selectFutureCycleDose(
-                                                        dose: deliverState.dose,
-                                                        cycle:
-                                                            RegistrationDeliverySingleton()
-                                                                .projectType!
-                                                                .cycles!
-                                                                .firstWhere((c) =>
-                                                                    c.id ==
-                                                                    deliverState
-                                                                        .cycle),
-                                                        individualModel: state
-                                                            .selectedIndividual,
-                                                      ),
-                                                    );
-                                                    await DigitDialog.show<
-                                                        bool>(
+                                        child: DigitElevatedButton(
+                                          onPressed: () async {
+                                            final selectedCycle =
+                                                cycles.firstWhereOrNull((c) =>
+                                                    c.id == deliverState.cycle);
+                                            if (selectedCycle != null) {
+                                              bloc.add(
+                                                DeliverInterventionEvent
+                                                    .selectFutureCycleDose(
+                                                  dose: deliverState.dose,
+                                                  cycle:
+                                                      RegistrationDeliverySingleton()
+                                                          .projectType!
+                                                          .cycles!
+                                                          .firstWhere((c) =>
+                                                              c.id ==
+                                                              deliverState
+                                                                  .cycle),
+                                                  individualModel:
+                                                      state.selectedIndividual,
+                                                ),
+                                              );
+                                              await DigitDialog.show<bool>(
+                                                context,
+                                                options: DigitDialogOptions(
+                                                  titlePadding:
+                                                      const EdgeInsets.fromLTRB(
+                                                    kPadding,
+                                                    0,
+                                                    kPadding,
+                                                    0,
+                                                  ),
+                                                  titleText: localizations
+                                                      .translate(i18
+                                                          .beneficiaryDetails
+                                                          .resourcesTobeDelivered),
+                                                  content: buildTableContent(
+                                                      deliverState,
                                                       context,
-                                                      options:
-                                                          DigitDialogOptions(
-                                                        titlePadding:
-                                                            const EdgeInsets
-                                                                .fromLTRB(
-                                                          kPadding,
-                                                          0,
-                                                          kPadding,
-                                                          0,
-                                                        ),
-                                                        titleText: localizations
-                                                            .translate(i18_local
-                                                                .beneficiaryDetails
-                                                                .resourcesTobeDeliveredTracoma),
-                                                        content: buildTableContent(
-                                                            deliverState,
-                                                            context,
-                                                            variant,
-                                                            state
-                                                                .selectedIndividual,
-                                                            state
-                                                                .householdMemberWrapper
-                                                                .household),
-                                                        barrierDismissible:
-                                                            true,
-                                                        primaryAction:
-                                                            DigitDialogActions(
-                                                          label: localizations
-                                                              .translate(i18
-                                                                  .beneficiaryDetails
-                                                                  .ctaProceed),
-                                                          action: (ctx) {
-                                                            Navigator.of(ctx)
-                                                                .pop();
-                                                            router.push(
-                                                              DeliverInterventionRoute(),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                                child: Center(
-                                                  child: Text(
-                                                    '${localizations.translate(i18_local.beneficiaryDetails.recordCycleTracoma)}',
+                                                      variant,
+                                                      state.selectedIndividual,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .household),
+                                                  barrierDismissible: true,
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label: localizations
+                                                        .translate(i18
+                                                            .beneficiaryDetails
+                                                            .ctaProceed),
+                                                    action: (ctx) {
+                                                      Navigator.of(ctx).pop();
+                                                      router.push(
+                                                        DeliverInterventionRoute(),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
-                                              ),
+                                              );
+                                            }
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              '${localizations.translate(i18_local.beneficiaryDetails.recordCycleSMC)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
+                                            ),
+                                          ),
+                                        ),
                                       )
                                     : const SizedBox.shrink()
                                 : DigitCard(
@@ -371,15 +345,6 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 ?.name
                                                 .toUpperCase() ??
                                             '--'),
-                                    localizations.translate(i18_local
-                                            .deliverIntervention
-                                            .individualHeight):
-                                        state.selectedIndividual
-                                            ?.additionalFields?.fields
-                                            .where((element) =>
-                                                element.key == Constants.height)
-                                            .firstOrNull
-                                            ?.value,
                                     localizations.translate(i18
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {
