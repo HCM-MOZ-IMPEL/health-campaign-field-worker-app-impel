@@ -14,6 +14,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/localized.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 class CustomRecordDeliveryCycle extends LocalizedStatefulWidget {
   final List<TaskModel>? taskData;

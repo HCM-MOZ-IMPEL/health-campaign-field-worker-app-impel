@@ -15,11 +15,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
+import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 
@@ -107,10 +110,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   final DashboardRemoteRepository dashboardRemoteRepository;
 
+  final BandwidthCheckRepository bandwidthCheckRepository;
+
   BuildContext context;
 
   ProjectBloc({
     LocalSecureStore? localSecureStore,
+    required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
     required this.projectStaffLocalRepository,
@@ -162,8 +168,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -478,12 +485,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
         final projectTypeCode = getProjectTypeCode(event.model);
-        final dashboardConfig = await isar.dashboardConfigSchemas
+        final dashboardConfig = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
-            .chartsIsNotNull()
-            .chartsIsNotEmpty()
-            .projectTypeCodeEqualTo(projectTypeCode)
+            .dashboardConfigsIsNotNull()
+            .dashboardConfigsIsNotEmpty()
             .findAll();
 
         final dashboardActionPath = Constants.getEndPoint(
@@ -491,10 +497,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (dashboardConfig.isNotEmpty &&
-            dashboardConfig.first != null &&
-            dashboardConfig.first!.enableDashboard == true &&
-            dashboardConfig.first!.charts != null) {
+        if (dashboardConfig.isNotEmpty && dashboardConfig.first != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -518,7 +521,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .toList();
 
           await processDashboardConfig(
-            dashboardConfig.first!.charts ?? [],
+            dashboardConfig.first.dashboardConfigs?.first.charts ?? [],
             startDate,
             endDate,
             isar,
@@ -619,12 +622,108 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       return;
     }
+    try {
+      final projectFacilities = await projectFacilityLocalRepository
+          .search(ProjectFacilitySearchModel());
+      final facilities =
+          await facilityLocalRepository.search(FacilitySearchModel());
+      await downloadStockDataBasedOnRole(
+          projectFacilities, facilities, event.model.address?.boundaryType);
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.projectFacilities,
+      ));
+    }
 
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,
       syncError: null,
     ));
+  }
+
+  // info: downloads stock data from remote , based on the user role
+  FutureOr<void> downloadStockDataBasedOnRole(
+    List<ProjectFacilityModel> projectFacilities,
+    List<FacilityModel> allFacilities,
+    String? boundaryType,
+  ) async {
+    final userObject = await localSecureStore.userRequestModel;
+    final userRoles = userObject!.roles.map((e) => e.code);
+
+    Map<String, String> facilityIdUsageMap = {};
+
+    for (var element in allFacilities) {
+      facilityIdUsageMap[element.id] = element?.usage ?? "";
+    }
+
+    // info : assumption both roles will not be assigned to user
+
+    if (userRoles.contains(RolesType.healthFacilitySupervisor.toValue())) {
+      // final receiverIds = projectFacilities.map((e) => e.facilityId).toList();
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds.first,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+      // info : create entries in the local repository
+
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
+        boundaryType == Constants.districtBoundaryLevel) {
+      List<String> receiverIds =
+          projectFacilities.map((e) => e.facilityId).toList();
+      receiverIds = receiverIds
+          .where((e) => facilityIdUsageMap[e] == Constants.lgaFacility)
+          .toList();
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds.first,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+      final receiverIds = [context.loggedInUserUuid];
+      final stockSearchModel = StockSearchModel(
+        receiverId: receiverIds.first,
+        transactionType: [TransactionType.dispatched.toValue()],
+      );
+      final stockEntriesDownloaded =
+          await downloadStockEntries(stockSearchModel);
+
+      // info : create entries in the local repository
+      await createStockDownloadedEntries(stockEntriesDownloaded);
+    }
+  }
+
+  // info : insert data in db
+  FutureOr<void> createStockDownloadedEntries(
+      List<StockModel> stockEntries) async {
+    await (stockLocalRepository as CustomStockLocalRepository)
+        .bulkStockCreate(stockEntries);
+  }
+
+  // info:  downloads the stock data from remote repository
+
+  FutureOr<List<StockModel>> downloadStockEntries(
+      StockSearchModel stockSearchModel) async {
+    var offset = 0;
+    var initialLimit = Constants.apiCallLimit;
+
+    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
+        limit: initialLimit, offSet: offset);
+
+    return stockEntries;
   }
 
   // Info : get the projectTypeCode from additional Details

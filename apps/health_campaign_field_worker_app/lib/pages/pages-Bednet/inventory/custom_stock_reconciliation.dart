@@ -58,9 +58,10 @@ class _CustomStockReconciliationBednetPageState
       _manualCountKey: FormControl<String>(
         value: '0',
         validators: [
-          Validators.number,
+          Validators.number(),
           Validators.required,
-          CustomValidator.validStockCount,
+          Validators.delegate(
+              (validator) => CustomValidator.validStockCount(validator)),
         ],
       ),
       _reconciliationCommentsKey: FormControl<String>(),
@@ -121,11 +122,16 @@ class _CustomStockReconciliationBednetPageState
                             ),
                           ),
                           fetched: (productVariants) {
+                            final filteredProductVariants = productVariants
+                                .where((product) =>
+                                    product.sku != Constants.vechileSKU)
+                                .toList();
+
                             return ReactiveFormBuilder(
                               form: () => _form(
                                   InventorySingleton().isDistributor! &&
                                       !InventorySingleton().isWareHouseMgr!,
-                                  productVariants),
+                                  filteredProductVariants),
                               builder: (ctx, form, child) {
                                 return Scaffold(
                                   body: ScrollableContent(
@@ -570,7 +576,8 @@ class _CustomStockReconciliationBednetPageState
                                                     .selectProductBednetLabel,
                                               ),
                                               form: form,
-                                              menuItems: productVariants,
+                                              menuItems:
+                                                  filteredProductVariants,
                                               enabled: false,
                                               formControlName:
                                                   _productVariantKey,

@@ -1,3 +1,6 @@
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -12,6 +15,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../blocs/localization/localization.dart';
@@ -37,7 +43,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_types.dart';
@@ -52,6 +57,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_bednet.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -66,23 +72,19 @@ class HomeSMCPage extends LocalizedStatefulWidget {
 
 class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool skipProgressBar = false;
+  bool _isCardExpanded = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
-
+  late StreamSubscription<List<ConnectivityResult>> subscription;
   @override
   initState() {
     super.initState();
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -172,12 +174,70 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBarSMC(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: spacer2,
                         ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
+                        child: Column(
+                          children: [
+                            CustomBeneficiaryProgressBarSMC(
+                              label: localizations.translate(
+                                i18.home.progressIndicatorTitleTracoma,
+                              ),
+                              prefixLabel: localizations.translate(
+                                i18.home.progressIndicatorPrefixLabel,
+                              ),
+                            ),
+                            if (_isCardExpanded)
+                              CustomBeneficiaryProgressBarBednet(
+                                label: localizations.translate(
+                                  i18.home.progressIndicatorTitleHeadBednet,
+                                ),
+                                prefixLabel: localizations.translate(
+                                  i18.home.progressIndicatorPrefixLabel,
+                                ),
+                              ),
+                            Container(
+                              height: 24,
+                              margin: const EdgeInsets.all(4),
+                              child: Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _isCardExpanded = !_isCardExpanded;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        _isCardExpanded
+                                            ? localizations
+                                                .translate(i18.home.close)
+                                            : localizations
+                                                .translate(i18.home.seeMore),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                              Color.fromARGB(255, 251, 154, 7),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Icon(
+                                        _isCardExpanded
+                                            ? Icons.keyboard_arrow_up
+                                            : Icons.keyboard_arrow_down,
+                                        size: 20,
+                                        color: Colors.orange,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
               ],
@@ -330,7 +390,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const CustomUserDashboardSMCRoute());
+            // context.router.push(const CustomUserDashboardSMCRoute());
           },
         ),
       ),
@@ -409,13 +469,13 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
         ),
       ),
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
@@ -516,7 +576,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -537,7 +597,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
 
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
@@ -546,10 +606,14 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where(
+          (element) =>
+              state.actionsWrapper.actions
+                  .map((e) => e.displayName)
+                  .toList()
+                  .contains(element) ||
+              element == i18.home.db,
+        ) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -560,22 +624,6 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
-
-    widgetList.add(homeShowcaseData.db.buildWith(
-      child: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.home.db,
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
-              ),
-            ),
-          );
-        },
-      ),
-    ));
 
     return _HomeItemDataModel(
       widgetList,
@@ -712,18 +760,18 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
-        DashboardSingleton().setInitialData(
-            projectId: context.projectId,
-            tenantId: envConfig.variables.tenantId,
-            dashboardConfig: filteredDashboardConfig.firstOrNull,
-            appVersion: Constants().version,
-            selectedProject: context.selectedProject,
-            actionPath: Constants.getEndPoint(
-              serviceRegistry: serviceRegistry,
-              service: DashboardResponseModel.schemaName.toUpperCase(),
-              action: ApiOperation.search.toValue(),
-              entityName: DashboardResponseModel.schemaName,
-            ));
+        // DashboardSingleton().setInitialData(
+        //     projectId: context.projectId,
+        //     tenantId: envConfig.variables.tenantId,
+        //     dashboardConfig: filteredDashboardConfig.firstOrNull,
+        //     appVersion: Constants().version,
+        //     selectedProject: context.selectedProject,
+        //     actionPath: Constants.getEndPoint(
+        //       serviceRegistry: serviceRegistry,
+        //       service: DashboardResponseModel.schemaName.toUpperCase(),
+        //       action: ApiOperation.search.toValue(),
+        //       entityName: DashboardResponseModel.schemaName,
+        //     ));
 
         RegistrationDeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
@@ -762,6 +810,7 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
               appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          searchCLFFilters: [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,

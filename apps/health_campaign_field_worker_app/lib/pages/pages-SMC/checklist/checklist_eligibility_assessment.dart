@@ -14,6 +14,11 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/blocs/service.dart';
+import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/models/entities/service_attributes.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
 import '../../../models/entities/roles_type.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
@@ -21,6 +26,7 @@ import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../models/entities/status.dart' as status_local;
 
 @RoutePage()
 class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
@@ -59,12 +65,11 @@ class _EligibilityChecklistViewPage
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
         );
-    super.initState();
   }
 
   @override
@@ -339,8 +344,8 @@ class _EligibilityChecklistViewPage
                                                     .millisecondsSinceEpoch(),
                                               ),
                                               projectId: context.projectId,
-                                              status: Status
-                                                  .beneficiaryInEligible
+                                              status: status_local
+                                                  .Status.beneficiaryInEligible
                                                   .toValue(),
                                               clientAuditDetails:
                                                   ClientAuditDetails(
@@ -359,7 +364,8 @@ class _EligibilityChecklistViewPage
                                                 fields: [
                                                   AdditionalField(
                                                     'taskStatus',
-                                                    Status.beneficiaryInEligible
+                                                    status_local.Status
+                                                        .beneficiaryInEligible
                                                         .toValue(),
                                                   ),
                                                   AdditionalField(
@@ -421,7 +427,7 @@ class _EligibilityChecklistViewPage
                               submitTriggered = true;
 
                               context.read<ServiceBloc>().add(
-                                    const ServiceChecklistEvent(
+                                    const ServiceSurveyFormEvent(
                                       value: '',
                                       submitTriggered: true,
                                     ),
@@ -616,7 +622,7 @@ class _EligibilityChecklistViewPage
                                                       context
                                                           .read<ServiceBloc>()
                                                           .add(
-                                                            ServiceChecklistEvent(
+                                                            ServiceSurveyFormEvent(
                                                               value:
                                                                   e.toString(),
                                                               submitTriggered:
@@ -730,7 +736,7 @@ class _EligibilityChecklistViewPage
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -888,7 +894,7 @@ class _EligibilityChecklistViewPage
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

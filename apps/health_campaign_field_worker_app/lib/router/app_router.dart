@@ -1,3 +1,9 @@
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -13,12 +19,15 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/irswrapper.dart';
+import '../pages/pages-Bednet/acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/bednetwrapper.dart';
+import '../pages/pages-Bednet/custom_qr_scanner.dart';
 import '../pages/pages-Bednet/home_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/custom_beneficiary_checklist_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/custom_beneficiary_details_bednet.dart';
@@ -30,6 +39,7 @@ import '../pages/pages-Bednet/beneficiary/custom_refused_delivery_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/dose_administered_verification_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/consent_household_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary/widgets/past_delivery_smc.dart';
+import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
 
 import '../pages/pages-Bednet/beneficiary_registration/custom_beneficiary_acknowledgement_bednet.dart';
 import '../pages/pages-Bednet/beneficiary_registration/custom_house_details_bednet.dart';
@@ -49,26 +59,24 @@ import '../pages/pages-Bednet/attendance/custom_manage_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_mark_attendance_bednet.dart';
 import '../pages/pages-Bednet/attendance/custom_session_select_bednet.dart';
 
+import '../pages/pages-Bednet/inventory_management/custom_acknowledgement.dart';
+import '../pages/pages-Bednet/inventory_management/custom_inventory_facility_selection.dart';
+import '../pages/pages-Bednet/inventory_management/custom_min_number.dart';
+import '../pages/pages-Bednet/inventory_management/custom_stock_details.dart';
+import '../pages/pages-Bednet/inventory_management/custom_warehouse_details.dart';
+import '../pages/pages-Bednet/inventory_management/qr_scanner.dart';
+import '../pages/pages-Bednet/inventory_management/qrscanner.dart';
+import '../pages/pages-Bednet/inventory_management/view_all_transactions_page.dart';
+import '../pages/pages-Bednet/inventory_management/view_record_cdd.dart';
+import '../pages/pages-Bednet/inventory_management/view_record_lga.dart';
+import '../pages/pages-Bednet/inventory_management/view_stock_records.dart';
+import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
+import '../pages/pages-SMC/beneficiary/conduct_mobility_control_assessment.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/complaints/inbox/complaints_details_view.dart';
-import '../pages/complaints/inbox/complaints_inbox.dart';
-import '../pages/complaints/inbox/complaints_inbox_filter.dart';
-import '../pages/complaints/inbox/complaints_inbox_search.dart';
-import '../pages/complaints/inbox/complaints_inbox_sort.dart';
-import '../pages/complaints/inbox/complaints_inbox_wrapper.dart';
-import '../pages/complaints/registration/complaint_type.dart';
-import '../pages/complaints/registration/complaints_details.dart';
-import '../pages/complaints/registration/complaints_location.dart';
-import '../pages/complaints/registration/complaints_registration_wrapper.dart';
-import '../pages/complaints_acknowledgement.dart';
 
-import '../pages/checklist/checklist.dart';
-import '../pages/checklist/checklist_boundary_view.dart';
-import '../pages/checklist/checklist_preview.dart';
-import '../pages/checklist/checklist_view.dart';
-import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/complaints_acknowledgement.dart';
 
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -116,13 +124,14 @@ import '../pages/attendance/custom_mark_attendance.dart';
 import '../pages/attendance/custom_session_select.dart';
 import 'package:attendance_management/attendance_management.dart';
 import '../pages/pages-SMC/beneficiary/custom_refer_beneficiary_smc.dart';
-import '../pages/pages-SMC/checklist/checklist_eligibility_assessment.dart';
+
 import '../pages/pages-SMC/beneficiary_registration/custom_household_overview_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_search_beneficiary_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowledgement_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
+import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_head.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
@@ -150,6 +159,10 @@ import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
 import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
+import '../pages/vehicle_tracking/vehicle_overview.dart';
+import '../pages/vehicle_tracking/vehicle_search.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
+import '../pages/vehicle_tracking/vehicle_trip_book.dart';
 
 part 'app_router.gr.dart';
 
@@ -162,6 +175,7 @@ part 'app_router.gr.dart';
     DashboardRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -267,11 +281,11 @@ class AppRouter extends _$AppRouter {
                 page: RecordStockWrapperRoute.page,
                 path: 'record-stock',
                 children: [
-                  AutoRoute(
-                    page: WarehouseDetailsRoute.page,
-                    path: 'warehouse-details',
-                    // initial: true,
-                  ),
+                  // AutoRoute(
+                  //   page: WarehouseDetailsRoute.page,
+                  //   path: 'warehouse-details',
+                  //   // initial: true,
+                  // ),
                   AutoRoute(
                     page: CustomWarehouseDetailsRoute.page,
                     path: 'custom-warehouse-details',
@@ -438,7 +452,7 @@ class AppRouter extends _$AppRouter {
                           page: BeneficiaryChecklistRoute.page,
                           path: 'beneficiary-checklist',
                         ),
-                        AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                        AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                         AutoRoute(
                           page: IneligibleSummaryRoute.page,
                           path: 'ineligible-beneficiary-summary',
@@ -549,10 +563,7 @@ class AppRouter extends _$AppRouter {
                           path: 'household-acknowledgement',
                           redirectTo: 'custom-household-acknowledgement',
                         ),
-                        AutoRoute(
-                          page: ChecklistViewRoute.page,
-                          path: 'view',
-                        ),
+                        AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                         AutoRoute(
                           page: DeliverySummaryRoute.page,
                           path: 'delivery-summary',
@@ -604,20 +615,24 @@ class AppRouter extends _$AppRouter {
                         path: 'closed-household-acknowledgement'),
                   ]),
 
+              // SurveyForm Route
               AutoRoute(
-                  page: ChecklistWrapperRoute.page,
-                  path: 'checklist',
+                  page: SurveyFormWrapperRoute.page,
+                  path: 'surveyForm',
                   children: [
                     AutoRoute(
-                      page: ChecklistRoute.page,
+                      page: SurveyformRoute.page,
                       path: '',
                     ),
                     AutoRoute(
-                        page: ChecklistBoundaryViewRoute.page,
+                        page: SurveyFormBoundaryViewRoute.page,
                         path: 'view-boundary'),
-                    AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
-                        page: ChecklistPreviewRoute.page, path: 'preview'),
+                        page: SurveyFormPreviewRoute.page, path: 'preview'),
+                    AutoRoute(
+                        page: SurveyFormAcknowledgementRoute.page,
+                        path: 'surveyForm-acknowledgement'),
                   ]),
               AutoRoute(
                   page: AcknowledgementRoute.page, path: 'acknowledgement'),
@@ -795,7 +810,7 @@ class AppRouter extends _$AppRouter {
                       page: BeneficiaryChecklistRoute.page,
                       path: 'beneficiary-checklist',
                     ),
-                    AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
                       page: IneligibleSummaryRoute.page,
                       path: 'ineligible-beneficiary-summary',
@@ -841,6 +856,10 @@ class AppRouter extends _$AppRouter {
                     ),
                     AutoRoute(
                       page: DeliverInterventionRoute.page,
+                      path: 'deliver-intervention-head',
+                    ),
+                    AutoRoute(
+                      page: DeliverInterventionRoute.page,
                       path: 'deliver-intervention',
                     ),
                     AutoRoute(
@@ -850,6 +869,13 @@ class AppRouter extends _$AppRouter {
                     RedirectRoute(
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention-smc',
+                    ),
+                    AutoRoute(
+                        page: CustomDeliverInterventionHeadRoute.page,
+                        path: 'custom-deliver-intervention-head'),
+                    RedirectRoute(
+                      path: 'deliver-intervention-head',
+                      redirectTo: 'custom-deliver-intervention-head',
                     ),
                     AutoRoute(
                       page: EligibilityChecklistViewRoute.page,
@@ -911,10 +937,7 @@ class AppRouter extends _$AppRouter {
                       path: 'household-acknowledgement',
                       redirectTo: 'custom-household-acknowledgement-smc',
                     ),
-                    AutoRoute(
-                      page: ChecklistViewRoute.page,
-                      path: 'view',
-                    ),
+                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
                       page: DeliverySummaryRoute.page,
                       path: 'delivery-summary',
@@ -931,6 +954,9 @@ class AppRouter extends _$AppRouter {
                       page: DoseAdministeredVerificationRoute.page,
                       path: 'dose-administered-verification',
                     ),
+                    AutoRoute(
+                        page: ConductMobilityControlAssessmentRoute.page,
+                        path: 'conduct-mobility-control-assessment'),
                   ],
                 ),
               ]),
@@ -1091,28 +1117,32 @@ class AppRouter extends _$AppRouter {
             page: UserDashboardRoute.page,
             path: 'dashboard',
           ),
-          AutoRoute(
-            page: CustomUserDashboardSMCRoute.page,
-            path: 'custom-dashboard-smc',
-          ),
+          // AutoRoute(
+          //   page: CustomUserDashboardSMCRoute.page,
+          //   path: 'custom-dashboard-smc',
+          // ),
           RedirectRoute(
             path: 'dashboard',
             redirectTo: 'custom-dashboard-smc',
           ),
 
+          // SurveyForm Route
           AutoRoute(
-              page: ChecklistWrapperRoute.page,
-              path: 'checklist',
+              page: SurveyFormWrapperRoute.page,
+              path: 'surveyForm',
               children: [
                 AutoRoute(
-                  page: ChecklistRoute.page,
+                  page: SurveyformRoute.page,
                   path: '',
                 ),
                 AutoRoute(
-                    page: ChecklistBoundaryViewRoute.page,
+                    page: SurveyFormBoundaryViewRoute.page,
                     path: 'view-boundary'),
-                AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-                AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+                AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+                AutoRoute(
+                    page: SurveyFormAcknowledgementRoute.page,
+                    path: 'surveyForm-acknowledgement'),
               ]),
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
@@ -1184,11 +1214,11 @@ class AppRouter extends _$AppRouter {
                   path: 'facility-details',
                   // initial: true,
                 ),
-                AutoRoute(
-                  page: CustomReferralFacilitySMCRoute.page,
-                  path: 'custom-facility-details-smc',
-                  initial: true,
-                ),
+                // AutoRoute(
+                //   page: CustomReferralFacilitySMCRoute.page,
+                //   path: 'custom-facility-details-smc',
+                //   initial: true,
+                // ),
                 RedirectRoute(
                   path: 'facility-details',
                   redirectTo: 'custom-facility-details-smc',
@@ -1261,6 +1291,32 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: BeneficiariesReportRoute.page,
             path: 'beneficiary-downsync-report',
+          ),
+
+          // vehicle Tracking module
+          AutoRoute(
+              page: VehicleTrackingWrapperRoute.page,
+              path: 'vehicle-tracking',
+              children: [
+                AutoRoute(
+                  page: VehicleSearchRoute.page,
+                  path: 'vehicle-search',
+                  initial: true,
+                ),
+                AutoRoute(
+                  page: VehicleOverviewRoute.page,
+                  path: 'vehicle-overview',
+                ),
+                AutoRoute(
+                  page: VehicleTripBookRoute.page,
+                  path: 'vehicle-trip-book',
+                )
+              ]),
+
+          // registration delivery
+          AutoRoute(
+            page: CustomInventoryFacilitySelectionRoute.page,
+            path: 'custom-inventory-select-facilities',
           ),
           AutoRoute(
               page: RegistrationDeliveryWrapperRoute.page,
@@ -1404,7 +1460,7 @@ class AppRouter extends _$AppRouter {
                       page: BeneficiaryChecklistRoute.page,
                       path: 'beneficiary-checklist',
                     ),
-                    AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
                       page: IneligibleSummaryRoute.page,
                       path: 'ineligible-beneficiary-summary',
@@ -1464,10 +1520,10 @@ class AppRouter extends _$AppRouter {
                       path: 'deliver-intervention',
                       redirectTo: 'custom-deliver-intervention-bednet',
                     ),
-                    AutoRoute(
-                      page: EligibilityChecklistViewRoute.page,
-                      path: 'eligibility-checklist',
-                    ),
+                    // AutoRoute(
+                    //   page: EligibilityChecklistViewRoute.page,
+                    //   path: 'eligibility-checklist',
+                    // ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
@@ -1524,10 +1580,7 @@ class AppRouter extends _$AppRouter {
                       path: 'household-acknowledgement',
                       redirectTo: 'custom-household-acknowledgement-bednet',
                     ),
-                    AutoRoute(
-                      page: ChecklistViewRoute.page,
-                      path: 'view',
-                    ),
+                    AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
                     AutoRoute(
                       page: DeliverySummaryRoute.page,
                       path: 'delivery-summary',
@@ -1663,20 +1716,26 @@ class AppRouter extends _$AppRouter {
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement',
           ),
+
+          // SurveyForm Route
           AutoRoute(
-              page: ChecklistWrapperRoute.page,
-              path: 'checklist',
+              page: SurveyFormWrapperRoute.page,
+              path: 'surveyForm',
               children: [
                 AutoRoute(
-                  page: ChecklistRoute.page,
+                  page: SurveyformRoute.page,
                   path: '',
                 ),
                 AutoRoute(
-                    page: ChecklistBoundaryViewRoute.page,
+                    page: SurveyFormBoundaryViewRoute.page,
                     path: 'view-boundary'),
-                AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-                AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+                AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+                AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+                AutoRoute(
+                    page: SurveyFormAcknowledgementRoute.page,
+                    path: 'surveyForm-acknowledgement'),
               ]),
+
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
             page: ComplaintsAcknowledgementRoute.page,
@@ -1688,10 +1747,10 @@ class AppRouter extends _$AppRouter {
             page: UserDashboardRoute.page,
             path: 'dashboard',
           ),
-          AutoRoute(
-            page: CustomUserDashboardBednetRoute.page,
-            path: 'custom-dashboard-bedent',
-          ),
+          // AutoRoute(
+          //   page: CustomUserDashboardBednetRoute.page,
+          //   path: 'custom-dashboard-bedent',
+          // ),
           RedirectRoute(
             path: 'dashboard',
             redirectTo: 'custom-dashboard-bedent',

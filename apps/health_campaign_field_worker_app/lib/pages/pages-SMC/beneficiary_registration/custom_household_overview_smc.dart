@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,13 +17,14 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/action_card/action_card.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
 @RoutePage()
@@ -363,6 +364,17 @@ class CustomHouseholdOverviewSMCPageState
                                                       DateTime.now()
                                                           .millisecondsSinceEpoch,
                                             );
+                                    final item = RegistrationDeliverySingleton()
+                                        .projectType
+                                        ?.cycles?[0]
+                                        .deliveries?[0];
+                                    final conditions = fetchProductVariantSMC(
+                                            item,
+                                            e,
+                                            state.householdMemberWrapper
+                                                .household)
+                                        ?.condition
+                                        ?.split('and');
 
                                     final isBeneficiaryRefused =
                                         checkIfBeneficiaryRefused(
@@ -522,23 +534,25 @@ class CustomHouseholdOverviewSMCPageState
                                           ),
                                         );
                                       },
-                                      isNotEligible: RegistrationDeliverySingleton()
-                                                  .projectType
-                                                  ?.cycles !=
-                                              null
-                                          ? !checkEligibilityForAgeAndSideEffect(
-                                              DigitDOBAge(
-                                                years: ageInYears,
-                                                months: ageInMonths,
-                                              ),
-                                              RegistrationDeliverySingleton()
-                                                  .projectType,
-                                              (taskData ?? []).isNotEmpty
-                                                  ? taskData?.lastOrNull
-                                                  : null,
-                                              sideEffectData,
-                                            )
-                                          : false,
+                                      isNotEligible: conditions == null
+                                          ? true
+                                          : RegistrationDeliverySingleton()
+                                                      .projectType
+                                                      ?.cycles !=
+                                                  null
+                                              ? !checkEligibilityForAgeAndSideEffect(
+                                                  DigitDOBAgeConvertor(
+                                                    years: ageInYears,
+                                                    months: ageInMonths,
+                                                  ),
+                                                  RegistrationDeliverySingleton()
+                                                      .projectType,
+                                                  (taskData ?? []).isNotEmpty
+                                                      ? taskData?.lastOrNull
+                                                      : null,
+                                                  sideEffectData,
+                                                )
+                                              : false,
                                       name:
                                           '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                       years: (e.dateOfBirth == null

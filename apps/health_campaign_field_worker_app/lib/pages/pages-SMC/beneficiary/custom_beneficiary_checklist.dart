@@ -16,6 +16,9 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
+import 'package:survey_form/blocs/service.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:survey_form/survey_form.dart';
 
 @RoutePage()
 class CustomBeneficiaryChecklistPage extends LocalizedStatefulWidget {
@@ -47,7 +50,7 @@ class _CustomBeneficiaryChecklistPageState
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -109,7 +112,7 @@ class _CustomBeneficiaryChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              const ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -210,9 +213,8 @@ class _CustomBeneficiaryChecklistPageState
                         DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
-                            titleText: localizations.translate(i18
-                                .deliverIntervention
-                                .beneficiaryChecklistDialogTitle),
+                            titleText: localizations
+                                .translate(i18.checklist.checklistDialogLabel),
                             titlePadding: const EdgeInsets.only(top: kPadding),
                             barrierDismissible: false,
                             enableRecordPast: true,
@@ -363,7 +365,7 @@ class _CustomBeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -453,7 +455,7 @@ class _CustomBeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: curValue
                                                               .toString(),
                                                           submitTriggered:

@@ -134,14 +134,18 @@ class CustomBednetSummaryPageState
                                   return;
                                 },
                                 summary: (
-                                  navigateToRoot,
+                                  addressModel,
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   registrationDate,
-                                  addressModel,
+                                  searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) async {
                                   final submit = await DigitDialog.show<bool>(
                                     context,
@@ -275,10 +279,14 @@ class CustomBednetSummaryPageState
                                       householdModel,
                                       individualModel,
                                       projectBeneficiaryModel,
+                                      parentClientReferenceId,
+                                      relationshipType,
                                       registrationDate,
                                       addressModel,
                                       loading,
                                       isHeadOfHousehold,
+                                      householdChecklists,
+                                      individualChecklists,
                                     ) =>
                                         individualModel?.name?.givenName ??
                                         localizations.translate(
@@ -295,10 +303,14 @@ class CustomBednetSummaryPageState
                                       householdModel,
                                       individualModel,
                                       projectBeneficiaryModel,
+                                      parentClientReferenceId,
+                                      relationshipType,
                                       registrationDate,
                                       addressModel,
                                       loading,
                                       isHeadOfHousehold,
+                                      householdChecklists,
+                                      individualChecklists,
                                     ) =>
                                         individualModel?.dateOfBirth != null
                                             ? DigitDateUtils.getFilteredDate(
@@ -325,10 +337,14 @@ class CustomBednetSummaryPageState
                                       householdModel,
                                       individualModel,
                                       projectBeneficiaryModel,
+                                      parentClientReferenceId,
+                                      relationshipType,
                                       registrationDate,
                                       addressModel,
                                       loading,
                                       isHeadOfHousehold,
+                                      householdChecklists,
+                                      individualChecklists,
                                     ) =>
                                         individualModel?.gender != null
                                             ? localizations.translate(

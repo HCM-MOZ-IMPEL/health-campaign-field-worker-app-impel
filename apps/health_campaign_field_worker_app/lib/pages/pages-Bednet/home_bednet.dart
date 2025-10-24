@@ -1,3 +1,6 @@
+import 'package:complaints/models/pgr_complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -10,6 +13,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 
@@ -32,7 +38,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_types.dart';
@@ -40,6 +45,8 @@ import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18_local;
+
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/home/home_item_card.dart';
@@ -61,7 +68,7 @@ class HomeBednetPage extends LocalizedStatefulWidget {
 class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -69,14 +76,10 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -324,7 +327,7 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const CustomUserDashboardBednetRoute());
+            // context.router.push(const CustomUserDashboardBednetRoute());
           },
         ),
       ),
@@ -407,11 +410,11 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
         child: HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.warehouseManagerCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
@@ -419,7 +422,18 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
           label: context.isDistributor
               ? i18.home.specialCaseCheckList
               : i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+        ),
+      ),
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.buildWith(
+        child: HomeItemCard(
+          icon: Icons.local_taxi_rounded,
+          label: i18_local.home.vehicleTrackingLabel,
+          onPressed: () => {
+            // context.router.push(VehicleTripBookRoute())
+            context.router.push(const VehicleTrackingWrapperRoute()),
+          },
         ),
       ),
       i18.home.fileComplaint:
@@ -507,7 +521,9 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      i18_local.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.showcaseKey,
       i18.home.warehouseManagerCheckList:
           homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.fileComplaint:
@@ -528,7 +544,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
       if (!context.isDistributor) i18.home.manageStockLabel,
       if (!context.isDistributor) i18.home.stockReconciliationLabel,
       if (!context.isDistributor) i18.home.viewReportsLabel,
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
+      i18_local.home.vehicleTrackingLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.warehouseManagerCheckList,
       i18.home.fileComplaint,
@@ -539,10 +556,13 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -600,6 +620,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -634,6 +656,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>()
               ],
             ),
           );
@@ -689,57 +713,58 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
-        DashboardSingleton().setInitialData(
-            projectId: context.projectId,
-            tenantId: envConfig.variables.tenantId,
-            dashboardConfig: filteredDashboardConfig.firstOrNull,
-            appVersion: Constants().version,
-            selectedProject: context.selectedProject,
-            actionPath: Constants.getEndPoint(
-              serviceRegistry: serviceRegistry,
-              service: DashboardResponseModel.schemaName.toUpperCase(),
-              action: ApiOperation.search.toValue(),
-              entityName: DashboardResponseModel.schemaName,
-            ));
+        // DashboardSingleton().setInitialData(
+        //     projectId: context.projectId,
+        //     tenantId: envConfig.variables.tenantId,
+        //     dashboardConfig: filteredDashboardConfig.firstOrNull,
+        //     appVersion: Constants().version,
+        //     selectedProject: context.selectedProject,
+        //     actionPath: Constants.getEndPoint(
+        //       serviceRegistry: serviceRegistry,
+        //       service: DashboardResponseModel.schemaName.toUpperCase(),
+        //       action: ApiOperation.search.toValue(),
+        //       entityName: DashboardResponseModel.schemaName,
+        //     ));
 
         RegistrationDeliverySingleton().setInitialData(
-          loggedInUser: context.loggedInUserModel,
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
-          projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter:
-              appConfiguration.searchHouseHoldFiltersBednet != null
-                  ? appConfiguration.searchHouseHoldFiltersBednet!
-                      .map((e) => e.code)
-                      .toList()
-                  : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
-        );
+            loggedInUser: context.loggedInUserModel,
+            loggedInUserUuid: context.loggedInUserUuid,
+            maxRadius: appConfiguration.maxRadius!,
+            projectId: context.projectId,
+            selectedBeneficiaryType: context.beneficiaryType,
+            projectType: context.selectedProjectType,
+            selectedProject: context.selectedProject,
+            genderOptions:
+                appConfiguration.genderOptions!.map((e) => e.code).toList(),
+            idTypeOptions:
+                appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+            householdDeletionReasonOptions: appConfiguration
+                .householdDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            householdMemberDeletionReasonOptions: appConfiguration
+                .householdMemberDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+                .map((e) => e.code)
+                .toList(),
+            symptomsTypes:
+                appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+            searchHouseHoldFilter:
+                appConfiguration.searchHouseHoldFiltersBednet != null
+                    ? appConfiguration.searchHouseHoldFiltersBednet!
+                        .map((e) => e.code)
+                        .toList()
+                    : [],
+            referralReasons:
+                appConfiguration.referralReasons?.map((e) => e.code).toList(),
+            houseStructureTypes: appConfiguration.houseStructureTypes
+                ?.map((e) => e.code)
+                .toList(),
+            refusalReasons:
+                appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+            searchCLFFilters: []);
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,

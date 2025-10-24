@@ -24,20 +24,17 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedProject;
   }
 
+  String get projectId => selectedProject.id;
+
   String? get projectTypeCode {
-    final projectType = RegistrationDeliverySingleton()
-        .selectedProject
-        ?.additionalDetails
-        ?.projectType;
+    final projectType = selectedProject.projectType;
 
     if (projectType == null) {
       return "";
     }
 
-    return projectType.code;
+    return projectType;
   }
-
-  String get projectId => selectedProject.id;
 
   ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
@@ -243,19 +240,31 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
-
     // INFO: Set Boundary for packages
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
-    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
-    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
-
+    InventorySingleton().setBoundary(boundary: selectedBoundary);
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    // LocationTrackerSingleton()
+    //     .setBoundaryName(boundaryName: selectedBoundary.code!);
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.code!);
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 
   BoundaryModel? get boundaryOrNull {
     try {
-      return boundary;
+      final boundaryBloc = _get<BoundaryBloc>();
+      final boundaryState = boundaryBloc.state;
+
+      final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+          .where((element) => element.value != null)
+          .lastOrNull
+          ?.value;
+      return selectedBoundary;
     } catch (_) {
       return null;
     }
@@ -274,6 +283,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (_) {
       return false;
     }
+  }
+
+  bool get isCDD {
+    return loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.communityDistributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
   }
 
   List<UserRoleModel> get loggedInUserRoles {
@@ -363,6 +383,24 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
+  bool get isLGA {
+    try {
+      String? boundaryLevel = selectedProject.address?.boundaryType;
+
+      if (boundaryLevel == Constants.districtBoundaryLevel) {
+        bool isDownSyncEnabled = loggedInUserRoles
+            .where((role) => role.code == RolesType.warehouseManager.toValue())
+            .toList()
+            .isNotEmpty;
+
+        return isDownSyncEnabled;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   NetworkManager get networkManager => read<NetworkManager>();
 
   DataRepository<D, R>
@@ -381,5 +419,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (error) {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
+  }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
   }
 }

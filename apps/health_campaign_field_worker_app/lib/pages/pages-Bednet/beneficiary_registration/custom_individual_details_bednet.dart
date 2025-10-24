@@ -223,10 +223,14 @@ class CustomIndividualDetailsBednetPageState
                             householdModel,
                             individualModel,
                             projectBeneficiaryModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             registrationDate,
                             searchQuery,
                             loading,
                             isHeadOfHousehold,
+                            householdChecklists,
+                            individualChecklists,
                           ) async {
                             // clickedStatus.value = true;
                             final individual = _getIndividualModel(
@@ -265,8 +269,12 @@ class CustomIndividualDetailsBednetPageState
                             householdModel,
                             individualModel,
                             addressModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             projectBeneficiaryModel,
                             loading,
+                            householdChecklists,
+                            individualChecklists,
                           ) async {
                             // clickedStatus.value = true;
                             isEditIndividual = true;
@@ -317,7 +325,11 @@ class CustomIndividualDetailsBednetPageState
                           addMember: (
                             addressModel,
                             householdModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             loading,
+                            householdChecklists,
+                            individualChecklists,
                           ) {
                             // clickedStatus.value = true;
                             final individual = _getIndividualModel(
@@ -815,7 +827,8 @@ class CustomIndividualDetailsBednetPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin3,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? '',
@@ -823,7 +836,8 @@ class CustomIndividualDetailsBednetPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin3,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.familyName ?? '',
@@ -836,12 +850,12 @@ class CustomIndividualDetailsBednetPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey: FormControl<String>(
-          value: individual?.mobileNumber,
-          validators: [
-            CustomValidator.validMobileNumber,
-            Validators.maxLength(9)
-          ]),
+      _mobileNumberKey:
+          FormControl<String>(value: individual?.mobileNumber, validators: [
+        Validators.delegate(
+            (validator) => CustomValidator.validMobileNumber(validator)),
+        Validators.maxLength(9)
+      ]),
     });
   }
 

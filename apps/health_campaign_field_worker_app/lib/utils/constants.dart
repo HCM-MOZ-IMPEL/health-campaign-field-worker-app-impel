@@ -1,3 +1,10 @@
+import 'package:survey_form/survey_form.dart';
+import 'package:complaints/data/repositories/local/pgr_service.dart';
+import 'package:complaints/data/repositories/oplog/oplog.dart';
+import 'package:complaints/data/repositories/remote/pgr_service.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
@@ -14,6 +21,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
+import 'package:survey_form/data/repositories/local/service.dart';
+import 'package:survey_form/data/repositories/local/service_definition.dart';
+import 'package:survey_form/data/repositories/oplog/oplog.dart';
+import 'package:survey_form/data/repositories/remote/service.dart';
+import 'package:survey_form/data/repositories/remote/service_definition.dart';
+import 'package:sync_service/data/repositories/sync/sync_up.dart';
+import 'package:sync_service/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -23,6 +37,8 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/sync_registry.dart';
+import '../data/sync_service_mapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
@@ -62,7 +78,7 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
-          DashboardConfigSchemaSchema,
+          DashboardConfigSchemaListSchema,
           DashboardResponseSchema,
         ],
         name: 'HCM',
@@ -75,6 +91,7 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
   static const String checklistPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
@@ -83,6 +100,7 @@ class Constants {
   static const String reAdministeredKey = "reAdministered";
   static const String pipeSeparator = ' || ';
   static const String spaq1String = 'SPAQ 1';
+  static const String administrativePost = 'Posto Administrativo';
   static const String centralFacility = 'Central Facility';
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
@@ -102,6 +120,8 @@ class Constants {
   static const String lastCycle = 'Last Cycle';
   static const String ddm = 'DDM';
   static const String bednetLabel = 'BEDNET';
+  static const String height = 'height';
+  static const String weight = 'weight';
 
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
@@ -119,6 +139,19 @@ class Constants {
   static const String distributorUsername = 'distributor_username';
   static const String supervisorUsername = 'supervisor_username';
   static const int maxBednetCount = 4;
+  static const String vechileSKU = 'Vehicle';
+
+  static const String spaq1 = "SPAQ 1";
+  static const String spaq2 = "SPAQ 2";
+  static const String blueVAS = "Blue VAS";
+  static const String redVAS = "Red VAS";
+  static const int apiCallLimit = 1000;
+  static const String isSMCDelivered = 'smc_delivered';
+  static const String headBednetDeliver = 'head_bednet_delivery';
+  static const String trueString = 'true';
+  static const String smcDeliver = 'smc_delivered';
+
+  static const String bednetSKU = "Redes Mosquiteiras";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -179,6 +212,8 @@ class Constants {
         AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -265,6 +300,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -299,7 +336,18 @@ class Constants {
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
-
+    SyncServiceSingleton().setData(
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      persistenceConfiguration: PersistenceConfiguration.offlineFirst,
+      entityMapper: SyncServiceMapper(),
+    );
+    SyncServiceSingleton().setRegistries(SyncServiceRegistry());
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => SyncRegistry(remote),
+    });
+    // LocationTrackerSingleton()
+    //     .setTenantId(tenantId: envConfig.variables.tenantId);
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);

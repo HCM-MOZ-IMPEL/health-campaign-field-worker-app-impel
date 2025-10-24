@@ -10,9 +10,11 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../../models/entities/project_types.dart';
+import '../../../../utils/utils_smc/utils_smc.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
@@ -38,7 +40,8 @@ Widget buildTableContent(
       cellKey: 'dose',
     ),
     TableHeader(
-      localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+      localizations
+          .translate(i18_local.beneficiaryDetails.beneficiaryResourcesTracoma),
       cellKey: 'resources',
     ),
   ];
@@ -50,8 +53,12 @@ Widget buildTableContent(
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
-      fetchProductVariant(item, individualModel, householdModel)
+      fetchProductVariantSMC(item, individualModel, householdModel)
           ?.productVariants;
+  final conditions =
+      fetchProductVariantSMC(item, individualModel, householdModel)
+          ?.condition
+          ?.split('and');
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -77,27 +84,24 @@ Widget buildTableContent(
           padding: const EdgeInsets.only(bottom: kPadding / 2),
           fraction: 2.5,
           element: {
-            localizations.translate(
-              i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(item, individualModel, householdModel)
-                        ?.productVariants
-                        ?.firstOrNull !=
-                    null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariant(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
-                : null,
+            if ((conditions?.length ?? 0) >= 2)
+              localizations.translate(
+                i18_local.beneficiaryDetails.beneficiaryHeight,
+              ): '${convertToRange(conditions)} ${localizations.translate(i18_local.beneficiaryDetails.beneficiaryHeightCm)}'
           },
         ),
         const Divider(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)
+        fetchProductVariantSMC(item, individualModel, householdModel)
                     ?.productVariants !=
                 null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariant(item, individualModel, householdModel)!
+                  ...fetchProductVariantSMC(
+                          item, individualModel, householdModel)!
                       .productVariants!
                       .map(
                     (e) {
@@ -113,7 +117,7 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(
+                        fetchProductVariantSMC(
                                         item, individualModel, householdModel)
                                     ?.productVariants
                                     ?.indexOf(e) ==
@@ -133,13 +137,13 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height:
-                    ((fetchProductVariant(item, individualModel, householdModel)
-                                        ?.productVariants ??
-                                    [])
-                                .length +
-                            1) *
-                        cellHeight,
+                height: ((fetchProductVariantSMC(
+                                        item, individualModel, householdModel)
+                                    ?.productVariants ??
+                                [])
+                            .length +
+                        1) *
+                    cellHeight,
               )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],
