@@ -22,7 +22,6 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
-import '../../../utils/constants.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -30,7 +29,6 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
-import '../../../utils/utils_smc/utils_smc.dart' show fetchProductVariantSMC;
 
 @RoutePage()
 class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
@@ -60,11 +58,10 @@ class CustomDeliverInterventionSMCPageState
   static const _administeredQuantity = 2;
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
-  int azmDose = 0;
 
   // Variable to track dose administration status
   bool doseAdministered = false;
-  bool deliveryCommentRequired = false;
+
   // toggle doseAdministered
   void checkDoseAdministration(bool newValue) {
     setState(() {
@@ -112,8 +109,8 @@ class CustomDeliverInterventionSMCPageState
             "ADMINISTRATION_NOT_SUCCESSFUL" &&
         doseAdministered;
 // todo verify this how to handle this should pass default 00 or make user enter some value
-    // String? wastedCount =
-    //     ((form.control(_quantityWastedKey).value) ?? "00").toString();
+    String? wastedCount =
+        ((form.control(_quantityWastedKey).value) ?? "00").toString();
     final shouldSubmit = await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
@@ -162,7 +159,7 @@ class CustomDeliverInterventionSMCPageState
               projectBeneficiaryClientRefId:
                   projectBeneficiaryClientReferenceId ?? '',
               individual: selectedIndividual!,
-              // quantityWasted: wastedCount,
+              quantityWasted: wastedCount,
               isReadministrationUnSuccessful: true,
               productVariantId: productVariantId),
         );
@@ -195,8 +192,7 @@ class CustomDeliverInterventionSMCPageState
                   navigateToSummary: true,
                   householdMemberWrapper: householdMember),
             );
-        // context.router.push(DeliverySummaryRoute());
-        context.router.push(ConductMobilityControlAssessmentRoute());
+        context.router.push(DeliverySummaryRoute());
       }
     }
   }
@@ -279,7 +275,7 @@ class CustomDeliverInterventionSMCPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              ? (fetchProductVariantSMC(
+                              ? (fetchProductVariant(
                                       RegistrationDeliverySingleton()
                                               .selectedProject
                                               ?.additionalDetails
@@ -314,9 +310,6 @@ class CustomDeliverInterventionSMCPageState
                                   ?.length) ??
                               0
                           : 0;
-                      azmDose = (productVariants?.isNotEmpty == true
-                          ? productVariants![0].quantity
-                          : null)!;
 
                       final steps = generateSteps(numberOfDoses);
                       if ((productVariants ?? []).isEmpty && context.mounted) {
@@ -349,7 +342,10 @@ class CustomDeliverInterventionSMCPageState
 
                               return ReactiveFormBuilder(
                                 form: () => buildForm(
-                                    context, productVariants, variant, azmDose),
+                                  context,
+                                  productVariants,
+                                  variant,
+                                ),
                                 builder: (context, form, child) {
                                   return ScrollableContent(
                                     enableFixedButton: true,
@@ -371,10 +367,6 @@ class CustomDeliverInterventionSMCPageState
                                                       (context, locationState) {
                                                 return DigitElevatedButton(
                                                   onPressed: () async {
-                                                    form.markAllAsTouched();
-                                                    if (!form.valid) {
-                                                      return;
-                                                    }
                                                     final deliveredProducts =
                                                         ((form.control(_resourceDeliveredKey)
                                                                     as FormArray)
@@ -500,69 +492,68 @@ class CustomDeliverInterventionSMCPageState
                                               children: [
                                                 Text(
                                                   localizations.translate(
-                                                    i18_local
-                                                        .deliverIntervention
-                                                        .deliverInterventionTracomaLabel,
+                                                    i18.deliverIntervention
+                                                        .deliverInterventionLabel,
                                                   ),
                                                   style: theme
                                                       .textTheme.displayMedium,
                                                 ),
-                                                // if (RegistrationDeliverySingleton()
-                                                //         .beneficiaryType ==
-                                                //     BeneficiaryType.individual)
-                                                //   DigitTextFormField(
-                                                //     readOnly: true,
-                                                //     formControlName:
-                                                //         _doseAdministrationKey,
-                                                //     keyboardType:
-                                                //         TextInputType.number,
-                                                //     label: localizations
-                                                //         .translate(i18
-                                                //             .deliverIntervention
-                                                //             .currentCycle),
-                                                //   ),
-                                                // if (numberOfDoses > 1)
-                                                //   DigitStepper(
-                                                //     activeStep:
-                                                //         deliveryInterventionState
-                                                //                 .dose -
-                                                //             1,
-                                                //     stepRadius: 12.5,
-                                                //     steps: steps,
-                                                //     maxStepReached: 3,
-                                                //     lineLength: (MediaQuery.of(
-                                                //                     context)
-                                                //                 .size
-                                                //                 .width -
-                                                //             12.5 *
-                                                //                 2 *
-                                                //                 steps.length -
-                                                //             50) /
-                                                //         (steps.length - 1),
-                                                //   ),
-                                                // DigitDateFormPicker(
-                                                //   isEnabled: false,
-                                                //   formControlName:
-                                                //       _dateOfAdministrationKey,
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18.householdDetails
-                                                //         .dateOfRegistrationLabel,
-                                                //   ),
-                                                //   confirmText:
-                                                //       localizations.translate(
-                                                //     i18.common.coreCommonOk,
-                                                //   ),
-                                                //   cancelText:
-                                                //       localizations.translate(
-                                                //     i18.common.coreCommonCancel,
-                                                //   ),
-                                                //   isRequired: false,
-                                                //   padding:
-                                                //       const EdgeInsets.only(
-                                                //     top: kPadding,
-                                                //   ),
-                                                // ),
+                                                if (RegistrationDeliverySingleton()
+                                                        .beneficiaryType ==
+                                                    BeneficiaryType.individual)
+                                                  DigitTextFormField(
+                                                    readOnly: true,
+                                                    formControlName:
+                                                        _doseAdministrationKey,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    label: localizations
+                                                        .translate(i18
+                                                            .deliverIntervention
+                                                            .currentCycle),
+                                                  ),
+                                                if (numberOfDoses > 1)
+                                                  DigitStepper(
+                                                    activeStep:
+                                                        deliveryInterventionState
+                                                                .dose -
+                                                            1,
+                                                    stepRadius: 12.5,
+                                                    steps: steps,
+                                                    maxStepReached: 3,
+                                                    lineLength: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            12.5 *
+                                                                2 *
+                                                                steps.length -
+                                                            50) /
+                                                        (steps.length - 1),
+                                                  ),
+                                                DigitDateFormPicker(
+                                                  isEnabled: false,
+                                                  formControlName:
+                                                      _dateOfAdministrationKey,
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.householdDetails
+                                                        .dateOfRegistrationLabel,
+                                                  ),
+                                                  confirmText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonOk,
+                                                  ),
+                                                  cancelText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
+                                                  isRequired: false,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: kPadding,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -583,182 +574,139 @@ class CustomDeliverInterventionSMCPageState
                                                 ),
                                                 ..._controllers.map((e) =>
                                                     CustomResourceBeneficiaryCardSMC(
-                                                        form: form,
-                                                        azmDose: azmDose,
-                                                        cardIndex: _controllers
-                                                            .indexOf(e),
-                                                        totalItems:
-                                                            _controllers.length,
-                                                        isAdministered:
-                                                            doseAdministered,
-                                                        checkDoseAdministration:
-                                                            checkDoseAdministration,
-                                                        onDelete: (index) {
-                                                          (form.control(
-                                                            _resourceDeliveredKey,
-                                                          ) as FormArray)
-                                                              .removeAt(
-                                                            index,
-                                                          );
-                                                          (form.control(
-                                                            _quantityDistributedKey,
-                                                          ) as FormArray)
-                                                              .removeAt(
-                                                            index,
-                                                          );
-                                                          _controllers.removeAt(
-                                                            index,
-                                                          );
-                                                          setState(() {
-                                                            _controllers;
-                                                          });
-                                                        },
-                                                        onQuantityUpdate: () {
-                                                          final quantity = (((form
-                                                                      .control(
-                                                                          _quantityDistributedKey)
-                                                                  as FormArray)
-                                                              .value)?[0]) as int;
-                                                          if (quantity ==
-                                                              azmDose) {
-                                                            setState(() {
-                                                              deliveryCommentRequired =
-                                                                  false;
-                                                              (form.control(
-                                                                _deliveryCommentKey,
-                                                              )).value = null;
-
-                                                              (form.control(
-                                                                _deliveryCommentKey,
-                                                              )).setValidators(
-                                                                [],
-                                                                updateParent:
-                                                                    true,
-                                                                autoValidate:
-                                                                    true,
-                                                              );
-                                                            });
-                                                          } else {
-                                                            setState(() {
-                                                              deliveryCommentRequired =
-                                                                  true;
-
-                                                              (form.control(
-                                                                _deliveryCommentKey,
-                                                              )).setValidators(
-                                                                [
-                                                                  Validators
-                                                                      .required
-                                                                ],
-                                                                updateParent:
-                                                                    true,
-                                                                autoValidate:
-                                                                    true,
-                                                              );
-                                                              (form.control(
-                                                                _deliveryCommentKey,
-                                                              )).touched;
-                                                            });
-                                                          }
-                                                        })),
-
-                                                // DigitTextFormField(
-                                                //   formControlName:
-                                                //       _quantityWastedKey,
-                                                //   keyboardType:
-                                                //       const TextInputType
-                                                //           .numberWithOptions(
-                                                //           decimal: true),
-                                                //   inputFormatters: [
-                                                //     LengthLimitingTextInputFormatter(
-                                                //         1),
-                                                //     FilteringTextInputFormatter
-                                                //         .allow(
-                                                //       RegExp(r'^[123]$'),
-                                                //     ),
-                                                //   ],
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18_local
-                                                //         .deliverIntervention
-                                                //         .quantityWastedLabel,
-                                                //   ),
-                                                //   validationMessages: {
-                                                //     "required": (control) {
-                                                //       return localizations
-                                                //           .translate(
-                                                //         i18.common
-                                                //             .corecommonRequired,
-                                                //       );
-                                                //     },
-                                                //   },
-                                                //   onChanged: (formControl) {
-                                                //     if ((formControl.value
-                                                //             as String)
-                                                //         .isNotEmpty) {
-                                                //       setState(() {
-                                                //         doseAdministered = true;
-                                                //       });
-                                                //     } else {
-                                                //       setState(() {
-                                                //         doseAdministered =
-                                                //             false;
-                                                //       });
-                                                //     }
-                                                //   },
-                                                // ),
+                                                      form: form,
+                                                      cardIndex: _controllers
+                                                          .indexOf(e),
+                                                      totalItems:
+                                                          _controllers.length,
+                                                      isAdministered:
+                                                          doseAdministered,
+                                                      checkDoseAdministration:
+                                                          checkDoseAdministration,
+                                                      onDelete: (index) {
+                                                        (form.control(
+                                                          _resourceDeliveredKey,
+                                                        ) as FormArray)
+                                                            .removeAt(
+                                                          index,
+                                                        );
+                                                        (form.control(
+                                                          _quantityDistributedKey,
+                                                        ) as FormArray)
+                                                            .removeAt(
+                                                          index,
+                                                        );
+                                                        _controllers.removeAt(
+                                                          index,
+                                                        );
+                                                        setState(() {
+                                                          _controllers;
+                                                        });
+                                                      },
+                                                    )),
+                                                DigitTextFormField(
+                                                  formControlName:
+                                                      _quantityWastedKey,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                          .numberWithOptions(
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    LengthLimitingTextInputFormatter(
+                                                        1),
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                      RegExp(r'^[123]$'),
+                                                    ),
+                                                  ],
+                                                  label:
+                                                      localizations.translate(
+                                                    i18_local
+                                                        .deliverIntervention
+                                                        .quantityWastedLabel,
+                                                  ),
+                                                  validationMessages: {
+                                                    "required": (control) {
+                                                      return localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .corecommonRequired,
+                                                      );
+                                                    },
+                                                  },
+                                                  onChanged: (formControl) {
+                                                    if ((formControl.value
+                                                            as String)
+                                                        .isNotEmpty) {
+                                                      setState(() {
+                                                        doseAdministered = true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        doseAdministered =
+                                                            false;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
                                               ],
                                             ),
                                           ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Opacity(
-                                                  opacity: true ? 1 : 0.5,
-                                                  child: BlocBuilder<
-                                                      AppInitializationBloc,
-                                                      AppInitializationState>(
-                                                    builder: (context, state) {
-                                                      if (state
-                                                          is! AppInitialized) {
-                                                        return const Offstage();
-                                                      }
+                                          IgnorePointer(
+                                            ignoring: !doseAdministered,
+                                            child: DigitCard(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Opacity(
+                                                    opacity: doseAdministered
+                                                        ? 1
+                                                        : 0.5,
+                                                    child: BlocBuilder<
+                                                        AppInitializationBloc,
+                                                        AppInitializationState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        if (state
+                                                            is! AppInitialized) {
+                                                          return const Offstage();
+                                                        }
 
-                                                      final deliveryCommentOptionsSmc = state
-                                                              .appConfiguration
-                                                              .deliveryCommentOptionsSmc ??
-                                                          <DeliveryCommentOptions>[];
+                                                        final deliveryCommentOptionsSmc = state
+                                                                .appConfiguration
+                                                                .deliveryCommentOptionsSmc ??
+                                                            <DeliveryCommentOptions>[];
 
-                                                      return DigitReactiveDropdown<
-                                                          String>(
-                                                        label: localizations
-                                                            .translate(
-                                                          i18_local
-                                                              .deliverIntervention
-                                                              .deliveryCommentLabelSMC,
-                                                        ),
-                                                        menuItems:
-                                                            deliveryCommentOptionsSmc
-                                                                .map((e) {
-                                                          return e.code;
-                                                        }).toList(),
-                                                        formControlName:
-                                                            _deliveryCommentKey,
-                                                        isRequired:
-                                                            doseAdministered,
-                                                        valueMapper: (value) =>
-                                                            localizations
-                                                                .translate(
-                                                          value,
-                                                        ),
-                                                      );
-                                                    },
+                                                        return DigitReactiveDropdown<
+                                                            String>(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18_local
+                                                                .deliverIntervention
+                                                                .deliveryCommentLabelSMC,
+                                                          ),
+                                                          menuItems:
+                                                              deliveryCommentOptionsSmc
+                                                                  .map((e) {
+                                                            return e.code;
+                                                          }).toList(),
+                                                          formControlName:
+                                                              _deliveryCommentKey,
+                                                          isRequired:
+                                                              doseAdministered,
+                                                          valueMapper: (value) =>
+                                                              localizations
+                                                                  .translate(
+                                                            value,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -884,9 +832,7 @@ class CustomDeliverInterventionSMCPageState
               taskId: task?.id,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: oldTask?.rowVersion ?? 1,
-              quantity: (((form.control(_quantityDistributedKey) as FormArray)
-                      .value)?[productvariantList.indexOf(e)])
-                  .toString(),
+              quantity: _defaultQuantity.toString(),
               clientAuditDetails: ClientAuditDetails(
                 createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                 createdTime: context.millisecondsSinceEpoch(),
@@ -897,11 +843,11 @@ class CustomDeliverInterventionSMCPageState
               ),
               additionalFields:
                   TaskResourceAdditionalFields(version: 1, fields: [
-                // AdditionalField(
-                //   _quantityWastedKey,
-                //   (((form.control(_quantityWastedKey)).value ?? "00"))
-                //       .toString(),
-                // ),
+                AdditionalField(
+                  _quantityWastedKey,
+                  (((form.control(_quantityWastedKey)).value ?? "00"))
+                      .toString(),
+                ),
               ])))
           .toList(),
       address: address?.copyWith(
@@ -940,7 +886,6 @@ class CustomDeliverInterventionSMCPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
-          AdditionalField(Constants.isSMCDelivered, true),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),
@@ -966,15 +911,16 @@ class CustomDeliverInterventionSMCPageState
 
   // This method builds a form used for delivering interventions.
   FormGroup buildForm(
-      BuildContext context,
-      List<DeliveryProductVariant>? productVariants,
-      List<ProductVariantModel>? variants,
-      int azmDose) {
+    BuildContext context,
+    List<DeliveryProductVariant>? productVariants,
+    List<ProductVariantModel>? variants,
+  ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
     final overViewbloc = context.read<HouseholdOverviewBloc>().state;
     _controllers.forEachIndexed((index, element) {
       _controllers.removeAt(index);
     });
+
     // Add controllers for each product variant to the _controllers list.
     if (_controllers.isEmpty) {
       final int r = RegistrationDeliverySingleton()
@@ -984,7 +930,7 @@ class CustomDeliverInterventionSMCPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariantSMC(
+          : fetchProductVariant(
                       RegistrationDeliverySingleton()
                           .selectedProject
                           ?.additionalDetails
@@ -1002,12 +948,12 @@ class CustomDeliverInterventionSMCPageState
     }
 
     return fb.group(<String, Object>{
-      // _doseAdministrationKey: FormControl<String>(
-      //   value:
-      //       '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
-      //           .toString(),
-      //   validators: [],
-      // ),
+      _doseAdministrationKey: FormControl<String>(
+        value:
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
+        validators: [],
+      ),
       _deliveryCommentKey: FormControl<String>(
         value: RegistrationDeliverySingleton().beneficiaryType !=
                 BeneficiaryType.individual
@@ -1027,8 +973,8 @@ class CustomDeliverInterventionSMCPageState
             : null,
         validators: [],
       ),
-      // _dateOfAdministrationKey:
-      //     FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _dateOfAdministrationKey:
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
@@ -1050,17 +996,17 @@ class CustomDeliverInterventionSMCPageState
       _quantityDistributedKey: FormArray<int>([
         ..._controllers.mapIndexed(
           (i, e) => FormControl<int>(
-            value:
-                // RegistrationDeliverySingleton().beneficiaryType !=
-                //         BeneficiaryType.individual
-                //     ?
-                azmDose > 0 ? azmDose : 0,
-            // : 0,
-            validators: [Validators.min(azmDose)],
+            value: RegistrationDeliverySingleton().beneficiaryType !=
+                    BeneficiaryType.individual
+                ? int.tryParse(
+                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+                  )
+                : 0,
+            validators: [Validators.min(1)],
           ),
         ),
       ]),
-      // _quantityWastedKey: FormControl<String>(validators: []),
+      _quantityWastedKey: FormControl<String>(validators: []),
     });
   }
 }

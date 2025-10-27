@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import 'package:health_campaign_field_worker_app/utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -163,12 +164,12 @@ class CustomIndividualDetailsSMCPageState
 
                               String localityCode = locality!.code;
 
-                              beneficiaryId = {};
-                              //     await UniqueIdGeneration().generateUniqueId(
-                              //   localityCode: localityCode,
-                              //   loggedInUserId: context.loggedInUserUuid,
-                              //   returnCombinedIds: false,
-                              // );
+                              beneficiaryId =
+                                  await UniqueIdGeneration().generateUniqueId(
+                                localityCode: localityCode,
+                                loggedInUserId: context.loggedInUserUuid,
+                                returnCombinedIds: false,
+                              );
 
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
@@ -754,6 +755,7 @@ class CustomIndividualDetailsSMCPageState
         : null;
 
     identifier ??= IdentifierModel(
+      individualClientReferenceId: individual.clientReferenceId,
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,

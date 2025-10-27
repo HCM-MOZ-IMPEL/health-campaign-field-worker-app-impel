@@ -306,12 +306,12 @@ class CustomMemberCardSMC extends StatelessWidget {
                                       ));
 
                                       if ((tasks ?? []).isEmpty) {
-                                        // context.router
-                                        //     .push(EligibilityChecklistViewRoute(
-                                        //   projectBeneficiaryClientReferenceId:
-                                        //       projectBeneficiaryClientReferenceId,
-                                        //   individual: individual,
-                                        // ));
+                                        context.router
+                                            .push(EligibilityChecklistViewRoute(
+                                          projectBeneficiaryClientReferenceId:
+                                              projectBeneficiaryClientReferenceId,
+                                          individual: individual,
+                                        ));
                                       } else {
                                         context.router
                                             .push(BeneficiaryDetailsRoute());
