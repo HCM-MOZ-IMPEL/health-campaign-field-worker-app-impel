@@ -961,6 +961,26 @@ class AppRouter extends _$AppRouter {
                 ),
               ]),
 
+          // vehicle Tracking module
+          AutoRoute(
+              page: VehicleTrackingWrapperRoute.page,
+              path: 'vehicle-tracking',
+              children: [
+                AutoRoute(
+                  page: VehicleSearchRoute.page,
+                  path: 'vehicle-search',
+                  initial: true,
+                ),
+                AutoRoute(
+                  page: VehicleOverviewRoute.page,
+                  path: 'vehicle-overview',
+                ),
+                AutoRoute(
+                  page: VehicleTripBookRoute.page,
+                  path: 'vehicle-trip-book',
+                )
+              ]),
+
           // Attendance Route
           AutoRoute(
             page: ManageAttendanceRoute.page,

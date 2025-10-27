@@ -499,6 +499,16 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
+      i18.home.vehicleTrackingLabel: homeShowcaseData.vehicleTracking.buildWith(
+        child: HomeItemCard(
+          icon: Icons.local_taxi_rounded,
+          label: i18.home.vehicleTrackingLabel,
+          onPressed: () => {
+            // context.router.push(VehicleTripBookRoute())
+            context.router.push(const VehicleTrackingWrapperRoute()),
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -518,6 +528,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.showcaseKey,
 
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
@@ -548,6 +560,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
+      i18.home.vehicleTrackingLabel,
 
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
