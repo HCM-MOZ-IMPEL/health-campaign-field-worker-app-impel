@@ -4,10 +4,10 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 
-import '../../../blocs/inventory_management/stock_bloc.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/extensions/extensions.dart';
+import '../../blocs/inventory_management/stock_bloc.dart';
+import '../../router/app_router.dart';
+import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
 import 'custom_stock_details_in_tabs.dart';
 import 'qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -29,7 +29,7 @@ import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomStockDetailsBednetPage extends LocalizedStatefulWidget {

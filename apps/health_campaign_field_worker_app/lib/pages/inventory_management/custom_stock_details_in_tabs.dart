@@ -26,14 +26,14 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../../blocs/auth/auth.dart';
-import '../../../blocs/inventory_management/stock_bloc.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/extensions/extensions.dart';
-import '../../../utils/registration_delivery/registration_delivery_utils.dart';
+import '../../blocs/auth/auth.dart';
+import '../../blocs/inventory_management/stock_bloc.dart';
+import '../../router/app_router.dart';
+import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../utils/registration_delivery/registration_delivery_utils.dart';
 
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 class DynamicTabsPage extends LocalizedStatefulWidget {
   @override

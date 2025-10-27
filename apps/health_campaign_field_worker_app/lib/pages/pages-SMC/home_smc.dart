@@ -384,7 +384,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     _,
                     __,
                   ) {
-                    context.router.push(ManageStocksRoute());
+                    context.router.push(CustomManageStocksRoute());
                   },
                 );
           },
@@ -577,6 +577,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                   .map((e) => e.displayName)
                   .toList()
                   .contains(element) ||
+              element == i18.home.manageStockLabel ||
               element == i18.home.db,
         ) // TODO: need to add close household inside mdms
         .toList();

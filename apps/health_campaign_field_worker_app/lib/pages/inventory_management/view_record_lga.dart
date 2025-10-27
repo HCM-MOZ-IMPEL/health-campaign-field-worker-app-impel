@@ -20,17 +20,17 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:collection/collection.dart';
 
-import '../../../router/app_router.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/extensions/extensions.dart';
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../router/app_router.dart';
+import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class ViewStockRecordsLGAPage extends LocalizedStatefulWidget {
+class ReceiveStockPage extends LocalizedStatefulWidget {
   final String mrnNumber;
   final List<StockModel> stockRecords;
 
-  const ViewStockRecordsLGAPage({
+  const ReceiveStockPage({
     super.key,
     super.appLocalizations,
     required this.mrnNumber,
@@ -38,12 +38,10 @@ class ViewStockRecordsLGAPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ViewStockRecordsLGAPage> createState() =>
-      _ViewStockRecordsLGAPageState();
+  State<ReceiveStockPage> createState() => _ReceiveStockPageState();
 }
 
-class _ViewStockRecordsLGAPageState
-    extends LocalizedState<ViewStockRecordsLGAPage>
+class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
     with SingleTickerProviderStateMixin {
   late final List<FormGroup> _forms;
   late TabController _tabController;

@@ -13,8 +13,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../../utils/extensions/extensions.dart';
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
