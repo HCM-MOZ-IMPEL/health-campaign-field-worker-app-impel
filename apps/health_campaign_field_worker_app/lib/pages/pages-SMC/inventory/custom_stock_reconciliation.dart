@@ -358,7 +358,7 @@ class _CustomStockReconciliationSMCPageState
                                                           (element) =>
                                                               element.usage ==
                                                               Constants
-                                                                  .districWarehouse,
+                                                                  .districtWarehouse,
                                                         )
                                                         .toList();
                                                 facilities =

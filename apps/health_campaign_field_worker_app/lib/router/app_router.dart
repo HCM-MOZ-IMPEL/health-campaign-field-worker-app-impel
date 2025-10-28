@@ -1,3 +1,4 @@
+import 'package:health_campaign_field_worker_app/blocs/inventory_management/custom_inventory_report.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
@@ -24,6 +25,8 @@ import 'package:survey_form/router/survey_form_router.gm.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/inventory_management/custom_inventory_report_details.dart';
+import '../pages/inventory_management/custom_inventory_report_selection.dart';
 import '../pages/inventory_management/custom_manage_stock.dart';
 import '../pages/inventory_management/view_transactions_page.dart';
 import '../pages/irswrapper.dart';
@@ -120,7 +123,7 @@ import '../pages/inventory/custom_stock_details.dart';
 import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
-import 'package:inventory_management/blocs/inventory_report.dart';
+// import 'package:inventory_management/blocs/inventory_report.dart';
 import '../pages/attendance/custom_manage_attendance.dart';
 import '../pages/attendance/custom_mark_attendance.dart';
 import '../pages/attendance/custom_session_select.dart';
@@ -1114,7 +1117,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-selection',
           ),
           AutoRoute(
-            page: CustomInventoryReportSelectionSMCRoute.page,
+            page: CustomInventoryReportSelectionRoute.page,
             path: 'custom-inventory-report-selection',
           ),
           RedirectRoute(
@@ -1126,7 +1129,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-details',
           ),
           AutoRoute(
-            page: CustomInventoryReportDetailsSMCRoute.page,
+            page: CustomInventoryReportDetailsRoute.page,
             path: 'custom-inventory-report-details',
           ),
           RedirectRoute(
@@ -1777,7 +1780,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-selection',
           ),
           AutoRoute(
-            page: CustomInventoryReportSelectionBednetRoute.page,
+            page: CustomInventoryReportSelectionRoute.page,
             path: 'custom-inventory-report-selection-bednet',
           ),
           RedirectRoute(
@@ -1789,7 +1792,7 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-report-details',
           ),
           AutoRoute(
-            page: CustomInventoryReportDetailsBednetRoute.page,
+            page: CustomInventoryReportDetailsRoute.page,
             path: 'custom-inventory-report-details-bednet',
           ),
           RedirectRoute(

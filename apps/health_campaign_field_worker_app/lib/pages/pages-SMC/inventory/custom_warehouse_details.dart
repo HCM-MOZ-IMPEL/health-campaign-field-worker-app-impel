@@ -122,7 +122,7 @@ class CustomWarehouseDetailsSMCPageState
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.districWarehouse,
+                                  element.usage == Constants.districtWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty

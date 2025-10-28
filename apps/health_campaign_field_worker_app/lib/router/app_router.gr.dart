@@ -691,18 +691,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CustomInventoryReportDetailsBednetRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<CustomInventoryReportDetailsBednetRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomInventoryReportDetailsBednetPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          reportType: args.reportType,
-        ),
-      );
-    },
     CustomInventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -714,47 +702,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CustomInventoryReportDetailsSMCRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomInventoryReportDetailsSMCRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomInventoryReportDetailsSMCPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          reportType: args.reportType,
-        ),
-      );
-    },
-    CustomInventoryReportSelectionBednetRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<CustomInventoryReportSelectionBednetRouteArgs>(
-              orElse: () =>
-                  const CustomInventoryReportSelectionBednetRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomInventoryReportSelectionBednetPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     CustomInventoryReportSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomInventoryReportSelectionRouteArgs>(
           orElse: () => const CustomInventoryReportSelectionRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomInventoryReportSelectionPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    CustomInventoryReportSelectionSMCRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomInventoryReportSelectionSMCRouteArgs>(
-          orElse: () => const CustomInventoryReportSelectionSMCRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomInventoryReportSelectionSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -3802,50 +3755,6 @@ class CustomInventoryFacilitySelectionSMCRouteArgs {
 }
 
 /// generated route for
-/// [CustomInventoryReportDetailsBednetPage]
-class CustomInventoryReportDetailsBednetRoute
-    extends PageRouteInfo<CustomInventoryReportDetailsBednetRouteArgs> {
-  CustomInventoryReportDetailsBednetRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required InventoryReportType reportType,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomInventoryReportDetailsBednetRoute.name,
-          args: CustomInventoryReportDetailsBednetRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            reportType: reportType,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomInventoryReportDetailsBednetRoute';
-
-  static const PageInfo<CustomInventoryReportDetailsBednetRouteArgs> page =
-      PageInfo<CustomInventoryReportDetailsBednetRouteArgs>(name);
-}
-
-class CustomInventoryReportDetailsBednetRouteArgs {
-  const CustomInventoryReportDetailsBednetRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.reportType,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final InventoryReportType reportType;
-
-  @override
-  String toString() {
-    return 'CustomInventoryReportDetailsBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
-  }
-}
-
-/// generated route for
 /// [CustomInventoryReportDetailsPage]
 class CustomInventoryReportDetailsRoute
     extends PageRouteInfo<CustomInventoryReportDetailsRouteArgs> {
@@ -3890,95 +3799,12 @@ class CustomInventoryReportDetailsRouteArgs {
 }
 
 /// generated route for
-/// [CustomInventoryReportDetailsSMCPage]
-class CustomInventoryReportDetailsSMCRoute
-    extends PageRouteInfo<CustomInventoryReportDetailsSMCRouteArgs> {
-  CustomInventoryReportDetailsSMCRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required InventoryReportType reportType,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomInventoryReportDetailsSMCRoute.name,
-          args: CustomInventoryReportDetailsSMCRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            reportType: reportType,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomInventoryReportDetailsSMCRoute';
-
-  static const PageInfo<CustomInventoryReportDetailsSMCRouteArgs> page =
-      PageInfo<CustomInventoryReportDetailsSMCRouteArgs>(name);
-}
-
-class CustomInventoryReportDetailsSMCRouteArgs {
-  const CustomInventoryReportDetailsSMCRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.reportType,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final InventoryReportType reportType;
-
-  @override
-  String toString() {
-    return 'CustomInventoryReportDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
-  }
-}
-
-/// generated route for
-/// [CustomInventoryReportSelectionBednetPage]
-class CustomInventoryReportSelectionBednetRoute
-    extends PageRouteInfo<CustomInventoryReportSelectionBednetRouteArgs> {
-  CustomInventoryReportSelectionBednetRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomInventoryReportSelectionBednetRoute.name,
-          args: CustomInventoryReportSelectionBednetRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomInventoryReportSelectionBednetRoute';
-
-  static const PageInfo<CustomInventoryReportSelectionBednetRouteArgs> page =
-      PageInfo<CustomInventoryReportSelectionBednetRouteArgs>(name);
-}
-
-class CustomInventoryReportSelectionBednetRouteArgs {
-  const CustomInventoryReportSelectionBednetRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'CustomInventoryReportSelectionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
 /// [CustomInventoryReportSelectionPage]
 class CustomInventoryReportSelectionRoute
     extends PageRouteInfo<CustomInventoryReportSelectionRouteArgs> {
   CustomInventoryReportSelectionRoute({
     Key? key,
-    AppLocalizations? appLocalizations,
+    InventoryLocalization? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomInventoryReportSelectionRoute.name,
@@ -4003,50 +3829,11 @@ class CustomInventoryReportSelectionRouteArgs {
 
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
     return 'CustomInventoryReportSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [CustomInventoryReportSelectionSMCPage]
-class CustomInventoryReportSelectionSMCRoute
-    extends PageRouteInfo<CustomInventoryReportSelectionSMCRouteArgs> {
-  CustomInventoryReportSelectionSMCRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomInventoryReportSelectionSMCRoute.name,
-          args: CustomInventoryReportSelectionSMCRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomInventoryReportSelectionSMCRoute';
-
-  static const PageInfo<CustomInventoryReportSelectionSMCRouteArgs> page =
-      PageInfo<CustomInventoryReportSelectionSMCRouteArgs>(name);
-}
-
-class CustomInventoryReportSelectionSMCRouteArgs {
-  const CustomInventoryReportSelectionSMCRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'CustomInventoryReportSelectionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

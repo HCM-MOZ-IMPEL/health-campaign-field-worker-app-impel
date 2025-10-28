@@ -930,7 +930,7 @@ class CustomStockDetailsSMCPageState
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants
-                                                          .districWarehouse)
+                                                          .districtWarehouse)
                                                   .toList());
                                             }
                                           } else if (boundaryLevel ==
@@ -974,7 +974,7 @@ class CustomStockDetailsSMCPageState
                                                     .where((element) =>
                                                         element.usage ==
                                                         Constants
-                                                            .districWarehouse)
+                                                            .districtWarehouse)
                                                     .toList());
                                               } else {
                                                 if (stockState.entryType ==
