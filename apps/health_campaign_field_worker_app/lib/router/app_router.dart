@@ -142,13 +142,7 @@ import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
-<<<<<<< HEAD
-=======
-import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
-import 'package:digit_dss/blocs/app_localization.dart';
-import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 import '../pages/vehicle_tracking/vehicle_acknowledgement.dart';
->>>>>>> e869b0760b4e9e8f7901302e4b7320a5cf46c8b8
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
