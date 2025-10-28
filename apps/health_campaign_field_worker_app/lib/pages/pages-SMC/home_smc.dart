@@ -1,5 +1,6 @@
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
@@ -366,6 +367,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabelSMC,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
@@ -416,6 +419,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -577,7 +582,6 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                   .map((e) => e.displayName)
                   .toList()
                   .contains(element) ||
-              element == i18.home.manageStockLabel ||
               element == i18.home.db ||
               element == i18.home.vehicleTrackingLabel,
         ) // TODO: need to add close household inside mdms
@@ -689,6 +693,7 @@ void setPackagesSingleton(BuildContext context) {
         List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
         loadLocalization(context, appConfiguration);
+        final filter = appConfiguration.searchHouseHoldFiltersSMC;
 
         // info filter dashboardschema based on projectTypeCode
         final projectTypeCode =

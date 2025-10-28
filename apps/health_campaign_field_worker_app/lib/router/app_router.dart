@@ -80,7 +80,6 @@ import '../pages/inventory_management/view_record_lga.dart';
 import '../pages/inventory_management/view_stock_records.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';
-import '../pages/pages-SMC/beneficiary/conduct_mobility_control_assessment.dart';
 import '../pages/pages-SMC/smcwrapper.dart';
 import '../pages/boundary_selection.dart';
 
@@ -132,7 +131,6 @@ import '../pages/pages-SMC/beneficiary_registration/custom_beneficiary_acknowled
 import '../pages/pages-SMC/beneficiary_registration/custom_household_location_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_details_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_smc.dart';
-import '../pages/pages-SMC/beneficiary/custom_deliver_intervention_head.dart';
 import '../pages/pages-SMC/home_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
@@ -144,10 +142,18 @@ import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
+<<<<<<< HEAD
+=======
+import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
+import 'package:digit_dss/blocs/app_localization.dart';
+import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
+import '../pages/vehicle_tracking/vehicle_acknowledgement.dart';
+>>>>>>> e869b0760b4e9e8f7901302e4b7320a5cf46c8b8
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 import '../pages/vehicle_tracking/vehicle_trip_book.dart';
+import '../pages/vehicle_tracking/vehicle_tracking_feedback.dart';
 
 part 'app_router.gr.dart';
 
@@ -894,13 +900,6 @@ class AppRouter extends _$AppRouter {
                       redirectTo: 'custom-deliver-intervention-smc',
                     ),
                     AutoRoute(
-                        page: CustomDeliverInterventionHeadRoute.page,
-                        path: 'custom-deliver-intervention-head'),
-                    RedirectRoute(
-                      path: 'deliver-intervention-head',
-                      redirectTo: 'custom-deliver-intervention-head',
-                    ),
-                    AutoRoute(
                       page: EligibilityChecklistViewRoute.page,
                       path: 'eligibility-checklist',
                     ),
@@ -977,9 +976,6 @@ class AppRouter extends _$AppRouter {
                       page: DoseAdministeredVerificationRoute.page,
                       path: 'dose-administered-verification',
                     ),
-                    AutoRoute(
-                        page: ConductMobilityControlAssessmentRoute.page,
-                        path: 'conduct-mobility-control-assessment'),
                   ],
                 ),
               ]),
@@ -1001,6 +997,14 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                   page: VehicleTripBookRoute.page,
                   path: 'vehicle-trip-book',
+                ),
+                AutoRoute(
+                  page: VehicleTripFeedbackRoute.page,
+                  path: 'vehicle-trip-feedback',
+                ),
+                AutoRoute(
+                  page: VehicleAcknowledgementRoute.page,
+                  path: 'vehicle-acknowledgement',
                 )
               ]),
 
@@ -1382,6 +1386,14 @@ class AppRouter extends _$AppRouter {
                 AutoRoute(
                   page: VehicleTripBookRoute.page,
                   path: 'vehicle-trip-book',
+                ),
+                AutoRoute(
+                  page: VehicleTripFeedbackRoute.page,
+                  path: 'vehicle-trip-feedback',
+                ),
+                AutoRoute(
+                  page: VehicleAcknowledgementRoute.page,
+                  path: 'vehicle-acknowledgement',
                 )
               ]),
 

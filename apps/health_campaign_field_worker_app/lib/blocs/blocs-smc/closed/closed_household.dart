@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaign_field_worker_app/utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -60,12 +61,12 @@ class ClosedHouseholdBloc
     try {
       String localityCode = locality!.code;
 
-      Set<String> beneficiaryId = {};
-      // await UniqueIdGeneration().generateUniqueId(
-      //   localityCode: localityCode,
-      //   loggedInUserId: event.loggedInUserUuid!,
-      //   returnCombinedIds: false,
-      // );
+      Set<String> beneficiaryId = await UniqueIdGeneration().generateUniqueId(
+        localityCode: localityCode,
+        loggedInUserId: event.loggedInUserUuid!,
+        returnCombinedIds: false,
+      );
+
       var address = AddressModel(
         latitude: event.latitude,
         longitude: event.longitude,
@@ -98,6 +99,7 @@ class ClosedHouseholdBloc
         tenantId: event.tenantId.toString(),
         longitude: event.longitude,
         latitude: event.latitude,
+        householdType: RegistrationDeliverySingleton().householdType,
         clientAuditDetails: ClientAuditDetails(
           createdBy: event.loggedInUserUuid!,
           createdTime: DateTime.now().millisecondsSinceEpoch,
@@ -147,6 +149,7 @@ class ClosedHouseholdBloc
         ),
       );
       var identifier = IdentifierModel(
+        individualClientReferenceId: individual.clientReferenceId,
         clientReferenceId: individual.clientReferenceId,
         tenantId: event.tenantId,
         rowVersion: 1,

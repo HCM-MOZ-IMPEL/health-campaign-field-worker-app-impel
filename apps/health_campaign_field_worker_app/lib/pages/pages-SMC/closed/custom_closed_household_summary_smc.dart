@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/utils/utils.dart';
 import '../../../../widgets/localized.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
@@ -124,10 +125,14 @@ class CustomClosedHouseholdSummaryPageState
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdVillageName),
                             value: localizations.translate(
-                                ClosedHouseholdSingleton()
-                                    .boundary!
-                                    .code
-                                    .toString()),
+                                RegistrationDeliverySingleton()
+                                        .boundary
+                                        ?.code
+                                        .toString() ??
+                                    ClosedHouseholdSingleton()
+                                        .boundary!
+                                        .code
+                                        .toString()),
                           ),
                           LabelValuePair(
                             label: localizations.translate(

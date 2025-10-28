@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
@@ -260,8 +261,9 @@ class CustomClosedHouseholdDetailsPageState
   FormGroup buildForm(ClosedHouseholdState state) {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
+        value: localizations.translate(
+            RegistrationDeliverySingleton().boundary?.code.toString() ??
+                ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(

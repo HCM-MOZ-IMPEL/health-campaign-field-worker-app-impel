@@ -11,6 +11,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
+import '../../utils/utils.dart';
 
 part 'vehicle_trip_action.freezed.dart';
 
@@ -40,7 +41,7 @@ class VehicleTripActionBloc
     UserActionModel tripActionModel = event.tripAction;
     try {
       tripActionModel = tripActionModel.copyWith(
-          action: TripActions.end.name,
+          action: TripActions.end.toValue(),
           auditDetails: tripActionModel.auditDetails?.copyWith(
               lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
               lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
@@ -97,7 +98,15 @@ class VehicleTripActionBloc
   FutureOr<void> _handleSearch(
     VehicleTripActionSearchEvent event,
     VehicleTripActionEmitter emit,
-  ) async {}
+  ) async {
+    List<UserActionModel> vehicleUserActions =
+        await userActionLocalRepository.searchUserAction(
+            action: TripActions.start.toValue(), vehicleNo: event.vehicleNo);
+    emit(state.copyWith(
+      loading: false,
+      tripAction: vehicleUserActions.firstOrNull,
+    ));
+  }
 }
 
 @freezed
@@ -112,12 +121,13 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   const factory VehicleTripActionEvent.handleEndTip({
     required bool isEditing,
     required BoundaryModel boundaryModel,
+    required String vehicleNo,
     required UserActionModel tripAction,
     @Default(false) bool navigateToSummary,
   }) = VehicleTripActionEndTripEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required UserActionModel vehicleTripSearch,
+    required String vehicleNo,
   }) = VehicleTripActionSearchEvent;
 }
 

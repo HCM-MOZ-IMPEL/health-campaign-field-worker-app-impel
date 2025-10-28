@@ -98,17 +98,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ConductMobilityControlAssessmentRoute.name: (routeData) {
-      final args = routeData.argsAs<ConductMobilityControlAssessmentRouteArgs>(
-          orElse: () => const ConductMobilityControlAssessmentRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ConductMobilityControlAssessmentPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     ConsentHouseholdAcknowledgementBednetRoute.name: (routeData) {
       final args =
           routeData.argsAs<ConsentHouseholdAcknowledgementBednetRouteArgs>(
@@ -346,18 +335,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomDeliverInterventionBednetPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
-    CustomDeliverInterventionHeadRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomDeliverInterventionHeadRouteArgs>(
-          orElse: () => const CustomDeliverInterventionHeadRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomDeliverInterventionHeadPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -1153,6 +1130,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VehicleAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleAcknowledgementRouteArgs>(
+          orElse: () => const VehicleAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     VehicleOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleOverviewRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1185,6 +1173,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: VehicleTripBookPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          vehicleNo: args.vehicleNo,
+        ),
+      );
+    },
+    VehicleTripFeedbackRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleTripFeedbackRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleTripFeedbackPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           vehicleNo: args.vehicleNo,
@@ -1529,45 +1528,6 @@ class ComplaintsAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'ComplaintsAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ConductMobilityControlAssessmentPage]
-class ConductMobilityControlAssessmentRoute
-    extends PageRouteInfo<ConductMobilityControlAssessmentRouteArgs> {
-  ConductMobilityControlAssessmentRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ConductMobilityControlAssessmentRoute.name,
-          args: ConductMobilityControlAssessmentRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ConductMobilityControlAssessmentRoute';
-
-  static const PageInfo<ConductMobilityControlAssessmentRouteArgs> page =
-      PageInfo<ConductMobilityControlAssessmentRouteArgs>(name);
-}
-
-class ConductMobilityControlAssessmentRouteArgs {
-  const ConductMobilityControlAssessmentRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ConductMobilityControlAssessmentRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2434,50 +2394,6 @@ class CustomDeliverInterventionBednetRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionBednetRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
-/// [CustomDeliverInterventionHeadPage]
-class CustomDeliverInterventionHeadRoute
-    extends PageRouteInfo<CustomDeliverInterventionHeadRouteArgs> {
-  CustomDeliverInterventionHeadRoute({
-    Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
-    bool isEditing = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomDeliverInterventionHeadRoute.name,
-          args: CustomDeliverInterventionHeadRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomDeliverInterventionHeadRoute';
-
-  static const PageInfo<CustomDeliverInterventionHeadRouteArgs> page =
-      PageInfo<CustomDeliverInterventionHeadRouteArgs>(name);
-}
-
-class CustomDeliverInterventionHeadRouteArgs {
-  const CustomDeliverInterventionHeadRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final RegistrationDeliveryLocalization? appLocalizations;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'CustomDeliverInterventionHeadRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
@@ -5360,6 +5276,45 @@ class UserQRDetailsRouteArgs {
 }
 
 /// generated route for
+/// [VehicleAcknowledgementPage]
+class VehicleAcknowledgementRoute
+    extends PageRouteInfo<VehicleAcknowledgementRouteArgs> {
+  VehicleAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleAcknowledgementRoute.name,
+          args: VehicleAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleAcknowledgementRoute';
+
+  static const PageInfo<VehicleAcknowledgementRouteArgs> page =
+      PageInfo<VehicleAcknowledgementRouteArgs>(name);
+}
+
+class VehicleAcknowledgementRouteArgs {
+  const VehicleAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'VehicleAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [VehicleOverviewPage]
 class VehicleOverviewRoute extends PageRouteInfo<VehicleOverviewRouteArgs> {
   VehicleOverviewRoute({
@@ -5489,6 +5444,50 @@ class VehicleTripBookRouteArgs {
   @override
   String toString() {
     return 'VehicleTripBookRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
+  }
+}
+
+/// generated route for
+/// [VehicleTripFeedbackPage]
+class VehicleTripFeedbackRoute
+    extends PageRouteInfo<VehicleTripFeedbackRouteArgs> {
+  VehicleTripFeedbackRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    required String vehicleNo,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleTripFeedbackRoute.name,
+          args: VehicleTripFeedbackRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            vehicleNo: vehicleNo,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleTripFeedbackRoute';
+
+  static const PageInfo<VehicleTripFeedbackRouteArgs> page =
+      PageInfo<VehicleTripFeedbackRouteArgs>(name);
+}
+
+class VehicleTripFeedbackRouteArgs {
+  const VehicleTripFeedbackRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.vehicleNo,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final String vehicleNo;
+
+  @override
+  String toString() {
+    return 'VehicleTripFeedbackRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
   }
 }
 

@@ -86,6 +86,10 @@ class AppConfiguration {
 
   @Name('SEARCH_HOUSEHOLD_FILTERS_BEDNET')
   late List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet;
+  @Name('VEHICLE_TRACKING_TRIP_REASONS')
+  late List<VehicleTrackingReasons>? vehicleTrackingTripReasons;
+  @Name('VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+  late List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons;
 
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
@@ -262,6 +266,13 @@ class HouseStructureTypes {
 
 @embedded
 class RefusalReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class VehicleTrackingReasons {
   late String code;
   late String name;
   late bool active;

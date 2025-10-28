@@ -244,6 +244,7 @@ extension ContextUtilityExtensions on BuildContext {
     SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);

@@ -22,6 +22,7 @@ import '../../blocs/vehicle_tracking/search_vehicles.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
 import '../../router/app_router.dart';
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
@@ -54,6 +55,12 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
         SearchVehiclesEvent.searchByVehicleNo(
             projectId: RegistrationDeliverySingleton().projectId!,
             vehicleNo: widget.vehicleNo));
+  }
+
+  _searchSelectedVehicleActionModel() {
+    final vehicleTripActionBloc = context.read<VehicleTripActionBloc>();
+    vehicleTripActionBloc
+        .add(VehicleTripActionEvent.handleSearch(vehicleNo: widget.vehicleNo));
   }
 
   VehicleStatusEnum _getVehicleStatus(UserActionModel? userActionModel) {
@@ -174,6 +181,7 @@ class _VehicleOverviewPageState extends State<VehicleOverviewPage> {
                                           boundaryModel:
                                               RegistrationDeliverySingleton()
                                                   .boundary!,
+                                          vehicleNo: widget.vehicleNo,
                                           tripAction: tripState.tripAction!),
                                     );
                               }

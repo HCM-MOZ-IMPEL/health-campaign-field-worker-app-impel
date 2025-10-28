@@ -224,7 +224,7 @@ class _CustomHouseholdLocationSMCPageState
                       child: Center(
                         child: Text(
                           localizations.translate(
-                            i18Local.householdLocation.actionLabelTracoma,
+                            i18Local.householdLocation.actionLabel,
                           ),
                         ),
                       ),
