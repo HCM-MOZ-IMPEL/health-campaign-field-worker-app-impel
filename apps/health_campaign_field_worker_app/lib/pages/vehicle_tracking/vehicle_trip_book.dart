@@ -10,8 +10,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +40,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../models/entities/vehicle_tracking/trip_actions.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
@@ -63,14 +63,11 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
   bool? shouldSubmit = false;
 
   static const _tripBookReasonKey = "tripBookReason";
-
-  List<String> reasons = ["Reason1", "Reason2", "Reason3", "Others"];
+  static const _otherFieldReasonKey = "otherFieldReason";
 
   // Variable to track dose administration status
   bool doseAdministered = false;
   // for others reason
-  final TextEditingController otherFieldReasonController =
-      TextEditingController();
   bool otherSelected = false;
 
 // Initialize the currentStep variable to keep track of the current step in a process.
@@ -124,6 +121,14 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                   : () async {
                                       form.markAllAsTouched();
                                       if (!form.valid) {
+                                        Toast.showToast(
+                                          context,
+                                          type: ToastType.error,
+                                          message: localizations.translate(
+                                            i18_local.vehicleTracking
+                                                .commentRequired,
+                                          ),
+                                        );
                                         return;
                                       }
 
@@ -200,63 +205,101 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: SelectionBox<String>(
-                                isRequired: true,
-                                title: localizations.translate(
-                                  i18_local.vehicleTracking.tripBookReasonLabel,
-                                ),
-                                allowMultipleSelection: false,
-                                width: 148,
-                                equalWidthOptions: true,
-                                options: reasons,
-                                onSelectionChanged: (value) {
-                                  form
-                                      .control(_tripBookReasonKey)
-                                      .markAsTouched();
-                                  setState(() {
-                                    if (value.isNotEmpty) {
-                                      if (value.first == "Others") {
-                                        setState(() {
-                                          otherSelected = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          otherSelected = false;
-                                        });
-                                      }
-                                      form.control(_tripBookReasonKey).value =
-                                          value.first;
-                                    } else {
-                                      form.control(_tripBookReasonKey).value =
-                                          null;
-                                    }
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations.translate(value);
-                                },
-                                errorMessage: null,
-                              ),
-                            ),
+                                padding: const EdgeInsets.fromLTRB(
+                                    kPadding, 0, kPadding, 0),
+                                child: BlocBuilder<AppInitializationBloc,
+                                        AppInitializationState>(
+                                    builder: (context, state) {
+                                  if (state is! AppInitialized) {
+                                    return const Offstage();
+                                  }
+
+                                  final vehicleTrackingTripReasons = state
+                                      .appConfiguration
+                                      .vehicleTrackingTripReasons;
+
+                                  return SelectionBox<String>(
+                                    isRequired: true,
+                                    title: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.tripBookReasonLabel,
+                                    ),
+                                    allowMultipleSelection: false,
+                                    width: 148,
+                                    equalWidthOptions: true,
+                                    options: vehicleTrackingTripReasons
+                                            ?.map((reason) => reason.code)
+                                            .toList() ??
+                                        [],
+                                    onSelectionChanged: (value) {
+                                      form
+                                          .control(_tripBookReasonKey)
+                                          .markAsTouched();
+                                      setState(() {
+                                        if (value.isNotEmpty) {
+                                          if (value.first == "OTHERS") {
+                                            setState(() {
+                                              otherSelected = true;
+                                              form
+                                                  .control(_otherFieldReasonKey)
+                                                  .setValidators(
+                                                [Validators.required],
+                                                autoValidate: true,
+                                              );
+                                            });
+                                          } else {
+                                            setState(() {
+                                              otherSelected = false;
+                                              form
+                                                  .control(_otherFieldReasonKey)
+                                                  .setValidators(
+                                                [],
+                                                autoValidate: true,
+                                              );
+                                            });
+                                          }
+                                          form
+                                              .control(_tripBookReasonKey)
+                                              .value = value.first;
+                                        } else {
+                                          form
+                                              .control(_tripBookReasonKey)
+                                              .value = null;
+                                        }
+                                      });
+                                    },
+                                    valueMapper: (value) {
+                                      return localizations.translate(value);
+                                    },
+                                    errorMessage: null,
+                                  );
+                                })),
                             Offstage(
                                 offstage: !otherSelected,
                                 child: Padding(
-                                  padding: EdgeInsets.all(kPadding),
-                                  child: DigitTextField(
-                                      label: localizations.translate(
-                                        i18_local.vehicleTracking
-                                            .othersReasonTextLabel,
-                                      ),
-                                      isRequired: otherSelected,
-                                      controller: otherFieldReasonController,
-                                      inputFormatter: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                          "[a-zA-Z0-9]",
-                                        )),
-                                      ]),
+                                  padding: const EdgeInsets.all(kPadding),
+                                  child: ReactiveWrapperField(
+                                      formControlName: _otherFieldReasonKey,
+                                      builder: (field) {
+                                        return InputField(
+                                          label: localizations.translate(
+                                            i18_local.vehicleTracking
+                                                .othersReasonTextLabel,
+                                          ),
+                                          isRequired: otherSelected,
+                                          onChange: (value) {
+                                            field.control.markAsTouched();
+                                            field.control.value = value;
+                                          },
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                              "[a-zA-Z0-9]",
+                                            )),
+                                          ],
+                                          type: InputType.text,
+                                        );
+                                      }),
                                 ))
                           ],
                         ),
@@ -309,8 +352,12 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     final long = locationState.longitude;
     final accuracy = locationState.accuracy;
 
-    final tripBookActionModel = _getTripActionModel(
+    UserActionModel? tripBookActionModel = _getTripActionModel(
         lat, long, accuracy, vehicleTripActionState, vehicleNo, form);
+
+    if (tripBookActionModel == null) {
+      return;
+    }
 
     context.read<VehicleTripActionBloc>().add(
           VehicleTripActionStartTripEvent(
@@ -329,7 +376,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     // await handleSubmit(context, taskModel, deliverInterventionState);
   }
 
-  UserActionModel _getTripActionModel(
+  UserActionModel? _getTripActionModel(
     double? latitude,
     double? longitude,
     double? locationAccuracy,
@@ -341,6 +388,15 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     var clientReferenceId = IdGen.i.identifier;
     var startTime = DateTime.now().millisecondsSinceEpoch;
     final tripBookReason = form.control(_tripBookReasonKey).value as String?;
+    final otherFieldReason =
+        form.control(_otherFieldReasonKey).value as String?;
+
+    if (latitude == null ||
+        longitude == null ||
+        locationAccuracy == null ||
+        vehicleNo == null) {
+      return null;
+    }
     tripBookAction = UserActionModel(
         latitude: latitude!,
         longitude: longitude!,
@@ -351,10 +407,13 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
         action: TripActions.start.toValue(),
+        beneficiaryTag: vehicleNo,
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
           if (vehicleNo != null) AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
+          if (otherFieldReason != null)
+            AdditionalField(_otherFieldReasonKey, otherFieldReason),
           AdditionalField("tripStartTime", startTime)
         ]));
 
@@ -365,6 +424,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     return fb.group(<String, Object>{
       _tripBookReasonKey:
           FormControl<String>(validators: [Validators.required]),
+      _otherFieldReasonKey: FormControl<String>(
+        validators: [],
+      )
     });
   }
 }

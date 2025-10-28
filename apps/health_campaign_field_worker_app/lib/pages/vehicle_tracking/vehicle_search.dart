@@ -90,134 +90,124 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
       }
     }
 
-    return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
-      builder: (context, tripState) {
-        VehicleStatusEnum vehicleStatus =
-            getVehicleStatus(tripState.tripAction);
-        return KeyboardVisibilityBuilder(
-          builder: (context, isKeyboardVisible) => Scaffold(
-            body: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollUpdateNotification) {
-                  final metrics = scrollNotification.metrics;
-                  if (metrics.atEdge && metrics.pixels != 0) {
-                    triggerGlobalSearchEvent(isPagination: true);
-                  }
-                }
-                return true;
-              },
-              child: ScrollableContent(
-                  header: const Column(children: [
-                    BackNavigationHelpHeaderWidget(),
-                  ]),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(kPadding),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  localizations
-                                      .translate("SEARCH_VEHICLE_LABEL"),
-                                  style: theme.textTheme.displayMedium,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) => Scaffold(
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (scrollNotification) {
+            if (scrollNotification is ScrollUpdateNotification) {
+              final metrics = scrollNotification.metrics;
+              if (metrics.atEdge && metrics.pixels != 0) {
+                triggerGlobalSearchEvent(isPagination: true);
+              }
+            }
+            return true;
+          },
+          child: ScrollableContent(
+              header: const Column(children: [
+                BackNavigationHelpHeaderWidget(),
+              ]),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPadding),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              localizations.translate("SEARCH_VEHICLE_LABEL"),
+                              style: theme.textTheme.displayMedium,
+                              textAlign: TextAlign.left,
                             ),
-                            BlocBuilder<LocationBloc, LocationState>(
-                              builder: (context, locationState) {
-                                return Column(
-                                  children: [
-                                    const Offstage(),
-                                    DigitSearchBar(
-                                      controller: searchController,
-                                      hintText: localizations.translate(
-                                        i18.searchBeneficiary
-                                            .beneficiarySearchHintText,
-                                      ),
-                                      textCapitalization:
-                                          TextCapitalization.words,
-                                      onChanged: (value) {
-                                        searchVehicleBlocWrapper.clearEvent();
-                                        if (value.isEmpty ||
-                                            value.trim().length > 2) {
-                                          triggerGlobalSearchEvent();
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                            const SizedBox(height: kPadding * 2),
-                            if (searchVehiclesState.resultsNotFound &&
-                                !searchVehiclesState.loading)
-                              DigitInfoCard(
-                                description: localizations.translate(
-                                  i18.searchBeneficiary
-                                      .beneficiaryInfoDescription,
-                                ),
-                                title: localizations.translate(
-                                  i18.searchBeneficiary.beneficiaryInfoTitle,
-                                ),
-                              ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    if (searchVehiclesState.loading)
-                      const SliverFillRemaining(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    BlocBuilder<LocationBloc, LocationState>(
-                      builder: (context, locationState) {
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (ctx, index) {
-                              final i =
-                                  searchVehiclesState.vehicles.elementAt(index);
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: kPadding),
-                                child: ViewVehicleCard(
-                                  vehicle: i,
-                                  status: vehicleStatus,
-                                  onOpenPressed: () async {
-                                    String? vehicleNo = i.variation;
-                                    if (vehicleNo == null) {
-                                      return;
-                                    }
-                                    await context.router.push(
-                                      VehicleOverviewRoute(
-                                        vehicleNo: vehicleNo,
-                                      ),
-                                    );
-
-                                    setState(() {
-                                      isProximityEnabled = false;
-                                    });
-                                    searchController.clear();
-
+                        BlocBuilder<LocationBloc, LocationState>(
+                          builder: (context, locationState) {
+                            return Column(
+                              children: [
+                                const Offstage(),
+                                DigitSearchBar(
+                                  controller: searchController,
+                                  hintText: localizations.translate(
+                                    i18.searchBeneficiary
+                                        .beneficiarySearchHintText,
+                                  ),
+                                  textCapitalization: TextCapitalization.words,
+                                  onChanged: (value) {
                                     searchVehicleBlocWrapper.clearEvent();
+                                    if (value.isEmpty ||
+                                        value.trim().length > 2) {
+                                      triggerGlobalSearchEvent();
+                                    }
                                   },
                                 ),
-                              );
-                            },
-                            childCount: searchVehiclesState.vehicles.length,
+                              ],
+                            );
+                          },
+                        ),
+                        const SizedBox(height: kPadding * 2),
+                        if (searchVehiclesState.resultsNotFound &&
+                            !searchVehiclesState.loading)
+                          DigitInfoCard(
+                            description: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                            ),
+                            title: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoTitle,
+                            ),
                           ),
-                        );
-                      },
+                      ],
                     ),
-                  ]),
-            ),
-          ),
-        );
-      },
+                  ),
+                ),
+                if (searchVehiclesState.loading)
+                  const SliverFillRemaining(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                BlocBuilder<LocationBloc, LocationState>(
+                  builder: (context, locationState) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (ctx, index) {
+                          final i =
+                              searchVehiclesState.vehicles.elementAt(index);
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: kPadding),
+                            child: ViewVehicleCard(
+                              vehicle: i,
+                              onOpenPressed: () async {
+                                String? vehicleNo = i.variation;
+                                if (vehicleNo == null) {
+                                  return;
+                                }
+                                await context.router.push(
+                                  VehicleOverviewRoute(
+                                    vehicleNo: vehicleNo,
+                                  ),
+                                );
+
+                                setState(() {
+                                  isProximityEnabled = false;
+                                });
+                                searchController.clear();
+
+                                searchVehicleBlocWrapper.clearEvent();
+                              },
+                            ),
+                          );
+                        },
+                        childCount: searchVehiclesState.vehicles.length,
+                      ),
+                    );
+                  },
+                ),
+              ]),
+        ),
+      ),
     );
   }
 

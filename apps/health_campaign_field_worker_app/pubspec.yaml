@@ -61,7 +61,7 @@ dependencies:
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
   qr_flutter: ^4.1.0
-  digit_data_model: 1.1.1
+  digit_data_model: 1.1.4
   registration_delivery: 1.0.7-dev.6-enumeration
   disable_battery_optimization: ^1.1.1
   inventory_management: 1.0.6
@@ -82,7 +82,7 @@ dependencies:
   digit_location_tracker: ^1.0.0
   logger: ^2.5.0
   mobile_scanner: ^3.4.1
-  transit_post: 1.0.0
+  transit_post: 1.0.0+1
 
 dev_dependencies:
   flutter_test:

@@ -266,3 +266,10 @@ class RefusalReasons {
   late String name;
   late bool active;
 }
+
+@embedded
+class VehicleTrackingReasons {
+  late String code;
+  late String name;
+  late bool active;
+}

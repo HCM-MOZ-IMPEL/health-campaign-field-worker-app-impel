@@ -1266,6 +1266,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VehicleAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<VehicleAcknowledgementRouteArgs>(
+          orElse: () => const VehicleAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VehicleAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     VehicleOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleOverviewRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -5869,6 +5880,45 @@ class UserQRDetailsRouteArgs {
   @override
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [VehicleAcknowledgementPage]
+class VehicleAcknowledgementRoute
+    extends PageRouteInfo<VehicleAcknowledgementRouteArgs> {
+  VehicleAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VehicleAcknowledgementRoute.name,
+          args: VehicleAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VehicleAcknowledgementRoute';
+
+  static const PageInfo<VehicleAcknowledgementRouteArgs> page =
+      PageInfo<VehicleAcknowledgementRouteArgs>(name);
+}
+
+class VehicleAcknowledgementRouteArgs {
+  const VehicleAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'VehicleAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

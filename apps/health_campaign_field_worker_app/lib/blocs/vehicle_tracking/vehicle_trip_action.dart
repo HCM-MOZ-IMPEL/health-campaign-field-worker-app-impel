@@ -40,7 +40,7 @@ class VehicleTripActionBloc
     UserActionModel tripActionModel = event.tripAction;
     try {
       tripActionModel = tripActionModel.copyWith(
-          action: TripActions.end.name,
+          action: TripActions.end.toValue(),
           auditDetails: tripActionModel.auditDetails?.copyWith(
               lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
               lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
@@ -97,7 +97,15 @@ class VehicleTripActionBloc
   FutureOr<void> _handleSearch(
     VehicleTripActionSearchEvent event,
     VehicleTripActionEmitter emit,
-  ) async {}
+  ) async {
+    List<UserActionModel> vehicleUserActions =
+        await userActionLocalRepository.searchUserAction(
+            action: TripActions.start.toValue(), vehicleNo: event.vehicleNo);
+    emit(state.copyWith(
+      loading: false,
+      tripAction: vehicleUserActions.firstOrNull,
+    ));
+  }
 }
 
 @freezed
@@ -117,7 +125,7 @@ class VehicleTripActionEvent with _$VehicleTripActionEvent {
   }) = VehicleTripActionEndTripEvent;
 
   const factory VehicleTripActionEvent.handleSearch({
-    required UserActionModel vehicleTripSearch,
+    required String vehicleNo,
   }) = VehicleTripActionSearchEvent;
 }
 
