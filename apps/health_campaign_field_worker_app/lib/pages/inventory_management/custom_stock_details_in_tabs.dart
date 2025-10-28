@@ -66,7 +66,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _transactionQuantityPartialKey = 'quantityPartial';
   static const _transactionQuantityWastedKey = 'quantityWasted';
   static const _waybillNumberKey = 'waybillNumber';
-  // static const _waybillQuantityKey = 'waybillQuantity';
+  static const _waybillQuantityKey = 'waybillQuantity';
   static const _batchNumberKey = 'batchNumberKey';
   static const _commentsKey = 'comments';
   List<InventoryTransportTypes> transportTypes = [];
@@ -157,8 +157,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                       Validators.min(1),
                       Validators.max(1000000),
                     ]),
-          // _waybillQuantityKey:
-          //     FormControl<String>(validators: [Validators.required]),
+          _waybillQuantityKey: FormControl<String>(),
           _transactionQuantityPartialKey: FormControl<int>(validators: []),
           _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
@@ -530,6 +529,54 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                   entryType == StockRecordEntryType.dispatch),
                             );
                           }),
+                    if (isWareHouseMgr)
+                      ReactiveWrapperField(
+                          formControlName: _waybillQuantityKey,
+                          builder: (field) {
+                            return InputField(
+                              type: InputType.text,
+                              label: localizations.translate(
+                                i18.stockDetails
+                                    .quantityOfProductIndicatedOnWaybillLabel,
+                              ),
+                              errorMessage: field.errorText,
+                              onChange: (val) {
+                                field.control.value = val;
+                              },
+                              isRequired: !(context
+                                      .isHealthFacilitySupervisor &&
+                                  entryType == StockRecordEntryType.dispatch),
+                            );
+                          }),
+                    // DigitTextFormField(
+                    //   label: localizations.translate(
+                    //     i18.stockDetails
+                    //         .quantityOfProductIndicatedOnWaybillLabel,
+                    //   ),
+                    //   isRequired: isWareHouseMgr &&
+                    //       !supervisorSelected &&
+                    //       !deliveryTeamSelected,
+                    //   formControlName: _waybillQuantityKey,
+                    //   validationMessages: {
+                    //     'required': (object) => localizations.translate(
+                    //           i18.common.corecommonRequired,
+                    //         ),
+                    //     "number": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_ERROR',
+                    //         ),
+                    //     "max": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_MAX_ERROR',
+                    //         ),
+                    //     "min": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_MIN_ERROR',
+                    //         ),
+                    //   },
+                    //   onChanged: (val) {
+                    //     setState(() {
+                    //       updateCommentValidation(isWareHouseMgr, form);
+                    //     });
+                    //   },
+                    // ),
                     if ((isWareHouseMgr || isHealthFacilitySupervisor) &&
                         entryType != StockRecordEntryType.returned)
                       ReactiveWrapperField(
@@ -809,7 +856,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       "batchNumber",
       "comments",
       "partialBlistersReturned",
-      "wastedBlistersReturned"
+      "wastedBlistersReturned",
+      "waybillQuantity",
     };
 
     List<AdditionalField> filteredAdditionalFields = additionalFields
@@ -835,6 +883,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           if (form.control(_transactionQuantityWastedKey).value != null)
             AdditionalField('wastedBlistersReturned',
                 form.control(_transactionQuantityWastedKey).value),
+          if (form.control(_waybillQuantityKey).value != null)
+            AdditionalField(
+                'waybillQuantity', form.control(_waybillQuantityKey).value),
         ],
       ),
     );

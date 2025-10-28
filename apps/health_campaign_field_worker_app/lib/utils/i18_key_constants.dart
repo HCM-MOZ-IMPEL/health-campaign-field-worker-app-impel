@@ -1241,6 +1241,10 @@ class BeneficiaryDetails {
 class StockDetails {
   const StockDetails();
 
+  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+
+  String get driverNameLabel => 'STOCK_DETAILS_DRIVER_NAME';
+
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
   String get recordStockReturnedDescription =>
       'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';

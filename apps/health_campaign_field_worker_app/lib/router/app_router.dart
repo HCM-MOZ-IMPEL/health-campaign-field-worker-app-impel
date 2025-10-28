@@ -1,3 +1,4 @@
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:health_campaign_field_worker_app/blocs/inventory_management/custom_inventory_report.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
@@ -25,9 +26,11 @@ import 'package:survey_form/router/survey_form_router.gm.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/custom_digit_scanner.dart';
 import '../pages/inventory_management/custom_inventory_report_details.dart';
 import '../pages/inventory_management/custom_inventory_report_selection.dart';
 import '../pages/inventory_management/custom_manage_stock.dart';
+import '../pages/inventory_management/custom_stock_reconciliation.dart';
 import '../pages/inventory_management/view_transactions_page.dart';
 import '../pages/irswrapper.dart';
 import '../pages/pages-Bednet/acknowledgement_bednet.dart';
@@ -93,11 +96,6 @@ import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
 export 'package:auto_route/auto_route.dart';
-import '../pages/inventory/custom_manage_stocks.dart';
-import '../pages/inventory/custom_stock_reconciliation.dart';
-import '../pages/inventory/custom_warehouse_details.dart';
-import '../pages/reports/inventory/custom_report_selection.dart';
-import '../pages/reports/inventory/custom_report_details.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_individual_details_smc.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
@@ -119,8 +117,6 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import '../pages/beneficiary_registration/custom_house_details.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/ineligible_summary_page.dart';
-import '../pages/inventory/custom_stock_details.dart';
-import '../pages/pages-SMC/inventory/custom_facility_selection.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import '../pages/beneficiary/custom_delivery_summary_page.dart';
 // import 'package:inventory_management/blocs/inventory_report.dart';
@@ -143,27 +139,11 @@ import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
 import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
-import '../pages/pages-SMC/inventory/custom_stock_details.dart';
-import '../pages/pages-SMC/inventory/custom_stock_reconciliation.dart';
-import '../pages/pages-Bednet/inventory/custom_warehouse_details.dart';
-import '../pages/pages-Bednet/inventory/custom_stock_details.dart';
-import '../pages/pages-Bednet/inventory/custom_stock_reconciliation.dart';
-import '../pages/pages-Bednet/inventory/custom_manage_stocks.dart';
-import '../pages/pages-SMC/inventory/custom_manage_stocks.dart';
-import '../pages/pages-SMC/inventory/custom_warehouse_details.dart';
-import '../pages/pages-SMC/reports/inventory/custom_report_selection.dart';
-import '../pages/pages-SMC/reports/inventory/custom_report_details.dart';
-import '../pages/pages-Bednet/reports/inventory/custom_report_selection.dart';
-import '../pages/pages-Bednet/reports/inventory/custom_report_details.dart';
 import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
-import '../pages/pages-SMC/referral/custom_record_facility_smc.dart';
 import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart';
 import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
-import '../pages/pages-SMC/dashboard/custom_user_dashboard_smc.dart';
-import 'package:digit_dss/blocs/app_localization.dart';
-import '../pages/pages-Bednet/dashboard/custom_dashboard_bednet.dart';
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
@@ -283,6 +263,13 @@ class AppRouter extends _$AppRouter {
                 redirectTo: 'custom-manage-stocks',
               ),
               AutoRoute(
+                  page: CustomAcknowledgementRoute.page,
+                  path: 'custom-acknowledgement-stock'),
+              AutoRoute(
+                page: ViewStockRecordsRoute.page,
+                path: 'custom-stock-record-view',
+              ),
+              AutoRoute(
                 page: RecordStockWrapperRoute.page,
                 path: 'record-stock',
                 children: [
@@ -291,19 +278,19 @@ class AppRouter extends _$AppRouter {
                   //   path: 'warehouse-details',
                   //   // initial: true,
                   // ),
-                  // AutoRoute(
-                  //   page: CustomWarehouseDetailsRoute.page,
-                  //   path: 'custom-warehouse-details',
-                  //   initial: true,
-                  // ),
+                  AutoRoute(
+                    page: CustomWarehouseDetailsRoute.page,
+                    path: 'custom-warehouse-details',
+                    initial: true,
+                  ),
                   AutoRoute(
                     page: StockDetailsRoute.page,
                     path: 'details',
                   ),
-                  // AutoRoute(
-                  //   page: CustomStockDetailsRoute.page,
-                  //   path: 'custom-details',
-                  // ),
+                  AutoRoute(
+                    page: CustomStockDetailsRoute.page,
+                    path: 'custom-details',
+                  ),
                   RedirectRoute(
                     path: 'details',
                     redirectTo: 'custom-details',
@@ -1052,26 +1039,24 @@ class AppRouter extends _$AppRouter {
             page: ManageStocksRoute.page,
             path: 'manage-stocks',
           ),
-          AutoRoute(
-            page: CustomManageStocksSMCRoute.page,
-            path: 'custom-manage-stocks',
-          ),
           RedirectRoute(
             path: 'manage-stocks',
             redirectTo: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+              page: CustomAcknowledgementRoute.page,
+              path: 'custom-acknowledgement-stock'),
+          AutoRoute(
+            page: ViewStockRecordsRoute.page,
+            path: 'custom-stock-record-view',
           ),
           AutoRoute(
             page: RecordStockWrapperRoute.page,
             path: 'record-stock',
             children: [
               AutoRoute(
-                page: WarehouseDetailsRoute.page,
+                page: CustomWarehouseDetailsRoute.page,
                 path: 'warehouse-details',
-                // initial: true,
-              ),
-              AutoRoute(
-                page: CustomWarehouseDetailsSMCRoute.page,
-                path: 'custom-warehouse-details',
                 initial: true,
               ),
               AutoRoute(
@@ -1079,8 +1064,8 @@ class AppRouter extends _$AppRouter {
                 path: 'details',
               ),
               AutoRoute(
-                page: CustomStockDetailsSMCRoute.page,
-                path: 'custom-details',
+                page: CustomStockDetailsRoute.page,
+                path: 'custom-details-bednet',
               ),
               RedirectRoute(
                 path: 'details',
@@ -1105,7 +1090,7 @@ class AppRouter extends _$AppRouter {
             path: 'stock-reconciliation',
           ),
           AutoRoute(
-            page: CustomStockReconciliationSMCRoute.page,
+            page: CustomStockReconciliationRoute.page,
             path: 'custom-stock-reconciliation',
           ),
           RedirectRoute(
@@ -1719,25 +1704,23 @@ class AppRouter extends _$AppRouter {
             page: ManageStocksRoute.page,
             path: 'manage-stocks',
           ),
-          AutoRoute(
-            page: CustomManageStocksBednetRoute.page,
-            path: 'custom-manage-stocks-bednet',
-          ),
           RedirectRoute(
             path: 'manage-stocks',
             redirectTo: 'custom-manage-stocks-bednet',
+          ),
+          AutoRoute(
+              page: CustomAcknowledgementRoute.page,
+              path: 'custom-acknowledgement-stock'),
+          AutoRoute(
+            page: ViewStockRecordsRoute.page,
+            path: 'custom-stock-record-view',
           ),
           AutoRoute(
             page: RecordStockWrapperRoute.page,
             path: 'record-stock',
             children: [
               AutoRoute(
-                page: WarehouseDetailsRoute.page,
-                path: 'warehouse-details',
-                // initial: true,
-              ),
-              AutoRoute(
-                page: CustomWarehouseDetailsBednetRoute.page,
+                page: CustomWarehouseDetailsRoute.page,
                 path: 'custom-warehouse-details-bednet',
                 initial: true,
               ),
@@ -1746,7 +1729,7 @@ class AppRouter extends _$AppRouter {
                 path: 'details',
               ),
               AutoRoute(
-                page: CustomStockDetailsBednetRoute.page,
+                page: CustomStockDetailsRoute.page,
                 path: 'custom-details-bednet',
               ),
               RedirectRoute(
@@ -1768,7 +1751,7 @@ class AppRouter extends _$AppRouter {
             path: 'stock-reconciliation',
           ),
           AutoRoute(
-            page: CustomStockReconciliationBednetRoute.page,
+            page: CustomStockReconciliationRoute.page,
             path: 'custom-stock-reconciliation-bednet',
           ),
           RedirectRoute(

@@ -32,23 +32,23 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class CustomStockDetailsBednetPage extends LocalizedStatefulWidget {
-  const CustomStockDetailsBednetPage({
+class CustomStockDetailsPage extends LocalizedStatefulWidget {
+  const CustomStockDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomStockDetailsBednetPage> createState() =>
-      CustomStockDetailsBednetPageState();
+  State<CustomStockDetailsPage> createState() => CustomStockDetailsPageState();
 }
 
-class CustomStockDetailsBednetPageState
-    extends LocalizedState<CustomStockDetailsBednetPage> {
+class CustomStockDetailsPageState
+    extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
+  static const _driverNameKey = 'driverName';
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
@@ -70,6 +70,9 @@ class CustomStockDetailsBednetPageState
       ),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
+      _driverNameKey: FormControl<String>(
+        validators: [],
+      ),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
@@ -368,6 +371,10 @@ class CustomStockDetailsBednetPageState
                                           .control(_vehicleNumberKey)
                                           .value as String?;
 
+                                      final driverName = form
+                                          .control(_driverNameKey)
+                                          .value as String?;
+
                                       final lat = locationState.latitude;
                                       final lng = locationState.longitude;
 
@@ -397,19 +404,17 @@ class CustomStockDetailsBednetPageState
                                             .control(_productVariantKey)
                                             .value as List<ProductVariantModel>;
 
-                                        ProductVariantModel? bednet =
-                                            selectedProducts.firstWhereOrNull(
-                                                (element) =>
-                                                    element.sku ==
-                                                    Constants.bednetSKU);
-                                        final receivedFrom = form
-                                            .control(_secondaryPartyKey)
-                                            .value as String;
+                                        // ProductVariantModel? bednet =
+                                        //     selectedProducts.firstWhereOrNull(
+                                        //         (element) =>
+                                        //             element.sku ==
+                                        //             Constants.bednetSKU);
+                                        // final receivedFrom = form
+                                        //     .control(_secondaryPartyKey)
+                                        //     .value as String;
                                         context.read<StockBloc>().add(
                                               StockSelectedEvent(
-                                                selectedProducts: [
-                                                  if (bednet != null) bednet,
-                                                ],
+                                                selectedProducts: selectedProducts,
                                                 secondaryPartyType:
                                                     deliveryTeamSelected
                                                         ? "STAFF"
@@ -462,12 +467,12 @@ class CustomStockDetailsBednetPageState
                                       )),
                                     ),
                                     fetched: (productVariants) {
-                                      ProductVariantModel? bednet =
-                                          productVariants.firstWhereOrNull(
+                                      List<ProductVariantModel> filteredProductVariants =
+                                          productVariants.where(
                                               (element) =>
-                                                  element.sku ==
-                                                  Constants.bednetSKU);
-                                      if (bednet == null) return Container();
+                                                  element.sku !=
+                                                  Constants.vehicleSKU).toList();
+                                      if (filteredProductVariants.isEmpty) return Container();
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -486,7 +491,7 @@ class CustomStockDetailsBednetPageState
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,
-                                              options: [bednet].map((variant) {
+                                              options: filteredProductVariants.map((variant) {
                                                 return DropdownItem(
                                                   name: localizations.translate(
                                                       variant.sku ??
@@ -529,41 +534,57 @@ class CustomStockDetailsBednetPageState
                                         List<FacilityModel> filteredFacilities =
                                             [];
                                         if (context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.stateBoundaryLevel ||
-                                            context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.administrativePost) {
+                                                ?.boundaryType ==
+                                            Constants.stateBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
-                                              ? allFacilities //TODO: changed from facilities
+                                              ? facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.centralFacility)
+                                                  .toList()
+                                              : facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.healthFacility)
+                                                  .toList();
+                                        } else if (context.selectedProject
+                                                .address?.boundaryType ==
+                                            Constants.administrativePost) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? facilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants
                                                           .provincialWarehouse)
                                                   .toList()
-                                              : allFacilities //TODO: changed from facilities
+                                              : facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.healthFacility)
+                                                      Constants
+                                                          .communitySupervisor)
                                                   .toList();
-                                        } else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? allFacilities //TODO: changed from facilities
+                                        } else if (context
+                                            .isCommunitySupervisor) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? facilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.healthFacility)
                                                   .toList()
-                                              : entryType ==
-                                                      StockRecordEntryType
-                                                          .receipt
-                                                  ? allFacilities //TODO: changed from facilities
-                                                      .where((element) =>
-                                                          element.usage ==
-                                                          Constants.lgaFacility)
-                                                      .toList()
-                                                  : [];
+                                              : [];
+                                        } else {
+                                          filteredFacilities = context
+                                                  .isDistributor
+                                              ? facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .communitySupervisor)
+                                                  .toList()
+                                              : [];
                                         }
 
                                         facilities =
@@ -835,6 +856,22 @@ class CustomStockDetailsBednetPageState
                                         type: InputType.text,
                                         label: localizations.translate(
                                           i18.stockDetails.vehicleNumberLabel,
+                                        ),
+                                        onChange: (val) {
+                                          field.control.value = val;
+                                        },
+                                      );
+                                    }),
+                              if (isWareHouseMgr ||
+                                  context.isHealthFacilitySupervisor)
+                                ReactiveWrapperField(
+                                    formControlName: _driverNameKey,
+                                    builder: (field) {
+                                      return InputField(
+                                        type: InputType.text,
+                                        label: localizations.translate(
+                                          i18_local
+                                              .stockDetails.driverNameLabel,
                                         ),
                                         onChange: (val) {
                                           field.control.value = val;

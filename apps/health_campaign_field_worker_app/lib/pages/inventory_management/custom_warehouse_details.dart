@@ -26,19 +26,19 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()
-class CustomWarehouseDetailsBednetPage extends LocalizedStatefulWidget {
-  const CustomWarehouseDetailsBednetPage({
+class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {
+  const CustomWarehouseDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomWarehouseDetailsBednetPage> createState() =>
-      CustomWarehouseDetailsBednetPageState();
+  State<CustomWarehouseDetailsPage> createState() =>
+      CustomWarehouseDetailsPageState();
 }
 
-class CustomWarehouseDetailsBednetPageState
-    extends LocalizedState<CustomWarehouseDetailsBednetPage> {
+class CustomWarehouseDetailsPageState
+    extends LocalizedState<CustomWarehouseDetailsPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
@@ -91,7 +91,7 @@ class CustomWarehouseDetailsBednetPageState
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.stateFacility,
+                                  element.usage == Constants.provincialWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty
@@ -271,7 +271,7 @@ class CustomWarehouseDetailsBednetPageState
                                                             StockRecordEntryType
                                                                 .returned)) {
                                                       context.router.push(
-                                                        CustomStockDetailsBednetRoute(),
+                                                        CustomStockDetailsRoute(),
                                                       );
                                                     } else {
                                                       context.router.push(ViewAllTransactionsRoute(

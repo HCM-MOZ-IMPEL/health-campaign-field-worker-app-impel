@@ -28,7 +28,7 @@ import 'package:registration_delivery/widgets/showcase/config/showcase_constants
 
 import '../../../widgets/localized.dart';
 import '../../../widgets/widgets_bednet/custom_digit_dob_picker_bednet.dart';
-import '../custom_qr_scanner.dart';
+import '../../custom_digit_scanner.dart';
 
 @RoutePage()
 class CustomIndividualDetailsBednetPage extends LocalizedStatefulWidget {

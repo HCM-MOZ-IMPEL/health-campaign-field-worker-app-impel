@@ -106,9 +106,10 @@ class Constants {
   static const String stateFacility = 'State Facility';
   static const String lgaBoundaryLevel = 'LGA';
   static const String lgaFacility = 'LGA Facility';
+  static const String communitySupervisor = 'Comunity Supervisor';
   static const String healthFacility = 'Health Facility';
   static const String provincialWarehouse = 'Provincial Warehouse';
-  static const String districWarehouse = 'District Warehouse';
+  static const String districtWarehouse = 'District Warehouse';
   static const String localMonitor = 'Local Monitor';
   static const String deliveryTeamFilter = 'DeliveryTeam';
   static const String provincialBoundaryLevel = 'Provincia';
@@ -152,6 +153,7 @@ class Constants {
   static const String smcDeliver = 'smc_delivered';
 
   static const String bednetSKU = "Redes Mosquiteiras";
+  static const String vehicleSKU= "Vehicle";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

@@ -362,7 +362,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     _,
                     __,
                   ) {
-                    context.router.push(ManageStocksRoute());
+                    context.router.push(CustomManageStocksRoute());
                   },
                 );
           },

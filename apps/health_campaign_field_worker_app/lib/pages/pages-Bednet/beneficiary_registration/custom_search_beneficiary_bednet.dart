@@ -21,7 +21,7 @@ import '../../../utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/widgets_bednet/custom_view_beneficiary_card_bednet.dart';
 import '../../../widgets/widgets_bednet/status_filter_bednet.dart';
-import '../custom_qr_scanner.dart';
+import '../../custom_digit_scanner.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryBednetPage extends LocalizedStatefulWidget {
