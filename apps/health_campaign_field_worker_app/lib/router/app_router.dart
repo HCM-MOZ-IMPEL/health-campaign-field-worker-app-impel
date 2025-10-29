@@ -76,7 +76,7 @@ import '../pages/inventory_management/qr_scanner.dart';
 import '../pages/inventory_management/qrscanner.dart';
 import '../pages/inventory_management/view_all_transactions_page.dart';
 import '../pages/inventory_management/view_record_cdd.dart';
-import '../pages/inventory_management/view_record_lga.dart';
+import '../pages/inventory_management/receive_stock.dart';
 import '../pages/inventory_management/view_stock_records.dart';
 import '../pages/pages-SMC/beneficiary/widgets/consent_household_acknowledgement.dart';
 import '../pages/pages-SMC/beneficiary_registration/custom_household_acknowledgement_smc.dart';

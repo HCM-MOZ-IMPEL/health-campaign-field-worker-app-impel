@@ -8,15 +8,13 @@ import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-
-import '../../../utils/extensions/extensions.dart';
-import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -31,8 +29,8 @@ import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
 import '../../blocs/inventory_management/custom_inventory_report.dart';
-import '../../router/app_router.dart';
 import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
 
 @RoutePage()
 class CustomInventoryReportDetailsPage extends LocalizedStatefulWidget {
@@ -123,7 +121,8 @@ class CustomInventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    bool isWareHouseManager = InventorySingleton().isWareHouseMgr;
+    final isCommunitySupervisor = context.isCommunitySupervisor;
+    final isCommunityDistributor = context.isCommunityDistributor;
 
     return BlocProvider<CustomInventoryReportBloc>(
       create: (context) => CustomInventoryReportBloc(
@@ -223,31 +222,15 @@ class CustomInventoryReportDetailsPageState
                                             ),
                                           ),
                                           builder: (context, state) {
+                                            final teamFacilities = [
+                                              FacilityModel(
+                                                id: 'Delivery Team',
+                                                name: 'Delivery Team',
+                                              ),
+                                            ];
                                             final facilities = state.whenOrNull(
                                                   fetched: (facilities, _) {
                                                     if (ctx
-                                                            .selectedProject
-                                                            .address
-                                                            ?.boundaryType ==
-                                                        Constants
-                                                            .provincialBoundaryLevel) {
-                                                      List<FacilityModel>
-                                                          filteredFacilities =
-                                                          facilities
-                                                              .where(
-                                                                (element) =>
-                                                                    element
-                                                                        .usage ==
-                                                                    Constants
-                                                                        .provincialWarehouse,
-                                                              )
-                                                              .toList();
-                                                      facilities =
-                                                          filteredFacilities
-                                                                  .isEmpty
-                                                              ? facilities
-                                                              : filteredFacilities;
-                                                    } else if (context
                                                             .selectedProject
                                                             .address
                                                             ?.boundaryType ==
@@ -270,28 +253,9 @@ class CustomInventoryReportDetailsPageState
                                                               ? facilities
                                                               : filteredFacilities;
                                                     }
-                                                    final teamFacilities = [
-                                                      FacilityModel(
-                                                        id: 'Delivery Team',
-                                                        name: 'Delivery Team',
-                                                      ),
-                                                    ];
-                                                    // info: fix for showing facilities for cdd in return flow only
-                                                    //else delivery team
-                                                    if (widget.reportType ==
-                                                            InventoryReportType
-                                                                .dispatch &&
-                                                        !context
-                                                            .isDistributor) {
-                                                      teamFacilities.addAll(
-                                                        facilities,
-                                                      );
-                                                    }
 
-                                                    return context
-                                                                .isDistributor &&
-                                                            !InventorySingleton()
-                                                                .isWareHouseMgr
+                                                    return (isCommunitySupervisor ||
+                                                            isCommunityDistributor)
                                                         ? teamFacilities
                                                         : facilities;
                                                   },
@@ -305,12 +269,11 @@ class CustomInventoryReportDetailsPageState
                                                       context.read<
                                                           StockReconciliationBloc>();
 
-                                                  final facility = await context
-                                                          .router
-                                                          .push(CustomInventoryFacilitySelectionRoute(
-                                                              facilities:
-                                                                  facilities))
-                                                      as FacilityModel?;
+                                                  final facility =
+                                                      await context.router.push(
+                                                          CustomInventoryFacilitySelectionRoute(
+                                                    facilities: facilities,
+                                                  )) as FacilityModel?;
 
                                                   if (facility == null) {
                                                     return;
@@ -392,6 +355,10 @@ class CustomInventoryReportDetailsPageState
                                                             Constants
                                                                 .vehicleSKU)
                                                         .toList();
+                                                if (filteredProductVariants
+                                                    .isEmpty) {
+                                                  return Container();
+                                                }
                                                 return ReactiveWrapperField(
                                                   formControlName:
                                                       _productVariantKey,

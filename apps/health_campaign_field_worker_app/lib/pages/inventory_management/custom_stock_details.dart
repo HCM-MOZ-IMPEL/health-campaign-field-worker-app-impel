@@ -529,7 +529,6 @@ class CustomStockDetailsPageState
                                   );
                                 },
                               ),
-
                               BlocBuilder<FacilityBloc, FacilityState>(
                                 builder: (context, state) {
                                   return state.maybeWhen(
@@ -543,26 +542,15 @@ class CustomStockDetailsPageState
                                         var address = context.selectedProject
                                             .address?.boundaryType;
                                         if (context.selectedProject.address
-                                                ?.boundaryType ==
-                                            Constants.provincialBoundaryLevel) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
-                                              ? facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.suppler)
-                                                  .toList()
-                                              : facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.healthFacility)
-                                                  .toList();
-                                        } else if (context.selectedProject
-                                                    .address?.boundaryType ==
+                                                    ?.boundaryType ==
                                                 Constants.administrativePost &&
                                             !context.isCommunitySupervisor) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
+                                          filteredFacilities = (entryType ==
+                                                      StockRecordEntryType
+                                                          .receipt ||
+                                                  entryType ==
+                                                      StockRecordEntryType
+                                                          .dispatch)
                                               ? facilities
                                                   .where((element) =>
                                                       element.usage ==
@@ -572,8 +560,12 @@ class CustomStockDetailsPageState
                                               : [];
                                         } else if (context
                                             .isCommunitySupervisor) {
-                                          filteredFacilities = entryType ==
-                                                  StockRecordEntryType.receipt
+                                          filteredFacilities = (entryType ==
+                                                      StockRecordEntryType
+                                                          .receipt ||
+                                                  entryType ==
+                                                      StockRecordEntryType
+                                                          .dispatch)
                                               ? facilities
                                                   .where((element) =>
                                                       element.usage ==
@@ -586,9 +578,9 @@ class CustomStockDetailsPageState
 
                                         facilities = ((isHealthFacilitySupervisor ||
                                                         isCommunitySupervisor) &&
-                                                    entryType !=
+                                                    entryType ==
                                                         StockRecordEntryType
-                                                            .receipt) ||
+                                                            .returned) ||
                                                 (isCommunityDistributor &&
                                                     entryType ==
                                                         StockRecordEntryType
@@ -713,7 +705,6 @@ class CustomStockDetailsPageState
                                       });
                                 },
                               ),
-                              // TODO: as this case i need to set when occurring
                               Visibility(
                                 visible: deliveryTeamSelected,
                                 child: ReactiveWrapperField(
@@ -792,7 +783,7 @@ class CustomStockDetailsPageState
                                       );
                                     }),
                               ),
-                              if (isWareHouseMgr || isHealthFacilitySupervisor)
+                              if (!deliveryTeamSelected)
                                 transportTypes.isNotEmpty
                                     ? ReactiveWrapperField(
                                         formControlName: _typeOfTransportKey,
@@ -849,7 +840,7 @@ class CustomStockDetailsPageState
                                         },
                                       )
                                     : const Offstage(),
-                              if (isWareHouseMgr || isHealthFacilitySupervisor)
+                              if (!deliveryTeamSelected)
                                 ReactiveWrapperField(
                                     formControlName: _vehicleNumberKey,
                                     builder: (field) {
@@ -863,7 +854,7 @@ class CustomStockDetailsPageState
                                         },
                                       );
                                     }),
-                              if (isWareHouseMgr || isHealthFacilitySupervisor)
+                              if (!deliveryTeamSelected)
                                 ReactiveWrapperField(
                                     formControlName: _driverNameKey,
                                     builder: (field) {

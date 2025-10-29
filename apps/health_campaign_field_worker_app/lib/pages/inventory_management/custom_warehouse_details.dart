@@ -86,20 +86,7 @@ class CustomWarehouseDetailsPageState
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allfacilities) {
-                      if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.provincialBoundaryLevel) {
-                        List<FacilityModel> filteredFacilities = facilities
-                            .where(
-                              (element) =>
-                                  element.usage ==
-                                  Constants.provincialWarehouse,
-                            )
-                            .toList();
-                        facilities = filteredFacilities.isEmpty
-                            ? facilities
-                            : filteredFacilities;
-                      } else if (context
-                              .selectedProject.address?.boundaryType ==
+                      if (context.selectedProject.address?.boundaryType ==
                           Constants.administrativePost) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
@@ -268,8 +255,6 @@ class CustomWarehouseDetailsPageState
                                                       ),
                                                     );
                                                     if ((!context
-                                                                .isSpaqManager &&
-                                                            !context
                                                                 .isCommunitySupervisor &&
                                                             !context
                                                                 .isCommunityDistributor) ||
@@ -302,8 +287,7 @@ class CustomWarehouseDetailsPageState
                                       },
                                     ),
                                     if ((context.isDistributor ||
-                                            context.isCommunitySupervisor ||
-                                            context.isSpaqManager) &&
+                                            context.isCommunitySupervisor) &&
                                         stockState.entryType ==
                                             StockRecordEntryType.receipt)
                                       DigitButton(

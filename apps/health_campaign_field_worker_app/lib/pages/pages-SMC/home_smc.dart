@@ -583,7 +583,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                   .toList()
                   .contains(element) ||
               element == i18.home.db ||
-              element == i18.home.manageStockLabel ||
+              element == i18.home.stockReconciliationLabel ||
               element == i18.home.vehicleTrackingLabel,
         ) // TODO: need to add close household inside mdms
         .toList();
