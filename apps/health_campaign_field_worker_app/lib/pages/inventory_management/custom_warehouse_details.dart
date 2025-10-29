@@ -300,9 +300,10 @@ class CustomWarehouseDetailsPageState
                                       },
                                     ),
                                     if ((context.isDistributor ||
-                                            context.isCommunitySupervisor) &&
-                                        stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
+                                            context.isCommunitySupervisor ||
+                                            context.isSpaqManager) &&
+                                        stockState.entryType ==
+                                            StockRecordEntryType.receipt)
                                       DigitButton(
                                         label: "Scan Resource",
                                         onPressed: _handleSubmission,
