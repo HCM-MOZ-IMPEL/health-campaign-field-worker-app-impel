@@ -2197,10 +2197,10 @@ packages:
     dependency: "direct main"
     description:
       name: sync_service
-      sha256: da4847fcd10ff8de25b6b722e0ba93bb93268824d903f8ff4fdc870a806ebe84
+      sha256: "3d2ea69d48ca024077ffb7b3f086dbab9459ffcfabb204463f7bc347b874fdfe"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:
