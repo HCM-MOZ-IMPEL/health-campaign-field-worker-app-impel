@@ -47,6 +47,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   late List<ProductVariantModel> products;
   late String receivedFrom;
   late String secondaryPartyType;
+  String? typeOfTransport;
+  String? vehicleNumber;
+  String? driverName;
   late List<dynamic> _formkeys;
   final Map<String, StockModel> _tabStocks = {};
   String _sharedMRN = '';
@@ -66,10 +69,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _transactionQuantityPartialKey = 'quantityPartial';
   static const _transactionQuantityWastedKey = 'quantityWasted';
   static const _waybillNumberKey = 'waybillNumber';
-  // static const _waybillQuantityKey = 'waybillQuantity';
+  static const _waybillQuantityKey = 'waybillQuantity';
   static const _batchNumberKey = 'batchNumberKey';
   static const _commentsKey = 'comments';
   List<InventoryTransportTypes> transportTypes = [];
+  List<String> skuList = [];
 
   @override
   void initState() {
@@ -101,6 +105,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         products = state.selectedProducts;
         receivedFrom = state.receivedFrom;
         secondaryPartyType = state.secondaryPartyType;
+        typeOfTransport = state.typeOfTransport;
+        vehicleNumber = state.vehicleNumber;
+        driverName = state.driverName;
         _tabController = TabController(length: products.length, vsync: this);
         _formkeys =
             List.generate(products.length, (_) => GlobalKey<FormState>());
@@ -157,8 +164,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                       Validators.min(1),
                       Validators.max(1000000),
                     ]),
-          // _waybillQuantityKey:
-          //     FormControl<String>(validators: [Validators.required]),
+          _waybillQuantityKey: FormControl<String>(),
           _transactionQuantityPartialKey: FormControl<int>(validators: []),
           _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
@@ -273,6 +279,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           AdditionalField('materialNoteNumber', _sharedMRN),
           if (distributorName != null)
             AdditionalField('distributorName', distributorName),
+          if (typeOfTransport != null && typeOfTransport!.isNotEmpty)
+            AdditionalField('typeOfTransport', typeOfTransport),
+          if (vehicleNumber != null && vehicleNumber!.isNotEmpty)
+            AdditionalField('vehicleNumber', vehicleNumber),
+          if (driverName != null && driverName!.isNotEmpty)
+            AdditionalField('driverName', driverName),
         ],
       ),
       referenceId: context.projectId,
@@ -530,6 +542,54 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                   entryType == StockRecordEntryType.dispatch),
                             );
                           }),
+                    if (isWareHouseMgr)
+                      ReactiveWrapperField(
+                          formControlName: _waybillQuantityKey,
+                          builder: (field) {
+                            return InputField(
+                              type: InputType.text,
+                              label: localizations.translate(
+                                i18.stockDetails
+                                    .quantityOfProductIndicatedOnWaybillLabel,
+                              ),
+                              errorMessage: field.errorText,
+                              onChange: (val) {
+                                field.control.value = val;
+                              },
+                              isRequired: !(context
+                                      .isHealthFacilitySupervisor &&
+                                  entryType == StockRecordEntryType.dispatch),
+                            );
+                          }),
+                    // DigitTextFormField(
+                    //   label: localizations.translate(
+                    //     i18.stockDetails
+                    //         .quantityOfProductIndicatedOnWaybillLabel,
+                    //   ),
+                    //   isRequired: isWareHouseMgr &&
+                    //       !supervisorSelected &&
+                    //       !deliveryTeamSelected,
+                    //   formControlName: _waybillQuantityKey,
+                    //   validationMessages: {
+                    //     'required': (object) => localizations.translate(
+                    //           i18.common.corecommonRequired,
+                    //         ),
+                    //     "number": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_ERROR',
+                    //         ),
+                    //     "max": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_MAX_ERROR',
+                    //         ),
+                    //     "min": (object) => localizations.translate(
+                    //           '${quantityCountLabel}_MIN_ERROR',
+                    //         ),
+                    //   },
+                    //   onChanged: (val) {
+                    //     setState(() {
+                    //       updateCommentValidation(isWareHouseMgr, form);
+                    //     });
+                    //   },
+                    // ),
                     if ((isWareHouseMgr || isHealthFacilitySupervisor) &&
                         entryType != StockRecordEntryType.returned)
                       ReactiveWrapperField(
@@ -708,24 +768,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               ),
                             );
                           }),
-                    // ReactiveWrapperField(
-                    //   formControlName: _waybillQuantityKey,
-                    //   builder: (field) {
-                    //     return InputField(
-                    //       type: InputType.text,
-                    //       label: 'Quantity of Blisters' + ,
-                    //       errorMessage: field.errorText,
-                    //       onChange: (val) {
-                    //         if (val == '') {
-                    //           field.control.value = '0';
-                    //         } else {
-                    //           field.control.value = val;
-                    //         }
-                    //       },
-                    //       isRequired: true,
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: 16),
                     ReactiveWrapperField(
                       formControlName: _commentsKey,
@@ -809,7 +851,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       "batchNumber",
       "comments",
       "partialBlistersReturned",
-      "wastedBlistersReturned"
+      "wastedBlistersReturned",
+      "waybillQuantity",
     };
 
     List<AdditionalField> filteredAdditionalFields = additionalFields
@@ -835,6 +878,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           if (form.control(_transactionQuantityWastedKey).value != null)
             AdditionalField('wastedBlistersReturned',
                 form.control(_transactionQuantityWastedKey).value),
+          if (form.control(_waybillQuantityKey).value != null)
+            AdditionalField(
+                'waybillQuantity', form.control(_waybillQuantityKey).value),
         ],
       ),
     );
@@ -885,71 +931,58 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
     if (submit && context.mounted) {
       // Loop through all stocks and dispatch individual events
-      // int currentSpaq1Count = context.spaq1;
-      // int currentSpaq2Count = context.spaq2;
-      // int spaq1Count = 0;
-      // int spaq2Count = 0;
-      // for (var productName in selectedProducts) {
-      //   await _saveCurrentTabData(productName, entryType);
-      // }
 
-      // for (final stockModel in _tabStocks.values) {
-      //   int quantity = int.parse(stockModel.quantity.toString());
-      //   int quantityWasted = int.parse(stockModel.additionalFields?.fields
-      //           .firstWhereOrNull(
-      //               (element) => element.key == 'wastedBlistersReturned')
-      //           ?.value
-      //           ?.toString() ??
-      //       '0');
-      //   final totalQty = ((entryType == StockRecordEntryType.dispatch)
-      //           ? quantity * -1
-      //           : quantity) -
-      //       quantityWasted;
+      Map<String, int> skuCounts = context
+          .getAllProductSkuCounts()
+          .map((key, value) => MapEntry(key, value));
 
-      //   String? productName = stockModel.additionalFields?.fields
-      //       .firstWhereOrNull((element) => element.key == 'productName')
-      //       ?.value;
+      for (var product in selectedProducts) {
+        await _saveCurrentTabData(product, entryType);
+      }
 
-      //   // Accumulate quantities based on product
-      //   if (productName == Constants.spaq1) {
-      //     spaq1Count += totalQty;
-      //   } else if (productName == Constants.spaq2) {
-      //     spaq2Count += totalQty;
-      //   }
+      for (final stockModel in _tabStocks.values) {
+        int quantity = int.parse(stockModel.quantity.toString());
+        int quantityWasted = int.parse(stockModel.additionalFields?.fields
+                .firstWhereOrNull(
+                    (element) => element.key == 'wastedBlistersReturned')
+                ?.value
+                ?.toString() ??
+            '0');
+        final totalQty = ((entryType == StockRecordEntryType.dispatch)
+                ? quantity * -1
+                : quantity) -
+            quantityWasted;
 
-      //   // Custom logic based on productName
-      //   if (entryType == StockRecordEntryType.dispatch) {
-      //     if (productName == Constants.spaq1 &&
-      //         (currentSpaq1Count + totalQty < 0)) {
-      //       await DigitToast.show(
-      //         context,
-      //         options: DigitToastOptions(
-      //             localizations.translate(context.isCommunityDistributor
-      //                 ? i18_local
-      //                     .beneficiaryDetails.validationForExcessStockReturn
-      //                 : i18_local
-      //                     .beneficiaryDetails.validationForExcessStockDispatch),
-      //             true,
-      //             theme),
-      //       );
-      //       return;
-      //     } else if (productName == Constants.spaq2 &&
-      //         (currentSpaq2Count + totalQty < 0)) {
-      //       await DigitToast.show(
-      //         context,
-      //         options: DigitToastOptions(
-      //             localizations.translate(context.isCommunityDistributor
-      //                 ? i18_local
-      //                     .beneficiaryDetails.validationForExcessStockReturn
-      //                 : i18_local
-      //                     .beneficiaryDetails.validationForExcessStockDispatch),
-      //             true,
-      //             theme),
-      //       );
-      //       return;
-      //     }
-      //   }
-      // }
+        String? productName = stockModel.additionalFields?.fields
+            .firstWhereOrNull((element) => element.key == 'productName')
+            ?.value;
+
+        if (skuCounts.isNotEmpty) {
+          skuList = skuCounts.keys.toList();
+        }
+
+        // Custom logic based on productName
+        if (entryType == StockRecordEntryType.dispatch) {
+          if ((skuList.contains(productName) &&
+                  // ignore: unnecessary_null_comparison
+                  (skuCounts[productName]! + totalQty < 0)) ||
+              (skuCounts[productName] == null)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(context.isCommunityDistributor
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockReturn
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDispatch),
+                  true,
+                  theme),
+            );
+            return;
+          }
+        }
+        skuCounts[productName!] = totalQty;
+      }
 
       for (final stockModel in _tabStocks.values) {
         context.read<RecordStockBloc>().add(
@@ -962,14 +995,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             );
       }
 
-      // context.read<AuthBloc>().add(
-      //       AuthAddSpaqCountsEvent(
-      //         spaq1Count: spaq1Count,
-      //         spaq2Count: spaq2Count,
-      //         blueVasCount: 0,
-      //         redVasCount: 0,
-      //       ),
-      //     );
+      context.read<AuthBloc>().add(
+            AuthUpdateProductSKUCountsEvent(
+              skuCounts: skuCounts,
+            ),
+          );
 
       (context.router.parent() as StackRouter).maybePop();
       context.router.push(CustomAcknowledgementRoute(

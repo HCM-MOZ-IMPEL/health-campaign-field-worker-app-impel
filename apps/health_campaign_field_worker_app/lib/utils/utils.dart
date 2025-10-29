@@ -694,6 +694,10 @@ bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   return true;
 }
 
+List<String> extractAllProductCounts(List<ProductVariantModel> variants) {
+  return variants.map((variant) => variant.sku).whereType<String>().toList();
+}
+
 bool checkIfBeneficiaryIneligible(
   List<TaskModel>? tasks,
 ) {

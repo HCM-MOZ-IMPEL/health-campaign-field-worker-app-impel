@@ -9,11 +9,18 @@ class StockSelectedEvent extends StockEvent {
   final List<ProductVariantModel> selectedProducts;
   final String receivedFrom;
   final String secondaryPartyType;
+  final String? typeOfTransport;
+  final String? vehicleNumber;
+  final String? driverName;
 
-  StockSelectedEvent(
-      {required this.selectedProducts,
-      required this.receivedFrom,
-      required this.secondaryPartyType});
+  StockSelectedEvent({
+    required this.selectedProducts,
+    required this.receivedFrom,
+    required this.secondaryPartyType,
+    required this.typeOfTransport,
+    required this.vehicleNumber,
+    required this.driverName,
+  });
 }
 
 class SubmitStockEvent extends StockEvent {
@@ -30,11 +37,18 @@ class StockSelectedState extends StockState {
   final List<ProductVariantModel> selectedProducts;
   final String receivedFrom;
   final String secondaryPartyType;
+  final String? typeOfTransport;
+  final String? vehicleNumber;
+  final String? driverName;
 
-  StockSelectedState(
-      {required this.selectedProducts,
-      required this.receivedFrom,
-      required this.secondaryPartyType});
+  StockSelectedState({
+    required this.selectedProducts,
+    required this.receivedFrom,
+    required this.secondaryPartyType,
+    required this.typeOfTransport,
+    required this.vehicleNumber,
+    required this.driverName,
+  });
 }
 
 class StockSubmittedState extends StockState {
@@ -50,6 +64,9 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         selectedProducts: event.selectedProducts,
         receivedFrom: event.receivedFrom,
         secondaryPartyType: event.secondaryPartyType,
+        typeOfTransport: event.typeOfTransport,
+        vehicleNumber: event.vehicleNumber,
+        driverName: event.driverName,
       ));
     });
 

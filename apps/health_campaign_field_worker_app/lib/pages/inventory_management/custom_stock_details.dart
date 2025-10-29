@@ -32,23 +32,23 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class CustomStockDetailsBednetPage extends LocalizedStatefulWidget {
-  const CustomStockDetailsBednetPage({
+class CustomStockDetailsPage extends LocalizedStatefulWidget {
+  const CustomStockDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomStockDetailsBednetPage> createState() =>
-      CustomStockDetailsBednetPageState();
+  State<CustomStockDetailsPage> createState() => CustomStockDetailsPageState();
 }
 
-class CustomStockDetailsBednetPageState
-    extends LocalizedState<CustomStockDetailsBednetPage> {
+class CustomStockDetailsPageState
+    extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
+  static const _driverNameKey = 'driverName';
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
@@ -70,6 +70,9 @@ class CustomStockDetailsBednetPageState
       ),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
+      _driverNameKey: FormControl<String>(
+        validators: [],
+      ),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
@@ -88,8 +91,9 @@ class CustomStockDetailsBednetPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    final isHealthFacilitySupervisor = context.isHealthFacilitySupervisor;
-
+    final isHealthFacilitySupervisor = context.isSpaqManager;
+    final isCommunitySupervisor = context.isCommunitySupervisor;
+    final isCommunityDistributor = context.isCommunityDistributor;
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return PopScope(
@@ -364,8 +368,16 @@ class CustomStockDetailsBednetPageState
                                           break;
                                       }
 
+                                      final typeOfTransport = form
+                                          .control(_typeOfTransportKey)
+                                          .value as String?;
+
                                       final vehicleNumber = form
                                           .control(_vehicleNumberKey)
+                                          .value as String?;
+
+                                      final driverName = form
+                                          .control(_driverNameKey)
                                           .value as String?;
 
                                       final lat = locationState.latitude;
@@ -397,19 +409,10 @@ class CustomStockDetailsBednetPageState
                                             .control(_productVariantKey)
                                             .value as List<ProductVariantModel>;
 
-                                        ProductVariantModel? bednet =
-                                            selectedProducts.firstWhereOrNull(
-                                                (element) =>
-                                                    element.sku ==
-                                                    Constants.bednetSKU);
-                                        final receivedFrom = form
-                                            .control(_secondaryPartyKey)
-                                            .value as String;
                                         context.read<StockBloc>().add(
                                               StockSelectedEvent(
-                                                selectedProducts: [
-                                                  if (bednet != null) bednet,
-                                                ],
+                                                selectedProducts:
+                                                    selectedProducts,
                                                 secondaryPartyType:
                                                     deliveryTeamSelected
                                                         ? "STAFF"
@@ -418,6 +421,10 @@ class CustomStockDetailsBednetPageState
                                                         ? deliveryTeamName
                                                         : selectedFacilityId) ??
                                                     "",
+                                                typeOfTransport:
+                                                    typeOfTransport,
+                                                vehicleNumber: vehicleNumber,
+                                                driverName: driverName,
                                               ),
                                             );
                                         Navigator.push(
@@ -462,12 +469,16 @@ class CustomStockDetailsBednetPageState
                                       )),
                                     ),
                                     fetched: (productVariants) {
-                                      ProductVariantModel? bednet =
-                                          productVariants.firstWhereOrNull(
-                                              (element) =>
+                                      List<ProductVariantModel>
+                                          filteredProductVariants =
+                                          productVariants
+                                              .whereNot((element) =>
                                                   element.sku ==
-                                                  Constants.bednetSKU);
-                                      if (bednet == null) return Container();
+                                                  Constants.vehicleSKU)
+                                              .toList();
+                                      if (filteredProductVariants.isEmpty) {
+                                        return Container();
+                                      }
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -486,7 +497,8 @@ class CustomStockDetailsBednetPageState
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,
-                                              options: [bednet].map((variant) {
+                                              options: filteredProductVariants
+                                                  .map((variant) {
                                                 return DropdownItem(
                                                   name: localizations.translate(
                                                       variant.sku ??
@@ -528,53 +540,63 @@ class CustomStockDetailsBednetPageState
                                       fetched: (facilities, allFacilities) {
                                         List<FacilityModel> filteredFacilities =
                                             [];
+                                        var address = context.selectedProject
+                                            .address?.boundaryType;
                                         if (context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.stateBoundaryLevel ||
-                                            context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.administrativePost) {
+                                                ?.boundaryType ==
+                                            Constants.provincialBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
-                                              ? allFacilities //TODO: changed from facilities
+                                              ? facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.suppler)
+                                                  .toList()
+                                              : facilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.healthFacility)
+                                                  .toList();
+                                        } else if (context.selectedProject
+                                                    .address?.boundaryType ==
+                                                Constants.administrativePost &&
+                                            !context.isCommunitySupervisor) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? facilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants
                                                           .provincialWarehouse)
                                                   .toList()
-                                              : allFacilities //TODO: changed from facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.healthFacility)
-                                                  .toList();
-                                        } else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? allFacilities //TODO: changed from facilities
+                                              : [];
+                                        } else if (context
+                                            .isCommunitySupervisor) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? facilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.healthFacility)
                                                   .toList()
-                                              : entryType ==
-                                                      StockRecordEntryType
-                                                          .receipt
-                                                  ? allFacilities //TODO: changed from facilities
-                                                      .where((element) =>
-                                                          element.usage ==
-                                                          Constants.lgaFacility)
-                                                      .toList()
-                                                  : [];
+                                              : [];
+                                        } else {
+                                          filteredFacilities = [];
                                         }
 
-                                        facilities =
-                                            context.isHealthFacilitySupervisor &&
+                                        facilities = ((isHealthFacilitySupervisor ||
+                                                        isCommunitySupervisor) &&
                                                     entryType !=
                                                         StockRecordEntryType
-                                                            .receipt
-                                                ? []
-                                                : filteredFacilities.isEmpty
-                                                    ? facilities
-                                                    : filteredFacilities;
+                                                            .receipt) ||
+                                                (isCommunityDistributor &&
+                                                    entryType ==
+                                                        StockRecordEntryType
+                                                            .dispatch)
+                                            ? []
+                                            : filteredFacilities.isEmpty
+                                                ? facilities
+                                                : filteredFacilities;
 
                                         final teamFacilities = [
                                           FacilityModel(
@@ -600,13 +622,17 @@ class CustomStockDetailsBednetPageState
                                                 final facility =
                                                     await context.router.push(
                                                         CustomInventoryFacilitySelectionRoute(
-                                                  facilities:
-                                                      (isHealthFacilitySupervisor &&
+                                                  facilities: ((isHealthFacilitySupervisor ||
+                                                                  isCommunitySupervisor) &&
                                                               entryType !=
                                                                   StockRecordEntryType
-                                                                      .receipt)
-                                                          ? teamFacilities
-                                                          : facilities,
+                                                                      .receipt) ||
+                                                          (isCommunityDistributor &&
+                                                              entryType ==
+                                                                  StockRecordEntryType
+                                                                      .dispatch)
+                                                      ? teamFacilities
+                                                      : facilities,
                                                 )) as FacilityModel?;
 
                                                 if (facility == null) return;
@@ -719,57 +745,54 @@ class CustomStockDetailsBednetPageState
                                             ),
                                           );
                                         },
-                                        child: IgnorePointer(
-                                          child: InputField(
-                                            type: InputType.search,
-                                            label: localizations.translate(
-                                              i18.stockReconciliationDetails
-                                                  .teamCodeLabel,
-                                            ),
-                                            isRequired: deliveryTeamSelected,
-                                            controller: textController,
-                                            suffixIcon: Icons.qr_code_2,
-                                            onSuffixTap: (value) {
-                                              //[TODO: Add route to auto_route]
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const DigitScannerPage(
-                                                    quantity: 1,
-                                                    isGS1code: false,
-                                                    singleValue: true,
-                                                  ),
-                                                  settings: const RouteSettings(
-                                                      name: '/qr-scanner'),
-                                                ),
-                                              );
-                                            },
-                                            onChange: (val) {
-                                              String? value = val;
-                                              if (value != null &&
-                                                  value.trim().isNotEmpty) {
-                                                context
-                                                    .read<DigitScannerBloc>()
-                                                    .add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: [],
-                                                        qrCode: [value],
-                                                        manualCode: value,
-                                                      ),
-                                                    );
-                                              } else {
-                                                clearQRCodes();
-                                              }
-                                              field.didChange(value);
-                                            },
+                                        child: InputField(
+                                          type: InputType.search,
+                                          label: localizations.translate(
+                                            i18.stockReconciliationDetails
+                                                .teamCodeLabel,
                                           ),
+                                          isRequired: deliveryTeamSelected,
+                                          controller: textController,
+                                          suffixIcon: Icons.qr_code_2,
+                                          onSuffixTap: (value) {
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                          onChange: (val) {
+                                            String? value = val;
+                                            if (value != null &&
+                                                value.trim().isNotEmpty) {
+                                              context
+                                                  .read<DigitScannerBloc>()
+                                                  .add(
+                                                    DigitScannerEvent
+                                                        .handleScanner(
+                                                      barCode: [],
+                                                      qrCode: [value],
+                                                      manualCode: value,
+                                                    ),
+                                                  );
+                                            } else {
+                                              clearQRCodes();
+                                            }
+                                            field.didChange(value);
+                                          },
                                         ),
                                       );
                                     }),
                               ),
-                              if (isWareHouseMgr ||
-                                  context.isHealthFacilitySupervisor)
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
                                 transportTypes.isNotEmpty
                                     ? ReactiveWrapperField(
                                         formControlName: _typeOfTransportKey,
@@ -826,8 +849,7 @@ class CustomStockDetailsBednetPageState
                                         },
                                       )
                                     : const Offstage(),
-                              if (isWareHouseMgr ||
-                                  context.isHealthFacilitySupervisor)
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
                                 ReactiveWrapperField(
                                     formControlName: _vehicleNumberKey,
                                     builder: (field) {
@@ -835,6 +857,21 @@ class CustomStockDetailsBednetPageState
                                         type: InputType.text,
                                         label: localizations.translate(
                                           i18.stockDetails.vehicleNumberLabel,
+                                        ),
+                                        onChange: (val) {
+                                          field.control.value = val;
+                                        },
+                                      );
+                                    }),
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
+                                ReactiveWrapperField(
+                                    formControlName: _driverNameKey,
+                                    builder: (field) {
+                                      return InputField(
+                                        type: InputType.text,
+                                        label: localizations.translate(
+                                          i18_local
+                                              .stockDetails.driverNameLabel,
                                         ),
                                         onChange: (val) {
                                           field.control.value = val;

@@ -362,7 +362,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     _,
                     __,
                   ) {
-                    context.router.push(ManageStocksRoute());
+                    context.router.push(CustomManageStocksRoute());
                   },
                 );
           },
@@ -528,6 +528,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .map((e) => e.displayName)
                   .toList()
                   .contains(element) ||
+              element == i18.home.manageStockLabel ||
               element == i18.home.db,
         )
         .toList();

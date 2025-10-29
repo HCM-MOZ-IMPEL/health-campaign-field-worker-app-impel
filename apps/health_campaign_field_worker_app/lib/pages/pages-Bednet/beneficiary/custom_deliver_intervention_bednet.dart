@@ -32,7 +32,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import '../../../widgets/widgets_bednet/custom_resource_beneficiary_card.dart';
-import '../custom_qr_scanner.dart';
+import '../../custom_digit_scanner.dart';
 
 @RoutePage()
 class CustomDeliverInterventionBednetPage extends LocalizedStatefulWidget {

@@ -40,6 +40,7 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../data/repositories/local/inventory_management/custom_stock.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/sync_registry.dart';
 import '../data/sync_service_mapper.dart';
@@ -105,6 +106,7 @@ class Constants {
   static const String pipeSeparator = ' || ';
   static const String spaq1String = 'SPAQ 1';
   static const String administrativePost = 'Posto Administrativo';
+  static const String suppler = 'DDM';
   static const String centralFacility = 'Central Facility';
   static const String stateBoundaryLevel = 'State';
   static const String stateFacility = 'State Facility';
@@ -112,7 +114,7 @@ class Constants {
   static const String lgaFacility = 'LGA Facility';
   static const String healthFacility = 'Health Facility';
   static const String provincialWarehouse = 'Provincial Warehouse';
-  static const String districWarehouse = 'District Warehouse';
+  static const String districtWarehouse = 'District Warehouse';
   static const String localMonitor = 'Local Monitor';
   static const String deliveryTeamFilter = 'DeliveryTeam';
   static const String provincialBoundaryLevel = 'Provincia';
@@ -156,6 +158,8 @@ class Constants {
   static const String smcDeliver = 'smc_delivered';
 
   static const String bednetSKU = "Redes Mosquiteiras";
+  static const String vehicleSKU = "Vehicle";
+  static const String productSKUCounts = "productSKUCounts";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -202,7 +206,7 @@ class Constants {
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
-      StockLocalRepository(sql, StockOpLogManager(isar)),
+      CustomStockLocalRepository(sql, StockOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),

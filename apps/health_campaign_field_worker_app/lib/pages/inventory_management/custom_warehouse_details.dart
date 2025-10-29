@@ -26,19 +26,19 @@ import 'package:inventory_management/widgets/inventory/no_facilities_assigned_di
 import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()
-class CustomWarehouseDetailsBednetPage extends LocalizedStatefulWidget {
-  const CustomWarehouseDetailsBednetPage({
+class CustomWarehouseDetailsPage extends LocalizedStatefulWidget {
+  const CustomWarehouseDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<CustomWarehouseDetailsBednetPage> createState() =>
-      CustomWarehouseDetailsBednetPageState();
+  State<CustomWarehouseDetailsPage> createState() =>
+      CustomWarehouseDetailsPageState();
 }
 
-class CustomWarehouseDetailsBednetPageState
-    extends LocalizedState<CustomWarehouseDetailsBednetPage> {
+class CustomWarehouseDetailsPageState
+    extends LocalizedState<CustomWarehouseDetailsPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
@@ -47,7 +47,7 @@ class CustomWarehouseDetailsBednetPageState
   String? selectedFacilityId;
   TextEditingController controller1 = TextEditingController();
 
-  FormGroup buildForm(bool isDistributor, RecordStockState stockState) =>
+  FormGroup buildForm(bool teamCodeRequired, RecordStockState stockState) =>
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
@@ -55,14 +55,14 @@ class CustomWarehouseDetailsBednetPageState
               .translate(InventorySingleton().boundary!.code ?? ''),
         ),
         _warehouseKey: FormControl<String>(
-          validators: isDistributor ? [] : [Validators.required],
+          validators: teamCodeRequired ? [] : [Validators.required],
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ??
               context.loggedInUser.userName.toString() +
                   Constants.pipeSeparator +
                   context.loggedInUserUuid,
-          validators: isDistributor ? [Validators.required] : [],
+          validators: teamCodeRequired ? [Validators.required] : [],
         ),
       });
 
@@ -87,17 +87,20 @@ class CustomWarehouseDetailsBednetPageState
               final facilities = facilityState.whenOrNull(
                     fetched: (facilities, allfacilities) {
                       if (ctx.selectedProject.address?.boundaryType ==
-                          Constants.stateBoundaryLevel) {
+                          Constants.provincialBoundaryLevel) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
-                                  element.usage == Constants.stateFacility,
+                                  element.usage ==
+                                  Constants.provincialWarehouse,
                             )
                             .toList();
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
-                      } else {
+                      } else if (context
+                              .selectedProject.address?.boundaryType ==
+                          Constants.administrativePost) {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
                               (element) =>
@@ -118,7 +121,8 @@ class CustomWarehouseDetailsBednetPageState
                         facilities,
                       );
 
-                      return context.isDistributor &&
+                      return (context.isDistributor ||
+                                  context.isCommunitySupervisor) &&
                               !InventorySingleton().isWareHouseMgr
                           ? teamFacilities
                           : facilities;
@@ -136,7 +140,8 @@ class CustomWarehouseDetailsBednetPageState
                     builder: (context, scannerState) {
                       return ReactiveFormBuilder(
                         form: () => buildForm(
-                            InventorySingleton().isDistributor! &&
+                            (context.isDistributor ||
+                                    context.isCommunitySupervisor) &&
                                 !InventorySingleton().isWareHouseMgr!,
                             stockState),
                         builder: (context, form, child) {
@@ -181,20 +186,21 @@ class CustomWarehouseDetailsBednetPageState
                                                       .control(_teamCodeKey)
                                                       .value as String?;
 
-                                                  final facility =
-                                                      InventorySingleton()
-                                                              .isDistributor
+                                                  final facility = (context
+                                                              .isDistributor ||
+                                                          context
+                                                              .isCommunitySupervisor)
+                                                      ? FacilityModel(
+                                                          id: teamCode ??
+                                                              'Delivery Team',
+                                                        )
+                                                      : selectedFacilityId !=
+                                                              null
                                                           ? FacilityModel(
-                                                              id: teamCode ??
-                                                                  'Delivery Team',
+                                                              id: selectedFacilityId
+                                                                  .toString(),
                                                             )
-                                                          : selectedFacilityId !=
-                                                                  null
-                                                              ? FacilityModel(
-                                                                  id: selectedFacilityId
-                                                                      .toString(),
-                                                                )
-                                                              : null;
+                                                          : null;
 
                                                   context
                                                       .read<DigitScannerBloc>()
@@ -233,8 +239,10 @@ class CustomWarehouseDetailsBednetPageState
                                                       RecordStockSaveTransactionDetailsEvent(
                                                         dateOfRecord:
                                                             dateOfRecord,
-                                                        facilityModel: InventorySingleton()
-                                                                    .isDistributor! &&
+                                                        facilityModel: (context
+                                                                        .isDistributor ||
+                                                                    context
+                                                                        .isCommunitySupervisor) &&
                                                                 !InventorySingleton()
                                                                     .isWareHouseMgr!
                                                             ? FacilityModel(
@@ -242,24 +250,27 @@ class CustomWarehouseDetailsBednetPageState
                                                                     .toString(),
                                                               )
                                                             : facility,
-                                                        primaryId: InventorySingleton()
-                                                                .isDistributor
+                                                        primaryId: (context
+                                                                    .isDistributor ||
+                                                                context
+                                                                    .isCommunitySupervisor)
                                                             ? (teamCode ?? '')
                                                                 .split(Constants
                                                                     .pipeSeparator)
                                                                 .last
                                                             : facility.id,
-                                                        primaryType: context
-                                                                .isCommunityDistributor
+                                                        primaryType: (context
+                                                                    .isCommunityDistributor ||
+                                                                context
+                                                                    .isCommunitySupervisor)
                                                             ? "STAFF"
                                                             : "WAREHOUSE",
                                                       ),
                                                     );
-                                                    if ((InventorySingleton()
-                                                                .isWareHouseMgr &&
-                                                            !context.isLGA &&
+                                                    if ((!context
+                                                                .isSpaqManager &&
                                                             !context
-                                                                .isHealthFacilitySupervisor &&
+                                                                .isCommunitySupervisor &&
                                                             !context
                                                                 .isCommunityDistributor) ||
                                                         (recordStockBloc.state
@@ -271,12 +282,14 @@ class CustomWarehouseDetailsBednetPageState
                                                             StockRecordEntryType
                                                                 .returned)) {
                                                       context.router.push(
-                                                        CustomStockDetailsBednetRoute(),
+                                                        CustomStockDetailsRoute(),
                                                       );
                                                     } else {
                                                       context.router.push(ViewAllTransactionsRoute(
-                                                          warehouseId: InventorySingleton()
-                                                                  .isDistributor
+                                                          warehouseId: (context
+                                                                      .isDistributor ||
+                                                                  context
+                                                                      .isCommunitySupervisor)
                                                               ? (teamCode ?? '')
                                                                   .split(Constants
                                                                       .pipeSeparator)
@@ -288,9 +301,11 @@ class CustomWarehouseDetailsBednetPageState
                                         );
                                       },
                                     ),
-                                    if (InventorySingleton().isDistributor &&
-                                        stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
+                                    if ((context.isDistributor ||
+                                            context.isCommunitySupervisor ||
+                                            context.isSpaqManager) &&
+                                        stockState.entryType ==
+                                            StockRecordEntryType.receipt)
                                       DigitButton(
                                         label: "Scan Resource",
                                         onPressed: _handleSubmission,
@@ -305,7 +320,9 @@ class CustomWarehouseDetailsBednetPageState
                                   margin: const EdgeInsets.all(spacer2),
                                   children: [
                                     Text(
-                                      InventorySingleton().isDistributor! &&
+                                      (context.isDistributor ||
+                                                  context
+                                                      .isCommunitySupervisor) &&
                                               !InventorySingleton()
                                                   .isWareHouseMgr!
                                           ? localizations.translate(
@@ -359,7 +376,8 @@ class CustomWarehouseDetailsBednetPageState
                                             readOnly: true,
                                           );
                                         }),
-                                    if (!InventorySingleton().isDistributor)
+                                    if (!(context.isDistributor ||
+                                        context.isCommunitySupervisor))
                                       InkWell(
                                         onTap: () async {
                                           // clearQRCodes();
@@ -426,7 +444,8 @@ class CustomWarehouseDetailsBednetPageState
                                               }),
                                         ),
                                       ),
-                                    if (InventorySingleton().isDistributor)
+                                    if ((context.isDistributor ||
+                                        context.isCommunitySupervisor))
                                       ReactiveWrapperField(
                                           formControlName: _teamCodeKey,
                                           builder: (field) {
@@ -440,8 +459,10 @@ class CustomWarehouseDetailsBednetPageState
                                               initialValue: form
                                                   .control(_teamCodeKey)
                                                   .value,
-                                              isRequired: InventorySingleton()
-                                                  .isDistributor,
+                                              isRequired: (context
+                                                      .isDistributor ||
+                                                  context
+                                                      .isCommunitySupervisor),
                                             );
                                           })
                                   ]),
@@ -458,7 +479,7 @@ class CustomWarehouseDetailsBednetPageState
   }
 
   void _handleSubmission() {
-    if (InventorySingleton().isDistributor) {
+    if ((context.isDistributor || context.isCommunitySupervisor)) {
       context.router.push(QRScannerRoute());
     }
   }

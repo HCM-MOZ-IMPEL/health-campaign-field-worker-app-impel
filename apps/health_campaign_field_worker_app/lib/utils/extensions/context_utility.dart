@@ -90,6 +90,23 @@ extension ContextUtilityExtensions on BuildContext {
         .toList();
   }
 
+  Map<String, int> getAllProductSkuCounts() {
+    final authBloc = _get<AuthBloc>();
+    final counts = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
+        return productSkuCounts;
+      },
+    );
+    return counts ?? {};
+  }
+
   bool get isHealthFacilitySupervisor {
     try {
       // todo : verify this make this healthFacilitySupervsior as per kebbi
@@ -300,8 +317,14 @@ extension ContextUtilityExtensions on BuildContext {
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel.roles;
       },
     );
@@ -316,8 +339,14 @@ extension ContextUtilityExtensions on BuildContext {
   String? get loggedInIndividualId {
     final authBloc = _get<AuthBloc>();
     final individualUUID = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return individualId;
       },
     );
@@ -349,8 +378,14 @@ extension ContextUtilityExtensions on BuildContext {
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actions, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actions,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel;
       },
     );
