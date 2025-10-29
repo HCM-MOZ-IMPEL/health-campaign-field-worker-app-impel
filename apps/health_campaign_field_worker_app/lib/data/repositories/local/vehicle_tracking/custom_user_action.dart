@@ -84,7 +84,13 @@ class CustomUserActionLocalRepository extends UserActionLocalRepository {
                   //   ),
                 ],
               ),
-            ))
+            )
+            ..orderBy([
+              OrderingTerm(
+                expression: sql.userAction.clientModifiedTime,
+                mode: OrderingMode.asc,
+              ),
+            ]))
           .get();
 
       return results.map((e) {

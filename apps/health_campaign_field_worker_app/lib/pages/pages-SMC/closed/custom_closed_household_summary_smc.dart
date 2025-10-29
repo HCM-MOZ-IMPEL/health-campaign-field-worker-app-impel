@@ -32,6 +32,7 @@ class CustomClosedHouseholdSummarySMCPage extends LocalizedStatefulWidget {
 
 class CustomClosedHouseholdSummaryPageState
     extends LocalizedState<CustomClosedHouseholdSummarySMCPage> {
+  final clickedStatus = ValueNotifier<bool>(false);
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
   }
@@ -64,41 +65,51 @@ class CustomClosedHouseholdSummaryPageState
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DigitElevatedButton(
-                        onPressed: () {
-                          context.read<custombloc.ClosedHouseholdBloc>().add(
-                              custombloc.ClosedHouseholdEvent.handleSubmit(
-                                  context.boundary.code,
-                                  localizations
-                                      .translate(context.boundary.code!),
-                                  context.loggedInUserUuid,
-                                  envConfig.variables.tenantId,
-                                  context.projectId,
-                                  context.beneficiaryType!.toString(),
-                                  reason:
-                                      localizations.translate(widget.reason),
-                                  projectTypeCode: context.projectTypeCode,
-                                  context: context,
-                                  householdHeadName:
-                                      householdState.householdHeadName,
-                                  locationAccuracy:
-                                      householdState.locationAccuracy,
-                                  longitude: householdState.longitude,
-                                  latitude: householdState.latitude,
-                                  tag: scannerState.qrCodes.isNotEmpty
-                                      ? scannerState.qrCodes.first
-                                      : null));
+                      ValueListenableBuilder(
+                          valueListenable: clickedStatus,
+                          builder: (context, bool isClicked, _) {
+                            return DigitElevatedButton(
+                              onPressed: isClicked
+                                  ? () {}
+                                  : () {
+                                      context.read<custombloc.ClosedHouseholdBloc>().add(
+                                          custombloc.ClosedHouseholdEvent.handleSubmit(
+                                              context.boundary.code,
+                                              localizations.translate(
+                                                  context.boundary.code!),
+                                              context.loggedInUserUuid,
+                                              envConfig.variables.tenantId,
+                                              context.projectId,
+                                              context.beneficiaryType!
+                                                  .toString(),
+                                              reason: localizations
+                                                  .translate(widget.reason),
+                                              projectTypeCode:
+                                                  context.projectTypeCode,
+                                              context: context,
+                                              householdHeadName: householdState
+                                                  .householdHeadName,
+                                              locationAccuracy: householdState
+                                                  .locationAccuracy,
+                                              longitude:
+                                                  householdState.longitude,
+                                              latitude: householdState.latitude,
+                                              tag: scannerState
+                                                      .qrCodes.isNotEmpty
+                                                  ? scannerState.qrCodes.first
+                                                  : null));
 
-                          context.router
-                              .push(ClosedHouseholdAcknowledgementRoute());
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations
-                                .translate(i18.common.coreCommonSubmit),
-                          ),
-                        ),
-                      ),
+                                      context.router.push(
+                                          ClosedHouseholdAcknowledgementRoute());
+                                    },
+                              child: Center(
+                                child: Text(
+                                  localizations
+                                      .translate(i18.common.coreCommonSubmit),
+                                ),
+                              ),
+                            );
+                          }),
                     ],
                   );
                 }),

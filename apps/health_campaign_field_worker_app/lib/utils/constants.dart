@@ -28,6 +28,10 @@ import 'package:survey_form/data/repositories/remote/service.dart';
 import 'package:survey_form/data/repositories/remote/service_definition.dart';
 import 'package:sync_service/data/repositories/sync/sync_up.dart';
 import 'package:sync_service/utils/utils.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -216,6 +220,7 @@ class Constants {
         AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
+      UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
     ];
@@ -306,6 +311,8 @@ class Constants {
           HFReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userLocation)
           LocationTrackerRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -348,9 +355,11 @@ class Constants {
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
     SyncServiceSingleton().registries?.registerSyncRegistries({
       DataModelType.complaints: (remote) => SyncRegistry(remote),
+      DataModelType.userAction: (remote) => SyncRegistry(remote),
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);
+    TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
     SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);

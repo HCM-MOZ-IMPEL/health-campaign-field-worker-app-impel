@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:digit_components/widgets/digit_text_field.dart';
@@ -53,6 +54,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
 
   static const _tripBookReasonKey = "tripBookReason";
   static const _otherFieldReasonKey = "otherFieldReason";
+  static const _startMileageKey = 'startMileage';
+  static const _originKey = 'origin';
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -289,7 +292,38 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                           type: InputType.text,
                                         );
                                       }),
-                                ))
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding - 4, 0, kPadding - 4, 0),
+                              child: DigitTextFormField(
+                                keyboardType: TextInputType.number,
+                                formControlName: _startMileageKey,
+                                maxLength: 9,
+                                label: localizations.translate(
+                                  i18_local.vehicleTracking.mileageLabel,
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding - 4, 0, kPadding - 4, 0),
+                              child: DigitTextFormField(
+                                formControlName: _originKey,
+                                label: localizations.translate(
+                                  i18_local.vehicleTracking.originLabel,
+                                ),
+                                isRequired: true,
+                                validationMessages: {
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', 100.toString()),
+                                },
+                              ),
+                            )
                           ],
                         ),
                       ],
@@ -380,6 +414,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
     final otherFieldReason =
         form.control(_otherFieldReasonKey).value as String?;
 
+    final origin = form.control(_originKey).value as String?;
+    final startMileage = form.control(_startMileageKey).value as String?;
+
     if (latitude == null ||
         longitude == null ||
         locationAccuracy == null ||
@@ -391,7 +428,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         longitude: longitude,
         locationAccuracy: locationAccuracy,
         clientReferenceId: clientReferenceId,
-        isSync: true,
+        isSync: false,
         timestamp: startTime,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
@@ -401,6 +438,14 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
           AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)
             AdditionalField(_tripBookReasonKey, tripBookReason),
+          if (otherFieldReason != null)
+            AdditionalField(_otherFieldReasonKey, otherFieldReason),
+          if (origin != null && origin.isNotEmpty && origin.length > 1)
+            AdditionalField(_originKey, origin),
+          if (startMileage != null &&
+              startMileage.isNotEmpty &&
+              startMileage.length > 1)
+            AdditionalField(_startMileageKey, startMileage),
           if (otherFieldReason != null)
             AdditionalField(_otherFieldReasonKey, otherFieldReason),
           AdditionalField("tripStartTime", startTime)
@@ -415,7 +460,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
           FormControl<String>(validators: [Validators.required]),
       _otherFieldReasonKey: FormControl<String>(
         validators: [],
-      )
+      ),
+      _startMileageKey: FormControl<String>(),
+      _originKey: FormControl<String>(validators: [Validators.maxLength(100)]),
     });
   }
 }

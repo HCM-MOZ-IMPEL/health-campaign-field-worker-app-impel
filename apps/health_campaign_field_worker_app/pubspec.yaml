@@ -77,7 +77,7 @@ dependencies:
   digit_showcase: ^1.0.2
   digit_components: 1.0.3
   survey_form: 1.0.3
-  sync_service: 1.0.2
+  sync_service: 1.0.4
   disk_space_update: 0.0.2
   digit_location_tracker: ^1.0.0
   logger: ^2.5.0

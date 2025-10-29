@@ -1147,6 +1147,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: VehicleOverviewPage(
           key: args.key,
+          appLocalizations: args.appLocalizations,
           vehicleNo: args.vehicleNo,
         ),
       );
@@ -5319,12 +5320,14 @@ class VehicleAcknowledgementRouteArgs {
 class VehicleOverviewRoute extends PageRouteInfo<VehicleOverviewRouteArgs> {
   VehicleOverviewRoute({
     Key? key,
+    AppLocalizations? appLocalizations,
     required String vehicleNo,
     List<PageRouteInfo>? children,
   }) : super(
           VehicleOverviewRoute.name,
           args: VehicleOverviewRouteArgs(
             key: key,
+            appLocalizations: appLocalizations,
             vehicleNo: vehicleNo,
           ),
           initialChildren: children,
@@ -5339,16 +5342,19 @@ class VehicleOverviewRoute extends PageRouteInfo<VehicleOverviewRouteArgs> {
 class VehicleOverviewRouteArgs {
   const VehicleOverviewRouteArgs({
     this.key,
+    this.appLocalizations,
     required this.vehicleNo,
   });
 
   final Key? key;
 
+  final AppLocalizations? appLocalizations;
+
   final String vehicleNo;
 
   @override
   String toString() {
-    return 'VehicleOverviewRouteArgs{key: $key, vehicleNo: $vehicleNo}';
+    return 'VehicleOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations, vehicleNo: $vehicleNo}';
   }
 }
 

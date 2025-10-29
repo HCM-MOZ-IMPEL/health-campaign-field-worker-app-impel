@@ -1,6 +1,7 @@
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
@@ -19,6 +20,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:transit_post/utils/utils.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../blocs/localization/localization.dart';
@@ -583,7 +585,6 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                   .toList()
                   .contains(element) ||
               element == i18.home.db ||
-              element == i18.home.stockReconciliationLabel ||
               element == i18.home.vehicleTrackingLabel,
         ) // TODO: need to add close household inside mdms
         .toList();
@@ -643,6 +644,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -677,6 +680,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -811,6 +816,15 @@ void setPackagesSingleton(BuildContext context) {
           checklistTypes:
               appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
                   [],
+        );
+
+        TransitPostSingleton().setInitialData(
+          resources: context.selectedProjectType?.resources,
+          transitPostType: [],
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          minAge: context.selectedProjectType?.validMinAge,
+          maxAge: context.selectedProjectType?.validMaxAge,
         );
       });
 }

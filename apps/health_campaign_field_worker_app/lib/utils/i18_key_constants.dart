@@ -242,6 +242,12 @@ class VehicleTracking {
   String get mapLabel => 'VEHICLE_TRACKING_MAP_LABEL';
   String get endTripButtonLabel => 'VEHICLE_TRACKING_END_TRIP';
   String get startTripButtonLabel => 'VEHICLE_TRACKING_START_TRIP';
+  String get searchVehicle => "SEARCH_VEHICLE_LABEL";
+  String get mileageLabel => 'VEHICLE_TRACKING_MILEAGE_LABEL';
+  String get originLabel => 'VEHICLE_TRACKING_ORIGIN_LABEL';
+
+  String get endMileageLabel => 'VEHICLE_TRACKING_END_MILEAGE_LABEL';
+  String get destinationLabel => 'VEHICLE_TRACKING_DESTINATION_LABEL';
 
   String get startTripTitle => 'VEHICLE_TRACKING_START_TRIP_TITLE';
   String get startTripContent => 'VEHICLE_TRACKING_START_TRIP_CONTENT';

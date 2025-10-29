@@ -68,16 +68,13 @@ class VehicleTripFeedbackPageState
 
   static const _tripFeedbackEvaluationKey = "tripFeedbackEvaluation";
   static const _tripFeedbackCommentKey = "tripFeedbackComment";
+  static const _endMileageKey = 'endMileage';
+  static const _destinationKey = 'destination';
 
-  // Variable to track dose administration status
-  bool doseAdministered = false;
   // for others reason
   final TextEditingController otherFieldReasonController =
       TextEditingController();
   bool otherSelected = false;
-
-// Initialize the currentStep variable to keep track of the current step in a process.
-  int currentStep = 0;
 
   @override
   void initState() {
@@ -103,7 +100,10 @@ class VehicleTripFeedbackPageState
               return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
                 builder: (context, vehicleTripActionState) {
                   UserActionModel? tripAction = _getTripActionModel(
-                      vehicleTripActionState, tripEvaluation, tripComment);
+                      vehicleTripActionState,
+                      tripEvaluation,
+                      tripComment,
+                      form);
                   return ScrollableContent(
                     header: const Column(
                       children: [
@@ -179,20 +179,12 @@ class VehicleTripFeedbackPageState
                                           if ((shouldSubmit ?? false) &&
                                               context.mounted &&
                                               tripAction != null) {
-                                            context
-                                                .read<VehicleTripActionBloc>()
-                                                .add(
-                                                  VehicleTripActionEndTripEvent(
-                                                      isEditing: true,
-                                                      boundaryModel:
-                                                          RegistrationDeliverySingleton()
-                                                              .boundary!,
-                                                      vehicleNo: vehicleNo,
-                                                      tripAction: tripAction),
-                                                );
-                                            context.router.push(
-                                              VehicleAcknowledgementRoute(),
-                                            );
+                                            handleLocationState(
+                                                locationState,
+                                                context,
+                                                vehicleTripActionState,
+                                                widget.vehicleNo,
+                                                form);
                                           }
                                         });
                             },
@@ -263,7 +255,12 @@ class VehicleTripFeedbackPageState
                                                     ?.map(
                                                         (reason) => reason.code)
                                                     .toList() ??
-                                                [],
+                                                [
+                                                  "Excellent – Very professional and safe",
+                                                  "Good – Smooth and comfortable",
+                                                  "Average – Could improve",
+                                                  "Poor – Unpleasant or unsafe"
+                                                ],
                                         onSelectionChanged: (value) {
                                           form
                                               .control(
@@ -298,6 +295,40 @@ class VehicleTripFeedbackPageState
                                         errorMessage: null,
                                       );
                                     })),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding - 4, 0, kPadding - 4, 0),
+                                  child: DigitTextFormField(
+                                    keyboardType: TextInputType.number,
+                                    formControlName: _endMileageKey,
+                                    maxLength: 9,
+                                    label: localizations.translate(
+                                      i18_local.vehicleTracking.mileageLabel,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding - 4, 0, kPadding - 4, 0),
+                                  child: DigitTextFormField(
+                                    formControlName: _destinationKey,
+                                    label: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.destinationLabel,
+                                    ),
+                                    isRequired: true,
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', 100.toString()),
+                                    },
+                                  ),
+                                )
                                 // Padding(
                                 //   padding: const EdgeInsets.all(kPadding),
                                 //   child: DigitTextField(
@@ -327,16 +358,86 @@ class VehicleTripFeedbackPageState
     );
   }
 
+  void handleLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) {
+    if (context.mounted) {
+      DigitComponentsUtils.showDialog(
+        context,
+        localizations.translate(i18.common.locationCapturing),
+        DialogType.inProgress,
+      );
+
+      Future.delayed(const Duration(seconds: 0), () {
+        // After delay, hide the initial dialog
+        DigitComponentsUtils.hideDialog(context);
+        handleCapturedLocationState(
+          locationState,
+          context,
+          vehicleTripActionState,
+          vehicleNo,
+          form,
+        );
+      });
+    }
+  }
+
+  Future<void> handleCapturedLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) async {
+    // if all null then put 0
+    final lat = locationState.latitude ??
+        vehicleTripActionState.tripAction?.latitude ??
+        0;
+    final long = locationState.longitude ??
+        vehicleTripActionState.tripAction?.longitude ??
+        0;
+    final accuracy = locationState.accuracy ??
+        vehicleTripActionState.tripAction?.locationAccuracy ??
+        0;
+    final tripEvaluation =
+        form.control(_tripFeedbackEvaluationKey).value as String?;
+    final tripComment = form.control(_tripFeedbackCommentKey).value as String?;
+
+    final tripActionEndTrip = _getTripActionModel(
+        vehicleTripActionState, tripEvaluation, tripComment, form);
+
+    context.read<VehicleTripActionBloc>().add(
+          VehicleTripActionEndTripEvent(
+              isEditing: true,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              vehicleNo: vehicleNo ?? widget.vehicleNo,
+              longitude: long,
+              latitude: lat,
+              locationAccurracy: accuracy,
+              tripAction: tripActionEndTrip!),
+        );
+    context.router.push(
+      VehicleAcknowledgementRoute(),
+    );
+  }
+
   UserActionModel? _getTripActionModel(
     VehicleTripActionState vehicleTripActionState,
     String? tripEvaluation,
     String? tripComment,
+    FormGroup form,
   ) {
     UserActionModel? tripBookAction = vehicleTripActionState.tripAction;
 
     if (tripBookAction == null) {
       return null;
     }
+    final destination = form.control(_destinationKey).value as String?;
+    final endMileage = form.control(_endMileageKey).value as String?;
 
     Set keys = {
       _tripFeedbackCommentKey,
@@ -352,6 +453,12 @@ class VehicleTripFeedbackPageState
     tripBookAction = tripBookAction.copyWith(
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
       ...additionalFields,
+      if (destination != null &&
+          destination.isNotEmpty &&
+          destination.length > 1)
+        AdditionalField(_destinationKey, destination),
+      if (endMileage != null && endMileage.isNotEmpty && endMileage.length > 1)
+        AdditionalField(_endMileageKey, endMileage),
       if (tripComment != null)
         AdditionalField(_tripFeedbackCommentKey, tripComment),
       if (tripEvaluation != null)
@@ -366,6 +473,9 @@ class VehicleTripFeedbackPageState
       _tripFeedbackCommentKey: FormControl<String>(),
       _tripFeedbackEvaluationKey:
           FormControl<String>(validators: [Validators.required]),
+      _endMileageKey: FormControl<String>(),
+      _destinationKey:
+          FormControl<String>(validators: [Validators.maxLength(100)]),
     });
   }
 }
