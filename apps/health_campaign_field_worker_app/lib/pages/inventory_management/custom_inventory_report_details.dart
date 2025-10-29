@@ -379,6 +379,14 @@ class CustomInventoryReportDetailsPageState
                                                 ),
                                               ),
                                               fetched: (productVariants) {
+                                                List<ProductVariantModel>
+                                                    filteredProductVariants =
+                                                    productVariants
+                                                        .whereNot((element) =>
+                                                            element.sku ==
+                                                            Constants
+                                                                .vehicleSKU)
+                                                        .toList();
                                                 return ReactiveWrapperField(
                                                   formControlName:
                                                       _productVariantKey,
@@ -404,8 +412,9 @@ class CustomInventoryReportDetailsPageState
                                                           i18.common
                                                               .noMatchFound,
                                                         ),
-                                                        items: productVariants
-                                                            .map((variant) {
+                                                        items:
+                                                            filteredProductVariants
+                                                                .map((variant) {
                                                           return DropdownItem(
                                                             name: localizations
                                                                 .translate(
@@ -418,7 +427,7 @@ class CustomInventoryReportDetailsPageState
                                                         onSelect: (value) {
                                                           /// Find the selected product variant model by matching the id
                                                           final selectedVariant =
-                                                              productVariants
+                                                              filteredProductVariants
                                                                   .firstWhere(
                                                             (variant) =>
                                                                 variant.id ==

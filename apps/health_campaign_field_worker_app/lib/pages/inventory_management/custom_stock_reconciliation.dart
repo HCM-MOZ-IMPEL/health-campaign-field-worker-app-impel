@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -361,7 +362,7 @@ class CustomStockReconciliationPageState
                                                         (element) =>
                                                             element.usage ==
                                                             Constants
-                                                                .stateFacility,
+                                                                .provincialBoundaryLevel,
                                                       )
                                                       .toList();
                                               facilities =
@@ -474,6 +475,13 @@ class CustomStockReconciliationPageState
                                           ),
                                         ),
                                         fetched: (productVariants) {
+                                          List<ProductVariantModel>
+                                              filteredProductVariants =
+                                              productVariants
+                                                  .whereNot((element) =>
+                                                      element.sku ==
+                                                      Constants.vehicleSKU)
+                                                  .toList();
                                           return ReactiveWrapperField(
                                             formControlName: _productVariantKey,
                                             validationMessages: {
@@ -517,7 +525,7 @@ class CustomStockReconciliationPageState
                                                               .id)
                                                       : const DropdownItem(
                                                           name: '', code: ''),
-                                                  items: productVariants
+                                                  items: filteredProductVariants
                                                       .map((variant) {
                                                     return DropdownItem(
                                                       name: localizations
@@ -534,7 +542,7 @@ class CustomStockReconciliationPageState
 
                                                     /// Find the selected product variant model by matching the id
                                                     final selectedVariant =
-                                                        productVariants
+                                                        filteredProductVariants
                                                             .firstWhere(
                                                       (variant) =>
                                                           variant.id ==

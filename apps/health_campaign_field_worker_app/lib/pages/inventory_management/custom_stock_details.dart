@@ -471,12 +471,13 @@ class CustomStockDetailsPageState
                                       List<ProductVariantModel>
                                           filteredProductVariants =
                                           productVariants
-                                              .where((element) =>
-                                                  element.sku !=
+                                              .whereNot((element) =>
+                                                  element.sku ==
                                                   Constants.vehicleSKU)
                                               .toList();
-                                      if (filteredProductVariants.isEmpty)
+                                      if (filteredProductVariants.isEmpty) {
                                         return Container();
+                                      }
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
