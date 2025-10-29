@@ -1261,6 +1261,15 @@ class BeneficiaryDetails {
 class StockDetails {
   const StockDetails();
 
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+
+  String get voucherSerialNumberLabel => 'STOCK_DETAILS_VOUCHER_SERIAL_NUMBER';
+  String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
+  String get statusVvmLabel => 'STOCK_DETAILS_STATUS_OF_VVM';
+  String get statusIvmLabel => 'STOCK_DETAILS_STATUS_OF_IVM';
+  String get manufacturerLabel => 'STOCK_DETAILS_STATUS_OF_MANUFACTURER_LABEL';
+  String get expireDateLabel => 'STOCK_DETAILS_EXPIRE_DATE_LABEL';
+
   String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
 
   String get driverNameLabel => 'STOCK_DETAILS_DRIVER_NAME';
@@ -1283,7 +1292,6 @@ class StockDetails {
     return 'CDD_CODE_LABEL';
   }
 
-  String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
   String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
   String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
   String get selectTransactingPartyReturnedFrom =>

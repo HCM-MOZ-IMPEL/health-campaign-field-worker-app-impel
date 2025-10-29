@@ -259,8 +259,10 @@ class CustomWarehouseDetailsPageState
                                                                     .pipeSeparator)
                                                                 .last
                                                             : facility.id,
-                                                        primaryType: context
-                                                                .isCommunityDistributor
+                                                        primaryType: (context
+                                                                    .isCommunityDistributor ||
+                                                                context
+                                                                    .isCommunitySupervisor)
                                                             ? "STAFF"
                                                             : "WAREHOUSE",
                                                       ),
