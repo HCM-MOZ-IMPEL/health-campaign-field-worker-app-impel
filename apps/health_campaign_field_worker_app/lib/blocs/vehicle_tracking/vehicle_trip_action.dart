@@ -40,6 +40,8 @@ class VehicleTripActionBloc
     UserActionModel tripActionModel = event.tripAction;
     var clientReferenceId = IdGen.i.identifier;
     try {
+      // capture clientRefOfStart so as to map end and start userAction
+      var startTripActionClientRefId = tripActionModel.clientReferenceId;
       var tripEndTime = DateTime.now().millisecondsSinceEpoch;
       tripActionModel = tripActionModel.copyWith(
           clientReferenceId: clientReferenceId,
@@ -58,11 +60,21 @@ class VehicleTripActionBloc
           additionalFields: tripActionModel.additionalFields?.fields == null
               ? UserActionAdditionalFields(
                   version: 1,
-                  fields: [AdditionalField("endTripTime", tripEndTime)],
+                  fields: [
+                    AdditionalField("endTripTime", tripEndTime),
+                    if (startTripActionClientRefId != null &&
+                        startTripActionClientRefId.isNotEmpty)
+                      AdditionalField(
+                          "startClientRefId", startTripActionClientRefId),
+                  ],
                 )
               : tripActionModel.additionalFields?.copyWith(fields: [
                   ...tripActionModel.additionalFields!.fields,
-                  AdditionalField("endTripTime", tripEndTime)
+                  AdditionalField("endTripTime", tripEndTime),
+                  if (startTripActionClientRefId != null &&
+                      startTripActionClientRefId.isNotEmpty)
+                    AdditionalField(
+                        "startClientRefId", startTripActionClientRefId)
                 ]));
       await userActionLocalRepository.createUserAction(tripActionModel);
       emit(state.copyWith(

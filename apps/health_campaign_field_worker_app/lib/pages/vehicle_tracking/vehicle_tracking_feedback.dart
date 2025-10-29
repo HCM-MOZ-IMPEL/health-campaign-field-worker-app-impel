@@ -68,6 +68,8 @@ class VehicleTripFeedbackPageState
 
   static const _tripFeedbackEvaluationKey = "tripFeedbackEvaluation";
   static const _tripFeedbackCommentKey = "tripFeedbackComment";
+  static const _endMileageKey = 'endMileage';
+  static const _destinationKey = 'destination';
 
   // for others reason
   final TextEditingController otherFieldReasonController =
@@ -98,7 +100,10 @@ class VehicleTripFeedbackPageState
               return BlocBuilder<VehicleTripActionBloc, VehicleTripActionState>(
                 builder: (context, vehicleTripActionState) {
                   UserActionModel? tripAction = _getTripActionModel(
-                      vehicleTripActionState, tripEvaluation, tripComment);
+                      vehicleTripActionState,
+                      tripEvaluation,
+                      tripComment,
+                      form);
                   return ScrollableContent(
                     header: const Column(
                       children: [
@@ -290,6 +295,40 @@ class VehicleTripFeedbackPageState
                                         errorMessage: null,
                                       );
                                     })),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding - 4, 0, kPadding - 4, 0),
+                                  child: DigitTextFormField(
+                                    keyboardType: TextInputType.number,
+                                    formControlName: _endMileageKey,
+                                    maxLength: 9,
+                                    label: localizations.translate(
+                                      i18_local.vehicleTracking.mileageLabel,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding - 4, 0, kPadding - 4, 0),
+                                  child: DigitTextFormField(
+                                    formControlName: _destinationKey,
+                                    label: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.destinationLabel,
+                                    ),
+                                    isRequired: true,
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', 100.toString()),
+                                    },
+                                  ),
+                                )
                                 // Padding(
                                 //   padding: const EdgeInsets.all(kPadding),
                                 //   child: DigitTextField(
@@ -369,7 +408,7 @@ class VehicleTripFeedbackPageState
     final tripComment = form.control(_tripFeedbackCommentKey).value as String?;
 
     final tripActionEndTrip = _getTripActionModel(
-        vehicleTripActionState, tripEvaluation, tripComment);
+        vehicleTripActionState, tripEvaluation, tripComment, form);
 
     context.read<VehicleTripActionBloc>().add(
           VehicleTripActionEndTripEvent(
@@ -390,12 +429,15 @@ class VehicleTripFeedbackPageState
     VehicleTripActionState vehicleTripActionState,
     String? tripEvaluation,
     String? tripComment,
+    FormGroup form,
   ) {
     UserActionModel? tripBookAction = vehicleTripActionState.tripAction;
 
     if (tripBookAction == null) {
       return null;
     }
+    final destination = form.control(_destinationKey).value as String?;
+    final endMileage = form.control(_endMileageKey).value as String?;
 
     Set keys = {
       _tripFeedbackCommentKey,
@@ -411,6 +453,12 @@ class VehicleTripFeedbackPageState
     tripBookAction = tripBookAction.copyWith(
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
       ...additionalFields,
+      if (destination != null &&
+          destination.isNotEmpty &&
+          destination.length > 1)
+        AdditionalField(_destinationKey, destination),
+      if (endMileage != null && endMileage.isNotEmpty && endMileage.length > 1)
+        AdditionalField(_endMileageKey, endMileage),
       if (tripComment != null)
         AdditionalField(_tripFeedbackCommentKey, tripComment),
       if (tripEvaluation != null)
@@ -425,6 +473,9 @@ class VehicleTripFeedbackPageState
       _tripFeedbackCommentKey: FormControl<String>(),
       _tripFeedbackEvaluationKey:
           FormControl<String>(validators: [Validators.required]),
+      _endMileageKey: FormControl<String>(),
+      _destinationKey:
+          FormControl<String>(validators: [Validators.maxLength(100)]),
     });
   }
 }
