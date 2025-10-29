@@ -27,6 +27,7 @@ import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
 import '../../widgets/vehicle_tracking/vehicle_card.dart';
 import '../../widgets/vehicle_tracking/view_vehicle_card.dart';
 import '../custom_digit_scanner.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class VehicleSearchPage extends LocalizedStatefulWidget {
@@ -117,7 +118,8 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              localizations.translate("SEARCH_VEHICLE_LABEL"),
+                              localizations.translate(
+                                  i18_local.vehicleTracking.searchVehicle),
                               style: theme.textTheme.displayMedium,
                               textAlign: TextAlign.left,
                             ),
@@ -149,7 +151,8 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                         ),
                         const SizedBox(height: kPadding * 2),
                         if (searchVehiclesState.resultsNotFound &&
-                            !searchVehiclesState.loading)
+                            !searchVehiclesState.loading &&
+                            searchVehiclesState.vehicles.isEmpty)
                           DigitInfoCard(
                             description: localizations.translate(
                               i18.searchBeneficiary.beneficiaryInfoDescription,

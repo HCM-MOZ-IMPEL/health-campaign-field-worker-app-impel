@@ -69,15 +69,10 @@ class VehicleTripFeedbackPageState
   static const _tripFeedbackEvaluationKey = "tripFeedbackEvaluation";
   static const _tripFeedbackCommentKey = "tripFeedbackComment";
 
-  // Variable to track dose administration status
-  bool doseAdministered = false;
   // for others reason
   final TextEditingController otherFieldReasonController =
       TextEditingController();
   bool otherSelected = false;
-
-// Initialize the currentStep variable to keep track of the current step in a process.
-  int currentStep = 0;
 
   @override
   void initState() {
@@ -179,20 +174,12 @@ class VehicleTripFeedbackPageState
                                           if ((shouldSubmit ?? false) &&
                                               context.mounted &&
                                               tripAction != null) {
-                                            context
-                                                .read<VehicleTripActionBloc>()
-                                                .add(
-                                                  VehicleTripActionEndTripEvent(
-                                                      isEditing: true,
-                                                      boundaryModel:
-                                                          RegistrationDeliverySingleton()
-                                                              .boundary!,
-                                                      vehicleNo: vehicleNo,
-                                                      tripAction: tripAction),
-                                                );
-                                            context.router.push(
-                                              VehicleAcknowledgementRoute(),
-                                            );
+                                            handleLocationState(
+                                                locationState,
+                                                context,
+                                                vehicleTripActionState,
+                                                widget.vehicleNo,
+                                                form);
                                           }
                                         });
                             },
@@ -263,7 +250,12 @@ class VehicleTripFeedbackPageState
                                                     ?.map(
                                                         (reason) => reason.code)
                                                     .toList() ??
-                                                [],
+                                                [
+                                                  "Excellent – Very professional and safe",
+                                                  "Good – Smooth and comfortable",
+                                                  "Average – Could improve",
+                                                  "Poor – Unpleasant or unsafe"
+                                                ],
                                         onSelectionChanged: (value) {
                                           form
                                               .control(
@@ -324,6 +316,73 @@ class VehicleTripFeedbackPageState
               );
             });
       }),
+    );
+  }
+
+  void handleLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) {
+    if (context.mounted) {
+      DigitComponentsUtils.showDialog(
+        context,
+        localizations.translate(i18.common.locationCapturing),
+        DialogType.inProgress,
+      );
+
+      Future.delayed(const Duration(seconds: 0), () {
+        // After delay, hide the initial dialog
+        DigitComponentsUtils.hideDialog(context);
+        handleCapturedLocationState(
+          locationState,
+          context,
+          vehicleTripActionState,
+          vehicleNo,
+          form,
+        );
+      });
+    }
+  }
+
+  Future<void> handleCapturedLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) async {
+    // if all null then put 0
+    final lat = locationState.latitude ??
+        vehicleTripActionState.tripAction?.latitude ??
+        0;
+    final long = locationState.longitude ??
+        vehicleTripActionState.tripAction?.longitude ??
+        0;
+    final accuracy = locationState.accuracy ??
+        vehicleTripActionState.tripAction?.locationAccuracy ??
+        0;
+    final tripEvaluation =
+        form.control(_tripFeedbackEvaluationKey).value as String?;
+    final tripComment = form.control(_tripFeedbackCommentKey).value as String?;
+
+    final tripActionEndTrip = _getTripActionModel(
+        vehicleTripActionState, tripEvaluation, tripComment);
+
+    context.read<VehicleTripActionBloc>().add(
+          VehicleTripActionEndTripEvent(
+              isEditing: true,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              vehicleNo: vehicleNo ?? widget.vehicleNo,
+              longitude: long,
+              latitude: lat,
+              locationAccurracy: accuracy,
+              tripAction: tripActionEndTrip!),
+        );
+    context.router.push(
+      VehicleAcknowledgementRoute(),
     );
   }
 

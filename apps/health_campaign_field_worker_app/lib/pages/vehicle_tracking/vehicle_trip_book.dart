@@ -391,7 +391,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         longitude: longitude,
         locationAccuracy: locationAccuracy,
         clientReferenceId: clientReferenceId,
-        isSync: true,
+        isSync: false,
         timestamp: startTime,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",

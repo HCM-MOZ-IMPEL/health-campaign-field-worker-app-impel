@@ -79,9 +79,8 @@ class VehicleCard extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    vehicleNo ??
-                        appLocalizations
-                            .translate(i18_local.common.coreCommonNA),
+                    appLocalizations
+                        .translate(vehicleNo ?? i18_local.common.coreCommonNA),
                     style: theme.textTheme.headlineSmall,
                   ),
                   const SizedBox(
@@ -94,7 +93,10 @@ class VehicleCard extends StatelessWidget {
                 ],
               ),
             ),
-            StatusWidget(status: status),
+            StatusWidget(
+              status: status,
+              appLocalizations: appLocalizations,
+            ),
             DigitTableCard(
               labelStyle: theme.textTheme.bodySmall,
               descriptionStyle: theme.textTheme.bodySmall,
@@ -111,13 +113,16 @@ class VehicleCard extends StatelessWidget {
                 ): vehicleType,
                 appLocalizations.translate(
                   i18_local.vehicleTracking.color,
-                ): color,
+                ): appLocalizations
+                    .translate(color ?? i18_local.common.coreCommonNA),
                 appLocalizations.translate(
                   i18_local.vehicleTracking.brand,
-                ): brand,
+                ): appLocalizations
+                    .translate(brand ?? i18_local.common.coreCommonNA),
                 appLocalizations.translate(
                   i18_local.vehicleTracking.model,
-                ): model,
+                ): appLocalizations
+                    .translate(model ?? i18_local.common.coreCommonNA),
                 if (type == VehicleCardType.all && endDate != null)
                   appLocalizations.translate(
                     i18_local.vehicleTracking.endDate,
@@ -142,8 +147,10 @@ class VehicleCard extends StatelessWidget {
 
 class StatusWidget extends StatelessWidget {
   final VehicleStatusEnum? status;
+  final AppLocalizations appLocalizations;
   const StatusWidget({
     super.key,
+    required this.appLocalizations,
     required this.status,
   });
 
@@ -176,7 +183,8 @@ class StatusWidget extends StatelessWidget {
               color: statusColor,
             ),
             const SizedBox(width: spacer1),
-            Text(vehicleStatusMap[status] ?? ""),
+            Text(appLocalizations.translate(
+                vehicleStatusMap[status] ?? i18_local.common.coreCommonNA)),
           ],
         ),
       ),
