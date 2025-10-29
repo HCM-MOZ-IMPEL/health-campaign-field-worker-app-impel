@@ -295,6 +295,10 @@ class AppRouter extends _$AppRouter {
                     path: 'details',
                     redirectTo: 'custom-details',
                   ),
+                  AutoRoute(
+                    page: ViewAllTransactionsRoute.page,
+                    path: 'custom-all-transactions',
+                  ),
                 ],
               ),
               AutoRoute(
@@ -1069,6 +1073,10 @@ class AppRouter extends _$AppRouter {
                 path: 'details',
                 redirectTo: 'custom-details',
               ),
+              AutoRoute(
+                page: ViewAllTransactionsRoute.page,
+                path: 'custom-all-transactions',
+              ),
             ],
           ),
           AutoRoute(
@@ -1741,6 +1749,10 @@ class AppRouter extends _$AppRouter {
               RedirectRoute(
                 path: 'details',
                 redirectTo: 'custom-details-bednet',
+              ),
+              AutoRoute(
+                page: ViewAllTransactionsRoute.page,
+                path: 'custom-all-transactions',
               ),
             ],
           ),

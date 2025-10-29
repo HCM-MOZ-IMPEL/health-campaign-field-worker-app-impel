@@ -352,9 +352,10 @@ class CustomStockReconciliationPageState
                                                     CircularProgressIndicator(),
                                               ),
                                           fetched: (facilities, allFacilities) {
-                                            if (context.selectedProject.address
+                                            if (ctx.selectedProject.address
                                                     ?.boundaryType ==
-                                                Constants.stateBoundaryLevel) {
+                                                Constants
+                                                    .provincialBoundaryLevel) {
                                               List<FacilityModel>
                                                   filteredFacilities =
                                                   facilities
@@ -362,14 +363,16 @@ class CustomStockReconciliationPageState
                                                         (element) =>
                                                             element.usage ==
                                                             Constants
-                                                                .provincialBoundaryLevel,
+                                                                .provincialWarehouse,
                                                       )
                                                       .toList();
                                               facilities =
                                                   filteredFacilities.isEmpty
                                                       ? facilities
                                                       : filteredFacilities;
-                                            } else {
+                                            } else if (context.selectedProject
+                                                    .address?.boundaryType ==
+                                                Constants.administrativePost) {
                                               List<FacilityModel>
                                                   filteredFacilities =
                                                   facilities

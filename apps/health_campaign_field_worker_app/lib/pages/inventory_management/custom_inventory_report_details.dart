@@ -230,7 +230,7 @@ class CustomInventoryReportDetailsPageState
                                                             .address
                                                             ?.boundaryType ==
                                                         Constants
-                                                            .stateBoundaryLevel) {
+                                                            .provincialBoundaryLevel) {
                                                       List<FacilityModel>
                                                           filteredFacilities =
                                                           facilities
@@ -239,7 +239,7 @@ class CustomInventoryReportDetailsPageState
                                                                     element
                                                                         .usage ==
                                                                     Constants
-                                                                        .stateFacility,
+                                                                        .provincialWarehouse,
                                                               )
                                                               .toList();
                                                       facilities =
@@ -247,7 +247,12 @@ class CustomInventoryReportDetailsPageState
                                                                   .isEmpty
                                                               ? facilities
                                                               : filteredFacilities;
-                                                    } else {
+                                                    } else if (context
+                                                            .selectedProject
+                                                            .address
+                                                            ?.boundaryType ==
+                                                        Constants
+                                                            .administrativePost) {
                                                       List<FacilityModel>
                                                           filteredFacilities =
                                                           facilities

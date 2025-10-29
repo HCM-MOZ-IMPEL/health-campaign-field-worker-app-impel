@@ -91,8 +91,9 @@ class CustomStockDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    final isHealthFacilitySupervisor = context.isHealthFacilitySupervisor;
-
+    final isHealthFacilitySupervisor = context.isSpaqManager;
+    final isCommunitySupervisor = context.isCommunitySupervisor;
+    final isCommunityDistributor = context.isCommunityDistributor;
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
     return PopScope(
@@ -539,15 +540,17 @@ class CustomStockDetailsPageState
                                       fetched: (facilities, allFacilities) {
                                         List<FacilityModel> filteredFacilities =
                                             [];
+                                        var address = context.selectedProject
+                                            .address?.boundaryType;
                                         if (context.selectedProject.address
                                                 ?.boundaryType ==
-                                            Constants.stateBoundaryLevel) {
+                                            Constants.provincialBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
                                               ? facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.centralFacility)
+                                                      Constants.suppler)
                                                   .toList()
                                               : facilities
                                                   .where((element) =>
@@ -555,8 +558,9 @@ class CustomStockDetailsPageState
                                                       Constants.healthFacility)
                                                   .toList();
                                         } else if (context.selectedProject
-                                                .address?.boundaryType ==
-                                            Constants.administrativePost) {
+                                                    .address?.boundaryType ==
+                                                Constants.administrativePost &&
+                                            !context.isCommunitySupervisor) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
                                               ? facilities
@@ -565,12 +569,7 @@ class CustomStockDetailsPageState
                                                       Constants
                                                           .provincialWarehouse)
                                                   .toList()
-                                              : facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants
-                                                          .communitySupervisor)
-                                                  .toList();
+                                              : [];
                                         } else if (context
                                             .isCommunitySupervisor) {
                                           filteredFacilities = entryType ==
@@ -582,26 +581,22 @@ class CustomStockDetailsPageState
                                                   .toList()
                                               : [];
                                         } else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants
-                                                          .communitySupervisor)
-                                                  .toList()
-                                              : [];
+                                          filteredFacilities = [];
                                         }
 
-                                        facilities =
-                                            context.isHealthFacilitySupervisor &&
+                                        facilities = ((isHealthFacilitySupervisor ||
+                                                        isCommunitySupervisor) &&
                                                     entryType !=
                                                         StockRecordEntryType
-                                                            .receipt
-                                                ? []
-                                                : filteredFacilities.isEmpty
-                                                    ? facilities
-                                                    : filteredFacilities;
+                                                            .receipt) ||
+                                                (isCommunityDistributor &&
+                                                    entryType ==
+                                                        StockRecordEntryType
+                                                            .dispatch)
+                                            ? []
+                                            : filteredFacilities.isEmpty
+                                                ? facilities
+                                                : filteredFacilities;
 
                                         final teamFacilities = [
                                           FacilityModel(
@@ -627,13 +622,17 @@ class CustomStockDetailsPageState
                                                 final facility =
                                                     await context.router.push(
                                                         CustomInventoryFacilitySelectionRoute(
-                                                  facilities:
-                                                      (isHealthFacilitySupervisor &&
+                                                  facilities: ((isHealthFacilitySupervisor ||
+                                                                  isCommunitySupervisor) &&
                                                               entryType !=
                                                                   StockRecordEntryType
-                                                                      .receipt)
-                                                          ? teamFacilities
-                                                          : facilities,
+                                                                      .receipt) ||
+                                                          (isCommunityDistributor &&
+                                                              entryType ==
+                                                                  StockRecordEntryType
+                                                                      .dispatch)
+                                                      ? teamFacilities
+                                                      : facilities,
                                                 )) as FacilityModel?;
 
                                                 if (facility == null) return;
@@ -746,57 +745,54 @@ class CustomStockDetailsPageState
                                             ),
                                           );
                                         },
-                                        child: IgnorePointer(
-                                          child: InputField(
-                                            type: InputType.search,
-                                            label: localizations.translate(
-                                              i18.stockReconciliationDetails
-                                                  .teamCodeLabel,
-                                            ),
-                                            isRequired: deliveryTeamSelected,
-                                            controller: textController,
-                                            suffixIcon: Icons.qr_code_2,
-                                            onSuffixTap: (value) {
-                                              //[TODO: Add route to auto_route]
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const DigitScannerPage(
-                                                    quantity: 1,
-                                                    isGS1code: false,
-                                                    singleValue: true,
-                                                  ),
-                                                  settings: const RouteSettings(
-                                                      name: '/qr-scanner'),
-                                                ),
-                                              );
-                                            },
-                                            onChange: (val) {
-                                              String? value = val;
-                                              if (value != null &&
-                                                  value.trim().isNotEmpty) {
-                                                context
-                                                    .read<DigitScannerBloc>()
-                                                    .add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: [],
-                                                        qrCode: [value],
-                                                        manualCode: value,
-                                                      ),
-                                                    );
-                                              } else {
-                                                clearQRCodes();
-                                              }
-                                              field.didChange(value);
-                                            },
+                                        child: InputField(
+                                          type: InputType.search,
+                                          label: localizations.translate(
+                                            i18.stockReconciliationDetails
+                                                .teamCodeLabel,
                                           ),
+                                          isRequired: deliveryTeamSelected,
+                                          controller: textController,
+                                          suffixIcon: Icons.qr_code_2,
+                                          onSuffixTap: (value) {
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                          onChange: (val) {
+                                            String? value = val;
+                                            if (value != null &&
+                                                value.trim().isNotEmpty) {
+                                              context
+                                                  .read<DigitScannerBloc>()
+                                                  .add(
+                                                    DigitScannerEvent
+                                                        .handleScanner(
+                                                      barCode: [],
+                                                      qrCode: [value],
+                                                      manualCode: value,
+                                                    ),
+                                                  );
+                                            } else {
+                                              clearQRCodes();
+                                            }
+                                            field.didChange(value);
+                                          },
                                         ),
                                       );
                                     }),
                               ),
-                              if (isWareHouseMgr ||
-                                  context.isHealthFacilitySupervisor)
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
                                 transportTypes.isNotEmpty
                                     ? ReactiveWrapperField(
                                         formControlName: _typeOfTransportKey,
@@ -853,8 +849,7 @@ class CustomStockDetailsPageState
                                         },
                                       )
                                     : const Offstage(),
-                              if (isWareHouseMgr ||
-                                  context.isHealthFacilitySupervisor)
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
                                 ReactiveWrapperField(
                                     formControlName: _vehicleNumberKey,
                                     builder: (field) {
@@ -868,8 +863,7 @@ class CustomStockDetailsPageState
                                         },
                                       );
                                     }),
-                              if (isWareHouseMgr ||
-                                  context.isHealthFacilitySupervisor)
+                              if (isWareHouseMgr || isHealthFacilitySupervisor)
                                 ReactiveWrapperField(
                                     formControlName: _driverNameKey,
                                     builder: (field) {

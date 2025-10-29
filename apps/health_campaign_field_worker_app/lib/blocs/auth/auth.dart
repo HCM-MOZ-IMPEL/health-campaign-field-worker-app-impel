@@ -37,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
+    on(_onUpdateProductSKUCounts);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -52,6 +53,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
       final userIndividualId = await localSecureStore.userIndividualId;
+      Map<String, int> currentSKUCounts =
+          await localSecureStore.getAllProductSKUCounts();
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
@@ -64,6 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: userObject,
           individualId: userIndividualId,
           actionsWrapper: actionsList,
+          productSkuCounts: currentSKUCounts,
         ));
       }
     } catch (_) {
@@ -95,6 +99,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "actionMaster": "actions-test",
         "enabled": true,
       });
+      Map<String, int> currentSKUCounts =
+          await localSecureStore.getAllProductSKUCounts();
       await localSecureStore.setBoundaryRefetch(true);
 
       await localSecureStore.setRoleActions(actionsWrapper);
@@ -120,6 +126,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: result.userRequestModel,
           actionsWrapper: actionsWrapper,
           individualId: await localSecureStore.userIndividualId,
+          productSkuCounts: currentSKUCounts,
         ),
       );
     } on DioException catch (error) {
@@ -148,6 +155,58 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
     emit(const AuthUnauthenticatedState());
   }
+
+  FutureOr<void> _onUpdateProductSKUCounts(
+    AuthUpdateProductSKUCountsEvent event,
+    AuthEmitter emit,
+  ) async {
+    // emit(const AuthLoadingState());
+
+    try {
+      Map<String, int> currentCounts =
+          await localSecureStore.getAllProductSKUCounts();
+
+      if (event.skuCounts != null) {
+        Map<String, int>? additionCounts = event.skuCounts;
+
+        for (final sku in additionCounts!.keys) {
+          // final existingCount = currentCounts[sku] ?? 0;
+          final addition = additionCounts[sku] ?? 0;
+          currentCounts[sku] = (currentCounts[sku] ?? 0) + addition;
+        }
+      }
+
+      await localSecureStore.setProductSKUCounts(currentCounts);
+
+      Map<String, int> test = await localSecureStore.getAllProductSKUCounts();
+
+      final accessToken = await localSecureStore.accessToken;
+      final refreshToken = await localSecureStore.refreshToken;
+      final userObject = await localSecureStore.userRequestModel;
+      final actionsList = await localSecureStore.savedActions;
+      final userIndividualId = await localSecureStore.userIndividualId;
+
+      if (accessToken == null ||
+          refreshToken == null ||
+          userObject == null ||
+          actionsList == null) {
+        emit(const AuthUnauthenticatedState());
+      } else {
+        emit(AuthAuthenticatedState(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          userModel: userObject,
+          individualId: userIndividualId,
+          actionsWrapper: actionsList,
+          productSkuCounts: currentCounts,
+        ));
+      }
+    } catch (_) {
+      await localSecureStore.deleteAll();
+      emit(const AuthUnauthenticatedState());
+      rethrow;
+    }
+  }
 }
 
 @freezed
@@ -163,6 +222,10 @@ class AuthEvent with _$AuthEvent {
   }) = AuthAutoLoginEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
+
+  const factory AuthEvent.updateProductSKUCounts({
+    Map<String, int>? skuCounts,
+  }) = AuthUpdateProductSKUCountsEvent;
 }
 
 @freezed
@@ -177,6 +240,7 @@ class AuthState with _$AuthState {
     required UserRequestModel userModel,
     required RoleActionsWrapperModel actionsWrapper,
     String? individualId,
+    Map<String, int>? productSkuCounts,
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;

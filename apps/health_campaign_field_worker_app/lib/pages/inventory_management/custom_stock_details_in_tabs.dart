@@ -47,9 +47,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   late List<ProductVariantModel> products;
   late String receivedFrom;
   late String secondaryPartyType;
-  late String? typeOfTransport;
-  late String? vehicleNumber;
-  late String? driverName;
+  String? typeOfTransport;
+  String? vehicleNumber;
+  String? driverName;
   late List<dynamic> _formkeys;
   final Map<String, StockModel> _tabStocks = {};
   String _sharedMRN = '';
@@ -73,6 +73,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _batchNumberKey = 'batchNumberKey';
   static const _commentsKey = 'comments';
   List<InventoryTransportTypes> transportTypes = [];
+  List<String> skuList = [];
 
   @override
   void initState() {
@@ -767,24 +768,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               ),
                             );
                           }),
-                    // ReactiveWrapperField(
-                    //   formControlName: _waybillQuantityKey,
-                    //   builder: (field) {
-                    //     return InputField(
-                    //       type: InputType.text,
-                    //       label: 'Quantity of Blisters' + ,
-                    //       errorMessage: field.errorText,
-                    //       onChange: (val) {
-                    //         if (val == '') {
-                    //           field.control.value = '0';
-                    //         } else {
-                    //           field.control.value = val;
-                    //         }
-                    //       },
-                    //       isRequired: true,
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: 16),
                     ReactiveWrapperField(
                       formControlName: _commentsKey,
@@ -948,71 +931,58 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
     if (submit && context.mounted) {
       // Loop through all stocks and dispatch individual events
-      // int currentSpaq1Count = context.spaq1;
-      // int currentSpaq2Count = context.spaq2;
-      // int spaq1Count = 0;
-      // int spaq2Count = 0;
-      // for (var productName in selectedProducts) {
-      //   await _saveCurrentTabData(productName, entryType);
-      // }
 
-      // for (final stockModel in _tabStocks.values) {
-      //   int quantity = int.parse(stockModel.quantity.toString());
-      //   int quantityWasted = int.parse(stockModel.additionalFields?.fields
-      //           .firstWhereOrNull(
-      //               (element) => element.key == 'wastedBlistersReturned')
-      //           ?.value
-      //           ?.toString() ??
-      //       '0');
-      //   final totalQty = ((entryType == StockRecordEntryType.dispatch)
-      //           ? quantity * -1
-      //           : quantity) -
-      //       quantityWasted;
+      Map<String, int> skuCounts = context
+          .getAllProductSkuCounts()
+          .map((key, value) => MapEntry(key, value));
 
-      //   String? productName = stockModel.additionalFields?.fields
-      //       .firstWhereOrNull((element) => element.key == 'productName')
-      //       ?.value;
+      for (var product in selectedProducts) {
+        await _saveCurrentTabData(product, entryType);
+      }
 
-      //   // Accumulate quantities based on product
-      //   if (productName == Constants.spaq1) {
-      //     spaq1Count += totalQty;
-      //   } else if (productName == Constants.spaq2) {
-      //     spaq2Count += totalQty;
-      //   }
+      for (final stockModel in _tabStocks.values) {
+        int quantity = int.parse(stockModel.quantity.toString());
+        int quantityWasted = int.parse(stockModel.additionalFields?.fields
+                .firstWhereOrNull(
+                    (element) => element.key == 'wastedBlistersReturned')
+                ?.value
+                ?.toString() ??
+            '0');
+        final totalQty = ((entryType == StockRecordEntryType.dispatch)
+                ? quantity * -1
+                : quantity) -
+            quantityWasted;
 
-      //   // Custom logic based on productName
-      //   if (entryType == StockRecordEntryType.dispatch) {
-      //     if (productName == Constants.spaq1 &&
-      //         (currentSpaq1Count + totalQty < 0)) {
-      //       await DigitToast.show(
-      //         context,
-      //         options: DigitToastOptions(
-      //             localizations.translate(context.isCommunityDistributor
-      //                 ? i18_local
-      //                     .beneficiaryDetails.validationForExcessStockReturn
-      //                 : i18_local
-      //                     .beneficiaryDetails.validationForExcessStockDispatch),
-      //             true,
-      //             theme),
-      //       );
-      //       return;
-      //     } else if (productName == Constants.spaq2 &&
-      //         (currentSpaq2Count + totalQty < 0)) {
-      //       await DigitToast.show(
-      //         context,
-      //         options: DigitToastOptions(
-      //             localizations.translate(context.isCommunityDistributor
-      //                 ? i18_local
-      //                     .beneficiaryDetails.validationForExcessStockReturn
-      //                 : i18_local
-      //                     .beneficiaryDetails.validationForExcessStockDispatch),
-      //             true,
-      //             theme),
-      //       );
-      //       return;
-      //     }
-      //   }
-      // }
+        String? productName = stockModel.additionalFields?.fields
+            .firstWhereOrNull((element) => element.key == 'productName')
+            ?.value;
+
+        if (skuCounts.isNotEmpty) {
+          skuList = skuCounts.keys.toList();
+        }
+
+        // Custom logic based on productName
+        if (entryType == StockRecordEntryType.dispatch) {
+          if ((skuList.contains(productName) &&
+                  // ignore: unnecessary_null_comparison
+                  (skuCounts[productName]! + totalQty < 0)) ||
+              (skuCounts[productName] == null)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(context.isCommunityDistributor
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockReturn
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDispatch),
+                  true,
+                  theme),
+            );
+            return;
+          }
+        }
+        skuCounts[productName!] = totalQty;
+      }
 
       for (final stockModel in _tabStocks.values) {
         context.read<RecordStockBloc>().add(
@@ -1025,14 +995,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             );
       }
 
-      // context.read<AuthBloc>().add(
-      //       AuthAddSpaqCountsEvent(
-      //         spaq1Count: spaq1Count,
-      //         spaq2Count: spaq2Count,
-      //         blueVasCount: 0,
-      //         redVasCount: 0,
-      //       ),
-      //     );
+      context.read<AuthBloc>().add(
+            AuthUpdateProductSKUCountsEvent(
+              skuCounts: skuCounts,
+            ),
+          );
 
       (context.router.parent() as StackRouter).maybePop();
       context.router.push(CustomAcknowledgementRoute(

@@ -1140,6 +1140,11 @@ class IndividualDetails {
 class BeneficiaryDetails {
   const BeneficiaryDetails();
 
+  String get validationForExcessStockReturn =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";
+  String get validationForExcessStockDispatch =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_DISPATCH";
+
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
