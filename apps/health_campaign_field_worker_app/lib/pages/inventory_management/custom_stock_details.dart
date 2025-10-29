@@ -367,6 +367,10 @@ class CustomStockDetailsPageState
                                           break;
                                       }
 
+                                      final typeOfTransport = form
+                                          .control(_typeOfTransportKey)
+                                          .value as String?;
+
                                       final vehicleNumber = form
                                           .control(_vehicleNumberKey)
                                           .value as String?;
@@ -404,17 +408,10 @@ class CustomStockDetailsPageState
                                             .control(_productVariantKey)
                                             .value as List<ProductVariantModel>;
 
-                                        // ProductVariantModel? bednet =
-                                        //     selectedProducts.firstWhereOrNull(
-                                        //         (element) =>
-                                        //             element.sku ==
-                                        //             Constants.bednetSKU);
-                                        // final receivedFrom = form
-                                        //     .control(_secondaryPartyKey)
-                                        //     .value as String;
                                         context.read<StockBloc>().add(
                                               StockSelectedEvent(
-                                                selectedProducts: selectedProducts,
+                                                selectedProducts:
+                                                    selectedProducts,
                                                 secondaryPartyType:
                                                     deliveryTeamSelected
                                                         ? "STAFF"
@@ -423,6 +420,10 @@ class CustomStockDetailsPageState
                                                         ? deliveryTeamName
                                                         : selectedFacilityId) ??
                                                     "",
+                                                typeOfTransport:
+                                                    typeOfTransport,
+                                                vehicleNumber: vehicleNumber,
+                                                driverName: driverName,
                                               ),
                                             );
                                         Navigator.push(
@@ -467,12 +468,15 @@ class CustomStockDetailsPageState
                                       )),
                                     ),
                                     fetched: (productVariants) {
-                                      List<ProductVariantModel> filteredProductVariants =
-                                          productVariants.where(
-                                              (element) =>
+                                      List<ProductVariantModel>
+                                          filteredProductVariants =
+                                          productVariants
+                                              .where((element) =>
                                                   element.sku !=
-                                                  Constants.vehicleSKU).toList();
-                                      if (filteredProductVariants.isEmpty) return Container();
+                                                  Constants.vehicleSKU)
+                                              .toList();
+                                      if (filteredProductVariants.isEmpty)
+                                        return Container();
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -491,7 +495,8 @@ class CustomStockDetailsPageState
                                               // errorText: field.errorText,
                                               selectionType:
                                                   SelectionType.defaultSelect,
-                                              options: filteredProductVariants.map((variant) {
+                                              options: filteredProductVariants
+                                                  .map((variant) {
                                                 return DropdownItem(
                                                   name: localizations.translate(
                                                       variant.sku ??

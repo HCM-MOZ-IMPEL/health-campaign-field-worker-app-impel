@@ -47,6 +47,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   late List<ProductVariantModel> products;
   late String receivedFrom;
   late String secondaryPartyType;
+  late String? typeOfTransport;
+  late String? vehicleNumber;
+  late String? driverName;
   late List<dynamic> _formkeys;
   final Map<String, StockModel> _tabStocks = {};
   String _sharedMRN = '';
@@ -101,6 +104,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         products = state.selectedProducts;
         receivedFrom = state.receivedFrom;
         secondaryPartyType = state.secondaryPartyType;
+        typeOfTransport = state.typeOfTransport;
+        vehicleNumber = state.vehicleNumber;
+        driverName = state.driverName;
         _tabController = TabController(length: products.length, vsync: this);
         _formkeys =
             List.generate(products.length, (_) => GlobalKey<FormState>());
@@ -272,6 +278,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           AdditionalField('materialNoteNumber', _sharedMRN),
           if (distributorName != null)
             AdditionalField('distributorName', distributorName),
+          if (typeOfTransport != null && typeOfTransport!.isNotEmpty)
+            AdditionalField('typeOfTransport', typeOfTransport),
+          if (vehicleNumber != null && vehicleNumber!.isNotEmpty)
+            AdditionalField('vehicleNumber', vehicleNumber),
+          if (driverName != null && driverName!.isNotEmpty)
+            AdditionalField('driverName', driverName),
         ],
       ),
       referenceId: context.projectId,
