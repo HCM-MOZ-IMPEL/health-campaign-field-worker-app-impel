@@ -136,18 +136,23 @@ import '../pages/pages-SMC/beneficiary/custom_delivery_summary_smc.dart';
 import '../pages/pages-SMC/beneficiary/dose_administered_verification.dart';
 import '../pages/boundary_selection_view.dart';
 import '../pages/pages-SMC/beneficiary/custom_beneficiary_details_smc.dart';
-import '../pages/pages-SMC/referral_reconciliation/custom_search_referral_reconciliations_smc.dart';
 import '../pages/pages-SMC/beneficiary/custom_facility_selection_smc.dart';
-import '../pages/pages-SMC/referral/custom_referral_record_reason_checklist_smc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
-import '../pages/pages-SMC/referral/referral_project_facility_selection_smc.dart';
-import '../pages/pages-SMC/referral/custom_record_referral_details_smc.dart';
+
 import '../pages/vehicle_tracking/vehicle_acknowledgement.dart';
 import '../pages/vehicle_tracking/vehicle_overview.dart';
 import '../pages/vehicle_tracking/vehicle_search.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_wrapper.dart';
 import '../pages/vehicle_tracking/vehicle_trip_book.dart';
 import '../pages/vehicle_tracking/vehicle_tracking_feedback.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_hf_referral_wrapper_page.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_record_facility_page.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_record_referral_details.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_referral_facility_selection_page.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checklist_page.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checklist_preview_page.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
 part 'app_router.gr.dart';
 
@@ -1252,51 +1257,55 @@ class AppRouter extends _$AppRouter {
           ),
 
           // Referral Reconciliation Route
+
           AutoRoute(
-              page: HFCreateReferralWrapperRoute.page,
+              page: CustomSearchReferralReconciliationsRoute.page,
+              path: 'custom-search-referrals'),
+          // Referral Reconciliation Route
+          AutoRoute(
+              page: CustomHFCreateReferralWrapperRoute.page,
               path: 'hf-referral',
               children: [
                 AutoRoute(
-                  page: ReferralFacilityRoute.page,
-                  path: 'facility-details',
-                  // initial: true,
-                ),
-                // AutoRoute(
-                //   page: CustomReferralFacilitySMCRoute.page,
-                //   path: 'custom-facility-details-smc',
-                //   initial: true,
-                // ),
+                    page: ReferralFacilityRoute.page, path: 'facility-details'),
+                AutoRoute(
+                    page: CustomReferralFacilityRoute.page,
+                    path: 'custom-facility-details',
+                    initial: true),
                 RedirectRoute(
-                  path: 'facility-details',
-                  redirectTo: 'custom-facility-details-smc',
-                ),
+                    path: 'facility-details',
+                    redirectTo: 'custom-facility-details'),
                 AutoRoute(
                     page: RecordReferralDetailsRoute.page,
                     path: 'referral-details'),
                 AutoRoute(
-                  page: CustomRecordReferralDetailsSMCRoute.page,
-                  path: 'custom-referral-details-smc',
-                ),
+                    page: CustomRecordReferralDetailsRoute.page,
+                    path: 'custom-referral-details'),
                 RedirectRoute(
-                  path: 'referral-details',
-                  redirectTo: 'custom-referral-details-smc',
-                ),
+                    path: 'referral-details',
+                    redirectTo: 'custom-referral-details'),
                 AutoRoute(
                   page: ReferralReasonChecklistRoute.page,
                   path: 'referral-checklist-create',
                 ),
                 AutoRoute(
-                  page: CustomReferralReasonChecklistSMCRoute.page,
-                  path: 'custom-referral-checklist-create-smc',
+                  page: CustomReferralReasonChecklistRoute.page,
+                  path: 'custom-referral-checklist-create',
                 ),
                 RedirectRoute(
-                  path: 'referral-checklist-create',
-                  redirectTo: 'custom-referral-checklist-create-smc',
-                ),
+                    path: 'referral-checklist-create',
+                    redirectTo: 'custom-referral-checklist-create'),
                 AutoRoute(
                   page: ReferralReasonChecklistPreviewRoute.page,
                   path: 'referral-checklist-view',
                 ),
+                AutoRoute(
+                  page: CustomReferralReasonChecklistPreviewRoute.page,
+                  path: 'custom-referral-checklist-view',
+                ),
+                RedirectRoute(
+                    path: 'referral-checklist-view',
+                    redirectTo: 'custom-referral-checklist-view'),
               ]),
           AutoRoute(
             page: ReferralReconAcknowledgementRoute.page,
@@ -1307,18 +1316,76 @@ class AppRouter extends _$AppRouter {
             path: 'referral-project-facility',
           ),
           AutoRoute(
-            page: ReferralReconProjectFacilitySelectionSMCRoute.page,
-            path: 'referral-project-facility-smc',
-          ),
-          AutoRoute(
             page: SearchReferralReconciliationsRoute.page,
             path: 'search-referrals',
           ),
-          AutoRoute(
-              page: CustomSearchReferralReconciliationsSMCRoute.page,
-              path: 'custom-search-referrals'),
-          RedirectRoute(
-              path: 'search-referrals', redirectTo: 'custom-search-referrals')
+          //   AutoRoute(
+          //       page: HFCreateReferralWrapperRoute.page,
+          //       path: 'hf-referral',
+          //       children: [
+          //         AutoRoute(
+          //           page: ReferralFacilityRoute.page,
+          //           path: 'facility-details',
+          //           initial: true,
+          //         ),
+          //         AutoRoute(
+          //           page: CustomReferralFacilitySMCRoute.page,
+          //           path: 'custom-facility-details-smc',
+          //           initial: true,
+          //         ),
+          //         RedirectRoute(
+          //           path: 'facility-details',
+          //           redirectTo: 'custom-facility-details-smc',
+          //         ),
+          //         AutoRoute(
+          //             page: RecordReferralDetailsRoute.page,
+          //             path: 'referral-details'),
+          //         AutoRoute(
+          //           page: CustomRecordReferralDetailsSMCRoute.page,
+          //           path: 'custom-referral-details-smc',
+          //         ),
+          //         RedirectRoute(
+          //           path: 'referral-details',
+          //           redirectTo: 'custom-referral-details-smc',
+          //         ),
+          //         AutoRoute(
+          //           page: ReferralReasonChecklistRoute.page,
+          //           path: 'referral-checklist-create',
+          //         ),
+          //         AutoRoute(
+          //           page: CustomReferralReasonChecklistSMCRoute.page,
+          //           path: 'custom-referral-checklist-create-smc',
+          //         ),
+          //         RedirectRoute(
+          //           path: 'referral-checklist-create',
+          //           redirectTo: 'custom-referral-checklist-create-smc',
+          //         ),
+          //         AutoRoute(
+          //           page: ReferralReasonChecklistPreviewRoute.page,
+          //           path: 'referral-checklist-view',
+          //         ),
+          //       ]),
+          //   AutoRoute(
+          //     page: ReferralReconAcknowledgementRoute.page,
+          //     path: 'referral-acknowledgement',
+          //   ),
+          //   AutoRoute(
+          //     page: ReferralReconProjectFacilitySelectionRoute.page,
+          //     path: 'referral-project-facility',
+          //   ),
+          //   AutoRoute(
+          //     page: ReferralReconProjectFacilitySelectionSMCRoute.page,
+          //     path: 'referral-project-facility-smc',
+          //   ),
+          //   AutoRoute(
+          //     page: SearchReferralReconciliationsRoute.page,
+          //     path: 'search-referrals',
+          //   ),
+          //   AutoRoute(
+          //       page: CustomSearchReferralReconciliationsSMCRoute.page,
+          //       path: 'custom-search-referrals'),
+          //   RedirectRoute(
+          //       path: 'search-referrals', redirectTo: 'custom-search-referrals')
         ]),
 
         // Bednet routes

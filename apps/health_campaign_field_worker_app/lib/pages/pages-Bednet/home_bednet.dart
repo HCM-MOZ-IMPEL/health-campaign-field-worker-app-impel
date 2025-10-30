@@ -498,8 +498,8 @@ class HomeBednetPageState extends LocalizedState<HomeBednetPage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _, __) {
-                    context.router
-                        .push(CustomSearchReferralReconciliationsSMCRoute());
+                    // context.router
+                    //     .push(CustomSearchReferralReconciliationsSMCRoute());
                   },
                 );
           },

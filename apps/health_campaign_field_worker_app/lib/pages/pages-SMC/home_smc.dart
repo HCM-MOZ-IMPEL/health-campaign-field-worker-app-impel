@@ -61,6 +61,7 @@ import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_bednet.dart';
+import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -490,21 +491,12 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.buildWith(
-        child: HomeItemCard(
-          icon: Icons.supervised_user_circle_rounded,
-          label: i18.home.beneficiaryReferralLabel,
-          onPressed: () async {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _, __) {
-                    context.router
-                        .push(CustomSearchReferralReconciliationsSMCRoute());
-                  },
-                );
-          },
-        ),
+      i18.home.beneficiaryReferralLabel: HomeItemCard(
+        icon: Icons.supervised_user_circle_rounded,
+        label: i18.home.beneficiaryReferralLabel,
+        onPressed: () async {
+          await context.router.push(CustomSearchReferralReconciliationsRoute());
+        },
       ),
       i18.home.vehicleTrackingLabel: homeShowcaseData.vehicleTracking.buildWith(
         child: HomeItemCard(

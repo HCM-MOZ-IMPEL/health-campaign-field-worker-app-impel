@@ -19,6 +19,8 @@ import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -591,6 +593,16 @@ class MainApplicationState extends State<MainApplication>
                                 ServiceDefinitionModel,
                                 ServiceDefinitionSearchModel>(),
                           )..add(const ServiceDefinitionFetchEvent()),
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return SearchReferralsBloc(
+                              const SearchReferralsState(),
+                              referralReconDataRepository: context.repository<
+                                  HFReferralModel, HFReferralSearchModel>(),
+                            );
+                          },
+                          lazy: false,
                         ),
                         // BlocProvider(
                         //   create: (_) => HouseholdOverviewBloc(
