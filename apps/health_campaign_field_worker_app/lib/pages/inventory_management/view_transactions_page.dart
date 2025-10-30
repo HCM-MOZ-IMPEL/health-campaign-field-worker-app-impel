@@ -8,17 +8,20 @@ import 'package:inventory_management/models/entities/stock.dart';
 
 import '../../blocs/inventory_management/stock_bloc.dart';
 import '../../router/app_router.dart';
+import '../../widgets/localized.dart';
 import 'view_stock_records.dart'; // Import your view stock page
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class ViewTransactionsScreen extends StatefulWidget {
+class ViewTransactionsScreen extends LocalizedStatefulWidget {
   const ViewTransactionsScreen({super.key});
 
   @override
   State<ViewTransactionsScreen> createState() => _ViewTransactionsScreenState();
 }
 
-class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
+class _ViewTransactionsScreenState
+    extends LocalizedState<ViewTransactionsScreen> {
   @override
   void initState() {
     super.initState();
@@ -174,7 +177,7 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
                             )),
                         const Divider(),
                         Text(
-                          'Waybill: ${firstStock.wayBillNumber ?? 'N/A'}',
+                          '${localizations.translate(i18_local.stockDetails.waybill)}: ${firstStock.wayBillNumber ?? 'N/A'}',
                           style: const TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ],

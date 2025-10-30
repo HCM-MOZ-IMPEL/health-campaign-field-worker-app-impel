@@ -4,9 +4,11 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/utils/utils.dart';
 
-import 'package:qr_flutter/qr_flutter.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
-class TransactionsCard extends StatelessWidget {
+import '../localized.dart';
+
+class TransactionsCard extends LocalizedStatefulWidget {
   final String minNumber;
   final String cddCode;
   final String date;
@@ -27,13 +29,18 @@ class TransactionsCard extends StatelessWidget {
   });
 
   @override
+  State<TransactionsCard> createState() => _TransactionsCardState();
+}
+
+class _TransactionsCardState extends LocalizedState<TransactionsCard> {
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey[200],
+        color: widget.backgroundColor ?? Colors.grey[200],
         border: Border.all(
           color: Colors.grey[400]!,
           width: 1,
@@ -54,7 +61,7 @@ class TransactionsCard extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(8.0), // Replace spacer2
               child: Text(
-                minNumber,
+                widget.minNumber,
                 style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -65,11 +72,11 @@ class TransactionsCard extends StatelessWidget {
 
             if (!InventorySingleton().isWareHouseMgr)
               const SizedBox(height: 8.0), // Replace spacer2
-            Text(cddCode),
+            Text(widget.cddCode),
             const SizedBox(height: 8.0), // Replace spacer2
 
             const SizedBox(height: 8.0), // Replace spacer2
-            ...items.map((item) {
+            ...widget.items.map((item) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8.0), // Replace spacer2
                 child: Row(
@@ -99,10 +106,10 @@ class TransactionsCard extends StatelessWidget {
               );
             }).toList(),
 
-            if (date.trim().isNotEmpty) ...[
+            if (widget.date.trim().isNotEmpty) ...[
               const SizedBox(width: 8.0),
               Text(
-                date,
+                widget.date,
                 style: textTheme.bodyL,
               ),
             ],
@@ -110,14 +117,14 @@ class TransactionsCard extends StatelessWidget {
             const SizedBox(height: 8.0), // Replace spacer2
             Row(
               children: [
-                Text("Waybill",
+                Text(localizations.translate(i18_local.stockDetails.waybill),
                     style: textTheme.bodyL.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(
                   width: spacer4,
                 ), // Replace spacer2
-                Text(waybillNumber),
+                Text(widget.waybillNumber),
               ],
             ),
           ],
