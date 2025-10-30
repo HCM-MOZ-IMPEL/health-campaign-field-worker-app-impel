@@ -3,6 +3,7 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -705,6 +706,31 @@ void setPackagesSingleton(BuildContext context) {
             loggedInIndividualId: context.loggedInIndividualId ?? '',
             loggedInUserUuid: context.loggedInUserUuid,
             appVersion: Constants().version);
+
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+        ComplaintsSingleton().setBoundary(boundary: context.boundary);
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
