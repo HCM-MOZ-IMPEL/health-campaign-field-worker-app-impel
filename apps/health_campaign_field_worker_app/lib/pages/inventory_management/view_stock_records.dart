@@ -106,30 +106,7 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
         .value;
 
     String? wayBillNumber = stock.wayBillNumber;
-    // String? statusVvm = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'statusVvm',
-    //           orElse: () => AdditionalField('statusVvm', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
-    // String? manufacturer = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'manufacturer',
-    //           orElse: () => AdditionalField('manufacturer', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
-    // String? expireDate = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'expireDate',
-    //           orElse: () => AdditionalField('expireDate', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
+
     String? entryType = stock.transactionType;
     String? stockDamage = stock.additionalFields?.fields
             .firstWhere(
@@ -139,33 +116,6 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
             .value
             ?.toString() ??
         '';
-
-    // String? emptyVialsQuantity = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'emptyVialsQuantity',
-    //           orElse: () => AdditionalField('emptyVialsQuantity', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
-
-    // String? unusableVvmFirstQuantity = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'unusableVvmfirst',
-    //           orElse: () => AdditionalField('unusableVvmfirst', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
-
-    // String? unusableVvmsecondQuantity = stock.additionalFields?.fields
-    //         .firstWhere(
-    //           (field) => field.key == 'unusableVvmSecond',
-    //           orElse: () => AdditionalField('unusableVvmSecond', ''),
-    //         )
-    //         .value
-    //         ?.toString() ??
-    //     '';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
