@@ -147,7 +147,7 @@
 //                                   child: DigitTable(
 //                                     headerList: table.headerList.map((header) {
 //                                       return TableHeader(
-//                                         localizations.translate(header.label),
+//                                         localizations.translate(header.header),
 //                                         cellKey: header.cellKey,
 //                                       );
 //                                     }).toList(),

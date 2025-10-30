@@ -346,7 +346,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            // context.router.push(const CustomUserDashboardSMCRoute());
+            context.router.push(const UserDashboardRoute());
           },
         ),
       ),
@@ -730,18 +730,18 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
-        // DashboardSingleton().setInitialData(
-        //     projectId: context.projectId,
-        //     tenantId: envConfig.variables.tenantId,
-        //     dashboardConfig: filteredDashboardConfig.firstOrNull,
-        //     appVersion: Constants().version,
-        //     selectedProject: context.selectedProject,
-        //     actionPath: Constants.getEndPoint(
-        //       serviceRegistry: serviceRegistry,
-        //       service: DashboardResponseModel.schemaName.toUpperCase(),
-        //       action: ApiOperation.search.toValue(),
-        //       entityName: DashboardResponseModel.schemaName,
-        //     ));
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
 
         RegistrationDeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
