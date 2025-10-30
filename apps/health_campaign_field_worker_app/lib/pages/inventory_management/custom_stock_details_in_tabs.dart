@@ -520,8 +520,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Stock Details',
+                    Text(
+                      localizations
+                          .translate(i18_local.stockDetails.stockDetailsLabel),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),

@@ -1267,41 +1267,82 @@ class BeneficiaryDetails {
 class StockDetails {
   const StockDetails();
 
-  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get stockDetailsLabel => 'STOCK_DETAILS_LABEL';
 
-  String get voucherSerialNumberLabel => 'STOCK_DETAILS_VOUCHER_SERIAL_NUMBER';
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
+  String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
+  String get noTransactionsFound => 'STOCK_DETAILS_NO_TRANSACTIONS_FOUND';
+  String get resource => 'STOCK_DETAILS_RESOURCE';
+  String get stockReceiptDetails => 'STOCK_DETAILS_STOCK_RECEIPT_DETAILS';
+  String get stockIssueDetails => 'STOCK_DETAILS_STOCK_ISSUE_DETAILS';
+  String get stockReturnDetails => 'STOCK_DETAILS_STOCK_RETURN_DETAILS';
+  String get waybill => 'STOCK_DETAILS_WAYBILL';
+  String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+  String get damageStockLabel => 'STOCK_DETAILS_DAMAGE_QUANTITY';
+  String get emptyVialsLabel => 'STOCK_DETAILS_EMPTY_OPENED_VIALS_LABEL';
+  String get unusableVvmFirst => 'UNUSABLE_VVM_THREE_FOURTH_VIALS_LABEL';
+  String get unusableVvmSecond => 'UNUSABLE_VVM_FIRST_SECOND_VIALS_LABEL';
+  String get blisters => 'STOCK_DETAILS_BLISTERS';
+  String get capsules => 'STOCK_DETAILS_CAPSULES';
+
+  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+
+  String get cddCodeLabel => 'CDD_CODE_LABEL';
+
+  String get quantityCapsuleReceivedLabel =>
+      'STOCK_DETAILS_CAPSULE_QUANTITY_RECEIVED';
+
+  String get quantityCapsuleSentLabel => 'STOCK_DETAILS_CAPSULE_QUANTITY_SENT';
+
+  String get quantityCapsuleReturnedLabel =>
+      'STOCK_DETAILS_CAPSULE_QUANTITY_RETURNED';
+
+  String get quantityCapsulePartialReturnedLabel =>
+      'STOCK_DETAILS_CAPSULE_PARTIAL_QUANTITY_RETURNED';
+  String get selectTransactingPartyReturnedFrom =>
+      'STOCK_DETAILS_RETURNED_FROM';
+  String get quantityCapsulePartialWastedLabel =>
+      'STOCK_DETAILS_CAPSULE_PARTIAL_QUANTITY_WASTED';
+  String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
+  String get batchNumberLabel {
+    return 'STOCK_DETAILS_BATCH_NUMBER';
+  }
+
   String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
   String get statusVvmLabel => 'STOCK_DETAILS_STATUS_OF_VVM';
   String get statusIvmLabel => 'STOCK_DETAILS_STATUS_OF_IVM';
   String get manufacturerLabel => 'STOCK_DETAILS_STATUS_OF_MANUFACTURER_LABEL';
   String get expireDateLabel => 'STOCK_DETAILS_EXPIRE_DATE_LABEL';
 
-  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+  String get quantityUnusedReturnedLabel =>
+      'STOCK_DETAILS_UNUSED_QUANTITY_RETURNED';
 
-  String get driverNameLabel => 'STOCK_DETAILS_DRIVER_NAME';
+  String get quantityPartialReturnedLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
 
-  String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
-  String get recordStockReturnedDescription =>
-      'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
-  String get batchNumberLabel => 'STOCK_DETAILS_BATCH_NUMBER';
+  String get quantityDamageReturnedLabel =>
+      'STOCK_DETAILS_DAMAGE_QUANTITY_RETURNED';
 
   String get quantityReturnedMaxError =>
       'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
   String get quantityWastedReturnedLabel =>
       'STOCK_DETAILS_WASTED_QUANTITY_RETURNED';
-  String get quantityUnusedReturnedLabel =>
-      'STOCK_DETAILS_UNUSED_QUANTITY_RETURNED';
-  String get quantityPartialReturnedLabel =>
-      'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
-
-  String get cddCodeLabel {
-    return 'CDD_CODE_LABEL';
-  }
-
   String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
-  String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
-  String get selectTransactingPartyReturnedFrom =>
-      'STOCK_DETAILS_RETURNED_FROM';
+
+  String get manageStockLabel => 'STOCK_DETAILS_MANAGE_STOCK_LABEL';
+
+  String get recordStockReturnedDescription =>
+      'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
+
+  String get driverNameLabel => 'STOCK_DETAILS_DRIVER_NAME';
+
+  String get createNewTransactions => "STOCK_DETAILS_CREATE_NEW_TRANSACTION";
+  String get viewCreatedTransactions =>
+      "STOCK_DETAILS_VIEW_CREATED_TRANSACTIONS";
+  String get stockReceiptDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
+
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
