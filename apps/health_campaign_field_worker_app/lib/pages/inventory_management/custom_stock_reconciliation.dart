@@ -80,6 +80,10 @@ class CustomStockReconciliationPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final isHealthFacilitySupervisor = context.isSpaqManager;
+    final isCommunitySupervisor = context.isCommunitySupervisor;
+    final isCommunityDistributor = context.isCommunityDistributor;
+
     return InventorySingleton().projectId.isEmpty
         ? Center(
             child: Text(localizations
@@ -352,51 +356,31 @@ class CustomStockReconciliationPageState
                                                     CircularProgressIndicator(),
                                               ),
                                           fetched: (facilities, allFacilities) {
-                                            if (ctx.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants
-                                                    .provincialBoundaryLevel) {
-                                              List<FacilityModel>
-                                                  filteredFacilities =
-                                                  facilities
-                                                      .where(
-                                                        (element) =>
-                                                            element.usage ==
-                                                            Constants
-                                                                .provincialWarehouse,
-                                                      )
-                                                      .toList();
-                                              facilities =
-                                                  filteredFacilities.isEmpty
-                                                      ? facilities
-                                                      : filteredFacilities;
-                                            } else if (context.selectedProject
-                                                    .address?.boundaryType ==
-                                                Constants.administrativePost) {
-                                              List<FacilityModel>
-                                                  filteredFacilities =
-                                                  facilities
-                                                      .where(
-                                                        (element) =>
-                                                            element.usage ==
-                                                            Constants
-                                                                .healthFacility,
-                                                      )
-                                                      .toList();
-                                              facilities =
-                                                  filteredFacilities.isEmpty
-                                                      ? facilities
-                                                      : filteredFacilities;
-                                            }
+                                            List<FacilityModel>
+                                                filteredFacilities = [];
                                             final teamFacilities = [
                                               FacilityModel(
                                                 id: 'Delivery Team',
                                                 name: 'Delivery Team',
                                               ),
                                             ];
-                                            teamFacilities.addAll(
-                                              facilities,
-                                            );
+                                            if (context.selectedProject.address
+                                                    ?.boundaryType ==
+                                                Constants.administrativePost) {
+                                              filteredFacilities = facilities
+                                                  .where(
+                                                    (element) =>
+                                                        element.usage ==
+                                                        Constants
+                                                            .healthFacility,
+                                                  )
+                                                  .toList();
+                                            }
+                                            facilities =
+                                                filteredFacilities.isEmpty
+                                                    ? facilities
+                                                    : filteredFacilities;
+
                                             return Column(
                                               children: [
                                                 InkWell(
@@ -404,12 +388,15 @@ class CustomStockReconciliationPageState
                                                     final stockReconciliationBloc =
                                                         context.read<
                                                             StockReconciliationBloc>();
-                                                    final facility = await context
-                                                            .router
-                                                            .push(CustomInventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
+                                                    final facility =
+                                                        await context.router.push(
+                                                            CustomInventoryFacilitySelectionRoute(
+                                                      facilities:
+                                                          (isCommunitySupervisor ||
+                                                                  isCommunityDistributor)
+                                                              ? teamFacilities
+                                                              : facilities,
+                                                    )) as FacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -432,9 +419,21 @@ class CustomStockReconciliationPageState
                                                       selectedFacilityId =
                                                           facility.id;
                                                     });
+                                                    FacilityModel
+                                                        facilityIdFix =
+                                                        facility.id ==
+                                                                'Delivery Team'
+                                                            ? FacilityModel(
+                                                                id: InventorySingleton()
+                                                                    .loggedInUserUuid,
+                                                                name:
+                                                                    'Delivery Team',
+                                                              )
+                                                            : facility;
+
                                                     stockReconciliationBloc.add(
                                                       StockReconciliationSelectFacilityEvent(
-                                                        facility,
+                                                        facilityIdFix,
                                                       ),
                                                     );
                                                   },
@@ -562,10 +561,9 @@ class CustomStockReconciliationPageState
                                                         .add(
                                                           StockReconciliationSelectProductEvent(
                                                             value.code,
-                                                            isDistributor: InventorySingleton()
-                                                                    .isDistributor! &&
-                                                                !InventorySingleton()
-                                                                    .isWareHouseMgr!,
+                                                            isDistributor:
+                                                                isCommunityDistributor ||
+                                                                    isCommunitySupervisor,
                                                           ),
                                                         );
                                                   },

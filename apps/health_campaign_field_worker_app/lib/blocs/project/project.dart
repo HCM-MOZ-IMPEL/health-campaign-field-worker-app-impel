@@ -663,25 +663,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityIdUsageMap[element.id] = element?.usage ?? "";
     }
 
-    // info : assumption both roles will not be assigned to user
-
-    if (userRoles.contains(RolesType.spaqManager.toValue())) {
-      // final receiverIds = projectFacilities.map((e) => e.facilityId).toList();
-      List<String> receiverIds =
-          projectFacilities.map((e) => e.facilityId).toList();
-      receiverIds = receiverIds
-          .where((e) => facilityIdUsageMap[e] == Constants.healthFacility)
-          .toList();
-      final stockSearchModel = StockSearchModel(
-        receiverId: [receiverIds.first],
-        transactionType: [TransactionType.dispatched.toValue()],
-      );
-      final stockEntriesDownloaded =
-          await downloadStockEntries(stockSearchModel);
-      // info : create entries in the local repository
-
-      await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communitySupervisor.toValue())) {
+    if (userRoles.contains(RolesType.communitySupervisor.toValue())) {
       final receiverIds = [context.loggedInUserUuid];
       final stockSearchModel = StockSearchModel(
         receiverId: [receiverIds.first],

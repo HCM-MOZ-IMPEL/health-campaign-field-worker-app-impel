@@ -12,6 +12,7 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:path/path.dart';
 
 part 'custom_inventory_report.freezed.dart';
 
@@ -36,7 +37,9 @@ class CustomInventoryReportBloc
     InventoryReportEmitter emit,
   ) async {
     final reportType = event.reportType;
-    final facilityId = event.facilityId;
+    String facilityId = event.facilityId == "Delivery Team"
+        ? InventorySingleton().loggedInUserUuid
+        : event.facilityId;
     final productVariantId = event.productVariantId;
 
     if (facilityId.trim().isEmpty || productVariantId.trim().isEmpty) {

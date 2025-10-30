@@ -443,16 +443,16 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         quantityCountLabel = i18.stockDetails.quantityDamagedLabel;
         break;
     }
-    if ((entryType == StockRecordEntryType.dispatch &&
-            context.isCommunityDistributor) ||
-        entryType == StockRecordEntryType.returned) {
-      form.control(_transactionQuantityPartialKey).setValidators([
-        Validators.number(),
-        Validators.required,
-        Validators.min(0),
-        Validators.max(1000000),
-      ], autoValidate: true);
-    }
+    // if ((entryType == StockRecordEntryType.dispatch &&
+    //         context.isCommunityDistributor) ||
+    //     entryType == StockRecordEntryType.returned) {
+    //   form.control(_transactionQuantityPartialKey).setValidators([
+    //     Validators.number(),
+    //     Validators.required,
+    //     Validators.min(0),
+    //     Validators.max(1000000),
+    //   ], autoValidate: true);
+    // }
 
     if (entryType == StockRecordEntryType.dispatch &&
         context.isCommunityDistributor) {
@@ -659,61 +659,61 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                             ),
                           );
                         }),
-                    if ((entryType == StockRecordEntryType.dispatch &&
-                            context.isCommunityDistributor) ||
-                        entryType == StockRecordEntryType.returned)
-                      ReactiveWrapperField(
-                          formControlName: _transactionQuantityPartialKey,
-                          validationMessages: {
-                            "number": (object) => localizations.translate(
-                                  '${quantityCountLabel}_ERROR',
-                                ),
-                            "max": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MAX_ERROR',
-                                ),
-                            "min": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MIN_ERROR',
-                                ),
-                          },
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                quantityPartialCountLabel,
-                              ),
-                              isRequired: true,
-                              child: BaseDigitFormInput(
-                                errorMessage: field.errorText,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]'),
-                                  ),
-                                  LengthLimitingTextInputFormatter(9),
-                                ],
-                                onChange: (val) {
-                                  field.control.markAsTouched();
-                                  if (val == "") {
-                                    field.control.value = null;
-                                    return;
-                                  }
-                                  if (int.parse(val) > 10000000000) {
-                                    field.control.value = 10000;
-                                  } else {
-                                    if (val != '') {
-                                      field.control.value = int.parse(val);
-                                    } else {
-                                      field.control.value = null;
-                                    }
-                                  }
-                                },
-                              ),
-                            );
-                          }),
+                    // if ((entryType == StockRecordEntryType.dispatch &&
+                    //         context.isCommunityDistributor) ||
+                    //     entryType == StockRecordEntryType.returned)
+                    //   ReactiveWrapperField(
+                    //       formControlName: _transactionQuantityPartialKey,
+                    //       validationMessages: {
+                    //         "number": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_ERROR',
+                    //             ),
+                    //         "max": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_MAX_ERROR',
+                    //             ),
+                    //         "min": (object) => localizations.translate(
+                    //               '${quantityCountLabel}_MIN_ERROR',
+                    //             ),
+                    //       },
+                    //       showErrors: (control) =>
+                    //           control.invalid && control.touched,
+                    //       builder: (field) {
+                    //         return LabeledField(
+                    //           label: localizations.translate(
+                    //             quantityPartialCountLabel,
+                    //           ),
+                    //           isRequired: true,
+                    //           child: BaseDigitFormInput(
+                    //             errorMessage: field.errorText,
+                    //             keyboardType:
+                    //                 const TextInputType.numberWithOptions(
+                    //               decimal: true,
+                    //             ),
+                    //             inputFormatters: [
+                    //               FilteringTextInputFormatter.allow(
+                    //                 RegExp(r'[0-9]'),
+                    //               ),
+                    //               LengthLimitingTextInputFormatter(9),
+                    //             ],
+                    //             onChange: (val) {
+                    //               field.control.markAsTouched();
+                    //               if (val == "") {
+                    //                 field.control.value = null;
+                    //                 return;
+                    //               }
+                    //               if (int.parse(val) > 10000000000) {
+                    //                 field.control.value = 10000;
+                    //               } else {
+                    //                 if (val != '') {
+                    //                   field.control.value = int.parse(val);
+                    //                 } else {
+                    //                   field.control.value = null;
+                    //                 }
+                    //               }
+                    //             },
+                    //           ),
+                    //         );
+                    //       }),
                     if (entryType == StockRecordEntryType.dispatch &&
                         context.isCommunityDistributor)
                       ReactiveWrapperField(
