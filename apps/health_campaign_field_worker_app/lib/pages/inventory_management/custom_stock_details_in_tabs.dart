@@ -74,6 +74,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _commentsKey = 'comments';
   List<InventoryTransportTypes> transportTypes = [];
   List<String> skuList = [];
+  bool commentRequired = false;
+  int maxCount = 100000000;
 
   @override
   void initState() {
@@ -140,7 +142,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           _transactionReasonKey: FormControl<String>(),
           _waybillNumberKey: FormControl<String>(
             validators: (InventorySingleton().isWareHouseMgr ||
-                    (context.isHealthFacilitySupervisor &&
+                    (context.isSpaqManager &&
                         entryType != StockRecordEntryType.dispatch))
                 ? [
                     Validators.minLength(2),
@@ -149,22 +151,21 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                   ]
                 : [],
           ),
-          _transactionQuantityKey: FormControl<int>(
-              validators: (InventorySingleton().isWareHouseMgr ||
-                      context.isHealthFacilitySupervisor)
+          _transactionQuantityKey: FormControl<int>(validators: [
+            Validators.number(),
+            Validators.required,
+            Validators.min(1),
+            Validators.max(1000000),
+          ]),
+          _waybillQuantityKey: FormControl<int>(
+              validators: context.isSpaqManager
                   ? [
-                      Validators.number(),
                       Validators.required,
-                      Validators.min(1),
-                      Validators.max(1000000),
+                      Validators.number(),
+                      Validators.min(0),
+                      Validators.max(maxCount),
                     ]
-                  : [
-                      Validators.number(),
-                      Validators.required,
-                      Validators.min(1),
-                      Validators.max(1000000),
-                    ]),
-          _waybillQuantityKey: FormControl<String>(),
+                  : []),
           _transactionQuantityPartialKey: FormControl<int>(validators: []),
           _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
@@ -385,8 +386,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Widget _buildTabContent(BuildContext context, String productName,
       String receivedFrom, List<String> selectedProducts) {
     final stockState = context.read<RecordStockBloc>().state;
-    bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
-    bool isHealthFacilitySupervisor = context.isHealthFacilitySupervisor;
+    bool isSpaqManager = context.isSpaqManager;
     final form = _forms[productName]!;
     StockRecordEntryType entryType = stockState.entryType;
     bool isLastTab = _tabController.index == _tabController.length - 1;
@@ -394,6 +394,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     String quantityPartialCountLabel = "";
     String quantityWastedCountLabel = "";
     String pageTitle;
+
+    final theme = Theme.of(context);
 
     switch (entryType) {
       case StockRecordEntryType.receipt:
@@ -405,11 +407,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         }
         break;
       case StockRecordEntryType.dispatch:
-        pageTitle = (isWareHouseMgr || isHealthFacilitySupervisor)
+        pageTitle = (isSpaqManager)
             ? i18.stockDetails.issuedPageTitle
             : i18.stockDetails.returnedPageTitle;
         if (productName == Constants.spaq1 || productName == Constants.spaq2) {
-          quantityCountLabel = (isWareHouseMgr || isHealthFacilitySupervisor)
+          quantityCountLabel = (isSpaqManager)
               ? i18.stockDetails.quantitySentLabel
               : i18.stockDetails.quantityReturnedLabel;
           quantityPartialCountLabel =
@@ -417,7 +419,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           quantityWastedCountLabel =
               i18_local.stockDetails.quantityWastedReturnedLabel;
         } else {
-          quantityCountLabel = (isWareHouseMgr || isHealthFacilitySupervisor)
+          quantityCountLabel = (isSpaqManager)
               ? i18.stockDetails.quantitySentLabel
               : i18.stockDetails.quantityReturnedLabel;
         }
@@ -524,7 +526,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    if ((isWareHouseMgr || isHealthFacilitySupervisor))
+                    if ((isSpaqManager))
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
                           builder: (field) {
@@ -537,60 +539,65 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               onChange: (val) {
                                 field.control.value = val;
                               },
-                              isRequired: !(context
-                                      .isHealthFacilitySupervisor &&
+                              isRequired: !(context.isSpaqManager &&
                                   entryType == StockRecordEntryType.dispatch),
                             );
                           }),
-                    if (isWareHouseMgr)
+
+                    if (isSpaqManager)
                       ReactiveWrapperField(
                           formControlName: _waybillQuantityKey,
+                          validationMessages: {
+                            "number": (object) => localizations.translate(
+                                  '${quantityCountLabel}_ERROR',
+                                ),
+                            "max": (object) => localizations.translate(
+                                  '${quantityCountLabel}_MAX_ERROR',
+                                ),
+                            "min": (object) => localizations.translate(
+                                  '${quantityCountLabel}_MIN_ERROR',
+                                ),
+                          },
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
                           builder: (field) {
-                            return InputField(
-                              type: InputType.text,
+                            return LabeledField(
                               label: localizations.translate(
                                 i18.stockDetails
                                     .quantityOfProductIndicatedOnWaybillLabel,
                               ),
-                              errorMessage: field.errorText,
-                              onChange: (val) {
-                                field.control.value = val;
-                              },
-                              isRequired: !(context
-                                      .isHealthFacilitySupervisor &&
-                                  entryType == StockRecordEntryType.dispatch),
+                              isRequired: true,
+                              child: BaseDigitFormInput(
+                                errorMessage: field.errorText,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9]'),
+                                  ),
+                                  LengthLimitingTextInputFormatter(9),
+                                ],
+                                onChange: (val) {
+                                  field.control.markAsTouched();
+                                  if (val == "") {
+                                    field.control.value = null;
+                                    return;
+                                  }
+                                  if (val != '') {
+                                    field.control.value = int.parse(val);
+                                  } else {
+                                    field.control.value = null;
+                                  }
+                                  setState(() {
+                                    updateCommentValidation(form);
+                                  });
+                                },
+                              ),
                             );
                           }),
-                    // DigitTextFormField(
-                    //   label: localizations.translate(
-                    //     i18.stockDetails
-                    //         .quantityOfProductIndicatedOnWaybillLabel,
-                    //   ),
-                    //   isRequired: isWareHouseMgr &&
-                    //       !supervisorSelected &&
-                    //       !deliveryTeamSelected,
-                    //   formControlName: _waybillQuantityKey,
-                    //   validationMessages: {
-                    //     'required': (object) => localizations.translate(
-                    //           i18.common.corecommonRequired,
-                    //         ),
-                    //     "number": (object) => localizations.translate(
-                    //           '${quantityCountLabel}_ERROR',
-                    //         ),
-                    //     "max": (object) => localizations.translate(
-                    //           '${quantityCountLabel}_MAX_ERROR',
-                    //         ),
-                    //     "min": (object) => localizations.translate(
-                    //           '${quantityCountLabel}_MIN_ERROR',
-                    //         ),
-                    //   },
-                    //   onChanged: (val) {
-                    //     setState(() {
-                    //       updateCommentValidation(isWareHouseMgr, form);
-                    //     });
-                    //   },
-                    // ),
-                    if ((isWareHouseMgr || isHealthFacilitySupervisor) &&
+                    if ((isSpaqManager) &&
                         entryType != StockRecordEntryType.returned)
                       ReactiveWrapperField(
                           formControlName: _batchNumberKey,
@@ -655,6 +662,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                 } else {
                                   field.control.value = null;
                                 }
+                                updateCommentValidation(form);
                               },
                             ),
                           );
@@ -794,6 +802,37 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                   size: DigitButtonSize.large,
                   type: DigitButtonType.primary,
                   onPressed: () async {
+                    final comments =
+                        form.control(_commentsKey).value as String?;
+                    final waybillQuantity =
+                        form.control(_waybillQuantityKey).value;
+                    final quantity =
+                        form.control(_transactionQuantityKey).value;
+
+                    if (context.isSpaqManager) {
+                      int? quantityValue = quantity == null
+                          ? null
+                          : int.parse(quantity.toString());
+                      int? wayBillQuantityValue = waybillQuantity == null
+                          ? null
+                          : int.parse(waybillQuantity.toString());
+                      if (quantityValue != wayBillQuantityValue &&
+                          comments == null) {
+                        DigitToast.show(
+                          context,
+                          options: DigitToastOptions(
+                            localizations.translate(
+                              i18_local
+                                  .stockDetails.stockMismatchCommentRequried,
+                            ),
+                            true,
+                            theme,
+                          ),
+                        );
+                        return;
+                      }
+                    }
+
                     if (form.valid) {
                       if (_tabController.index < products.length - 1) {
                         if (form.valid) {
@@ -884,6 +923,70 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         ],
       ),
     );
+  }
+
+  void updateCommentValidation(FormGroup form) {
+    if (context.isSpaqManager) {
+      final quantity =
+          (form.control(_transactionQuantityKey).value ?? 0) as int;
+
+      final waybillQuantity =
+          (form.control(_waybillQuantityKey).value ?? 0) as int;
+
+      if (quantity != waybillQuantity) {
+        commentRequired = true;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [
+            Validators.required,
+          ],
+          updateParent: true,
+          autoValidate: true,
+        );
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      } else {
+        commentRequired = false;
+        form
+            .control(
+          _commentsKey,
+        )
+            .setValidators(
+          [],
+          updateParent: true,
+          autoValidate: true,
+        );
+
+        form
+            .control(
+              _commentsKey,
+            )
+            .touched;
+      }
+    } else {
+      commentRequired = false;
+      form
+          .control(
+        _commentsKey,
+      )
+          .setValidators(
+        [],
+        updateParent: true,
+        autoValidate: true,
+      );
+
+      form
+          .control(
+            _commentsKey,
+          )
+          .touched;
+    }
   }
 
   Future<void> _handleFinalSubmission(BuildContext context,
