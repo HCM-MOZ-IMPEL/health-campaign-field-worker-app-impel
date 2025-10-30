@@ -152,9 +152,18 @@ import '../pages/pages-SMC/referral_reconcillation/custom_record_referral_detail
 import '../pages/pages-SMC/referral_reconcillation/custom_referral_facility_selection_page.dart';
 import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checklist_page.dart';
 import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checklist_preview_page.dart';
-import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
+
+import '../pages/pages-SMC/checklist/custom_survey_form.dart';
+import '../pages/pages-SMC/checklist/custom_survey_form_acknowledgement.dart';
+import '../pages/pages-SMC/checklist/custom_survey_form_boundary_view.dart';
+import '../pages/pages-SMC/checklist/custom_survey_form_preview.dart';
+import '../pages/pages-SMC/checklist/custom_survey_form_view.dart';
+import '../pages/pages-SMC/checklist/custom_survey_form_wrapper.dart';
+
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:complaints/blocs/localization/app_localization.dart';
+import 'package:survey_form/blocs/app_localization.dart';
+import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -1183,22 +1192,42 @@ class AppRouter extends _$AppRouter {
 
           // SurveyForm Route
           AutoRoute(
-              page: SurveyFormWrapperRoute.page,
-              path: 'surveyForm',
+              page: CustomSurveyFormWrapperRoute.page,
+              path: 'custom-surveyForm',
               children: [
                 AutoRoute(
-                  page: SurveyformRoute.page,
+                  page: CustomSurveyformRoute.page,
                   path: '',
                 ),
                 AutoRoute(
-                    page: SurveyFormBoundaryViewRoute.page,
-                    path: 'view-boundary'),
-                AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
-                AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+                    page: CustomSurveyFormBoundaryViewRoute.page,
+                    path: 'custom-view-boundary'),
                 AutoRoute(
-                    page: SurveyFormAcknowledgementRoute.page,
-                    path: 'surveyForm-acknowledgement'),
+                    page: CustomSurveyFormViewRoute.page, path: 'custom-view'),
+                AutoRoute(
+                    page: CustomSurveyFormPreviewRoute.page,
+                    path: 'custom-preview'),
+                AutoRoute(
+                    page: CustomSurveyFormAcknowledgementRoute.page,
+                    path: 'custom-surveyForm-acknowledgement'),
               ]),
+          // AutoRoute(
+          //     page: SurveyFormWrapperRoute.page,
+          //     path: 'surveyForm',
+          //     children: [
+          //       AutoRoute(
+          //         page: SurveyformRoute.page,
+          //         path: '',
+          //       ),
+          //       AutoRoute(
+          //           page: SurveyFormBoundaryViewRoute.page,
+          //           path: 'view-boundary'),
+          //       AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+          //       AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+          //       AutoRoute(
+          //           page: SurveyFormAcknowledgementRoute.page,
+          //           path: 'surveyForm-acknowledgement'),
+          //     ]),
           AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
           AutoRoute(
             page: ComplaintsAcknowledgementRoute.page,

@@ -436,7 +436,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomSurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
