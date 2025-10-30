@@ -21,6 +21,7 @@ import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:closed_household/closed_household.dart'
     as closed_household_mappers;
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 // import 'package:attendance_management/attendance_management.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
@@ -602,6 +603,7 @@ initializeAllMappers() async {
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
     Future(() => surveyForm_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

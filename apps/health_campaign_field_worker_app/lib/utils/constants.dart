@@ -1,3 +1,4 @@
+import 'package:complaints/utils/utils.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
@@ -363,6 +364,7 @@ class Constants {
     SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
+    ComplaintsSingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);

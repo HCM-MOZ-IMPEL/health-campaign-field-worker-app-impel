@@ -1,3 +1,4 @@
+import 'package:complaints/router/complaints_router.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:health_campaign_field_worker_app/blocs/inventory_management/custom_inventory_report.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
@@ -153,6 +154,7 @@ import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checkl
 import '../pages/pages-SMC/referral_reconcillation/custom_referral_reason_checklist_preview_page.dart';
 import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:complaints/blocs/localization/app_localization.dart';
 
 part 'app_router.gr.dart';
 
@@ -166,6 +168,7 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ReferralReconciliationRoute,
     SurveyFormRoute,
+    ComplaintsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {

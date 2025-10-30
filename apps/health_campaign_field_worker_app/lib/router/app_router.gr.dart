@@ -407,8 +407,11 @@ abstract class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           quantity: args.quantity,
           isGS1code: args.isGS1code,
+          gs1CodeList: args.gs1CodeList,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
+          manualEnabled: args.manualEnabled,
+          isDelivery: args.isDelivery,
         ),
       );
     },
@@ -1275,6 +1278,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
+    ...ComplaintsRoute().pagesMap,
   };
 }
 
@@ -2649,8 +2653,11 @@ class CustomDigitScannerRoute
     ScannerLocalization? appLocalizations,
     required int quantity,
     required bool isGS1code,
+    List<GS1Barcode> gs1CodeList = const [],
     bool singleValue = false,
     bool isEditEnabled = false,
+    bool manualEnabled = true,
+    bool isDelivery = false,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2659,8 +2666,11 @@ class CustomDigitScannerRoute
             appLocalizations: appLocalizations,
             quantity: quantity,
             isGS1code: isGS1code,
+            gs1CodeList: gs1CodeList,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
+            manualEnabled: manualEnabled,
+            isDelivery: isDelivery,
           ),
           initialChildren: children,
         );
@@ -2677,8 +2687,11 @@ class CustomDigitScannerRouteArgs {
     this.appLocalizations,
     required this.quantity,
     required this.isGS1code,
+    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
+    this.manualEnabled = true,
+    this.isDelivery = false,
   });
 
   final Key? key;
@@ -2689,13 +2702,19 @@ class CustomDigitScannerRouteArgs {
 
   final bool isGS1code;
 
+  final List<GS1Barcode> gs1CodeList;
+
   final bool singleValue;
 
   final bool isEditEnabled;
 
+  final bool manualEnabled;
+
+  final bool isDelivery;
+
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, gs1CodeList: $gs1CodeList, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, isDelivery: $isDelivery}';
   }
 }
 
