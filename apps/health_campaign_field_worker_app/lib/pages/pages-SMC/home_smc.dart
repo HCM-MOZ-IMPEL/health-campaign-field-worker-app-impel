@@ -571,15 +571,13 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where(
-          (element) =>
-              state.actionsWrapper.actions
-                  .map((e) => e.displayName)
-                  .toList()
-                  .contains(element) ||
-              element == i18.home.db ||
-              element == i18.home.vehicleTrackingLabel,
-        ) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels

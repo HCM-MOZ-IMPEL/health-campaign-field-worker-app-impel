@@ -1,7 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../router/app_router.dart';
@@ -31,27 +38,31 @@ class CustomAcknowledgementPageState
     extends LocalizedState<CustomAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    var showLabel = localizations
-        .translate(i18_local.acknowledgementSuccess.mrnNumberLabel);
-    var showDescription = localizations
-        .translate(i18_local.acknowledgementSuccess.mrrnNumberDescription);
-    var showHeading = localizations
-        .translate(i18_local.acknowledgementSuccess.mrrnNumberHeading);
+    var showLabel = "";
+    var showDescription = "";
+    var showHeading = "";
 
     if (widget.entryType == StockRecordEntryType.dispatch) {
-      showLabel = localizations
-          .translate(i18_local.acknowledgementSuccess.minNumberLabel);
+      showLabel =
+          localizations.translate(i18_local.stockDetails.minNumberLabel);
       showDescription = localizations
-          .translate(i18_local.acknowledgementSuccess.minNumberDescription);
+          .translate(i18_local.acknowledgementSuccess.materialIssueDescription);
       showHeading = localizations
-          .translate(i18_local.acknowledgementSuccess.minNumberHeading);
+          .translate(i18_local.acknowledgementSuccess.materialIssueHeading);
     } else if (widget.entryType == StockRecordEntryType.returned) {
-      showLabel = localizations
-          .translate(i18_local.acknowledgementSuccess.mrnNumberLabel);
-      showDescription = localizations
-          .translate(i18_local.acknowledgementSuccess.mrnNumberDescription);
+      showLabel =
+          localizations.translate(i18_local.stockDetails.mrnNumberLabel);
+      showDescription = localizations.translate(
+          i18_local.acknowledgementSuccess.materialReturnDescription);
       showHeading = localizations
-          .translate(i18_local.acknowledgementSuccess.mrnNumberHeading);
+          .translate(i18_local.acknowledgementSuccess.materialReturnHeading);
+    } else {
+      showLabel =
+          localizations.translate(i18_local.stockDetails.mrnNumberLabel);
+      showDescription = localizations.translate(
+          i18_local.acknowledgementSuccess.materialReceiveDescription);
+      showHeading = localizations
+          .translate(i18_local.acknowledgementSuccess.materialReceiveHeading);
     }
 
     Map<String, String> mrnnumber = {

@@ -257,6 +257,15 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
             ?.toString() ??
         '';
 
+    String? batchNumber = stock.additionalFields?.fields
+        .firstWhere(
+          (field) => field.key == 'batchNumber',
+          orElse: () => const AdditionalField('batchNumber', ''),
+        )
+        .value;
+
+    String? wayBillNumber = stock.wayBillNumber;
+
     return ReactiveForm(
       formGroup: _forms[index],
       child: Column(
@@ -282,31 +291,28 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                     ),
                   ),
                   const SizedBox(height: 12),
-                  InputField(
-                    type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.waybillNumberText),
-                    initialValue: stock.wayBillNumber ?? '',
-                    isDisabled: true,
-                    readOnly: true,
-                  ),
-                  const SizedBox(height: 12),
-                  InputField(
-                    type: InputType.text,
-                    label: localizations.translate(
-                        i18_local.inventoryReportDetails.batchNumberText),
-                    initialValue: stock.additionalFields?.fields
-                            .firstWhere(
-                              (field) => field.key == 'batchNumber',
-                              orElse: () => AdditionalField('batchNumber', ''),
-                            )
-                            .value
-                            ?.toString() ??
-                        '',
-                    isDisabled: true,
-                    readOnly: true,
-                  ),
-                  const SizedBox(height: 12),
+                  if (wayBillNumber != null && wayBillNumber.isNotEmpty)
+                    InputField(
+                      type: InputType.text,
+                      label: localizations.translate(
+                          i18_local.inventoryReportDetails.waybillNumberText),
+                      initialValue: wayBillNumber,
+                      isDisabled: true,
+                      readOnly: true,
+                    ),
+                  if (wayBillNumber != null && wayBillNumber.isNotEmpty)
+                    const SizedBox(height: 12),
+                  if (batchNumber != null && batchNumber.isNotEmpty)
+                    InputField(
+                      type: InputType.text,
+                      label: localizations.translate(
+                          i18_local.inventoryReportDetails.batchNumberText),
+                      initialValue: batchNumber,
+                      isDisabled: true,
+                      readOnly: true,
+                    ),
+                  if (batchNumber != null && batchNumber.isNotEmpty)
+                    const SizedBox(height: 12),
                   InputField(
                     type: InputType.text,
                     label: localizations.translate(i18_local
@@ -332,9 +338,11 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                       ],
                       onChange: (value) {
                         if (value != null && value.isNotEmpty) {
-                          field.control.value = int.tryParse(value);
+                          _forms[index].control("quantityReceived").value =
+                              int.tryParse(value);
                         } else {
-                          field.control.value = null;
+                          _forms[index].control("quantityReceived").value =
+                              null;
                         }
                       },
                     ),

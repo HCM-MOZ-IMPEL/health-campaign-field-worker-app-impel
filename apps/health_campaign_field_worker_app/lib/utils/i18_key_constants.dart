@@ -746,6 +746,15 @@ class Home {
 
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
+
+  String get materialIssueHeading => "MATERIAL_ISSUE_HEADING";
+  String get materialReceiveHeading => "MATERIAL_RECEIVE_HEADING";
+  String get materialReturnHeading => "MATERIAL_RETURN_HEADING";
+
+  String get materialIssueDescription => "MATERIAL_ISSUE_DESCRIPTION";
+  String get materialReceiveDescription => "MATERIAL_RECEIVE_DESCRIPTION";
+  String get materialReturnDescription => "MATERIAL_RETURN_DESCRIPTION";
+
   String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
   String get mrrnNumberDescription => "MRRN_NUMBER_DESCRIPTION";
   String get mrrnNumberHeading => "MRRN_NUMBER_HEADING";
