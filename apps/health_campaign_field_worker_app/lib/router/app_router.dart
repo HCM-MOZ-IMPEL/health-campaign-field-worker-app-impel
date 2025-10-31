@@ -164,6 +164,8 @@ import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:complaints/blocs/localization/app_localization.dart';
 import 'package:survey_form/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
+import '../pages/pages-SMC/complaint/custom_complaint_type.dart';
+import '../pages/pages-SMC/complaint/custom_complaints_details.dart';
 
 part 'app_router.gr.dart';
 
@@ -1272,11 +1274,20 @@ class AppRouter extends _$AppRouter {
             page: ComplaintsRegistrationWrapperRoute.page,
             path: 'complaints-registration',
             children: [
+              // AutoRoute(
+              //   page: ComplaintTypeRoute.page,
+              //   path: 'complaints-type',
+              //   initial: true,
+              // ),
               AutoRoute(
-                page: ComplaintTypeRoute.page,
-                path: 'complaints-type',
+                page: CustomComplaintTypeRoute.page,
+                path: 'custom-complaints-type',
                 initial: true,
               ),
+              // RedirectRoute(
+              //   path: 'complaints-type',
+              //   redirectTo: 'custom-complaints-type',
+              // ),
               AutoRoute(
                 page: ComplaintsLocationRoute.page,
                 path: 'complaints-location',
@@ -1284,6 +1295,14 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: ComplaintsDetailsRoute.page,
                 path: 'complaints-details',
+              ),
+              AutoRoute(
+                page: CustomComplaintsDetailsRoute.page,
+                path: 'custom-complaints-details',
+              ),
+              RedirectRoute(
+                path: 'complaints-details',
+                redirectTo: 'custom-complaints-details',
               ),
             ],
           ),
