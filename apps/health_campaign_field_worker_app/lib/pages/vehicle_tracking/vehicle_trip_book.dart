@@ -297,6 +297,7 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                               padding: const EdgeInsets.fromLTRB(
                                   kPadding - 4, 0, kPadding - 4, 0),
                               child: DigitTextFormField(
+                                isRequired: true,
                                 keyboardType: TextInputType.number,
                                 formControlName: _startMileageKey,
                                 maxLength: 9,
@@ -461,8 +462,9 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
       _otherFieldReasonKey: FormControl<String>(
         validators: [],
       ),
-      _startMileageKey: FormControl<String>(),
-      _originKey: FormControl<String>(validators: [Validators.maxLength(100)]),
+      _startMileageKey: FormControl<String>(validators: [Validators.required]),
+      _originKey: FormControl<String>(
+          validators: [Validators.required, Validators.maxLength(100)]),
     });
   }
 }

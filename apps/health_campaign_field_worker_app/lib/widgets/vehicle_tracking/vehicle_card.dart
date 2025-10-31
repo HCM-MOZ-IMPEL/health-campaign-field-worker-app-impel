@@ -54,22 +54,23 @@ class VehicleCard extends StatelessWidget {
 
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            width: 100,
-            child: DigitButton(
-              label: buttonText,
-              isDisabled: false,
-              type: DigitButtonType.secondary,
-              size: DigitButtonSize.medium,
-              mainAxisSize: MainAxisSize.max,
-              onPressed: () {
-                onTap();
-              },
-            ),
-          ),
-        ),
+        // map hidden
+        // Align(
+        //   alignment: Alignment.topRight,
+        //   child: SizedBox(
+        //     width: 100,
+        //     child: DigitButton(
+        //       label: buttonText,
+        //       isDisabled: false,
+        //       type: DigitButtonType.secondary,
+        //       size: DigitButtonSize.medium,
+        //       mainAxisSize: MainAxisSize.max,
+        //       onPressed: () {
+        //         onTap();
+        //       },
+        //     ),
+        //   ),
+        // ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

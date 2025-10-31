@@ -25,6 +25,7 @@ import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -555,11 +556,16 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
             create: (_) => HFReferralRemoteRepository(dio, actionMap: actions),
           ),
-        if (value == DataModelType.userLocation)
+        // if (value == DataModelType.userLocation)
+        //   RepositoryProvider<
+        //       RemoteRepository<UserActionModel, UserActionSearchModel>>(
+        //     create: (_) =>
+        //         LocationTrackerRemoteRepository(dio, actionMap: actions),
+        //   ),
+        if (value == DataModelType.userAction)
           RepositoryProvider<
               RemoteRepository<UserActionModel, UserActionSearchModel>>(
-            create: (_) =>
-                LocationTrackerRemoteRepository(dio, actionMap: actions),
+            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

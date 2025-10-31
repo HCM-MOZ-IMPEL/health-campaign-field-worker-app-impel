@@ -310,8 +310,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.userLocation)
-          LocationTrackerRemoteRepository(dio, actionMap: actions),
+        // if (value == DataModelType.userLocation)
+        //   LocationTrackerRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
           UserActionRemoteRepository(dio, actionMap: actions),
       ]);
