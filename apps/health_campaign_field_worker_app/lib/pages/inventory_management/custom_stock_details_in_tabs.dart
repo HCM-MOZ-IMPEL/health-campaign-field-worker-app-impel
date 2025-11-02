@@ -141,9 +141,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           'materialNoteNumber': FormControl<String>(value: _sharedMRN),
           _transactionReasonKey: FormControl<String>(),
           _waybillNumberKey: FormControl<String>(
-            validators: (InventorySingleton().isWareHouseMgr ||
-                    (context.isSpaqManager &&
-                        entryType != StockRecordEntryType.dispatch))
+            validators: (context.isSpaqManager &&
+                    entryType != StockRecordEntryType.returned &&
+                    secondaryPartyType != 'STAFF')
                 ? [
                     Validators.minLength(2),
                     Validators.maxLength(200),
@@ -158,7 +158,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             Validators.max(1000000),
           ]),
           _waybillQuantityKey: FormControl<int>(
-              validators: context.isSpaqManager
+              validators: (context.isSpaqManager &&
+                      entryType != StockRecordEntryType.returned &&
+                      secondaryPartyType != 'STAFF')
                   ? [
                       Validators.required,
                       Validators.number(),
@@ -527,7 +529,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    if ((isSpaqManager))
+                    if (context.isSpaqManager &&
+                        entryType != StockRecordEntryType.returned &&
+                        secondaryPartyType != 'STAFF')
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
                           builder: (field) {
@@ -545,7 +549,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                             );
                           }),
 
-                    if (isSpaqManager)
+                    if (context.isSpaqManager &&
+                        entryType != StockRecordEntryType.returned &&
+                        secondaryPartyType != 'STAFF')
                       ReactiveWrapperField(
                           formControlName: _waybillQuantityKey,
                           validationMessages: {
