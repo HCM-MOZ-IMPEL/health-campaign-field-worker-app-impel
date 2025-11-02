@@ -44,23 +44,27 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
   late final List<FormGroup> _forms;
   late TabController _tabController;
 
+  final String _actualQuantityReceivedKey = 'actualQuantityReceived';
+  final String _commentsKey = 'comments';
+
   @override
   void initState() {
     super.initState();
     context
         .read<AuthBloc>()
         .add(const AuthUpdateProductSKUCountsEvent(skuCounts: {}));
-    _forms = widget.stockRecords
-        .map((_) => FormGroup({
-              'quantityReceived': FormControl<int>(
-                validators: [
-                  Validators.required,
-                  Validators.min(1),
-                ],
-              ),
-              'comments': FormControl<String>(),
-            }))
-        .toList();
+    _forms = widget.stockRecords.map((stock) {
+      return FormGroup({
+        _actualQuantityReceivedKey: FormControl<int>(
+          validators: [
+            Validators.required,
+            Validators.min(1),
+          ],
+        ),
+        _commentsKey: FormControl<String>(),
+      });
+    }).toList();
+
     _tabController =
         TabController(length: widget.stockRecords.length, vsync: this);
   }
@@ -79,10 +83,11 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
     // Validate current form
     final currentForm = _forms[_tabController.index];
     currentForm.markAllAsTouched();
-    final quantityReceived = currentForm.control('quantityReceived').value;
+    final quantityReceived =
+        currentForm.control(_actualQuantityReceivedKey).value;
     final stockQuantity =
         int.tryParse(stockRecords[_tabController.index].quantity ?? '0') ?? 0;
-    final currentComment = currentForm.control('comments').value;
+    final currentComment = currentForm.control(_commentsKey).value;
     if ((quantityReceived == null ||
             (quantityReceived is int && quantityReceived < stockQuantity)) &&
         (currentComment == null || currentComment.trim() == '')) {
@@ -166,15 +171,17 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
 
       final updatedStocks = widget.stockRecords.map((stock) {
         final additionalFields = stock.additionalFields?.fields ?? [];
+        int index = widget.stockRecords.indexOf(stock);
         final form = _forms[widget.stockRecords.indexOf(stock)];
 
         final newFields = [
           ...additionalFields.where((field) =>
-              field.key != 'quantityReceived' && field.key != 'comments'),
-          AdditionalField('quantityReceived',
-              form.control('quantityReceived').value.toString()),
-          if (form.control('comments').value != null)
-            AdditionalField('comments', form.control('comments').value),
+              field.key != _actualQuantityReceivedKey &&
+              field.key != _commentsKey),
+          AdditionalField(_actualQuantityReceivedKey,
+              form.control(_actualQuantityReceivedKey).value.toString()),
+          if (form.control(_commentsKey).value != null)
+            AdditionalField(_commentsKey, form.control(_commentsKey).value),
           const AdditionalField('received', 'true'),
         ];
 
@@ -185,7 +192,7 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
           clientReferenceId: IdGen.i.identifier,
           transactionType: TransactionType.received.toValue(),
           transactionReason: TransactionReason.received.toValue(),
-          quantity: form.control('quantityReceived').value.toString(),
+          quantity: form.control(_actualQuantityReceivedKey).value.toString(),
           additionalFields: stock.additionalFields?.copyWith(
             fields: newFields,
           ),
@@ -216,7 +223,7 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
             );
 
         final totalQty = int.parse(_forms[updatedStocks.indexOf(stock)]
-            .control('quantityReceived')
+            .control(_actualQuantityReceivedKey)
             .value
             .toString());
 
@@ -323,8 +330,12 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                   ),
                   const SizedBox(height: 12),
                   ReactiveWrapperField(
-                    formControlName: 'quantityReceived',
+                    formControlName: _actualQuantityReceivedKey,
                     builder: (field) => InputField(
+                      initialValue: _forms[index]
+                          .control(_actualQuantityReceivedKey)
+                          .value
+                          ?.toString(),
                       type: InputType.text,
                       label: localizations.translate(i18_local
                           .inventoryReportDetails.actualQuantityReceived),
@@ -338,12 +349,15 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                       ],
                       onChange: (value) {
                         if (value != null && value.isNotEmpty) {
-                          _forms[index].control("quantityReceived").value =
-                              int.tryParse(value);
+                          _forms[index]
+                              .control(_actualQuantityReceivedKey)
+                              .value = int.tryParse(value);
                         } else {
-                          _forms[index].control("quantityReceived").value =
-                              null;
+                          _forms[index]
+                              .control(_actualQuantityReceivedKey)
+                              .value = null;
                         }
+                        setState(() {});
                       },
                     ),
                     validationMessages: {
@@ -354,8 +368,10 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                   ),
                   const SizedBox(height: 12),
                   ReactiveWrapperField(
-                    formControlName: 'comments',
+                    formControlName: _commentsKey,
                     builder: (field) => InputField(
+                      initialValue:
+                          _forms[index].control(_commentsKey).value?.toString(),
                       type: InputType.textArea,
                       label: localizations.translate(
                           i18_local.inventoryReportDetails.commentsText),
