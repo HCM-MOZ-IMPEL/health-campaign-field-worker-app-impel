@@ -355,8 +355,8 @@ class Constants {
     );
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
     SyncServiceSingleton().registries?.registerSyncRegistries({
-      DataModelType.complaints: (remote) => SyncRegistry(remote),
-      DataModelType.userAction: (remote) => SyncRegistry(remote),
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
     });
     // LocationTrackerSingleton()
     //     .setTenantId(tenantId: envConfig.variables.tenantId);

@@ -269,6 +269,7 @@ class _EligibilityChecklistViewPage
                                                   ? widget.referralClientRefId
                                                       .toString()
                                                   : referenceId,
+                                              referenceId: referenceId,
                                               serviceDefId:
                                                   selectedServiceDefinition?.id,
                                               attributes: attributes,

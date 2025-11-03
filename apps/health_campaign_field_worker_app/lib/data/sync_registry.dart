@@ -6,10 +6,10 @@ import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sync_service/data/repositories/sync/sync_up.dart';
 
-class SyncRegistry implements SyncUpOperation {
+class CustomSyncRegistry implements SyncUpOperation {
   final RemoteRepository remote;
 
-  SyncRegistry(this.remote);
+  CustomSyncRegistry(this.remote);
 
   @override
   Future<void> update(List<EntityModel> entities, LocalRepository local) async {
