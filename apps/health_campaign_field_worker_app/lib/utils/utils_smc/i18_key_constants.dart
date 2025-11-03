@@ -544,6 +544,7 @@ class Checklist {
   String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
 
   String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+  String get checklistDialogLabelSMC => 'CHECKLIST_DIALOG_LABEL_SMC';
 
   String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
 
@@ -1403,6 +1404,11 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+  String get stockQuantityLabel => 'STOCK_DETAILS_QUANTITY_LABEL';
+  String get stockCommentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
+  String get stockWastedQuantityLabel => 'STOCK_DETAILS_WASTED_QUANTITY_LABEL';
+  String get stockPartialQuantityLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_LABEL';
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabelSMC => 'STOCK_SUPERVISOR_CODE_LABEL_SMC';
@@ -1414,6 +1420,9 @@ class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
+
+  String get reconciliationPageTitleSMC =>
+      'STOCK_RECONCILIATION_PAGE_TITLE_SMC';
 }
 
 class WarehouseDetails {

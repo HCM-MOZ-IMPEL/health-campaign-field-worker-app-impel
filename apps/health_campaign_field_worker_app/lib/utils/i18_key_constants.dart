@@ -1411,6 +1411,8 @@ class InventoryReportDetails {
   String get quantityReceivedByWarehouse => 'QUANTITY_RECEIVED_BY_WAREHOUSE';
 
   String get actualQuantityReceived => 'ACTUAL_QUANTITY_RECEIVED';
+  String get actualQuantityReceivedRequired =>
+      'ACTUAL_QUANTITY_RECEIVED_REQUIRED';
 
   String get commentsText => 'COMMENTS_TEXT';
 

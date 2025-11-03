@@ -361,7 +361,9 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
                       },
                     ),
                     validationMessages: {
-                      'required': (_) => 'Quantity is required',
+                      'required': (_) => localizations.translate(i18_local
+                          .inventoryReportDetails
+                          .actualQuantityReceivedRequired),
                       'min': (_) => 'Must be at least 1',
                       'number': (_) => 'Must be a valid number',
                     },

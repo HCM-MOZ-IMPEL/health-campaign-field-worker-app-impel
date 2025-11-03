@@ -25,6 +25,7 @@ import 'package:referral_reconciliation/utils/date_utils.dart';
 import 'package:referral_reconciliation/utils/i18_key_constants.dart' as i18;
 import 'package:survey_form/utils/i18_key_constants.dart' as i18_survey_form;
 import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
 
@@ -154,7 +155,8 @@ class _CustomReferralReasonChecklistPageState
                                 builder: (BuildContext ctx) {
                                   return Popup(
                                     title: localizations.translate(
-                                      i18.checklist.checklistDialogLabel,
+                                      i18_local_smc
+                                          .checklist.checklistDialogLabelSMC,
                                     ),
                                     description: localizations.translate(
                                       i18.checklist.checklistDialogDescription,

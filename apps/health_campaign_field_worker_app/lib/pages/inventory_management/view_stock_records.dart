@@ -11,6 +11,7 @@ import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 import '../../utils/extensions/extensions.dart';
 import '../../utils/utils.dart';
 
@@ -243,7 +244,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                   // Quantity
                   InputField(
                     type: InputType.text,
-                    label: 'Quantity ',
+                    label: localizations.translate(
+                        i18_local_smc.stockDetails.stockQuantityLabel),
                     initialValue: stock.quantity ?? '',
                     isDisabled: true,
                     readOnly: true,
@@ -254,7 +256,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                   if (partialQuantity != null)
                     InputField(
                       type: InputType.text,
-                      label: 'Partial Quantity *',
+                      label:
+                          '${localizations.translate(i18_local_smc.stockDetails.stockPartialQuantityLabel)} *',
                       initialValue: partialQuantity,
                       isDisabled: true,
                       readOnly: true,
@@ -264,7 +267,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                   if (wastedQuantity != null)
                     InputField(
                       type: InputType.text,
-                      label: 'Wasted Quantity *',
+                      label:
+                          '${localizations.translate(i18_local_smc.stockDetails.stockWastedQuantityLabel)} *',
                       initialValue: wastedQuantity,
                       isDisabled: true,
                       readOnly: true,
@@ -273,7 +277,8 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                   // Comments
                   InputField(
                     type: InputType.textArea,
-                    label: 'Comments',
+                    label: localizations.translate(
+                        i18_local_smc.stockDetails.stockCommentsLabel),
                     initialValue: stock.additionalFields?.fields
                             .firstWhere(
                               (field) => field.key == 'comments',

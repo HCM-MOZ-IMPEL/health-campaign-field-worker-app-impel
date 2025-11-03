@@ -238,7 +238,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       case StockRecordEntryType.loss:
       case StockRecordEntryType.damaged:
       case StockRecordEntryType.returned:
-        senderId = secondaryPartyType == 'STAFF'
+        senderId = secondaryPartyType == 'STAFF' ||
+                secondartParty.contains(Constants.pipeSeparator)
             ? secondartParty.split(Constants.pipeSeparator).last
             : secondartParty;
         senderType = secondaryPartyType;
@@ -248,7 +249,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
         break;
       case StockRecordEntryType.dispatch:
-        receiverId = secondaryPartyType == 'STAFF'
+        receiverId = secondaryPartyType == 'STAFF' ||
+                secondartParty.contains(Constants.pipeSeparator)
             ? secondartParty.split(Constants.pipeSeparator).last
             : secondartParty;
         receiverType = secondaryPartyType;

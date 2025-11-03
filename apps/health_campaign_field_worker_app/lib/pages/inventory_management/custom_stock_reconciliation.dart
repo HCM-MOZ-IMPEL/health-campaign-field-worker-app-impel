@@ -31,6 +31,7 @@ import 'package:inventory_management/widgets/component_wrapper/product_variant_b
 import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 
 @RoutePage()
 class CustomStockReconciliationPage extends LocalizedStatefulWidget {
@@ -330,8 +331,8 @@ class CustomStockReconciliationPageState
                                 children: [
                                   Text(
                                     localizations.translate(
-                                      i18.stockReconciliationDetails
-                                          .reconciliationPageTitle,
+                                      i18_local_smc.stockReconciliationDetails
+                                          .reconciliationPageTitleSMC,
                                     ),
                                     style: Theme.of(context)
                                         .digitTextTheme(context)
