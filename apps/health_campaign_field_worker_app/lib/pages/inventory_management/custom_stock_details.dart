@@ -30,6 +30,7 @@ import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
 import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 
 @RoutePage()
 class CustomStockDetailsPage extends LocalizedStatefulWidget {
@@ -483,14 +484,15 @@ class CustomStockDetailsPageState
                                         formControlName: _productVariantKey,
                                         validationMessages: {
                                           'required': (object) =>
-                                              '${module.selectProductLabel}_IS_REQUIRED',
+                                              '${i18_local_smc.stockDetails.selectProductLabelSMC}_IS_REQUIRED',
                                         },
                                         showErrors: (control) =>
                                             control.invalid && control.touched,
                                         builder: (field) {
                                           return LabeledField(
                                             label: localizations.translate(
-                                              module.selectProductLabel,
+                                              i18_local_smc.stockDetails
+                                                  .selectProductLabelSMC,
                                             ),
                                             isRequired: true,
                                             child: MultiSelectDropDown(
