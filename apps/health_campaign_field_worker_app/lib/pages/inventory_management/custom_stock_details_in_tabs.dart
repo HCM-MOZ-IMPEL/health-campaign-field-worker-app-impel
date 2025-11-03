@@ -598,7 +598,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                     field.control.value = null;
                                   }
                                   setState(() {
-                                    updateCommentValidation(form);
+                                    updateCommentValidation(form, entryType);
                                   });
                                 },
                               ),
@@ -669,7 +669,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                                 } else {
                                   field.control.value = null;
                                 }
-                                updateCommentValidation(form);
+                                updateCommentValidation(form, entryType);
                               },
                             ),
                           );
@@ -816,7 +816,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     final quantity =
                         form.control(_transactionQuantityKey).value;
 
-                    if (context.isSpaqManager) {
+                    if (context.isSpaqManager &&
+                        entryType == StockRecordEntryType.receipt) {
                       int? quantityValue = quantity == null
                           ? null
                           : int.parse(quantity.toString());
@@ -932,8 +933,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     );
   }
 
-  void updateCommentValidation(FormGroup form) {
-    if (context.isSpaqManager) {
+  void updateCommentValidation(FormGroup form, StockRecordEntryType entryType) {
+    if (context.isSpaqManager && entryType == StockRecordEntryType.receipt) {
       final quantity =
           (form.control(_transactionQuantityKey).value ?? 0) as int;
 
