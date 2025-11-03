@@ -198,28 +198,28 @@ class CustomSurveyFormPreviewPageState
                                                         localizations.translate(
                                                       "${item2?.code ?? ''}.${e.attributeCode!}",
                                                     ),
-                                                    value: e.value != null
-                                                        ? e.dataType ==
+                                                    value: e.value != null &&
+                                                            e.dataType ==
                                                                 'MultiValueList'
-                                                            ? getMultiValueString(
-                                                                e.value
-                                                                    .toString()
-                                                                    .split('.'))
-                                                            : e.dataType ==
-                                                                    'SingleValueList'
-                                                                ? localizations
-                                                                    .translate(
-                                                                    '${item2?.code}.${e.value.toString().trim()}',
-                                                                  )
-                                                                : e.value
-                                                                    .toString()
-                                                        : "",
+                                                        ? getMultiValueString(e
+                                                            .value
+                                                            .toString()
+                                                            .split('.'))
+                                                        : e.dataType ==
+                                                                'SingleValueList'
+                                                            ? localizations
+                                                                .translate(
+                                                                '${item2?.code}.${e.value.toString().trim()}',
+                                                              )
+                                                            : e.value ?? "",
                                                     isInline: false,
                                                   ),
                                                   if (e.additionalDetails !=
                                                           '' &&
                                                       e.additionalDetails !=
-                                                          null) ...[
+                                                          null &&
+                                                      e.additionalDetails !=
+                                                          "null") ...[
                                                     LabelValueItem(
                                                       label: localizations
                                                           .translate(

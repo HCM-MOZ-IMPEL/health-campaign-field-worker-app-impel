@@ -449,6 +449,16 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         action: TripActions.start.toValue(),
         beneficiaryTag: vehicleNo,
         rowVersion: 1,
+        clientAuditDetails: ClientAuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+        auditDetails: AuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
           AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)

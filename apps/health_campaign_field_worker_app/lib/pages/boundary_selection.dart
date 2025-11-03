@@ -583,7 +583,9 @@ class _BoundarySelectionPageState
                                                     context.boundary;
                                                     if (context.mounted) {
                                                       if (isOnline &&
-                                                          isDistributor &&
+                                                          (isDistributor ||
+                                                              context
+                                                                  .isHealthFacilitySupervisor) &&
                                                           context.projectTypeCode !=
                                                               ProjectTypes
                                                                   .bednet
