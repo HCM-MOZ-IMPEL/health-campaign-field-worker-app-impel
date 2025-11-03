@@ -50,6 +50,7 @@ class VehicleTripActionBloc
           isSync: false,
           latitude: event.latitude,
           longitude: event.longitude,
+          tenantId: TransitPostSingleton().tenantId,
           locationAccuracy: event.locationAccurracy,
           auditDetails: tripActionModel.auditDetails?.copyWith(
               lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid!,

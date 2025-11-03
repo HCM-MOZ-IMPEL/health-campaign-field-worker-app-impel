@@ -244,10 +244,14 @@ class VehicleTracking {
   String get startTripButtonLabel => 'VEHICLE_TRACKING_START_TRIP';
   String get searchVehicle => "SEARCH_VEHICLE_LABEL";
   String get mileageLabel => 'VEHICLE_TRACKING_MILEAGE_LABEL';
+  String get mileageLabelRequired => 'VEHICLE_TRACKING_MILEAGE_REQUIRED_LABEL';
   String get originLabel => 'VEHICLE_TRACKING_ORIGIN_LABEL';
+  String get originLabelRequired => 'VEHICLE_TRACKING_ORIGIN_REQUIRED_LABEL';
 
   String get endMileageLabel => 'VEHICLE_TRACKING_END_MILEAGE_LABEL';
   String get destinationLabel => 'VEHICLE_TRACKING_DESTINATION_LABEL';
+  String get destinationLabelRequired =>
+      'VEHICLE_TRACKING_DESTINATION_REQUIRED_LABEL';
 
   String get startTripTitle => 'VEHICLE_TRACKING_START_TRIP_TITLE';
   String get startTripContent => 'VEHICLE_TRACKING_START_TRIP_CONTENT';

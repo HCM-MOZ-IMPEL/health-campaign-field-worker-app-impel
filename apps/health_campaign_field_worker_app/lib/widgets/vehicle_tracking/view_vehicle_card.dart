@@ -49,6 +49,7 @@ class ViewVehicleCardState extends LocalizedState<ViewVehicleCard> {
         status: widget.status,
         buttonText: localizations.translate(i18.searchBeneficiary.iconLabel),
         onTap: widget.onOpenPressed ?? () {},
+        enableMap: true,
       ),
     );
   }

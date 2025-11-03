@@ -19,6 +19,7 @@ class VehicleCard extends StatelessWidget {
   final VehicleStatusEnum? status;
   final List<String>? fields;
   final AppLocalizations appLocalizations;
+  final bool enableMap;
 
   final VehicleCardType type;
   final String? description;
@@ -35,6 +36,7 @@ class VehicleCard extends StatelessWidget {
     required this.vehicle,
     this.vehicleActionModel,
     required this.onTap,
+    required this.enableMap,
     required this.buttonText,
     this.type = VehicleCardType.few,
   });
@@ -54,23 +56,23 @@ class VehicleCard extends StatelessWidget {
 
     return Stack(
       children: [
-        // map hidden
-        // Align(
-        //   alignment: Alignment.topRight,
-        //   child: SizedBox(
-        //     width: 100,
-        //     child: DigitButton(
-        //       label: buttonText,
-        //       isDisabled: false,
-        //       type: DigitButtonType.secondary,
-        //       size: DigitButtonSize.medium,
-        //       mainAxisSize: MainAxisSize.max,
-        //       onPressed: () {
-        //         onTap();
-        //       },
-        //     ),
-        //   ),
-        // ),
+        if (enableMap)
+          Align(
+            alignment: Alignment.topRight,
+            child: SizedBox(
+              width: 100,
+              child: DigitButton(
+                label: buttonText,
+                isDisabled: false,
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.medium,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  onTap();
+                },
+              ),
+            ),
+          ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

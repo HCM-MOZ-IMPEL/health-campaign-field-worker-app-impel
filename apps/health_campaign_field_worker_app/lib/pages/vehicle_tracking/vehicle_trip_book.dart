@@ -22,6 +22,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../../../router/app_router.dart';
 
@@ -300,13 +301,19 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                 isRequired: true,
                                 keyboardType: TextInputType.number,
                                 formControlName: _startMileageKey,
-                                maxLength: 9,
                                 label: localizations.translate(
                                   i18_local.vehicleTracking.mileageLabel,
                                 ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18_local.vehicleTracking
+                                            .mileageLabelRequired,
+                                      )
+                                },
                               ),
                             ),
                             Padding(
@@ -319,6 +326,11 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                 ),
                                 isRequired: true,
                                 validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18_local.vehicleTracking
+                                            .originLabelRequired,
+                                      ),
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', 100.toString()),
@@ -431,10 +443,12 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         clientReferenceId: clientReferenceId,
         isSync: false,
         timestamp: startTime,
+        tenantId: TransitPostSingleton().tenantId,
         projectId: RegistrationDeliverySingleton().projectId!,
         boundaryCode: RegistrationDeliverySingleton().boundary?.code! ?? "",
         action: TripActions.start.toValue(),
         beneficiaryTag: vehicleNo,
+        rowVersion: 1,
         additionalFields: UserActionAdditionalFields(version: 1, fields: [
           AdditionalField("vehicleNo", vehicleNo),
           if (tripBookReason != null)

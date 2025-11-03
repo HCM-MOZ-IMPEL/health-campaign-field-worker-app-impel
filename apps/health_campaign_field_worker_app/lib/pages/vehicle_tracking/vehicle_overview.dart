@@ -229,6 +229,7 @@ class _VehicleOverviewPageState extends LocalizedState<VehicleOverviewPage> {
                                 i18_local.vehicleTracking.mapLabel,
                               ),
                               onTap: () {},
+                              enableMap: false,
                             ),
                         ]),
                   );
