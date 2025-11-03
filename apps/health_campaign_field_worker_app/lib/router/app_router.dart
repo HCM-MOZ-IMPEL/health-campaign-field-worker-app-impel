@@ -166,6 +166,7 @@ import 'package:survey_form/blocs/app_localization.dart';
 import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.dart';
 import '../pages/pages-SMC/complaint/custom_complaint_type.dart';
 import '../pages/pages-SMC/complaint/custom_complaints_details.dart';
+import '../pages/pages-SMC/custom_dashboard.dart';
 
 part 'app_router.gr.dart';
 
@@ -1183,13 +1184,13 @@ class AppRouter extends _$AppRouter {
             page: UserDashboardRoute.page,
             path: 'dashboard',
           ),
-          // AutoRoute(
-          //   page: CustomUserDashboardSMCRoute.page,
-          //   path: 'custom-dashboard-smc',
-          // ),
+          AutoRoute(
+            page: CustomUserDashboardRoute.page,
+            path: 'custom-dashboard',
+          ),
           RedirectRoute(
             path: 'dashboard',
-            redirectTo: 'custom-dashboard-smc',
+            redirectTo: 'custom-dashboard',
           ),
 
           // SurveyForm Route

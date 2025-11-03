@@ -1000,123 +1000,126 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     final theme = Theme.of(context);
-    final submit = await showCustomPopup(
-      context: context,
-      builder: (popupContext) => Popup(
-        title: localizations.translate(i18.stockDetails.dialogTitle),
-        onOutsideTap: () {
-          Navigator.of(popupContext).pop(false);
-        },
-        description: localizations.translate(
-          i18.stockDetails.dialogContent,
+
+    if (context.mounted) {
+      final submit = await showCustomPopup(
+        context: context,
+        builder: (popupContext) => Popup(
+          title: localizations.translate(i18.stockDetails.dialogTitle),
+          onOutsideTap: () {
+            Navigator.of(popupContext).pop(false);
+          },
+          description: localizations.translate(
+            i18.stockDetails.dialogContent,
+          ),
+          type: PopUpType.simple,
+          actions: [
+            DigitButton(
+              label: localizations.translate(
+                i18.common.coreCommonSubmit,
+              ),
+              onPressed: () {
+                Navigator.of(
+                  popupContext,
+                ).pop(true);
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+            DigitButton(
+              label: localizations.translate(
+                i18.common.coreCommonCancel,
+              ),
+              onPressed: () {
+                Navigator.of(
+                  popupContext,
+                ).pop(false);
+              },
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large,
+            ),
+          ],
         ),
-        type: PopUpType.simple,
-        actions: [
-          DigitButton(
-            label: localizations.translate(
-              i18.common.coreCommonSubmit,
-            ),
-            onPressed: () {
-              Navigator.of(
-                popupContext,
-              ).pop(true);
-            },
-            type: DigitButtonType.primary,
-            size: DigitButtonSize.large,
-          ),
-          DigitButton(
-            label: localizations.translate(
-              i18.common.coreCommonCancel,
-            ),
-            onPressed: () {
-              Navigator.of(
-                popupContext,
-              ).pop(false);
-            },
-            type: DigitButtonType.secondary,
-            size: DigitButtonSize.large,
-          ),
-        ],
-      ),
-    ) as bool;
+      ) as bool;
 
-    if (submit && context.mounted) {
-      // Loop through all stocks and dispatch individual events
+      if (submit) {
+        // Loop through all stocks and dispatch individual events
 
-      Map<String, int> skuCounts = context
-          .getAllProductSkuCounts()
-          .map((key, value) => MapEntry(key, value));
+        Map<String, int> skuCounts = context
+            .getAllProductSkuCounts()
+            .map((key, value) => MapEntry(key, value));
 
-      for (var product in selectedProducts) {
-        await _saveCurrentTabData(product, entryType);
-      }
-
-      for (final stockModel in _tabStocks.values) {
-        int quantity = int.parse(stockModel.quantity.toString());
-        int quantityWasted = int.parse(stockModel.additionalFields?.fields
-                .firstWhereOrNull(
-                    (element) => element.key == 'wastedBlistersReturned')
-                ?.value
-                ?.toString() ??
-            '0');
-        final totalQty = ((entryType == StockRecordEntryType.dispatch)
-                ? quantity * -1
-                : quantity) -
-            quantityWasted;
-
-        String? productName = stockModel.additionalFields?.fields
-            .firstWhereOrNull((element) => element.key == 'productName')
-            ?.value;
-
-        if (skuCounts.isNotEmpty) {
-          skuList = skuCounts.keys.toList();
+        for (var product in selectedProducts) {
+          await _saveCurrentTabData(product, entryType);
         }
 
-        // Custom logic based on productName
-        if (entryType == StockRecordEntryType.dispatch) {
-          if ((skuList.contains(productName) &&
-                  // ignore: unnecessary_null_comparison
-                  (skuCounts[productName]! + totalQty < 0)) ||
-              (skuCounts[productName] == null)) {
-            await DigitToast.show(
-              context,
-              options: DigitToastOptions(
-                  localizations.translate(context.isCommunityDistributor
-                      ? i18_local
-                          .beneficiaryDetails.validationForExcessStockReturn
-                      : i18_local
-                          .beneficiaryDetails.validationForExcessStockDispatch),
-                  true,
-                  theme),
-            );
-            return;
+        for (final stockModel in _tabStocks.values) {
+          int quantity = int.parse(stockModel.quantity.toString());
+          int quantityWasted = int.parse(stockModel.additionalFields?.fields
+                  .firstWhereOrNull(
+                      (element) => element.key == 'wastedBlistersReturned')
+                  ?.value
+                  ?.toString() ??
+              '0');
+          final totalQty = ((entryType == StockRecordEntryType.dispatch)
+                  ? quantity * -1
+                  : quantity) -
+              quantityWasted;
+
+          String? productName = stockModel.additionalFields?.fields
+              .firstWhereOrNull((element) => element.key == 'productName')
+              ?.value;
+
+          if (skuCounts.isNotEmpty) {
+            skuList = skuCounts.keys.toList();
           }
-        }
-        skuCounts[productName!] = totalQty;
-      }
 
-      for (final stockModel in _tabStocks.values) {
-        context.read<RecordStockBloc>().add(
-              RecordStockSaveStockDetailsEvent(
-                stockModel: stockModel,
+          // Custom logic based on productName
+          if (entryType == StockRecordEntryType.dispatch) {
+            if ((skuList.contains(productName) &&
+                    // ignore: unnecessary_null_comparison
+                    (skuCounts[productName]! + totalQty < 0)) ||
+                (skuCounts[productName] == null)) {
+              await DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                    localizations.translate(context.isCommunityDistributor
+                        ? i18_local
+                            .beneficiaryDetails.validationForExcessStockReturn
+                        : i18_local.beneficiaryDetails
+                            .validationForExcessStockDispatch),
+                    true,
+                    theme),
+              );
+              return;
+            }
+          }
+          skuCounts[productName!] = totalQty;
+        }
+
+        for (final stockModel in _tabStocks.values) {
+          context.read<RecordStockBloc>().add(
+                RecordStockSaveStockDetailsEvent(
+                  stockModel: stockModel,
+                ),
+              );
+          context.read<RecordStockBloc>().add(
+                const RecordStockCreateStockEntryEvent(),
+              );
+        }
+
+        context.read<AuthBloc>().add(
+              AuthUpdateProductSKUCountsEvent(
+                skuCounts: skuCounts,
               ),
             );
-        context.read<RecordStockBloc>().add(
-              const RecordStockCreateStockEntryEvent(),
-            );
+
+        (context.router.parent() as StackRouter).maybePop();
+        context.router.push(CustomAcknowledgementRoute(
+            mrnNumber: _sharedMRN,
+            stockRecords: _tabStocks.values.toList(),
+            entryType: entryType));
       }
-
-      context.read<AuthBloc>().add(
-            AuthUpdateProductSKUCountsEvent(
-              skuCounts: skuCounts,
-            ),
-          );
-
-      (context.router.parent() as StackRouter).maybePop();
-      context.router.push(CustomAcknowledgementRoute(
-          mrnNumber: _sharedMRN,
-          stockRecords: _tabStocks.values.toList(),
-          entryType: entryType));
     }
   }
 

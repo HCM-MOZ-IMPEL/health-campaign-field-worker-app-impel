@@ -40,6 +40,7 @@ class CustomClosedHouseholdDetailsPageState
   static const _accuracyKey = 'accuracy';
   static const _reasonKey = 'reason';
   static const maxLength = 64;
+  bool _isManualRefresh = false;
 
   @override
   void initState() {
@@ -78,15 +79,15 @@ class CustomClosedHouseholdDetailsPageState
             form.control(_latKey).value ??= lat;
             form.control(_lngKey).value ??= lng;
             form.control(_accuracyKey).value ??= accuracy;
+            _isManualRefresh = false;
           },
           listenWhen: (previous, current) {
             final lat = form.control(_latKey).value;
             final lng = form.control(_lngKey).value;
             final accuracy = form.control(_accuracyKey).value;
 
-            return lat != null || lng != null || accuracy != null
-                ? false
-                : true;
+            final isFirstTime = lat == null || lng == null || accuracy == null;
+            return isFirstTime || _isManualRefresh;
           },
           child: BlocBuilder<custombloc.ClosedHouseholdBloc,
               custombloc.ClosedHouseholdState>(builder: (context, state) {
@@ -189,6 +190,31 @@ class CustomClosedHouseholdDetailsPageState
                                 value != null && value > 5,
                             label: localizations.translate(
                               i18.closeHousehold.accuracyLabel,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: DigitIconButton(
+                              icon: Icons.refresh,
+                              iconSize: 20,
+                              iconText: localizations.translate(
+                                i18Local.householdLocation.refreshLocation,
+                              ),
+                              onPressed: () {
+                                _isManualRefresh = true;
+
+                                DigitComponentsUtils()
+                                    .showLocationCapturingDialog(
+                                  context,
+                                  localizations.translate(
+                                      i18Local.common.locationCapturing),
+                                  DigitSyncDialogType.inProgress,
+                                );
+
+                                context
+                                    .read<LocationBloc>()
+                                    .add(const LoadLocationEvent());
+                              },
                             ),
                           ),
                           Padding(

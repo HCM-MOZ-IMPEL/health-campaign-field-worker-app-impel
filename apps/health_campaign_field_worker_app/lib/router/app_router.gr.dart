@@ -1052,6 +1052,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomUserDashboardRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomUserDashboardPage(),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
@@ -5163,6 +5169,20 @@ class CustomSurveyformRouteArgs {
   String toString() {
     return 'CustomSurveyformRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [CustomUserDashboardPage]
+class CustomUserDashboardRoute extends PageRouteInfo<void> {
+  const CustomUserDashboardRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomUserDashboardRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomUserDashboardRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
