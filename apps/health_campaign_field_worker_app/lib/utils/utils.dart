@@ -57,6 +57,7 @@ import 'extensions/extensions.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
 import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -138,11 +139,11 @@ String getStockRecordLabel(StockModel? stock) {
 
   if (stock != null) {
     if (stock.transactionReason == "RETURNED") {
-      label = i18_local.stockDetails.stockReturnDetails;
+      label = i18_local_smc.stockDetails.stockReturnDetailsSMC;
     } else if (stock.transactionType == "RECEIVED") {
-      label = i18_local.stockDetails.stockReceiptDetails;
+      label = i18_local_smc.stockDetails.stockReceiptDetailsSMC;
     } else if (stock.transactionType == "DISPATCHED") {
-      label = i18_local.stockDetails.stockIssueDetails;
+      label = i18_local_smc.stockDetails.stockIssueDetailsSMC;
     }
   }
 

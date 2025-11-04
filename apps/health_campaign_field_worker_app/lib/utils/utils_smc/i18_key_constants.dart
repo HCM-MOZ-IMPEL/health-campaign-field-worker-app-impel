@@ -1404,6 +1404,12 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+  String get stockIssueDetailsSMC => 'STOCK_DETAILS_STOCK_ISSUE_DETAILS_SMC';
+  String get stockReceiptDetailsSMC =>
+      'STOCK_DETAILS_STOCK_RECEIPT_DETAILS_SMC';
+
+  String get stockReturnDetailsSMC => 'STOCK_DETAILS_STOCK_RETURN_DETAILS_SMC';
+
   String get stockQuantityLabel => 'STOCK_DETAILS_QUANTITY_LABEL';
   String get stockCommentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
   String get stockWastedQuantityLabel => 'STOCK_DETAILS_WASTED_QUANTITY_LABEL';
