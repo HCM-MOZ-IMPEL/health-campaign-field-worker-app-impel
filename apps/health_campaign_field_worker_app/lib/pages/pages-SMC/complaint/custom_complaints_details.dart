@@ -445,12 +445,7 @@ class CustomComplaintsDetailsPageState
                                   ),
                                   isRequired: true,
                                   child: DigitTextFormInput(
-                                    readOnly: (isRaisedForSelf)
-                                        ? (field.value == null ||
-                                                field.value.isEmpty)
-                                            ? false
-                                            : true
-                                        : false,
+                                    readOnly: false,
                                     initialValue: field.value,
                                     isRequired: true,
                                     keyboardType: TextInputType.number,
