@@ -63,6 +63,7 @@ class CustomSurveyFormViewPageState
             submitTriggered: true,
           ),
         );
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
   }
 
