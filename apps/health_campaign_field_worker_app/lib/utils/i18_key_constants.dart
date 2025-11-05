@@ -449,6 +449,7 @@ class Login {
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
@@ -1281,6 +1282,8 @@ class StockDetails {
   const StockDetails();
 
   String get stockDetailsLabel => 'STOCK_DETAILS_LABEL';
+
+  String get stockScanResourcesLabel => 'STOCK_SCAN_RESOURCE_LABEL';
 
   String get minNumberLabel => 'MIN_NUMBER_LABEL';
   String get mrnNumberLabel => 'MRN_NUMBER_LABEL';

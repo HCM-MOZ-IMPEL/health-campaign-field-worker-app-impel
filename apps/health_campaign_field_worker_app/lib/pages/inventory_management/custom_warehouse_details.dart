@@ -291,7 +291,8 @@ class CustomWarehouseDetailsPageState
                                         stockState.entryType ==
                                             StockRecordEntryType.receipt)
                                       DigitButton(
-                                        label: "Scan Resource",
+                                        label: i18_local.stockDetails
+                                            .stockScanResourcesLabel,
                                         onPressed: _handleSubmission,
                                         type: DigitButtonType.primary,
                                         mainAxisSize: MainAxisSize.max,
