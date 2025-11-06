@@ -490,7 +490,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Expanded(child: Text('Resource')),
+                        Expanded(
+                            child: Text(localizations.translate(
+                                i18_local.stockDetails.resourceLabel))),
                         Expanded(child: Text(productName)),
                       ],
                     ),
@@ -917,9 +919,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       additionalFields: currentStock.additionalFields?.copyWith(
         fields: [
           ...(filteredAdditionalFields),
-          if (form.control(_batchNumberKey).value != null)
+          if (form.control(_batchNumberKey).value != null &&
+              form.control(_batchNumberKey).value != '')
             AdditionalField('batchNumber', form.control(_batchNumberKey).value),
-          if (form.control(_commentsKey).value != null)
+          if (form.control(_commentsKey).value != null &&
+              form.control(_commentsKey).value != '' &&
+              (form.control(_commentsKey).value as String).isNotEmpty)
             AdditionalField('comments', form.control(_commentsKey).value),
           if (form.control(_transactionQuantityPartialKey).value != null)
             AdditionalField('partialBlistersReturned',

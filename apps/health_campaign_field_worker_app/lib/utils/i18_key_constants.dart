@@ -1322,6 +1322,7 @@ class StockDetails {
   String get quantityCapsulePartialWastedLabel =>
       'STOCK_DETAILS_CAPSULE_PARTIAL_QUANTITY_WASTED';
   String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
+  String get resourceLabel => 'RESOURCE';
   String get batchNumberLabel {
     return 'STOCK_DETAILS_BATCH_NUMBER';
   }

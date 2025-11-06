@@ -1404,6 +1404,8 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+  String get qrCodeAccountError => 'STOCK_DETAILS_QR_CODE_ACCOUNT_ERROR';
+  String get stockAlreadyReceivedLabel => 'STOCK_ALREADY_RECEIVED_LABEL';
   String get stockIssueDetailsSMC => 'STOCK_DETAILS_STOCK_ISSUE_DETAILS_SMC';
   String get stockReceiptDetailsSMC =>
       'STOCK_DETAILS_STOCK_RECEIPT_DETAILS_SMC';
