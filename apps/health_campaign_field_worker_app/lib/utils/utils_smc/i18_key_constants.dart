@@ -47,6 +47,8 @@ class Common {
   const Common();
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get toggleTorchTip => 'TOGGLE_TORCH_TIP';
+  String get invalidQRCodeError => 'INVALID_QR_CODE_ERROR';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';

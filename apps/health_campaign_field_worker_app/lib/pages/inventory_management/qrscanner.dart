@@ -150,7 +150,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
         }
       }
     } catch (e) {
-      _showError('Invalid QR code format: ${e.toString()}');
+      _showError(
+          '${localizations.translate(i18_local_smc.common.invalidQRCodeError)}: ${e.toString()}');
     } finally {
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) setState(() => _isScanning = true);
@@ -197,7 +198,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
               onPressed: () {
                 cameraController.toggleTorch();
               },
-              tooltip: 'Toggle Torch',
+              tooltip:
+                  localizations.translate(i18_local_smc.common.toggleTorchTip),
             ),
           ],
         ),
