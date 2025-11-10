@@ -53,6 +53,8 @@ const referralReconciliation = ReferralReconciliation();
 
 class Common {
   const Common();
+  String get coreCommonComment => 'CORE_COMMON_COMMENT';
+
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
@@ -1282,6 +1284,8 @@ class StockDetails {
   const StockDetails();
 
   String get stockDetailsLabel => 'STOCK_DETAILS_LABEL';
+  String get stockReceivedIssuedQuantityLabel =>
+      'STOCK_DETAILS_RECEIVED_ISSUES_QUANTITY_LABEL';
 
   String get stockScanResourcesLabel => 'STOCK_SCAN_RESOURCE_LABEL';
 

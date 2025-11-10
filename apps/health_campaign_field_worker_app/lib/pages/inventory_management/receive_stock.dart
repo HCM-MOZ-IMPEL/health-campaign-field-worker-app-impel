@@ -92,14 +92,20 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
             (quantityReceived is int && quantityReceived < stockQuantity)) &&
         (currentComment == null || currentComment.trim() == '')) {
       await DigitToast.show(context,
-          options: DigitToastOptions('Comment is required', true, theme));
+          options: DigitToastOptions(
+              localizations.translate(
+                i18_local.common.coreCommonComment,
+              ),
+              true,
+              theme));
       return;
     }
     if (quantityReceived == null ||
         (quantityReceived is int && quantityReceived > stockQuantity)) {
       await DigitToast.show(context,
           options: DigitToastOptions(
-              'Received quantity can not be more than issued quantity',
+              localizations.translate(
+                  i18_local.stockDetails.stockReceivedIssuedQuantityLabel),
               true,
               theme));
       return;

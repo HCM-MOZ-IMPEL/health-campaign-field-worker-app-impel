@@ -46,6 +46,7 @@ const complaintsInboxShowcase = ComplaintsInboxShowcase();
 class Common {
   const Common();
 
+  String get coreCommonComment => 'CORE_COMMON_COMMENT';
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get toggleTorchTip => 'TOGGLE_TORCH_TIP';
   String get invalidQRCodeError => 'INVALID_QR_CODE_ERROR';
