@@ -329,6 +329,9 @@ class VehicleTripFeedbackPageState
                                             .translate(
                                                 i18.common.maxCharsRequired)
                                             .replaceAll('{}', 100.toString()),
+                                        'minLength': (object) =>
+                                            localizations.translate(
+                                                i18.common.min2CharsRequired)
                                       },
                                     ),
                                   )
@@ -478,8 +481,11 @@ class VehicleTripFeedbackPageState
       _tripFeedbackEvaluationKey:
           FormControl<String>(validators: [Validators.required]),
       _endMileageKey: FormControl<String>(validators: [Validators.required]),
-      _destinationKey: FormControl<String>(
-          validators: [Validators.maxLength(100), Validators.required]),
+      _destinationKey: FormControl<String>(validators: [
+        Validators.maxLength(100),
+        Validators.minLength(2),
+        Validators.required
+      ]),
     });
   }
 }

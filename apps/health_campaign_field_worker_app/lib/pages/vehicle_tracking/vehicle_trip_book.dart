@@ -334,6 +334,8 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', 100.toString()),
+                                  'minLength': (object) => localizations
+                                      .translate(i18.common.min2CharsRequired)
                                 },
                               ),
                             )
@@ -487,8 +489,11 @@ class VehicleTripBookPageState extends LocalizedState<VehicleTripBookPage> {
         validators: [],
       ),
       _startMileageKey: FormControl<String>(validators: [Validators.required]),
-      _originKey: FormControl<String>(
-          validators: [Validators.required, Validators.maxLength(100)]),
+      _originKey: FormControl<String>(validators: [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100)
+      ]),
     });
   }
 }

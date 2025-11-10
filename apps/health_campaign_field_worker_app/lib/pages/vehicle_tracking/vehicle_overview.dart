@@ -153,7 +153,7 @@ class _VehicleOverviewPageState extends LocalizedState<VehicleOverviewPage> {
                               action: (ctx) => Navigator.of(
                                 context,
                                 rootNavigator: true,
-                              ).pop(true),
+                              ).pop(false),
                             ),
                           ),
                         );
@@ -188,7 +188,7 @@ class _VehicleOverviewPageState extends LocalizedState<VehicleOverviewPage> {
                               action: (ctx) => Navigator.of(
                                 context,
                                 rootNavigator: true,
-                              ).pop(true),
+                              ).pop(false),
                             ),
                           ),
                         );
