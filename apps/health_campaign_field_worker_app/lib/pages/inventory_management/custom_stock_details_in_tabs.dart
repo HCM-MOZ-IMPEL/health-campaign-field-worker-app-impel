@@ -821,7 +821,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                         form.control(_transactionQuantityKey).value;
 
                     if (context.isSpaqManager &&
-                        entryType == StockRecordEntryType.receipt) {
+                        entryType != StockRecordEntryType.returned &&
+                        secondaryPartyType != 'STAFF') {
                       int? quantityValue = quantity == null
                           ? null
                           : int.parse(quantity.toString());
@@ -829,7 +830,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           ? null
                           : int.parse(waybillQuantity.toString());
                       if (quantityValue != wayBillQuantityValue &&
-                          comments == null) {
+                          (comments == null || comments.length <= 2)) {
                         DigitToast.show(
                           context,
                           options: DigitToastOptions(
@@ -941,7 +942,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   }
 
   void updateCommentValidation(FormGroup form, StockRecordEntryType entryType) {
-    if (context.isSpaqManager && entryType == StockRecordEntryType.receipt) {
+    if (context.isSpaqManager &&
+        entryType != StockRecordEntryType.returned &&
+        secondaryPartyType != 'STAFF') {
       final quantity =
           (form.control(_transactionQuantityKey).value ?? 0) as int;
 
