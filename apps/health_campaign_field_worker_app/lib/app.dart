@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:digit_dss/digit_dss.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
@@ -145,6 +146,19 @@ class MainApplicationState extends State<MainApplication>
                   );
                 },
                 lazy: false,
+              ),
+
+              BlocProvider(
+                create: (context) {
+                  return RecordStockBloc(
+                    stockRepository:
+                        context.repository<StockModel, StockSearchModel>(),
+                    RecordStockCreateState(
+                      entryType: StockRecordEntryType.receipt,
+                      projectId: InventorySingleton().projectId,
+                    ),
+                  );
+                },
               ),
 
               BlocProvider(
