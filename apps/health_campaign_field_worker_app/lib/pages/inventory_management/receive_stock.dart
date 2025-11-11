@@ -218,6 +218,8 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
         );
       }).toList();
 
+      Map<String, int> skuCounts = {};
+
       for (final stock in updatedStocks) {
         context.read<RecordStockBloc>().add(
               RecordStockSaveStockDetailsEvent(
@@ -228,27 +230,22 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
               const RecordStockCreateStockEntryEvent(),
             );
 
+        String productName = stock.additionalFields?.fields
+            .firstWhereOrNull((element) => element.key == "productName")
+            ?.value;
+
         final totalQty = int.parse(_forms[updatedStocks.indexOf(stock)]
             .control(_actualQuantityReceivedKey)
             .value
             .toString());
 
-        Map<String, int> skuCounts = context
-            .getAllProductSkuCounts()
-            .map((key, value) => MapEntry(key, value));
-
-        String productName = stock.additionalFields?.fields
-            .firstWhereOrNull((element) => element.key == "productName")
-            ?.value;
-
         skuCounts[productName] = totalQty;
-
-        context.read<AuthBloc>().add(
-              AuthUpdateProductSKUCountsEvent(
-                skuCounts: skuCounts,
-              ),
-            );
       }
+      context.read<AuthBloc>().add(
+            AuthUpdateProductSKUCountsEvent(
+              skuCounts: skuCounts,
+            ),
+          );
       await Future.delayed(const Duration(milliseconds: 500));
       context.router.push(
         CustomAcknowledgementRoute(
