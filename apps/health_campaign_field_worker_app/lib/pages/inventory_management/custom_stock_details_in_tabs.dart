@@ -1010,9 +1010,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     final theme = Theme.of(context);
+    bool? submit;
 
     if (context.mounted) {
-      final submit = await showCustomPopup(
+      submit = await showCustomPopup(
         context: context,
         builder: (popupContext) => Popup(
           title: localizations.translate(i18.stockDetails.dialogTitle),
@@ -1029,6 +1030,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 i18.common.coreCommonSubmit,
               ),
               onPressed: () {
+                if (submit == true) return;
                 Navigator.of(
                   popupContext,
                 ).pop(true);
@@ -1041,6 +1043,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 i18.common.coreCommonCancel,
               ),
               onPressed: () {
+                if (submit == true) return;
                 Navigator.of(
                   popupContext,
                 ).pop(false);
@@ -1052,7 +1055,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         ),
       ) as bool;
 
-      if (submit) {
+      if (submit == true) {
         // Loop through all stocks and dispatch individual events
 
         Map<String, int> skuCounts = context
