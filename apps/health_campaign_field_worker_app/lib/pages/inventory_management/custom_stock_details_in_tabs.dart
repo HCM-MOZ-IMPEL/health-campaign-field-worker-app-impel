@@ -825,7 +825,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                         form.control(_transactionQuantityKey).value;
 
                     if (context.isSpaqManager &&
-                        entryType == StockRecordEntryType.receipt) {
+                        entryType != StockRecordEntryType.returned &&
+                        secondaryPartyType != 'STAFF') {
                       int? quantityValue = quantity == null
                           ? null
                           : int.parse(quantity.toString());
@@ -833,7 +834,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           ? null
                           : int.parse(waybillQuantity.toString());
                       if (quantityValue != wayBillQuantityValue &&
-                          comments == null) {
+                          (comments == null || comments.length <= 2)) {
                         DigitToast.show(
                           context,
                           options: DigitToastOptions(
@@ -945,7 +946,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   }
 
   void updateCommentValidation(FormGroup form, StockRecordEntryType entryType) {
-    if (context.isSpaqManager && entryType == StockRecordEntryType.receipt) {
+    if (context.isSpaqManager &&
+        entryType != StockRecordEntryType.returned &&
+        secondaryPartyType != 'STAFF') {
       final quantity =
           (form.control(_transactionQuantityKey).value ?? 0) as int;
 
@@ -1011,9 +1014,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     final theme = Theme.of(context);
+    bool? submit;
 
     if (context.mounted) {
-      final submit = await showCustomPopup(
+      submit = await showCustomPopup(
         context: context,
         builder: (popupContext) => Popup(
           title: localizations.translate(i18.stockDetails.dialogTitle),
@@ -1030,6 +1034,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 i18.common.coreCommonSubmit,
               ),
               onPressed: () {
+                if (submit == true) return;
                 Navigator.of(
                   popupContext,
                 ).pop(true);
@@ -1042,6 +1047,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 i18.common.coreCommonCancel,
               ),
               onPressed: () {
+                if (submit == true) return;
                 Navigator.of(
                   popupContext,
                 ).pop(false);
@@ -1053,7 +1059,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         ),
       ) as bool;
 
-      if (submit) {
+      if (submit == true) {
         // Loop through all stocks and dispatch individual events
 
         Map<String, int> skuCounts = context
