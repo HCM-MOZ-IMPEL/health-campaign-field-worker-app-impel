@@ -161,6 +161,7 @@ class Constants {
   static const String bednetSKU = "Redes Mosquiteiras";
   static const String vehicleSKU = "Vehicle";
   static const String productSKUCounts = "productSKUCounts";
+  static const String deliveryCommentWastedKey = "deliveryCommentWasted";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

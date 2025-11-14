@@ -540,7 +540,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           formControlName: _waybillNumberKey,
                           builder: (field) {
                             return InputField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               type: InputType.text,
+                              keyboardType: TextInputType.number,
                               label: localizations.translate(
                                 i18.stockDetails.waybillNumberLabel,
                               ),
