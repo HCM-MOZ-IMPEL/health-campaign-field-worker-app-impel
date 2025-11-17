@@ -778,6 +778,8 @@ class DeliverIntervention {
   String get bednetScannedCode => 'BEDNET_SCANNED_CODES';
   String get deliveryCommentLabelSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
+  String get deliveryCommentLabelWastedSMC =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>
