@@ -33,6 +33,8 @@ enum MasterEnums {
   deliveryComments,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR")
   deliveryCommentsSMC,
+  @MappableValue("DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR")
+  deliveryCommentsWastedSMC,
   @MappableValue("BACKEND_INTERFACE")
   backendInterface,
   @MappableValue("CALL_SUPPORT")

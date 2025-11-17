@@ -53,6 +53,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.deliveryComments;
       case "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR":
         return MasterEnums.deliveryCommentsSMC;
+      case "DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR":
+        return MasterEnums.deliveryCommentsWastedSMC;
       case "BACKEND_INTERFACE":
         return MasterEnums.backendInterface;
       case "CALL_SUPPORT":
@@ -119,6 +121,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "DELIVERY_COMMENT_OPTIONS_POPULATOR";
       case MasterEnums.deliveryCommentsSMC:
         return "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR";
+      case MasterEnums.deliveryCommentsWastedSMC:
+        return "DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR";
       case MasterEnums.backendInterface:
         return "BACKEND_INTERFACE";
       case MasterEnums.callSupport:

@@ -129,6 +129,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryCommentWastedOptionsSmc:
+          (json['DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR']
+                  as List<dynamic>)
+              .map((e) =>
+                  DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
+              .toList(),
       backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
           .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -196,6 +202,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
       'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentOptionsSmc,
+      'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR':
+          instance.deliveryCommentWastedOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,

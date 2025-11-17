@@ -83,6 +83,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+    @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')

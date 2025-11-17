@@ -61,6 +61,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
 
+  @Name('DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc;
+
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
 

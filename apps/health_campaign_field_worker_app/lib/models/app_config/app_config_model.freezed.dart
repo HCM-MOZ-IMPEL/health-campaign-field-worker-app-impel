@@ -944,6 +944,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsSmc =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -1014,6 +1017,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1060,6 +1065,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
+    Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1115,6 +1121,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
           ? _value.deliveryCommentOptionsSmc
           : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentWastedOptionsSmc: null == deliveryCommentWastedOptionsSmc
+          ? _value.deliveryCommentWastedOptionsSmc
+          : deliveryCommentWastedOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
@@ -1200,6 +1210,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1244,6 +1256,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
+    Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1299,6 +1312,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
       deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
           ? _value._deliveryCommentOptionsSmc
           : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentWastedOptionsSmc: null == deliveryCommentWastedOptionsSmc
+          ? _value._deliveryCommentWastedOptionsSmc
+          : deliveryCommentWastedOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
@@ -1381,6 +1398,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions>
+          deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1418,6 +1438,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
         _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
+        _deliveryCommentWastedOptionsSmc = deliveryCommentWastedOptionsSmc,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
@@ -1533,6 +1554,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       return _deliveryCommentOptionsSmc;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_deliveryCommentOptionsSmc);
+  }
+
+  final List<DeliveryCommentOptions> _deliveryCommentWastedOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc {
+    if (_deliveryCommentWastedOptionsSmc is EqualUnmodifiableListView)
+      return _deliveryCommentWastedOptionsSmc;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentWastedOptionsSmc);
   }
 
   final List<BackendInterface> _backendInterface;
@@ -1686,7 +1717,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, deliveryCommentWastedOptionsSmc: $deliveryCommentWastedOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1717,6 +1748,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptionsSmc, _deliveryCommentOptionsSmc) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentWastedOptionsSmc,
+                _deliveryCommentWastedOptionsSmc) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
@@ -1763,6 +1797,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
+        const DeepCollectionEquality().hash(_deliveryCommentWastedOptionsSmc),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
         const DeepCollectionEquality().hash(_transportTypes),
@@ -1816,6 +1851,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions>
+          deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1877,6 +1915,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
