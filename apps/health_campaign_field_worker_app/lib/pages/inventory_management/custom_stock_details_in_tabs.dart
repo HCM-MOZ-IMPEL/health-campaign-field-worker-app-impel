@@ -540,17 +540,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           formControlName: _waybillNumberKey,
                           builder: (field) {
                             return InputField(
-                              type: InputType.text,
-                              label: localizations.translate(
-                                i18.stockDetails.waybillNumberLabel,
-                              ),
-                              errorMessage: field.errorText,
-                              onChange: (val) {
-                                field.control.value = val;
-                              },
-                              isRequired: !(context.isSpaqManager &&
-                                  entryType == StockRecordEntryType.dispatch),
-                            );
+                                type: InputType.text,
+                                label: localizations.translate(
+                                  i18.stockDetails.waybillNumberLabel,
+                                ),
+                                errorMessage: field.errorText,
+                                onChange: (val) {
+                                  field.control.value = val;
+                                },
+                                isRequired: true);
                           }),
 
                     if (context.isSpaqManager &&
