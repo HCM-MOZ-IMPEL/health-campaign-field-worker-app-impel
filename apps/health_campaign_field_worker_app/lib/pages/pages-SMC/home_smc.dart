@@ -593,8 +593,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
+            element == i18.home.db ||
             element ==
-                i18.home.db) // TODO: need to add close household inside mdms
+                i18.home
+                    .dataShare) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
