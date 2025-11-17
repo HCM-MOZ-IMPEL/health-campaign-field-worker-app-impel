@@ -172,6 +172,8 @@ import '../pages/peer_to_peer/data_share_home.dart';
 import '../pages/peer_to_peer/data_transfer.dart';
 import '../pages/peer_to_peer/devices_list.dart';
 import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 
 part 'app_router.gr.dart';
 

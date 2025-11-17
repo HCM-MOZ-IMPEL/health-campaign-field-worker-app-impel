@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PeerToPeerEvent {
-  InvalidType get nearbyService => throw _privateConstructorUsedError;
+  NearbyService get nearbyService => throw _privateConstructorUsedError;
   String get selectedBoundaryCode => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -83,7 +83,7 @@ abstract class $PeerToPeerEventCopyWith<$Res> {
           PeerToPeerEvent value, $Res Function(PeerToPeerEvent) then) =
       _$PeerToPeerEventCopyWithImpl<$Res, PeerToPeerEvent>;
   @useResult
-  $Res call({InvalidType nearbyService, String selectedBoundaryCode});
+  $Res call({NearbyService nearbyService, String selectedBoundaryCode});
 }
 
 /// @nodoc
@@ -99,14 +99,14 @@ class _$PeerToPeerEventCopyWithImpl<$Res, $Val extends PeerToPeerEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nearbyService = freezed,
+    Object? nearbyService = null,
     Object? selectedBoundaryCode = null,
   }) {
     return _then(_value.copyWith(
-      nearbyService: freezed == nearbyService
+      nearbyService: null == nearbyService
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
-              as InvalidType,
+              as NearbyService,
       selectedBoundaryCode: null == selectedBoundaryCode
           ? _value.selectedBoundaryCode
           : selectedBoundaryCode // ignore: cast_nullable_to_non_nullable
@@ -141,13 +141,13 @@ class __$$DataTransferEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nearbyService = freezed,
+    Object? nearbyService = null,
     Object? selectedProject = null,
     Object? selectedBoundaryCode = null,
     Object? connectedDevice = null,
   }) {
     return _then(_$DataTransferEventImpl(
-      nearbyService: freezed == nearbyService
+      nearbyService: null == nearbyService
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
               as NearbyService,
@@ -214,8 +214,8 @@ class _$DataTransferEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DataTransferEventImpl &&
-            const DeepCollectionEquality()
-                .equals(other.nearbyService, nearbyService) &&
+            (identical(other.nearbyService, nearbyService) ||
+                other.nearbyService == nearbyService) &&
             (identical(other.selectedProject, selectedProject) ||
                 other.selectedProject == selectedProject) &&
             (identical(other.selectedBoundaryCode, selectedBoundaryCode) ||
@@ -227,7 +227,7 @@ class _$DataTransferEventImpl
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(nearbyService),
+      nearbyService,
       selectedProject,
       selectedBoundaryCode,
       const DeepCollectionEquality().hash(_connectedDevice));
@@ -367,7 +367,7 @@ class __$$DataReceiverEventImplCopyWithImpl<$Res>
   $Res call({
     Object? projectId = null,
     Object? selectedBoundaryCode = null,
-    Object? nearbyService = freezed,
+    Object? nearbyService = null,
     Object? data = freezed,
   }) {
     return _then(_$DataReceiverEventImpl(
@@ -379,7 +379,7 @@ class __$$DataReceiverEventImplCopyWithImpl<$Res>
           ? _value.selectedBoundaryCode
           : selectedBoundaryCode // ignore: cast_nullable_to_non_nullable
               as String,
-      nearbyService: freezed == nearbyService
+      nearbyService: null == nearbyService
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
               as NearbyService,
@@ -436,18 +436,14 @@ class _$DataReceiverEventImpl
                 other.projectId == projectId) &&
             (identical(other.selectedBoundaryCode, selectedBoundaryCode) ||
                 other.selectedBoundaryCode == selectedBoundaryCode) &&
-            const DeepCollectionEquality()
-                .equals(other.nearbyService, nearbyService) &&
+            (identical(other.nearbyService, nearbyService) ||
+                other.nearbyService == nearbyService) &&
             const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      projectId,
-      selectedBoundaryCode,
-      const DeepCollectionEquality().hash(nearbyService),
-      const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, projectId, selectedBoundaryCode,
+      nearbyService, const DeepCollectionEquality().hash(data));
 
   @JsonKey(ignore: true)
   @override

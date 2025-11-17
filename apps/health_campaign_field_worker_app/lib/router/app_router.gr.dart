@@ -429,11 +429,8 @@ abstract class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           quantity: args.quantity,
           isGS1code: args.isGS1code,
-          gs1CodeList: args.gs1CodeList,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
-          manualEnabled: args.manualEnabled,
-          isDelivery: args.isDelivery,
         ),
       );
     },
@@ -2873,11 +2870,8 @@ class CustomDigitScannerRoute
     ScannerLocalization? appLocalizations,
     required int quantity,
     required bool isGS1code,
-    List<GS1Barcode> gs1CodeList = const [],
     bool singleValue = false,
     bool isEditEnabled = false,
-    bool manualEnabled = true,
-    bool isDelivery = false,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2886,11 +2880,8 @@ class CustomDigitScannerRoute
             appLocalizations: appLocalizations,
             quantity: quantity,
             isGS1code: isGS1code,
-            gs1CodeList: gs1CodeList,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
-            manualEnabled: manualEnabled,
-            isDelivery: isDelivery,
           ),
           initialChildren: children,
         );
@@ -2907,11 +2898,8 @@ class CustomDigitScannerRouteArgs {
     this.appLocalizations,
     required this.quantity,
     required this.isGS1code,
-    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
-    this.manualEnabled = true,
-    this.isDelivery = false,
   });
 
   final Key? key;
@@ -2922,19 +2910,13 @@ class CustomDigitScannerRouteArgs {
 
   final bool isGS1code;
 
-  final List<GS1Barcode> gs1CodeList;
-
   final bool singleValue;
 
   final bool isEditEnabled;
 
-  final bool manualEnabled;
-
-  final bool isDelivery;
-
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, gs1CodeList: $gs1CodeList, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, isDelivery: $isDelivery}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 
@@ -5273,8 +5255,8 @@ class CustomWarehouseDetailsRouteArgs {
 class DataReceiverRoute extends PageRouteInfo<DataReceiverRouteArgs> {
   DataReceiverRoute({
     Key? key,
-    required InvalidType connectedDevice,
-    required InvalidType nearbyService,
+    required Device connectedDevice,
+    required NearbyService nearbyService,
     List<PageRouteInfo>? children,
   }) : super(
           DataReceiverRoute.name,
@@ -5301,9 +5283,9 @@ class DataReceiverRouteArgs {
 
   final Key? key;
 
-  final InvalidType connectedDevice;
+  final Device connectedDevice;
 
-  final InvalidType nearbyService;
+  final NearbyService nearbyService;
 
   @override
   String toString() {
@@ -5330,8 +5312,8 @@ class DataShareHomeRoute extends PageRouteInfo<void> {
 class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
   DataTransferRoute({
     Key? key,
-    required InvalidType nearbyService,
-    required List<void> connectedDevices,
+    required NearbyService nearbyService,
+    required List<Device> connectedDevices,
     List<PageRouteInfo>? children,
   }) : super(
           DataTransferRoute.name,
@@ -5358,9 +5340,9 @@ class DataTransferRouteArgs {
 
   final Key? key;
 
-  final InvalidType nearbyService;
+  final NearbyService nearbyService;
 
-  final List<void> connectedDevices;
+  final List<Device> connectedDevices;
 
   @override
   String toString() {
