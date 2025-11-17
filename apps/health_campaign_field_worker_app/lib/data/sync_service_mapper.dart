@@ -96,6 +96,61 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
   }
 
+  void createDbRecords(LocalRepository<EntityModel, EntitySearchModel> local,
+      List<Map<String, dynamic>> entityList, String key) async {
+    switch (key) {
+      case "Individuals":
+        final entity = entityList
+            .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "Households":
+        final entity = entityList
+            .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "HouseholdMembers":
+        final entity = entityList
+            .map(
+              (e) => HouseholdMemberModelMapper.fromJson(
+                jsonEncode(e),
+              ),
+            )
+            .toList();
+        await local.bulkCreate(entity);
+      case "ProjectBeneficiaries":
+        final entity = entityList
+            .map((e) => ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "Tasks":
+        final entity = entityList
+            .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "SideEffects":
+        final entity = entityList
+            .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "Referrals":
+        final entity = entityList
+            .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      case "Services":
+        final entity = entityList
+            .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      default:
+        final entity = entityList
+            .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+    }
+  }
+
   @override
   int getSyncCount(List<OpLog> opLogs) {
     int count = opLogs.where((element) {

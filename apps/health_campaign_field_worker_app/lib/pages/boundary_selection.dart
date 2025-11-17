@@ -43,7 +43,8 @@ class _BoundarySelectionPageState
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
   var expenseTypeCtrl = TextEditingController();
-  StreamController<double> downloadProgress = StreamController<double>();
+  StreamController<double> downloadProgress =
+      StreamController<double>.broadcast();
 
   Map<String, TextEditingController> dropdownControllers = {};
   final String setLocale = "pt_MZ";
@@ -71,6 +72,7 @@ class _BoundarySelectionPageState
   @override
   void dispose() {
     clickedStatus.dispose();
+    downloadProgress.close();
     super.dispose();
   }
 

@@ -31,6 +31,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorProgressBar,
   );
 
+  final dataShare = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.dataShare,
+  );
+
   final distributorBeneficiaries = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorBeneficiaries,
   );

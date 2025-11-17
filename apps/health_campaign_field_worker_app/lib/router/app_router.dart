@@ -167,6 +167,11 @@ import '../pages/pages-SMC/referral_reconcillation/custom_search_referral_page.d
 import '../pages/pages-SMC/complaint/custom_complaint_type.dart';
 import '../pages/pages-SMC/complaint/custom_complaints_details.dart';
 import '../pages/pages-SMC/custom_dashboard.dart';
+import '../pages/peer_to_peer/data_receiver.dart';
+import '../pages/peer_to_peer/data_share_home.dart';
+import '../pages/peer_to_peer/data_transfer.dart';
+import '../pages/peer_to_peer/devices_list.dart';
+import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
 
 part 'app_router.gr.dart';
 
@@ -1024,6 +1029,22 @@ class AppRouter extends _$AppRouter {
                   page: VehicleAcknowledgementRoute.page,
                   path: 'vehicle-acknowledgement',
                 )
+              ]),
+
+          AutoRoute(
+            page: DataShareHomeRoute.page,
+            path: 'data-share-home',
+          ),
+          AutoRoute(
+              page: PeerToPeerWrapperRoute.page,
+              path: 'peer-to-peer-wrapper',
+              children: [
+                AutoRoute(
+                    page: DevicesListRoute.page,
+                    path: 'devices-list',
+                    initial: true),
+                AutoRoute(page: DataTransferRoute.page, path: 'data-transfer'),
+                AutoRoute(page: DataReceiverRoute.page, path: 'data-receiver'),
               ]),
 
           // Attendance Route

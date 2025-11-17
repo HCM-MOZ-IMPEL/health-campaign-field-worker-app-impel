@@ -1,5 +1,10 @@
 library app_utils;
 
+import 'package:attendance_management/models/entities/attendance_log.dart';
+import 'package:complaints/models/pgr_complaints.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
 
 import 'package:digit_data_model/data_model.init.dart';
@@ -40,6 +45,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -197,6 +203,85 @@ performBackgroundService({
         );
       }
     }
+  }
+}
+
+void attemptSyncUp(BuildContext context) async {
+  await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+  if (context.mounted) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            userId: context.loggedInUserUuid,
+            localRepositories: [
+              // INFO : Need to add local repo of package Here
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<LocalRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  LocalRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  LocalRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+            remoteRepositories: [
+              // INFO : Need to add repo repo of package Here
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  RemoteRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  RemoteRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+          ),
+        );
   }
 }
 

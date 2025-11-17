@@ -7,6 +7,7 @@ const householdDetails = HouseholdDetails();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -53,6 +54,9 @@ const referralReconciliation = ReferralReconciliation();
 
 class Common {
   const Common();
+  String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
+
+  String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
   String get coreCommonComment => 'CORE_COMMON_COMMENT';
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
@@ -721,6 +725,7 @@ class Home {
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
 
@@ -914,6 +919,71 @@ class Complaints {
 
   String get validationRadioRequiredError =>
       'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
+}
+
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
+  String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
+
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
+
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
+
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
+  String get dataSharingLabel => 'DATA_SHARING_LABEL';
+
+  String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
+
+  String get invalidFileError => 'INVALID_FILE_FORMAT_ERROR';
+
+  String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
+
+  String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDesc => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
+
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
 }
 
 class SyncDialog {

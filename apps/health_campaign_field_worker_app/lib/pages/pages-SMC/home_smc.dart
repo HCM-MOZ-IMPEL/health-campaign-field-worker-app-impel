@@ -53,6 +53,7 @@ import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -80,6 +81,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool _isCardExpanded = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
+  bool isTriggerLocalisation = true;
   @override
   initState() {
     super.initState();
@@ -509,6 +511,19 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () async {
+            if (isTriggerLocalisation) {
+              triggerLocalization(context);
+              isTriggerLocalisation = false;
+            }
+            context.router.push(const DataShareHomeRoute());
+          },
+        ),
+      )
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -525,6 +540,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -561,6 +577,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
       i18.home.vehicleTrackingLabel,
+      i18.home.dataShare,
 
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
@@ -843,6 +860,31 @@ void setPackagesSingleton(BuildContext context) {
           maxAge: context.selectedProjectType?.validMaxAge,
         );
       });
+}
+
+void triggerLocalization(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+        orElse: () {},
+        initialized: (
+          AppConfiguration appConfiguration,
+          _,
+          __,
+        ) {
+          final appConfig = appConfiguration;
+          final localizationModulesList = appConfiguration.backendInterface;
+          final selectedLocale = AppSharedPreferences().getSelectedLocale;
+          LocalizationParams().setCode(LeastLevelBoundarySingleton().boundary);
+          context
+              .read<LocalizationBloc>()
+              .add(LocalizationEvent.onLoadLocalization(
+                module:
+                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: appConfig.tenantId ?? "default",
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
+        },
+      );
 }
 
 void loadLocalization(
