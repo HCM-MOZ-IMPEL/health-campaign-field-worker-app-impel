@@ -516,10 +516,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            if (isTriggerLocalisation) {
-              triggerLocalization(context);
-              isTriggerLocalisation = false;
-            }
+            // if (isTriggerLocalisation) {
+            //   triggerLocalization(context);
+            //   isTriggerLocalisation = false;
+            // }
             context.router.push(const DataShareHomeRoute());
           },
         ),

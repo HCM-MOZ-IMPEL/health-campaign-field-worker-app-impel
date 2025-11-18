@@ -35,7 +35,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
 
     return ScrollableContent(
       header: const BackNavigationHelpHeaderWidget(
-        showHelp: true,
+        showHelp: false,
       ),
       children: [
         Padding(

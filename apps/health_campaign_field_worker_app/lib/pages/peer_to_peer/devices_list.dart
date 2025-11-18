@@ -77,7 +77,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const BackNavigationHelpHeaderWidget(showHelp: true),
+                const BackNavigationHelpHeaderWidget(showHelp: false),
                 Padding(
                   padding: const EdgeInsets.all(spacer4),
                   child: Align(

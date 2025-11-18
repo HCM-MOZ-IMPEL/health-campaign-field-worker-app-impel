@@ -87,7 +87,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
           return ScrollableContent(
             enableFixedDigitButton: true,
             header: const BackNavigationHelpHeaderWidget(
-              showHelp: true,
+              showHelp: false,
             ),
             footer: DigitCard(
                 margin: const EdgeInsets.only(top: spacer2),
