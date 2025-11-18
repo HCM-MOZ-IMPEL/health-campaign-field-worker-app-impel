@@ -19,6 +19,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:survey_form/blocs/service.dart';
 import 'package:survey_form/models/entities/service_definition.dart';
 import 'package:survey_form/survey_form.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomBeneficiaryChecklistPage extends LocalizedStatefulWidget {
@@ -213,8 +214,8 @@ class _CustomBeneficiaryChecklistPageState
                         DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
-                            titleText: localizations
-                                .translate(i18.checklist.checklistDialogLabel),
+                            titleText: localizations.translate(
+                                i18_local.checklist.checklistDialogLabelSMC),
                             titlePadding: const EdgeInsets.only(top: kPadding),
                             barrierDismissible: false,
                             enableRecordPast: true,
