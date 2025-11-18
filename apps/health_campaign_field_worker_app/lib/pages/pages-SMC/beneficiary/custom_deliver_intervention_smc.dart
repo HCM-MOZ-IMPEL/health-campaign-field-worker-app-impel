@@ -677,9 +677,9 @@ class CustomDeliverInterventionSMCPageState
                                                           return const Offstage();
                                                         }
 
-                                                        final deliveryCommentOptionsSmc = state
+                                                        final deliveryCommentWastedOptionsSmc = state
                                                                 .appConfiguration
-                                                                .deliveryCommentOptionsSmc ??
+                                                                .deliveryCommentWastedOptionsSmc ??
                                                             <DeliveryCommentOptions>[];
 
                                                         return DigitReactiveDropdown<
@@ -691,7 +691,7 @@ class CustomDeliverInterventionSMCPageState
                                                                 .deliveryCommentLabelWastedSMC,
                                                           ),
                                                           menuItems:
-                                                              deliveryCommentOptionsSmc
+                                                              deliveryCommentWastedOptionsSmc
                                                                   .map((e) {
                                                             return e.code;
                                                           }).toList(),

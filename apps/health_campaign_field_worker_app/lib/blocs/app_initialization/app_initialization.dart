@@ -102,6 +102,7 @@ class AppInitializationBloc
                     MasterEnums.idTypes.toValue(),
                     MasterEnums.deliveryComments.toValue(),
                     MasterEnums.deliveryCommentsSMC.toValue(),
+                    MasterEnums.deliveryCommentsWastedSMC.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
