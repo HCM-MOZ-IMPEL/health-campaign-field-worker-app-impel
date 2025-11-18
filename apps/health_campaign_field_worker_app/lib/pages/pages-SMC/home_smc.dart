@@ -515,7 +515,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
         child: HomeItemCard(
           icon: Icons.send,
           label: i18.home.dataShare,
-          onPressed: () async {
+          onPressed: () {
             // if (isTriggerLocalisation) {
             //   triggerLocalization(context);
             //   isTriggerLocalisation = false;
