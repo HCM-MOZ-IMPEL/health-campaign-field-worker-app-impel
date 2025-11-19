@@ -2,6 +2,7 @@ library app_utils;
 
 import 'package:attendance_management/models/entities/attendance_log.dart';
 import 'package:complaints/models/pgr_complaints.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:survey_form/models/entities/service.dart';
@@ -138,6 +139,69 @@ class CustomValidator {
 
     return null;
   }
+}
+
+// Existing _findLeastLevelBoundaryCode method remains unchanged
+String _findLeastLevelBoundaryCode(List<BoundaryModel> boundaries) {
+  BoundaryModel? highestBoundary;
+
+  // Find the boundary with the highest boundaryNum
+  for (var boundary in boundaries) {
+    if (highestBoundary == null ||
+        (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
+      highestBoundary = boundary;
+    }
+  }
+
+  // If the highest boundary is a leaf node (no children), it is the least-level boundary
+  if (highestBoundary?.children.isEmpty ?? true) {
+    // Return the boundary type if available, otherwise fallback to the label or an empty string
+    return highestBoundary?.boundaryType ?? highestBoundary?.label ?? "";
+  }
+
+  // If the highest boundary has children, recursively search in them
+  if (highestBoundary?.children != null) {
+    for (var child in highestBoundary!.children) {
+      String leastCode = _findLeastLevelBoundaryCode(
+          [child]); // Recursively find the least level
+      if (leastCode.isNotEmpty) {
+        return leastCode;
+      }
+    }
+  }
+
+  // If no boundary found
+  return "";
+}
+
+// Recursive function to find the least level boundary codes
+List<String> findLeastLevelBoundaries(List<BoundaryModel> boundaries) {
+  // Find the least level boundary type
+  String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
+
+  // Initialize a list to store the matching boundary codes with lowest level boundary type
+  List<String> leastLevelBoundaryCodes = [];
+
+  // Iterate through the boundaries to find matching codes
+  if (leastLevelType.isNotEmpty) {
+    for (var boundary in boundaries) {
+      // Check if the boundary matches the least-level type and has no children (leaf node)
+      if ((boundary.boundaryType == leastLevelType ||
+              boundary.label == leastLevelType) &&
+          boundary.children.isEmpty) {
+        // Found a least level boundary with no children (leaf node), add its code
+        leastLevelBoundaryCodes.add(boundary.code!);
+      } else if (boundary.children.isNotEmpty) {
+        // Recursively search in the children
+        List<String> childVillageCodes =
+            findLeastLevelBoundaries(boundary.children);
+        leastLevelBoundaryCodes.addAll(childVillageCodes);
+      }
+    }
+  }
+
+  // Return the list of matching boundary codes
+  return leastLevelBoundaryCodes;
 }
 
 String getStockRecordLabel(StockModel? stock) {
