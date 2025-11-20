@@ -89,15 +89,18 @@ class CustomSurveyFormPreviewPageState
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: Text(
-                                                    DateFormat(Constants
-                                                            .SurveyFormPreviewDateFormat)
-                                                        .format(
-                                                      DateFormat(Constants
-                                                              .defaultDateFormat)
-                                                          .parse(
-                                                        e.createdAt.toString(),
-                                                      ),
-                                                    ),
+                                                    e.createdAt == null
+                                                        ? "N/A"
+                                                        : DateFormat(Constants
+                                                                .SurveyFormPreviewDateFormat)
+                                                            .format(
+                                                            DateFormat(Constants
+                                                                    .defaultDateFormat)
+                                                                .parse(
+                                                              e.createdAt
+                                                                  .toString(),
+                                                            ),
+                                                          ),
                                                     style: textTheme.headingXl,
                                                   ),
                                                 ),
