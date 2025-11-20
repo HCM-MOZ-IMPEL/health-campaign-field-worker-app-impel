@@ -552,8 +552,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               onChange: (val) {
                                 field.control.value = val;
                               },
-                              isRequired: !(context.isSpaqManager &&
-                                  entryType == StockRecordEntryType.dispatch),
+                              isRequired: true,
                             );
                           }),
 
@@ -612,8 +611,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               ),
                             );
                           }),
-                    if ((isSpaqManager) &&
-                        entryType != StockRecordEntryType.returned)
+                    if (context.isSpaqManager &&
+                        entryType != StockRecordEntryType.returned &&
+                        secondaryPartyType != 'STAFF')
                       ReactiveWrapperField(
                           formControlName: _batchNumberKey,
                           builder: (field) {
