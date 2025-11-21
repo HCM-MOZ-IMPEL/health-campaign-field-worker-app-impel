@@ -738,49 +738,51 @@ class CustomStockDetailsPageState
                                             ),
                                           );
                                         },
-                                        child: InputField(
-                                          type: InputType.search,
-                                          label: localizations.translate(
-                                            i18.stockReconciliationDetails
-                                                .teamCodeLabel,
-                                          ),
-                                          isRequired: deliveryTeamSelected,
-                                          controller: textController,
-                                          suffixIcon: Icons.qr_code_2,
-                                          onSuffixTap: (value) {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
+                                        child: IgnorePointer(
+                                          child: InputField(
+                                            type: InputType.search,
+                                            label: localizations.translate(
+                                              i18.stockReconciliationDetails
+                                                  .teamCodeLabel,
+                                            ),
+                                            isRequired: deliveryTeamSelected,
+                                            controller: textController,
+                                            suffixIcon: Icons.qr_code_2,
+                                            onSuffixTap: (value) {
+                                              //[TODO: Add route to auto_route]
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const DigitScannerPage(
+                                                    quantity: 1,
+                                                    isGS1code: false,
+                                                    singleValue: true,
+                                                  ),
+                                                  settings: const RouteSettings(
+                                                      name: '/qr-scanner'),
                                                 ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                          onChange: (val) {
-                                            String? value = val;
-                                            if (value != null &&
-                                                value.trim().isNotEmpty) {
-                                              context
-                                                  .read<DigitScannerBloc>()
-                                                  .add(
-                                                    DigitScannerEvent
-                                                        .handleScanner(
-                                                      barCode: [],
-                                                      qrCode: [value],
-                                                      manualCode: value,
-                                                    ),
-                                                  );
-                                            } else {
-                                              clearQRCodes();
-                                            }
-                                            field.didChange(value);
-                                          },
+                                              );
+                                            },
+                                            onChange: (val) {
+                                              String? value = val;
+                                              if (value != null &&
+                                                  value.trim().isNotEmpty) {
+                                                context
+                                                    .read<DigitScannerBloc>()
+                                                    .add(
+                                                      DigitScannerEvent
+                                                          .handleScanner(
+                                                        barCode: [],
+                                                        qrCode: [value],
+                                                        manualCode: value,
+                                                      ),
+                                                    );
+                                              } else {
+                                                clearQRCodes();
+                                              }
+                                              field.didChange(value);
+                                            },
+                                          ),
                                         ),
                                       );
                                     }),

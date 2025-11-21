@@ -69,8 +69,8 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  message ??
-                      localizations.translate(i18.login.unableToLoginText),
+                  localizations
+                      .translate(message ?? i18.login.unableToLoginText),
                   true,
                   theme,
                 ),
