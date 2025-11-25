@@ -27,9 +27,6 @@ class VehicleAcknowledgementPageState
       body: VehicleAcknowledgementCard(
         descriptionWidget: Column(
           children: [
-            Text(localizations.translate(
-              i18_local.vehicleTracking.acknowledgementDescription,
-            )),
             DigitElevatedButton(
               child: Text(localizations
                   .translate(i18_local.acknowledgementSuccess.goToHome)),
