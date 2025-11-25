@@ -255,6 +255,8 @@ class VehicleTracking {
   String get originLabelRequired => 'VEHICLE_TRACKING_ORIGIN_REQUIRED_LABEL';
 
   String get endMileageLabel => 'VEHICLE_TRACKING_END_MILEAGE_LABEL';
+
+  String get endStartMileageLabel => 'VEHICLE_TRACKING_END_START_MILEAGE_LABEL';
   String get destinationLabel => 'VEHICLE_TRACKING_DESTINATION_LABEL';
   String get destinationLabelRequired =>
       'VEHICLE_TRACKING_DESTINATION_REQUIRED_LABEL';
@@ -289,6 +291,8 @@ class VehicleTracking {
   String get color => 'VEHICLE_COLOR';
   String get model => 'VEHICLE_MODEL';
   String get driverName => 'VEHICLE_DRIVER_NAME';
+
+  String get vehilceInfoDescription => 'VEHICLE_INFO_DESCRIPTION';
 }
 
 class SelectStockShowcase {

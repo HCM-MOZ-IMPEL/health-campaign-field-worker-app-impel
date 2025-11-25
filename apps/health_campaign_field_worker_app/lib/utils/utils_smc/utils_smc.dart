@@ -38,6 +38,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:registration_delivery/models/entities/status.dart'
+    as reg_del_status;
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -855,6 +857,37 @@ bool checkIfBeneficiaryIneligible(
       tasks.last.status == Status.beneficiaryIneligible.toValue());
 
   return isBeneficiaryIneligible;
+}
+
+bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  // this task confirms eligibility and dose administrations is done
+  if (currentCycle == null) {
+    return true;
+  }
+  if ((tasks ?? []).isEmpty) {
+    return true;
+  }
+  var successfulTask = tasks!
+      .where((element) =>
+          element.status == reg_del_status.Status.administeredSuccess.toValue())
+      .lastOrNull;
+
+  final successfulTaskCreatedTime =
+      successfulTask?.clientAuditDetails?.createdTime;
+
+  if (successfulTaskCreatedTime == null) {
+    return true;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(successfulTaskCreatedTime);
+
+  final isLastCycleRunning =
+      successfulTaskCreatedTime >= currentCycle.startDate &&
+          successfulTaskCreatedTime <= currentCycle.endDate;
+
+  return !isLastCycleRunning;
+
+  //return successfulTask == null;
 }
 
 bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {

@@ -19,7 +19,8 @@ import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
-import '../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
+import '../../utils/utils_smc/utils_smc.dart'
+    show assessmentSMCPending, checkStatusSMC;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -70,6 +71,9 @@ class CustomMemberCardSMC extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
+
+    bool smcAssessmentPendingStatus =
+        assessmentSMCPending(tasks, context.selectedCycle);
 
     return Container(
       decoration: BoxDecoration(
@@ -305,7 +309,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      if ((tasks ?? []).isEmpty) {
+                                      if (smcAssessmentPendingStatus) {
                                         context.router
                                             .push(EligibilityChecklistViewRoute(
                                           projectBeneficiaryClientReferenceId:

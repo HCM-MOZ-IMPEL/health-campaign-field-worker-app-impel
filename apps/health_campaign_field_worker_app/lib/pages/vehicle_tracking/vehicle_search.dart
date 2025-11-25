@@ -155,7 +155,7 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                             searchVehiclesState.vehicles.isEmpty)
                           DigitInfoCard(
                             description: localizations.translate(
-                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                              i18_local.vehicleTracking.vehilceInfoDescription,
                             ),
                             title: localizations.translate(
                               i18.searchBeneficiary.beneficiaryInfoTitle,

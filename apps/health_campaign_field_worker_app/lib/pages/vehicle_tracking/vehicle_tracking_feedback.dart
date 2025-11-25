@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 // import 'package:digit_components/digit_components.dart';
@@ -26,6 +27,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18_local;
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
+import '../../utils/utils.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -83,6 +85,13 @@ class VehicleTripFeedbackPageState
                 return BlocBuilder<VehicleTripActionBloc,
                     VehicleTripActionState>(
                   builder: (context, vehicleTripActionState) {
+                    UserActionModel? existingTripBookAction =
+                        vehicleTripActionState.tripAction;
+
+                    String startMileage =
+                        getStartMileageFromUserAction(existingTripBookAction) ??
+                            '0';
+
                     UserActionModel? tripAction = _getTripActionModel(
                         vehicleTripActionState,
                         tripEvaluation,
@@ -118,6 +127,25 @@ class VehicleTripFeedbackPageState
                                         : () async {
                                             form.markAllAsTouched();
                                             if (!form.valid) {
+                                              return;
+                                            }
+
+                                            String? endMileage = (form
+                                                .control(_endMileageKey)
+                                                .value as String?);
+
+                                            if (int.parse(endMileage ?? '0') <
+                                                int.parse(startMileage)) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                      i18_local.vehicleTracking
+                                                          .endStartMileageLabel),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
                                               return;
                                             }
 

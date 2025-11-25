@@ -847,6 +847,23 @@ String? getAdditionalFieldFromVehicleActionModel(
   return additionalField.value.toString();
 }
 
+/// from a [UserActionModel]. Returns `null` when the field is not present.
+String? getStartMileageFromUserAction(UserActionModel? action) {
+  const startMileageKey = 'startMileage';
+  return getAdditionalFieldFromVehicleActionModel(action, startMileageKey);
+}
+
+/// Returns true when the end mileage is invalid compared to start mileage.
+/// Treats missing or non-numeric values as invalid (returns true).
+bool isEndMileageLessThanStart(String? endMileage, String? startMileage) {
+  final int? startParsed = int.tryParse(startMileage?.trim() ?? '');
+  final int? endParsed = int.tryParse(endMileage?.trim() ?? '');
+
+  if (startParsed == null || endParsed == null) return true;
+
+  return endParsed < startParsed;
+}
+
 String vehicleCustomAction(TripActions action, String vehicleNo) {
   return "$vehicleNo||${action.toValue()}";
 }
