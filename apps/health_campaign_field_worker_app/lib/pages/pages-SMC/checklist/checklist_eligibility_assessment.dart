@@ -1002,8 +1002,12 @@ class _EligibilityChecklistViewPage
 
   bool isDelivery(Map<String?, String> responses) {
     var isDeliver = true;
+    // exclude the questions SEAA4 and SEAA4.YES.ADT1 while checking for delivery,
+    // as they not needed for flow decision now
     for (var entry in responses.entries) {
-      if (entry.value == yes) {
+      if (entry.value == yes &&
+          !(entry.key!.contains('SEAA4') ||
+              entry.key!.contains('SEAA4.YES.ADT1'))) {
         isDeliver = false;
         break;
       }
