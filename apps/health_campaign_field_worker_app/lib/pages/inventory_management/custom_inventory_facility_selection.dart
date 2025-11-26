@@ -105,8 +105,7 @@ class CustomInventoryFacilitySelectionPageState
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final facility = filteredFacilities[index];
-                          String facilityPrefix =
-                              facility.id == 'Delivery Team' ? '' : 'FAC_';
+                          String facilityPrefix = 'FAC_';
                           return Container(
                             color: Colors.white,
                             padding:

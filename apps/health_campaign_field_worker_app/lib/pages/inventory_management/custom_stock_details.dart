@@ -636,11 +636,9 @@ class CustomStockDetailsPageState
                                                     localizations.translate(
                                                   'FAC_${facility.id}',
                                                 );
-                                                String facilityPrefix =
-                                                    facility.id ==
-                                                            'Delivery Team'
-                                                        ? ''
-                                                        : 'FAC_';
+
+                                                // Keeping this prefix for all facilities
+                                                String facilityPrefix = 'FAC_';
                                                 controller1.text =
                                                     localizations.translate(
                                                         '$facilityPrefix${facility.id}');
