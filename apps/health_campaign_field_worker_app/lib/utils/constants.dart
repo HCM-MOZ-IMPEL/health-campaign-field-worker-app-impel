@@ -157,6 +157,8 @@ class Constants {
   static const String headBednetDeliver = 'head_bednet_delivery';
   static const String trueString = 'true';
   static const String smcDeliver = 'smc_delivered';
+  static const int validMinAge = 3;
+  static const int validMaxAge = 59;
 
   static const String bednetSKU = "Redes Mosquiteiras";
   static const String vehicleSKU = "Vehicle";

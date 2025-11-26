@@ -21,7 +21,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../utils/constants.dart' as local_constants;
 import '../../../utils/utils.dart' as utils;
+import '../../../utils/date_utils.dart' as digits;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
@@ -174,6 +176,7 @@ class CustomIndividualDetailsSMCPageState
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
                               );
+
                               if ((age.years == 0 && age.months == 0) ||
                                   age.years >= 150 && age.months > 0) {
                                 form.control(_dobKey).setErrors({'': true});
@@ -200,6 +203,23 @@ class CustomIndividualDetailsSMCPageState
                                   options: DigitToastOptions(
                                     localizations.translate(i18_local
                                         .individualDetails.headAgeValidError),
+                                    true,
+                                    theme,
+                                  ),
+                                );
+
+                                return;
+                              }
+
+                              // dob null check already added above
+
+                              if (!widget.isHeadOfHousehold &&
+                                  !verifyIfChildAgeValid(context, age)) {
+                                await DigitToast.show(
+                                  context,
+                                  options: DigitToastOptions(
+                                    localizations.translate(i18_local
+                                        .individualDetails.chilAgeValidError),
                                     true,
                                     theme,
                                   ),
@@ -885,6 +905,17 @@ class CustomIndividualDetailsSMCPageState
         Validators.maxLength(9),
       ]),
     });
+  }
+
+  bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
+    final ageInMonths = (age.years * 12) + age.months;
+    // set default from constants if config has null
+
+    final validMaxAge =
+        context.selectedProject.additionalDetails?.projectType?.validMaxAge ??
+            local_constants.Constants.validMaxAge;
+
+    return ageInMonths <= validMaxAge;
   }
 
   getGenderOptions(IndividualModel? individual) {

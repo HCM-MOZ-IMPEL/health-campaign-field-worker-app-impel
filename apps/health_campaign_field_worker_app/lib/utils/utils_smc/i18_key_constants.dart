@@ -1330,6 +1330,7 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+  String get chilAgeValidError => 'CHILD_VALID_AGE_ERROR_MESSAGE';
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
