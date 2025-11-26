@@ -178,6 +178,28 @@ class _EligibilityChecklistViewPage
                                   }
                                 }
 
+                                for (int i = 0; i < controller.length; i++) {
+                                  initialAttributes;
+                                  var attributeCode =
+                                      '${initialAttributes?[i].code}';
+                                  var value = initialAttributes?[i].dataType !=
+                                          'SingleValueList'
+                                      ? controller[i]
+                                              .text
+                                              .toString()
+                                              .trim()
+                                              .isNotEmpty
+                                          ? controller[i].text.toString()
+                                          : (initialAttributes?[i].dataType !=
+                                                  'Number'
+                                              ? ''
+                                              : '0')
+                                      : visibleSurveyFormIndexes.contains(i)
+                                          ? controller[i].text.toString()
+                                          : i18_local.checklist.notSelectedKey;
+                                  responses[attributeCode] = value;
+                                }
+
                                 // Request location from LocationBloc
                                 context
                                     .read<LocationBloc>()
