@@ -1384,6 +1384,7 @@ class StockDetails {
   String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
 
   String get cddCodeLabel => 'CDD_CODE_LABEL';
+  String get supervisorCommunityCodeLabel => 'SUPERVISOR_COMMUNITY_CODE_LABEL';
 
   String get quantityCapsuleReceivedLabel =>
       'STOCK_DETAILS_CAPSULE_QUANTITY_RECEIVED';

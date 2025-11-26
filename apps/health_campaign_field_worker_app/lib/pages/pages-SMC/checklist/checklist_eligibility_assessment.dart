@@ -227,8 +227,8 @@ class _EligibilityChecklistViewPage
                                     builder: (popUpContext) => Popup(
                                             type: PopUpType.simple,
                                             title: localizations.translate(
-                                              i18.surveyForm
-                                                  .surveyFormDialogLabel,
+                                              i18_local.checklist
+                                                  .submitButtonDialogLabelText,
                                             ),
                                             description: localizations
                                                 .translate(

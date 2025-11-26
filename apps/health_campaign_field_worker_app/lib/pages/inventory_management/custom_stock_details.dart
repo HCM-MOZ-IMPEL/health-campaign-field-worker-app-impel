@@ -742,8 +742,8 @@ class CustomStockDetailsPageState
                                           child: InputField(
                                             type: InputType.search,
                                             label: localizations.translate(
-                                              i18.stockReconciliationDetails
-                                                  .teamCodeLabel,
+                                              i18_local_smc.stockDetails
+                                                  .teamCodeLabelSMC,
                                             ),
                                             isRequired: deliveryTeamSelected,
                                             controller: textController,

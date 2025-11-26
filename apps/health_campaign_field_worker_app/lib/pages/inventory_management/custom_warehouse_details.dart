@@ -438,8 +438,11 @@ class CustomWarehouseDetailsPageState
                                               type: InputType.text,
                                               isDisabled: true,
                                               label: localizations.translate(
-                                                i18_local
-                                                    .stockDetails.cddCodeLabel,
+                                                context.isCommunitySupervisor
+                                                    ? i18_local.stockDetails
+                                                        .cddCodeLabel
+                                                    : i18_local.stockDetails
+                                                        .cddCodeLabel,
                                               ),
                                               initialValue: form
                                                   .control(_teamCodeKey)
