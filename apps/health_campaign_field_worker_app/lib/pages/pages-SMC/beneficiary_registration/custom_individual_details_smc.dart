@@ -911,9 +911,7 @@ class CustomIndividualDetailsSMCPageState
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
 
-    final validMaxAge =
-        context.selectedProject.additionalDetails?.projectType?.validMaxAge ??
-            local_constants.Constants.validMaxAge;
+    const validMaxAge = local_constants.Constants.validMaxAge;
 
     return ageInMonths <= validMaxAge;
   }
