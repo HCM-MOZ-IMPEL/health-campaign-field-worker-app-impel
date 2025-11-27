@@ -319,46 +319,50 @@ class _EligibilityChecklistViewPage
                                                             referenceId,
                                                         serviceClientReferenceId:
                                                             referenceId,
-                                                        value: attribute?[i]
-                                                                    .dataType ==
-                                                                'MultiValueList'
-                                                            ? controller[i]
-                                                                    .text
-                                                                    .toString()
-                                                                    .isNotEmpty
-                                                                ? controller[i]
-                                                                    .text
-                                                                    .toString()
-                                                                    .substring(
-                                                                        1)
-                                                                : i18.surveyForm
-                                                                    .notSelectedKey
-                                                            : attribute?[i]
-                                                                        .dataType !=
-                                                                    'SingleValueList'
+
+                                                        // todo verify this , this top level check works for single and multi value list only
+                                                        value: visibleSurveyFormIndexes
+                                                                .contains(i)
+                                                            ? (attribute?[i]
+                                                                        .dataType ==
+                                                                    'MultiValueList'
                                                                 ? controller[i]
                                                                         .text
                                                                         .toString()
-                                                                        .trim()
                                                                         .isNotEmpty
                                                                     ? controller[i]
                                                                         .text
                                                                         .toString()
-                                                                    : (attribute?[i].dataType !=
-                                                                            'Number'
-                                                                        ? i18
-                                                                            .surveyForm
-                                                                            .notSelectedKey
-                                                                        : '0')
-                                                                : visibleSurveyFormIndexes
-                                                                        .contains(
-                                                                            i)
-                                                                    ? controller[i]
-                                                                        .text
-                                                                        .toString()
+                                                                        .substring(
+                                                                            1)
                                                                     : i18
                                                                         .surveyForm
-                                                                        .notSelectedKey,
+                                                                        .notSelectedKey
+                                                                : attribute?[i]
+                                                                            .dataType !=
+                                                                        'SingleValueList'
+                                                                    ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                            .trim()
+                                                                            .isNotEmpty
+                                                                        ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                        : (attribute?[i].dataType != 'Number'
+                                                                            ? i18
+                                                                                .surveyForm.notSelectedKey
+                                                                            : '0')
+                                                                    : visibleSurveyFormIndexes.contains(
+                                                                            i)
+                                                                        ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                        : i18
+                                                                            .surveyForm
+                                                                            .notSelectedKey)
+                                                            : i18.surveyForm
+                                                                .notSelectedKey,
                                                         rowVersion: 1,
                                                         additionalDetails:
                                                             additionalDetailValue,

@@ -638,9 +638,12 @@ class CustomDeliverInterventionSMCPageState
                                                     },
                                                   },
                                                   onChanged: (formControl) {
-                                                    if ((formControl.value
-                                                            as String)
-                                                        .isNotEmpty) {
+                                                    final val =
+                                                        (formControl.value ??
+                                                                '')
+                                                            .toString();
+                                                    if (val.isNotEmpty &&
+                                                        val != '0') {
                                                       setState(() {
                                                         doseAdministered = true;
                                                       });
@@ -649,6 +652,19 @@ class CustomDeliverInterventionSMCPageState
                                                         doseAdministered =
                                                             false;
                                                       });
+                                                      // Clear delivery comment fields when wasted quantity is empty, null or zero
+                                                      try {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .value = '';
+                                                      } catch (_) {}
+                                                      try {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentWastedKey)
+                                                            .value = '';
+                                                      } catch (_) {}
                                                     }
                                                   },
                                                 ),
