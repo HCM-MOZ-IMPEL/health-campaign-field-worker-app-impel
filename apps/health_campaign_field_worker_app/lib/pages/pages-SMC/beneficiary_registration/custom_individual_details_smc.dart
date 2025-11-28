@@ -54,7 +54,6 @@ class CustomIndividualDetailsSMCPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
-  static const _beneficiaryIdKey = 'beneficiaryId';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -683,29 +682,29 @@ class CustomIndividualDetailsSMCPageState
                             ),
                           ),
                         ),
-                        Offstage(
-                          offstage: widget.isHeadOfHousehold,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding - 4, 0, kPadding - 4, 0),
-                            child: DigitTextFormField(
-                              formControlName: _beneficiaryIdKey,
-                              label: localizations.translate(
-                                i18_local.individualDetails
-                                    .previousCycleBeneficiaryLabelText,
-                              ),
-                              validationMessages: {
-                                'min3': (object) => localizations
-                                    .translate(
-                                        i18_local.common.min3CharsRequired)
-                                    .replaceAll('{}', ''),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                        ),
+                        // Offstage(
+                        //   offstage: widget.isHeadOfHousehold,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.fromLTRB(
+                        //         kPadding - 4, 0, kPadding - 4, 0),
+                        //     child: DigitTextFormField(
+                        //       formControlName: _beneficiaryIdKey,
+                        //       label: localizations.translate(
+                        //         i18_local.individualDetails
+                        //             .previousCycleBeneficiaryLabelText,
+                        //       ),
+                        //       validationMessages: {
+                        //         'min3': (object) => localizations
+                        //             .translate(
+                        //                 i18_local.common.min3CharsRequired)
+                        //             .replaceAll('{}', ''),
+                        //         'maxLength': (object) => localizations
+                        //             .translate(i18.common.maxCharsRequired)
+                        //             .replaceAll('{}', maxLength.toString()),
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -827,17 +826,6 @@ class CustomIndividualDetailsSMCPageState
             ],
     );
 
-    final previousBeneficiaryId =
-        form.control(_beneficiaryIdKey).value as String?;
-
-    individual = individual.copyWith(
-        additionalFields:
-            previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
-                ? IndividualAdditionalFields(version: 1, fields: [
-                    AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
-                  ])
-                : null);
-
     return individual;
   }
 
@@ -866,10 +854,6 @@ class CustomIndividualDetailsSMCPageState
       },
     );
 
-    final beneficiaryId = individual?.additionalFields?.fields
-        .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
-        ?.value;
-
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
         validators: [
@@ -895,10 +879,6 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _beneficiaryIdKey: FormControl<String>(validators: [
-        Validators.delegate(utils.CustomValidator.requiredMin3),
-        Validators.maxLength(200),
-      ], value: beneficiaryId),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
         Validators.delegate(utils.CustomValidator.validMobileNumber),
