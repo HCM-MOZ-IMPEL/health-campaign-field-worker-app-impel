@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
@@ -150,14 +152,15 @@ class CustomMemberCardSMC extends StatelessWidget {
                   ),
                 ],
               ),
-              (tasks ?? [])
-                          .where(
-                            (element) =>
-                                element.status ==
-                                Status.administeredSuccess.toValue(),
-                          )
-                          .lastOrNull ==
-                      null
+              ((!isCurrentCycleData(context, tasks ?? []) ||
+                      (tasks ?? [])
+                              .where(
+                                (element) =>
+                                    element.status ==
+                                    Status.administeredSuccess.toValue(),
+                              )
+                              .lastOrNull ==
+                          null))
                   ? Positioned(
                       child: Align(
                         alignment: Alignment.topRight,
@@ -352,5 +355,21 @@ class CustomMemberCardSMC extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool isCurrentCycleData(BuildContext context, List<TaskModel> task) {
+    if (task.isEmpty) return true;
+    final currentCycle = context.selectedCycle;
+    final taskCycleIndex = task.first.additionalFields?.fields
+        .firstWhereOrNull(
+          (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+        )
+        ?.value;
+    if (taskCycleIndex != null && currentCycle != null) {
+      if (int.tryParse(taskCycleIndex) == currentCycle.id) {
+        return true;
+      }
+    }
+    return false;
   }
 }
