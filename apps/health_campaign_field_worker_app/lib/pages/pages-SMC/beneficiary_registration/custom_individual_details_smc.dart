@@ -443,7 +443,8 @@ class CustomIndividualDetailsSMCPageState
                                                 .beneficiaryType!,
                                         householdModel: householdModel,
                                         individualModel: individual,
-                                        addressModel: addressModel,
+                                        addressModel:
+                                            addressModel.copyWith(id: null),
                                         userUuid:
                                             RegistrationDeliverySingleton()
                                                 .loggedInUserUuid!,
