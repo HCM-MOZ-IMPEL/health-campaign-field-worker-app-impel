@@ -14,6 +14,7 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
@@ -301,16 +302,31 @@ class CustomHouseholdOverviewSMCPageState
                                         )
                                         .toList();
 
-                                    final taskData = (projectBeneficiary ?? [])
-                                            .isNotEmpty
-                                        ? state.householdMemberWrapper.tasks
-                                            ?.where((element) =>
-                                                element
-                                                    .projectBeneficiaryClientReferenceId ==
-                                                projectBeneficiary
-                                                    ?.first.clientReferenceId)
-                                            .toList()
-                                        : null;
+                                    List<TaskModel>? taskData =
+                                        (projectBeneficiary ?? []).isNotEmpty
+                                            ? state.householdMemberWrapper.tasks
+                                                ?.where((element) =>
+                                                    element
+                                                        .projectBeneficiaryClientReferenceId ==
+                                                    projectBeneficiary?.first
+                                                        .clientReferenceId)
+                                                .toList()
+                                            : null;
+
+                                    // sort the task data based on created time in descending order
+
+                                    (taskData ?? []).sort(
+                                      (a, b) {
+                                        final aTime =
+                                            a.clientAuditDetails?.createdTime ??
+                                                0;
+                                        final bTime =
+                                            b.clientAuditDetails?.createdTime ??
+                                                0;
+                                        return bTime.compareTo(aTime);
+                                      },
+                                    );
+
                                     final referralData = (projectBeneficiary ??
                                                 [])
                                             .isNotEmpty
