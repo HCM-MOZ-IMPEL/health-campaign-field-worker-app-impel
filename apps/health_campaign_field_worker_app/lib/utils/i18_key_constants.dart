@@ -292,8 +292,8 @@ class VehicleTracking {
   String get model => 'VEHICLE_MODEL';
   String get driverName => 'VEHICLE_DRIVER_NAME';
 
-  String get vehilceInfoDescription => 'VEHICLE_INFO_DESCRIPTION';
-  String get vehiclSearchHintText => 'VEHICLE_SEARCH_HINT_TEXT';
+  String get vehicleInfoDescription => 'VEHICLE_INFO_DESCRIPTION';
+  String get vehicleSearchHintText => 'VEHICLE_SEARCH_HINT_TEXT';
 }
 
 class SelectStockShowcase {
