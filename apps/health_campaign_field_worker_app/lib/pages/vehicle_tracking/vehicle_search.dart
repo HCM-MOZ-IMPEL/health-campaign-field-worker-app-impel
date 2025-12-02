@@ -134,7 +134,7 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                                   controller: searchController,
                                   hintText: localizations.translate(
                                     i18_local
-                                        .vehicleTracking.vehiclSearchHintText,
+                                        .vehicleTracking.vehicleSearchHintText,
                                   ),
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {
@@ -155,7 +155,7 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                             searchVehiclesState.vehicles.isEmpty)
                           DigitInfoCard(
                             description: localizations.translate(
-                              i18_local.vehicleTracking.vehilceInfoDescription,
+                              i18_local.vehicleTracking.vehicleInfoDescription,
                             ),
                             title: localizations.translate(
                               i18.searchBeneficiary.beneficiaryInfoTitle,
