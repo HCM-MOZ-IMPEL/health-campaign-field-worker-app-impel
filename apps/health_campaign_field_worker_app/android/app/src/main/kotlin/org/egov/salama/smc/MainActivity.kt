@@ -1,4 +1,4 @@
-package org.egov.salama.smc
+package org.egov.qa.smc
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

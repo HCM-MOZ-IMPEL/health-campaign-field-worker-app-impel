@@ -1,4 +1,4 @@
-package org.egov.salama.smc
+package org.egov.qa.smc
 
 import android.annotation.TargetApi
 import android.app.NotificationChannel
