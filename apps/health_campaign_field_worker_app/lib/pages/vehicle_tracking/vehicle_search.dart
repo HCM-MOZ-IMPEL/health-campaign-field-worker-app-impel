@@ -133,8 +133,8 @@ class _VehicleSearchPageState extends LocalizedState<VehicleSearchPage> {
                                 DigitSearchBar(
                                   controller: searchController,
                                   hintText: localizations.translate(
-                                    i18.searchBeneficiary
-                                        .beneficiarySearchHintText,
+                                    i18_local
+                                        .vehicleTracking.vehiclSearchHintText,
                                   ),
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {

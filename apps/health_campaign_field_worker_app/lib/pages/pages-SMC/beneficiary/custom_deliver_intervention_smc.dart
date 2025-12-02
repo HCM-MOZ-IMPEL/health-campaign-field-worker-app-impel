@@ -109,8 +109,7 @@ class CustomDeliverInterventionSMCPageState
                   _deliveryCommentKey,
                 )
                 .value ==
-            "ADMINISTRATION_NOT_SUCCESSFUL" &&
-        doseAdministered;
+            "ADMINISTRATION_NOT_SUCCESSFUL";
 // todo verify this how to handle this should pass default 00 or make user enter some value
     String? wastedCount =
         ((form.control(_quantityWastedKey).value) ?? "00").toString();

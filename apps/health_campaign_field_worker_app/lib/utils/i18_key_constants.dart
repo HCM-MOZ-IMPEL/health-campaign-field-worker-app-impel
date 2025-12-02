@@ -293,6 +293,7 @@ class VehicleTracking {
   String get driverName => 'VEHICLE_DRIVER_NAME';
 
   String get vehilceInfoDescription => 'VEHICLE_INFO_DESCRIPTION';
+  String get vehiclSearchHintText => 'VEHICLE_SEARCH_HINT_TEXT';
 }
 
 class SelectStockShowcase {
