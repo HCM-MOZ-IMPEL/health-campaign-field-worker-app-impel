@@ -767,6 +767,7 @@ class ReferBeneficiary {
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
   String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredSubmitVerifyLabel => 'REFERRED_SUBMIT_VERIFY_LABEL';
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
   String get referralComments => 'REFERRAL_COMMENTS';

@@ -5,7 +5,9 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +26,7 @@ import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/custom_pop_route.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomRecordReferralDetailsPage extends LocalizedStatefulWidget {
@@ -488,7 +491,7 @@ class _CustomRecordReferralDetailsPageState
                                                           .coreCommonSubmit),
                                               onPressed: isClicked
                                                   ? () {}
-                                                  : () {
+                                                  : () async {
                                                       if (form
                                                               .control(
                                                                   _cycleKey)
@@ -647,170 +650,258 @@ class _CustomRecordReferralDetailsPageState
                                                         );
                                                         final hfClientRefId =
                                                             IdGen.i.identifier;
+                                                        bool? submit;
 
-                                                        final event = context.read<
-                                                            RecordHFReferralBloc>();
-                                                        event.add(
-                                                          RecordHFReferralCreateEntryEvent(
-                                                            hfReferralModel:
-                                                                HFReferralModel(
-                                                              clientReferenceId:
-                                                                  hfClientRefId,
-                                                              projectFacilityId:
-                                                                  facilityId,
-                                                              projectId:
-                                                                  ReferralReconSingleton()
-                                                                      .projectId,
-                                                              name: nameOfChild
-                                                                  .trim(),
-                                                              beneficiaryId:
-                                                                  beneficiaryId,
-                                                              referralCode:
-                                                                  referralCode,
-                                                              symptom: symptom,
-                                                              tenantId:
-                                                                  ReferralReconSingleton()
-                                                                      .tenantId,
-                                                              rowVersion: 1,
-                                                              auditDetails:
-                                                                  AuditDetails(
-                                                                createdBy:
-                                                                    ReferralReconSingleton()
-                                                                        .userUUid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    ReferralReconSingleton()
-                                                                        .userUUid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
+                                                        if (context.mounted) {
+                                                          submit =
+                                                              await showCustomPopup(
+                                                            context: context,
+                                                            builder:
+                                                                (popupContext) =>
+                                                                    Popup(
+                                                              title: localizations
+                                                                  .translate(i18_local
+                                                                      .checklist
+                                                                      .checklistDialogLabelSMC),
+                                                              onOutsideTap: () {
+                                                                Navigator.of(
+                                                                        popupContext)
+                                                                    .pop(false);
+                                                              },
+                                                              description:
+                                                                  localizations
+                                                                      .translate(
+                                                                i18_local
+                                                                    .referBeneficiary
+                                                                    .referredSubmitVerifyLabel,
                                                               ),
-                                                              clientAuditDetails:
-                                                                  ClientAuditDetails(
-                                                                createdBy:
-                                                                    ReferralReconSingleton()
-                                                                        .userUUid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    ReferralReconSingleton()
-                                                                        .userUUid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
-                                                              ),
-                                                              additionalFields:
-                                                                  HFReferralAdditionalFields(
-                                                                version: 1,
-                                                                fields: [
-                                                                  AdditionalField(
-                                                                      "boundaryCode",
-                                                                      ReferralReconSingleton()
-                                                                          .boundary
-                                                                          ?.code),
-                                                                  if (hfCoordinator !=
-                                                                          null &&
-                                                                      hfCoordinator
-                                                                          .toString()
-                                                                          .trim()
-                                                                          .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .hFCoordinator
-                                                                          .toValue(),
-                                                                      hfCoordinator,
-                                                                    ),
-                                                                  if (referredBy !=
-                                                                          null &&
-                                                                      referredBy
-                                                                          .toString()
-                                                                          .trim()
-                                                                          .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .referredBy
-                                                                          .toValue(),
-                                                                      referredBy,
-                                                                    ),
-                                                                  if (dateOfEvaluation !=
-                                                                          null &&
-                                                                      dateOfEvaluation
-                                                                          .toString()
-                                                                          .trim()
-                                                                          .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .dateOfEvaluation
-                                                                          .toValue(),
-                                                                      dateOfEvaluation,
-                                                                    ),
-                                                                  if (nameOfChild
-                                                                      .toString()
-                                                                      .trim()
-                                                                      .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .nameOfReferral
-                                                                          .toValue(),
-                                                                      nameOfChild,
-                                                                    ),
-                                                                  if (age
-                                                                      .toString()
-                                                                      .trim()
-                                                                      .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .age
-                                                                          .toValue(),
-                                                                      age,
-                                                                    ),
-                                                                  if (gender
-                                                                      .toString()
-                                                                      .trim()
-                                                                      .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .gender
-                                                                          .toValue(),
-                                                                      gender,
-                                                                    ),
-                                                                  if (cycle !=
-                                                                          null &&
-                                                                      cycle
-                                                                          .toString()
-                                                                          .trim()
-                                                                          .isNotEmpty)
-                                                                    AdditionalField(
-                                                                      ReferralReconEnums
-                                                                          .cycle
-                                                                          .toValue(),
-                                                                      cycle,
-                                                                    ),
-                                                                ],
-                                                              ),
+                                                              type: PopUpType
+                                                                  .simple,
+                                                              actions: [
+                                                                DigitButton(
+                                                                  label: localizations
+                                                                      .translate(
+                                                                    i18.common
+                                                                        .coreCommonSubmit,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    if (submit ==
+                                                                        true)
+                                                                      return;
+                                                                    Navigator
+                                                                        .of(
+                                                                      popupContext,
+                                                                    ).pop(true);
+                                                                  },
+                                                                  type: DigitButtonType
+                                                                      .primary,
+                                                                  size:
+                                                                      DigitButtonSize
+                                                                          .large,
+                                                                ),
+                                                                DigitButton(
+                                                                  label: localizations
+                                                                      .translate(
+                                                                    i18.common
+                                                                        .coreCommonCancel,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    isClicked =
+                                                                        false;
+                                                                    clickedStatus
+                                                                            .value =
+                                                                        false;
+                                                                    if (submit ==
+                                                                        true)
+                                                                      return;
+                                                                    Navigator
+                                                                        .of(
+                                                                      popupContext,
+                                                                    ).pop(
+                                                                        false);
+                                                                  },
+                                                                  type: DigitButtonType
+                                                                      .secondary,
+                                                                  size:
+                                                                      DigitButtonSize
+                                                                          .large,
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        );
-                                                        context
-                                                            .read<
-                                                                ReferralReconServiceDefinitionBloc>()
-                                                            .add(
-                                                              ReferralReconServiceDefinitionSelectionEvent(
-                                                                serviceDefinitionCode:
-                                                                    symptom,
+                                                          ) as bool;
+
+                                                          if (submit == true) {
+                                                            final event =
+                                                                context.read<
+                                                                    RecordHFReferralBloc>();
+                                                            event.add(
+                                                              RecordHFReferralCreateEntryEvent(
+                                                                hfReferralModel:
+                                                                    HFReferralModel(
+                                                                  clientReferenceId:
+                                                                      hfClientRefId,
+                                                                  projectFacilityId:
+                                                                      facilityId,
+                                                                  projectId:
+                                                                      ReferralReconSingleton()
+                                                                          .projectId,
+                                                                  name: nameOfChild
+                                                                      .trim(),
+                                                                  beneficiaryId:
+                                                                      beneficiaryId,
+                                                                  referralCode:
+                                                                      referralCode,
+                                                                  symptom:
+                                                                      symptom,
+                                                                  tenantId:
+                                                                      ReferralReconSingleton()
+                                                                          .tenantId,
+                                                                  rowVersion: 1,
+                                                                  auditDetails:
+                                                                      AuditDetails(
+                                                                    createdBy:
+                                                                        ReferralReconSingleton()
+                                                                            .userUUid,
+                                                                    createdTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                    lastModifiedBy:
+                                                                        ReferralReconSingleton()
+                                                                            .userUUid,
+                                                                    lastModifiedTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                  ),
+                                                                  clientAuditDetails:
+                                                                      ClientAuditDetails(
+                                                                    createdBy:
+                                                                        ReferralReconSingleton()
+                                                                            .userUUid,
+                                                                    createdTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                    lastModifiedBy:
+                                                                        ReferralReconSingleton()
+                                                                            .userUUid,
+                                                                    lastModifiedTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                  ),
+                                                                  additionalFields:
+                                                                      HFReferralAdditionalFields(
+                                                                    version: 1,
+                                                                    fields: [
+                                                                      AdditionalField(
+                                                                          "boundaryCode",
+                                                                          ReferralReconSingleton()
+                                                                              .boundary
+                                                                              ?.code),
+                                                                      if (hfCoordinator !=
+                                                                              null &&
+                                                                          hfCoordinator
+                                                                              .toString()
+                                                                              .trim()
+                                                                              .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .hFCoordinator
+                                                                              .toValue(),
+                                                                          hfCoordinator,
+                                                                        ),
+                                                                      if (referredBy !=
+                                                                              null &&
+                                                                          referredBy
+                                                                              .toString()
+                                                                              .trim()
+                                                                              .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .referredBy
+                                                                              .toValue(),
+                                                                          referredBy,
+                                                                        ),
+                                                                      if (dateOfEvaluation !=
+                                                                              null &&
+                                                                          dateOfEvaluation
+                                                                              .toString()
+                                                                              .trim()
+                                                                              .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .dateOfEvaluation
+                                                                              .toValue(),
+                                                                          dateOfEvaluation,
+                                                                        ),
+                                                                      if (nameOfChild
+                                                                          .toString()
+                                                                          .trim()
+                                                                          .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .nameOfReferral
+                                                                              .toValue(),
+                                                                          nameOfChild,
+                                                                        ),
+                                                                      if (age
+                                                                          .toString()
+                                                                          .trim()
+                                                                          .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .age
+                                                                              .toValue(),
+                                                                          age,
+                                                                        ),
+                                                                      if (gender
+                                                                          .toString()
+                                                                          .trim()
+                                                                          .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .gender
+                                                                              .toValue(),
+                                                                          gender,
+                                                                        ),
+                                                                      if (cycle !=
+                                                                              null &&
+                                                                          cycle
+                                                                              .toString()
+                                                                              .trim()
+                                                                              .isNotEmpty)
+                                                                        AdditionalField(
+                                                                          ReferralReconEnums
+                                                                              .cycle
+                                                                              .toValue(),
+                                                                          cycle,
+                                                                        ),
+                                                                    ],
+                                                                  ),
+                                                                ),
                                                               ),
                                                             );
-                                                        final parent = context
-                                                                .router
-                                                                .parent()
-                                                            as StackRouter;
-                                                        parent.push(
-                                                          CustomReferralReasonChecklistRoute(
-                                                            referralClientRefId:
-                                                                hfClientRefId,
-                                                          ),
-                                                        );
+                                                            context
+                                                                .read<
+                                                                    ReferralReconServiceDefinitionBloc>()
+                                                                .add(
+                                                                  ReferralReconServiceDefinitionSelectionEvent(
+                                                                    serviceDefinitionCode:
+                                                                        symptom,
+                                                                  ),
+                                                                );
+                                                            final parent = context
+                                                                    .router
+                                                                    .parent()
+                                                                as StackRouter;
+                                                            parent.push(
+                                                              CustomReferralReasonChecklistRoute(
+                                                                referralClientRefId:
+                                                                    hfClientRefId,
+                                                              ),
+                                                            );
+                                                          }
+                                                        }
                                                       }
                                                     },
                                             );

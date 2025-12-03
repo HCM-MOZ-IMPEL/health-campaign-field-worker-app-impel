@@ -32,10 +32,12 @@ import 'package:referral_reconciliation/widgets/localized.dart';
 @RoutePage()
 class CustomReferralReasonChecklistPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
+  final bool? showBackButton;
 
   const CustomReferralReasonChecklistPage({
     super.key,
     this.referralClientRefId,
+    this.showBackButton,
     super.appLocalizations,
   });
 
@@ -75,7 +77,7 @@ class _CustomReferralReasonChecklistPageState
     final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
-      canPop: false,
+      canPop: widget.showBackButton ?? false,
       child: Scaffold(
         body: BlocBuilder<ReferralReconServiceDefinitionBloc,
             ReferralReconServiceDefinitionState>(
