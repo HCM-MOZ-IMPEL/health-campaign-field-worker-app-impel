@@ -291,8 +291,9 @@ class CustomWarehouseDetailsPageState
                                         stockState.entryType ==
                                             StockRecordEntryType.receipt)
                                       DigitButton(
-                                        label: i18_local.stockDetails
-                                            .stockScanResourcesLabel,
+                                        label: localizations.translate(i18_local
+                                            .stockDetails
+                                            .stockScanResourcesLabel),
                                         onPressed: _handleSubmission,
                                         type: DigitButtonType.primary,
                                         mainAxisSize: MainAxisSize.max,
