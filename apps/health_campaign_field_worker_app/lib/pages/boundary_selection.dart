@@ -585,6 +585,8 @@ class _BoundarySelectionPageState
                                                     context.boundary;
                                                     if (context.mounted) {
                                                       if (isOnline &&
+                                                          Constants
+                                                              .isDownSyncEnabled &&
                                                           (isDistributor ||
                                                               context
                                                                   .isHealthFacilitySupervisor) &&

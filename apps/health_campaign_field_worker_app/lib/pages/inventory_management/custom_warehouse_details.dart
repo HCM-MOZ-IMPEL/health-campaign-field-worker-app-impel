@@ -159,144 +159,136 @@ class CustomWarehouseDetailsPageState
                                           label: localizations.translate(
                                             i18.householdDetails.actionLabel,
                                           ),
-                                          onPressed: !form.valid
-                                              ? () {}
-                                              : () {
-                                                  form.markAllAsTouched();
-                                                  if (!form.valid) {
-                                                    return;
-                                                  }
-                                                  final dateOfRecord = form
-                                                      .control(_dateOfEntryKey)
-                                                      .value as DateTime;
+                                          onPressed: () {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) {
+                                              return;
+                                            }
+                                            final dateOfRecord = form
+                                                .control(_dateOfEntryKey)
+                                                .value as DateTime;
 
-                                                  final teamCode = form
-                                                      .control(_teamCodeKey)
-                                                      .value as String?;
+                                            final teamCode = form
+                                                .control(_teamCodeKey)
+                                                .value as String?;
 
-                                                  final facility = (context
+                                            final facility = (context
+                                                        .isDistributor ||
+                                                    context
+                                                        .isCommunitySupervisor)
+                                                ? FacilityModel(
+                                                    id: teamCode ??
+                                                        'Delivery Team',
+                                                  )
+                                                : selectedFacilityId != null
+                                                    ? FacilityModel(
+                                                        id: selectedFacilityId
+                                                            .toString(),
+                                                      )
+                                                    : null;
+
+                                            context
+                                                .read<DigitScannerBloc>()
+                                                .add(
+                                                  const DigitScannerEvent
+                                                      .handleScanner(
+                                                      qrCode: [], barCode: []),
+                                                );
+                                            if (facility == null) {
+                                              DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                    i18.stockDetails
+                                                        .facilityRequired,
+                                                  ),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+                                              // await  Toast.showToast(
+                                              //     type: ToastType.error,
+                                              //     context,
+                                              //     message: localizations
+                                              //         .translate(
+                                              //       i18.stockDetails
+                                              //           .facilityRequired,
+                                              //     ),
+                                              //   );
+                                              return;
+                                            } else if (deliveryTeamSelected &&
+                                                (teamCode == null ||
+                                                    teamCode.trim().isEmpty)) {
+                                              Toast.showToast(
+                                                context,
+                                                type: ToastType.error,
+                                                message:
+                                                    localizations.translate(
+                                                  i18.stockDetails
+                                                      .teamCodeRequired,
+                                                ),
+                                              );
+                                            } else {
+                                              recordStockBloc.add(
+                                                RecordStockSaveTransactionDetailsEvent(
+                                                  dateOfRecord: dateOfRecord,
+                                                  facilityModel: (context
+                                                                  .isDistributor ||
+                                                              context
+                                                                  .isCommunitySupervisor) &&
+                                                          !InventorySingleton()
+                                                              .isWareHouseMgr!
+                                                      ? FacilityModel(
+                                                          id: teamCode
+                                                              .toString(),
+                                                        )
+                                                      : facility,
+                                                  primaryId: (context
                                                               .isDistributor ||
                                                           context
                                                               .isCommunitySupervisor)
-                                                      ? FacilityModel(
-                                                          id: teamCode ??
-                                                              'Delivery Team',
-                                                        )
-                                                      : selectedFacilityId !=
-                                                              null
-                                                          ? FacilityModel(
-                                                              id: selectedFacilityId
-                                                                  .toString(),
-                                                            )
-                                                          : null;
-
-                                                  context
-                                                      .read<DigitScannerBloc>()
-                                                      .add(
-                                                        const DigitScannerEvent
-                                                            .handleScanner(
-                                                            qrCode: [],
-                                                            barCode: []),
-                                                      );
-                                                  if (facility == null) {
-                                                    DigitToast.show(
-                                                      context,
-                                                      options:
-                                                          DigitToastOptions(
-                                                        localizations.translate(
-                                                          i18.stockDetails
-                                                              .facilityRequired,
-                                                        ),
-                                                        true,
-                                                        theme,
-                                                      ),
-                                                    );
-                                                    // await  Toast.showToast(
-                                                    //     type: ToastType.error,
-                                                    //     context,
-                                                    //     message: localizations
-                                                    //         .translate(
-                                                    //       i18.stockDetails
-                                                    //           .facilityRequired,
-                                                    //     ),
-                                                    //   );
-                                                    return;
-                                                  } else if (deliveryTeamSelected &&
-                                                      (teamCode == null ||
-                                                          teamCode
-                                                              .trim()
-                                                              .isEmpty)) {
-                                                    Toast.showToast(
-                                                      context,
-                                                      type: ToastType.error,
-                                                      message: localizations
-                                                          .translate(
-                                                        i18.stockDetails
-                                                            .teamCodeRequired,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    recordStockBloc.add(
-                                                      RecordStockSaveTransactionDetailsEvent(
-                                                        dateOfRecord:
-                                                            dateOfRecord,
-                                                        facilityModel: (context
-                                                                        .isDistributor ||
-                                                                    context
-                                                                        .isCommunitySupervisor) &&
-                                                                !InventorySingleton()
-                                                                    .isWareHouseMgr!
-                                                            ? FacilityModel(
-                                                                id: teamCode
-                                                                    .toString(),
-                                                              )
-                                                            : facility,
-                                                        primaryId: (context
-                                                                    .isDistributor ||
-                                                                context
-                                                                    .isCommunitySupervisor)
-                                                            ? (teamCode ?? '')
-                                                                .split(Constants
-                                                                    .pipeSeparator)
-                                                                .last
-                                                            : facility.id,
-                                                        primaryType: (context
-                                                                    .isCommunityDistributor ||
-                                                                context
-                                                                    .isCommunitySupervisor)
-                                                            ? "STAFF"
-                                                            : "WAREHOUSE",
-                                                      ),
-                                                    );
-                                                    if ((!context
-                                                                .isCommunitySupervisor &&
-                                                            !context
-                                                                .isCommunityDistributor) ||
-                                                        (recordStockBloc.state
-                                                                .entryType ==
-                                                            StockRecordEntryType
-                                                                .dispatch) ||
-                                                        (recordStockBloc.state
-                                                                .entryType ==
-                                                            StockRecordEntryType
-                                                                .returned)) {
-                                                      context.router.push(
-                                                        CustomStockDetailsRoute(),
-                                                      );
-                                                    } else {
-                                                      context.router.push(ViewAllTransactionsRoute(
-                                                          warehouseId: (context
-                                                                      .isDistributor ||
-                                                                  context
-                                                                      .isCommunitySupervisor)
-                                                              ? (teamCode ?? '')
-                                                                  .split(Constants
-                                                                      .pipeSeparator)
-                                                                  .last
-                                                              : selectedFacilityId));
-                                                    }
-                                                  }
-                                                },
+                                                      ? (teamCode ?? '')
+                                                          .split(Constants
+                                                              .pipeSeparator)
+                                                          .last
+                                                      : facility.id,
+                                                  primaryType: (context
+                                                              .isCommunityDistributor ||
+                                                          context
+                                                              .isCommunitySupervisor)
+                                                      ? "STAFF"
+                                                      : "WAREHOUSE",
+                                                ),
+                                              );
+                                              if ((!context
+                                                          .isCommunitySupervisor &&
+                                                      !context
+                                                          .isCommunityDistributor) ||
+                                                  (recordStockBloc
+                                                          .state.entryType ==
+                                                      StockRecordEntryType
+                                                          .dispatch) ||
+                                                  (recordStockBloc
+                                                          .state.entryType ==
+                                                      StockRecordEntryType
+                                                          .returned)) {
+                                                context.router.push(
+                                                  CustomStockDetailsRoute(),
+                                                );
+                                              } else {
+                                                context.router.push(ViewAllTransactionsRoute(
+                                                    warehouseId: (context
+                                                                .isDistributor ||
+                                                            context
+                                                                .isCommunitySupervisor)
+                                                        ? (teamCode ?? '')
+                                                            .split(Constants
+                                                                .pipeSeparator)
+                                                            .last
+                                                        : selectedFacilityId));
+                                              }
+                                            }
+                                          },
                                         );
                                       },
                                     ),

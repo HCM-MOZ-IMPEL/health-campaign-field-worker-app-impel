@@ -96,6 +96,8 @@ class Constants {
     }
   }
 
+  static const bool isDownSyncEnabled = false;
+
   static const String localizationApiPath = 'localization/messages/v1/_search';
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
   static const String checklistPreviewDateFormat = 'dd MMMM yyyy';

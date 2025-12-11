@@ -1076,6 +1076,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             .getAllProductSkuCounts()
             .map((key, value) => MapEntry(key, value));
 
+        Map<String, int> currentSKUCounts = {};
+
         for (var product in selectedProducts) {
           await _saveCurrentTabData(product, entryType);
         }
@@ -1121,7 +1123,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               return;
             }
           }
-          skuCounts[productName!] = totalQty;
+          currentSKUCounts[productName!] = totalQty;
         }
 
         for (final stockModel in _tabStocks.values) {
@@ -1137,7 +1139,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
         context.read<AuthBloc>().add(
               AuthUpdateProductSKUCountsEvent(
-                skuCounts: skuCounts,
+                skuCounts: currentSKUCounts,
               ),
             );
 
