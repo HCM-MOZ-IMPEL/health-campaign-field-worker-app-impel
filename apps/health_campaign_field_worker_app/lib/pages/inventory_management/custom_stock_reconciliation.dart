@@ -442,6 +442,14 @@ class CustomStockReconciliationPageState
                                                     child: ReactiveWrapperField(
                                                       formControlName:
                                                           _facilityKey,
+                                                      validationMessages: {
+                                                        'required': (object) =>
+                                                            localizations
+                                                                .translate(
+                                                              i18.common
+                                                                  .corecommonRequired,
+                                                            ),
+                                                      },
                                                       builder: (field) {
                                                         return InputField(
                                                           type:

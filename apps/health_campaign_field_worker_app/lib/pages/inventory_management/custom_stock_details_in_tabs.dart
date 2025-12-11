@@ -538,6 +538,13 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                         secondaryPartyType != 'STAFF')
                       ReactiveWrapperField(
                           formControlName: _waybillNumberKey,
+                          validationMessages: {
+                            "minLength": (object) => localizations.translate(
+                                i18_local.stockDetails.minLengthLabel),
+                            "required": (object) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                          },
                           builder: (field) {
                             return InputField(
                               inputFormatters: [
@@ -562,6 +569,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                       ReactiveWrapperField(
                           formControlName: _waybillQuantityKey,
                           validationMessages: {
+                            "required": (object) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
                             "number": (object) => localizations.translate(
                                   '${quantityCountLabel}_ERROR',
                                 ),

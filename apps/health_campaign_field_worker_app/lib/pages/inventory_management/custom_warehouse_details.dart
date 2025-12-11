@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -198,15 +199,28 @@ class CustomWarehouseDetailsPageState
                                                             barCode: []),
                                                       );
                                                   if (facility == null) {
-                                                    Toast.showToast(
-                                                      type: ToastType.error,
+                                                    DigitToast.show(
                                                       context,
-                                                      message: localizations
-                                                          .translate(
-                                                        i18.stockDetails
-                                                            .facilityRequired,
+                                                      options:
+                                                          DigitToastOptions(
+                                                        localizations.translate(
+                                                          i18.stockDetails
+                                                              .facilityRequired,
+                                                        ),
+                                                        true,
+                                                        theme,
                                                       ),
                                                     );
+                                                    // await  Toast.showToast(
+                                                    //     type: ToastType.error,
+                                                    //     context,
+                                                    //     message: localizations
+                                                    //         .translate(
+                                                    //       i18.stockDetails
+                                                    //           .facilityRequired,
+                                                    //     ),
+                                                    //   );
+                                                    return;
                                                   } else if (deliveryTeamSelected &&
                                                       (teamCode == null ||
                                                           teamCode
