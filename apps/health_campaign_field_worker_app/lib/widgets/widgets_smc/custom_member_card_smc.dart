@@ -123,6 +123,15 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               IdentifierTypes
                                                   .uniqueBeneficiaryID
                                                   .toValue(),
+                                          orElse: () => IdentifierModel(
+                                            identifierId:
+                                                localizations.translate(
+                                                    i18.common.noResultsFound),
+                                            identifierType:
+                                                '', // Default to an empty string or appropriate fallback
+                                            clientReferenceId:
+                                                '', // Provide a default value for the required parameter
+                                          ),
                                         )
                                         .identifierId ??
                                     localizations
