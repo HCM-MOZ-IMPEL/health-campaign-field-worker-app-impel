@@ -101,7 +101,7 @@ class CustomBeneficiaryAcknowledgementSMCPageState
         secondaryLabel: localizations.translate(
           i18_local.householdDetails.viewHouseHoldDetailsActionSMC,
         ),
-        subLabel: getSubText(wrapper),
+        subLabel: getSubText(wrapper) ?? '',
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(
@@ -114,14 +114,21 @@ class CustomBeneficiaryAcknowledgementSMCPageState
   }
 
   getSubText(HouseholdMemberWrapper? wrapper) {
-    return wrapper != null
+    final uniqueId = wrapper?.members?.lastOrNull?.identifiers
+            ?.lastWhereOrNull(
+              (e) =>
+                  e.identifierType ==
+                  IdentifierTypes.uniqueBeneficiaryID.toValue(),
+            )
+            ?.identifierId ??
+        '';
+
+    final uniqueBeneficiaryID = wrapper != null
         ? '${localizations.translate(i18_local.beneficiaryDetails.beneficiaryId)}\n'
             '${wrapper.members?.lastOrNull!.name!.givenName} - '
-            '${wrapper.members?.lastOrNull!.identifiers!.lastWhereOrNull(
-                  (e) =>
-                      e.identifierType ==
-                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )!.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
+            '${uniqueId}'
         : '';
+
+    return uniqueId.isNotEmpty ? uniqueBeneficiaryID : null;
   }
 }

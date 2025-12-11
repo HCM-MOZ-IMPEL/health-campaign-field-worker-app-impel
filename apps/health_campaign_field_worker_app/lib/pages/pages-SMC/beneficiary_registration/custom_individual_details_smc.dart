@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
@@ -364,6 +366,7 @@ class CustomIndividualDetailsSMCPageState
                                     context,
                                     form: form,
                                     oldIndividual: individualModel,
+                                    beneficiaryId: beneficiaryId!.first,
                                   );
 
                                   final tag =
@@ -792,15 +795,38 @@ class CustomIndividualDetailsSMCPageState
       ),
     );
 
-    List<IdentifierModel>? identifiers = individual.identifiers;
+// filter default identifiers except unique beneficiary id
+    List<IdentifierModel>? identifiers = individual.identifiers == null
+        ? []
+        : individual.identifiers!
+            .where((element) =>
+                element.identifierType ==
+                IdentifierTypes.uniqueBeneficiaryID.toValue())
+            .toList();
+
     if (isEditIndividual == false) {
-      identifiers?.add(IdentifierModel(
-        clientReferenceId: individual.clientReferenceId,
-        identifierId: beneficiaryId,
-        identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        clientAuditDetails: individual.clientAuditDetails,
-        auditDetails: individual.auditDetails,
-      ));
+      if (identifiers.isEmpty) {
+        identifiers?.add(IdentifierModel(
+          clientReferenceId: individual.clientReferenceId,
+          identifierId: beneficiaryId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+          clientAuditDetails: individual.clientAuditDetails,
+          auditDetails: individual.auditDetails,
+        ));
+      }
+    } else if (isEditIndividual == true) {
+      // in edit mode, if unique beneficiary id is not present, add it
+      if (!identifiers.any((element) =>
+          element.identifierType ==
+          IdentifierTypes.uniqueBeneficiaryID.toValue())) {
+        identifiers.add(IdentifierModel(
+          clientReferenceId: individual.clientReferenceId,
+          identifierId: beneficiaryId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+          clientAuditDetails: individual.clientAuditDetails,
+          auditDetails: individual.auditDetails,
+        ));
+      }
     }
 
     String? individualName = form.control(_individualNameKey).value as String?;

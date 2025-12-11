@@ -116,8 +116,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                 kPadding,
                               ),
                               child: Text(
-                                individual.identifiers!
-                                        .lastWhere(
+                                individual.identifiers
+                                        ?.lastWhere(
                                           (e) =>
                                               e.identifierType ==
                                               IdentifierTypes
@@ -126,7 +126,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                         )
                                         .identifierId ??
                                     localizations
-                                        .translate(i18.common.noResultsFound),
+                                        .translate(i18.common.coreCommonNA),
                                 style: theme.textTheme.headlineSmall,
                               ),
                             ),
