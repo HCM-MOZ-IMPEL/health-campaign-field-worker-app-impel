@@ -71,29 +71,6 @@ class _CustomSearchBeneficiarySMCPageState
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
-    isProximityEnabled = true;
-    var ifSearchTriggered = false;
-    if (!ifSearchTriggered) {
-      // Listen to LocationBloc's state to ensure location is loaded before triggering search
-      context.read<LocationBloc>().stream.listen((locationState) {
-        if (!locationState.loading &&
-            isProximityEnabled == true &&
-            locationState.latitude != null &&
-            locationState.longitude != null) {
-          setState(() {
-            lat = locationState.latitude!;
-            long = locationState.longitude!;
-          });
-          if (!ifSearchTriggered) {
-            ifSearchTriggered = true;
-            // Trigger search after location is loaded
-            blocWrapper.clearEvent();
-            triggerGlobalSearchEvent();
-          }
-        }
-      });
-    }
-
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
         setState(() {
