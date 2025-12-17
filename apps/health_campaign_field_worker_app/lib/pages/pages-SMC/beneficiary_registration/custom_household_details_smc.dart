@@ -197,10 +197,14 @@ class CustomHouseHoldDetailsSMCPageState
                           householdModel,
                           individualModel,
                           projectBeneficiaryModel,
+                          parentClientReferenceId,
+                          relationshipType,
                           registrationDate,
                           searchQuery,
                           loading,
                           isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var household = householdModel;
                           household ??= HouseholdModel(
@@ -259,6 +263,8 @@ class CustomHouseHoldDetailsSMCPageState
                                 lastModifiedTime:
                                     context.millisecondsSinceEpoch(),
                               ),
+                              householdType:
+                                  RegistrationDeliverySingleton().householdType,
                               address: addressModel,
                               additionalFields: HouseholdAdditionalFields(
                                   version: 1,
@@ -312,10 +318,14 @@ class CustomHouseHoldDetailsSMCPageState
                           addressModel,
                           householdModel,
                           individuals,
+                          relationshipType,
                           registrationDate,
+                          parentClientReferenceId,
                           projectBeneficiaryModel,
                           loading,
                           isHeadOfHousehold,
+                          householdChecklists,
+                          individualChecklists,
                         ) {
                           var household = householdModel.copyWith(
                               memberCount: memberCount,
@@ -453,8 +463,8 @@ class CustomHouseHoldDetailsSMCPageState
                               editHousehold: (value) => localizations
                                   .translate(i18.common.coreCommonSave),
                             ) ??
-                            localizations
-                                .translate(i18.householdDetails.actionLabel),
+                            localizations.translate(
+                                i18_local.householdDetails.actionLabel),
                       ),
                     ),
                   ),

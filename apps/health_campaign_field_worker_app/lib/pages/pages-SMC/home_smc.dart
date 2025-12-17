@@ -1,3 +1,9 @@
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
@@ -12,6 +18,10 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:transit_post/utils/utils.dart';
 import '../../blocs/localization/localization.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../blocs/localization/localization.dart';
@@ -37,13 +47,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/sync/sync.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/debound.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -52,6 +62,8 @@ import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_bednet.dart';
+import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
 
 @RoutePage()
 class HomeSMCPage extends LocalizedStatefulWidget {
@@ -66,23 +78,20 @@ class HomeSMCPage extends LocalizedStatefulWidget {
 
 class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   bool skipProgressBar = false;
+  bool _isCardExpanded = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
-
+  late StreamSubscription<List<ConnectivityResult>> subscription;
+  bool isTriggerLocalisation = true;
   @override
   initState() {
     super.initState();
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -172,12 +181,22 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                 ),
                 skipProgressBar
                     ? const SizedBox.shrink()
-                    : CustomBeneficiaryProgressBarSMC(
-                        label: localizations.translate(
-                          i18.home.progressIndicatorTitle,
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: spacer2,
                         ),
-                        prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
+                        child: Column(
+                          children: [
+                            CustomBeneficiaryProgressBarSMC(
+                              label: localizations.translate(
+                                i18.home.progressIndicatorTitle,
+                              ),
+                              prefixLabel: localizations.translate(
+                                i18.home.progressIndicatorPrefixLabel,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
               ],
@@ -330,7 +349,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(const CustomUserDashboardSMCRoute());
+            context.router.push(const CustomUserDashboardRoute());
           },
         ),
       ),
@@ -354,6 +373,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           customIconSize: 48,
           label: i18.home.closedHouseHoldLabelSMC,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
@@ -372,7 +393,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     _,
                     __,
                   ) {
-                    context.router.push(ManageStocksRoute());
+                    context.router.push(CustomManageStocksRoute());
                   },
                 );
           },
@@ -404,18 +425,20 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          onPressed: () => context.router.push(CustomSurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
@@ -471,22 +494,36 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.buildWith(
+      i18.home.beneficiaryReferralLabel: HomeItemCard(
+        icon: Icons.supervised_user_circle_rounded,
+        label: i18.home.beneficiaryReferralLabel,
+        onPressed: () async {
+          await context.router.push(CustomSearchReferralReconciliationsRoute());
+        },
+      ),
+      i18.home.vehicleTrackingLabel: homeShowcaseData.vehicleTracking.buildWith(
         child: HomeItemCard(
-          icon: Icons.supervised_user_circle_rounded,
-          label: i18.home.beneficiaryReferralLabel,
-          onPressed: () async {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _, __) {
-                    context.router
-                        .push(CustomSearchReferralReconciliationsSMCRoute());
-                  },
-                );
+          icon: Icons.local_taxi_rounded,
+          label: i18.home.vehicleTrackingLabel,
+          onPressed: () => {
+            // context.router.push(VehicleTripBookRoute())
+            context.router.push(const VehicleTrackingWrapperRoute()),
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () {
+            // if (isTriggerLocalisation) {
+            //   triggerLocalization(context);
+            //   isTriggerLocalisation = false;
+            // }
+            context.router.push(const DataShareHomeRoute());
+          },
+        ),
+      )
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -503,9 +540,12 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.vehicleTrackingLabel:
+          homeShowcaseData.vehicleTracking.showcaseKey,
 
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
@@ -516,7 +556,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
 
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -536,8 +576,10 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
+      i18.home.vehicleTrackingLabel,
+      i18.home.dataShare,
 
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.manageAttendanceLabel,
@@ -607,6 +649,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -641,6 +685,8 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -657,13 +703,14 @@ void setPackagesSingleton(BuildContext context) {
         List<ServiceRegistry> serviceRegistry,
         List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        loadLocalization(context, appConfiguration);
+        final filter = appConfiguration.searchHouseHoldFiltersSMC;
+
+        // info filter dashboardschema based on projectTypeCode
         final projectTypeCode =
             context.projectTypeCode ?? ProjectTypes.irs.toValue();
-
-        final filteredDashboardConfig =
-            filterDashboardConfig(dashboardConfigSchema ?? [], projectTypeCode);
-
-        loadLocalization(context, appConfiguration);
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
@@ -671,6 +718,31 @@ void setPackagesSingleton(BuildContext context) {
             loggedInIndividualId: context.loggedInIndividualId ?? '',
             loggedInUserUuid: context.loggedInUserUuid,
             appVersion: Constants().version);
+
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+        ComplaintsSingleton().setBoundary(boundary: context.boundary);
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
@@ -746,6 +818,7 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
               appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          searchCLFFilters: [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -774,7 +847,41 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
                   [],
         );
+
+        TransitPostSingleton().setInitialData(
+          resources: context.selectedProjectType?.resources,
+          transitPostType: [],
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          minAge: context.selectedProjectType?.validMinAge,
+          maxAge: context.selectedProjectType?.validMaxAge,
+        );
       });
+}
+
+void triggerLocalization(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+        orElse: () {},
+        initialized: (
+          AppConfiguration appConfiguration,
+          _,
+          __,
+        ) {
+          final appConfig = appConfiguration;
+          final localizationModulesList = appConfiguration.backendInterface;
+          final selectedLocale = AppSharedPreferences().getSelectedLocale;
+          LocalizationParams().setCode(LeastLevelBoundarySingleton().boundary);
+          context
+              .read<LocalizationBloc>()
+              .add(LocalizationEvent.onLoadLocalization(
+                module:
+                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: appConfig.tenantId ?? "default",
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
+        },
+      );
 }
 
 void loadLocalization(

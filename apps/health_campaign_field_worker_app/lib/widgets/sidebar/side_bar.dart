@@ -99,6 +99,21 @@ class SideBar extends StatelessWidget {
               context.router.replaceAll([HomeRoute()]);
             },
           ),
+          // show view download button for below roles
+          context.isCommunityDistributor ||
+                  context.isDistributor ||
+                  context.isHealthFacilitySupervisor
+              ? DigitIconTile(
+                  title: AppLocalizations.of(context).translate(
+                    i18.common.coreCommonViewDownloadedData,
+                  ),
+                  icon: Icons.download,
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(const BeneficiariesReportRoute());
+                  },
+                )
+              : const Offstage(),
           if (isDistributor)
             DigitIconTile(
               title: AppLocalizations.of(context).translate(

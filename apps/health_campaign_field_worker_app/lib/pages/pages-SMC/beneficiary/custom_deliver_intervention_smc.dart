@@ -22,6 +22,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -52,6 +53,8 @@ class CustomDeliverInterventionSMCPageState
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
+  static const _deliveryCommentWastedKey = 'deliveryCommentWasted';
+
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
   static const _defaultQuantity = 1;
@@ -106,8 +109,7 @@ class CustomDeliverInterventionSMCPageState
                   _deliveryCommentKey,
                 )
                 .value ==
-            "ADMINISTRATION_NOT_SUCCESSFUL" &&
-        doseAdministered;
+            "ADMINISTRATION_NOT_SUCCESSFUL";
 // todo verify this how to handle this should pass default 00 or make user enter some value
     String? wastedCount =
         ((form.control(_quantityWastedKey).value) ?? "00").toString();
@@ -635,9 +637,12 @@ class CustomDeliverInterventionSMCPageState
                                                     },
                                                   },
                                                   onChanged: (formControl) {
-                                                    if ((formControl.value
-                                                            as String)
-                                                        .isNotEmpty) {
+                                                    final val =
+                                                        (formControl.value ??
+                                                                '')
+                                                            .toString();
+                                                    if (val.isNotEmpty &&
+                                                        val != '0') {
                                                       setState(() {
                                                         doseAdministered = true;
                                                       });
@@ -646,6 +651,19 @@ class CustomDeliverInterventionSMCPageState
                                                         doseAdministered =
                                                             false;
                                                       });
+                                                      // Clear delivery comment fields when wasted quantity is empty, null or zero
+                                                      try {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .value = '';
+                                                      } catch (_) {}
+                                                      try {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentWastedKey)
+                                                            .value = '';
+                                                      } catch (_) {}
                                                     }
                                                   },
                                                 ),
@@ -674,9 +692,9 @@ class CustomDeliverInterventionSMCPageState
                                                           return const Offstage();
                                                         }
 
-                                                        final deliveryCommentOptionsSmc = state
+                                                        final deliveryCommentWastedOptionsSmc = state
                                                                 .appConfiguration
-                                                                .deliveryCommentOptionsSmc ??
+                                                                .deliveryCommentWastedOptionsSmc ??
                                                             <DeliveryCommentOptions>[];
 
                                                         return DigitReactiveDropdown<
@@ -685,15 +703,15 @@ class CustomDeliverInterventionSMCPageState
                                                               .translate(
                                                             i18_local
                                                                 .deliverIntervention
-                                                                .deliveryCommentLabelSMC,
+                                                                .deliveryCommentLabelWastedSMC,
                                                           ),
                                                           menuItems:
-                                                              deliveryCommentOptionsSmc
+                                                              deliveryCommentWastedOptionsSmc
                                                                   .map((e) {
                                                             return e.code;
                                                           }).toList(),
                                                           formControlName:
-                                                              _deliveryCommentKey,
+                                                              _deliveryCommentWastedKey,
                                                           isRequired:
                                                               doseAdministered,
                                                           valueMapper: (value) =>
@@ -707,6 +725,54 @@ class CustomDeliverInterventionSMCPageState
                                                   ),
                                                 ],
                                               ),
+                                            ),
+                                          ),
+                                          DigitCard(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                BlocBuilder<
+                                                    AppInitializationBloc,
+                                                    AppInitializationState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is! AppInitialized) {
+                                                      return const Offstage();
+                                                    }
+
+                                                    final deliveryCommentOptionsSmc = state
+                                                            .appConfiguration
+                                                            .deliveryCommentOptionsSmc ??
+                                                        <DeliveryCommentOptions>[];
+
+                                                    return DigitReactiveDropdown<
+                                                        String>(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentLabelSMC,
+                                                      ),
+                                                      menuItems:
+                                                          deliveryCommentOptionsSmc
+                                                              .map((e) {
+                                                        return e.code;
+                                                      }).toList(),
+                                                      formControlName:
+                                                          _deliveryCommentKey,
+                                                      isRequired:
+                                                          doseAdministered,
+                                                      valueMapper: (value) =>
+                                                          localizations
+                                                              .translate(
+                                                        value,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
@@ -820,6 +886,8 @@ class CustomDeliverInterventionSMCPageState
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
+    final deliveryCommentWasted =
+        form.control(_deliveryCommentWastedKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -902,6 +970,12 @@ class CustomDeliverInterventionSMCPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
+          if (deliveryCommentWasted != null &&
+              deliveryCommentWasted.trim().toString().isNotEmpty)
+            AdditionalField(
+              Constants.deliveryCommentWastedKey,
+              deliveryCommentWasted,
+            ),
         ],
       ),
     );
@@ -955,6 +1029,25 @@ class CustomDeliverInterventionSMCPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
+        validators: [],
+      ),
+      _deliveryCommentWastedKey: FormControl<String>(
         value: RegistrationDeliverySingleton().beneficiaryType !=
                 BeneficiaryType.individual
             ? (bloc.tasks?.last.additionalFields?.fields

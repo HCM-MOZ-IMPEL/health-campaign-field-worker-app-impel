@@ -52,6 +52,14 @@
     {
       "name": "Health Facility Supervisor",
       "value": "HEALTH_FACILITY_SUPERVISOR"
+    },
+    {
+      "value": "VOUCHER_ACCEPTOR",
+      "name": "Voucher Acceptor"
+    },
+    {
+      "value": "LOCAL_MONITOR",
+      "name": "Local Monitor"
     }
   ],
   "isEnum": true

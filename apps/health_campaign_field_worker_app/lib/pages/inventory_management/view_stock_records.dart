@@ -1,0 +1,334 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:flutter/material.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:inventory_management/utils/utils.dart';
+import 'package:registration_delivery/widgets/localized.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
+import '../../utils/extensions/extensions.dart';
+import '../../utils/utils.dart';
+
+@RoutePage()
+class ViewStockRecordsPage extends LocalizedStatefulWidget {
+  final String mrnNumber;
+  final List<StockModel> stockRecords;
+
+  const ViewStockRecordsPage({
+    super.key,
+    super.appLocalizations,
+    required this.mrnNumber,
+    required this.stockRecords,
+  });
+
+  @override
+  State<ViewStockRecordsPage> createState() => _ViewStockRecordsPageState();
+}
+
+class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
+    with TickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: widget.stockRecords.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        bottom: TabBar(
+          labelColor: Colors.white,
+          indicator: const BoxDecoration(
+            border: Border(
+              left: BorderSide(color: Colors.orange),
+              right: BorderSide(color: Colors.orange),
+              bottom: BorderSide(color: Colors.orange),
+              top: BorderSide(color: Colors.orange),
+            ),
+          ),
+          indicatorPadding: EdgeInsets.fromLTRB(0.1, 0, 0.1, 0.1),
+          controller: _tabController,
+          isScrollable: true,
+          tabs: widget.stockRecords
+              .map((stock) => Tab(
+                    text: localizations.translate(stock.additionalFields?.fields
+                            .firstWhere(
+                              (field) => field.key == 'productName',
+                              orElse: () => AdditionalField('productName', ''),
+                            )
+                            .value
+                            ?.toString() ??
+                        ''),
+                  ))
+              .toList(),
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: widget.stockRecords.map(_buildStockRecordTab).toList(),
+      ),
+    );
+  }
+
+  Widget _buildStockRecordTab(StockModel stock) {
+    String? partialQuantity = stock.additionalFields?.fields
+        .firstWhereOrNull((e) => e.key == "partialBlistersReturned")
+        ?.value
+        .toString();
+
+    String? wastedQuantity = stock.additionalFields?.fields
+        .firstWhereOrNull((e) => e.key == "wastedBlistersReturned")
+        ?.value
+        .toString();
+
+    String? batchNumber = stock.additionalFields?.fields
+        .firstWhere(
+          (field) => field.key == 'batchNumber',
+          orElse: () => const AdditionalField('batchNumber', ''),
+        )
+        .value;
+
+    String? wayBillNumber = stock.wayBillNumber;
+
+    String? entryType = stock.transactionType;
+    String? stockDamage = stock.additionalFields?.fields
+            .firstWhere(
+              (field) => field.key == 'damageQuantity',
+              orElse: () => AdditionalField('damageQuantity', ''),
+            )
+            .value
+            ?.toString() ??
+        '';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // MRN Card
+          DigitCard(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    localizations.translate(getStockRecordLabel(stock)),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Text(localizations.translate(
+                              (stock.transactionType == "RECEIVED" ||
+                                      stock.transactionReason == "RETURNED")
+                                  ? i18_local.stockDetails.mrnNumberLabel
+                                  : i18_local.stockDetails.minNumberLabel))),
+                      Expanded(child: Text(widget.mrnNumber)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Text(localizations
+                              .translate(i18_local.stockDetails.resource))),
+                      Expanded(
+                        child: Text(
+                          localizations.translate(stock.additionalFields?.fields
+                                  .firstWhere(
+                                    (field) => field.key == 'productName',
+                                    orElse: () =>
+                                        AdditionalField('productName', ''),
+                                  )
+                                  .value
+                                  ?.toString() ??
+                              ''),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(localizations.translate(getEntryTypeLabel(
+                            widget.stockRecords.firstOrNull))),
+                      ),
+                      Expanded(
+                          child: Text(localizations.translate(
+                              getSecondaryPartyValue(
+                                  widget.stockRecords.firstOrNull)))),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Stock Details Card
+
+          DigitCard(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    localizations.translate(
+                      i18_local.stockDetails.stockDetailsLabel,
+                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  if (InventorySingleton().isDistributor != true) ...[
+                    if (wayBillNumber != null && wayBillNumber.isNotEmpty)
+                      InputField(
+                        type: InputType.text,
+                        label: localizations.translate(
+                          i18_local.inventoryReportDetails.waybillNumberText,
+                        ),
+                        initialValue: wayBillNumber,
+                        isDisabled: true,
+                        readOnly: true,
+                      ),
+                    if (wayBillNumber != null && wayBillNumber.isNotEmpty)
+                      const SizedBox(height: 12),
+
+                    // Batch Number
+                    if (batchNumber != null && batchNumber.isNotEmpty)
+                      InputField(
+                        type: InputType.text,
+                        label: localizations.translate(
+                            i18_local.inventoryReportDetails.batchNumberText),
+                        initialValue: batchNumber,
+                        isDisabled: true,
+                        readOnly: true,
+                      ),
+                    if (batchNumber != null && batchNumber.isNotEmpty)
+                      const SizedBox(height: 12),
+
+                    //stock damage quantity
+                    if (stockDamage.isNotEmpty && entryType == "RECEIVED")
+                      InputField(
+                        type: InputType.text,
+                        label: localizations.translate(
+                          i18_local.stockDetails.damageStockLabel,
+                        ),
+                        initialValue: stockDamage,
+                        isDisabled: true,
+                        readOnly: true,
+                      ),
+                    if (stockDamage != null) const SizedBox(height: 12),
+                  ],
+
+                  // Quantity
+                  InputField(
+                    type: InputType.text,
+                    label: localizations.translate(
+                        i18_local_smc.stockDetails.stockQuantityLabel),
+                    initialValue: stock.quantity ?? '',
+                    isDisabled: true,
+                    readOnly: true,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Partial Quantity
+                  if (partialQuantity != null)
+                    InputField(
+                      type: InputType.text,
+                      label:
+                          '${localizations.translate(i18_local_smc.stockDetails.stockPartialQuantityLabel)} *',
+                      initialValue: partialQuantity,
+                      isDisabled: true,
+                      readOnly: true,
+                    ),
+                  if (partialQuantity != null) const SizedBox(height: 12),
+                  // Wasted Quantity
+                  if (wastedQuantity != null)
+                    InputField(
+                      type: InputType.text,
+                      label:
+                          '${localizations.translate(i18_local_smc.stockDetails.stockWastedQuantityLabel)} *',
+                      initialValue: wastedQuantity,
+                      isDisabled: true,
+                      readOnly: true,
+                    ),
+                  if (wastedQuantity != null) const SizedBox(height: 12),
+                  // Comments
+                  InputField(
+                    type: InputType.textArea,
+                    label: localizations.translate(
+                        i18_local_smc.stockDetails.stockCommentsLabel),
+                    initialValue: stock.additionalFields?.fields
+                            .firstWhere(
+                              (field) => field.key == 'comments',
+                              orElse: () => AdditionalField('comments', ''),
+                            )
+                            .value
+                            ?.toString() ??
+                        '',
+                    isDisabled: true,
+                    readOnly: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+          DigitButton(
+            label: localizations.translate(i18.common.corecommonclose),
+            onPressed: () => context.router.pop(),
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReadOnlyField({required String label, required String value}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(value),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+}

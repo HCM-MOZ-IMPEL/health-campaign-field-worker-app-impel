@@ -1,9 +1,12 @@
 library i18;
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/individual.dart';
+
 const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -44,7 +47,10 @@ const complaintsInboxShowcase = ComplaintsInboxShowcase();
 class Common {
   const Common();
 
+  String get coreCommonComment => 'CORE_COMMON_COMMENT';
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get toggleTorchTip => 'TOGGLE_TORCH_TIP';
+  String get invalidQRCodeError => 'INVALID_QR_CODE_ERROR';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
@@ -542,6 +548,7 @@ class Checklist {
   String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
 
   String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+  String get checklistDialogLabelSMC => 'CHECKLIST_DIALOG_LABEL_SMC';
 
   String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
 
@@ -575,6 +582,71 @@ class Checklist {
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
 }
 
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
+  String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
+
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
+
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
+
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
+  String get dataSharingLabel => 'DATA_SHARING_LABEL';
+
+  String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
+
+  String get invalidFileError => 'INVALID_FILE_FORMAT_ERROR';
+
+  String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
+
+  String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDesc => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
+
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
+}
+
 class HouseholdDetails {
   const HouseholdDetails();
 
@@ -595,6 +667,7 @@ class HouseholdDetails {
   String get reasonLabelText => 'REASON_LABEL_TEXT';
   String get householdDetailsDescriptionSMC =>
       'HOUSEHOLD_DETAILS_DESCRIPTION_SMC';
+  String get actionLabelTracoma => 'HOUSEHOLD_ACTION_LABEL_TRACOMA';
 }
 
 class HouseholdOverView {
@@ -604,9 +677,14 @@ class HouseholdOverView {
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+  String get tracomaDeliveryAction => 'DELIVER_TRACOMA';
+  String get headBednetDeliveryAction => 'DELIVER_BEDNET';
 
   String get householdOverViewDeliveredIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_SMC';
+  String get headBednetDeliveredSuccess => 'HEAD_BEDNET_DELIVERED';
+  String get tracomaDeliveredSuccess => 'TRACOMA_DELIVERED';
+  String get tracomaDeliveredNotEligible => 'NOT_ELIGIBLE';
   String get householdOverViewNotEligibleIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_SMC';
   String get householdOverViewBeneficiaryReferredLabelSMC =>
@@ -635,6 +713,8 @@ class Home {
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
@@ -643,10 +723,17 @@ class Home {
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
-
+  String get seeMore => 'SEE_MORE';
+  String get close => 'CLOSE';
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
+
+  String get progressIndicatorTitleTracoma =>
+      'PROGRESS_INDICATOR_TITLE_TRACOMA';
+  String get progressIndicatorTitleHeadBednet =>
+      'PROGRESS_INDICATOR_TITLE_HEAD_BEDNET';
 
   String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
 
@@ -657,6 +744,7 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+  String get specialCaseCheckList => 'SPECIAL_CASE_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
@@ -679,6 +767,7 @@ class ReferBeneficiary {
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
   String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredSubmitVerifyLabel => 'REFERRED_SUBMIT_VERIFY_LABEL';
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
   String get referralComments => 'REFERRAL_COMMENTS';
@@ -718,9 +807,14 @@ class DeliverIntervention {
 
   String get deliverInteventionAdministeredLabel =>
       'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
-
+  String get deliverInterventionTracomaLabel =>
+      'DELIVER_INTERVENTION_TRACOMA_LABEL';
+  String get mobilityControlLabel => 'MOBILITY_CONTROL_ASSESSMENT_LABEL';
+  String get mobilityControlQuestion => 'MOBILITY_CONTROL_QUESTION';
+  String get noCheckboxSelect => 'NO_CHECKBOX_SELECT_MESSAGE';
   String get deliverInterventionResourceLabelSMC =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL_SMC';
+  String get doseTracoma => 'DELIVER_INTERVENTION_TRACOMA_DOSE';
 
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
@@ -733,15 +827,27 @@ class DeliverIntervention {
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
+  String get individualHeight => 'INDIVIDUAL_HEIGHT_IN_CM';
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+  String get quantityDistributedLabelTracoma =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_TRACOMA';
 
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
-
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+  String get patternValidationFailed => 'PATTERN_VALIDATION_FAILED';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
+  String get bednetCountHeadText => "BEDNET_COUNT_HEAD_TEXT";
+  String get scanBednet => 'SCAN_THE_BEDNET';
+  String get bednetScannedCode => 'BEDNET_SCANNED_CODES';
   String get deliveryCommentLabelSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
+  String get deliveryCommentLabelWastedSMC =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>
@@ -829,6 +935,22 @@ class DeliverIntervention {
   String get beneficiaryIneligibleDescription => 'BENEFICIARY_INELIGIBLE_DESC';
   String get beneficiaryReferralDescription => 'BENEFICIARY_REFERRAL_DESC';
   String get spaqRedirectionScreenDescription => 'SPAQ_REDIRECTED_SCREEN_DESC';
+  String get conductMobilityAssessmentText1 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT1';
+  String get conductMobilityAssessmentText2 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT2';
+  String get conductMobilityAssessmentText3 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT3';
+  String get conductMobilityAssessmentText4 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT4';
+  String get conductMobilityAssessmentText5 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT5';
+  String get conductMobilityAssessmentText6 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT6';
+  String get conductMobilityAssessmentText7 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT7';
+  String get conductMobilityAssessmentText8 =>
+      'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT8';
 }
 
 class AcknowledgementSuccess {
@@ -1120,6 +1242,8 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get actionLabelTracoma => 'HOUSEHOLD_LOCATION_ACTION_LABEL_TRACOMA';
+  String get refreshLocation => 'REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {
@@ -1207,6 +1331,7 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+  String get chilAgeValidError => 'CHILD_VALID_AGE_ERROR_MESSAGE';
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
@@ -1219,11 +1344,19 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
   String get mobileMinLengthValidationMessageSMC =>
       'MOBILE_MIN_LENGTH_VALIDATION_SMC';
+  String get heightInvalidFormatValidationMessageSMC =>
+      'INDIVIDUAL_DETAILS_INVALID_HEIGHT';
+  String get heightLengthValidationMessageSMC =>
+      'INDIVIDUAL_DETAILS_HEIGHT_LENGTH';
+  String get heightMinLengthValidationMessageSMC =>
+      'HEIGHT_MIN_LENGTH_VALIDATION_SMC';
+  String get heightLabelTextSMC => 'HEIGHT_LABEL_TEXT';
+  String get heightLabelTextTracoma => 'HEIGHT_LABEL_TEXT_TRACOMA';
 }
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
-
+  String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
@@ -1233,13 +1366,19 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
   String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
+  String get resourcesTobeDeliveredTracoma =>
+      'RESOURCES_TO_BE_DELIVERED_TRACOMA';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get beneficiaryHeight => 'BENEFICIARY_HEIGHT';
+  String get beneficiaryHeightCm => 'cm';
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+  String get beneficiaryResourcesTracoma =>
+      'BENEFICIARY_DETAILS_RESOURCES_TRACOMA';
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
   String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
   String get beneficiaryDeliveryStrategy =>
@@ -1314,6 +1453,7 @@ class BeneficiaryDetails {
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycleSMC => 'BENEFICIARY_DETAILS_RECORD_CYCLE_SMC';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
+  String get recordCycleTracoma => 'BENEFICIARY_DETAILS_RECORD_CYCLE_TRACOMA';
 
   String get noOfRoomsAlertTitle => 'ROOMS_ALERT_TITLE';
   String get noOfRoomsAlertContent => 'ROOMS_ALERT_CONTENT';
@@ -1338,6 +1478,19 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+  String get qrCodeAccountError => 'STOCK_DETAILS_QR_CODE_ACCOUNT_ERROR';
+  String get stockAlreadyReceivedLabel => 'STOCK_ALREADY_RECEIVED_LABEL';
+  String get stockIssueDetailsSMC => 'STOCK_DETAILS_STOCK_ISSUE_DETAILS_SMC';
+  String get stockReceiptDetailsSMC =>
+      'STOCK_DETAILS_STOCK_RECEIPT_DETAILS_SMC';
+
+  String get stockReturnDetailsSMC => 'STOCK_DETAILS_STOCK_RETURN_DETAILS_SMC';
+
+  String get stockQuantityLabel => 'STOCK_DETAILS_QUANTITY_LABEL';
+  String get stockCommentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
+  String get stockWastedQuantityLabel => 'STOCK_DETAILS_WASTED_QUANTITY_LABEL';
+  String get stockPartialQuantityLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_LABEL';
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabelSMC => 'STOCK_SUPERVISOR_CODE_LABEL_SMC';
@@ -1349,6 +1502,9 @@ class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
+
+  String get reconciliationPageTitleSMC =>
+      'STOCK_RECONCILIATION_PAGE_TITLE_SMC';
 }
 
 class WarehouseDetails {

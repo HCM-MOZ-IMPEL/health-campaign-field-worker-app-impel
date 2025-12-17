@@ -1,187 +1,187 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_dss/blocs/dashboard.dart';
-import 'package:digit_dss/widgets/back_navigation_help_header.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:auto_route/auto_route.dart';
+// import 'package:digit_components/digit_components.dart';
+// import 'package:digit_components/models/digit_table_model.dart';
+// import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+// import 'package:digit_dss/blocs/dashboard.dart';
+// import 'package:digit_dss/widgets/back_navigation_help_header.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:digit_dss/utils/i18_key_constants.dart' as i18;
-import 'package:digit_dss/utils/utils.dart';
-import 'package:digit_dss/widgets/dashboard/dashboard_metric_card.dart';
-import 'package:digit_dss/widgets/localized.dart';
-import 'package:digit_dss/widgets/no_result_card.dart';
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
+// import 'package:digit_dss/utils/i18_key_constants.dart' as i18;
+// import 'package:digit_dss/utils/utils.dart';
+// import 'package:digit_dss/widgets/dashboard/dashboard_metric_card.dart';
+// import 'package:digit_dss/widgets/localized.dart';
+// import 'package:digit_dss/widgets/no_result_card.dart';
+// import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 
-@RoutePage()
-class CustomUserDashboardSMCPage extends LocalizedStatefulWidget {
-  const CustomUserDashboardSMCPage({
-    super.key,
-  });
+// @RoutePage()
+// class CustomUserDashboardSMCPage extends LocalizedStatefulWidget {
+//   const CustomUserDashboardSMCPage({
+//     super.key,
+//   });
 
-  @override
-  State<StatefulWidget> createState() {
-    return CustomUserDashboardSMCPageState();
-  }
-}
+//   @override
+//   State<StatefulWidget> createState() {
+//     return CustomUserDashboardSMCPageState();
+//   }
+// }
 
-class CustomUserDashboardSMCPageState
-    extends LocalizedState<CustomUserDashboardSMCPage> {
-  @override
-  void initState() {
-    context.read<DashboardBloc>().add(DashboardRefreshEvent(
-          projectId: DashboardSingleton().projectId,
-          syncFromServer: false,
-          selectedDate: DateTime.now(),
-        ));
+// class CustomUserDashboardSMCPageState
+//     extends LocalizedState<CustomUserDashboardSMCPage> {
+//   @override
+//   void initState() {
+//     context.read<DashboardBloc>().add(DashboardRefreshEvent(
+//           projectId: DashboardSingleton().projectId,
+//           syncFromServer: false,
+//           selectedDate: DateTime.now(),
+//         ));
 
-    super.initState();
-  }
+//     super.initState();
+//   }
 
-  bool isLoading = false;
+//   bool isLoading = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<DashboardBloc, DashboardState>(
-        listener: (context, dashboardState) {
-      dashboardState.maybeWhen(
-          orElse: () => false,
-          loading: () {
-            if (!isLoading) {
-              setState(() {
-                isLoading = true;
-              });
-              Loaders.showLoadingDialog(context);
-            }
-          },
-          fetched: (
-            metricData,
-            tableData,
-            selectedDate,
-            isNetworkError,
-          ) {
-            Navigator.of(context, rootNavigator: true).pop();
-            if (isNetworkError == true) {
-              DigitToast.show(context,
-                  options: DigitToastOptions(
-                    localizations.translate(i18.dashboard.someErrorOccured),
-                    true,
-                    DigitTheme.instance.mobileTheme,
-                  ));
-            }
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocConsumer<DashboardBloc, DashboardState>(
+//         listener: (context, dashboardState) {
+//       dashboardState.maybeWhen(
+//           orElse: () => false,
+//           loading: () {
+//             if (!isLoading) {
+//               setState(() {
+//                 isLoading = true;
+//               });
+//               Loaders.showLoadingDialog(context);
+//             }
+//           },
+//           fetched: (
+//             metricData,
+//             tableData,
+//             selectedDate,
+//             isNetworkError,
+//           ) {
+//             Navigator.of(context, rootNavigator: true).pop();
+//             if (isNetworkError == true) {
+//               DigitToast.show(context,
+//                   options: DigitToastOptions(
+//                     localizations.translate(i18.dashboard.someErrorOccured),
+//                     true,
+//                     DigitTheme.instance.mobileTheme,
+//                   ));
+//             }
 
-            setState(() {
-              isLoading = false;
-            });
-          },
-          error: () {
-            Navigator.of(context, rootNavigator: true).pop();
-            setState(() {
-              isLoading = false;
-            });
-            DigitToast.show(context,
-                options: DigitToastOptions(
-                    localizations.translate(i18.dashboard.someErrorOccured),
-                    true,
-                    DigitTheme.instance.mobileTheme));
-          });
-    }, builder: (context, dashboardState) {
-      return RefreshIndicator(
-        onRefresh: () {
-          dashboardState.maybeWhen(
-              orElse: () => false,
-              fetched:
-                  (metricData, tableData, selectedDate, isNetworkError) async {
-                bool isConnected = await getIsConnected();
-                if (isConnected) {
-                  context.read<DashboardBloc>().add(DashboardRefreshEvent(
-                        projectId: DashboardSingleton().projectId,
-                        syncFromServer: true,
-                        selectedDate: selectedDate ?? DateTime.now(),
-                      ));
-                } else {
-                  DigitToast.show(context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.dashboard.networkFailureError),
-                        true,
-                        DigitTheme.instance.mobileTheme,
-                      ));
-                }
-              });
+//             setState(() {
+//               isLoading = false;
+//             });
+//           },
+//           error: () {
+//             Navigator.of(context, rootNavigator: true).pop();
+//             setState(() {
+//               isLoading = false;
+//             });
+//             DigitToast.show(context,
+//                 options: DigitToastOptions(
+//                     localizations.translate(i18.dashboard.someErrorOccured),
+//                     true,
+//                     DigitTheme.instance.mobileTheme));
+//           });
+//     }, builder: (context, dashboardState) {
+//       return RefreshIndicator(
+//         onRefresh: () {
+//           dashboardState.maybeWhen(
+//               orElse: () => false,
+//               fetched:
+//                   (metricData, tableData, selectedDate, isNetworkError) async {
+//                 bool isConnected = await getIsConnected();
+//                 if (isConnected) {
+//                   context.read<DashboardBloc>().add(DashboardRefreshEvent(
+//                         projectId: DashboardSingleton().projectId,
+//                         syncFromServer: true,
+//                         selectedDate: selectedDate ?? DateTime.now(),
+//                       ));
+//                 } else {
+//                   DigitToast.show(context,
+//                       options: DigitToastOptions(
+//                         localizations
+//                             .translate(i18.dashboard.networkFailureError),
+//                         true,
+//                         DigitTheme.instance.mobileTheme,
+//                       ));
+//                 }
+//               });
 
-          return Future<void>.delayed(const Duration(seconds: 1));
-        },
-        child: Scaffold(
-          body: ScrollableContent(
-            footer: PoweredByDigit(
-              version: DashboardSingleton().appVersion,
-            ),
-            header: const Column(children: [
-              BackNavigationHelpHeaderWidget(
-                showHelp: false,
-              ),
-            ]),
-            children: [
-              dashboardState.maybeWhen(
-                  orElse: () => const SizedBox.shrink(),
-                  fetched:
-                      (metricData, tableData, selectedDate, isNetworkError) {
-                    return Column(
-                      children: [
-                        DashboardMetricCard(
-                          selectedDate: selectedDate ?? DateTime.now(),
-                        ),
-                        if ((metricData ?? {}).isEmpty &&
-                            (tableData ?? []).isEmpty)
-                          NoResultCard(
-                            align: Alignment.center,
-                            label: localizations.translate(
-                              i18.common.noResultsFound,
-                            ),
-                          ),
-                        ...(tableData ?? [])
-                            .map((table) => Padding(
-                                  padding: const EdgeInsets.all(kPadding),
-                                  child: DigitTable(
-                                    headerList: table.headerList.map((header) {
-                                      return TableHeader(
-                                        localizations.translate(header.label),
-                                        cellKey: header.cellKey,
-                                      );
-                                    }).toList(),
-                                    tableData: table.tableData,
-                                    height: ((table.tableData.length) + 1) * 65,
-                                    columnWidth:
-                                        MediaQuery.of(context).size.width / 2,
-                                    columnRowFixedHeight: 65,
-                                    scrollPhysics: (table.tableData.length ??
-                                                0) >
-                                            5
-                                        ? const ClampingScrollPhysics()
-                                        : const NeverScrollableScrollPhysics(),
-                                  ),
-                                ))
-                            .toList(),
-                        if ((tableData ?? []).isNotEmpty)
-                          Align(
-                            alignment: Alignment.center,
-                            child: DigitInfoCard(
-                              title: localizations
-                                  .translate(i18.dashboard.noteHeader),
-                              description: localizations.translate(
-                                i18Local.dashBoard.noteDescriptionSMC,
-                              ),
-                            ),
-                          )
-                      ],
-                    );
-                  }),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-}
+//           return Future<void>.delayed(const Duration(seconds: 1));
+//         },
+//         child: Scaffold(
+//           body: ScrollableContent(
+//             footer: PoweredByDigit(
+//               version: DashboardSingleton().appVersion,
+//             ),
+//             header: const Column(children: [
+//               BackNavigationHelpHeaderWidget(
+//                 showHelp: false,
+//               ),
+//             ]),
+//             children: [
+//               dashboardState.maybeWhen(
+//                   orElse: () => const SizedBox.shrink(),
+//                   fetched:
+//                       (metricData, tableData, selectedDate, isNetworkError) {
+//                     return Column(
+//                       children: [
+//                         DashboardMetricCard(
+//                           selectedDate: selectedDate ?? DateTime.now(),
+//                         ),
+//                         if ((metricData ?? {}).isEmpty &&
+//                             (tableData ?? []).isEmpty)
+//                           NoResultCard(
+//                             align: Alignment.center,
+//                             label: localizations.translate(
+//                               i18.common.noResultsFound,
+//                             ),
+//                           ),
+//                         ...(tableData ?? [])
+//                             .map((table) => Padding(
+//                                   padding: const EdgeInsets.all(kPadding),
+//                                   child: DigitTable(
+//                                     headerList: table.headerList.map((header) {
+//                                       return TableHeader(
+//                                         localizations.translate(header.header),
+//                                         cellKey: header.cellKey,
+//                                       );
+//                                     }).toList(),
+//                                     tableData: table.tableData,
+//                                     height: ((table.tableData.length) + 1) * 65,
+//                                     columnWidth:
+//                                         MediaQuery.of(context).size.width / 2,
+//                                     columnRowFixedHeight: 65,
+//                                     scrollPhysics: (table.tableData.length ??
+//                                                 0) >
+//                                             5
+//                                         ? const ClampingScrollPhysics()
+//                                         : const NeverScrollableScrollPhysics(),
+//                                   ),
+//                                 ))
+//                             .toList(),
+//                         if ((tableData ?? []).isNotEmpty)
+//                           Align(
+//                             alignment: Alignment.center,
+//                             child: DigitInfoCard(
+//                               title: localizations
+//                                   .translate(i18.dashboard.noteHeader),
+//                               description: localizations.translate(
+//                                 i18Local.dashBoard.noteDescriptionSMC,
+//                               ),
+//                             ),
+//                           )
+//                       ],
+//                     );
+//                   }),
+//             ],
+//           ),
+//         ),
+//       );
+//     });
+//   }
+// }

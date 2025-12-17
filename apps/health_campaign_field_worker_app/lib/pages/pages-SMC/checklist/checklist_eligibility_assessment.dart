@@ -1,26 +1,41 @@
 import 'dart:math';
 
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/digit_text_field.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
+import 'package:health_campaign_field_worker_app/models/entities/roles_type.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import '../../../models/entities/roles_type.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/utils/constants.dart' as survey_constants;
+
+import 'package:survey_form/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
+
 import '../../../utils/environment_config.dart';
-import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/custom_pop_route.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+import 'package:survey_form/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+
+import '../../../models/entities/status.dart' as status_local;
 
 @RoutePage()
 class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
@@ -45,31 +60,39 @@ class _EligibilityChecklistViewPage
     extends LocalizedState<EligibilityChecklistViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  bool triggerLocalization = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
   ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
+  List<int> visibleSurveyFormIndexes = [];
+  GlobalKey<FormState> surveyFormKey = GlobalKey<FormState>();
+  String othersText = "OTHERS";
+  final String yes = "YES";
+  String multiSelectionSeparator = ".";
+  Map<String?, String> responses = {};
+
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
-  Map<String?, String> responses = {};
-  final String yes = "YES";
-  bool triggerLocalization = false;
 
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
         );
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     var ifReferral = false;
     var ifDeliver = false;
     var ifIneligible = false;
@@ -84,28 +107,27 @@ class _EligibilityChecklistViewPage
         widget.projectBeneficiaryClientReferenceId;
 
     return WillPopScope(
-      onWillPop: context.isHealthFacilitySupervisor &&
-              widget.referralClientRefId != null
-          ? () async => false
-          : () async => _onBackPressed(context, ifIneligible),
-      child: Scaffold(
-        body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-          builder: (context, householdOverviewState) {
+      onWillPop: () async => _onBackPressed(context),
+      child: GlobalBackHandler(
+        child: Scaffold(
+          body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+              builder: (context, householdOverviewState) {
             return BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
               builder: (context, state) {
                 state.mapOrNull(
                   serviceDefinitionFetch: (value) {
-                    // todo: verify the checklist name
                     selectedServiceDefinition = value.serviceDefinitionList
                         .where((element) => element.code.toString().contains(
                               '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
                             ))
                         .toList()
                         .first;
+
                     initialAttributes = selectedServiceDefinition?.attributes;
                     if (!isControllersInitialized) {
                       initialAttributes?.forEach((e) {
                         controller.add(TextEditingController());
+                        additionalController.add(TextEditingController());
                       });
 
                       // Set the flag to true after initializing controllers
@@ -113,429 +135,492 @@ class _EligibilityChecklistViewPage
                     }
                   },
                 );
-
                 return state.maybeMap(
                   orElse: () => Text(state.runtimeType.toString()),
                   serviceDefinitionFetch: (value) {
                     return ScrollableContent(
-                      header: Column(children: [
-                        if (!(context.isHealthFacilitySupervisor &&
-                            widget.referralClientRefId != null))
-                          const BackNavigationHelpHeaderWidget(
-                            showHelp: false,
-                            showcaseButton: null,
-                          ),
-                      ]),
-                      enableFixedButton: true,
-                      footer: BlocListener<LocationBloc, LocationState>(
-                        listener: (context, state) async {
-                          if (state.accuracy != null && triggerLocalization) {
-                            triggerLocalization = false;
-                            final router = context.router;
-                            // close the location capturing `dialog`
-                            DigitComponentsUtils().hideDialog(context);
+                      header: const BackNavigationHelpHeaderWidget(),
+                      enableFixedDigitButton: true,
+                      footer: DigitCard(
+                          cardType: CardType.primary,
+                          margin: const EdgeInsets.only(top: spacer2),
+                          children: [
+                            DigitButton(
+                              label: localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () async {
+                                final router = context.router;
+                                submitTriggered = true;
 
-                            // Wait for the location to be obtained
-                            final locationState =
-                                context.read<LocationBloc>().state;
-                            double? latitude = locationState.latitude;
-                            double? longitude = locationState.longitude;
-
-                            List<String>? referralReasons = [];
-                            List<String?> ineligibilityReasons = [];
-                            List<bool> checkIfIneligibleFlow = [];
-
-                            ifReferral = isReferral(responses, referralReasons);
-                            ifDeliver = isDelivery(responses);
-                            checkIfIneligibleFlow = isIneligible(
-                              responses,
-                              ineligibilityReasons,
-                              ifAdministration,
-                            );
-                            if (checkIfIneligibleFlow.isNotEmpty &&
-                                checkIfIneligibleFlow.length >= 2) {
-                              ifIneligible = checkIfIneligibleFlow[0];
-                              ifAdministration = checkIfIneligibleFlow[1];
-                            }
-
-                            var descriptionText = ifIneligible
-                                ? localizations.translate(
-                                    i18.deliverIntervention
-                                        .beneficiaryIneligibleDescription,
-                                  )
-                                : ifReferral
-                                    ? localizations.translate(
-                                        i18.deliverIntervention
-                                            .beneficiaryReferralDescription,
-                                      )
-                                    : localizations.translate(
-                                        i18.deliverIntervention
-                                            .spaqRedirectionScreenDescription,
-                                      );
-
-                            final shouldSubmit = await DigitDialog.show(
-                              context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(
-                                  i18.checklist.submitButtonDialogLabelText,
-                                ),
-                                content: Text(localizations
-                                    .translate(
-                                      i18.checklist
-                                          .checklistDialogDynamicDescription,
-                                    )
-                                    .replaceFirst('{}', descriptionText)),
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.checklist.checklistDialogPrimaryAction,
-                                  ),
-                                  action: (ctx) {
-                                    final referenceId = IdGen.i.identifier;
-                                    List<ServiceAttributesModel> attributes =
-                                        [];
-                                    for (int i = 0;
-                                        i < controller.length;
-                                        i++) {
-                                      final attribute = initialAttributes;
-
-                                      attributes.add(ServiceAttributesModel(
-                                        auditDetails: AuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        attributeCode: '${attribute?[i].code}',
-                                        dataType: attribute?[i].dataType,
-                                        clientReferenceId: IdGen.i.identifier,
-                                        referenceId: isHealthFacilityWorker &&
-                                                widget.referralClientRefId !=
-                                                    null
-                                            ? widget.referralClientRefId
-                                            : referenceId,
-                                        value: attribute?[i].dataType !=
-                                                'SingleValueList'
-                                            ? controller[i]
-                                                    .text
-                                                    .toString()
-                                                    .trim()
-                                                    .isNotEmpty
-                                                ? controller[i].text.toString()
-                                                : ''
-                                            : visibleChecklistIndexes
-                                                    .contains(i)
-                                                ? controller[i].text.toString()
-                                                : i18.checklist.notSelectedKey,
-                                        rowVersion: 1,
-                                        tenantId: attribute?[i].tenantId,
-                                        additionalFields:
-                                            ServiceAttributesAdditionalFields(
-                                          version: 1,
-                                          fields: [
-                                            AdditionalField(
-                                              'latitude',
-                                              latitude,
-                                            ),
-                                            AdditionalField(
-                                              'longitude',
-                                              longitude,
-                                            ),
-                                          ],
-                                        ),
-                                      ));
-                                    }
-
-                                    context.read<ServiceBloc>().add(
-                                          ServiceCreateEvent(
-                                            serviceModel: ServiceModel(
-                                              createdAt: DigitDateUtils
-                                                  .getDateFromTimestamp(
-                                                DateTime.now()
-                                                    .toLocal()
-                                                    .millisecondsSinceEpoch,
-                                                dateFormat: Constants
-                                                    .checklistViewDateFormat,
-                                              ),
-                                              tenantId:
-                                                  selectedServiceDefinition!
-                                                      .tenantId,
-                                              clientId: isHealthFacilityWorker &&
-                                                      widget.referralClientRefId !=
-                                                          null
-                                                  ? widget.referralClientRefId
-                                                      .toString()
-                                                  : referenceId,
-                                              serviceDefId:
-                                                  selectedServiceDefinition?.id,
-                                              attributes: attributes,
-                                              rowVersion: 1,
-                                              accountId: context.projectId,
-                                              auditDetails: AuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: DateTime.now()
-                                                    .millisecondsSinceEpoch,
-                                              ),
-                                              clientAuditDetails:
-                                                  ClientAuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                                lastModifiedBy:
-                                                    context.loggedInUserUuid,
-                                                lastModifiedTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              additionalDetails: {
-                                                "boundaryCode":
-                                                    context.boundary.code
-                                              },
-                                            ),
-                                          ),
-                                        );
-
-                                    Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(true);
-                                  },
-                                ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.checklist
-                                        .checklistDialogSecondaryAction,
-                                  ),
-                                  action: (context) {
-                                    Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false);
-                                  },
-                                ),
-                              ),
-                            );
-                            if (shouldSubmit ?? false) {
-                              if (context.mounted &&
-                                  ((ifDeliver || ifAdministration) ||
-                                      ifIneligible ||
-                                      ifReferral)) {
-                                if (ifIneligible) {
-                                  // added the deliversubmitevent here
-                                  final clientReferenceId = IdGen.i.identifier;
-                                  context.read<DeliverInterventionBloc>().add(
-                                        DeliverInterventionSubmitEvent(
-                                            task: TaskModel(
-                                              projectBeneficiaryClientReferenceId:
-                                                  projectBeneficiaryClientReferenceId,
-                                              clientReferenceId:
-                                                  clientReferenceId,
-                                              tenantId:
-                                                  envConfig.variables.tenantId,
-                                              rowVersion: 1,
-                                              auditDetails: AuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              projectId: context.projectId,
-                                              status: Status
-                                                  .beneficiaryInEligible
-                                                  .toValue(),
-                                              clientAuditDetails:
-                                                  ClientAuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                                lastModifiedBy:
-                                                    context.loggedInUserUuid,
-                                                lastModifiedTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              additionalFields:
-                                                  TaskAdditionalFields(
-                                                version: 1,
-                                                fields: [
-                                                  AdditionalField(
-                                                    'taskStatus',
-                                                    Status.beneficiaryInEligible
-                                                        .toValue(),
-                                                  ),
-                                                  AdditionalField(
-                                                    'ineligibleReasons',
-                                                    ineligibilityReasons
-                                                        .join(","),
-                                                  ),
-                                                ],
-                                              ),
-                                              address: widget
-                                                  .individual!.address?.first
-                                                  .copyWith(
-                                                relatedClientReferenceId:
-                                                    clientReferenceId,
-                                                id: null,
-                                              ),
-                                            ),
-                                            isEditing: false,
-                                            boundaryModel: context.boundary,
-                                            navigateToSummary: false,
-                                            householdMemberWrapper:
-                                                householdOverviewState
-                                                    .householdMemberWrapper),
-                                      );
-                                  final searchBloc =
-                                      context.read<SearchHouseholdsBloc>();
-                                  searchBloc.add(
-                                    const SearchHouseholdsClearEvent(),
-                                  );
-
-                                  router.push(
-                                    CustomHouseholdAcknowledgementSMCRoute(
-                                        enableViewHousehold: true),
-                                  );
-                                } else if (ifReferral) {
-                                  router.push(
-                                    CustomReferBeneficiarySMCRoute(
-                                      projectBeneficiaryClientRefId:
-                                          projectBeneficiaryClientReferenceId ??
-                                              "",
-                                      individual: widget.individual!,
-                                      referralReasons: referralReasons,
-                                    ),
-                                  );
-                                } else {
-                                  router.push(BeneficiaryDetailsRoute());
-                                }
-                              }
-                            }
-                          }
-                        },
-                        child: DigitCard(
-                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: DigitElevatedButton(
-                            onPressed: () async {
-                              final router = context.router;
-                              submitTriggered = true;
-
-                              context.read<ServiceBloc>().add(
-                                    const ServiceChecklistEvent(
-                                      value: '',
-                                      submitTriggered: true,
-                                    ),
-                                  );
-                              final isValid =
-                                  checklistFormKey.currentState?.validate();
-                              if (!isValid!) {
-                                return;
-                              }
-                              final itemsAttributes = initialAttributes;
-
-                              for (int i = 0; i < controller.length; i++) {
-                                if (itemsAttributes?[i].required == true &&
-                                    ((itemsAttributes?[i].dataType ==
-                                                'SingleValueList' &&
-                                            visibleChecklistIndexes
-                                                .any((e) => e == i) &&
-                                            (controller[i].text == '')) ||
-                                        (itemsAttributes?[i].dataType !=
-                                                'SingleValueList' &&
-                                            (controller[i].text == '' &&
-                                                !(context
-                                                        .isHealthFacilitySupervisor &&
-                                                    widget.referralClientRefId !=
-                                                        null))))) {
+                                context.read<ServiceBloc>().add(
+                                      const ServiceSurveyFormEvent(
+                                        value: '',
+                                        submitTriggered: true,
+                                      ),
+                                    );
+                                final isValid =
+                                    surveyFormKey.currentState?.validate();
+                                if (!isValid!) {
                                   return;
                                 }
-                              }
-                              for (int i = 0; i < controller.length; i++) {
-                                initialAttributes;
-                                var attributeCode =
-                                    '${initialAttributes?[i].code}';
-                                var value = initialAttributes?[i].dataType !=
-                                        'SingleValueList'
-                                    ? controller[i]
-                                            .text
-                                            .toString()
-                                            .trim()
-                                            .isNotEmpty
-                                        ? controller[i].text.toString()
-                                        : (initialAttributes?[i].dataType !=
-                                                'Number'
-                                            ? ''
-                                            : '0')
-                                    : visibleChecklistIndexes.contains(i)
-                                        ? controller[i].text.toString()
-                                        : i18.checklist.notSelectedKey;
-                                responses[attributeCode] = value;
-                              }
-                              triggerLocalization = true;
 
-                              // Request location from LocationBloc
-                              context
-                                  .read<LocationBloc>()
-                                  .add(const LocationEvent.load());
-                              DigitComponentsUtils()
-                                  .showLocationCapturingDialog(
-                                context,
-                                localizations
-                                    .translate(i18.common.locationCapturing),
-                                DigitSyncDialogType.inProgress,
-                              );
-                            },
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonSubmit),
+                                final itemsAttributes = initialAttributes;
+
+                                for (int i = 0; i < controller.length; i++) {
+                                  if (itemsAttributes?[i].required == true &&
+                                      visibleSurveyFormIndexes
+                                          .any((e) => e == i) &&
+                                      controller[i].text == '') {
+                                    return;
+                                  }
+                                }
+
+                                for (int i = 0; i < controller.length; i++) {
+                                  initialAttributes;
+                                  var attributeCode =
+                                      '${initialAttributes?[i].code}';
+                                  var value = initialAttributes?[i].dataType !=
+                                          'SingleValueList'
+                                      ? controller[i]
+                                              .text
+                                              .toString()
+                                              .trim()
+                                              .isNotEmpty
+                                          ? controller[i].text.toString()
+                                          : (initialAttributes?[i].dataType !=
+                                                  'Number'
+                                              ? ''
+                                              : '0')
+                                      : visibleSurveyFormIndexes.contains(i)
+                                          ? controller[i].text.toString()
+                                          : i18_local.checklist.notSelectedKey;
+                                  responses[attributeCode] = value;
+                                }
+
+                                // Request location from LocationBloc
+                                context
+                                    .read<LocationBloc>()
+                                    .add(const LocationEvent.load());
+
+                                // Wait for the location to be obtained
+                                final locationState =
+                                    context.read<LocationBloc>().state;
+                                double? latitude = locationState.latitude;
+                                double? longitude = locationState.longitude;
+
+                                List<String>? referralReasons = [];
+                                List<String?> ineligibilityReasons = [];
+                                List<bool> checkIfIneligibleFlow = [];
+
+                                ifReferral =
+                                    isReferral(responses, referralReasons);
+                                ifDeliver = isDelivery(responses);
+                                checkIfIneligibleFlow = isIneligible(
+                                  responses,
+                                  ineligibilityReasons,
+                                  ifAdministration,
+                                );
+                                if (checkIfIneligibleFlow.isNotEmpty &&
+                                    checkIfIneligibleFlow.length >= 2) {
+                                  ifIneligible = checkIfIneligibleFlow[0];
+                                  ifAdministration = checkIfIneligibleFlow[1];
+                                }
+
+                                var descriptionText = ifIneligible
+                                    ? localizations.translate(
+                                        i18_local.deliverIntervention
+                                            .beneficiaryIneligibleDescription,
+                                      )
+                                    : ifReferral
+                                        ? localizations.translate(
+                                            i18_local.deliverIntervention
+                                                .beneficiaryReferralDescription,
+                                          )
+                                        : localizations.translate(
+                                            i18_local.deliverIntervention
+                                                .spaqRedirectionScreenDescription,
+                                          );
+
+                                final shouldSubmit = await showCustomPopup(
+                                    context: context,
+                                    builder: (popUpContext) => Popup(
+                                            type: PopUpType.simple,
+                                            title: localizations.translate(
+                                              i18_local.checklist
+                                                  .submitButtonDialogLabelText,
+                                            ),
+                                            description: localizations
+                                                .translate(
+                                                  i18_local.checklist
+                                                      .checklistDialogDynamicDescription,
+                                                )
+                                                .replaceFirst(
+                                                    '{}', descriptionText),
+                                            actions: [
+                                              DigitButton(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.surveyForm
+                                                        .surveyFormDialogPrimaryAction,
+                                                  ),
+                                                  onPressed: () {
+                                                    List<ServiceAttributesModel>
+                                                        attributes = [];
+                                                    var referenceId =
+                                                        IdGen.i.identifier;
+                                                    for (int i = 0;
+                                                        i < controller.length;
+                                                        i++) {
+                                                      final attribute =
+                                                          initialAttributes;
+                                                      String? additionalDetailValue = ((attribute?[
+                                                                          i]
+                                                                      .values
+                                                                      ?.firstWhereOrNull(
+                                                                        (element) =>
+                                                                            element.toUpperCase() ==
+                                                                            othersText,
+                                                                      ) !=
+                                                                  null &&
+                                                              controller[i]
+                                                                      .text
+                                                                      .split(
+                                                                        multiSelectionSeparator,
+                                                                      )
+                                                                      .firstWhereOrNull(
+                                                                        (element) =>
+                                                                            element.toUpperCase() ==
+                                                                            othersText,
+                                                                      ) !=
+                                                                  null))
+                                                          ? additionalController[
+                                                                      i]
+                                                                  .text
+                                                                  .toString()
+                                                                  .isEmpty
+                                                              ? null
+                                                              : additionalController[
+                                                                      i]
+                                                                  .text
+                                                                  .toString()
+                                                          : null;
+                                                      attributes.add(
+                                                          ServiceAttributesModel(
+                                                        attributeCode:
+                                                            '${attribute?[i].code}',
+                                                        dataType: attribute?[i]
+                                                            .dataType,
+                                                        clientReferenceId:
+                                                            IdGen.i.identifier,
+                                                        referenceId:
+                                                            referenceId,
+                                                        serviceClientReferenceId:
+                                                            referenceId,
+
+                                                        // todo verify this , this top level check works for single and multi value list only
+                                                        value: visibleSurveyFormIndexes
+                                                                .contains(i)
+                                                            ? (attribute?[i]
+                                                                        .dataType ==
+                                                                    'MultiValueList'
+                                                                ? controller[i]
+                                                                        .text
+                                                                        .toString()
+                                                                        .isNotEmpty
+                                                                    ? controller[i]
+                                                                        .text
+                                                                        .toString()
+                                                                        .substring(
+                                                                            1)
+                                                                    : i18
+                                                                        .surveyForm
+                                                                        .notSelectedKey
+                                                                : attribute?[i]
+                                                                            .dataType !=
+                                                                        'SingleValueList'
+                                                                    ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                            .trim()
+                                                                            .isNotEmpty
+                                                                        ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                        : (attribute?[i].dataType != 'Number'
+                                                                            ? i18
+                                                                                .surveyForm.notSelectedKey
+                                                                            : '0')
+                                                                    : visibleSurveyFormIndexes.contains(
+                                                                            i)
+                                                                        ? controller[i]
+                                                                            .text
+                                                                            .toString()
+                                                                        : i18
+                                                                            .surveyForm
+                                                                            .notSelectedKey)
+                                                            : i18.surveyForm
+                                                                .notSelectedKey,
+                                                        rowVersion: 1,
+                                                        additionalDetails:
+                                                            additionalDetailValue,
+                                                        additionalFields:
+                                                            additionalDetailValue !=
+                                                                    null
+                                                                ? ServiceAttributesAdditionalFields(
+                                                                    version: 1,
+                                                                    fields: [
+                                                                        AdditionalField(
+                                                                            'additionalValue',
+                                                                            additionalDetailValue)
+                                                                      ])
+                                                                : null,
+                                                        tenantId: attribute?[i]
+                                                            .tenantId,
+                                                      ));
+                                                    }
+
+                                                    context
+                                                        .read<ServiceBloc>()
+                                                        .add(
+                                                          ServiceCreateEvent(
+                                                            serviceModel:
+                                                                ServiceModel(
+                                                                    createdAt:
+                                                                        DigitDateUtils
+                                                                            .getDateFromTimestamp(
+                                                                      DateTime.now()
+                                                                          .toLocal()
+                                                                          .millisecondsSinceEpoch,
+                                                                      dateFormat: survey_constants
+                                                                          .Constants
+                                                                          .SurveyFormViewDateFormat,
+                                                                    ),
+                                                                    tenantId:
+                                                                        selectedServiceDefinition!
+                                                                            .tenantId,
+                                                                    clientId:
+                                                                        referenceId,
+                                                                    referenceId:
+                                                                        referenceId,
+                                                                    serviceDefId:
+                                                                        selectedServiceDefinition
+                                                                            ?.id,
+                                                                    attributes:
+                                                                        attributes,
+                                                                    rowVersion:
+                                                                        1,
+                                                                    accountId:
+                                                                        SurveyFormSingleton()
+                                                                            .projectId,
+                                                                    auditDetails:
+                                                                        AuditDetails(
+                                                                      createdBy:
+                                                                          SurveyFormSingleton()
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          DateTime.now()
+                                                                              .millisecondsSinceEpoch,
+                                                                    ),
+                                                                    clientAuditDetails:
+                                                                        ClientAuditDetails(
+                                                                      createdBy:
+                                                                          SurveyFormSingleton()
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                      lastModifiedBy:
+                                                                          SurveyFormSingleton()
+                                                                              .loggedInUserUuid,
+                                                                      lastModifiedTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                    ),
+                                                                    additionalFields: ServiceAdditionalFields(
+                                                                        version:
+                                                                            1,
+                                                                        fields: [
+                                                                          AdditionalField(
+                                                                              'lng',
+                                                                              longitude),
+                                                                          AdditionalField(
+                                                                              'lat',
+                                                                              latitude),
+                                                                          AdditionalField(
+                                                                              'boundaryCode',
+                                                                              SurveyFormSingleton().boundary?.code)
+                                                                        ])),
+                                                          ),
+                                                        );
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  },
+                                                  type: DigitButtonType.primary,
+                                                  size: DigitButtonSize.large),
+                                              DigitButton(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.surveyForm
+                                                        .surveyFormDialogSecondaryAction,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(false);
+                                                  },
+                                                  type:
+                                                      DigitButtonType.secondary,
+                                                  size: DigitButtonSize.large)
+                                            ])) as bool?;
+
+                                if (shouldSubmit ?? false) {
+                                  if (context.mounted &&
+                                      ((ifDeliver || ifAdministration) ||
+                                          ifIneligible ||
+                                          ifReferral)) {
+                                    if (ifIneligible) {
+                                      // added the deliversubmitevent here
+                                      final clientReferenceId =
+                                          IdGen.i.identifier;
+                                      context
+                                          .read<DeliverInterventionBloc>()
+                                          .add(
+                                            DeliverInterventionSubmitEvent(
+                                                task: TaskModel(
+                                                  projectBeneficiaryClientReferenceId:
+                                                      projectBeneficiaryClientReferenceId,
+                                                  clientReferenceId:
+                                                      clientReferenceId,
+                                                  tenantId: envConfig
+                                                      .variables.tenantId,
+                                                  rowVersion: 1,
+                                                  auditDetails: AuditDetails(
+                                                    createdBy: context
+                                                        .loggedInUserUuid,
+                                                    createdTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                  ),
+                                                  projectId: context.projectId,
+                                                  status: status_local.Status
+                                                      .beneficiaryInEligible
+                                                      .toValue(),
+                                                  clientAuditDetails:
+                                                      ClientAuditDetails(
+                                                    createdBy: context
+                                                        .loggedInUserUuid,
+                                                    createdTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                    lastModifiedBy: context
+                                                        .loggedInUserUuid,
+                                                    lastModifiedTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                  ),
+                                                  additionalFields:
+                                                      TaskAdditionalFields(
+                                                    version: 1,
+                                                    fields: [
+                                                      AdditionalField(
+                                                        'taskStatus',
+                                                        status_local.Status
+                                                            .beneficiaryInEligible
+                                                            .toValue(),
+                                                      ),
+                                                      AdditionalField(
+                                                        'ineligibleReasons',
+                                                        ineligibilityReasons
+                                                            .join(","),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  address: widget.individual!
+                                                      .address?.first
+                                                      .copyWith(
+                                                    relatedClientReferenceId:
+                                                        clientReferenceId,
+                                                    id: null,
+                                                  ),
+                                                ),
+                                                isEditing: false,
+                                                boundaryModel: context.boundary,
+                                                navigateToSummary: false,
+                                                householdMemberWrapper:
+                                                    householdOverviewState
+                                                        .householdMemberWrapper),
+                                          );
+                                      final searchBloc =
+                                          context.read<SearchHouseholdsBloc>();
+                                      searchBloc.add(
+                                        const SearchHouseholdsClearEvent(),
+                                      );
+
+                                      router.push(
+                                        CustomHouseholdAcknowledgementSMCRoute(
+                                            enableViewHousehold: true),
+                                      );
+                                    } else if (ifReferral) {
+                                      router.push(
+                                        CustomReferBeneficiarySMCRoute(
+                                          projectBeneficiaryClientRefId:
+                                              projectBeneficiaryClientReferenceId ??
+                                                  "",
+                                          individual: widget.individual!,
+                                          referralReasons: referralReasons,
+                                        ),
+                                      );
+                                    } else {
+                                      router.push(BeneficiaryDetailsRoute());
+                                    }
+                                  }
+                                }
+                              },
                             ),
-                          ),
-                        ),
-                      ),
+                          ]),
                       children: [
                         Form(
-                          key: checklistFormKey, //assigning key to form
-                          child: DigitCard(
-                            child: Column(children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Text(
-                                  localizations.translate(
-                                    selectedServiceDefinition!.code.toString(),
-                                  ),
-                                  style: theme.textTheme.displayMedium,
-                                  textAlign: TextAlign.left,
-                                ),
+                          key: surveyFormKey, //assigning key to form
+                          child:
+                              DigitCard(cardType: CardType.primary, children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: spacer2),
+                              child: Text(
+                                '${localizations.translate(
+                                  selectedServiceDefinition!.code.toString(),
+                                )} ${localizations.translate(i18.surveyForm.surveyForm)}',
+                                style: textTheme.headingXl,
                               ),
-                              ...initialAttributes!.map((
-                                e,
-                              ) {
-                                int index =
-                                    (initialAttributes ?? []).indexOf(e);
-
-                                return Column(children: [
-                                  if (e.dataType == 'String' &&
-                                      !(e.code ?? '').contains('.')) ...[
-                                    DigitTextField(
-                                      autoValidation:
+                            ),
+                            ...initialAttributes!
+                                .where((att) => att.isActive == true)
+                                .map((
+                              e,
+                            ) {
+                              String? description = e.additionalFields?.fields
+                                  .where((a) => a.key == 'helpText')
+                                  .firstOrNull
+                                  ?.value;
+                              int index = (initialAttributes ?? []).indexOf(e);
+                              return Column(children: [
+                                if (e.dataType == 'String' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  FormField<String>(
+                                      autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
-                                      isRequired: true,
-                                      controller: controller[index],
-                                      // inputFormatter: [
-                                      //   FilteringTextInputFormatter.allow(RegExp(
-                                      //     "[a-zA-Z0-9]",
-                                      //   )),
-                                      // ],
                                       validator: (value) {
-                                        if (((value == null || value == '') &&
+                                        if (((controller[index].text == null ||
+                                                controller[index].text == '') &&
                                             e.required == true)) {
                                           return localizations.translate(
-                                            i18.common.corecommonRequired,
-                                          );
+                                              i18.common.corecommonRequired);
                                         }
                                         if (e.regex != null) {
-                                          return (RegExp(e.regex!)
-                                                  .hasMatch(value!))
+                                          return (RegExp(e.regex!).hasMatch(
+                                                  controller[index].text!))
                                               ? null
                                               : localizations
                                                   .translate("${e.code}_REGEX");
@@ -543,130 +628,370 @@ class _EligibilityChecklistViewPage
 
                                         return null;
                                       },
-                                      label: localizations.translate(
-                                        '${selectedServiceDefinition?.code}.${e.code}',
+                                      builder: (field) {
+                                        return LabeledField(
+                                            label: localizations.translate(
+                                              '${selectedServiceDefinition?.code}.${e.code}',
+                                            ),
+                                            capitalizedFirstLetter: false,
+                                            charCondition: true,
+                                            description: description != null
+                                                ? localizations.translate(
+                                                    '${selectedServiceDefinition?.code}.$description',
+                                                  )
+                                                : null,
+                                            isRequired: e.required ?? false,
+                                            child: DigitTextFormInput(
+                                              onChange: (value) {
+                                                field.didChange(value);
+                                                controller[index].text = value;
+                                                // surveyFormKey.currentState
+                                                //     ?.validate();
+                                              },
+                                              errorMessage: field.errorText,
+                                              controller: controller[index],
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp(
+                                                  "[a-zA-Z0-9 ]",
+                                                )),
+                                              ],
+                                            ));
+                                      }),
+                                ] else if (e.dataType == 'Number' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  FormField<String>(
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      validator: (value) {
+                                        if (((controller[index].text == null ||
+                                                controller[index].text == '') &&
+                                            e.required == true)) {
+                                          return localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          );
+                                        }
+                                        if (e.regex != null) {
+                                          return (RegExp(e.regex!).hasMatch(
+                                                  controller[index].text!))
+                                              ? null
+                                              : localizations
+                                                  .translate("${e.code}_REGEX");
+                                        }
+
+                                        return null;
+                                      },
+                                      builder: (field) {
+                                        return LabeledField(
+                                          label: localizations
+                                              .translate(
+                                                '${selectedServiceDefinition?.code}.${e.code}',
+                                              )
+                                              .trim(),
+                                          description: description != null
+                                              ? localizations.translate(
+                                                  '${selectedServiceDefinition?.code}.$description',
+                                                )
+                                              : null,
+                                          isRequired: e.required ?? false,
+                                          capitalizedFirstLetter: false,
+                                          charCondition: true,
+                                          child: DigitTextFormInput(
+                                            onChange: (value) {
+                                              field.didChange(value);
+                                              controller[index].text = value;
+                                              // surveyFormKey.currentState
+                                              //     ?.validate();
+                                            },
+                                            errorMessage: field.errorText,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                "[0-9]",
+                                              )),
+                                            ],
+                                            controller: controller[index],
+                                          ),
+                                        );
+                                      }),
+                                ] else if (e.dataType == 'MultiValueList' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '${localizations.translate(
+                                              '${selectedServiceDefinition?.code}.${e.code}',
+                                            )} ${e.required == true ? '*' : ''}',
+                                            style: textTheme.headingS,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ] else if (e.dataType == 'Number' &&
-                                      !(e.code ?? '').contains('.')) ...[
-                                    DigitTextField(
-                                      autoValidation:
-                                          AutovalidateMode.onUserInteraction,
-                                      textStyle: theme.textTheme.headlineMedium,
-                                      textInputType: TextInputType.number,
-                                      inputFormatter: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                            "[0-9]",
+                                  ),
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      visibleSurveyFormIndexes.add(index);
+                                      return Column(
+                                        children: e.values!
+                                            .where((e1) =>
+                                                e1 !=
+                                                i18.surveyForm.notSelectedKey)
+                                            .toList()
+                                            .map((e) => Column(
+                                                  children: [
+                                                    DigitCheckbox(
+                                                      label: localizations
+                                                          .translate(e),
+                                                      value: controller[index]
+                                                          .text
+                                                          .split('.')
+                                                          .contains(e),
+                                                      onChanged: (value) {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceSurveyFormEvent(
+                                                                value: e
+                                                                    .toString(),
+                                                                submitTriggered:
+                                                                    submitTriggered,
+                                                              ),
+                                                            );
+                                                        final String ele;
+                                                        var val =
+                                                            controller[index]
+                                                                .text
+                                                                .split('.');
+                                                        if (val.contains(e)) {
+                                                          val.remove(e);
+                                                          ele = val.join(".");
+                                                        } else {
+                                                          ele =
+                                                              "${controller[index].text}.$e";
+                                                        }
+                                                        controller[index]
+                                                                .value =
+                                                            TextEditingController
+                                                                .fromValue(
+                                                          TextEditingValue(
+                                                            text: ele,
+                                                          ),
+                                                        ).value;
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                      height: theme
+                                                          .spacerTheme.spacer3,
+                                                    )
+                                                  ],
+                                                ))
+                                            .toList(),
+                                      );
+                                    },
+                                  ),
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      return (e.values?.firstWhereOrNull(
+                                                    (element) =>
+                                                        element.toUpperCase() ==
+                                                        othersText,
+                                                  ) !=
+                                                  null &&
+                                              controller[index]
+                                                  .text
+                                                  .contains(othersText))
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 4.0,
+                                                right: 4.0,
+                                                bottom: 16,
+                                              ),
+                                              child: DigitTextField(
+                                                maxLength: 1000,
+                                                controller:
+                                                    additionalController[index],
+                                                label:
+                                                    '${localizations.translate(
+                                                  '${selectedServiceDefinition?.code}.${e.code}.ADDITIONAL_FIELD',
+                                                )}*',
+                                                validator: (value1) {
+                                                  if (value1 == null ||
+                                                      value1 == '') {
+                                                    return localizations
+                                                        .translate(
+                                                      i18_local.common
+                                                          .coreCommonOthersRequired,
+                                                    );
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                            )
+                                          : const SizedBox();
+                                    },
+                                  ),
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      final hasError = (e.required == true &&
+                                          controller[index].text.isEmpty &&
+                                          submitTriggered);
+
+                                      return Offstage(
+                                        offstage: !hasError,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            ),
+                                            style: TextStyle(
+                                              color: theme.colorScheme.error,
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                      validator: (value) {
-                                        if (((value == null || value == '') &&
-                                            e.required == true)) {
-                                          return localizations.translate(
-                                            i18.common.corecommonRequired,
-                                          );
-                                        }
-                                        if (e.regex != null) {
-                                          return (RegExp(e.regex!)
-                                                  .hasMatch(value!))
-                                              ? null
-                                              : localizations
-                                                  .translate("${e.code}_REGEX");
-                                        }
-
-                                        return null;
-                                      },
-                                      controller: controller[index],
-                                      label: '${localizations.translate(
-                                            '${selectedServiceDefinition?.code}.${e.code}',
-                                          ).trim()} ${e.required == true ? '*' : ''}',
-                                    ),
-                                  ] else if (e.dataType == 'MultiValueList' &&
-                                      !(e.code ?? '').contains('.')) ...[
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              '${localizations.translate(
-                                                '${selectedServiceDefinition?.code}.${e.code}',
-                                              )} ${e.required == true ? '*' : ''}',
-                                              style:
-                                                  theme.textTheme.headlineSmall,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    BlocBuilder<ServiceBloc, ServiceState>(
-                                      builder: (context, state) {
-                                        return Column(
-                                          children: e.values!
-                                              .map((e) => DigitCheckboxTile(
-                                                    label: e,
-                                                    value: controller[index]
-                                                        .text
-                                                        .split('.')
-                                                        .contains(e),
-                                                    onChanged: (value) {
-                                                      context
-                                                          .read<ServiceBloc>()
-                                                          .add(
-                                                            ServiceChecklistEvent(
-                                                              value:
-                                                                  e.toString(),
-                                                              submitTriggered:
-                                                                  submitTriggered,
-                                                            ),
+                                      );
+                                    },
+                                  ),
+                                ] else if (e.dataType == 'SingleValueList') ...[
+                                  if (!(e.code ?? '').contains('.'))
+                                    DigitCard(
+                                        cardType: CardType.secondary,
+                                        children: [
+                                          _buildSurveyForm(
+                                            e,
+                                            index,
+                                            selectedServiceDefinition,
+                                            context,
+                                            description,
+                                          ),
+                                        ]),
+                                ] else if (e.dataType == 'Boolean') ...[
+                                  if (!(e.code ?? '').contains('.'))
+                                    DigitCard(
+                                        cardType: CardType.primary,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(spacer2),
+                                              child: LabeledField(
+                                                label: localizations.translate(
+                                                  '${selectedServiceDefinition?.code}.${e.code}',
+                                                ),
+                                                description: description != null
+                                                    ? localizations.translate(
+                                                        '${selectedServiceDefinition?.code}.$description',
+                                                      )
+                                                    : null,
+                                                isRequired: e.required ?? false,
+                                                capitalizedFirstLetter: false,
+                                                charCondition: true,
+                                                child: BlocBuilder<ServiceBloc,
+                                                    ServiceState>(
+                                                  builder: (context, state) {
+                                                    return FormField<bool>(
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator: (value) {
+                                                        if (e.required ==
+                                                                true &&
+                                                            (controller[index]
+                                                                        .text ==
+                                                                    null ||
+                                                                controller[index]
+                                                                        .text ==
+                                                                    '')) {
+                                                          return localizations
+                                                              .translate(
+                                                            i18.common
+                                                                .corecommonRequired,
                                                           );
-                                                      final String ele;
-                                                      var val =
-                                                          controller[index]
-                                                              .text
-                                                              .split('.');
-                                                      if (val.contains(e)) {
-                                                        val.remove(e);
-                                                        ele = val.join(".");
-                                                      } else {
-                                                        ele =
-                                                            "${controller[index].text}.$e";
-                                                      }
-                                                      controller[index].value =
-                                                          TextEditingController
-                                                              .fromValue(
-                                                        TextEditingValue(
-                                                          text: ele,
-                                                        ),
-                                                      ).value;
-                                                    },
-                                                  ))
-                                              .toList(),
-                                        );
-                                      },
-                                    ),
-                                  ] else if (e.dataType ==
-                                      'SingleValueList') ...[
-                                    if (!(e.code ?? '').contains('.'))
-                                      DigitCard(
-                                        child: _buildChecklist(
-                                          e,
-                                          index,
-                                          selectedServiceDefinition,
-                                          context,
-                                        ),
-                                      ),
-                                  ],
-                                ]);
-                              }).toList(),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                            ]),
-                          ),
+                                                        }
+
+                                                        return null;
+                                                      },
+                                                      builder: (field) =>
+                                                          SelectionCard<bool>(
+                                                        errorMessage:
+                                                            field.errorText,
+                                                        allowMultipleSelection:
+                                                            false,
+                                                        valueMapper: (value) {
+                                                          return value
+                                                              ? localizations
+                                                                  .translate(
+                                                                  i18.common
+                                                                      .coreCommonYes,
+                                                                )
+                                                              : localizations
+                                                                  .translate(
+                                                                  i18.common
+                                                                      .coreCommonNo,
+                                                                );
+                                                        },
+                                                        initialSelection: controller[
+                                                                        index]
+                                                                    .text ==
+                                                                'true'
+                                                            ? [true]
+                                                            : controller[index]
+                                                                        .text ==
+                                                                    'false'
+                                                                ? [false]
+                                                                : [],
+                                                        options: const [
+                                                          true,
+                                                          false
+                                                        ],
+                                                        onSelectionChanged:
+                                                            (curValue) {
+                                                          field.didChange(
+                                                              curValue.first);
+                                                          if (curValue
+                                                              .isNotEmpty) {
+                                                            context
+                                                                .read<
+                                                                    ServiceBloc>()
+                                                                .add(
+                                                                  ServiceSurveyFormEvent(
+                                                                    value: curValue
+                                                                        .toString(),
+                                                                    submitTriggered:
+                                                                        submitTriggered,
+                                                                  ),
+                                                                );
+                                                            controller[index]
+                                                                    .value =
+                                                                TextEditingValue(
+                                                              text: curValue
+                                                                  .first
+                                                                  .toString(),
+                                                            );
+                                                          }
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                ],
+                              ]);
+                            }),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ]),
                         ),
                       ],
                     );
@@ -674,19 +999,20 @@ class _EligibilityChecklistViewPage
                 );
               },
             );
-          },
+          }),
         ),
       ),
     );
   }
 
-  Widget _buildChecklist(
-    AttributesModel item,
-    int index,
-    ServiceDefinitionModel? selectedServiceDefinition,
-    BuildContext context,
-  ) {
+  Widget _buildSurveyForm(
+      AttributesModel item,
+      int index,
+      ServiceDefinitionModel? selectedServiceDefinition,
+      BuildContext context,
+      String? description) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -696,199 +1022,313 @@ class _EligibilityChecklistViewPage
       List<int> excludedIndexes = [];
 
       // Ensure the current index is added to visible indexes and not excluded
-      if (!visibleChecklistIndexes.contains(index) &&
+      if (!visibleSurveyFormIndexes.contains(index) &&
           !excludedIndexes.contains(index)) {
-        visibleChecklistIndexes.add(index);
+        visibleSurveyFormIndexes.add(index);
       }
 
       // Determine excluded indexes
       for (int i = 0; i < (initialAttributes ?? []).length; i++) {
-        if (!visibleChecklistIndexes.contains(i)) {
+        if (!visibleSurveyFormIndexes.contains(i)) {
           excludedIndexes.add(i);
         }
       }
 
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0), // Add padding here
-              child: Text(
-                '${localizations.translate(
-                  '${selectedServiceDefinition?.code}.${item.code}',
-                )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
-              ),
+      return Align(
+        alignment: Alignment.topLeft,
+        child: LabeledField(
+            label: localizations.translate(
+              '${selectedServiceDefinition?.code}.${item.code}',
             ),
-          ),
-          Column(
-            children: [
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
+            capitalizedFirstLetter: false,
+            charCondition: true,
+            isRequired: item.required ?? false,
+            child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return RadioGroup<String>.builder(
-                    groupValue: controller[index].text.trim(),
-                    onChanged: (value) {
-                      context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
-                              value: Random().nextInt(100).toString(),
-                              submitTriggered: submitTriggered,
-                            ),
-                          );
-                      setState(() {
-                        // Clear child controllers and update visibility
-                        for (final matchingChildItem in childItems) {
-                          final childIndex =
-                              initialAttributes?.indexOf(matchingChildItem);
-                          if (childIndex != null) {
-                            visibleChecklistIndexes
-                                .removeWhere((v) => v == childIndex);
-                          }
-                        }
+                  return Align(
+                      alignment: Alignment.topLeft,
+                      child: FormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value1) {
+                            if (item.required == true &&
+                                (controller[index].text == null ||
+                                    controller[index].text == '')) {
+                              return localizations.translate(
+                                i18.common.corecommonRequired,
+                              );
+                            }
 
-                        // Update the current controller's value
-                        controller[index].value =
-                            TextEditingController.fromValue(
-                          TextEditingValue(
-                            text: value!,
+                            return null;
+                          },
+                          builder: (field) => RadioList(
+                                radioDigitButtons: item.values != null
+                                    ? item.values!
+                                        .where((e) =>
+                                            e != i18.surveyForm.notSelectedKey)
+                                        .toList()
+                                        .map((item) => RadioButtonModel(
+                                              code: item,
+                                              name: localizations.translate(
+                                                '${selectedServiceDefinition?.code}.${item.trim()}',
+                                              ),
+                                            ))
+                                        .toList()
+                                    : [],
+                                errorMessage: field.errorText,
+                                groupValue: controller[index].text.trim(),
+                                onChanged: (value) {
+                                  field.didChange(value);
+                                  context.read<ServiceBloc>().add(
+                                        ServiceSurveyFormEvent(
+                                          value:
+                                              Random().nextInt(100).toString(),
+                                          submitTriggered: submitTriggered,
+                                        ),
+                                      );
+                                  setState(() {
+                                    // Clear child controllers and update visibility
+                                    for (final matchingChildItem
+                                        in childItems) {
+                                      final childIndex = initialAttributes
+                                          ?.indexOf(matchingChildItem);
+                                      if (childIndex != null) {
+                                        // controller[childIndex].clear();
+                                        visibleSurveyFormIndexes.removeWhere(
+                                            (v) => v == childIndex);
+                                      }
+                                    }
+
+                                    // Update the current controller's value
+                                    controller[index].value =
+                                        TextEditingController.fromValue(
+                                      TextEditingValue(
+                                        text: value!.code,
+                                      ),
+                                    ).value;
+
+                                    if (excludedIndexes.isNotEmpty) {
+                                      for (int i = 0;
+                                          i < excludedIndexes.length;
+                                          i++) {
+                                        // Clear excluded child controllers
+                                        if (item.dataType !=
+                                            'SingleValueList') {
+                                          // controller[excludedIndexes[i]].value =
+                                          //     TextEditingController.fromValue(
+                                          //   const TextEditingValue(
+                                          //     text: '',
+                                          //   ),
+                                          // ).value;
+                                        }
+                                      }
+                                    }
+
+                                    // Remove corresponding controllers based on the removed attributes
+                                  });
+                                },
+                              )));
+                },
+              ),
+              BlocBuilder<ServiceBloc, ServiceState>(
+                builder: (context, state) {
+                  return (controller[index].text == item.values?[1].trim() &&
+                          item.dataType != 'SingleValueList')
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                            left: spacer1,
+                            right: spacer1,
+                            bottom: spacer4,
                           ),
-                        ).value;
+                          child: FormField<String>(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value1) {
+                              if (item.required == true &&
+                                  (additionalController[index].text == null ||
+                                      additionalController[index].text == '')) {
+                                return localizations.translate(
+                                  i18.common.corecommonRequired,
+                                );
+                              }
 
-                        // Remove corresponding controllers based on the removed attributes
-                      });
-                    },
-                    items: item.values != null
-                        ? item.values!
-                            .where((e) => e != i18.checklist.notSelectedKey)
-                            .toList()
-                        : [],
-                    itemBuilder: (item) => RadioButtonBuilder(
-                      localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
-                      ),
-                    ),
-                  );
+                              return null;
+                            },
+                            builder: (field) {
+                              return LabeledField(
+                                  label: localizations.translate(
+                                    '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                                  ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
+                                  isRequired: item.required ?? false,
+                                  capitalizedFirstLetter: false,
+                                  charCondition: true,
+                                  child: DigitTextFormInput(
+                                    onChange: (value) {
+                                      field.didChange(value);
+                                      additionalController[index].text = value;
+                                    },
+                                    errorMessage: field.errorText,
+                                    maxLength: 1000,
+                                    charCount: true,
+                                    controller: additionalController[index],
+                                  ));
+                            },
+                          ),
+                        )
+                      : const SizedBox();
                 },
               ),
-              BlocBuilder<ServiceBloc, ServiceState>(
-                builder: (context, state) {
-                  final hasError = (item.required == true &&
-                      controller[index].text.isEmpty &&
-                      submitTriggered);
-
-                  return Offstage(
-                    offstage: !hasError,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        localizations.translate(
-                          i18.common.corecommonRequired,
-                        ),
-                        style: TextStyle(
-                          color: theme.colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          if (childItems.isNotEmpty &&
-              controller[index].text.trim().isNotEmpty) ...[
-            _buildNestedChecklists(
-              item.code.toString(),
-              index,
-              controller[index].text.trim(),
-              context,
-            ),
-          ],
-        ],
+              if (childItems.isNotEmpty &&
+                  controller[index].text.trim().isNotEmpty) ...[
+                _buildNestedSurveyForm(
+                  item.code.toString(),
+                  index,
+                  controller[index].text.trim(),
+                  context,
+                  description,
+                ),
+              ],
+            ])),
       );
     } else if (item.dataType == 'String') {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: DigitTextField(
-          onChange: (value) {
-            checklistFormKey.currentState?.validate();
-          },
-          isRequired: item.required ?? true,
-          controller: controller[index],
+      return FormField<String>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((value == null || value == '') && item.required == true)) {
-              return localizations.translate("${item.code}_REQUIRED");
+            if (((controller[index].text == null ||
+                    controller[index].text == '') &&
+                item.required == true)) {
+              return localizations.translate(i18.common.corecommonRequired);
             }
             if (item.regex != null) {
-              return (RegExp(item.regex!).hasMatch(value!))
+              return (RegExp(item.regex!).hasMatch(controller[index].text!))
                   ? null
                   : localizations.translate("${item.code}_REGEX");
             }
 
             return null;
           },
-          label: localizations.translate(
-            '${selectedServiceDefinition?.code}.${item.code}',
-          ),
-        ),
-      );
-    } else if (item.dataType == 'Number') {
-      return DigitTextField(
-        autoValidation: AutovalidateMode.onUserInteraction,
-        textStyle: theme.textTheme.headlineMedium,
-        textInputType: TextInputType.number,
-        inputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp(
-            "[0-9]",
-          )),
-        ],
-        validator: (value) {
-          if (((value == null || value == '') && item.required == true)) {
-            return localizations.translate(
-              i18.common.corecommonRequired,
-            );
-          }
-          if (item.regex != null) {
-            return (RegExp(item.regex!).hasMatch(value!))
-                ? null
-                : localizations.translate("${item.code}_REGEX");
-          }
-
-          return null;
-        },
-        controller: controller[index],
-        label: '${localizations.translate(
-              '${selectedServiceDefinition?.code}.${item.code}',
-            ).trim()} ${item.required == true ? '*' : ''}',
-      );
-    } else if (item.dataType == 'MultiValueList') {
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text(
-                    '${localizations.translate(
-                      '${selectedServiceDefinition?.code}.${item.code}',
-                    )} ${item.required == true ? '*' : ''}',
-                    style: theme.textTheme.headlineSmall,
-                  ),
+          builder: (field) {
+            return LabeledField(
+              label: localizations.translate(
+                '${selectedServiceDefinition?.code}.${item.code}',
+              ),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
+              isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
+              charCondition: true,
+              child: DigitTextFormInput(
+                maxLength: 1000,
+                charCount: true,
+                onChange: (value) {
+                  field.didChange(value);
+                  controller[index].text = value;
+                },
+                errorMessage: field.errorText,
+                controller: controller[index],
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(
+                    "[a-zA-Z0-9 ]",
+                  )),
                 ],
               ),
+            );
+          });
+    } else if (item.dataType == 'Number') {
+      return FormField<String>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (((controller[index].text == null ||
+                    controller[index].text == '') &&
+                item.required == true)) {
+              return localizations.translate(
+                i18.common.corecommonRequired,
+              );
+            }
+            if (item.regex != null) {
+              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+                  ? null
+                  : localizations.translate("${item.code}_REGEX");
+            }
+
+            return null;
+          },
+          builder: (field) {
+            return LabeledField(
+              label: localizations
+                  .translate(
+                    '${selectedServiceDefinition?.code}.${item.code}',
+                  )
+                  .trim(),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
+              isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
+              charCondition: true,
+              child: DigitTextFormInput(
+                onChange: (value) {
+                  field.didChange(value);
+                  controller[index].text = value;
+                },
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(
+                    "[0-9]",
+                  )),
+                ],
+                errorMessage: field.errorText,
+                controller: controller[index],
+              ),
+            );
+          });
+    } else if (item.dataType == 'MultiValueList') {
+      visibleSurveyFormIndexes.add(index);
+      return Column(children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Text(
+                  '${localizations.translate(
+                    '${selectedServiceDefinition?.code}.${item.code}',
+                  )} ${item.required == true ? '*' : ''}',
+                  style: textTheme.headingS,
+                ),
+              ],
             ),
           ),
-          BlocBuilder<ServiceBloc, ServiceState>(
-            builder: (context, state) {
-              return Column(
-                children: item.values!
-                    .map((e) => DigitCheckboxTile(
-                          label: e,
+        ),
+        BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
+          return Column(
+            children: item.values!
+                .where((e1) => e1 != i18.surveyForm.notSelectedKey)
+                .toList()
+                .map((e) => Column(
+                      children: [
+                        DigitCheckbox(
+                          label: localizations.translate(e),
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),
@@ -901,23 +1341,215 @@ class _EligibilityChecklistViewPage
                             } else {
                               ele = "${controller[index].text}.$e";
                             }
-                            controller[index].value =
-                                TextEditingController.fromValue(
-                              TextEditingValue(
-                                text: ele,
-                              ),
-                            ).value;
+                            setState(() {
+                              controller[index].value =
+                                  TextEditingController.fromValue(
+                                TextEditingValue(
+                                  text: ele,
+                                ),
+                              ).value;
+                            });
                           },
-                        ))
-                    .toList(),
-              );
-            },
+                        ),
+                        SizedBox(
+                          height: theme.spacerTheme.spacer3,
+                        )
+                      ],
+                    ))
+                .toList(),
+          );
+        }),
+        BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            return item.values?.firstWhereOrNull(
+                          (element) => element.toUpperCase() == othersText,
+                        ) !=
+                        null &&
+                    controller[index].text.contains(othersText)
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                      left: 4.0,
+                      right: 4.0,
+                      bottom: 16,
+                    ),
+                    child: DigitTextField(
+                      maxLength: 1000,
+                      controller: additionalController[index],
+                      label: '${localizations.translate(
+                        '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                      )}*',
+                      validator: (value1) {
+                        if (value1 == null || value1 == '') {
+                          return localizations.translate(
+                            i18_local.common.coreCommonOthersRequired,
+                          );
+                        }
+
+                        return null;
+                      },
+                    ),
+                  )
+                : const SizedBox();
+          },
+        ),
+        BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            final hasError = (item.required == true &&
+                controller[index].text.isEmpty &&
+                submitTriggered);
+
+            return Offstage(
+              offstage: !hasError,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  localizations.translate(
+                    i18.common.corecommonRequired,
+                  ),
+                  style: TextStyle(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ]);
+    } else if (item.dataType == 'Boolean') {
+      return Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(spacer2),
+          child: LabeledField(
+            label: localizations.translate(
+              '${selectedServiceDefinition?.code}.${item.code}',
+            ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
+            isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
+            charCondition: true,
+            child: BlocBuilder<ServiceBloc, ServiceState>(
+              builder: (context, state) {
+                return FormField<bool>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (item.required == true &&
+                        (controller[index].text == null ||
+                            controller[index].text == '')) {
+                      return localizations.translate(
+                        i18.common.corecommonRequired,
+                      );
+                    }
+
+                    return null;
+                  },
+                  builder: (field) => SelectionCard(
+                    errorMessage: field.errorText,
+                    allowMultipleSelection: false,
+                    valueMapper: (value) {
+                      return value
+                          ? localizations.translate(
+                              i18.common.coreCommonYes,
+                            )
+                          : localizations.translate(
+                              i18.common.coreCommonNo,
+                            );
+                    },
+                    initialSelection: const [false],
+                    options: const [true, false],
+                    onSelectionChanged: (value) {
+                      field.didChange(value.first);
+                      context.read<ServiceBloc>().add(
+                            ServiceSurveyFormEvent(
+                              value: value.toString(),
+                              submitTriggered: submitTriggered,
+                            ),
+                          );
+                      final String ele;
+                      var val = controller[index].text.split('.');
+                      if (val.contains(e)) {
+                        val.remove(e);
+                        ele = val.join(".");
+                      } else {
+                        ele = "${controller[index].text}.$e";
+                      }
+                      controller[index].value = TextEditingController.fromValue(
+                        TextEditingValue(
+                          text: ele,
+                        ),
+                      ).value;
+                    },
+                  ),
+                );
+              },
+            ),
           ),
-        ],
+        ),
       );
     } else {
       return const SizedBox.shrink();
     }
+  }
+
+  // Function to build nested SurveyForm for child attributes
+  Widget _buildNestedSurveyForm(String parentCode, int parentIndex,
+      String parentControllerValue, BuildContext context, String? description) {
+    // Retrieve child items for the given parent code
+    final childItems = getNextQuestions(
+      parentCode,
+      initialAttributes ?? [],
+    );
+
+    return Column(
+      children: [
+        // Build cards for each matching child attribute
+        for (final matchingChildItem in childItems.where((childItem) =>
+            childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
+          DigitCard(
+              cardType: CardType.secondary,
+              margin: const EdgeInsets.only(
+                  bottom: spacer2, left: spacer2, right: spacer2),
+              children: [
+                _buildSurveyForm(
+                    matchingChildItem,
+                    initialAttributes?.indexOf(matchingChildItem) ??
+                        parentIndex,
+                    // Pass parentIndex here as we're building at the same level
+                    selectedServiceDefinition,
+                    context,
+                    description),
+              ]),
+      ],
+    );
+  }
+
+  // Function to get the next questions (child attributes) based on a parent code
+  List<AttributesModel> getNextQuestions(
+    String parentCode,
+    List<AttributesModel> surveyFormItems,
+  ) {
+    final childCodePrefix = '$parentCode.';
+    final nextSurveyForm = surveyFormItems.where((item) {
+      return item.code!.startsWith(childCodePrefix) &&
+          item.code?.split('.').length == parentCode.split('.').length + 2;
+    }).toList();
+
+    return nextSurveyForm;
+  }
+
+  int countDots(String inputString) {
+    int dotCount = 0;
+    for (int i = 0; i < inputString.length; i++) {
+      if (inputString[i] == '.') {
+        dotCount++;
+      }
+    }
+
+    return dotCount;
   }
 
   List<bool> isIneligible(
@@ -995,8 +1627,12 @@ class _EligibilityChecklistViewPage
 
   bool isDelivery(Map<String?, String> responses) {
     var isDeliver = true;
+    // exclude the questions SEAA4 and SEAA4.YES.ADT1 while checking for delivery,
+    // as they not needed for flow decision now
     for (var entry in responses.entries) {
-      if (entry.value == yes) {
+      if (entry.value == yes &&
+          !(entry.key!.contains('SEAA4') ||
+              entry.key!.contains('SEAA4.YES.ADT1'))) {
         isDeliver = false;
         break;
       }
@@ -1005,104 +1641,44 @@ class _EligibilityChecklistViewPage
     return isDeliver;
   }
 
-  // Function to build nested checklists for child attributes
-  Widget _buildNestedChecklists(
-    String parentCode,
-    int parentIndex,
-    String parentControllerValue,
-    BuildContext context,
-  ) {
-    // Retrieve child items for the given parent code
-    final childItems = getNextQuestions(
-      parentCode,
-      initialAttributes ?? [],
-    );
-
-    return Column(
-      children: [
-        // Build cards for each matching child attribute
-        for (final matchingChildItem in childItems.where((childItem) =>
-            childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
-          Card(
-            margin: const EdgeInsets.only(bottom: 8.0, left: 4.0, right: 4.0),
-            color: countDots(matchingChildItem.code ?? '') % 4 == 2
-                ? const Color.fromRGBO(238, 238, 238, 1)
-                : const DigitColors().white,
-            child: _buildChecklist(
-              matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ??
-                  parentIndex, // Pass parentIndex here as we're building at the same level
-              selectedServiceDefinition,
-              context,
-            ),
-          ),
-      ],
-    );
-  }
-
-  // Function to get the next questions (child attributes) based on a parent code
-  List<AttributesModel> getNextQuestions(
-    String parentCode,
-    List<AttributesModel> checklistItems,
-  ) {
-    final childCodePrefix = '$parentCode.';
-    final nextCheckLists = checklistItems.where((item) {
-      return item.code!.startsWith(childCodePrefix) &&
-          item.code?.split('.').length == parentCode.split('.').length + 2;
-    }).toList();
-
-    return nextCheckLists;
-  }
-
-  int countDots(String inputString) {
-    int dotCount = 0;
-    for (int i = 0; i < inputString.length; i++) {
-      if (inputString[i] == '.') {
-        dotCount++;
-      }
-    }
-
-    return dotCount;
-  }
-
-  Future<bool> _onBackPressed(BuildContext context, bool isIneligible) async {
-    if (!isIneligible) {
-      bool? shouldNavigateBack = await showDialog<bool>(
-        context: context,
-        builder: (context) => DigitDialog(
-          options: DigitDialogOptions(
-            titleText: localizations.translate(
-              i18.checklist.checklistBackDialogLabel,
-            ),
-            content: Text(localizations.translate(
-              i18.checklist.checklistBackDialogDescription,
-            )),
-            primaryAction: DigitDialogActions(
+  Future<bool> _onBackPressed(BuildContext context) async {
+    bool? shouldNavigateBack = await showDialog<bool>(
+      context: context,
+      builder: (context) => Popup(
+        title: localizations.translate(
+          i18.surveyForm.surveyFormBackDialogLabel,
+        ),
+        type: PopUpType.simple,
+        description: localizations.translate(
+          i18.surveyForm.surveyFormBackDialogDescription,
+        ),
+        actions: [
+          DigitButton(
               label: localizations
-                  .translate(i18.checklist.checklistBackDialogPrimaryAction),
-              action: (ctx) {
+                  .translate(i18.surveyForm.surveyFormBackDialogPrimaryAction),
+              onPressed: () {
                 Navigator.of(
                   context,
                   rootNavigator: true,
                 ).pop(true);
               },
-            ),
-            secondaryAction: DigitDialogActions(
-              label: localizations
-                  .translate(i18.checklist.checklistBackDialogSecondaryAction),
-              action: (context) {
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large),
+          DigitButton(
+              label: localizations.translate(
+                  i18.surveyForm.surveyFormBackDialogSecondaryAction),
+              onPressed: () {
                 Navigator.of(
                   context,
                   rootNavigator: true,
                 ).pop(false);
               },
-            ),
-          ),
-        ),
-      );
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large)
+        ],
+      ),
+    );
 
-      return shouldNavigateBack ?? false;
-    }
-    return false;
+    return shouldNavigateBack ?? false;
   }
 }

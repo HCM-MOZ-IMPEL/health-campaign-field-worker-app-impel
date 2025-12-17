@@ -5,6 +5,9 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_location_tracker/bloc/location_tracker_service.dart';
+import 'package:digit_location_tracker/utils/utils.dart'
+    as location_tracker_utils;
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,14 +16,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
+import 'package:sync_service/data/sync_service.dart';
+import 'package:sync_service/models/bandwidth/bandwidth_model.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../data/network_manager.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
-import '../models/bandwidth/bandwidth_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -115,6 +118,15 @@ void onStart(ServiceInstance service) async {
   final _isar = await isarFuture;
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+  final selectedProject = await LocalSecureStore.instance.selectedProject;
+
+  location_tracker_utils.LocationTrackerSingleton()
+      .setTenantId(tenantId: userRequestModel!.tenantId!);
+  location_tracker_utils.LocationTrackerSingleton().setInitialData(
+      projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
+
+  LocationTrackerService().processLocationData(
+      interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
   final appConfiguration = await _isar.appConfigurations.where().findAll();
   final interval =
@@ -145,7 +157,6 @@ void onStart(ServiceInstance service) async {
           if (frequencyCount != null && !isManualSyncRunning) {
             final serviceRegistryList =
                 await _isar.serviceRegistrys.where().findAll();
-
             if (serviceRegistryList.isNotEmpty) {
               final bandwidthService = serviceRegistryList.firstWhereOrNull(
                 (element) => element.service == 'BANDWIDTH-CHECK',
@@ -175,55 +186,43 @@ void onStart(ServiceInstance service) async {
                   sum / speedArray.length,
                   appConfiguration,
                 );
-                if (configuredBatchSize > 0) {
-                  final BandwidthModel bandwidthModel =
-                      BandwidthModel.fromJson({
-                    'userId': userRequestModel!.uuid,
-                    'batchSize': configuredBatchSize,
-                  });
+                final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+                  'userId': userRequestModel?.uuid,
+                  'batchSize': configuredBatchSize,
+                });
+                flutterLocalNotificationsPlugin.show(
+                  888,
+                  'Auto Sync',
+                  'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
+                  const NotificationDetails(
+                    android: AndroidNotificationDetails(
+                      "my_foreground",
+                      'AUTO SYNC',
+                      icon: 'ic_bg_service_small',
+                      ongoing: true,
+                    ),
+                  ),
+                );
+                // Insert sync logic here
+                final isSyncCompleted = await SyncService().performSync(
+                  localRepositories: Constants.getLocalRepositories(
+                    _sql,
+                    _isar,
+                  ).toList(),
+                  remoteRepositories: Constants.getRemoteRepositories(
+                    _dio,
+                    getActionMap(serviceRegistryList),
+                  ),
+                  bandwidthModel: bandwidthModel,
+                  service: service,
+                );
 
-                  try {
-                    flutterLocalNotificationsPlugin.show(
-                      888,
-                      'Auto Sync',
-                      'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(1) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
-                      const NotificationDetails(
-                        android: AndroidNotificationDetails(
-                          "my_foreground",
-                          'AUTO SYNC',
-                          icon: 'ic_bg_service_small',
-                          ongoing: true,
-                        ),
-                      ),
-                    );
-                    final isSyncCompleted = await const NetworkManager(
-                      configuration: NetworkManagerConfiguration(
-                        persistenceConfig:
-                            PersistenceConfiguration.offlineFirst,
-                      ),
-                    ).performSync(
-                      localRepositories:
-                          Constants.getLocalRepositories(_sql, _isar).toList(),
-                      remoteRepositories: Constants.getRemoteRepositories(
-                        _dio,
-                        getActionMap(serviceRegistryList),
-                      ),
-                      bandwidthModel: bandwidthModel,
-                      service: service,
-                    );
-                    i++;
-                    final isAppInActive =
-                        await LocalSecureStore.instance.isAppInActive;
+                i++;
+                final isAppInActive =
+                    await LocalSecureStore.instance.isAppInActive;
 
-                    if (isSyncCompleted && i >= 2 && isAppInActive) {
-                      service.stopSelf();
-                    }
-                  } catch (e) {
-                    service.invoke('serviceRunning', {
-                      "enablesManualSync": true,
-                    });
-                    service.stopSelf();
-                  }
+                if (isSyncCompleted && i >= 2 && isAppInActive) {
+                  service.stopSelf();
                 }
               }
             }
@@ -287,12 +286,10 @@ int getBatchSizeToBandwidth(
   List<AppConfiguration> appConfiguration, {
   bool isDownSync = false,
 }) {
-  int batchSize = 1;
+  int batchSize = 100;
   final bandwidthBatchSizeConfig = isDownSync
       ? appConfiguration.first.downSyncBandwidthBatchSize
       : appConfiguration.first.bandwidthBatchSize;
-
-  bandwidthBatchSizeConfig?.sort((a, b) => a.batchSize.compareTo(b.batchSize));
 
   final batchResult = bandwidthBatchSizeConfig
       ?.where(
@@ -302,12 +299,16 @@ int getBatchSizeToBandwidth(
   if (batchResult != null) {
     if (batchResult.isNotEmpty) {
       batchSize = int.parse(batchResult.first.batchSize.toString());
-    } else if (speed >=
-        appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
-      batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
-    } else if (speed <=
-        appConfiguration.first.bandwidthBatchSize!.first.minRange) {
-      batchSize = 0;
+    } else {
+      appConfiguration.first.bandwidthBatchSize!.sort(
+        (a, b) => a.maxRange.compareTo(b.maxRange),
+      );
+      if (speed >= appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
+        batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
+      } else if (speed <=
+          appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
+        batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+      }
     }
   }
 

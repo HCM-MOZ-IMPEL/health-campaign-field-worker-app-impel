@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/utils/utils.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
@@ -39,6 +40,7 @@ class CustomClosedHouseholdDetailsPageState
   static const _accuracyKey = 'accuracy';
   static const _reasonKey = 'reason';
   static const maxLength = 64;
+  bool _isManualRefresh = false;
 
   @override
   void initState() {
@@ -77,15 +79,15 @@ class CustomClosedHouseholdDetailsPageState
             form.control(_latKey).value ??= lat;
             form.control(_lngKey).value ??= lng;
             form.control(_accuracyKey).value ??= accuracy;
+            _isManualRefresh = false;
           },
           listenWhen: (previous, current) {
             final lat = form.control(_latKey).value;
             final lng = form.control(_lngKey).value;
             final accuracy = form.control(_accuracyKey).value;
 
-            return lat != null || lng != null || accuracy != null
-                ? false
-                : true;
+            final isFirstTime = lat == null || lng == null || accuracy == null;
+            return isFirstTime || _isManualRefresh;
           },
           child: BlocBuilder<custombloc.ClosedHouseholdBloc,
               custombloc.ClosedHouseholdState>(builder: (context, state) {
@@ -190,6 +192,31 @@ class CustomClosedHouseholdDetailsPageState
                               i18.closeHousehold.accuracyLabel,
                             ),
                           ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: DigitIconButton(
+                              icon: Icons.refresh,
+                              iconSize: 20,
+                              iconText: localizations.translate(
+                                i18Local.householdLocation.refreshLocation,
+                              ),
+                              onPressed: () {
+                                _isManualRefresh = true;
+
+                                DigitComponentsUtils()
+                                    .showLocationCapturingDialog(
+                                  context,
+                                  localizations.translate(
+                                      i18Local.common.locationCapturing),
+                                  DigitSyncDialogType.inProgress,
+                                );
+
+                                context
+                                    .read<LocationBloc>()
+                                    .add(const LoadLocationEvent());
+                              },
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
@@ -260,14 +287,15 @@ class CustomClosedHouseholdDetailsPageState
   FormGroup buildForm(ClosedHouseholdState state) {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
+        value: localizations.translate(
+            RegistrationDeliverySingleton().boundary?.code.toString() ??
+                ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          utilsLocal.CustomValidator.requiredMin3,
+          Validators.delegate(utilsLocal.CustomValidator.requiredMin3),
           Validators.maxLength(200),
         ],
       ),

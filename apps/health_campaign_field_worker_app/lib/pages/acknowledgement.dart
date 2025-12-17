@@ -76,9 +76,9 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                         const IRSWrapperRoute(),
                       ]);
                     } else {
-                      // context.router.replaceAll([
-                      //   const BednetWrapperRoute(),
-                      // ]);
+                      context.router.replaceAll([
+                        const BednetWrapperRoute(),
+                      ]);
                     }
                   },
                 ),
@@ -98,10 +98,10 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                         BoundarySelectionRoute(),
                       ]);
                     } else {
-                      // context.router.replaceAll([
-                      //   const BednetWrapperRoute(),
-                      //   BoundarySelectionRoute(),
-                      // ]);
+                      context.router.replaceAll([
+                        const BednetWrapperRoute(),
+                        BoundarySelectionRoute(),
+                      ]);
                     }
                   },
                   label: localizations

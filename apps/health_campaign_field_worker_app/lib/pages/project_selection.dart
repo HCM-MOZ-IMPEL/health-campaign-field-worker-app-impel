@@ -249,18 +249,36 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
 
-      context.router.replaceAll([
-        isProjectTypeSMC(context)
-            ? const SMCWrapperRoute()
-            : const IRSWrapperRoute(),
-        BoundarySelectionRoute(),
-      ]);
+      // context.router.replaceAll([
+      //   isProjectTypeSMC(context)
+      //       ? const SMCWrapperRoute()
+      //       : const IRSWrapperRoute(),
+      //   BoundarySelectionRoute(),
+      // ]);
+
+      if (isProjectTypeSMC(context)) {
+        context.router.replaceAll([
+          const SMCWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      } else if (isProjectTypeIRS(context)) {
+        context.router.replaceAll([
+          const IRSWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      } else {
+        context.router.replaceAll([
+          const BednetWrapperRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      }
     } catch (e) {
       debugPrint('error $e');
     }
   }
 }
 
+// get the search household filters based on projectType and set the same
 List<String> getHouseholdFiltersBasedOnProjectType(
     AppConfiguration appConfiguration, BuildContext context) {
   List<String> list = [];
@@ -268,6 +286,13 @@ List<String> getHouseholdFiltersBasedOnProjectType(
       ProjectTypes.smc.toValue()) {
     if (appConfiguration.searchHouseHoldFiltersSMC != null) {
       list.addAll(appConfiguration.searchHouseHoldFiltersSMC!
+          .map((e) => e.code)
+          .toList());
+    }
+  } else if (context.selectedProject.additionalDetails?.projectType?.code ==
+      ProjectTypes.bednet.toValue()) {
+    if (appConfiguration.searchHouseHoldFiltersBednet != null) {
+      list.addAll(appConfiguration.searchHouseHoldFiltersBednet!
           .map((e) => e.code)
           .toList());
     }
@@ -289,11 +314,12 @@ void setPackagesSingleton(BuildContext context) {
         List<ServiceRegistry> serviceRegistry,
         List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        // info filter dashboardschema based on projectTypeCode
+
         final projectTypeCode =
             context.projectTypeCode ?? ProjectTypes.irs.toValue();
-
-        final filteredDashboardConfig =
-            filterDashboardConfig(dashboardConfigSchema ?? [], projectTypeCode);
+        final filteredDashboardConfig = context.filterDashboardConfig(
+            dashboardConfigSchema ?? [], projectTypeCode);
 
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
@@ -372,6 +398,7 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
               appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          searchCLFFilters: [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -383,4 +410,8 @@ void setPackagesSingleton(BuildContext context) {
 
 bool isProjectTypeSMC(BuildContext context) {
   return context.projectTypeCode == ProjectTypes.smc.toValue();
+}
+
+bool isProjectTypeIRS(BuildContext context) {
+  return context.projectTypeCode == ProjectTypes.irs.toValue();
 }

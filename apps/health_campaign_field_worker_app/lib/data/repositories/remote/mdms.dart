@@ -254,11 +254,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =
@@ -286,6 +286,15 @@ class MdmsRepository {
         ..code = element.code;
 
       return deliveryCommentOption;
+    }).toList();
+
+    final List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc =
+        element?.deliveryCommentWastedOptionsSmc.map((element) {
+      final deliveryCommentWastedOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return deliveryCommentWastedOption;
     }).toList();
 
     final List<Interfaces>? interfaceList =
@@ -316,6 +325,8 @@ class MdmsRepository {
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
+    appConfiguration.deliveryCommentWastedOptionsSmc =
+        deliveryCommentWastedOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
     appConfiguration.householdMemberDeletionReasonOptions =
@@ -338,6 +349,15 @@ class MdmsRepository {
     }).toList();
     appConfiguration.searchHouseHoldFiltersSMC =
         result.hcmWrapperModel?.searchHouseHoldFiltersSMC?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
+    appConfiguration.searchHouseHoldFiltersBednet =
+        result.hcmWrapperModel?.searchHouseHoldFiltersBednet?.map((e) {
       final searchFilters = SearchHouseHoldFilters()
         ..name = e.name
         ..code = e.code
@@ -382,6 +402,26 @@ class MdmsRepository {
         ..active = e.active;
 
       return reasonTypes;
+    }).toList();
+
+    appConfiguration.vehicleTrackingTripReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripReasons?.map((e) {
+      final vehicleTrackingTripReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripReasons;
+    }).toList();
+
+    appConfiguration.vehicleTrackingTripEvaluationReasons =
+        result.hcmWrapperModel?.vehicleTrackingTripEvaluationReasons?.map((e) {
+      final vehicleTrackingTripEvaluationReasons = VehicleTrackingReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return vehicleTrackingTripEvaluationReasons;
     }).toList();
 
     isar.writeTxnSync(() {

@@ -1,20 +1,40 @@
 import 'dart:io';
 
+import 'package:complaints/data/repositories/local/pgr_service.dart';
+import 'package:complaints/data/repositories/oplog/oplog.dart';
+import 'package:complaints/data/repositories/remote/pgr_service.dart';
+import 'package:complaints/models/pgr_complaints.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:survey_form/data/repositories/local/service.dart';
+import 'package:survey_form/data/repositories/local/service_definition.dart';
+import 'package:survey_form/data/repositories/oplog/oplog.dart';
+import 'package:survey_form/data/repositories/remote/service.dart';
+import 'package:survey_form/data/repositories/remote/service_definition.dart';
+import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/custom_product_variant.dart';
+import '../data/repositories/custom_project_beneficairy.dart';
 import '../data/repositories/custom_task.dart';
+import '../data/repositories/local/inventory_management/custom_stock.dart';
+import '../data/repositories/local/vehicle_tracking/custom_user_action.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -24,6 +44,7 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:survey_form/survey_form.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -105,6 +126,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
     Isar isar,
   ) {
     return [
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => LocationTrackerLocalBaseRepository(
+          sql,
+          LocationTrackerOpLogManager(isar),
+        ),
+      ),
+
       RepositoryProvider<
           LocalRepository<IndividualModel, IndividualSearchModel>>(
         create: (_) => IndividualLocalRepository(
@@ -209,6 +238,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectBeneficiaryOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>>(
+        create: (_) => CustomProjectBeneficiaryLocalRepository(
+          sql,
+          ProjectBeneficiaryOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => TaskLocalRepository(
           sql,
@@ -219,6 +256,27 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => CustomTaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => UserActionLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => CustomUserActionLocalRepository(
+          sql,
+          UserActionOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProductVariantModel, ProductVariantSearchModel>>(
+        create: (_) => CustomProductVariantLocalRepository(
+          sql,
+          ProductVariantOpLogManager(isar),
         ),
       ),
       RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
@@ -241,7 +299,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
-        create: (_) => StockLocalRepository(
+        create: (_) => CustomStockLocalRepository(
           sql,
           StockOpLogManager(isar),
         ),
@@ -497,6 +555,17 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
             create: (_) => HFReferralRemoteRepository(dio, actionMap: actions),
+          ),
+        // if (value == DataModelType.userLocation)
+        //   RepositoryProvider<
+        //       RemoteRepository<UserActionModel, UserActionSearchModel>>(
+        //     create: (_) =>
+        //         LocationTrackerRemoteRepository(dio, actionMap: actions),
+        //   ),
+        if (value == DataModelType.userAction)
+          RepositoryProvider<
+              RemoteRepository<UserActionModel, UserActionSearchModel>>(
+            create: (_) => UserActionRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

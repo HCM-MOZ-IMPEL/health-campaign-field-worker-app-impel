@@ -13,7 +13,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showBackNavigation;
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
-  final VoidCallback? handleback;
+  final VoidCallback? handleBack;
   final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
@@ -22,7 +22,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,
-    this.handleback,
+    this.handleBack,
     this.showcaseButton,
   });
 
@@ -46,7 +46,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       ),
                       onPressed: () {
                         context.router.pop();
-                        handleback != null ? handleback!() : null;
+                        handleBack != null ? handleBack!() : null;
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(

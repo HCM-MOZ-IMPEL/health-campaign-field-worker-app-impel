@@ -1,6 +1,17 @@
 library app_utils;
 
+import 'package:attendance_management/models/entities/attendance_log.dart';
+import 'package:complaints/models/pgr_complaints.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:survey_form/models/entities/service.dart';
+import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
+
+import 'package:digit_data_model/data_model.init.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -16,6 +27,7 @@ import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:closed_household/closed_household.dart'
     as closed_household_mappers;
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 // import 'package:attendance_management/attendance_management.dart'
 //     as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
@@ -34,6 +46,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -41,13 +54,17 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
 import '../models/entities/project_types.dart';
 import '../models/entities/status.dart';
+import '../models/entities/vehicle_tracking/trip_actions.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
+
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
+import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../utils/utils_smc/i18_key_constants.dart' as i18_local_smc;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -124,6 +141,85 @@ class CustomValidator {
   }
 }
 
+// Existing _findLeastLevelBoundaryCode method remains unchanged
+String _findLeastLevelBoundaryCode(List<BoundaryModel> boundaries) {
+  BoundaryModel? highestBoundary;
+
+  // Find the boundary with the highest boundaryNum
+  for (var boundary in boundaries) {
+    if (highestBoundary == null ||
+        (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
+      highestBoundary = boundary;
+    }
+  }
+
+  // If the highest boundary is a leaf node (no children), it is the least-level boundary
+  if (highestBoundary?.children.isEmpty ?? true) {
+    // Return the boundary type if available, otherwise fallback to the label or an empty string
+    return highestBoundary?.boundaryType ?? highestBoundary?.label ?? "";
+  }
+
+  // If the highest boundary has children, recursively search in them
+  if (highestBoundary?.children != null) {
+    for (var child in highestBoundary!.children) {
+      String leastCode = _findLeastLevelBoundaryCode(
+          [child]); // Recursively find the least level
+      if (leastCode.isNotEmpty) {
+        return leastCode;
+      }
+    }
+  }
+
+  // If no boundary found
+  return "";
+}
+
+// Recursive function to find the least level boundary codes
+List<String> findLeastLevelBoundaries(List<BoundaryModel> boundaries) {
+  // Find the least level boundary type
+  String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
+
+  // Initialize a list to store the matching boundary codes with lowest level boundary type
+  List<String> leastLevelBoundaryCodes = [];
+
+  // Iterate through the boundaries to find matching codes
+  if (leastLevelType.isNotEmpty) {
+    for (var boundary in boundaries) {
+      // Check if the boundary matches the least-level type and has no children (leaf node)
+      if ((boundary.boundaryType == leastLevelType ||
+              boundary.label == leastLevelType) &&
+          boundary.children.isEmpty) {
+        // Found a least level boundary with no children (leaf node), add its code
+        leastLevelBoundaryCodes.add(boundary.code!);
+      } else if (boundary.children.isNotEmpty) {
+        // Recursively search in the children
+        List<String> childVillageCodes =
+            findLeastLevelBoundaries(boundary.children);
+        leastLevelBoundaryCodes.addAll(childVillageCodes);
+      }
+    }
+  }
+
+  // Return the list of matching boundary codes
+  return leastLevelBoundaryCodes;
+}
+
+String getStockRecordLabel(StockModel? stock) {
+  String label = i18_local.stockDetails.stockReceiptDetails;
+
+  if (stock != null) {
+    if (stock.transactionReason == "RETURNED") {
+      label = i18_local_smc.stockDetails.stockReturnDetailsSMC;
+    } else if (stock.transactionType == "RECEIVED") {
+      label = i18_local_smc.stockDetails.stockReceiptDetailsSMC;
+    } else if (stock.transactionType == "DISPATCHED") {
+      label = i18_local_smc.stockDetails.stockIssueDetailsSMC;
+    }
+  }
+
+  return label;
+}
+
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
@@ -136,8 +232,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -174,6 +270,85 @@ performBackgroundService({
   }
 }
 
+void attemptSyncUp(BuildContext context) async {
+  await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+  if (context.mounted) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            userId: context.loggedInUserUuid,
+            localRepositories: [
+              // INFO : Need to add local repo of package Here
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<LocalRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  LocalRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  LocalRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  LocalRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+            remoteRepositories: [
+              // INFO : Need to add repo repo of package Here
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+              context
+                  .read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+              context.read<
+                  RemoteRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
+              context.read<
+                  RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+              context.read<
+                  RemoteRepository<AttendanceLogModel,
+                      AttendanceLogSearchModel>>(),
+              context.read<
+                  RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+            ],
+          ),
+        );
+  }
+}
+
 String maskString(String input) {
   // Define the character to use for masking (e.g., "*")
   const maskingChar = '*';
@@ -187,6 +362,32 @@ String maskString(String input) {
 
 List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
   return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
+}
+
+String formatDateFromMillis(int millis) {
+  final date = DateTime.fromMillisecondsSinceEpoch(millis);
+  final day = date.day.toString().padLeft(2, '0');
+  final month = _monthShort(date.month);
+  final year = date.year;
+  return '$day $month $year';
+}
+
+String _monthShort(int month) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  return months[month - 1];
 }
 
 Timer makePeriodicTimer(
@@ -404,8 +605,13 @@ void showDownloadDialog(
                 (context.selectedProject.additionalDetails?.projectType?.code ==
                         ProjectTypes.smc.toValue())
                     ? context.router.popUntilRouteWithName(SMCWrapperRoute.name)
-                    : context.router
-                        .popUntilRouteWithName(IRSWrapperRoute.name);
+                    : (context.selectedProject.additionalDetails?.projectType
+                                ?.code ==
+                            ProjectTypes.irs.toValue())
+                        ? context.router
+                            .popUntilRouteWithName(IRSWrapperRoute.name)
+                        : context.router
+                            .popUntilRouteWithName(BednetWrapperRoute.name);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -437,10 +643,18 @@ void showDownloadDialog(
                       (context.selectedProject.additionalDetails?.projectType
                                   ?.code ==
                               (ProjectTypes.smc.toValue()))
-                          ? context.router
-                              .popUntilRouteWithName(SMCWrapperRoute.name)
-                          : context.router
-                              .popUntilRouteWithName(IRSWrapperRoute.name);
+                          ? context.router.replaceAll([
+                              const SMCWrapperRoute(),
+                            ])
+                          : (context.selectedProject.additionalDetails
+                                      ?.projectType?.code ==
+                                  ProjectTypes.irs.toValue())
+                              ? context.router.replaceAll([
+                                  const IRSWrapperRoute(),
+                                ])
+                              : context.router.replaceAll([
+                                  const BednetWrapperRoute(),
+                                ]);
                     }
                   },
                 )
@@ -504,6 +718,47 @@ getSelectedLanguage(AppInitialized state, int index) {
   return isSelected;
 }
 
+String getSecondaryPartyValue(StockModel? stock) {
+  String value = stock?.receiverId ?? "";
+
+  if (stock != null) {
+    if ((stock.transactionType == "RECEIVED" && stock.senderType == "STAFF") ||
+        (stock.transactionType == "DISPATCHED" &&
+            stock.receiverType == "STAFF")) {
+      value = stock.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == "distributorName")
+              ?.value ??
+          "Delivery Team";
+    } else {
+      value = stock.transactionType == "RECEIVED"
+          ? 'FAC_${stock.senderId}'
+          : 'FAC_${stock.receiverId}';
+    }
+  }
+
+  return value;
+}
+
+String getEntryTypeLabel(StockModel? stock) {
+  String label =
+      '${i18_stock.stockDetails.receivedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+
+  if (stock != null) {
+    if (stock.transactionType == "RECEIVED" &&
+        stock.transactionReason == "RETURNED") {
+      label = i18_local.stockDetails.selectTransactingPartyReturnedFrom;
+    } else if (stock.transactionType == "DISPATCHED" &&
+        stock.senderType == "STAFF") {
+      label = i18_local.stockDetails.returnedTo;
+    } else if (stock.transactionType == "DISPATCHED") {
+      label =
+          '${i18_stock.stockDetails.issuedPageTitle}_${i18_stock.stockReconciliationDetails.stockLabel}';
+    }
+  }
+
+  return label;
+}
+
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
@@ -513,6 +768,8 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
+    Future(() => surveyForm_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -561,6 +818,56 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
+String? getVehicleNo(ProductVariantModel vehicle) {
+  return vehicle.variation;
+}
+
+String? getAdditionalFieldFromVehicle(
+    ProductVariantModel vehicle, String additionalFieldKey) {
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
+}
+
+String? getAdditionalFieldFromVehicleActionModel(
+    UserActionModel? vehicle, String additionalFieldKey) {
+  if (vehicle == null) return null;
+  final additionalField = vehicle.additionalFields?.fields
+      .where((field) => field.key == additionalFieldKey)
+      .firstOrNull;
+  if (additionalField == null) {
+    return null;
+  }
+
+  return additionalField.value.toString();
+}
+
+/// from a [UserActionModel]. Returns `null` when the field is not present.
+String? getStartMileageFromUserAction(UserActionModel? action) {
+  const startMileageKey = 'startMileage';
+  return getAdditionalFieldFromVehicleActionModel(action, startMileageKey);
+}
+
+/// Returns true when the end mileage is invalid compared to start mileage.
+/// Treats missing or non-numeric values as invalid (returns true).
+bool isEndMileageLessThanStart(String? endMileage, String? startMileage) {
+  final int? startParsed = int.tryParse(startMileage?.trim() ?? '');
+  final int? endParsed = int.tryParse(endMileage?.trim() ?? '');
+
+  if (startParsed == null || endParsed == null) return true;
+
+  return endParsed < startParsed;
+}
+
+String vehicleCustomAction(TripActions action, String vehicleNo) {
+  return "$vehicleNo||${action.toValue()}";
+}
+
 bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
   if (selectedHouseStructureTypes.contains("METAL") ||
       selectedHouseStructureTypes.contains("GLASS") ||
@@ -570,6 +877,10 @@ bool checkEligibilityForHouseType(List<String> selectedHouseStructureTypes) {
     return false;
   }
   return true;
+}
+
+List<String> extractAllProductCounts(List<ProductVariantModel> variants) {
+  return variants.map((variant) => variant.sku).whereType<String>().toList();
 }
 
 bool checkIfBeneficiaryIneligible(

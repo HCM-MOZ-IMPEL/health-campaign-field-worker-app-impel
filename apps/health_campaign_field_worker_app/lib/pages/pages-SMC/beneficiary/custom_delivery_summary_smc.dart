@@ -260,6 +260,12 @@ class DeliverySummaryPageState
                             );
 
                             const deliveryCommentKey = 'deliveryComment';
+                            const _deliveryCommentWastedKey =
+                                'deliveryCommentWasted';
+                            var deliveryCommentWasted = getDeliveryComment(
+                                deliverState.oldTask,
+                                _deliveryCommentWastedKey);
+
                             var deliveryComment = getDeliveryComment(
                                 deliverState.oldTask, deliveryCommentKey);
                             var wastedQuantity =
@@ -319,6 +325,20 @@ class DeliverySummaryPageState
                                                     .toValue()
                                             ? localizations.translate(
                                                 deliveryComment.toString())
+                                            : localizations.translate(
+                                                i18.common.coreCommonNA),
+                                        isInline: true),
+                                    LabelValuePair(
+                                        label: localizations.translate(
+                                          i18_local.deliverIntervention
+                                              .deliveryCommentLabelWastedSMC,
+                                        ),
+                                        value: deliverState.oldTask?.status ==
+                                                Status.administeredSuccess
+                                                    .toValue()
+                                            ? localizations.translate(
+                                                deliveryCommentWasted
+                                                    .toString())
                                             : localizations.translate(
                                                 i18.common.coreCommonNA),
                                         isInline: true),

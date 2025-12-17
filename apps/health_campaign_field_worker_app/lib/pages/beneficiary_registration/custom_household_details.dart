@@ -308,10 +308,14 @@ class CustomHouseHoldDetailsPageState
                             householdModel,
                             individualModel,
                             projectBeneficiaryModel,
+                            parentClientReferenceId,
+                            relationshipType,
                             registrationDate,
                             searchQuery,
                             loading,
                             isHeadOfHousehold,
+                            householdChecklists,
+                            individualChecklists,
                           ) {
                             var household = householdModel;
                             household ??= HouseholdModel(
@@ -447,10 +451,14 @@ class CustomHouseHoldDetailsPageState
                             addressModel,
                             householdModel,
                             individuals,
+                            relationshipType,
                             registrationDate,
+                            parentClientReferenceId,
                             projectBeneficiaryModel,
                             loading,
                             isHeadOfHousehold,
+                            householdChecklists,
+                            individualChecklists,
                           ) {
                             var household = householdModel.copyWith(
                                 memberCount: memberCount,

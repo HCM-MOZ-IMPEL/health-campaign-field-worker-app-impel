@@ -1,0 +1,519 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
+import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
+// import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/utils/utils.dart';
+
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
+import 'package:registration_delivery/widgets/localized.dart';
+
+import '../../../router/app_router.dart';
+
+import '../../../utils/i18_key_constants.dart' as i18_local;
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/vehicle_tracking/vehicle_trip_action.dart';
+import '../../utils/utils.dart';
+import '../../widgets/showcase/showcase_wrappers.dart';
+
+@RoutePage()
+class VehicleTripFeedbackPage extends LocalizedStatefulWidget {
+  final String vehicleNo;
+  const VehicleTripFeedbackPage({
+    super.key,
+    super.appLocalizations,
+    required this.vehicleNo,
+  });
+
+  @override
+  State<VehicleTripFeedbackPage> createState() =>
+      VehicleTripFeedbackPageState();
+}
+
+class VehicleTripFeedbackPageState
+    extends LocalizedState<VehicleTripFeedbackPage> {
+  final clickedStatus = ValueNotifier<bool>(false);
+  bool? shouldSubmit = false;
+
+  static const _tripFeedbackEvaluationKey = "tripFeedbackEvaluation";
+  static const _tripFeedbackCommentKey = "tripFeedbackComment";
+  static const _endMileageKey = 'endMileage';
+  static const _destinationKey = 'destination';
+
+  // for others reason
+  final TextEditingController otherFieldReasonController =
+      TextEditingController();
+  bool otherSelected = false;
+
+  @override
+  void initState() {
+    context.read<LocationBloc>().add(const LoadLocationEvent());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final vehicleNo = widget.vehicleNo;
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: BlocBuilder<LocationBloc, LocationState>(
+            builder: (context, locationState) {
+          return ReactiveFormBuilder(
+              form: () => buildForm(),
+              builder: (context, form, child) {
+                final tripEvaluation =
+                    form.control(_tripFeedbackEvaluationKey).value as String?;
+                final tripComment =
+                    form.control(_tripFeedbackCommentKey).value as String?;
+                return BlocBuilder<VehicleTripActionBloc,
+                    VehicleTripActionState>(
+                  builder: (context, vehicleTripActionState) {
+                    UserActionModel? existingTripBookAction =
+                        vehicleTripActionState.tripAction;
+
+                    String startMileage =
+                        getStartMileageFromUserAction(existingTripBookAction) ??
+                            '0';
+
+                    UserActionModel? tripAction = _getTripActionModel(
+                        vehicleTripActionState,
+                        tripEvaluation,
+                        tripComment,
+                        form);
+                    return ScrollableContent(
+                      header: const Column(
+                        children: [
+                          BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                            showBackNavigation: false,
+                          ),
+                        ],
+                      ),
+                      footer: DigitCard(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          children: [
+                            ValueListenableBuilder(
+                              valueListenable: clickedStatus,
+                              builder: (context, bool isClicked, _) {
+                                return DigitButton(
+                                    label: localizations.translate(
+                                      i18_local
+                                          .vehicleTracking.endTripButtonLabel,
+                                    ),
+                                    isDisabled: false,
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.large,
+                                    mainAxisSize: MainAxisSize.max,
+                                    onPressed: isClicked
+                                        ? () {}
+                                        : () async {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) {
+                                              return;
+                                            }
+
+                                            String? endMileage = (form
+                                                .control(_endMileageKey)
+                                                .value as String?);
+
+                                            if (int.parse(endMileage ?? '0') <
+                                                int.parse(startMileage)) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                      i18_local.vehicleTracking
+                                                          .endStartMileageLabel),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+                                              return;
+                                            }
+
+                                            final shouldSubmit = await dialog
+                                                .DigitDialog.show<bool>(
+                                              context,
+                                              options:
+                                                  dialog.DigitDialogOptions(
+                                                titleText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogTitle,
+                                                ),
+                                                contentText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogContent,
+                                                ),
+                                                primaryAction:
+                                                    dialog.DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonSubmit,
+                                                  ),
+                                                  action: (context) {
+                                                    clickedStatus.value = true;
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  },
+                                                ),
+                                                secondaryAction:
+                                                    dialog.DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
+                                                  action: (context) =>
+                                                      Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(false),
+                                                ),
+                                              ),
+                                            );
+                                            if ((shouldSubmit ?? false) &&
+                                                context.mounted &&
+                                                tripAction != null) {
+                                              handleLocationState(
+                                                  locationState,
+                                                  context,
+                                                  vehicleTripActionState,
+                                                  widget.vehicleNo,
+                                                  form);
+                                            }
+                                          });
+                              },
+                            ),
+                          ]),
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: DigitCard(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: kPadding),
+                                child: Text(
+                                  localizations.translate(
+                                    i18_local.vehicleTracking.feedbackLabel,
+                                  ),
+                                  style: theme.textTheme.displayMedium,
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18_local.vehicleTracking.tripComment,
+                                    ),
+                                    validationMessages: {
+                                      "required": (control) {
+                                        return localizations.translate(
+                                          '${i18_local.vehicleTracking.tripComment}_IS_REQUIRED',
+                                        );
+                                      },
+                                    },
+                                    textCapitalization: TextCapitalization.none,
+                                    formControlName: _tripFeedbackCommentKey,
+                                    isRequired: false,
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          kPadding, 0, kPadding, 0),
+                                      child: BlocBuilder<AppInitializationBloc,
+                                              AppInitializationState>(
+                                          builder: (context, state) {
+                                        if (state is! AppInitialized) {
+                                          return const Offstage();
+                                        }
+
+                                        final vehicleTrackingTripEvaluationReasons =
+                                            state.appConfiguration
+                                                .vehicleTrackingTripEvaluationReasons;
+
+                                        return SelectionBox<String>(
+                                          isRequired: true,
+                                          title: localizations.translate(
+                                            i18_local.vehicleTracking
+                                                .tripBookReasonLabel,
+                                          ),
+                                          allowMultipleSelection: false,
+                                          width: 148,
+                                          equalWidthOptions: true,
+                                          options:
+                                              vehicleTrackingTripEvaluationReasons
+                                                      ?.map((reason) =>
+                                                          reason.code)
+                                                      .toList() ??
+                                                  [
+                                                    "Excellent – Very professional and safe",
+                                                    "Good – Smooth and comfortable",
+                                                    "Average – Could improve",
+                                                    "Poor – Unpleasant or unsafe"
+                                                  ],
+                                          onSelectionChanged: (value) {
+                                            form
+                                                .control(
+                                                    _tripFeedbackEvaluationKey)
+                                                .markAsTouched();
+                                            setState(() {
+                                              if (value.isNotEmpty) {
+                                                if (value.first == "Others") {
+                                                  setState(() {
+                                                    otherSelected = true;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    otherSelected = false;
+                                                  });
+                                                }
+                                                form
+                                                    .control(
+                                                        _tripFeedbackEvaluationKey)
+                                                    .value = value.first;
+                                              } else {
+                                                form
+                                                    .control(
+                                                        _tripFeedbackEvaluationKey)
+                                                    .value = null;
+                                              }
+                                            });
+                                          },
+                                          valueMapper: (value) {
+                                            return localizations
+                                                .translate(value);
+                                          },
+                                          errorMessage: null,
+                                        );
+                                      })),
+
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        kPadding - 4, 0, kPadding - 4, 0),
+                                    child: DigitTextFormField(
+                                        isRequired: true,
+                                        keyboardType: TextInputType.number,
+                                        formControlName: _endMileageKey,
+                                        label: localizations.translate(
+                                          i18_local
+                                              .vehicleTracking.mileageLabel,
+                                        ),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        validationMessages: {
+                                          'required': (object) =>
+                                              localizations.translate(
+                                                i18_local.vehicleTracking
+                                                    .mileageLabelRequired,
+                                              )
+                                        }),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        kPadding - 4, 0, kPadding - 4, 0),
+                                    child: DigitTextFormField(
+                                      formControlName: _destinationKey,
+                                      label: localizations.translate(
+                                        i18_local
+                                            .vehicleTracking.destinationLabel,
+                                      ),
+                                      isRequired: true,
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              i18_local.vehicleTracking
+                                                  .destinationLabelRequired,
+                                            ),
+                                        'maxLength': (object) => localizations
+                                            .translate(
+                                                i18.common.maxCharsRequired)
+                                            .replaceAll('{}', 100.toString()),
+                                        'minLength': (object) =>
+                                            localizations.translate(
+                                                i18.common.min2CharsRequired)
+                                      },
+                                    ),
+                                  )
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(kPadding),
+                                  //   child: DigitTextField(
+                                  //       label: localizations.translate(
+                                  //         i18_local
+                                  //             .vehicleTracking.othersReasonTextLabel,
+                                  //       ),
+                                  //       isRequired: otherSelected,
+                                  //       controller: otherFieldReasonController,
+                                  //       inputFormatter: [
+                                  //         FilteringTextInputFormatter.allow(RegExp(
+                                  //           "[a-zA-Z0-9]",
+                                  //         )),
+                                  //       ]),
+                                  // )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              });
+        }),
+      ),
+    );
+  }
+
+  void handleLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) {
+    if (context.mounted) {
+      DigitComponentsUtils.showDialog(
+        context,
+        localizations.translate(i18.common.locationCapturing),
+        DialogType.inProgress,
+      );
+
+      Future.delayed(const Duration(seconds: 0), () {
+        // After delay, hide the initial dialog
+        DigitComponentsUtils.hideDialog(context);
+        handleCapturedLocationState(
+          locationState,
+          context,
+          vehicleTripActionState,
+          vehicleNo,
+          form,
+        );
+      });
+    }
+  }
+
+  Future<void> handleCapturedLocationState(
+    LocationState locationState,
+    BuildContext context,
+    VehicleTripActionState vehicleTripActionState,
+    String? vehicleNo,
+    FormGroup form,
+  ) async {
+    // if all null then put 0
+    final lat = locationState.latitude ??
+        vehicleTripActionState.tripAction?.latitude ??
+        0;
+    final long = locationState.longitude ??
+        vehicleTripActionState.tripAction?.longitude ??
+        0;
+    final accuracy = locationState.accuracy ??
+        vehicleTripActionState.tripAction?.locationAccuracy ??
+        0;
+    final tripEvaluation =
+        form.control(_tripFeedbackEvaluationKey).value as String?;
+    final tripComment = form.control(_tripFeedbackCommentKey).value as String?;
+
+    final tripActionEndTrip = _getTripActionModel(
+        vehicleTripActionState, tripEvaluation, tripComment, form);
+
+    context.read<VehicleTripActionBloc>().add(
+          VehicleTripActionEndTripEvent(
+              isEditing: true,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              vehicleNo: vehicleNo ?? widget.vehicleNo,
+              longitude: long,
+              latitude: lat,
+              locationAccurracy: accuracy,
+              tripAction: tripActionEndTrip!),
+        );
+    context.router.push(
+      VehicleAcknowledgementRoute(),
+    );
+  }
+
+  UserActionModel? _getTripActionModel(
+    VehicleTripActionState vehicleTripActionState,
+    String? tripEvaluation,
+    String? tripComment,
+    FormGroup form,
+  ) {
+    UserActionModel? tripBookAction = vehicleTripActionState.tripAction;
+
+    if (tripBookAction == null) {
+      return null;
+    }
+    final destination = form.control(_destinationKey).value as String?;
+    final endMileage = form.control(_endMileageKey).value as String?;
+
+    Set keys = {
+      _tripFeedbackCommentKey,
+      _tripFeedbackEvaluationKey,
+    };
+
+    List<AdditionalField> additionalFields =
+        tripBookAction.additionalFields?.fields ?? [];
+
+    additionalFields =
+        additionalFields.whereNot((e) => keys.contains(e)).toList();
+
+    tripBookAction = tripBookAction.copyWith(
+        additionalFields: UserActionAdditionalFields(version: 1, fields: [
+      ...additionalFields,
+      if (destination != null &&
+          destination.isNotEmpty &&
+          destination.length > 1)
+        AdditionalField(_destinationKey, destination),
+      if (endMileage != null && endMileage.isNotEmpty && endMileage.length > 1)
+        AdditionalField(_endMileageKey, endMileage),
+      if (tripComment != null)
+        AdditionalField(_tripFeedbackCommentKey, tripComment),
+      if (tripEvaluation != null)
+        AdditionalField(_tripFeedbackEvaluationKey, tripEvaluation),
+    ]));
+
+    return tripBookAction;
+  }
+
+  FormGroup buildForm() {
+    return fb.group(<String, Object>{
+      _tripFeedbackCommentKey: FormControl<String>(),
+      _tripFeedbackEvaluationKey:
+          FormControl<String>(validators: [Validators.required]),
+      _endMileageKey: FormControl<String>(validators: [Validators.required]),
+      _destinationKey: FormControl<String>(validators: [
+        Validators.maxLength(100),
+        Validators.minLength(2),
+        Validators.required
+      ]),
+    });
+  }
+}

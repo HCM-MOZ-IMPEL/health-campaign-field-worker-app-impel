@@ -66,13 +66,57 @@ class LocalizationLocalRepository {
 
       return result.map((row) {
         final data = row.readTableOrNull(sql.localization);
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
 
         return Localization()
-          ..code = data!.code
+          ..code = data.code
           ..locale = data.locale
           ..module = data.module
           ..message = data.message;
       }).toList();
+    });
+  }
+
+  FutureOr<List<Localization>> fetchLocalization(
+      {required LocalSqlDataStore sql,
+      required String locale,
+      required String module}) async {
+    return retryLocalCallOperation(() async {
+      final query = sql.select(sql.localization).join([])
+        ..where(
+          buildOr([
+            sql.localization.locale.equals(locale),
+            sql.localization.module.contains(module),
+          ]),
+        );
+
+      final results = await query.get();
+
+      return results.map((e) {
+        final data = e.readTableOrNull(sql.localization);
+
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
+
+        return Localization()
+          ..code = data.code
+          ..locale = data.locale
+          ..module = data.module
+          ..message = data.message;
+      }).toList();
+    });
+  }
+
+  FutureOr create(
+      List<LocalizationCompanion> result, LocalSqlDataStore sql) async {
+    if (result.isEmpty) return;
+    return retryLocalCallOperation(() async {
+      return sql.batch((batch) {
+        batch.insertAll(sql.localization, result);
+      });
     });
   }
 }

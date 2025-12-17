@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,13 +14,14 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/action_card/action_card.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
@@ -301,16 +302,31 @@ class CustomHouseholdOverviewSMCPageState
                                         )
                                         .toList();
 
-                                    final taskData = (projectBeneficiary ?? [])
-                                            .isNotEmpty
-                                        ? state.householdMemberWrapper.tasks
-                                            ?.where((element) =>
-                                                element
-                                                    .projectBeneficiaryClientReferenceId ==
-                                                projectBeneficiary
-                                                    ?.first.clientReferenceId)
-                                            .toList()
-                                        : null;
+                                    List<TaskModel>? taskData =
+                                        (projectBeneficiary ?? []).isNotEmpty
+                                            ? state.householdMemberWrapper.tasks
+                                                ?.where((element) =>
+                                                    element
+                                                        .projectBeneficiaryClientReferenceId ==
+                                                    projectBeneficiary?.first
+                                                        .clientReferenceId)
+                                                .toList()
+                                            : null;
+
+                                    // sort the task data based on created time in descending order
+
+                                    (taskData ?? []).sort(
+                                      (a, b) {
+                                        final aTime =
+                                            a.clientAuditDetails?.createdTime ??
+                                                0;
+                                        final bTime =
+                                            b.clientAuditDetails?.createdTime ??
+                                                0;
+                                        return bTime.compareTo(aTime);
+                                      },
+                                    );
+
                                     final referralData = (projectBeneficiary ??
                                                 [])
                                             .isNotEmpty
@@ -527,7 +543,7 @@ class CustomHouseholdOverviewSMCPageState
                                                   ?.cycles !=
                                               null
                                           ? !checkEligibilityForAgeAndSideEffect(
-                                              DigitDOBAge(
+                                              DigitDOBAgeConvertor(
                                                 years: ageInYears,
                                                 months: ageInMonths,
                                               ),
@@ -640,10 +656,12 @@ class CustomHouseholdOverviewSMCPageState
             RegistrationDeliverySingleton().beneficiaryType!,
       ),
     );
+    // note : setting id to null to create new address entry for add member flow
+    final updatedAddress = address.copyWith(id: null);
     await context.router.push(
       BeneficiaryRegistrationWrapperRoute(
         initialState: BeneficiaryRegistrationAddMemberState(
-          addressModel: address,
+          addressModel: updatedAddress,
           householdModel: household,
         ),
         children: [

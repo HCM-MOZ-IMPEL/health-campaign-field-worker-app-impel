@@ -23,7 +23,7 @@ class BoundarySelectionWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<BoundaryBloc, BoundaryState>(
       listener: (context, state) {
-        if (state.hasSubmitted) {
+        if (state.hasSubmitted && !state.loading) {
           if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
             context.navigateTo(
               SMCWrapperRoute(),
@@ -34,17 +34,27 @@ class BoundarySelectionWrapper extends StatelessWidget {
                 );
               },
             );
+          } else if (context.projectTypeCode == ProjectTypes.irs.toValue()) {
+            context.navigateTo(
+              IRSWrapperRoute(),
+              onFailure: (failure) {
+                AppLogger.instance.error(
+                  title: 'BoundarySelectionWrapper',
+                  message: failure.toString(),
+                );
+              },
+            );
+          } else {
+            context.navigateTo(
+              BednetWrapperRoute(),
+              onFailure: (failure) {
+                AppLogger.instance.error(
+                  title: 'BoundarySelectionWrapper',
+                  message: failure.toString(),
+                );
+              },
+            );
           }
-        } else {
-          context.navigateTo(
-            IRSWrapperRoute(),
-            onFailure: (failure) {
-              AppLogger.instance.error(
-                title: 'BoundarySelectionWrapper',
-                message: failure.toString(),
-              );
-            },
-          );
         }
       },
       child: child,
