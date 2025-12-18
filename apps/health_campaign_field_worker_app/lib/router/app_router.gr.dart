@@ -163,6 +163,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomAttendanceDateSessionSelectionSMCRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomAttendanceDateSessionSelectionSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomAttendanceDateSessionSelectionSMCPage(
+          registers: args.registers,
+          registerID: args.registerID,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomBednetSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomBednetSummaryRouteArgs>(
           orElse: () => const CustomBednetSummaryRouteArgs());
@@ -737,6 +750,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CustomManageAttendancePage(),
       );
     },
+    CustomManageAttendanceSMCRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CustomManageAttendanceSMCPage(),
+      );
+    },
     CustomManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<CustomManageStocksRouteArgs>(
           orElse: () => const CustomManageStocksRouteArgs());
@@ -770,6 +789,23 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomMarkAttendancePage(
+          exitTime: args.exitTime,
+          entryTime: args.entryTime,
+          dateTime: args.dateTime,
+          attendees: args.attendees,
+          registerId: args.registerId,
+          tenantId: args.tenantId,
+          session: args.session,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomMarkAttendanceSMCRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomMarkAttendanceSMCRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomMarkAttendanceSMCPage(
           exitTime: args.exitTime,
           entryTime: args.entryTime,
           dateTime: args.dateTime,
@@ -860,6 +896,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CustomReferralReasonChecklistPage(
           key: args.key,
           referralClientRefId: args.referralClientRefId,
+          showBackButton: args.showBackButton,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -1950,6 +1987,55 @@ class CustomAttendanceDateSessionSelectionRouteArgs {
   @override
   String toString() {
     return 'CustomAttendanceDateSessionSelectionRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomAttendanceDateSessionSelectionSMCPage]
+class CustomAttendanceDateSessionSelectionSMCRoute
+    extends PageRouteInfo<CustomAttendanceDateSessionSelectionSMCRouteArgs> {
+  CustomAttendanceDateSessionSelectionSMCRoute({
+    required List<AttendanceRegisterModel> registers,
+    required String registerID,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomAttendanceDateSessionSelectionSMCRoute.name,
+          args: CustomAttendanceDateSessionSelectionSMCRouteArgs(
+            registers: registers,
+            registerID: registerID,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomAttendanceDateSessionSelectionSMCRoute';
+
+  static const PageInfo<CustomAttendanceDateSessionSelectionSMCRouteArgs> page =
+      PageInfo<CustomAttendanceDateSessionSelectionSMCRouteArgs>(name);
+}
+
+class CustomAttendanceDateSessionSelectionSMCRouteArgs {
+  const CustomAttendanceDateSessionSelectionSMCRouteArgs({
+    required this.registers,
+    required this.registerID,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final List<AttendanceRegisterModel> registers;
+
+  final String registerID;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomAttendanceDateSessionSelectionSMCRouteArgs{registers: $registers, registerID: $registerID, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -4029,6 +4115,20 @@ class CustomManageAttendanceRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CustomManageAttendanceSMCPage]
+class CustomManageAttendanceSMCRoute extends PageRouteInfo<void> {
+  const CustomManageAttendanceSMCRoute({List<PageRouteInfo>? children})
+      : super(
+          CustomManageAttendanceSMCRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomManageAttendanceSMCRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [CustomManageStocksPage]
 class CustomManageStocksRoute
     extends PageRouteInfo<CustomManageStocksRouteArgs> {
@@ -4212,6 +4312,80 @@ class CustomMarkAttendanceRouteArgs {
   @override
   String toString() {
     return 'CustomMarkAttendanceRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomMarkAttendanceSMCPage]
+class CustomMarkAttendanceSMCRoute
+    extends PageRouteInfo<CustomMarkAttendanceSMCRouteArgs> {
+  CustomMarkAttendanceSMCRoute({
+    required int exitTime,
+    required int entryTime,
+    required DateTime dateTime,
+    required List<AttendeeModel> attendees,
+    required String registerId,
+    required String tenantId,
+    int? session,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomMarkAttendanceSMCRoute.name,
+          args: CustomMarkAttendanceSMCRouteArgs(
+            exitTime: exitTime,
+            entryTime: entryTime,
+            dateTime: dateTime,
+            attendees: attendees,
+            registerId: registerId,
+            tenantId: tenantId,
+            session: session,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomMarkAttendanceSMCRoute';
+
+  static const PageInfo<CustomMarkAttendanceSMCRouteArgs> page =
+      PageInfo<CustomMarkAttendanceSMCRouteArgs>(name);
+}
+
+class CustomMarkAttendanceSMCRouteArgs {
+  const CustomMarkAttendanceSMCRouteArgs({
+    required this.exitTime,
+    required this.entryTime,
+    required this.dateTime,
+    required this.attendees,
+    required this.registerId,
+    required this.tenantId,
+    this.session,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final int exitTime;
+
+  final int entryTime;
+
+  final DateTime dateTime;
+
+  final List<AttendeeModel> attendees;
+
+  final String registerId;
+
+  final String tenantId;
+
+  final int? session;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomMarkAttendanceSMCRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -4511,6 +4685,7 @@ class CustomReferralReasonChecklistRoute
   CustomReferralReasonChecklistRoute({
     Key? key,
     String? referralClientRefId,
+    bool? showBackButton,
     ReferralReconLocalization? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
@@ -4518,6 +4693,7 @@ class CustomReferralReasonChecklistRoute
           args: CustomReferralReasonChecklistRouteArgs(
             key: key,
             referralClientRefId: referralClientRefId,
+            showBackButton: showBackButton,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -4533,6 +4709,7 @@ class CustomReferralReasonChecklistRouteArgs {
   const CustomReferralReasonChecklistRouteArgs({
     this.key,
     this.referralClientRefId,
+    this.showBackButton,
     this.appLocalizations,
   });
 
@@ -4540,11 +4717,13 @@ class CustomReferralReasonChecklistRouteArgs {
 
   final String? referralClientRefId;
 
+  final bool? showBackButton;
+
   final ReferralReconLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'CustomReferralReasonChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+    return 'CustomReferralReasonChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, showBackButton: $showBackButton, appLocalizations: $appLocalizations}';
   }
 }
 

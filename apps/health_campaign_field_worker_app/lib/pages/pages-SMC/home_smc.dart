@@ -360,7 +360,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(const CustomManageAttendanceRoute());
+            context.router.push(const CustomManageAttendanceSMCRoute());
           },
         ),
       ),
