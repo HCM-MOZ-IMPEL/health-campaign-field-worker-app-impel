@@ -83,6 +83,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+    @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
@@ -94,6 +96,12 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<SearchHouseHoldFilters>? searchHouseHoldFilters,
     @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
     List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+    @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+    List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+    @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+    List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+    @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+    List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -331,6 +339,18 @@ class CallSupportList with _$CallSupportList {
 
   factory CallSupportList.fromJson(Map<String, dynamic> json) =>
       _$CallSupportListFromJson(json);
+}
+
+@freezed
+class VehicleTrackingReasons with _$VehicleTrackingReasons {
+  factory VehicleTrackingReasons({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _VehicleTrackingReasons;
+
+  factory VehicleTrackingReasons.fromJson(Map<String, dynamic> json) =>
+      _$VehicleTrackingReasonsFromJson(json);
 }
 
 @freezed

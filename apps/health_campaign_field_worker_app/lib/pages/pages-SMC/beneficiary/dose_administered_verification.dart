@@ -17,6 +17,8 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 
 import '../../../blocs/localization/app_localization.dart';
 import '../../../models/entities/additional_fields_type.dart';
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
@@ -72,6 +74,14 @@ class _DoseAdministeredVerificationPageState
                             (e) =>
                                 e.identifierType ==
                                 IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                            orElse: () => IdentifierModel(
+                              identifierId: localizations
+                                  .translate(i18.common.noResultsFound),
+                              identifierType:
+                                  '', // Default to an empty string or appropriate fallback
+                              clientReferenceId:
+                                  '', // Provide a default value for the required parameter
+                            ),
                           )
                           .identifierId ??
                       localizations.translate(

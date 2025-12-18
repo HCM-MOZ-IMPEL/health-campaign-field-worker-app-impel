@@ -129,6 +129,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryCommentWastedOptionsSmc:
+          (json['DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR']
+                  as List<dynamic>)
+              .map((e) =>
+                  DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
+              .toList(),
       backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
           .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -151,6 +157,21 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           ?.map(
               (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
           .toList(),
+      searchHouseHoldFiltersBednet: (json['SEARCH_HOUSEHOLD_FILTERS_BEDNET']
+              as List<dynamic>?)
+          ?.map(
+              (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      vehicleTrackingTripReasons: (json['VEHICLE_TRACKING_TRIP_REASONS']
+              as List<dynamic>?)
+          ?.map(
+              (e) => VehicleTrackingReasons.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      vehicleTrackingTripEvaluationReasons:
+          (json['VEHICLE_TRACKING_TRIP_EVALUATION_REASONS'] as List<dynamic>?)
+              ?.map((e) =>
+                  VehicleTrackingReasons.fromJson(e as Map<String, dynamic>))
+              .toList(),
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -181,12 +202,18 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
       'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentOptionsSmc,
+      'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR':
+          instance.deliveryCommentWastedOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
       'SYMPTOM_TYPES': instance.symptomsTypeList,
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
       'SEARCH_HOUSEHOLD_FILTERS_SMC': instance.searchHouseHoldFiltersSMC,
+      'SEARCH_HOUSEHOLD_FILTERS_BEDNET': instance.searchHouseHoldFiltersBednet,
+      'VEHICLE_TRACKING_TRIP_REASONS': instance.vehicleTrackingTripReasons,
+      'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS':
+          instance.vehicleTrackingTripEvaluationReasons,
       'REFERRAL_REASONS': instance.referralReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
@@ -472,6 +499,22 @@ Map<String, dynamic> _$$CallSupportListImplToJson(
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+    };
+
+_$VehicleTrackingReasonsImpl _$$VehicleTrackingReasonsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VehicleTrackingReasonsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+      active: json['active'] as bool,
+    );
+
+Map<String, dynamic> _$$VehicleTrackingReasonsImplToJson(
+        _$VehicleTrackingReasonsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'active': instance.active,
     };
 
 _$SearchHouseHoldFiltersImpl _$$SearchHouseHoldFiltersImplFromJson(

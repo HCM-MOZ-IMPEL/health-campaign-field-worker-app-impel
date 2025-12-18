@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'status.dart';
@@ -35,6 +35,8 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.notVisited;
       case "BENEFICIARY_REFUSED":
         return Status.beneficiaryRefused;
+      case "BENEFICIARY_INELIGIBLE":
+        return Status.beneficiaryInEligible;
       case "BENEFICIARY_REFERRED":
         return Status.beneficiaryReferred;
       case "ADMINISTERED_SUCCESS":
@@ -65,6 +67,8 @@ class StatusMapper extends EnumMapper<Status> {
         return "NOT_VISITED";
       case Status.beneficiaryRefused:
         return "BENEFICIARY_REFUSED";
+      case Status.beneficiaryInEligible:
+        return "BENEFICIARY_INELIGIBLE";
       case Status.beneficiaryReferred:
         return "BENEFICIARY_REFERRED";
       case Status.administeredSuccess:

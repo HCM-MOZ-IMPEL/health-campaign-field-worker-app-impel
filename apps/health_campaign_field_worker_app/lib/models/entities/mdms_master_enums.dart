@@ -33,6 +33,8 @@ enum MasterEnums {
   deliveryComments,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR")
   deliveryCommentsSMC,
+  @MappableValue("DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR")
+  deliveryCommentsWastedSMC,
   @MappableValue("BACKEND_INTERFACE")
   backendInterface,
   @MappableValue("CALL_SUPPORT")
@@ -53,6 +55,12 @@ enum MasterEnums {
   searchHouseHoldFilters,
   @MappableValue("SEARCH_HOUSEHOLD_FILTERS_SMC")
   searchHouseHoldFiltersSMC,
+  @MappableValue("SEARCH_HOUSEHOLD_FILTERS_BEDNET")
+  searchHouseHoldFiltersBednet,
+  @MappableValue("VEHICLE_TRACKING_TRIP_REASONS")
+  vechileTrackingTripReasons,
+  @MappableValue("VEHICLE_TRACKING_TRIP_EVALUATION_REASONS")
+  vechileTrackingTripEvaluationReasons,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")

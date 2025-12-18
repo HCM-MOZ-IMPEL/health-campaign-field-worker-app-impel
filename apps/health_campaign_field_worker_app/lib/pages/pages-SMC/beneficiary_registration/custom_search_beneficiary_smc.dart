@@ -71,29 +71,6 @@ class _CustomSearchBeneficiarySMCPageState
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
-    isProximityEnabled = true;
-    var ifSearchTriggered = false;
-    if (!ifSearchTriggered) {
-      // Listen to LocationBloc's state to ensure location is loaded before triggering search
-      context.read<LocationBloc>().stream.listen((locationState) {
-        if (!locationState.loading &&
-            isProximityEnabled == true &&
-            locationState.latitude != null &&
-            locationState.longitude != null) {
-          setState(() {
-            lat = locationState.latitude!;
-            long = locationState.longitude!;
-          });
-          if (!ifSearchTriggered) {
-            ifSearchTriggered = true;
-            // Trigger search after location is loaded
-            blocWrapper.clearEvent();
-            triggerGlobalSearchEvent();
-          }
-        }
-      });
-    }
-
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
         setState(() {
@@ -727,31 +704,33 @@ class _CustomSearchBeneficiarySMCPageState
               ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
           projectId: context.projectId,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     } else {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc
-            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+        blocWrapper.houseHoldGlobalSearchBloc.add(
+            SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-          projectId: RegistrationDeliverySingleton().projectId,
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-        )));
+                    projectId: RegistrationDeliverySingleton().projectId,
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text.trim().length > 2
+                        ? searchController.text.trim()
+                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+                    filter: selectedFilters,
+                    offset: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+                        : offset,
+                    limit: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+                        : limit,
+                    householdType:
+                        RegistrationDeliverySingleton().householdType)));
       }
     }
   }

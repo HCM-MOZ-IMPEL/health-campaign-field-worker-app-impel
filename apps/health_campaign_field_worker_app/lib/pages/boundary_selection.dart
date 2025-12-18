@@ -10,13 +10,14 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../models/entities/project_types.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -42,7 +43,8 @@ class _BoundarySelectionPageState
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
   var expenseTypeCtrl = TextEditingController();
-  StreamController<double> downloadProgress = StreamController<double>();
+  StreamController<double> downloadProgress =
+      StreamController<double>.broadcast();
 
   Map<String, TextEditingController> dropdownControllers = {};
   final String setLocale = "pt_MZ";
@@ -51,6 +53,7 @@ class _BoundarySelectionPageState
   void initState() {
     LocalizationParams()
         .setModule(['hcm-common', 'hcm-beneficiary', 'hcm-home'], false);
+
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -69,6 +72,7 @@ class _BoundarySelectionPageState
   @override
   void dispose() {
     clickedStatus.dispose();
+    downloadProgress.close();
     super.dispose();
   }
 
@@ -127,8 +131,15 @@ class _BoundarySelectionPageState
                           children: [
                             Expanded(
                               child: ListView.builder(
-                                itemCount: labelList.length,
+                                itemCount: labelList.length + 1,
                                 itemBuilder: (context, labelIndex) {
+                                  if (labelIndex == labelList.length) {
+                                    // Return a SizedBox for whitespace after the last item
+                                    return const SizedBox(
+                                        height: kPadding *
+                                            3); // Adjust height as needed
+                                  }
+
                                   final label = labelList.elementAt(labelIndex);
 
                                   final filteredItems =
@@ -571,10 +582,18 @@ class _BoundarySelectionPageState
                                                         );
                                                     bool isOnline =
                                                         await getIsConnected();
-
+                                                    context.boundary;
                                                     if (context.mounted) {
                                                       if (isOnline &&
-                                                          isDistributor) {
+                                                          Constants
+                                                              .isDownSyncEnabled &&
+                                                          (isDistributor ||
+                                                              context
+                                                                  .isHealthFacilitySupervisor) &&
+                                                          context.projectTypeCode !=
+                                                              ProjectTypes
+                                                                  .bednet
+                                                                  .toValue()) {
                                                         context
                                                             .read<
                                                                 BeneficiaryDownSyncBloc>()
@@ -604,8 +623,38 @@ class _BoundarySelectionPageState
                                                             const Duration(
                                                               milliseconds: 100,
                                                             ), () {
-                                                          context.router
-                                                              .maybePop();
+                                                          // Info route to proper wrapper based on projectTypeCode instead of just popping the route
+                                                          if (context.mounted) {
+                                                            if (context.projectTypeCode ==
+                                                                    null ||
+                                                                (context.projectTypeCode
+                                                                        ?.isEmpty ??
+                                                                    true)) {
+                                                              context.router
+                                                                  .maybePop();
+                                                            } else if (isProjectTypeSMC(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const SMCWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeIRS(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const IRSWrapperRoute(),
+                                                              ]);
+                                                            } else if (isProjectTypeBEDNET(
+                                                                context)) {
+                                                              context.router
+                                                                  .replaceAll([
+                                                                const BednetWrapperRoute(),
+                                                              ]);
+                                                            } else {
+                                                              context.router
+                                                                  .maybePop();
+                                                            }
+                                                          }
 
                                                           LocalizationParams()
                                                               .setModule(
@@ -649,6 +698,18 @@ class _BoundarySelectionPageState
         );
       }),
     );
+  }
+
+  bool isProjectTypeSMC(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.smc.toValue();
+  }
+
+  bool isProjectTypeIRS(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.irs.toValue();
+  }
+
+  bool isProjectTypeBEDNET(BuildContext context) {
+    return context.projectTypeCode == ProjectTypes.bednet.toValue();
   }
 
   void resetChildDropdowns(String parentLabel, BoundaryState state) {

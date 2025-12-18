@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project_types.dart';
@@ -27,8 +27,10 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
     switch (value) {
       case "IRS":
         return ProjectTypes.irs;
-      case "SMC-Moz":
+      case "SMC-Moz26":
         return ProjectTypes.smc;
+      case "LLIN-Moz":
+        return ProjectTypes.bednet;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -40,7 +42,9 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
       case ProjectTypes.irs:
         return "IRS";
       case ProjectTypes.smc:
-        return "SMC-Moz";
+        return "SMC-Moz26";
+      case ProjectTypes.bednet:
+        return "LLIN-Moz";
     }
   }
 }

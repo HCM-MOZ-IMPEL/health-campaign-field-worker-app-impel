@@ -7,6 +7,7 @@ const householdDetails = HouseholdDetails();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -16,6 +17,9 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
+const deliverIntervention = DeliverIntervention();
+
+const vehicleTracking = VehicleTracking();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -24,15 +28,19 @@ const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 const stockDetails = StockDetails();
 const stockReconciliationDetails = StockReconciliationDetails();
+const inventoryReportDetails = InventoryReportDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
 const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
 const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectChecklistShowcase = SelectChecklistShowcase();
+const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 
+const surveyFormDataShowcase = SurveyFormDataShowcase();
+const surveyFormListShowcase = SurveyFormListShowcase();
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
 const complaintTypeShowcase = ComplaintTypeShowcase();
@@ -46,8 +54,13 @@ const referralReconciliation = ReferralReconciliation();
 
 class Common {
   const Common();
+  String get coreCommonGoHome => 'CORE_COMMON_GO_HOME';
+
+  String get coreCommonAttention => 'CORE_COMMON_ATTENTION';
+  String get coreCommonComment => 'CORE_COMMON_COMMENT';
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
@@ -219,6 +232,68 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get supervisorMySurveyForm {
+    return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
+  }
+
+  String get vehicleTracking {
+    return 'VEHICLE_TRACKING';
+  }
+}
+
+class VehicleTracking {
+  const VehicleTracking();
+  String get vehicleOverviewLabel => 'VEHICLE_TRACKING_VEHICLE_OVERVIEW_LABEL';
+  String get mapLabel => 'VEHICLE_TRACKING_MAP_LABEL';
+  String get endTripButtonLabel => 'VEHICLE_TRACKING_END_TRIP';
+  String get startTripButtonLabel => 'VEHICLE_TRACKING_START_TRIP';
+  String get searchVehicle => "SEARCH_VEHICLE_LABEL";
+  String get mileageLabel => 'VEHICLE_TRACKING_MILEAGE_LABEL';
+  String get mileageLabelRequired => 'VEHICLE_TRACKING_MILEAGE_REQUIRED_LABEL';
+  String get originLabel => 'VEHICLE_TRACKING_ORIGIN_LABEL';
+  String get originLabelRequired => 'VEHICLE_TRACKING_ORIGIN_REQUIRED_LABEL';
+
+  String get endMileageLabel => 'VEHICLE_TRACKING_END_MILEAGE_LABEL';
+
+  String get endStartMileageLabel => 'VEHICLE_TRACKING_END_START_MILEAGE_LABEL';
+  String get destinationLabel => 'VEHICLE_TRACKING_DESTINATION_LABEL';
+  String get destinationLabelRequired =>
+      'VEHICLE_TRACKING_DESTINATION_REQUIRED_LABEL';
+
+  String get startTripTitle => 'VEHICLE_TRACKING_START_TRIP_TITLE';
+  String get startTripContent => 'VEHICLE_TRACKING_START_TRIP_CONTENT';
+
+  String get endTripTitle => 'VEHICLE_TRACKING_END_TRIP_TITLE';
+  String get endTripContent => 'VEHICLE_TRACKING_END_TRIP_CONTENT';
+
+  String get tripBookLabel => "TRIP_BOOK_LABEL";
+  String get tripBookReasonLabel => "TRIP_BOOK_REASON_LABEL";
+  String get bookTripButtonActionLabel => "BOOK_TRIP_BUTTON_ACTION_LABEL";
+  String get othersReasonTextLabel => "BOOK_TRIP_OTHERS_REASON_TEXT_LABEL";
+  String get feedbackLabel => "VEHICLE_TRACKING_FEEDBACK_LABEL";
+
+  String get tripComment => "VEHICLE_TRACKING_TRIP_COMMENT";
+  String get tipSubmitted => "VEHICLE_TRACKING_TIP_SUBMITTED";
+
+  String get commentRequired => "VEHICLE_TRACKING_COMMENT_REQUIRED";
+
+  String get acknowledgementLabel => "VEHICLE_TRACKING_ACKNOWLEDGEMENT_LABEL";
+  String get acknowledgementDescription =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_DESCRIPTION";
+  String get acknowledgementSubLabel =>
+      "VEHICLE_TRACKING_ACKNOWLEDGEMENT_SUB_LABEL";
+
+  String get startDate => 'VEHICLE_TRACKING_START_DATE';
+  String get endDate => 'VEHICLE_TRACKING_END_DATE';
+  String get vehicleType => 'VEHICLE_TRACKING_VEHICLE_TYPE';
+  String get brand => 'VEHICLE_BRAND';
+  String get color => 'VEHICLE_COLOR';
+  String get model => 'VEHICLE_MODEL';
+  String get driverName => 'VEHICLE_DRIVER_NAME';
+
+  String get vehicleInfoDescription => 'VEHICLE_INFO_DESCRIPTION';
+  String get vehicleSearchHintText => 'VEHICLE_SEARCH_HINT_TEXT';
 }
 
 class SelectStockShowcase {
@@ -239,6 +314,10 @@ class SelectStockShowcase {
 
 class WarehouseDetailsShowcase {
   const WarehouseDetailsShowcase();
+
+  String get dateOfReturn {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RETURN';
+  }
 
   String get dateOfReceipt {
     return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RECEIPT';
@@ -269,6 +348,8 @@ class HouseholdDetails {
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+  String get bednetHouseholdOverViewActionText =>
+      'BEDNET_HOUSEHOLD_OVERVIEW_ACTION_LABEL';
 }
 
 class StockDetailsReceiptShowcase {
@@ -376,12 +457,43 @@ class Login {
   const Login();
 
   String get labelText => 'LOGIN_LABEL_TEXT';
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get userIdPlaceholder => 'USER_ID_PLACEHOLDER';
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
+}
+
+class SelectSurveyFormShowcase {
+  const SelectSurveyFormShowcase();
+
+  String get selectSurveyForm {
+    return 'SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST';
+  }
+}
+
+class SurveyFormDataShowcase {
+  const SurveyFormDataShowcase();
+
+  String get date {
+    return 'CHECKLIST_DATA_SHOWCASE_DATE';
+  }
+
+  String get administrativeUnit {
+    return 'CHECKLIST_DATA_SHOWCASE_ADMINISTRATIVE_UNIT';
+  }
+}
+
+class SurveyFormListShowcase {
+  const SurveyFormListShowcase();
+
+  String get open {
+    return 'CHECKLIST_LIST_SHOWCASE_OPEN';
+  }
 }
 
 class SelectChecklistShowcase {
@@ -606,6 +718,8 @@ class Home {
   const Home();
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+  String get vehicleTrackingLabel => 'VEHICLE_TRACKING_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
 
@@ -616,6 +730,7 @@ class Home {
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
 
@@ -630,6 +745,8 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+
+  String get mobilizerChecklist => 'MOBILIZER_CHECK_LIST_LABEL';
 
   String get specialCaseCheckList => 'SPECIAL_CASE_CHECK_LIST_LABEL';
 
@@ -646,6 +763,25 @@ class Home {
 
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
+
+  String get materialIssueHeading => "MATERIAL_ISSUE_HEADING";
+  String get materialReceiveHeading => "MATERIAL_RECEIVE_HEADING";
+  String get materialReturnHeading => "MATERIAL_RETURN_HEADING";
+
+  String get materialIssueDescription => "MATERIAL_ISSUE_DESCRIPTION";
+  String get materialReceiveDescription => "MATERIAL_RECEIVE_DESCRIPTION";
+  String get materialReturnDescription => "MATERIAL_RETURN_DESCRIPTION";
+
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get mrrnNumberDescription => "MRRN_NUMBER_DESCRIPTION";
+  String get mrrnNumberHeading => "MRRN_NUMBER_HEADING";
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get minNumberDescription => "MIN_NUMBER_DESCRIPTION";
+  String get minNumberHeading => "MIN_NUMBER_HEADING";
+  String get mrnNumberDescription => "MRN_NUMBER_DESCRIPTION";
+  String get mrnNumberHeading => "MRN_NUMBER_HEADING";
+  String get viewtransactions => 'VIEW_TRANSACTIONS';
+  String get createNewTransactions => 'CREATE_NEW_TRANSACTION';
 
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
@@ -790,6 +926,71 @@ class Complaints {
       'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
 }
 
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+
+  String get dataUnSyncedDesc => 'DATA_UN_SYNCED_DESCRIPTION';
+
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
+  String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
+
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
+  String get noRecipientsSelected => 'NO_RECIPIENTS_SELECTED';
+
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get dataTransferCompleted => 'DATA_TRANSFER_COMPLETED';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receivedSuccessMessage => 'RECEIVED_SUCCESS_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
+
+  String get senderDialogTitle => 'SENDER_DIALOG_TITLE';
+
+  String get senderDialogDescription => 'SENDER_DIALOG_DESCRIPTION';
+
+  String get dataSharingLabel => 'DATA_SHARING_LABEL';
+
+  String get projectMisMatchError => 'PROJECT_MISMATCH_ERROR';
+
+  String get invalidFileError => 'INVALID_FILE_FORMAT_ERROR';
+
+  String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
+
+  String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDesc => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get dateReceivedForBoundaries => 'DATA_RECEIVED_FOR_BOUNDARIES';
+
+  String get noBoundariesMatchedTitle => 'NO_BOUNDARIES_MATCHED_ERROR_TITLE';
+
+  String get noBoundariesMatchedDesc =>
+      'NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
+}
+
 class SyncDialog {
   const SyncDialog();
 
@@ -929,6 +1130,7 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+  String get refreshLocation => 'HOUSEHOLD_REFRESH_LOCATION';
 }
 
 class SearchBeneficiary {
@@ -942,6 +1144,7 @@ class SearchBeneficiary {
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get beneficiaryIdbednet => 'BENEFICIARY_ID_BEDNET';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 
@@ -967,6 +1170,10 @@ class IndividualDetails {
   const IndividualDetails();
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
+  String get individualsDetailsLabelTextSMC => 'INDIVIDUAL_LABEL_TEXT_SMC';
+  String get individualsChildDetailsLabelTextSMC =>
+      'INDIVIDUAL_CHILD_LABEL_TEXT_SMC';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
@@ -1009,10 +1216,31 @@ class IndividualDetails {
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+  String get voucherCodeBednet => 'BEDNET_VOUCHER_CODE_INDIVIDUAL';
+
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get lastNameHeadLabelText => 'HEAD_HOUSEHOLD_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelTextSMC =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT_SMC';
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+  String get firstNameHeadLabelTextSMC => 'FIRST_NAME_HEAD_LABEL_TEXT_SMC';
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+  String get mobileMinLengthValidationMessageSMC =>
+      'MOBILE_MIN_LENGTH_VALIDATION_SMC';
+  String get scanVoucherAndLinkToIndividual => 'VOUCHER_LINK_ERROR';
+  String get bednetCountSummaryText => 'BEDNET_SUMMARY_COUNT_TEXT';
 }
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+
+  String get validationForExcessStockReturn =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";
+  String get validationForExcessStockDispatch =>
+      "ERROR_VALIDATION_FOR_EXCESS_STOCK_DISPATCH";
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
@@ -1129,9 +1357,95 @@ class BeneficiaryDetails {
 
 class StockDetails {
   const StockDetails();
+
+  String get stockDetailsLabel => 'STOCK_DETAILS_LABEL';
+  String get stockReceivedIssuedQuantityLabel =>
+      'STOCK_DETAILS_RECEIVED_ISSUES_QUANTITY_LABEL';
+
+  String get stockScanResourcesLabel => 'STOCK_SCAN_RESOURCE_LABEL';
+
+  String get minNumberLabel => 'MIN_NUMBER_LABEL';
+  String get mrnNumberLabel => 'MRN_NUMBER_LABEL';
+  String get selectMINNumber => 'STOCK_DETAILS_SELECT_MIN_NUMBER';
+  String get selectMRNNumber => 'STOCK_DETAILS_SELECT_MRN_NUMBER';
+  String get noTransactionsFound => 'STOCK_DETAILS_NO_TRANSACTIONS_FOUND';
+  String get resource => 'STOCK_DETAILS_RESOURCE';
+  String get stockReceiptDetails => 'STOCK_DETAILS_STOCK_RECEIPT_DETAILS';
+  String get stockIssueDetails => 'STOCK_DETAILS_STOCK_ISSUE_DETAILS';
+  String get stockReturnDetails => 'STOCK_DETAILS_STOCK_RETURN_DETAILS';
+  String get waybill => 'STOCK_DETAILS_WAYBILL';
+  String get waybillNumber => 'STOCK_DETAILS_WAYBILL_NUMBER';
+  String get damageStockLabel => 'STOCK_DETAILS_DAMAGE_QUANTITY';
+  String get emptyVialsLabel => 'STOCK_DETAILS_EMPTY_OPENED_VIALS_LABEL';
+  String get unusableVvmFirst => 'UNUSABLE_VVM_THREE_FOURTH_VIALS_LABEL';
+  String get unusableVvmSecond => 'UNUSABLE_VVM_FIRST_SECOND_VIALS_LABEL';
+  String get blisters => 'STOCK_DETAILS_BLISTERS';
+  String get capsules => 'STOCK_DETAILS_CAPSULES';
+
+  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+
+  String get cddCodeLabel => 'CDD_CODE_LABEL';
+  String get supervisorCommunityCodeLabel => 'SUPERVISOR_COMMUNITY_CODE_LABEL';
+
+  String get quantityCapsuleReceivedLabel =>
+      'STOCK_DETAILS_CAPSULE_QUANTITY_RECEIVED';
+
+  String get quantityCapsuleSentLabel => 'STOCK_DETAILS_CAPSULE_QUANTITY_SENT';
+
+  String get quantityCapsuleReturnedLabel =>
+      'STOCK_DETAILS_CAPSULE_QUANTITY_RETURNED';
+
+  String get quantityCapsulePartialReturnedLabel =>
+      'STOCK_DETAILS_CAPSULE_PARTIAL_QUANTITY_RETURNED';
+  String get selectTransactingPartyReturnedFrom =>
+      'STOCK_DETAILS_RETURNED_FROM';
+  String get quantityCapsulePartialWastedLabel =>
+      'STOCK_DETAILS_CAPSULE_PARTIAL_QUANTITY_WASTED';
+  String get returnedTo => 'STOCK_DETAILS_RETURNED_TO';
+  String get resourceLabel => 'RESOURCE';
+  String get minLengthLabel => 'MIN_LENGTH_LABEL';
+  String get batchNumberLabel {
+    return 'STOCK_DETAILS_BATCH_NUMBER';
+  }
+
+  String get transportTypeLabel => 'STOCK_DETAILS_TYPE_OF_TRANSPORT_LABEL';
+  String get statusVvmLabel => 'STOCK_DETAILS_STATUS_OF_VVM';
+  String get statusIvmLabel => 'STOCK_DETAILS_STATUS_OF_IVM';
+  String get manufacturerLabel => 'STOCK_DETAILS_STATUS_OF_MANUFACTURER_LABEL';
+  String get expireDateLabel => 'STOCK_DETAILS_EXPIRE_DATE_LABEL';
+
+  String get quantityUnusedReturnedLabel =>
+      'STOCK_DETAILS_UNUSED_QUANTITY_RETURNED';
+
+  String get quantityPartialReturnedLabel =>
+      'STOCK_DETAILS_PARTIAL_QUANTITY_RETURNED';
+
+  String get quantityDamageReturnedLabel =>
+      'STOCK_DETAILS_DAMAGE_QUANTITY_RETURNED';
+
+  String get quantityReturnedMaxError =>
+      'STOCK_DETAILS_RETURNED_MAX_QUANTITY_ERROR';
+  String get quantityWastedReturnedLabel =>
+      'STOCK_DETAILS_WASTED_QUANTITY_RETURNED';
+  String get productRequired => 'STOCK_DETAILS_PRODUCT_IS_REQUIRED';
+
+  String get manageStockLabel => 'STOCK_DETAILS_MANAGE_STOCK_LABEL';
+
+  String get recordStockReturnedDescription =>
+      'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
+
+  String get driverNameLabel => 'STOCK_DETAILS_DRIVER_NAME';
+
+  String get createNewTransactions => "STOCK_DETAILS_CREATE_NEW_TRANSACTION";
+  String get viewCreatedTransactions =>
+      "STOCK_DETAILS_VIEW_CREATED_TRANSACTIONS";
+  String get stockReceiptDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
+
   String get supervisorCodeRequired =>
       'STOCK_DETAILS_SUPERVISOR_CODE_IS_REQUIRED';
   String get supervisorCodeLabel => 'STOCK_SUPERVISOR_CODE_LABEL';
+
+  String get monitorCodeLabel => 'STOCK_MONITOR_CODE_LABEL';
 
   String get stockMismatchCommentRequried => 'STOCK_MISMATCH_COMMENT_REQURIED';
 
@@ -1144,12 +1458,64 @@ class StockDetails {
 
   String get countDialogCancel =>
       'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
+
+  String get selectProductBednetLabel => 'SELECT_PRODUCT_BEDNET_LABEL';
+  String get stockIssuedBednetDetailsLabel => 'ISSUED_STOCK_BEDNET_DETAILS';
 }
 
 class StockReconciliationDetails {
   const StockReconciliationDetails();
   String get insecticideLabel => 'STOCK_RECONCILIATION_INDECTICIDE_LABEL';
   String get commentsRequired => 'STOCK_RECONCILIATION_COMMENT_IS_REQUIRED';
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get returnedTOTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_TO_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get backToHomeButtonLabel =>
+      "INVENTORY_REPORT_DETAILS_BACK_TO_HOME_BUTTON_LABEL";
+  String get partialReturnedQuantityLabel =>
+      "INVENTORY_REPORT_DETAILS_PARTIAL_RETURNED_QUANTITY_LABEL";
+
+  String get commentIsRequiredText => "COMMENT_IS_REQUIRED_TEXT";
+
+  String get checkTheQuantityReceivedText =>
+      'CHECK_THE_QUANTITY_RECEIEVED_TEXT';
+
+  String get stockReceiptDetailsText => 'STOCK_RECEIPT_DETAILS_TEXT';
+
+  String get receivedFromText => 'RECEIVED_FROM_TEXT';
+
+  String get quantityReceivedByWarehouse => 'QUANTITY_RECEIVED_BY_WAREHOUSE';
+
+  String get actualQuantityReceived => 'ACTUAL_QUANTITY_RECEIVED';
+  String get actualQuantityReceivedRequired =>
+      'ACTUAL_QUANTITY_RECEIVED_REQUIRED';
+
+  String get commentsText => 'COMMENTS_TEXT';
+
+  String get waybillNumberText => 'WAYBILL_NUMBER_TEXT';
+  String get summaryReport => 'INVENTORY_REPORT_DETAILS_SUMMARY_REPORT_LABEL';
+
+  String get batchNumberText => 'BATCH_NUMBER_TEXT';
+  String get houseHoldRegistered =>
+      'SUMMARY_REPORT_COLUMN_HOUSEHOLD_REGISTERED';
+  String get childrenTreated => 'SUMMARY_REPORT_COLUMN_CHILDREN_TREATED';
+  String get childrenTreatedPercentage =>
+      'SUMMARY_REPORT_COLUMN_CHILDREN_TREATED_PERCENTAGE';
+  String get drugsReceived => 'SUMMARY_REPORT_COLUMN_DRUGS_RECEIVED';
+  String get drugsUsed => 'SUMMARY_REPORT_COLUMN_DRUGS_USED';
+  String get drugsBalance => 'SUMMARY_REPORT_COLUMN_DRUGS_BALANCE';
+
+  String get aztReceived => 'SUMMARY_REPORT_COLUMN_AZT_RECEIVED';
+  String get aztConsumed => 'SUMMARY_REPORT_COLUMN_AZT_CONSUMED';
 }
 
 class PrivacyPolicy {
@@ -1172,10 +1538,41 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+  String get noteDescriptionBednet => 'DSS_NOTE_DESCRIPTION_BEDNET';
 }
 
 class Attendance {
   const Attendance();
 
   String get comments => 'ATTENDANCE_COMMENTS_FIELD';
+  String get attendanceOfficerBednet => 'ATTENDANCE_OFFICER_BEDNET';
+  String get locationBednet => 'ATTENDANCE_LOCATION_BEDNET';
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+
+  String get memberCountText => "MEMBER_COUNT_TEXT";
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
+
+  String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
+  String get infoWrittenInChildCard =>
+      'DELIVER_INTERVENTION_DOSE_INFO_IN_CHILD_CARD_ADDED';
+  String get healthTalkGivenOnSPAQ =>
+      'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get informationBulletOne => 'INFORMATION_BULLET_ONE';
+  String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
+  String get informationBulletThree => 'INFORMATION_BULLET_THREE';
+  String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get notDelivered => 'NOT_DELIVERED';
+  String get delivered => 'DELIVERED';
+  String get resourceDelivered => 'RESOURCE_DELIVERED';
+  String get numberOfResourceDelivered => 'NUMBER_OF_RESOURCE_DELIVERED_LABEL';
+  String get scanBednet => 'SCAN_THE_BEDNET';
+  String get deliveryCommentError => 'BEDNET_DELIVERY_COMMENT_ERROR';
+  String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
 }

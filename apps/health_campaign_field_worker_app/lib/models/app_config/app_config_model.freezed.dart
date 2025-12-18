@@ -944,6 +944,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsSmc =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -960,6 +963,15 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
   List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripReasons =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripEvaluationReasons =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
@@ -1005,6 +1017,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1014,6 +1028,12 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+      List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+      List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1045,12 +1065,16 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
+    Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? searchHouseHoldFiltersSMC = freezed,
+    Object? searchHouseHoldFiltersBednet = freezed,
+    Object? vehicleTrackingTripReasons = freezed,
+    Object? vehicleTrackingTripEvaluationReasons = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1098,6 +1122,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.deliveryCommentOptionsSmc
           : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      deliveryCommentWastedOptionsSmc: null == deliveryCommentWastedOptionsSmc
+          ? _value.deliveryCommentWastedOptionsSmc
+          : deliveryCommentWastedOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1122,6 +1150,19 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.searchHouseHoldFiltersSMC
           : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersBednet: freezed == searchHouseHoldFiltersBednet
+          ? _value.searchHouseHoldFiltersBednet
+          : searchHouseHoldFiltersBednet // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
+      vehicleTrackingTripReasons: freezed == vehicleTrackingTripReasons
+          ? _value.vehicleTrackingTripReasons
+          : vehicleTrackingTripReasons // ignore: cast_nullable_to_non_nullable
+              as List<VehicleTrackingReasons>?,
+      vehicleTrackingTripEvaluationReasons: freezed ==
+              vehicleTrackingTripEvaluationReasons
+          ? _value.vehicleTrackingTripEvaluationReasons
+          : vehicleTrackingTripEvaluationReasons // ignore: cast_nullable_to_non_nullable
+              as List<VehicleTrackingReasons>?,
       referralReasonList: freezed == referralReasonList
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1169,6 +1210,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1178,6 +1221,12 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+      List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+      List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1207,12 +1256,16 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
+    Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? searchHouseHoldFiltersSMC = freezed,
+    Object? searchHouseHoldFiltersBednet = freezed,
+    Object? vehicleTrackingTripReasons = freezed,
+    Object? vehicleTrackingTripEvaluationReasons = freezed,
     Object? referralReasonList = freezed,
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
@@ -1260,6 +1313,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._deliveryCommentOptionsSmc
           : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      deliveryCommentWastedOptionsSmc: null == deliveryCommentWastedOptionsSmc
+          ? _value._deliveryCommentWastedOptionsSmc
+          : deliveryCommentWastedOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1284,6 +1341,19 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._searchHouseHoldFiltersSMC
           : searchHouseHoldFiltersSMC // ignore: cast_nullable_to_non_nullable
               as List<SearchHouseHoldFilters>?,
+      searchHouseHoldFiltersBednet: freezed == searchHouseHoldFiltersBednet
+          ? _value._searchHouseHoldFiltersBednet
+          : searchHouseHoldFiltersBednet // ignore: cast_nullable_to_non_nullable
+              as List<SearchHouseHoldFilters>?,
+      vehicleTrackingTripReasons: freezed == vehicleTrackingTripReasons
+          ? _value._vehicleTrackingTripReasons
+          : vehicleTrackingTripReasons // ignore: cast_nullable_to_non_nullable
+              as List<VehicleTrackingReasons>?,
+      vehicleTrackingTripEvaluationReasons: freezed ==
+              vehicleTrackingTripEvaluationReasons
+          ? _value._vehicleTrackingTripEvaluationReasons
+          : vehicleTrackingTripEvaluationReasons // ignore: cast_nullable_to_non_nullable
+              as List<VehicleTrackingReasons>?,
       referralReasonList: freezed == referralReasonList
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1328,6 +1398,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions>
+          deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1340,6 +1413,12 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+      final List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+      final List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1359,12 +1438,17 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
         _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
+        _deliveryCommentWastedOptionsSmc = deliveryCommentWastedOptionsSmc,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
         _symptomsTypeList = symptomsTypeList,
         _searchHouseHoldFilters = searchHouseHoldFilters,
         _searchHouseHoldFiltersSMC = searchHouseHoldFiltersSMC,
+        _searchHouseHoldFiltersBednet = searchHouseHoldFiltersBednet,
+        _vehicleTrackingTripReasons = vehicleTrackingTripReasons,
+        _vehicleTrackingTripEvaluationReasons =
+            vehicleTrackingTripEvaluationReasons,
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
@@ -1472,6 +1556,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptionsSmc);
   }
 
+  final List<DeliveryCommentOptions> _deliveryCommentWastedOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc {
+    if (_deliveryCommentWastedOptionsSmc is EqualUnmodifiableListView)
+      return _deliveryCommentWastedOptionsSmc;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentWastedOptionsSmc);
+  }
+
   final List<BackendInterface> _backendInterface;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1539,6 +1633,42 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<SearchHouseHoldFilters>? _searchHouseHoldFiltersBednet;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet {
+    final value = _searchHouseHoldFiltersBednet;
+    if (value == null) return null;
+    if (_searchHouseHoldFiltersBednet is EqualUnmodifiableListView)
+      return _searchHouseHoldFiltersBednet;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<VehicleTrackingReasons>? _vehicleTrackingTripReasons;
+  @override
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripReasons {
+    final value = _vehicleTrackingTripReasons;
+    if (value == null) return null;
+    if (_vehicleTrackingTripReasons is EqualUnmodifiableListView)
+      return _vehicleTrackingTripReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<VehicleTrackingReasons>? _vehicleTrackingTripEvaluationReasons;
+  @override
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripEvaluationReasons {
+    final value = _vehicleTrackingTripEvaluationReasons;
+    if (value == null) return null;
+    if (_vehicleTrackingTripEvaluationReasons is EqualUnmodifiableListView)
+      return _vehicleTrackingTripEvaluationReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<ReferralReasonType>? _referralReasonList;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
@@ -1587,7 +1717,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, deliveryCommentWastedOptionsSmc: $deliveryCommentWastedOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1618,6 +1748,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptionsSmc, _deliveryCommentOptionsSmc) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentWastedOptionsSmc,
+                _deliveryCommentWastedOptionsSmc) &&
             const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
@@ -1630,6 +1763,15 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 other._searchHouseHoldFilters, _searchHouseHoldFilters) &&
             const DeepCollectionEquality().equals(
                 other._searchHouseHoldFiltersSMC, _searchHouseHoldFiltersSMC) &&
+            const DeepCollectionEquality().equals(
+                other._searchHouseHoldFiltersBednet,
+                _searchHouseHoldFiltersBednet) &&
+            const DeepCollectionEquality().equals(
+                other._vehicleTrackingTripReasons,
+                _vehicleTrackingTripReasons) &&
+            const DeepCollectionEquality().equals(
+                other._vehicleTrackingTripEvaluationReasons,
+                _vehicleTrackingTripEvaluationReasons) &&
             const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList) &&
             const DeepCollectionEquality()
@@ -1655,12 +1797,17 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_idTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
+        const DeepCollectionEquality().hash(_deliveryCommentWastedOptionsSmc),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
         const DeepCollectionEquality().hash(_transportTypes),
         const DeepCollectionEquality().hash(_symptomsTypeList),
         const DeepCollectionEquality().hash(_searchHouseHoldFilters),
         const DeepCollectionEquality().hash(_searchHouseHoldFiltersSMC),
+        const DeepCollectionEquality().hash(_searchHouseHoldFiltersBednet),
+        const DeepCollectionEquality().hash(_vehicleTrackingTripReasons),
+        const DeepCollectionEquality()
+            .hash(_vehicleTrackingTripEvaluationReasons),
         const DeepCollectionEquality().hash(_referralReasonList),
         const DeepCollectionEquality().hash(_houseStructureTypes),
         const DeepCollectionEquality().hash(_refusalReasons),
@@ -1704,6 +1851,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+      @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+      required final List<DeliveryCommentOptions>
+          deliveryCommentWastedOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1716,6 +1866,12 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
       final List<SearchHouseHoldFilters>? searchHouseHoldFiltersSMC,
+      @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+      final List<SearchHouseHoldFilters>? searchHouseHoldFiltersBednet,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+      final List<VehicleTrackingReasons>? vehicleTrackingTripReasons,
+      @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+      final List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -1760,6 +1916,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsSmc;
   @override
+  @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentWastedOptionsSmc;
+  @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
   @override
@@ -1777,6 +1936,15 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_SMC')
   List<SearchHouseHoldFilters>? get searchHouseHoldFiltersSMC;
+  @override
+  @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS_BEDNET')
+  List<SearchHouseHoldFilters>? get searchHouseHoldFiltersBednet;
+  @override
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripReasons;
+  @override
+  @JsonKey(name: 'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
+  List<VehicleTrackingReasons>? get vehicleTrackingTripEvaluationReasons;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;
@@ -5144,6 +5312,184 @@ abstract class _CallSupportList implements CallSupportList {
   @JsonKey(ignore: true)
   _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+VehicleTrackingReasons _$VehicleTrackingReasonsFromJson(
+    Map<String, dynamic> json) {
+  return _VehicleTrackingReasons.fromJson(json);
+}
+
+/// @nodoc
+mixin _$VehicleTrackingReasons {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $VehicleTrackingReasonsCopyWith<VehicleTrackingReasons> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $VehicleTrackingReasonsCopyWith<$Res> {
+  factory $VehicleTrackingReasonsCopyWith(VehicleTrackingReasons value,
+          $Res Function(VehicleTrackingReasons) then) =
+      _$VehicleTrackingReasonsCopyWithImpl<$Res, VehicleTrackingReasons>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$VehicleTrackingReasonsCopyWithImpl<$Res,
+        $Val extends VehicleTrackingReasons>
+    implements $VehicleTrackingReasonsCopyWith<$Res> {
+  _$VehicleTrackingReasonsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$VehicleTrackingReasonsImplCopyWith<$Res>
+    implements $VehicleTrackingReasonsCopyWith<$Res> {
+  factory _$$VehicleTrackingReasonsImplCopyWith(
+          _$VehicleTrackingReasonsImpl value,
+          $Res Function(_$VehicleTrackingReasonsImpl) then) =
+      __$$VehicleTrackingReasonsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$VehicleTrackingReasonsImplCopyWithImpl<$Res>
+    extends _$VehicleTrackingReasonsCopyWithImpl<$Res,
+        _$VehicleTrackingReasonsImpl>
+    implements _$$VehicleTrackingReasonsImplCopyWith<$Res> {
+  __$$VehicleTrackingReasonsImplCopyWithImpl(
+      _$VehicleTrackingReasonsImpl _value,
+      $Res Function(_$VehicleTrackingReasonsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$VehicleTrackingReasonsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$VehicleTrackingReasonsImpl implements _VehicleTrackingReasons {
+  _$VehicleTrackingReasonsImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$VehicleTrackingReasonsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VehicleTrackingReasonsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'VehicleTrackingReasons(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$VehicleTrackingReasonsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$VehicleTrackingReasonsImplCopyWith<_$VehicleTrackingReasonsImpl>
+      get copyWith => __$$VehicleTrackingReasonsImplCopyWithImpl<
+          _$VehicleTrackingReasonsImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$VehicleTrackingReasonsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _VehicleTrackingReasons implements VehicleTrackingReasons {
+  factory _VehicleTrackingReasons(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$VehicleTrackingReasonsImpl;
+
+  factory _VehicleTrackingReasons.fromJson(Map<String, dynamic> json) =
+      _$VehicleTrackingReasonsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$VehicleTrackingReasonsImplCopyWith<_$VehicleTrackingReasonsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 SearchHouseHoldFilters _$SearchHouseHoldFiltersFromJson(

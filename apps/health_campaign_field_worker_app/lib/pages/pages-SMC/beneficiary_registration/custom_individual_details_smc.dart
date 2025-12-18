@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import 'package:health_campaign_field_worker_app/utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -18,7 +21,11 @@ import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+import '../../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
+import '../../../utils/constants.dart' as local_constants;
 import '../../../utils/utils.dart' as utils;
+import '../../../utils/date_utils.dart' as digits;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
@@ -49,7 +56,6 @@ class CustomIndividualDetailsSMCPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
-  static const _beneficiaryIdKey = 'beneficiaryId';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -171,6 +177,7 @@ class CustomIndividualDetailsSMCPageState
                               final age = DigitDateUtils.calculateAge(
                                 form.control(_dobKey).value as DateTime?,
                               );
+
                               if ((age.years == 0 && age.months == 0) ||
                                   age.years >= 150 && age.months > 0) {
                                 form.control(_dobKey).setErrors({'': true});
@@ -197,6 +204,23 @@ class CustomIndividualDetailsSMCPageState
                                   options: DigitToastOptions(
                                     localizations.translate(i18_local
                                         .individualDetails.headAgeValidError),
+                                    true,
+                                    theme,
+                                  ),
+                                );
+
+                                return;
+                              }
+
+                              // dob null check already added above
+
+                              if (!widget.isHeadOfHousehold &&
+                                  !verifyIfChildAgeValid(context, age)) {
+                                await DigitToast.show(
+                                  context,
+                                  options: DigitToastOptions(
+                                    localizations.translate(i18_local
+                                        .individualDetails.chilAgeValidError),
                                     true,
                                     theme,
                                   ),
@@ -251,10 +275,14 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   projectBeneficiaryModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   registrationDate,
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   final individual = _getIndividualModel(
                                       context,
@@ -323,8 +351,12 @@ class CustomIndividualDetailsSMCPageState
                                   householdModel,
                                   individualModel,
                                   addressModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   projectBeneficiaryModel,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   isEditIndividual = true;
@@ -334,6 +366,7 @@ class CustomIndividualDetailsSMCPageState
                                     context,
                                     form: form,
                                     oldIndividual: individualModel,
+                                    beneficiaryId: beneficiaryId!.first,
                                   );
 
                                   final tag =
@@ -394,7 +427,11 @@ class CustomIndividualDetailsSMCPageState
                                 addMember: (
                                   addressModel,
                                   householdModel,
+                                  parentClientReferenceId,
+                                  relationshipType,
                                   loading,
+                                  householdChecklists,
+                                  individualChecklists,
                                 ) {
                                   // clickedStatus.value = true;
                                   final individual = _getIndividualModel(
@@ -648,29 +685,29 @@ class CustomIndividualDetailsSMCPageState
                             ),
                           ),
                         ),
-                        Offstage(
-                          offstage: widget.isHeadOfHousehold,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding - 4, 0, kPadding - 4, 0),
-                            child: DigitTextFormField(
-                              formControlName: _beneficiaryIdKey,
-                              label: localizations.translate(
-                                i18_local.individualDetails
-                                    .previousCycleBeneficiaryLabelText,
-                              ),
-                              validationMessages: {
-                                'min3': (object) => localizations
-                                    .translate(
-                                        i18_local.common.min3CharsRequired)
-                                    .replaceAll('{}', ''),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                        ),
+                        // Offstage(
+                        //   offstage: widget.isHeadOfHousehold,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.fromLTRB(
+                        //         kPadding - 4, 0, kPadding - 4, 0),
+                        //     child: DigitTextFormField(
+                        //       formControlName: _beneficiaryIdKey,
+                        //       label: localizations.translate(
+                        //         i18_local.individualDetails
+                        //             .previousCycleBeneficiaryLabelText,
+                        //       ),
+                        //       validationMessages: {
+                        //         'min3': (object) => localizations
+                        //             .translate(
+                        //                 i18_local.common.min3CharsRequired)
+                        //             .replaceAll('{}', ''),
+                        //         'maxLength': (object) => localizations
+                        //             .translate(i18.common.maxCharsRequired)
+                        //             .replaceAll('{}', maxLength.toString()),
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -740,6 +777,7 @@ class CustomIndividualDetailsSMCPageState
         : null;
 
     identifier ??= IdentifierModel(
+      individualClientReferenceId: individual.clientReferenceId,
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
@@ -757,15 +795,38 @@ class CustomIndividualDetailsSMCPageState
       ),
     );
 
-    List<IdentifierModel>? identifiers = individual.identifiers;
+// filter default identifiers except unique beneficiary id
+    List<IdentifierModel>? identifiers = individual.identifiers == null
+        ? []
+        : individual.identifiers!
+            .where((element) =>
+                element.identifierType ==
+                IdentifierTypes.uniqueBeneficiaryID.toValue())
+            .toList();
+
     if (isEditIndividual == false) {
-      identifiers?.add(IdentifierModel(
-        clientReferenceId: individual.clientReferenceId,
-        identifierId: beneficiaryId,
-        identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
-        clientAuditDetails: individual.clientAuditDetails,
-        auditDetails: individual.auditDetails,
-      ));
+      if (identifiers.isEmpty) {
+        identifiers?.add(IdentifierModel(
+          clientReferenceId: individual.clientReferenceId,
+          identifierId: beneficiaryId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+          clientAuditDetails: individual.clientAuditDetails,
+          auditDetails: individual.auditDetails,
+        ));
+      }
+    } else if (isEditIndividual == true) {
+      // in edit mode, if unique beneficiary id is not present, add it
+      if (!identifiers.any((element) =>
+          element.identifierType ==
+          IdentifierTypes.uniqueBeneficiaryID.toValue())) {
+        identifiers.add(IdentifierModel(
+          clientReferenceId: individual.clientReferenceId,
+          identifierId: beneficiaryId,
+          identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
+          clientAuditDetails: individual.clientAuditDetails,
+          auditDetails: individual.auditDetails,
+        ));
+      }
     }
 
     String? individualName = form.control(_individualNameKey).value as String?;
@@ -790,17 +851,6 @@ class CustomIndividualDetailsSMCPageState
               ),
             ],
     );
-
-    final previousBeneficiaryId =
-        form.control(_beneficiaryIdKey).value as String?;
-
-    individual = individual.copyWith(
-        additionalFields:
-            previousBeneficiaryId != null && previousBeneficiaryId.isNotEmpty
-                ? IndividualAdditionalFields(version: 1, fields: [
-                    AdditionalField(_beneficiaryIdKey, previousBeneficiaryId)
-                  ])
-                : null);
 
     return individual;
   }
@@ -830,15 +880,11 @@ class CustomIndividualDetailsSMCPageState
       },
     );
 
-    final beneficiaryId = individual?.additionalFields?.fields
-        .firstWhereOrNull((element) => element.key == _beneficiaryIdKey)
-        ?.value;
-
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(CustomValidator.requiredMin),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
@@ -846,7 +892,7 @@ class CustomIndividualDetailsSMCPageState
       _individualLastNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(CustomValidator.requiredMin),
           Validators.maxLength(200),
         ],
         value: individual?.name?.familyName ?? '',
@@ -859,16 +905,21 @@ class CustomIndividualDetailsSMCPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _beneficiaryIdKey: FormControl<String>(validators: [
-        utils.CustomValidator.requiredMin3,
-        Validators.maxLength(200),
-      ], value: beneficiaryId),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        utils.CustomValidator.validMobileNumber,
+        Validators.delegate(utils.CustomValidator.validMobileNumber),
         Validators.maxLength(9),
       ]),
     });
+  }
+
+  bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
+    final ageInMonths = (age.years * 12) + age.months;
+    // set default from constants if config has null
+
+    const validMaxAge = local_constants.Constants.validMaxAge;
+
+    return ageInMonths <= validMaxAge;
   }
 
   getGenderOptions(IndividualModel? individual) {

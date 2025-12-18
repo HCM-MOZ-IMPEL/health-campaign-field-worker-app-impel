@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +8,21 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../models/entities/additional_fields_type.dart';
+import '../../models/entities/entities_smc/identifier_types.dart'
+    as identifier_types;
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
-import '../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
+import '../../utils/utils_smc/utils_smc.dart'
+    show assessmentSMCPending, checkStatusSMC;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -70,6 +74,9 @@ class CustomMemberCardSMC extends StatelessWidget {
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
 
+    bool smcAssessmentPendingStatus =
+        assessmentSMCPending(tasks, context.selectedCycle);
+
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.background,
@@ -109,17 +116,26 @@ class CustomMemberCardSMC extends StatelessWidget {
                                 kPadding,
                               ),
                               child: Text(
-                                individual.identifiers!
-                                        .lastWhere(
+                                individual.identifiers
+                                        ?.lastWhere(
                                           (e) =>
                                               e.identifierType ==
                                               IdentifierTypes
                                                   .uniqueBeneficiaryID
                                                   .toValue(),
+                                          orElse: () => IdentifierModel(
+                                            identifierId:
+                                                localizations.translate(
+                                                    i18.common.noResultsFound),
+                                            identifierType:
+                                                '', // Default to an empty string or appropriate fallback
+                                            clientReferenceId:
+                                                '', // Provide a default value for the required parameter
+                                          ),
                                         )
                                         .identifierId ??
                                     localizations
-                                        .translate(i18.common.noResultsFound),
+                                        .translate(i18.common.coreCommonNA),
                                 style: theme.textTheme.headlineSmall,
                               ),
                             ),
@@ -145,14 +161,15 @@ class CustomMemberCardSMC extends StatelessWidget {
                   ),
                 ],
               ),
-              (tasks ?? [])
-                          .where(
-                            (element) =>
-                                element.status ==
-                                Status.administeredSuccess.toValue(),
-                          )
-                          .lastOrNull ==
-                      null
+              ((!isCurrentCycleData(context, tasks ?? []) ||
+                      (tasks ?? [])
+                              .where(
+                                (element) =>
+                                    element.status ==
+                                    Status.administeredSuccess.toValue(),
+                              )
+                              .lastOrNull ==
+                          null))
                   ? Positioned(
                       child: Align(
                         alignment: Alignment.topRight,
@@ -304,7 +321,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                 BeneficiaryType.individual,
                                       ));
 
-                                      if ((tasks ?? []).isEmpty) {
+                                      if (smcAssessmentPendingStatus) {
                                         context.router
                                             .push(EligibilityChecklistViewRoute(
                                           projectBeneficiaryClientReferenceId:
@@ -347,5 +364,21 @@ class CustomMemberCardSMC extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool isCurrentCycleData(BuildContext context, List<TaskModel> task) {
+    if (task.isEmpty) return true;
+    final currentCycle = context.selectedCycle;
+    final taskCycleIndex = task.first.additionalFields?.fields
+        .firstWhereOrNull(
+          (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+        )
+        ?.value;
+    if (taskCycleIndex != null && currentCycle != null) {
+      if (int.tryParse(taskCycleIndex) == currentCycle.id) {
+        return true;
+      }
+    }
+    return false;
   }
 }

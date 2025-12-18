@@ -24,20 +24,17 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedProject;
   }
 
+  String get projectId => selectedProject.id;
+
   String? get projectTypeCode {
-    final projectType = RegistrationDeliverySingleton()
-        .selectedProject
-        ?.additionalDetails
-        ?.projectType;
+    final projectType = selectedProject.projectType;
 
     if (projectType == null) {
       return "";
     }
 
-    return projectType.code;
+    return projectType;
   }
-
-  String get projectId => selectedProject.id;
 
   ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
@@ -83,6 +80,31 @@ extension ContextUtilityExtensions on BuildContext {
     } else {
       return [];
     }
+  }
+
+  List<DashboardConfigSchema?> filterDashboardConfig(
+      List<DashboardConfigSchema?> dashboardConfig, String projectTypeCode) {
+    return dashboardConfig
+        .where((element) =>
+            element != null && element.projectTypeCode == projectTypeCode)
+        .toList();
+  }
+
+  Map<String, int> getAllProductSkuCounts() {
+    final authBloc = _get<AuthBloc>();
+    final counts = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
+        return productSkuCounts;
+      },
+    );
+    return counts ?? {};
   }
 
   bool get isHealthFacilitySupervisor {
@@ -148,6 +170,66 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isVoucherAcceptor {
+    try {
+      bool voucherAcceptor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.voucherAcceptor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return voucherAcceptor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isLocalMonitor {
+    try {
+      bool localMonitor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.localMonitor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return localMonitor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isDistributor {
+    try {
+      bool distributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return distributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isRegistrar {
+    try {
+      bool registrar = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.registrar.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return registrar;
+    } catch (_) {
+      return false;
+    }
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 
@@ -175,29 +257,74 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
-
     // INFO: Set Boundary for packages
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
-    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
-
+    InventorySingleton().setBoundary(boundary: selectedBoundary);
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    // LocationTrackerSingleton()
+    //     .setBoundaryName(boundaryName: selectedBoundary.code!);
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.code!);
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 
   BoundaryModel? get boundaryOrNull {
     try {
-      return boundary;
+      final boundaryBloc = _get<BoundaryBloc>();
+      final boundaryState = boundaryBloc.state;
+
+      final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+          .where((element) => element.value != null)
+          .lastOrNull
+          ?.value;
+      return selectedBoundary;
     } catch (_) {
       return null;
     }
   }
 
+  bool get isMobilizer {
+    try {
+      bool isMobilizerRole = loggedInUserRoles
+          .where(
+            (role) => role.code == 'MOBILIZER',
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isMobilizerRole;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isCDD {
+    return loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.communityDistributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+  }
+
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel.roles;
       },
     );
@@ -212,8 +339,14 @@ extension ContextUtilityExtensions on BuildContext {
   String? get loggedInIndividualId {
     final authBloc = _get<AuthBloc>();
     final individualUUID = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actionsWrapper, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        productSkuCounts,
+      ) {
         return individualId;
       },
     );
@@ -245,8 +378,14 @@ extension ContextUtilityExtensions on BuildContext {
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated:
-          (accessToken, refreshToken, userModel, actions, individualId) {
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actions,
+        individualId,
+        productSkuCounts,
+      ) {
         return userModel;
       },
     );
@@ -280,6 +419,24 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
+  bool get isLGA {
+    try {
+      String? boundaryLevel = selectedProject.address?.boundaryType;
+
+      if (boundaryLevel == Constants.districtBoundaryLevel) {
+        bool isDownSyncEnabled = loggedInUserRoles
+            .where((role) => role.code == RolesType.warehouseManager.toValue())
+            .toList()
+            .isNotEmpty;
+
+        return isDownSyncEnabled;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   NetworkManager get networkManager => read<NetworkManager>();
 
   DataRepository<D, R>
@@ -298,5 +455,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (error) {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
+  }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
   }
 }

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -29,7 +28,6 @@ class AppInitializationBloc
     extends Bloc<AppInitializationEvent, AppInitializationState> {
   final MdmsRepository mdmsRepository;
   final DashboardRemoteRepository dashboardRemoteRepository;
-
   final Isar isar;
 
   AppInitializationBloc({
@@ -104,12 +102,15 @@ class AppInitializationBloc
                     MasterEnums.idTypes.toValue(),
                     MasterEnums.deliveryComments.toValue(),
                     MasterEnums.deliveryCommentsSMC.toValue(),
+                    MasterEnums.deliveryCommentsWastedSMC.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.searchHouseHoldFiltersSMC.toValue(),
+                    MasterEnums.vechileTrackingTripEvaluationReasons.toValue(),
+                    MasterEnums.vechileTrackingTripReasons.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -117,7 +118,7 @@ class AppInitializationBloc
                   masterDetails: getMasterDetailsModel([
                     MasterEnums.stateInfo.toValue(),
                     MasterEnums.genderType.toValue(),
-                    MasterEnums.privacyPolicy.toValue()
+                    MasterEnums.privacyPolicy.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -173,17 +174,20 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
+          if (dashboardConfigWrapper.isNotEmpty) {
+            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
+                    jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                        [ModuleEnums.hcm.toValue().toString()])
+                .dashboardConfigWrapper;
 
-          final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-                  jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                      [ModuleEnums.hcm.toValue()])
-              .dashboardConfigWrapper;
-
-          if (dashboardConfigs.isNotEmpty) {
-            dashboardConfigs.forEach((dashboardConfig) async {
+            if (dashboardConfigs.isNotEmpty) {
               await dashboardRemoteRepository.writeToDashboardConfigDB(
-                  dashboardConfig, isar);
-            });
+                  DashboardConfigPrimaryWrapper.fromJson(
+                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                              [ModuleEnums.hcm.toValue().toString()])
+                      .dashboardConfigWrapper,
+                  isar);
+            }
           }
         } catch (e) {
           debugPrint(e.toString());
@@ -208,11 +212,11 @@ class AppInitializationBloc
   ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
-    final dashboardConfigs = await isar.dashboardConfigSchemas
+    final dashboardConfigs = await isar.dashboardConfigSchemaLists
         .where()
         .filter()
-        .chartsIsNotNull()
-        .chartsIsNotEmpty()
+        .dashboardConfigsIsNotNull()
+        .dashboardConfigsIsNotEmpty()
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
@@ -225,7 +229,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
     );
   }
 }
@@ -244,6 +248,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.uninitialized() = AppUninitialized;
 
   const factory AppInitializationState.loading() = AppInitializing;
+
   const factory AppInitializationState.failed() = AppInitializationFailed;
 
   const factory AppInitializationState.initialized({
