@@ -32,6 +32,7 @@ class _CustomReferralReconProjectFacilitySelectionPageState
     extends LocalizedState<CustomReferralReconProjectFacilitySelectionPage> {
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
+  static const String facilityPrefix = 'FAC_';
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +171,7 @@ class _CustomReferralReconProjectFacilitySelectionPageState
                                   ),
                                   child: Text(projectFacility != null
                                       ? localizations.translate(
-                                          '$projectFacilityPrefix${projectFacility.id}',
+                                          '$facilityPrefix${projectFacility.facilityId}',
                                         )
                                       : ''),
                                 ),
