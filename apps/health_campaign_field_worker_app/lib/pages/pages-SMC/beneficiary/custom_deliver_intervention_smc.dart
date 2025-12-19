@@ -29,6 +29,8 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
+import '../../../utils/utils_smc/utils_smc.dart'
+    show getIndividualAdditionalFields;
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -848,18 +850,18 @@ class CustomDeliverInterventionSMCPageState
   }
 
   // ignore: long-parameter-list
-  TaskModel _getTaskModel(
-    BuildContext context, {
-    required FormGroup form,
-    TaskModel? oldTask,
-    int? cycle,
-    int? dose,
-    String? deliveryStrategy,
-    String? projectBeneficiaryClientReferenceId,
-    AddressModel? address,
-    double? latitude,
-    double? longitude,
-  }) {
+  TaskModel _getTaskModel(BuildContext context,
+      {required FormGroup form,
+      TaskModel? oldTask,
+      int? cycle,
+      int? dose,
+      String? deliveryStrategy,
+      String? projectBeneficiaryClientReferenceId,
+      AddressModel? address,
+      double? latitude,
+      double? longitude,
+      IndividualModel? selectedIndividual,
+      HouseholdMemberWrapper? householdMemberWrapper}) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
@@ -976,6 +978,8 @@ class CustomDeliverInterventionSMCPageState
               Constants.deliveryCommentWastedKey,
               deliveryCommentWasted,
             ),
+          ...getIndividualAdditionalFields(
+              selectedIndividual, householdMemberWrapper)
         ],
       ),
     );

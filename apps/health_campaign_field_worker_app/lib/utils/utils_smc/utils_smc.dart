@@ -2,6 +2,7 @@ library app_utils;
 
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -53,6 +54,9 @@ import '../../router/app_router.dart';
 import '../../widgets/progress_indicator/progress_indicator.dart';
 import '../constants.dart';
 import '../extensions/extensions.dart';
+
+import '../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 export '../app_exception.dart';
 export '../constants.dart';
@@ -347,6 +351,105 @@ String? getAgeConditionStringFromVariant(
   }
 
   return finalCondition;
+}
+
+String getIndividualAge(IndividualModel individualModel) {
+  DateTime dateOfBirth =
+      DateFormat("dd/MM/yyyy").parse(individualModel.dateOfBirth ?? '');
+  DigitDOBAge age = DigitDateUtils.calculateAge(dateOfBirth);
+
+  return getAgeMonths(age).toString().length == 1
+      ? '0${getAgeMonths(age)}'
+      : getAgeMonths(age).toString();
+}
+
+String? getBeneficiaryId(IndividualModel individualModel) {
+  return individualModel.identifiers
+      ?.firstWhereOrNull((e) =>
+          e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue())
+      ?.identifierId;
+}
+
+List<AdditionalField> getAdditionalIndividualInfoFromHouseholdMemberWrapper(
+    HouseholdMemberWrapper householdMemberWrapper) {
+  return [
+    if (householdMemberWrapper.household != null &&
+        householdMemberWrapper.household?.memberCount != null)
+      AdditionalField(
+          additional_fields_local.AdditionalFieldsType.memberCount.toValue(),
+          householdMemberWrapper.household?.memberCount),
+    if (householdMemberWrapper.headOfHousehold != null &&
+        householdMemberWrapper.headOfHousehold?.name != null &&
+        householdMemberWrapper.headOfHousehold?.name?.givenName != null)
+      AdditionalField(
+        additional_fields_local.AdditionalFieldsType.householdHeadName
+            .toValue(),
+        householdMemberWrapper.headOfHousehold?.name?.givenName,
+      ),
+    if (householdMemberWrapper.headOfHousehold != null &&
+        householdMemberWrapper.headOfHousehold?.mobileNumber != null)
+      AdditionalField(
+        additional_fields_local.AdditionalFieldsType.householdHeadMobileNumber
+            .toValue(),
+        householdMemberWrapper.headOfHousehold?.mobileNumber,
+      ),
+    if (householdMemberWrapper.headOfHousehold != null &&
+        householdMemberWrapper.headOfHousehold?.gender != null)
+      AdditionalField(
+        additional_fields_local.AdditionalFieldsType.householdHeadGender
+            .toValue(),
+        householdMemberWrapper.headOfHousehold?.gender,
+      ),
+    if (householdMemberWrapper.headOfHousehold != null &&
+        householdMemberWrapper.headOfHousehold?.dateOfBirth != null)
+      AdditionalField(
+        additional_fields_local.AdditionalFieldsType.householdHeadAge.toValue(),
+        getIndividualAge(householdMemberWrapper.headOfHousehold!),
+      ),
+    if (householdMemberWrapper.headOfHousehold != null &&
+        householdMemberWrapper.headOfHousehold?.clientReferenceId != null)
+      AdditionalField(
+        'headOfHouseholdClientReferenceId',
+        householdMemberWrapper.headOfHousehold?.clientReferenceId,
+      ),
+    if (householdMemberWrapper.headOfHousehold != null)
+      AdditionalField(
+        'headOfHouseholdUniqueBeneficiaryId',
+        getBeneficiaryId(householdMemberWrapper.headOfHousehold!),
+      ),
+  ];
+}
+
+List<AdditionalField> getIndividualAdditionalFields(
+    IndividualModel? individualModel,
+    HouseholdMemberWrapper? householdMemberWrapper) {
+  // find height weight from additional fields
+
+  return [
+    if (individualModel != null)
+      AdditionalField(
+        AdditionalFieldsType.age.toValue(),
+        getIndividualAge(individualModel),
+      ),
+    if (individualModel?.gender != null)
+      AdditionalField(
+        AdditionalFieldsType.gender.toValue(),
+        individualModel?.gender,
+      ),
+    if (individualModel?.clientReferenceId != null)
+      AdditionalField(
+        'individualClientReferenceId',
+        individualModel?.clientReferenceId,
+      ),
+    if (individualModel != null)
+      AdditionalField(
+        'uniqueBeneficiaryId',
+        getBeneficiaryId(individualModel),
+      ),
+    if (householdMemberWrapper != null)
+      ...getAdditionalIndividualInfoFromHouseholdMemberWrapper(
+          householdMemberWrapper),
+  ];
 }
 
 void showDownloadDialog(

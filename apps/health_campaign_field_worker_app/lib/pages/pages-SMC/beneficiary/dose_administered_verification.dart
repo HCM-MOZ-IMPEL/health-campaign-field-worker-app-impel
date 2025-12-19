@@ -25,6 +25,8 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/utils_smc.dart'
+    show getIndividualAdditionalFields;
 
 @RoutePage()
 class DoseAdministeredVerificationPage extends LocalizedStatefulWidget {
@@ -252,6 +254,12 @@ class _DoseAdministeredVerificationPageState
                                                           .toValue(),
                                                       e.deliveryStrategy,
                                                     ),
+                                                    ...getIndividualAdditionalFields(
+                                                      overViewBloc
+                                                          .selectedIndividual,
+                                                      overViewBloc
+                                                          .householdMemberWrapper,
+                                                    )
                                                   ],
                                                 ),
                                               ),

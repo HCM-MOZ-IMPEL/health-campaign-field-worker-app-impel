@@ -34,6 +34,8 @@ import '../../../widgets/custom_pop_route.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import 'package:survey_form/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../utils/utils_smc/utils_smc.dart'
+    show getIndividualAdditionalFields;
 
 import '../../../models/entities/status.dart' as status_local;
 
@@ -536,6 +538,11 @@ class _EligibilityChecklistViewPage
                                                         ineligibilityReasons
                                                             .join(","),
                                                       ),
+                                                      ...getIndividualAdditionalFields(
+                                                        widget.individual,
+                                                        householdOverviewState
+                                                            .householdMemberWrapper,
+                                                      )
                                                     ],
                                                   ),
                                                   address: widget.individual!

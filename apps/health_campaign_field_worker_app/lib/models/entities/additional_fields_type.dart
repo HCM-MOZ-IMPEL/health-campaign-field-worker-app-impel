@@ -43,5 +43,15 @@ enum AdditionalFieldsType {
   mobile,
   @MappableValue("EMPLOYEE")
   employee,
+  @MappableValue("memberCount")
+  memberCount,
+  @MappableValue("householdHeadName")
+  householdHeadName,
+  @MappableValue("householdHeadMobileNumber")
+  householdHeadMobileNumber,
+  @MappableValue("householdHeadGender")
+  householdHeadGender,
+  @MappableValue("householdHeadAge")
+  householdHeadAge,
   ;
 }

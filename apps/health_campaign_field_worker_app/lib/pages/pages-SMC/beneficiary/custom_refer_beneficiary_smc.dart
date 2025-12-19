@@ -22,6 +22,8 @@ import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../utils/utils_smc/utils_smc.dart'
+    show getIndividualAdditionalFields;
 
 @RoutePage()
 class CustomReferBeneficiarySMCPage extends LocalizedStatefulWidget {
@@ -216,6 +218,10 @@ class CustomReferBeneficiarySMCPageState
                                       false,
                                     ));
 
+                                    final householdOverviewState = context
+                                        .read<HouseholdOverviewBloc>()
+                                        .state;
+
                                     final clientReferenceId =
                                         IdGen.i.identifier;
                                     context.read<DeliverInterventionBloc>().add(
@@ -283,6 +289,10 @@ class CustomReferBeneficiarySMCPageState
                                                       'productVariantId',
                                                       widget.productVariantId,
                                                     ),
+                                                  ...getIndividualAdditionalFields(
+                                                      widget.individual,
+                                                      householdOverviewState
+                                                          .householdMemberWrapper)
                                                 ],
                                               ),
                                               address: widget
