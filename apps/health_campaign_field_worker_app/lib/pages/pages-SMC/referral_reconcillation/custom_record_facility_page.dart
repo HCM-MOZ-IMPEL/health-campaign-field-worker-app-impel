@@ -602,9 +602,20 @@ class _CustomReferralFacilityPageState
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? localizations.translate(
-                  'PJ_FAC_${facilities.where(
-                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
-                      ).first.id.toString()}',
+                  facilities
+                          .where(
+                            (e) =>
+                                e.id ==
+                                value.hfReferralModel?.projectFacilityId,
+                          )
+                          .toList()
+                          .isEmpty
+                      ? 'PJ_FAC_${value.hfReferralModel?.projectFacilityId}'
+                      : 'FAC_${facilities.where(
+                            (e) =>
+                                e.id ==
+                                value.hfReferralModel?.projectFacilityId,
+                          ).first.facilityId.toString()}',
                 )
               : null,
         ),
