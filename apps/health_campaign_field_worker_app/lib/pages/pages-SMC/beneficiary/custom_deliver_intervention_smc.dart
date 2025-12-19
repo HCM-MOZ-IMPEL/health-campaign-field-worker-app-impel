@@ -185,6 +185,8 @@ class CustomDeliverInterventionSMCPageState
                     address: householdMember.members?.first.address?.first,
                     latitude: lat,
                     longitude: long,
+                    selectedIndividual: selectedIndividual,
+                    householdMemberWrapper: householdMember,
                   ),
                   isEditing:
                       (deliverInterventionState.tasks ?? []).isNotEmpty &&

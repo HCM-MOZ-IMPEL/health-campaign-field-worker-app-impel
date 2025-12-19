@@ -370,56 +370,6 @@ String? getBeneficiaryId(IndividualModel individualModel) {
       ?.identifierId;
 }
 
-List<AdditionalField> getAdditionalIndividualInfoFromHouseholdMemberWrapper(
-    HouseholdMemberWrapper householdMemberWrapper) {
-  return [
-    if (householdMemberWrapper.household != null &&
-        householdMemberWrapper.household?.memberCount != null)
-      AdditionalField(
-          additional_fields_local.AdditionalFieldsType.memberCount.toValue(),
-          householdMemberWrapper.household?.memberCount),
-    if (householdMemberWrapper.headOfHousehold != null &&
-        householdMemberWrapper.headOfHousehold?.name != null &&
-        householdMemberWrapper.headOfHousehold?.name?.givenName != null)
-      AdditionalField(
-        additional_fields_local.AdditionalFieldsType.householdHeadName
-            .toValue(),
-        householdMemberWrapper.headOfHousehold?.name?.givenName,
-      ),
-    if (householdMemberWrapper.headOfHousehold != null &&
-        householdMemberWrapper.headOfHousehold?.mobileNumber != null)
-      AdditionalField(
-        additional_fields_local.AdditionalFieldsType.householdHeadMobileNumber
-            .toValue(),
-        householdMemberWrapper.headOfHousehold?.mobileNumber,
-      ),
-    if (householdMemberWrapper.headOfHousehold != null &&
-        householdMemberWrapper.headOfHousehold?.gender != null)
-      AdditionalField(
-        additional_fields_local.AdditionalFieldsType.householdHeadGender
-            .toValue(),
-        householdMemberWrapper.headOfHousehold?.gender,
-      ),
-    if (householdMemberWrapper.headOfHousehold != null &&
-        householdMemberWrapper.headOfHousehold?.dateOfBirth != null)
-      AdditionalField(
-        additional_fields_local.AdditionalFieldsType.householdHeadAge.toValue(),
-        getIndividualAge(householdMemberWrapper.headOfHousehold!),
-      ),
-    if (householdMemberWrapper.headOfHousehold != null &&
-        householdMemberWrapper.headOfHousehold?.clientReferenceId != null)
-      AdditionalField(
-        'headOfHouseholdClientReferenceId',
-        householdMemberWrapper.headOfHousehold?.clientReferenceId,
-      ),
-    if (householdMemberWrapper.headOfHousehold != null)
-      AdditionalField(
-        'headOfHouseholdUniqueBeneficiaryId',
-        getBeneficiaryId(householdMemberWrapper.headOfHousehold!),
-      ),
-  ];
-}
-
 List<AdditionalField> getIndividualAdditionalFields(
     IndividualModel? individualModel,
     HouseholdMemberWrapper? householdMemberWrapper) {
@@ -446,9 +396,11 @@ List<AdditionalField> getIndividualAdditionalFields(
         'uniqueBeneficiaryId',
         getBeneficiaryId(individualModel),
       ),
-    if (householdMemberWrapper != null)
-      ...getAdditionalIndividualInfoFromHouseholdMemberWrapper(
-          householdMemberWrapper),
+    if (individualModel?.name?.givenName != null)
+      AdditionalField(
+        'individualName',
+        individualModel?.name?.givenName,
+      ),
   ];
 }
 
