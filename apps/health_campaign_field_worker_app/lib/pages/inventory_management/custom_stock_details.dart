@@ -592,12 +592,23 @@ class CustomStockDetailsPageState
                                                 ? facilities
                                                 : filteredFacilities;
 
-                                        final teamFacilities = [
-                                          FacilityModel(
-                                            id: 'Delivery Team',
-                                            name: 'CDD Team',
-                                          ),
-                                        ];
+                                        final teamFacilities =
+                                            (context.isCommunitySupervisor &&
+                                                    entryType ==
+                                                        StockRecordEntryType
+                                                            .dispatch)
+                                                ? [
+                                                    FacilityModel(
+                                                      id: 'Delivery Team',
+                                                      name: 'Team',
+                                                    ),
+                                                  ]
+                                                : [
+                                                    FacilityModel(
+                                                      id: 'Supervisor Team',
+                                                      name: 'Team',
+                                                    ),
+                                                  ];
                                         teamFacilities.addAll(
                                           facilities,
                                         );
@@ -646,8 +657,7 @@ class CustomStockDetailsPageState
                                                   selectedFacilityId =
                                                       facility.id;
                                                 });
-                                                if (facility.id ==
-                                                    'Delivery Team') {
+                                                if (facility.name == 'Team') {
                                                   setState(() {
                                                     deliveryTeamSelected = true;
                                                   });
