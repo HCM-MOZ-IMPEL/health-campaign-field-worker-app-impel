@@ -357,10 +357,18 @@ class _CustomReferralFacilityPageState
                                                                   _evaluationFacilityKey)
                                                               .markAsTouched();
                                                           form
-                                                                  .control(
-                                                                      _evaluationFacilityKey)
-                                                                  .value =
-                                                              'PJ_FAC_${facility.id}';
+                                                              .control(
+                                                                  _evaluationFacilityKey)
+                                                              .value = facility
+                                                                      .facilityId ==
+                                                                  null
+                                                              ? localizations
+                                                                  .translate(
+                                                                      'PJ_FAC_${facility.id}')
+                                                              : localizations
+                                                                  .translate(
+                                                                      'FAC_${facility.facilityId}');
+
                                                           setState(() {
                                                             selectedProjectFacilityId =
                                                                 facility.id;
@@ -393,38 +401,45 @@ class _CustomReferralFacilityPageState
                                                                   .evaluationFacilityLabel,
                                                             ),
                                                             child:
-                                                                DigitTextFormField(
-                                                                    onTap:
-                                                                        viewOnly
-                                                                            ? null
-                                                                            : () async {
-                                                                                final facility = await Navigator.of(context).push(
-                                                                                  MaterialPageRoute(
-                                                                                    builder: (context) => CustomReferralReconProjectFacilitySelectionPage(
-                                                                                      projectFacilities: facilities,
-                                                                                    ),
-                                                                                  ),
-                                                                                );
+                                                                IgnorePointer(
+                                                              ignoring: true,
+                                                              child: DigitTextFormField(
+                                                                  onTap: viewOnly
+                                                                      ? null
+                                                                      : () async {
+                                                                          final facility =
+                                                                              await Navigator.of(context).push(
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => CustomReferralReconProjectFacilitySelectionPage(
+                                                                                projectFacilities: facilities,
+                                                                              ),
+                                                                            ),
+                                                                          );
 
-                                                                                if (facility == null) {
-                                                                                  return;
-                                                                                }
+                                                                          if (facility ==
+                                                                              null) {
+                                                                            return;
+                                                                          }
 
-                                                                                form.control(_evaluationFacilityKey).markAsTouched();
-                                                                                form.control(_evaluationFacilityKey).value = 'PJ_FAC_${facility.id}';
-                                                                                setState(() {
-                                                                                  selectedProjectFacilityId = facility.id;
-                                                                                });
-                                                                              },
-                                                                    readOnly:
-                                                                        viewOnly,
-                                                                    label: localizations
-                                                                        .translate(
-                                                                      i18.referralReconciliation
-                                                                          .evaluationFacilityLabel,
-                                                                    ),
-                                                                    formControlName:
-                                                                        _evaluationFacilityKey),
+                                                                          form
+                                                                              .control(_evaluationFacilityKey)
+                                                                              .markAsTouched();
+                                                                          form.control(_evaluationFacilityKey).value = facility.facilityId == null
+                                                                              ? localizations.translate('PJ_FAC_${facility.id}')
+                                                                              : localizations.translate('FAC_${facility.facilityId}');
+                                                                          setState(
+                                                                              () {
+                                                                            selectedProjectFacilityId =
+                                                                                facility.id;
+                                                                          });
+                                                                        },
+                                                                  readOnly: viewOnly,
+                                                                  label: localizations.translate(
+                                                                    i18.referralReconciliation
+                                                                        .evaluationFacilityLabel,
+                                                                  ),
+                                                                  formControlName: _evaluationFacilityKey),
+                                                            ),
                                                           );
                                                         }),
                                                   ),

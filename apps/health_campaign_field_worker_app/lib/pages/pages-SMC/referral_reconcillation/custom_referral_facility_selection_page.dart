@@ -57,7 +57,7 @@ class _CustomReferralReconProjectFacilitySelectionPageState
                               form.control(_facilityName).value as String?;
                           if (query == null || query.isEmpty) return true;
                           final localizedFacilityIdWithPrefix = localizations
-                              .translate('$projectFacilityPrefix${element.id}')
+                              .translate('$facilityPrefix${element.facilityId}')
                               .toLowerCase();
                           final lowerCaseQuery = query.toLowerCase();
                           return localizedFacilityIdWithPrefix
