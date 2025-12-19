@@ -175,6 +175,10 @@ import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 
+import '../pages/pages-SMC/attendance/custom_manage_attendance_smc.dart';
+import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
+import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(
@@ -1055,24 +1059,24 @@ class AppRouter extends _$AppRouter {
             path: 'manage-attendance',
           ),
           AutoRoute(
-            page: CustomManageAttendanceRoute.page,
-            path: 'custom-manage-attendance',
+            page: CustomManageAttendanceSMCRoute.page,
+            path: 'custom-manage-attendance-smc',
           ),
           AutoRoute(
             page: AttendanceDateSessionSelectionRoute.page,
             path: 'attendance-date-session-selection',
           ),
           AutoRoute(
-            page: CustomAttendanceDateSessionSelectionRoute.page,
-            path: 'custom-attendance-date-session-selection',
+            page: CustomAttendanceDateSessionSelectionSMCRoute.page,
+            path: 'custom-attendance-date-session-selection-smc',
           ),
           AutoRoute(
             page: MarkAttendanceRoute.page,
             path: 'mark-attendance',
           ),
           AutoRoute(
-            page: CustomMarkAttendanceRoute.page,
-            path: 'custom-mark-attendance',
+            page: CustomMarkAttendanceSMCRoute.page,
+            path: 'custom-mark-attendance-smc',
           ),
           AutoRoute(
             page: AttendanceAcknowledgementRoute.page,

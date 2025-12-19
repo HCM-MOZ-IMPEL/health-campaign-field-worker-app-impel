@@ -557,7 +557,7 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/digit_data_model"
-      ref: "digit-data-model-1.1.5-skb"
+      ref: "digit-data-model-1.1.5"
       resolved-ref: ec84586512a06c128c6089db50a28ed8018dafb2
       url: "https://github.com/egov-skb/health-campaign-field-worker-app/"
     source: git

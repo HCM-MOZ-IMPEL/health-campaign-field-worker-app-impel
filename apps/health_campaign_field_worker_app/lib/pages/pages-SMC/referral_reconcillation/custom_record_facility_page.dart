@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -330,7 +331,51 @@ class _CustomReferralFacilityPageState
                                                       );
                                                     }),
                                                 InkWell(
+                                                  onTap: viewOnly
+                                                      ? null
+                                                      : () async {
+                                                          final facility =
+                                                              await Navigator.of(
+                                                                      context)
+                                                                  .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CustomReferralReconProjectFacilitySelectionPage(
+                                                                projectFacilities:
+                                                                    facilities,
+                                                              ),
+                                                            ),
+                                                          );
+
+                                                          if (facility ==
+                                                              null) {
+                                                            return;
+                                                          }
+
+                                                          form
+                                                              .control(
+                                                                  _evaluationFacilityKey)
+                                                              .markAsTouched();
+                                                          form
+                                                              .control(
+                                                                  _evaluationFacilityKey)
+                                                              .value = facility
+                                                                      .facilityId ==
+                                                                  null
+                                                              ? localizations
+                                                                  .translate(
+                                                                      'PJ_FAC_${facility.id}')
+                                                              : localizations
+                                                                  .translate(
+                                                                      'FAC_${facility.facilityId}');
+
+                                                          setState(() {
+                                                            selectedProjectFacilityId =
+                                                                facility.id;
+                                                          });
+                                                        },
                                                   child: IgnorePointer(
+                                                    ignoring: viewOnly,
                                                     child: ReactiveWrapperField<
                                                             String>(
                                                         validationMessages: {
@@ -356,25 +401,44 @@ class _CustomReferralFacilityPageState
                                                                   .evaluationFacilityLabel,
                                                             ),
                                                             child:
-                                                                DigitTextFormInput(
-                                                              onChange: (val) =>
-                                                                  {
-                                                                form
-                                                                    .control(
-                                                                        _evaluationFacilityKey)
-                                                                    .markAsTouched(),
-                                                                form
-                                                                    .control(
-                                                                        _evaluationFacilityKey)
-                                                                    .value = val,
-                                                              },
-                                                              readOnly: true,
-                                                              errorMessage: field
-                                                                  .errorText,
-                                                              initialValue: form
-                                                                  .control(
-                                                                      _evaluationFacilityKey)
-                                                                  .value,
+                                                                IgnorePointer(
+                                                              ignoring: true,
+                                                              child: DigitTextFormField(
+                                                                  onTap: viewOnly
+                                                                      ? null
+                                                                      : () async {
+                                                                          final facility =
+                                                                              await Navigator.of(context).push(
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => CustomReferralReconProjectFacilitySelectionPage(
+                                                                                projectFacilities: facilities,
+                                                                              ),
+                                                                            ),
+                                                                          );
+
+                                                                          if (facility ==
+                                                                              null) {
+                                                                            return;
+                                                                          }
+
+                                                                          form
+                                                                              .control(_evaluationFacilityKey)
+                                                                              .markAsTouched();
+                                                                          form.control(_evaluationFacilityKey).value = facility.facilityId == null
+                                                                              ? localizations.translate('PJ_FAC_${facility.id}')
+                                                                              : localizations.translate('FAC_${facility.facilityId}');
+                                                                          setState(
+                                                                              () {
+                                                                            selectedProjectFacilityId =
+                                                                                facility.id;
+                                                                          });
+                                                                        },
+                                                                  readOnly: viewOnly,
+                                                                  label: localizations.translate(
+                                                                    i18.referralReconciliation
+                                                                        .evaluationFacilityLabel,
+                                                                  ),
+                                                                  formControlName: _evaluationFacilityKey),
                                                             ),
                                                           );
                                                         }),
@@ -536,9 +600,13 @@ class _CustomReferralFacilityPageState
       ),
       _evaluationFacilityKey: FormControl<String>(
         value: referralState.mapOrNull(
-          create: (value) => localizations.translate(
-            'FAC_${mappedFacility.id.toString()}',
-          ),
+          create: (value) => value.viewOnly
+              ? localizations.translate(
+                  'PJ_FAC_${facilities.where(
+                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
+                      ).first.id.toString()}',
+                )
+              : null,
         ),
         validators: [Validators.required],
       ),

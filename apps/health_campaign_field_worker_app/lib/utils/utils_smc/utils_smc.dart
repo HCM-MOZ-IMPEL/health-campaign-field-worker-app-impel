@@ -2,6 +2,7 @@ library app_utils;
 
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:attendance_management/attendance_management.dart'
@@ -53,6 +54,9 @@ import '../../router/app_router.dart';
 import '../../widgets/progress_indicator/progress_indicator.dart';
 import '../constants.dart';
 import '../extensions/extensions.dart';
+
+import '../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 export '../app_exception.dart';
 export '../constants.dart';
@@ -347,6 +351,57 @@ String? getAgeConditionStringFromVariant(
   }
 
   return finalCondition;
+}
+
+String getIndividualAge(IndividualModel individualModel) {
+  DateTime dateOfBirth =
+      DateFormat("dd/MM/yyyy").parse(individualModel.dateOfBirth ?? '');
+  DigitDOBAge age = DigitDateUtils.calculateAge(dateOfBirth);
+
+  return getAgeMonths(age).toString().length == 1
+      ? '0${getAgeMonths(age)}'
+      : getAgeMonths(age).toString();
+}
+
+String? getBeneficiaryId(IndividualModel individualModel) {
+  return individualModel.identifiers
+      ?.firstWhereOrNull((e) =>
+          e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue())
+      ?.identifierId;
+}
+
+List<AdditionalField> getIndividualAdditionalFields(
+    IndividualModel? individualModel,
+    HouseholdMemberWrapper? householdMemberWrapper) {
+  // find height weight from additional fields
+
+  return [
+    if (individualModel != null)
+      AdditionalField(
+        AdditionalFieldsType.age.toValue(),
+        getIndividualAge(individualModel),
+      ),
+    if (individualModel?.gender != null)
+      AdditionalField(
+        AdditionalFieldsType.gender.toValue(),
+        individualModel?.gender,
+      ),
+    if (individualModel?.clientReferenceId != null)
+      AdditionalField(
+        'individualClientReferenceId',
+        individualModel?.clientReferenceId,
+      ),
+    if (individualModel != null)
+      AdditionalField(
+        'uniqueBeneficiaryId',
+        getBeneficiaryId(individualModel),
+      ),
+    if (individualModel?.name?.givenName != null)
+      AdditionalField(
+        'individualName',
+        individualModel?.name?.givenName,
+      ),
+  ];
 }
 
 void showDownloadDialog(
