@@ -917,9 +917,10 @@ class CustomIndividualDetailsSMCPageState
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
 
+    const validMinAge = local_constants.Constants.validMinAge;
     const validMaxAge = local_constants.Constants.validMaxAge;
 
-    return ageInMonths <= validMaxAge;
+    return (ageInMonths >= validMinAge && ageInMonths <= validMaxAge);
   }
 
   getGenderOptions(IndividualModel? individual) {
