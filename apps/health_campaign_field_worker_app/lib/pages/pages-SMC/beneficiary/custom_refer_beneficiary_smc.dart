@@ -125,6 +125,7 @@ class CustomReferBeneficiarySMCPageState
             builder: (context, locationState) {
               double? latitude = locationState.latitude;
               double? longitude = locationState.longitude;
+              String? boundaryCode = SurveyFormSingleton().boundary?.code;
               return Scaffold(
                 body: Scaffold(
                   body: ReactiveFormBuilder(
@@ -319,15 +320,16 @@ class CustomReferBeneficiarySMCPageState
                                                           widget.individual,
                                                           householdOverviewState
                                                               .householdMemberWrapper),
-                                                      AdditionalField(
-                                                          'lng', longitude),
-                                                      AdditionalField(
-                                                          'lat', latitude),
-                                                      AdditionalField(
-                                                          'boundaryCode',
-                                                          SurveyFormSingleton()
-                                                              .boundary
-                                                              ?.code)
+                                                      if (longitude != null)
+                                                        AdditionalField(
+                                                            'lng', longitude),
+                                                      if (latitude != null)
+                                                        AdditionalField(
+                                                            'lat', latitude),
+                                                      if (boundaryCode != null)
+                                                        AdditionalField(
+                                                            'boundaryCode',
+                                                            boundaryCode)
                                                     ],
                                                   ),
                                                   address: widget

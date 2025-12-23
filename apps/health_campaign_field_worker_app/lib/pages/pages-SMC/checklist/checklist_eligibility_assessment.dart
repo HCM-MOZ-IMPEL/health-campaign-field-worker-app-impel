@@ -214,6 +214,8 @@ class _EligibilityChecklistViewPage
 
                                     double? latitude = locationState.latitude;
                                     double? longitude = locationState.longitude;
+                                    String? boundaryCode =
+                                        SurveyFormSingleton().boundary?.code;
 
                                     List<String>? referralReasons = [];
                                     List<String?> ineligibilityReasons = [];
@@ -445,9 +447,12 @@ class _EligibilityChecklistViewPage
                                                                             version:
                                                                                 1,
                                                                             fields: [
-                                                                              AdditionalField('lng', longitude),
-                                                                              AdditionalField('lat', latitude),
-                                                                              AdditionalField('boundaryCode', SurveyFormSingleton().boundary?.code)
+                                                                              if (longitude != null)
+                                                                                AdditionalField('lng', longitude),
+                                                                              if (latitude != null)
+                                                                                AdditionalField('lat', latitude),
+                                                                              if (boundaryCode != null)
+                                                                                AdditionalField('boundaryCode', boundaryCode)
                                                                             ])),
                                                               ),
                                                             );
@@ -543,15 +548,19 @@ class _EligibilityChecklistViewPage
                                                             householdOverviewState
                                                                 .householdMemberWrapper,
                                                           ),
-                                                          AdditionalField(
-                                                              'lng', longitude),
-                                                          AdditionalField(
-                                                              'lat', latitude),
-                                                          AdditionalField(
-                                                              'boundaryCode',
-                                                              SurveyFormSingleton()
-                                                                  .boundary
-                                                                  ?.code)
+                                                          if (longitude != null)
+                                                            AdditionalField(
+                                                                'lng',
+                                                                longitude),
+                                                          if (latitude != null)
+                                                            AdditionalField(
+                                                                'lat',
+                                                                latitude),
+                                                          if (boundaryCode !=
+                                                              null)
+                                                            AdditionalField(
+                                                                'boundaryCode',
+                                                                boundaryCode)
                                                         ],
                                                       ),
                                                       address: widget
