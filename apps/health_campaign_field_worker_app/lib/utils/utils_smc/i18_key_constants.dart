@@ -47,6 +47,9 @@ const complaintsInboxShowcase = ComplaintsInboxShowcase();
 class Common {
   const Common();
 
+  String get generateBeneficiaryIdTitle => 'GENERATE_BENEFICIARY_ID';
+  String get generateBeneficiaryIdMessage => 'GENERATE_BENEFICIARY_ID_MESSAGE';
+
   String get coreCommonComment => 'CORE_COMMON_COMMENT';
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get toggleTorchTip => 'TOGGLE_TORCH_TIP';
