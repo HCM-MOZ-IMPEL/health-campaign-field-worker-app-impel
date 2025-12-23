@@ -376,7 +376,7 @@ List<AdditionalField> getIndividualAdditionalFields(
   // find height weight from additional fields
 
   return [
-    if (individualModel != null && getIndividualAge(individualModel).length > 2)
+    if (individualModel != null)
       AdditionalField(
         AdditionalFieldsType.age.toValue(),
         getIndividualAge(individualModel),
