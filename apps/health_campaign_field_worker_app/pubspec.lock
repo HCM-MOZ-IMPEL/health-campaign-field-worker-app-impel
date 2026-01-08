@@ -1944,11 +1944,12 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "8c6c266b52fea6f3fc7aafb5b1dcdb7d7d9b4dfc1b1293b7b4e935a693880dd7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.7-dev.6-enumeration"
+      path: "packages/registration_delivery"
+      ref: "registration-delivery-1.0.7+1-proiximity-search-fix"
+      resolved-ref: "61270dbf206323f2e7ab385e0da3ee2dd4099ebf"
+      url: "https://github.com/egov-skb/health-campaign-field-worker-app/"
+    source: git
+    version: "1.0.7+1"
   remove_emoji_input_formatter:
     dependency: "direct main"
     description:
