@@ -89,6 +89,7 @@ class _CustomMarkAttendanceSMCPageState
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
+    commentsController.dispose();
     super.dispose();
   }
 
