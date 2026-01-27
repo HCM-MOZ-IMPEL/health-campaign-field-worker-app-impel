@@ -111,6 +111,7 @@ class AppInitializationBloc
                     MasterEnums.searchHouseHoldFiltersSMC.toValue(),
                     MasterEnums.vechileTrackingTripEvaluationReasons.toValue(),
                     MasterEnums.vechileTrackingTripReasons.toValue(),
+                    MasterEnums.vechileTrackingTripReasons.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

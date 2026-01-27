@@ -424,6 +424,23 @@ class MdmsRepository {
       return vehicleTrackingTripEvaluationReasons;
     }).toList();
 
+    appConfiguration.vaccine = result.hcmWrapperModel?.vaccine?.map((e) {
+      final vaccine = Vaccine()
+        ..name = e.name.toString()
+        ..code = e.code;
+
+      return vaccine;
+    }).toList();
+
+    appConfiguration.vaccineGroups =
+        result.hcmWrapperModel?.vaccineGroups?.map((e) {
+      final vaccineGroup = VaccineGroup()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..vaccineData = e.vaccineData;
+      return vaccineGroup;
+    }).toList();
+
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
       isar.rowVersionLists.putAllSync(rowVersionList);
