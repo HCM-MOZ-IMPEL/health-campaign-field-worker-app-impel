@@ -1346,6 +1346,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VaccineInformationCaptureRoute.name: (routeData) {
+      final args = routeData.argsAs<VaccineInformationCaptureRouteArgs>(
+          orElse: () => const VaccineInformationCaptureRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VaccineInformationCapturePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     VehicleAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleAcknowledgementRouteArgs>(
           orElse: () => const VehicleAcknowledgementRouteArgs());
@@ -6262,6 +6273,45 @@ class UserQRDetailsRouteArgs {
   @override
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [VaccineInformationCapturePage]
+class VaccineInformationCaptureRoute
+    extends PageRouteInfo<VaccineInformationCaptureRouteArgs> {
+  VaccineInformationCaptureRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VaccineInformationCaptureRoute.name,
+          args: VaccineInformationCaptureRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VaccineInformationCaptureRoute';
+
+  static const PageInfo<VaccineInformationCaptureRouteArgs> page =
+      PageInfo<VaccineInformationCaptureRouteArgs>(name);
+}
+
+class VaccineInformationCaptureRouteArgs {
+  const VaccineInformationCaptureRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
