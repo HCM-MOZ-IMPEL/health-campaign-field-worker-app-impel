@@ -112,6 +112,8 @@ class AppInitializationBloc
                     MasterEnums.vechileTrackingTripEvaluationReasons.toValue(),
                     MasterEnums.vechileTrackingTripReasons.toValue(),
                     MasterEnums.vechileTrackingTripReasons.toValue(),
+                    MasterEnums.vaccine.toValue(),
+                    MasterEnums.vaccineGroups.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
