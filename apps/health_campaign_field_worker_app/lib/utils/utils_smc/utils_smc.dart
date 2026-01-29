@@ -1107,26 +1107,18 @@ app_configuration_schema.VaccineGroup? getApplicableVaccineGroup(
 /// Adjust the logic based on your vaccine group naming convention
 bool _vaccineAgeMatchesGroup(
     int ageInMonths, app_configuration_schema.VaccineGroup group) {
-  final code = group.code?.toLowerCase() ?? '';
   final name = group.name?.toLowerCase() ?? '';
 
-  // Example age range matching based on group names like "0-3 months", "3-6 months"
-  // Adjust these ranges according to your actual vaccine group definitions
+  // Extract min and max numbers from the group name (e.g., "0-3 months" -> min: 0, max: 3)
+  final RegExp rangeRegex = RegExp(r'(\d+)-(\d+)');
+  final match = rangeRegex.firstMatch(name);
 
-  if (name.contains('0-3') || code.contains('group_one')) {
-    return ageInMonths >= 0 && ageInMonths <= 3;
-  } else if (name.contains('3-6') || code.contains('group_two')) {
-    return ageInMonths > 3 && ageInMonths <= 6;
-  } else if (name.contains('6-9') || code.contains('group_three')) {
-    return ageInMonths > 6 && ageInMonths <= 9;
-  } else if (name.contains('9-12') || code.contains('group_four')) {
-    return ageInMonths > 9 && ageInMonths <= 12;
-  } else if (name.contains('12-18') || code.contains('group_five')) {
-    return ageInMonths > 12 && ageInMonths <= 18;
-  } else if (name.contains('18-24') || code.contains('group_six')) {
-    return ageInMonths > 18 && ageInMonths <= 24;
-  } else if (name.contains('24-36') || code.contains('group_seven')) {
-    return ageInMonths > 24 && ageInMonths <= 36;
+  if (match != null) {
+    final minAge = int.tryParse(match.group(1) ?? '0') ?? 0;
+    final maxAge = int.tryParse(match.group(2) ?? '0') ?? 0;
+
+    // Check if ageInMonths falls within the range (inclusive)
+    return ageInMonths >= minAge && ageInMonths <= maxAge;
   }
 
   return false;

@@ -74,145 +74,74 @@ class _VaccineInformationCapturePageState
             showcaseButton: null,
           ),
           enableFixedButton: true,
-          footer: null,
+          footer: const Offstage(),
           slivers: [
-            // Beneficiary Age Info Section
+            // Vaccine Group Section
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: DigitCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Beneficiary Information',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 12),
-                      if (widget.individual?.name?.givenName != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            'Name: ${widget.individual?.name?.givenName}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+              child: DigitCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Applicable Vaccine Group Section
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: DigitCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Applicable Vaccine Group',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: DigitTheme.instance.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    getVaccineAgeGroupLabel(
+                                      applicableVaccineGroup,
+                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      Text(
-                        'Age: ${getVaccineAgeDisplayText(widget.individual)}',
-                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    ],
-                  ),
+                    ),
+                    // Vaccines List Section
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: DigitCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Vaccines to Administer',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 16),
+                            ..._buildVaccineList(context),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            // Vaccine Group Section
-            if (applicableVaccineGroup != null)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Applicable Vaccine Group',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.all(12.0),
-                          decoration: BoxDecoration(
-                            color: DigitTheme.instance.colorScheme.surface,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                getVaccineAgeGroupLabel(
-                                  applicableVaccineGroup,
-                                ),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                              const SizedBox(height: 4),
-                              if (applicableVaccineGroup?.code != null)
-                                Text(
-                                  'Code: ${applicableVaccineGroup?.code}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: DigitTheme
-                                            .instance.colorScheme.onSurface
-                                            .withOpacity(0.6),
-                                      ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            // Vaccines List Section
-            if (applicableVaccines != null && applicableVaccines!.isNotEmpty)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Vaccines to Administer',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 16),
-                        ..._buildVaccineList(context),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            else
-              // No vaccines available section
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 24),
-                        Icon(
-                          Icons.info_outline,
-                          size: 48,
-                          color:
-                              DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No vaccines applicable for this age group',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: DigitTheme
-                                        .instance.colorScheme.onSurfaceVariant,
-                                  ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
           ],
         ),
       );
@@ -240,13 +169,6 @@ class _VaccineInformationCapturePageState
           ),
           child: CheckboxListTile(
             title: Text(vaccineName),
-            subtitle: Text(
-              'Code: $vaccineCode',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: DigitTheme.instance.colorScheme.onSurface
-                        .withOpacity(0.6),
-                  ),
-            ),
             value: vaccineSelection[vaccineCode] ?? false,
             onChanged: (bool? selected) {
               setState(() {
@@ -254,8 +176,8 @@ class _VaccineInformationCapturePageState
               });
             },
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
+              horizontal: 4.0,
+              vertical: 2.0,
             ),
           ),
         ),
