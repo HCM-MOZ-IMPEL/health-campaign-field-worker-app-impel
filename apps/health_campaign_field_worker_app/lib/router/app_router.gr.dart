@@ -1354,6 +1354,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: VaccineInformationCapturePage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          individual: args.individual,
         ),
       );
     },
@@ -6283,12 +6284,14 @@ class VaccineInformationCaptureRoute
   VaccineInformationCaptureRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    IndividualModel? individual,
     List<PageRouteInfo>? children,
   }) : super(
           VaccineInformationCaptureRoute.name,
           args: VaccineInformationCaptureRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            individual: individual,
           ),
           initialChildren: children,
         );
@@ -6303,15 +6306,18 @@ class VaccineInformationCaptureRouteArgs {
   const VaccineInformationCaptureRouteArgs({
     this.key,
     this.appLocalizations,
+    this.individual,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final IndividualModel? individual;
+
   @override
   String toString() {
-    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual}';
   }
 }
 
