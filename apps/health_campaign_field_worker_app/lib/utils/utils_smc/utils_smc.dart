@@ -414,6 +414,11 @@ List<AdditionalField> getIndividualAdditionalFields(
         'individualName',
         individualModel?.name?.givenName,
       ),
+    if (individualModel?.name?.familyName != null)
+      AdditionalField(
+        'individualFamilyName',
+        individualModel?.name?.familyName,
+      ),
   ];
 }
 
