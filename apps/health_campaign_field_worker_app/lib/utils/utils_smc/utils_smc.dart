@@ -354,13 +354,26 @@ String? getAgeConditionStringFromVariant(
 }
 
 String getIndividualAge(IndividualModel individualModel) {
-  DateTime dateOfBirth =
-      DateFormat("dd/MM/yyyy").parse(individualModel.dateOfBirth ?? '');
-  DigitDOBAge age = DigitDateUtils.calculateAge(dateOfBirth);
+  // Guard and validate the DOB string
+  final dobString = individualModel.dateOfBirth?.trim();
 
-  return getAgeMonths(age).toString().length == 1
-      ? '0${getAgeMonths(age)}'
-      : getAgeMonths(age).toString();
+  // Check for null or empty string
+  if (dobString == null || dobString.isEmpty) {
+    return '00'; // Default fallback for missing DOB
+  }
+
+  try {
+    // Safely parse the date of birth
+    final dateOfBirth = DateFormat("dd/MM/yyyy").parse(dobString);
+    final age = DigitDateUtils.calculateAge(dateOfBirth);
+
+    // Get months and format with leading zero if needed
+    final months = getAgeMonths(age);
+    return months.toString().length == 1 ? '0$months' : months.toString();
+  } on FormatException catch (_) {
+    // Fallback to safe default age (0 months) on parse error
+    return '00';
+  }
 }
 
 String? getBeneficiaryId(IndividualModel individualModel) {
