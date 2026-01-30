@@ -742,7 +742,14 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.complaintTypes!.map((e) => e.code).toList(),
           userName: context.loggedInUser.name ?? '',
         );
-        ComplaintsSingleton().setBoundary(boundary: context.boundary);
+
+        BoundaryModel? boundary;
+        try {
+          boundary = context.boundary;
+        } catch (e) {}
+        if (boundary != null) {
+          ComplaintsSingleton().setBoundary(boundary: boundary);
+        }
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
