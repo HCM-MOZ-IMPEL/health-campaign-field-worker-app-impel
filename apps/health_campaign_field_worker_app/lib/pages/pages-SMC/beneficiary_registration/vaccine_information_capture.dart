@@ -1,24 +1,33 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../router/app_router.dart';
+import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../models/entities/status.dart' as status_local;
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_smc;
 
 @RoutePage()
 class VaccineInformationCapturePage extends LocalizedStatefulWidget {
   /// The individual/beneficiary whose vaccine information is being captured
   final IndividualModel? individual;
+  final String? projectBeneficiaryClientReferenceId;
 
   const VaccineInformationCapturePage({
     super.key,
     super.appLocalizations,
     this.individual,
+    this.projectBeneficiaryClientReferenceId,
   });
 
   @override
@@ -33,6 +42,13 @@ class _VaccineInformationCapturePageState
   VaccineGroup? applicableVaccineGroup;
   List<Vaccine>? applicableVaccines = [];
   Map<String, bool> vaccineSelection = {};
+  bool vaccineCardPresent = false;
+  final clickedStatus = ValueNotifier<bool>(false);
+  @override
+  void initState() {
+    context.read<LocationBloc>().add(const LoadLocationEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,78 +90,293 @@ class _VaccineInformationCapturePageState
             showcaseButton: null,
           ),
           enableFixedButton: true,
-          footer: const Offstage(),
+          footer: DigitCard(
+              margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+              padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+              child: ValueListenableBuilder(
+                  valueListenable: clickedStatus,
+                  builder: (context, bool isClicked, _) {
+                    return BlocBuilder<LocationBloc, LocationState>(
+                        builder: (context, locationState) {
+                      return DigitElevatedButton(
+                        onPressed: () async {
+                          context
+                              .read<LocationBloc>()
+                              .add(const LoadLocationEvent());
+
+                          if (context.mounted && widget.individual != null) {
+                            DigitComponentsUtils().showLocationCapturingDialog(
+                                context,
+                                localizations
+                                    .translate(i18.common.locationCapturing),
+                                DigitSyncDialogType.inProgress);
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              // After delay, hide the initial dialog
+                              DigitComponentsUtils().hideDialog(context);
+                              submitTask(context, locationState);
+                            });
+                          }
+                          // create a task
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.common.coreCommonSubmit,
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  })),
           slivers: [
-            // Vaccine Group Section
+            // Vaccine Card Present Question Section
             SliverToBoxAdapter(
-              child: DigitCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Applicable Vaccine Group Section
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: DigitCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Applicable Vaccine Group',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.all(12.0),
-                              decoration: BoxDecoration(
-                                color: DigitTheme.instance.colorScheme.surface,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    getVaccineAgeGroupLabel(
-                                      applicableVaccineGroup,
-                                    ),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: DigitCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        i18_smc.deliverIntervention.vaccineCardPresentLabel,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
-                    ),
-                    // Vaccines List Section
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: DigitCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Vaccines to Administer',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: 16),
-                            ..._buildVaccineList(context),
-                          ],
-                        ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Radio<bool>(
+                            value: true,
+                            groupValue: vaccineCardPresent,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  vaccineCardPresent = value;
+                                });
+                              }
+                            },
+                          ),
+                          Text(
+                            i18.common.coreCommonYes,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const SizedBox(width: 24),
+                          Radio<bool>(
+                            value: false,
+                            groupValue: vaccineCardPresent,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  vaccineCardPresent = value;
+                                });
+                              }
+                            },
+                          ),
+                          Text(
+                            i18.common.coreCommonNo,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
+            // Show vaccine groups and list only if card is present
+            if (vaccineCardPresent)
+              SliverToBoxAdapter(
+                child: DigitCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Applicable Vaccine Group Section
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: DigitCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                i18_smc.deliverIntervention.vaccineGroupLabel,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.all(12.0),
+                                decoration: BoxDecoration(
+                                  color:
+                                      DigitTheme.instance.colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      getVaccineAgeGroupLabel(
+                                        applicableVaccineGroup,
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Vaccines List Section
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: DigitCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                i18_smc.deliverIntervention
+                                    .vaccinesToAdministerLabel,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 16),
+                              ..._buildVaccineList(context),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       );
     });
+  }
+
+  void submitTask(BuildContext context, LocationState locationState) async {
+    final shouldSubmit = await DigitDialog.show<bool>(
+      context,
+      options: DigitDialogOptions(
+        titleText: localizations.translate(
+          i18.deliverIntervention.dialogTitle,
+        ),
+        contentText: localizations.translate(
+          i18.deliverIntervention.dialogContent,
+        ),
+        primaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonSubmit,
+          ),
+          action: (context) {
+            clickedStatus.value = true;
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop(true);
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonCancel,
+          ),
+          action: (context) => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+        ),
+      ),
+    );
+
+    if (context.mounted && (shouldSubmit ?? false)) {
+      // If vaccine card is not present, just navigate to next page without creating task
+      if (!vaccineCardPresent) {
+        context.router.push(EligibilityChecklistViewRoute(
+          projectBeneficiaryClientReferenceId:
+              widget.projectBeneficiaryClientReferenceId,
+          individual: widget.individual,
+        ));
+        return;
+      } else {
+        // If vaccine card is present, show confirmation dialog and create task
+
+        final task = getTaskModel(locationState);
+        context
+            .read<DeliverInterventionBloc>()
+            .add(DeliverInterventionSubmitEvent(
+              task: task,
+              isEditing: false,
+              boundaryModel: context.boundary,
+              navigateToSummary: false,
+            ));
+
+        context.router.push(EligibilityChecklistViewRoute(
+          projectBeneficiaryClientReferenceId:
+              widget.projectBeneficiaryClientReferenceId,
+          individual: widget.individual,
+        ));
+      }
+    }
+  }
+
+  TaskModel getTaskModel(LocationState locationState) {
+    final clientReferenceId = IdGen.i.identifier;
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+
+    return TaskModel(
+      projectBeneficiaryClientReferenceId:
+          widget.projectBeneficiaryClientReferenceId,
+      clientReferenceId: clientReferenceId,
+      tenantId: envConfig.variables.tenantId,
+      rowVersion: 1,
+      auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      projectId: context.projectId,
+      status: status_local.Status.beneficiaryInEligible.toValue(),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
+      ),
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            'taskStatus',
+            status_local.Status.vaccineStatus.toValue(),
+          ),
+          if (lat != null)
+            AdditionalField(
+              'latitude',
+              lat,
+            ),
+          if (long != null)
+            AdditionalField(
+              'longitude',
+              long,
+            ),
+          // Add selected vaccines as additional fields
+          ...vaccineSelection.entries
+              .where((entry) => entry.value) // Only include selected vaccines
+              .map((entry) => AdditionalField(
+                    'vaccine_${entry.key}',
+                    entry.value,
+                  )),
+        ],
+      ),
+      address: widget.individual!.address?.first.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
+    );
   }
 
   /// Build the list of vaccines with checkboxes for selection

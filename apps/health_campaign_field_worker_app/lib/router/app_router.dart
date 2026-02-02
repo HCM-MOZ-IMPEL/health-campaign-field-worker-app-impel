@@ -1492,6 +1492,10 @@ class AppRouter extends _$AppRouter {
             path: 'custom-manage-stocks',
           ),
           AutoRoute(
+            page: VaccineInformationCaptureRoute.page,
+            path: 'vaccine-information-capture',
+          ),
+          AutoRoute(
             page: QRScannerRoute.page,
             path: 'qr-scanner',
           ),

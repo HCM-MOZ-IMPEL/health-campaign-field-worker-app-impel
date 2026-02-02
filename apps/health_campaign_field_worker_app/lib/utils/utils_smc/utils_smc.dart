@@ -1060,7 +1060,10 @@ DigitDOBAge? calculateVaccineAge(String? dateOfBirth) {
   }
 
   try {
-    final dob = DateTime.parse(dateOfBirth);
+    final dob = DigitDateUtils.getFormattedDateToDateTime(
+          dateOfBirth,
+        ) ??
+        DateTime.now();
     return DigitDateUtils.calculateAge(dob);
   } catch (e) {
     return null;

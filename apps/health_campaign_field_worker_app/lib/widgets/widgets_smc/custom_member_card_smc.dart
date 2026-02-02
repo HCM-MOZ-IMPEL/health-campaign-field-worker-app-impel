@@ -314,11 +314,17 @@ class CustomMemberCardSMC extends StatelessWidget {
 
                                           if (smcAssessmentPendingStatus) {
                                             context.router.push(
-                                                EligibilityChecklistViewRoute(
+                                                VaccineInformationCaptureRoute(
                                               projectBeneficiaryClientReferenceId:
                                                   projectBeneficiaryClientReferenceId,
                                               individual: individual,
                                             ));
+                                            // context.router.push(
+                                            //     EligibilityChecklistViewRoute(
+                                            //   projectBeneficiaryClientReferenceId:
+                                            //       projectBeneficiaryClientReferenceId,
+                                            //   individual: individual,
+                                            // ));
                                           } else {
                                             context.router.push(
                                                 BeneficiaryDetailsRoute());
