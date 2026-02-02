@@ -743,14 +743,6 @@ void setPackagesSingleton(BuildContext context) {
           userName: context.loggedInUser.name ?? '',
         );
 
-        BoundaryModel? boundary;
-        try {
-          boundary = context.boundary;
-        } catch (e) {}
-        if (boundary != null) {
-          ComplaintsSingleton().setBoundary(boundary: boundary);
-        }
-
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles
               .where((role) =>
