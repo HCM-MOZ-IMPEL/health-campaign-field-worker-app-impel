@@ -960,6 +960,52 @@ bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   //return successfulTask == null;
 }
 
+bool allDosesDelivered(
+  List<TaskModel>? tasks,
+  ProjectCycle? selectedCycle,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel? individualModel,
+) {
+  if (selectedCycle == null ||
+      selectedCycle.id == 0 ||
+      (selectedCycle.deliveries ?? []).isEmpty) {
+    return true;
+  } else {
+    if ((tasks ?? []).isNotEmpty) {
+      final lastCycle = int.tryParse(tasks?.first.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      final lastDose = int.tryParse(tasks?.first.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          tasks?.first.status != Status.delivered.name) {
+        return true;
+      } else if (selectedCycle.id == lastCycle &&
+          tasks?.first.status == Status.delivered.name) {
+        return false;
+      } else if ((sideEffects ?? []).isNotEmpty) {
+        return recordedSideEffect(selectedCycle, tasks?.first, sideEffects);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+}
+
 bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;
