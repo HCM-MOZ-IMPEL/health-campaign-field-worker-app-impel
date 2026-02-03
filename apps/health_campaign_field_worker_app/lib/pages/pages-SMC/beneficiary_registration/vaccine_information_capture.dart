@@ -132,54 +132,66 @@ class _VaccineInformationCapturePageState
           slivers: [
             // Vaccine Card Present Question Section
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: DigitCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        i18_smc.deliverIntervention.vaccineCardPresentLabel,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Radio<bool>(
-                            value: true,
-                            groupValue: vaccineCardPresent,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  vaccineCardPresent = value;
-                                });
-                              }
-                            },
-                          ),
-                          Text(
-                            i18.common.coreCommonYes,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          const SizedBox(width: 24),
-                          Radio<bool>(
-                            value: false,
-                            groupValue: vaccineCardPresent,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  vaccineCardPresent = value;
-                                });
-                              }
-                            },
-                          ),
-                          Text(
-                            i18.common.coreCommonNo,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              child: DigitCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.translate(
+                          i18_smc.deliverIntervention.vaccineCardPresentLabel),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Radio<bool>(
+                                  value: true,
+                                  groupValue: vaccineCardPresent,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        vaccineCardPresent = value;
+                                      });
+                                    }
+                                  },
+                                ),
+                                Text(
+                                  localizations
+                                      .translate(i18.common.coreCommonYes),
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 24),
+                            Row(
+                              children: [
+                                Radio<bool>(
+                                  value: false,
+                                  groupValue: vaccineCardPresent,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        vaccineCardPresent = value;
+                                      });
+                                    }
+                                  },
+                                ),
+                                Text(
+                                  localizations
+                                      .translate(i18.common.coreCommonNo),
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -198,7 +210,8 @@ class _VaccineInformationCapturePageState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                i18_smc.deliverIntervention.vaccineGroupLabel,
+                                localizations.translate(i18_smc
+                                    .deliverIntervention.vaccineGroupLabel),
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               const SizedBox(height: 12),
@@ -238,8 +251,9 @@ class _VaccineInformationCapturePageState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                i18_smc.deliverIntervention
-                                    .vaccinesToAdministerLabel,
+                                localizations.translate(i18_smc
+                                    .deliverIntervention
+                                    .vaccinesToAdministerLabel),
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               const SizedBox(height: 16),
@@ -339,7 +353,7 @@ class _VaccineInformationCapturePageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
       projectId: context.projectId,
-      status: status_local.Status.beneficiaryInEligible.toValue(),
+      status: status_local.Status.vaccineStatus.toValue(),
       clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
