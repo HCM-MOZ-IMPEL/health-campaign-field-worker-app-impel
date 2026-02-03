@@ -164,6 +164,7 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
+      service.invoke("stopService");
       if (!isBackground && context != null) {
         if (context.mounted) {
           DigitToast.show(

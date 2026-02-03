@@ -67,6 +67,9 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
       final isRunning = await FlutterBackgroundService().isRunning();
       final localSecureStore = LocalSecureStore.instance,
           isBgRunning = await localSecureStore.isBackgroundSerivceRunning;
+      if (isRunning) {
+        FlutterBackgroundService().invoke("stopService");
+      }
       if (!isRunning && isBgRunning) {}
     }
   }
