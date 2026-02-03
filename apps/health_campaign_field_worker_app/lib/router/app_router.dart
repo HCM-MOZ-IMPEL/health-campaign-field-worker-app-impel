@@ -178,6 +178,7 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import '../pages/pages-SMC/attendance/custom_manage_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
 
 part 'app_router.gr.dart';
 
@@ -933,6 +934,10 @@ class AppRouter extends _$AppRouter {
                       path: 'eligibility-checklist',
                     ),
                     AutoRoute(
+                      page: VaccineInformationCaptureRoute.page,
+                      path: 'vaccine-information-capture',
+                    ),
+                    AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
                     ),
@@ -1485,6 +1490,10 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: CustomManageStocksRoute.page,
             path: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+            page: VaccineInformationCaptureRoute.page,
+            path: 'vaccine-information-capture',
           ),
           AutoRoute(
             page: QRScannerRoute.page,

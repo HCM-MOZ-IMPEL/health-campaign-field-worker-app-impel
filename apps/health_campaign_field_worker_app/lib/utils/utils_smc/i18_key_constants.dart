@@ -804,6 +804,9 @@ class ReferBeneficiary {
 
 class DeliverIntervention {
   const DeliverIntervention();
+  String get vaccineGroupLabel => 'VACCINE_GROUP_LABEL';
+  String get vaccinesToAdministerLabel => 'VACCINES_TO_ADMINISTER_LABEL';
+  String get vaccineCardPresentLabel => 'VACCINE_CARD_PRESENT_LABEL';
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
   String get recordRedoseLabel => 'DELIVER_INTERVENTION_RECORD_REDOSE_LABEL';

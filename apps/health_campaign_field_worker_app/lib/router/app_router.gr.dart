@@ -1346,6 +1346,20 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VaccineInformationCaptureRoute.name: (routeData) {
+      final args = routeData.argsAs<VaccineInformationCaptureRouteArgs>(
+          orElse: () => const VaccineInformationCaptureRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VaccineInformationCapturePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          individual: args.individual,
+          projectBeneficiaryClientReferenceId:
+              args.projectBeneficiaryClientReferenceId,
+        ),
+      );
+    },
     VehicleAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<VehicleAcknowledgementRouteArgs>(
           orElse: () => const VehicleAcknowledgementRouteArgs());
@@ -6262,6 +6276,56 @@ class UserQRDetailsRouteArgs {
   @override
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [VaccineInformationCapturePage]
+class VaccineInformationCaptureRoute
+    extends PageRouteInfo<VaccineInformationCaptureRouteArgs> {
+  VaccineInformationCaptureRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    IndividualModel? individual,
+    String? projectBeneficiaryClientReferenceId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VaccineInformationCaptureRoute.name,
+          args: VaccineInformationCaptureRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            individual: individual,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VaccineInformationCaptureRoute';
+
+  static const PageInfo<VaccineInformationCaptureRouteArgs> page =
+      PageInfo<VaccineInformationCaptureRouteArgs>(name);
+}
+
+class VaccineInformationCaptureRouteArgs {
+  const VaccineInformationCaptureRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.individual,
+    this.projectBeneficiaryClientReferenceId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final IndividualModel? individual;
+
+  final String? projectBeneficiaryClientReferenceId;
+
+  @override
+  String toString() {
+    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId}';
   }
 }
 

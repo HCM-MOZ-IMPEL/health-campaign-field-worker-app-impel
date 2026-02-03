@@ -107,6 +107,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
     List<CommonMasterModel>? houseStructureTypes,
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
+    @JsonKey(name: 'VACCINE') List<Vaccine>? vaccine,
+    @JsonKey(name: 'VACCINE_GROUPS') List<VaccineGroup>? vaccineGroups,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;
@@ -351,6 +353,29 @@ class VehicleTrackingReasons with _$VehicleTrackingReasons {
 
   factory VehicleTrackingReasons.fromJson(Map<String, dynamic> json) =>
       _$VehicleTrackingReasonsFromJson(json);
+}
+
+@freezed
+class VaccineGroup with _$VaccineGroup {
+  factory VaccineGroup({
+    required String? code,
+    required String? name,
+    required List<String>? vaccineData,
+  }) = _VaccineGroup;
+
+  factory VaccineGroup.fromJson(Map<String, dynamic> json) =>
+      _$VaccineGroupFromJson(json);
+}
+
+@freezed
+class Vaccine with _$Vaccine {
+  factory Vaccine({
+    required String? code,
+    required String? name,
+  }) = _Vaccine;
+
+  factory Vaccine.fromJson(Map<String, dynamic> json) =>
+      _$VaccineFromJson(json);
 }
 
 @freezed

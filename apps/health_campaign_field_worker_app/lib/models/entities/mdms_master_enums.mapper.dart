@@ -81,6 +81,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.vechileTrackingTripReasons;
       case "VEHICLE_TRACKING_TRIP_EVALUATION_REASONS":
         return MasterEnums.vechileTrackingTripEvaluationReasons;
+      case "VACCINE":
+        return MasterEnums.vaccine;
+      case "VACCINE_GROUPS":
+        return MasterEnums.vaccineGroups;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
@@ -149,6 +153,10 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "VEHICLE_TRACKING_TRIP_REASONS";
       case MasterEnums.vechileTrackingTripEvaluationReasons:
         return "VEHICLE_TRACKING_TRIP_EVALUATION_REASONS";
+      case MasterEnums.vaccine:
+        return "VACCINE";
+      case MasterEnums.vaccineGroups:
+        return "VACCINE_GROUPS";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
