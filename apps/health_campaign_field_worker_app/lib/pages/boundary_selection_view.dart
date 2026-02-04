@@ -463,28 +463,33 @@ class BoundarySelectionViewPageState
                                         showDownloadDialog(
                                       context,
                                       model: DownloadBeneficiary(
-                                        title: localizations.translate(
-                                          i18.beneficiaryDetails
-                                              .unableToCheckDataInServer,
-                                        ),
-                                        appConfiguartion: appConfiguration,
-                                        projectId: context.projectId,
-                                        pendingSyncCount: pendingSyncCount,
-                                        boundary: selectedBoundary!.value!.code
-                                            .toString(),
-                                        primaryButtonLabel:
-                                            localizations.translate(
-                                          i18.beneficiaryDetails
-                                              .proceedWithoutDownloading,
-                                        ),
-                                        secondaryButtonLabel:
-                                            localizations.translate(
-                                          i18.syncDialog.retryButtonLabel,
-                                        ),
-                                        boundaryName: selectedBoundary
-                                            .value!.name
-                                            .toString(),
-                                      ),
+                                          title: localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .unableToCheckDataInServer,
+                                          ),
+                                          appConfiguartion: appConfiguration,
+                                          projectId: context.projectId,
+                                          pendingSyncCount: pendingSyncCount,
+                                          boundary: selectedBoundary!
+                                              .value!.code
+                                              .toString(),
+                                          primaryButtonLabel:
+                                              localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .proceedWithoutDownloading,
+                                          ),
+                                          secondaryButtonLabel:
+                                              localizations.translate(
+                                            i18.syncDialog.retryButtonLabel,
+                                          ),
+                                          boundaryName: selectedBoundary
+                                              .value!.name
+                                              .toString(),
+                                          // passing description as suffixLabel to show warning icon (Temp fix)
+                                          suffixLabel: localizations.translate(
+                                            i18.syncDialog
+                                                .checkFailedWarningDescription,
+                                          )),
                                       dialogType:
                                           DigitProgressDialogType.checkFailed,
                                       isPop: true,
