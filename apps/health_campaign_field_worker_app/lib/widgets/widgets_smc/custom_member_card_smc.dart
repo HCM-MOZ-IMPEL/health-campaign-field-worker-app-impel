@@ -400,7 +400,7 @@ class CustomMemberCardSMC extends StatelessWidget {
   bool isCurrentCycleData(BuildContext context, List<TaskModel> task) {
     if (task.isEmpty) return true;
     final currentCycle = context.selectedCycle;
-    final taskCycleIndex = task.first.additionalFields?.fields
+    final taskCycleIndex = task.last.additionalFields?.fields
         .firstWhereOrNull(
           (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
         )

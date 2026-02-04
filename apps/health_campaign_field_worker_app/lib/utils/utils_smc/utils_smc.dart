@@ -978,14 +978,14 @@ bool allDosesDelivered(
     return true;
   } else {
     if ((tasks ?? []).isNotEmpty) {
-      final lastCycle = int.tryParse(tasks?.first.additionalFields?.fields
+      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
                 (e) => e.key == AdditionalFieldsType.cycleIndex.name,
               )
               .firstOrNull
               ?.value ??
           '');
-      final lastDose = int.tryParse(tasks?.first.additionalFields?.fields
+      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
                 (e) => e.key == AdditionalFieldsType.doseIndex.name,
               )
@@ -996,13 +996,13 @@ bool allDosesDelivered(
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          tasks?.first.status != Status.delivered.name) {
+          tasks?.last.status != Status.delivered.name) {
         return true;
       } else if (selectedCycle.id == lastCycle &&
-          tasks?.first.status == Status.delivered.name) {
+          tasks?.last.status == Status.delivered.name) {
         return false;
       } else if ((sideEffects ?? []).isNotEmpty) {
-        return recordedSideEffect(selectedCycle, tasks?.first, sideEffects);
+        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
       } else {
         return false;
       }
