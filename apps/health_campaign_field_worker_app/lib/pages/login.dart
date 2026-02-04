@@ -65,16 +65,23 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               Loaders.showLoadingDialog(context);
             },
             error: (message) {
-              Navigator.of(context, rootNavigator: true).pop();
-              DigitToast.show(
-                context,
-                options: DigitToastOptions(
-                  message ??
-                      localizations.translate(i18.login.unableToLoginText),
-                  true,
-                  theme,
-                ),
-              );
+              if (context.mounted) {
+                // Try to pop the loading dialog if it exists
+                Navigator.of(context, rootNavigator: true).pop();
+                final errorMessage = message == null
+                    ? localizations.translate(i18.login.unableToLoginText)
+                    : localizations.translate(message);
+                Future.delayed(const Duration(milliseconds: 50), () {
+                  DigitToast.show(
+                    context,
+                    options: DigitToastOptions(
+                      errorMessage,
+                      true,
+                      theme,
+                    ),
+                  );
+                });
+              }
             },
           );
         },
