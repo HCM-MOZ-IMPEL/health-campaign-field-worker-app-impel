@@ -474,12 +474,12 @@ class BoundarySelectionViewPageState
                                             .toString(),
                                         primaryButtonLabel:
                                             localizations.translate(
-                                          i18.syncDialog.retryButtonLabel,
+                                          i18.beneficiaryDetails
+                                              .proceedWithoutDownloading,
                                         ),
                                         secondaryButtonLabel:
                                             localizations.translate(
-                                          i18.beneficiaryDetails
-                                              .proceedWithoutDownloading,
+                                          i18.syncDialog.retryButtonLabel,
                                         ),
                                         boundaryName: selectedBoundary
                                             .value!.name

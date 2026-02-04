@@ -547,7 +547,6 @@ void showDownloadDialog(
 
   switch (dialogType) {
     case DigitProgressDialogType.failed:
-    case DigitProgressDialogType.checkFailed:
       DigitSyncDialog.show(
         context,
         type: DigitSyncDialogType.failed,
@@ -581,6 +580,38 @@ void showDownloadDialog(
           },
         ),
       );
+    case DigitProgressDialogType.checkFailed:
+      DigitSyncDialog.show(context,
+          type: DigitSyncDialogType.failed,
+          label: model.title,
+          primaryAction: DigitDialogActions(
+            label: model.secondaryButtonLabel ?? '',
+            action: (ctx) {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.maybePop();
+            },
+          ),
+          secondaryAction: DigitDialogActions(
+            label: model.primaryButtonLabel ?? '',
+            action: (ctx) {
+              if (dialogType == DigitProgressDialogType.failed ||
+                  dialogType == DigitProgressDialogType.checkFailed) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<BeneficiaryDownSyncBloc>().add(
+                      DownSyncGetBatchSizeEvent(
+                        appConfiguration: [model.appConfiguartion!],
+                        projectId: context.projectId,
+                        boundaryCode: model.boundary,
+                        pendingSyncCount: model.pendingSyncCount ?? 0,
+                        boundaryName: model.boundaryName,
+                      ),
+                    );
+              } else {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.maybePop();
+              }
+            },
+          ));
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
