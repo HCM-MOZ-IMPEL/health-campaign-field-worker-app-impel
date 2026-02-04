@@ -176,7 +176,9 @@ void onStart(ServiceInstance service) async {
                     service.invoke('serviceRunning', {
                       "enablesManualSync": true,
                     });
-                    service.stopSelf();
+                    // Give the native side time to bind before killing it
+                    // await Future.delayed(const Duration(seconds: 2));
+                    // service.stopSelf();
                     break;
                   }
                 }
