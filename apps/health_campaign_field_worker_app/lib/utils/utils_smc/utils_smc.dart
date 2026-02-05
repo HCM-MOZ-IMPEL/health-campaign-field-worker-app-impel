@@ -1164,16 +1164,39 @@ bool _vaccineAgeMatchesGroup(
     int ageInMonths, app_configuration_schema.VaccineGroup group) {
   final name = group.name?.toLowerCase() ?? '';
 
-  // Extract min and max numbers from the group name (e.g., "0-3 months" -> min: 0, max: 3)
+  // Try to match range format first (e.g., "0-3 months" -> min: 0, max: 3)
   final RegExp rangeRegex = RegExp(r'(\d+)-(\d+)');
-  final match = rangeRegex.firstMatch(name);
+  final rangeMatch = rangeRegex.firstMatch(name);
 
-  if (match != null) {
-    final minAge = int.tryParse(match.group(1) ?? '0') ?? 0;
-    final maxAge = int.tryParse(match.group(2) ?? '0') ?? 0;
+  if (rangeMatch != null) {
+    final minAge = int.tryParse(rangeMatch.group(1) ?? '0') ?? 0;
+    final maxAge = int.tryParse(rangeMatch.group(2) ?? '0') ?? 0;
 
     // Check if ageInMonths falls within the range (inclusive)
     return ageInMonths >= minAge && ageInMonths <= maxAge;
+  }
+
+  // Handle single age value format (e.g., "6 months", ">9 months", ">=12 months")
+  final RegExp singleValueRegex = RegExp(r'(>=?|<=?)?(\d+)');
+  final singleMatch = singleValueRegex.firstMatch(name);
+
+  if (singleMatch != null) {
+    final operator = singleMatch.group(1) ?? '';
+    final ageValue = int.tryParse(singleMatch.group(2) ?? '0') ?? 0;
+
+    switch (operator) {
+      case '>':
+        return ageInMonths > ageValue;
+      case '>=':
+        return ageInMonths >= ageValue;
+      case '<':
+        return ageInMonths < ageValue;
+      case '<=':
+        return ageInMonths <= ageValue;
+      default:
+        // No operator, exact match
+        return ageInMonths == ageValue;
+    }
   }
 
   return false;

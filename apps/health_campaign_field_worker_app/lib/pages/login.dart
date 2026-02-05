@@ -66,14 +66,16 @@ class _LoginPageState extends LocalizedState<LoginPage> {
             },
             error: (message) {
               if (context.mounted) {
+                final translatedMessage = message != null
+                    ? localizations.translate(message)
+                    : localizations.translate(i18.login.unableToLoginText);
                 Navigator.of(context, rootNavigator: true).pop();
 
-                Future.delayed(const Duration(milliseconds: 100), () {
+                Future.delayed(const Duration(milliseconds: 50), () {
                   DigitToast.show(
                     context,
                     options: DigitToastOptions(
-                      message ??
-                          localizations.translate(i18.login.unableToLoginText),
+                      translatedMessage,
                       true,
                       theme,
                     ),
