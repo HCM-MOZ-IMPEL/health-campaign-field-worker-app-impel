@@ -205,8 +205,8 @@ class _ViewStockRecordsCDDPageState
         );
       }).toList();
 
-      int spaq1Count = 0;
-      int spaq2Count = 0;
+      // int spaq1Count = 0;
+      // int spaq2Count = 0;
 
       // for (final stock in updatedStocks) {
       //   context.read<RecordStockBloc>().add(
