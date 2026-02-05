@@ -90,23 +90,6 @@ extension ContextUtilityExtensions on BuildContext {
         .toList();
   }
 
-  Map<String, int> getAllProductSkuCounts() {
-    final authBloc = _get<AuthBloc>();
-    final counts = authBloc.state.whenOrNull(
-      authenticated: (
-        accessToken,
-        refreshToken,
-        userModel,
-        actionsWrapper,
-        individualId,
-        productSkuCounts,
-      ) {
-        return productSkuCounts;
-      },
-    );
-    return counts ?? {};
-  }
-
   bool get isHealthFacilitySupervisor {
     try {
       // todo : verify this make this healthFacilitySupervsior as per kebbi
@@ -323,7 +306,6 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
-        productSkuCounts,
       ) {
         return userModel.roles;
       },
@@ -345,7 +327,6 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
-        productSkuCounts,
       ) {
         return individualId;
       },
@@ -384,7 +365,6 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actions,
         individualId,
-        productSkuCounts,
       ) {
         return userModel;
       },

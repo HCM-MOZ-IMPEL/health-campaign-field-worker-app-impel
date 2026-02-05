@@ -166,6 +166,7 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
+      await Future.delayed(const Duration(milliseconds: 500));
       service.invoke("stopService");
       if (!isBackground && context != null) {
         if (context.mounted) {
