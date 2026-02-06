@@ -327,7 +327,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
         ),
         primaryAction: DigitDialogActions(
           label: localizations.translate(
-            i18.syncDialog.closeButtonLabel,
+            i18.syncDialog.closeButtonFailedLabel,
           ),
           action: (ctx) => Navigator.pop(ctx),
         ),

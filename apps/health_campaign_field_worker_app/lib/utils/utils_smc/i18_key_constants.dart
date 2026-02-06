@@ -1123,6 +1123,7 @@ class SyncDialog {
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
 
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
+  String get closeButtonFailedLabel => 'SYNC_DIALOG_CLOSE_BUTTON_FAILED_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
   String get syncFailedDescriptionText =>
