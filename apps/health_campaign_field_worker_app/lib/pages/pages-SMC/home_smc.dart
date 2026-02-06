@@ -548,7 +548,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
+      // i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -585,7 +585,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
       i18.home.vehicleTrackingLabel,
-      i18.home.dataShare,
+      // i18.home.dataShare,
 
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
