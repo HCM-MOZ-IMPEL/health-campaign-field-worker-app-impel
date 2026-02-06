@@ -314,25 +314,33 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   }) {
     Navigator.of(context, rootNavigator: true).pop();
 
-    DigitSyncDialog.show(
+    DigitDialog.show(
       context,
-      type: DigitSyncDialogType.failed,
-      label: message,
-      primaryAction: DigitDialogActions(
-        label: localizations.translate(
-          i18.syncDialog.retryButtonLabel,
+      options: DigitDialogOptions(
+        titleIcon: Icon(
+          Icons.warning,
+          color: DigitTheme.instance.colorScheme.error,
         ),
-        action: (ctx) {
-          Navigator.pop(ctx);
-          // Sync Failed Manual Sync is Enabled
-          _attemptSyncUp(context);
-        },
-      ),
-      secondaryAction: DigitDialogActions(
-        label: localizations.translate(
-          i18.syncDialog.closeButtonLabel,
+        titleText: message,
+        contentText: localizations.translate(
+          i18.syncDialog.syncFailedDescriptionText,
         ),
-        action: (ctx) => Navigator.pop(ctx),
+        primaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.syncDialog.closeButtonLabel,
+          ),
+          action: (ctx) => Navigator.pop(ctx),
+        ),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.syncDialog.retryButtonLabel,
+          ),
+          action: (ctx) {
+            Navigator.pop(ctx);
+            // Sync Failed Manual Sync is Enabled
+            _attemptSyncUp(context);
+          },
+        ),
       ),
     );
   }
