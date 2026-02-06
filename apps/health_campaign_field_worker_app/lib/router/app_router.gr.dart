@@ -442,11 +442,8 @@ abstract class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           quantity: args.quantity,
           isGS1code: args.isGS1code,
-          gs1CodeList: args.gs1CodeList,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
-          manualEnabled: args.manualEnabled,
-          isDelivery: args.isDelivery,
         ),
       );
     },
@@ -1106,33 +1103,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    DataShareHomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DataShareHomePage(),
-      );
-    },
-    DataTransferRoute.name: (routeData) {
-      final args = routeData.argsAs<DataTransferRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: DataTransferPage(
-          key: args.key,
-          nearbyService: args.nearbyService,
-          connectedDevices: args.connectedDevices,
-        ),
-      );
-    },
-    DevicesListRoute.name: (routeData) {
-      final args = routeData.argsAs<DevicesListRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: DevicesListPage(
-          key: args.key,
-          deviceType: args.deviceType,
-        ),
-      );
-    },
     DigitScannerRoute.name: (routeData) {
       final args = routeData.argsAs<DigitScannerRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1252,12 +1222,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
-      );
-    },
-    PeerToPeerWrapperRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -2962,11 +2926,8 @@ class CustomDigitScannerRoute
     ScannerLocalization? appLocalizations,
     required int quantity,
     required bool isGS1code,
-    List<GS1Barcode> gs1CodeList = const [],
     bool singleValue = false,
     bool isEditEnabled = false,
-    bool manualEnabled = true,
-    bool isDelivery = false,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDigitScannerRoute.name,
@@ -2975,11 +2936,8 @@ class CustomDigitScannerRoute
             appLocalizations: appLocalizations,
             quantity: quantity,
             isGS1code: isGS1code,
-            gs1CodeList: gs1CodeList,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
-            manualEnabled: manualEnabled,
-            isDelivery: isDelivery,
           ),
           initialChildren: children,
         );
@@ -2996,11 +2954,8 @@ class CustomDigitScannerRouteArgs {
     this.appLocalizations,
     required this.quantity,
     required this.isGS1code,
-    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
-    this.manualEnabled = true,
-    this.isDelivery = false,
   });
 
   final Key? key;
@@ -3011,19 +2966,13 @@ class CustomDigitScannerRouteArgs {
 
   final bool isGS1code;
 
-  final List<GS1Barcode> gs1CodeList;
-
   final bool singleValue;
 
   final bool isEditEnabled;
 
-  final bool manualEnabled;
-
-  final bool isDelivery;
-
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, gs1CodeList: $gs1CodeList, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, isDelivery: $isDelivery}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 
@@ -5451,101 +5400,6 @@ class CustomWarehouseDetailsRouteArgs {
 }
 
 /// generated route for
-/// [DataShareHomePage]
-class DataShareHomeRoute extends PageRouteInfo<void> {
-  const DataShareHomeRoute({List<PageRouteInfo>? children})
-      : super(
-          DataShareHomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'DataShareHomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [DataTransferPage]
-class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
-  DataTransferRoute({
-    Key? key,
-    required InvalidType nearbyService,
-    required List<void> connectedDevices,
-    List<PageRouteInfo>? children,
-  }) : super(
-          DataTransferRoute.name,
-          args: DataTransferRouteArgs(
-            key: key,
-            nearbyService: nearbyService,
-            connectedDevices: connectedDevices,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'DataTransferRoute';
-
-  static const PageInfo<DataTransferRouteArgs> page =
-      PageInfo<DataTransferRouteArgs>(name);
-}
-
-class DataTransferRouteArgs {
-  const DataTransferRouteArgs({
-    this.key,
-    required this.nearbyService,
-    required this.connectedDevices,
-  });
-
-  final Key? key;
-
-  final InvalidType nearbyService;
-
-  final List<void> connectedDevices;
-
-  @override
-  String toString() {
-    return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
-  }
-}
-
-/// generated route for
-/// [DevicesListPage]
-class DevicesListRoute extends PageRouteInfo<DevicesListRouteArgs> {
-  DevicesListRoute({
-    Key? key,
-    required DeviceType deviceType,
-    List<PageRouteInfo>? children,
-  }) : super(
-          DevicesListRoute.name,
-          args: DevicesListRouteArgs(
-            key: key,
-            deviceType: deviceType,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'DevicesListRoute';
-
-  static const PageInfo<DevicesListRouteArgs> page =
-      PageInfo<DevicesListRouteArgs>(name);
-}
-
-class DevicesListRouteArgs {
-  const DevicesListRouteArgs({
-    this.key,
-    required this.deviceType,
-  });
-
-  final Key? key;
-
-  final DeviceType deviceType;
-
-  @override
-  String toString() {
-    return 'DevicesListRouteArgs{key: $key, deviceType: $deviceType}';
-  }
-}
-
-/// generated route for
 /// [DigitScannerPage]
 class DigitScannerRoute extends PageRouteInfo<DigitScannerRouteArgs> {
   DigitScannerRoute({
@@ -5960,20 +5814,6 @@ class LoginRouteArgs {
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-}
-
-/// generated route for
-/// [PeerToPeerWrapperPage]
-class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
-  const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
-      : super(
-          PeerToPeerWrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'PeerToPeerWrapperRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

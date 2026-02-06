@@ -1042,10 +1042,10 @@ class AppRouter extends _$AppRouter {
                 )
               ]),
 
-          AutoRoute(
-            page: DataShareHomeRoute.page,
-            path: 'data-share-home',
-          ),
+          // AutoRoute(
+          //   page: DataShareHomeRoute.page,
+          //   path: 'data-share-home',
+          // ),
           // AutoRoute(
           //     page: PeerToPeerWrapperRoute.page,
           //     path: 'peer-to-peer-wrapper',

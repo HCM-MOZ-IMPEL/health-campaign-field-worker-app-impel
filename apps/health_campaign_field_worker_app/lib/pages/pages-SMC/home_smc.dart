@@ -519,19 +519,19 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
-      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
-        child: HomeItemCard(
-          icon: Icons.send,
-          label: i18.home.dataShare,
-          onPressed: () {
-            // if (isTriggerLocalisation) {
-            //   triggerLocalization(context);
-            //   isTriggerLocalisation = false;
-            // }
-            context.router.push(const DataShareHomeRoute());
-          },
-        ),
-      )
+      // i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.send,
+      //     label: i18.home.dataShare,
+      //     onPressed: () {
+      //       // if (isTriggerLocalisation) {
+      //       //   triggerLocalization(context);
+      //       //   isTriggerLocalisation = false;
+      //       // }
+      //       context.router.push(const DataShareHomeRoute());
+      //     },
+      //   ),
+      // )
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
