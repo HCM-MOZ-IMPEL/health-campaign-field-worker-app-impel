@@ -21,9 +21,10 @@ import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:attendance_management/widgets/circular_button.dart';
 import 'package:attendance_management/widgets/no_result_card.dart';
+import '../../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
-class CustomMarkAttendancePage extends LocalizedStatefulWidget {
+class CustomMarkAttendanceSMCPage extends LocalizedStatefulWidget {
   final List<AttendeeModel> attendees;
   final String registerId;
   final String tenantId;
@@ -32,7 +33,7 @@ class CustomMarkAttendancePage extends LocalizedStatefulWidget {
   final int exitTime;
   final int? session;
 
-  const CustomMarkAttendancePage({
+  const CustomMarkAttendanceSMCPage({
     required this.exitTime,
     required this.entryTime,
     required this.dateTime,
@@ -45,15 +46,17 @@ class CustomMarkAttendancePage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<CustomMarkAttendancePage> createState() =>
-      _CustomMarkAttendancePageState();
+  State<CustomMarkAttendanceSMCPage> createState() =>
+      _CustomMarkAttendanceSMCPageState();
 }
 
-class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
+class _CustomMarkAttendanceSMCPageState
+    extends State<CustomMarkAttendanceSMCPage> {
   bool isDialogOpen = false;
   Timer? _debounce;
   late TextEditingController controller;
   AttendanceIndividualBloc? individualLogBloc;
+  final TextEditingController commentsController = TextEditingController();
 
   @override
   void initState() {
@@ -86,6 +89,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
+    commentsController.dispose();
     super.dispose();
   }
 
@@ -181,6 +185,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                                                   EnumValues.draft.toValue(),
                                                   locationState.latitude,
                                                   locationState.longitude,
+                                                  commentsController.text,
                                                   context,
                                                 );
                                               },
@@ -201,6 +206,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                                                             .toValue(),
                                                         locationState.latitude,
                                                         locationState.longitude,
+                                                        commentsController.text,
                                                         context,
                                                       );
                                                     }
@@ -300,6 +306,13 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                                                 i18.common.noResultsFound,
                                               ),
                                             ),
+                                    ),
+                                    DigitTextField(
+                                      label: localizations.translate(
+                                        i18_local.attendance.comments,
+                                      ),
+                                      maxLines: 3,
+                                      controller: commentsController,
                                     ),
                                   ],
                                 ),
@@ -443,6 +456,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
       String type,
       double? latitude,
       double? longitude,
+      String? comment,
       BuildContext context) {
     context.read<LocationBloc>().add(const LoadLocationEvent());
     DigitComponentsUtils().showLocationCapturingDialog(
@@ -487,6 +501,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                   createOplog: type != EnumValues.draft.toValue(),
                   latitude: latitude,
                   longitude: longitude,
+                  comment: comment,
                 ));
                 DigitToast.show(
                   context,
@@ -510,14 +525,14 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                         ),
                         action: (context) {
                           individualLogBloc?.add(SaveAsDraftEvent(
-                            entryTime: widget.entryTime,
-                            exitTime: widget.exitTime,
-                            selectedDate: widget.dateTime,
-                            isSingleSession: widget.session == null,
-                            createOplog: type != EnumValues.draft.toValue(),
-                            latitude: latitude,
-                            longitude: longitude,
-                          ));
+                              entryTime: widget.entryTime,
+                              exitTime: widget.exitTime,
+                              selectedDate: widget.dateTime,
+                              isSingleSession: widget.session == null,
+                              createOplog: type != EnumValues.draft.toValue(),
+                              latitude: latitude,
+                              longitude: longitude,
+                              comment: comment));
                           Navigator.of(context).pop();
                           navigateToAcknowledgement(localizations);
                         },
@@ -549,7 +564,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
             localizations.translate(i18.attendance.goToAttendanceRegisters),
         secondaryAction: () {
           context.router
-              .popUntilRouteWithName(CustomManageAttendanceRoute.name);
+              .popUntilRouteWithName(CustomManageAttendanceSMCRoute.name);
         },
       ),
     );

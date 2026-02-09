@@ -17,18 +17,18 @@ import '../../../widgets/localized.dart';
 import 'package:attendance_management/widgets/no_result_card.dart';
 
 @RoutePage()
-class CustomManageAttendancePage extends LocalizedStatefulWidget {
-  const CustomManageAttendancePage({
+class CustomManageAttendanceSMCPage extends LocalizedStatefulWidget {
+  const CustomManageAttendanceSMCPage({
     super.key,
   });
 
   @override
-  State<CustomManageAttendancePage> createState() =>
-      _CustomManageAttendancePageState();
+  State<CustomManageAttendanceSMCPage> createState() =>
+      _CustomManageAttendanceSMCPageState();
 }
 
-class _CustomManageAttendancePageState
-    extends State<CustomManageAttendancePage> {
+class _CustomManageAttendanceSMCPageState
+    extends State<CustomManageAttendanceSMCPage> {
   List<AttendanceRegisterModel> attendanceRegisters = [];
   var list = <Widget>[];
 
@@ -306,7 +306,7 @@ class RegisterCard extends StatelessWidget {
                       );
                     } else {
                       await context.router.push(
-                        CustomAttendanceDateSessionSelectionRoute(
+                        CustomAttendanceDateSessionSelectionSMCRoute(
                           registers: registers,
                           registerID: registerId,
                         ),

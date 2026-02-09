@@ -63,6 +63,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.mobile;
       case "EMPLOYEE":
         return AdditionalFieldsType.employee;
+      case "memberCount":
+        return AdditionalFieldsType.memberCount;
+      case "householdHeadName":
+        return AdditionalFieldsType.householdHeadName;
+      case "householdHeadMobileNumber":
+        return AdditionalFieldsType.householdHeadMobileNumber;
+      case "householdHeadGender":
+        return AdditionalFieldsType.householdHeadGender;
+      case "householdHeadAge":
+        return AdditionalFieldsType.householdHeadAge;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -109,6 +119,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "mobile";
       case AdditionalFieldsType.employee:
         return "EMPLOYEE";
+      case AdditionalFieldsType.memberCount:
+        return "memberCount";
+      case AdditionalFieldsType.householdHeadName:
+        return "householdHeadName";
+      case AdditionalFieldsType.householdHeadMobileNumber:
+        return "householdHeadMobileNumber";
+      case AdditionalFieldsType.householdHeadGender:
+        return "householdHeadGender";
+      case AdditionalFieldsType.householdHeadAge:
+        return "householdHeadAge";
     }
   }
 }

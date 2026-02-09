@@ -23,11 +23,12 @@ import 'package:attendance_management/utils/date_util_attendance.dart';
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 
 @RoutePage()
-class CustomAttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
+class CustomAttendanceDateSessionSelectionSMCPage
+    extends LocalizedStatefulWidget {
   final List<AttendanceRegisterModel> registers;
   final String registerID;
 
-  const CustomAttendanceDateSessionSelectionPage({
+  const CustomAttendanceDateSessionSelectionSMCPage({
     required this.registers,
     required this.registerID,
     super.key,
@@ -35,12 +36,12 @@ class CustomAttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<CustomAttendanceDateSessionSelectionPage> createState() =>
-      _CustomAttendanceDateSessionSelectionPageState();
+  State<CustomAttendanceDateSessionSelectionSMCPage> createState() =>
+      _CustomAttendanceDateSessionSelectionSMCPageState();
 }
 
-class _CustomAttendanceDateSessionSelectionPageState
-    extends State<CustomAttendanceDateSessionSelectionPage> {
+class _CustomAttendanceDateSessionSelectionSMCPageState
+    extends State<CustomAttendanceDateSessionSelectionSMCPage> {
   static const _dateOfSession = 'dateOfSession';
   static const _sessionRadio = 'sessionRadio';
   List<String> attendeeList = [];
@@ -200,7 +201,7 @@ class _CustomAttendanceDateSessionSelectionPageState
 
                                                 final submit =
                                                     await context.router.push(
-                                                  CustomMarkAttendanceRoute(
+                                                  CustomMarkAttendanceSMCRoute(
                                                     attendees: selectedRegister
                                                                 .attendees !=
                                                             null
