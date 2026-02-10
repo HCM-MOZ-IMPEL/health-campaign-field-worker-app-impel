@@ -46,6 +46,8 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart'
+    as app_configuration_schema;
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/entities/project_types.dart';
@@ -164,6 +166,8 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      service.invoke("stopService");
       if (!isBackground && context != null) {
         if (context.mounted) {
           DigitToast.show(
@@ -963,6 +967,52 @@ bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   //return successfulTask == null;
 }
 
+bool allDosesDelivered(
+  List<TaskModel>? tasks,
+  ProjectCycle? selectedCycle,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel? individualModel,
+) {
+  if (selectedCycle == null ||
+      selectedCycle.id == 0 ||
+      (selectedCycle.deliveries ?? []).isEmpty) {
+    return true;
+  } else {
+    if ((tasks ?? []).isNotEmpty) {
+      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          tasks?.last.status != Status.delivered.name) {
+        return true;
+      } else if (selectedCycle.id == lastCycle &&
+          tasks?.last.status == Status.delivered.name) {
+        return false;
+      } else if ((sideEffects ?? []).isNotEmpty) {
+        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+}
+
 bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;
@@ -1051,4 +1101,188 @@ List<DashboardConfigSchema?> filterDashboardConfig(
       .where((element) =>
           element != null && element.projectTypeCode == projectTypeCode)
       .toList();
+}
+
+// ============== VACCINE UTILITY METHODS ==============
+
+/// Calculate the age of a child from their date of birth
+/// Returns [DigitDOBAge] with years, months, and days
+DigitDOBAge? calculateVaccineAge(String? dateOfBirth) {
+  if (dateOfBirth == null || dateOfBirth.isEmpty) {
+    return null;
+  }
+
+  try {
+    final dob = DigitDateUtils.getFormattedDateToDateTime(
+          dateOfBirth,
+        ) ??
+        DateTime.now();
+    return DigitDateUtils.calculateAge(dob);
+  } catch (e) {
+    return null;
+  }
+}
+
+/// Get the appropriate vaccine group based on the child's age
+/// [individual] - The individual model containing the date of birth
+/// [vaccineGroups] - List of available vaccine groups
+/// Returns the matching [VaccineGroup] or null if no match is found
+app_configuration_schema.VaccineGroup? getApplicableVaccineGroup(
+  IndividualModel? individual,
+  List<app_configuration_schema.VaccineGroup>? vaccineGroups,
+) {
+  if (individual?.dateOfBirth == null ||
+      individual!.dateOfBirth!.isEmpty ||
+      vaccineGroups == null ||
+      vaccineGroups.isEmpty) {
+    return null;
+  }
+
+  final age = calculateVaccineAge(individual.dateOfBirth);
+  if (age == null) {
+    return null;
+  }
+
+  // Convert age to total months for easier comparison
+  final ageInMonths = (age.years * 12) + age.months;
+
+  // Find the matching vaccine group based on age
+  // This logic should match your vaccine group definitions
+  // Example: 0-3 months = 0-3, 3-6 months = 3-6, etc.
+  for (final group in vaccineGroups) {
+    if (_vaccineAgeMatchesGroup(ageInMonths, group)) {
+      return group;
+    }
+  }
+
+  return null;
+}
+
+/// Check if a given age in months matches a vaccine group
+/// This method extracts age ranges from the group code or name
+/// Adjust the logic based on your vaccine group naming convention
+bool _vaccineAgeMatchesGroup(
+    int ageInMonths, app_configuration_schema.VaccineGroup group) {
+  final name = group.name?.toLowerCase() ?? '';
+
+  // Try to match range format first (e.g., "0-3 months" -> min: 0, max: 3)
+  final RegExp rangeRegex = RegExp(r'(\d+)-(\d+)');
+  final rangeMatch = rangeRegex.firstMatch(name);
+
+  if (rangeMatch != null) {
+    final minAge = int.tryParse(rangeMatch.group(1) ?? '0') ?? 0;
+    final maxAge = int.tryParse(rangeMatch.group(2) ?? '0') ?? 0;
+
+    // Check if ageInMonths falls within the range (inclusive)
+    return ageInMonths >= minAge && ageInMonths <= maxAge;
+  }
+
+  // Handle single age value format (e.g., "6 months", ">9 months", ">=12 months")
+  final RegExp singleValueRegex = RegExp(r'(>=?|<=?)?(\d+)');
+  final singleMatch = singleValueRegex.firstMatch(name);
+
+  if (singleMatch != null) {
+    final operator = singleMatch.group(1) ?? '';
+    final ageValue = int.tryParse(singleMatch.group(2) ?? '0') ?? 0;
+
+    switch (operator) {
+      case '>':
+        return ageInMonths > ageValue;
+      case '>=':
+        return ageInMonths >= ageValue;
+      case '<':
+        return ageInMonths < ageValue;
+      case '<=':
+        return ageInMonths <= ageValue;
+      default:
+        // No operator, exact match
+        return ageInMonths == ageValue;
+    }
+  }
+
+  return false;
+}
+
+/// Get the list of vaccines applicable for a specific vaccine group
+/// [vaccineGroup] - The vaccine group containing vaccine codes
+/// [allVaccines] - The list of all available vaccines
+/// Returns a list of [Vaccine] objects that are in the group
+List<app_configuration_schema.Vaccine> getVaccinesForGroup(
+  app_configuration_schema.VaccineGroup? vaccineGroup,
+  List<app_configuration_schema.Vaccine>? allVaccines,
+) {
+  if (vaccineGroup?.vaccineData == null ||
+      vaccineGroup!.vaccineData!.isEmpty ||
+      allVaccines == null ||
+      allVaccines.isEmpty) {
+    return [];
+  }
+
+  final applicableVaccines = <app_configuration_schema.Vaccine>[];
+
+  // Iterate through the vaccine codes in the group
+  for (final vaccineCode in vaccineGroup.vaccineData!) {
+    // Find the matching vaccine from the list
+    final vaccine = allVaccines.firstWhereOrNull(
+      (vaccine) => vaccine.code == vaccineCode,
+    );
+
+    if (vaccine != null) {
+      applicableVaccines.add(vaccine);
+    }
+  }
+
+  return applicableVaccines;
+}
+
+/// Get all vaccine groups applicable for a specific individual
+/// [individual] - The individual model containing the date of birth
+/// [vaccineGroups] - List of available vaccine groups
+/// Returns a map of vaccine group codes to their corresponding vaccines
+Map<String, List<app_configuration_schema.Vaccine>>
+    getApplicableVaccinesByGroup(
+  IndividualModel? individual,
+  List<app_configuration_schema.VaccineGroup>? vaccineGroups,
+  List<app_configuration_schema.Vaccine>? allVaccines,
+) {
+  final result = <String, List<app_configuration_schema.Vaccine>>{};
+
+  if (vaccineGroups == null || vaccineGroups.isEmpty) {
+    return result;
+  }
+
+  for (final group in vaccineGroups) {
+    final applicableVaccines = getVaccinesForGroup(group, allVaccines);
+    if (applicableVaccines.isNotEmpty) {
+      result[group.code ?? 'unknown'] = applicableVaccines;
+    }
+  }
+
+  return result;
+}
+
+/// Format vaccine age group for display
+/// Returns a user-friendly age group label
+String getVaccineAgeGroupLabel(app_configuration_schema.VaccineGroup? group) {
+  return group?.name ?? 'Unknown Age Group';
+}
+
+/// Get child age in a readable format
+String getVaccineAgeDisplayText(IndividualModel? individual) {
+  if (individual?.dateOfBirth == null || individual!.dateOfBirth!.isEmpty) {
+    return 'Age unknown';
+  }
+
+  final age = calculateVaccineAge(individual.dateOfBirth);
+  if (age == null) {
+    return 'Invalid date of birth';
+  }
+
+  if (age.years > 0) {
+    return '${age.years} year${age.years > 1 ? 's' : ''} ${age.months} month${age.months != 1 ? 's' : ''}';
+  } else if (age.months > 0) {
+    return '${age.months} month${age.months != 1 ? 's' : ''} ${age.days} day${age.days != 1 ? 's' : ''}';
+  } else {
+    return '${age.days} day${age.days != 1 ? 's' : ''}';
+  }
 }

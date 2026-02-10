@@ -50,6 +50,7 @@ import '../../../blocs/blocs-smc/closed/closed_household.dart' as custombloc;
 import 'blocs/blocs-smc/searchBeneficiary/individual_global_search_smc.dart';
 import 'blocs/blocs-smc/searchBeneficiary/search_households_smc.dart';
 import 'blocs/inventory_management/stock_bloc.dart';
+import 'blocs/inventory_management/stock_count.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/vehicle_tracking/search_vehicles.dart';
@@ -185,6 +186,17 @@ class MainApplicationState extends State<MainApplication>
                   );
                 },
                 lazy: false,
+              ),
+
+              BlocProvider(
+                create: (context) {
+                  return StockCountBloc(
+                    stockRepository:
+                        context.repository<StockModel, StockSearchModel>(),
+                    productVariantDataRepository: context.repository<
+                        ProductVariantModel, ProductVariantSearchModel>(),
+                  );
+                },
               ),
               BlocProvider(
                 create: (context) {
@@ -735,8 +747,14 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated:
-                                    (_, __, ___, ____, _____, ______) => [
+                                authenticated: (
+                                  _,
+                                  __,
+                                  ___,
+                                  ____,
+                                  _____,
+                                ) =>
+                                    [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),

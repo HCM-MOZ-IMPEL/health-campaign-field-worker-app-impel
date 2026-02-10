@@ -211,8 +211,8 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              writeToFile(event.projectId, event.boundaryCode,
-                  event.boundaryName, downSyncResults);
+              // writeToFile(event.projectId, event.boundaryCode,
+              //     event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
@@ -272,85 +272,85 @@ class BeneficiaryDownSyncBloc
     }
   }
 
-  void writeToFile(
-    String projectId,
-    String selectedBoundaryCode,
-    String selectedBoundaryName,
-    Map<String, dynamic> response,
-  ) async {
-    Map<String, dynamic> storedData = {};
+//   void writeToFile(
+//     String projectId,
+//     String selectedBoundaryCode,
+//     String selectedBoundaryName,
+//     Map<String, dynamic> response,
+//   ) async {
+//     Map<String, dynamic> storedData = {};
 
-    // Get the Downloads directory
-    final downloadsDirectory = await getDownloadsDirectory();
-    if (downloadsDirectory == null) {
-      if (kDebugMode) {
-        print("Downloads directory is not available.");
-      }
-      return;
-    }
+//     // Get the Downloads directory
+//     final downloadsDirectory = await getDownloadsDirectory();
+//     if (downloadsDirectory == null) {
+//       if (kDebugMode) {
+//         print("Downloads directory is not available.");
+//       }
+//       return;
+//     }
 
-    final file = File('${downloadsDirectory.path}/down_sync_data.json');
+//     final file = File('${downloadsDirectory.path}/down_sync_data.json');
 
-    // Read existing file content if available
-    if (file.existsSync()) {
-      final content = await file.readAsString();
-      if (content.isNotEmpty) {
-        storedData = jsonDecode(content);
-      }
-    } else {
-      // Create the file if it doesn't exist
-      await file.create(recursive: true);
-      await file.writeAsString(jsonEncode({}));
-    }
-    var downSyncModel = response["DownsyncCriteria"];
-    String offsetKey = '${downSyncModel["offset"]}';
+//     // Read existing file content if available
+//     if (file.existsSync()) {
+//       final content = await file.readAsString();
+//       if (content.isNotEmpty) {
+//         storedData = jsonDecode(content);
+//       }
+//     } else {
+//       // Create the file if it doesn't exist
+//       await file.create(recursive: true);
+//       await file.writeAsString(jsonEncode({}));
+//     }
+//     var downSyncModel = response["DownsyncCriteria"];
+//     String offsetKey = '${downSyncModel["offset"]}';
 
-    // Prepare the boundary data
-    Map<String, dynamic> boundaryData = {
-      "boundaryCode": selectedBoundaryCode,
-      "boundaryName": selectedBoundaryName,
-      "response": response
-    };
+//     // Prepare the boundary data
+//     Map<String, dynamic> boundaryData = {
+//       "boundaryCode": selectedBoundaryCode,
+//       "boundaryName": selectedBoundaryName,
+//       "response": response
+//     };
 
-    // Initialize the offset entry if it doesn't exist
-    storedData[offsetKey] ??= {"totalCount": 0, "boundaries": []};
+//     // Initialize the offset entry if it doesn't exist
+//     storedData[offsetKey] ??= {"totalCount": 0, "boundaries": []};
 
-    // Always update totalCount to reflect latest info
-    storedData[offsetKey]["totalCount"] += downSyncModel["totalCount"];
+//     // Always update totalCount to reflect latest info
+//     storedData[offsetKey]["totalCount"] += downSyncModel["totalCount"];
 
-    // Fetch or initialize the list of boundaries
-    List<dynamic> boundaries = storedData[offsetKey]["boundaries"];
+//     // Fetch or initialize the list of boundaries
+//     List<dynamic> boundaries = storedData[offsetKey]["boundaries"];
 
-    // Check if boundary already exists
-    bool exists = boundaries
-        .any((entry) => entry["boundaryCode"] == selectedBoundaryCode);
+//     // Check if boundary already exists
+//     bool exists = boundaries
+//         .any((entry) => entry["boundaryCode"] == selectedBoundaryCode);
 
-    if (!exists) {
-      boundaries.add(boundaryData);
-      storedData[offsetKey]["boundaries"] = boundaries;
+//     if (!exists) {
+//       boundaries.add(boundaryData);
+//       storedData[offsetKey]["boundaries"] = boundaries;
 
-      if (kDebugMode) {
-        print(
-            "Added new boundary: $selectedBoundaryCode under offset: $offsetKey");
-      }
-    } else {
-      if (kDebugMode) {
-        print(
-            "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.");
-      }
-    }
+//       if (kDebugMode) {
+//         print(
+//             "Added new boundary: $selectedBoundaryCode under offset: $offsetKey");
+//       }
+//     } else {
+//       if (kDebugMode) {
+//         print(
+//             "Boundary '$selectedBoundaryCode' already exists under offset $offsetKey.");
+//       }
+//     }
 
-    // Convert map to JSON string
-    String storedDataString = jsonEncode(storedData);
-    debugPrint("Stored data: $storedDataString");
+//     // Convert map to JSON string
+//     String storedDataString = jsonEncode(storedData);
+//     debugPrint("Stored data: $storedDataString");
 
-    // Write back to file
-    await file.writeAsString(storedDataString);
+//     // Write back to file
+//     await file.writeAsString(storedDataString);
 
-    if (kDebugMode) {
-      print("Data successfully written to ${file.path}");
-    }
-  }
+//     if (kDebugMode) {
+//       print("Data successfully written to ${file.path}");
+//     }
+//   }
 
   FutureOr<void> _handleDownSyncReport(
     DownSyncReportEvent event,

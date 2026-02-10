@@ -111,6 +111,8 @@ class AppInitializationBloc
                     MasterEnums.searchHouseHoldFiltersSMC.toValue(),
                     MasterEnums.vechileTrackingTripEvaluationReasons.toValue(),
                     MasterEnums.vechileTrackingTripReasons.toValue(),
+                    MasterEnums.vaccine.toValue(),
+                    MasterEnums.vaccineGroups.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

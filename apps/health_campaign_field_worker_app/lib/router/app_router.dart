@@ -173,11 +173,12 @@ import '../pages/peer_to_peer/data_transfer.dart';
 import '../pages/peer_to_peer/devices_list.dart';
 import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
+// import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 
 import '../pages/pages-SMC/attendance/custom_manage_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
+import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
 
 part 'app_router.gr.dart';
 
@@ -933,6 +934,10 @@ class AppRouter extends _$AppRouter {
                       path: 'eligibility-checklist',
                     ),
                     AutoRoute(
+                      page: VaccineInformationCaptureRoute.page,
+                      path: 'vaccine-information-capture',
+                    ),
+                    AutoRoute(
                       page: RefusedDeliveryRoute.page,
                       path: 'refused-delivery',
                     ),
@@ -1037,21 +1042,21 @@ class AppRouter extends _$AppRouter {
                 )
               ]),
 
-          AutoRoute(
-            page: DataShareHomeRoute.page,
-            path: 'data-share-home',
-          ),
-          AutoRoute(
-              page: PeerToPeerWrapperRoute.page,
-              path: 'peer-to-peer-wrapper',
-              children: [
-                AutoRoute(
-                    page: DevicesListRoute.page,
-                    path: 'devices-list',
-                    initial: true),
-                AutoRoute(page: DataTransferRoute.page, path: 'data-transfer'),
-                AutoRoute(page: DataReceiverRoute.page, path: 'data-receiver'),
-              ]),
+          // AutoRoute(
+          //   page: DataShareHomeRoute.page,
+          //   path: 'data-share-home',
+          // ),
+          // AutoRoute(
+          //     page: PeerToPeerWrapperRoute.page,
+          //     path: 'peer-to-peer-wrapper',
+          //     children: [
+          //       AutoRoute(
+          //           page: DevicesListRoute.page,
+          //           path: 'devices-list',
+          //           initial: true),
+          //       AutoRoute(page: DataTransferRoute.page, path: 'data-transfer'),
+          //       AutoRoute(page: DataReceiverRoute.page, path: 'data-receiver'),
+          //     ]),
 
           // Attendance Route
           AutoRoute(
@@ -1485,6 +1490,10 @@ class AppRouter extends _$AppRouter {
           AutoRoute(
             page: CustomManageStocksRoute.page,
             path: 'custom-manage-stocks',
+          ),
+          AutoRoute(
+            page: VaccineInformationCaptureRoute.page,
+            path: 'vaccine-information-capture',
           ),
           AutoRoute(
             page: QRScannerRoute.page,

@@ -93,7 +93,10 @@ class AppConfiguration {
   late List<VehicleTrackingReasons>? vehicleTrackingTripReasons;
   @Name('VEHICLE_TRACKING_TRIP_EVALUATION_REASONS')
   late List<VehicleTrackingReasons>? vehicleTrackingTripEvaluationReasons;
-
+  @Name('VACCINE')
+  late List<Vaccine>? vaccine;
+  @Name('VACCINE_GROUPS')
+  late List<VaccineGroup>? vaccineGroups;
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -250,6 +253,19 @@ class Description {
   late String? type;
   late bool? isBold;
   late List<SubDescription>? subDescriptions;
+}
+
+@embedded
+class VaccineGroup {
+  late String? code;
+  late String? name;
+  late List<String>? vaccineData;
+}
+
+@embedded
+class Vaccine {
+  late String? code;
+  late String? name;
 }
 
 @embedded

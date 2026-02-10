@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/app_localization.dart';
@@ -18,11 +19,10 @@ import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
-import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 import '../../utils/utils_smc/utils_smc.dart'
-    show assessmentSMCPending, checkStatusSMC;
+    show assessmentSMCPending, checkStatusSMC, allDosesDelivered;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -314,11 +314,17 @@ class CustomMemberCardSMC extends StatelessWidget {
 
                                           if (smcAssessmentPendingStatus) {
                                             context.router.push(
-                                                EligibilityChecklistViewRoute(
+                                                VaccineInformationCaptureRoute(
                                               projectBeneficiaryClientReferenceId:
                                                   projectBeneficiaryClientReferenceId,
                                               individual: individual,
                                             ));
+                                            // context.router.push(
+                                            //     EligibilityChecklistViewRoute(
+                                            //   projectBeneficiaryClientReferenceId:
+                                            //       projectBeneficiaryClientReferenceId,
+                                            //   individual: individual,
+                                            // ));
                                           } else {
                                             context.router.push(
                                                 BeneficiaryDetailsRoute());
@@ -394,7 +400,7 @@ class CustomMemberCardSMC extends StatelessWidget {
   bool isCurrentCycleData(BuildContext context, List<TaskModel> task) {
     if (task.isEmpty) return true;
     final currentCycle = context.selectedCycle;
-    final taskCycleIndex = task.first.additionalFields?.fields
+    final taskCycleIndex = task.last.additionalFields?.fields
         .firstWhereOrNull(
           (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
         )

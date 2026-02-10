@@ -50,9 +50,6 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
   @override
   void initState() {
     super.initState();
-    context
-        .read<AuthBloc>()
-        .add(const AuthUpdateProductSKUCountsEvent(skuCounts: {}));
     _forms = widget.stockRecords.map((stock) {
       return FormGroup({
         _actualQuantityReceivedKey: FormControl<int>(
@@ -218,8 +215,6 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
         );
       }).toList();
 
-      Map<String, int> skuCounts = {};
-
       for (final stock in updatedStocks) {
         context.read<RecordStockBloc>().add(
               RecordStockSaveStockDetailsEvent(
@@ -238,14 +233,7 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
             .control(_actualQuantityReceivedKey)
             .value
             .toString());
-
-        skuCounts[productName] = totalQty;
       }
-      context.read<AuthBloc>().add(
-            AuthUpdateProductSKUCountsEvent(
-              skuCounts: skuCounts,
-            ),
-          );
       await Future.delayed(const Duration(milliseconds: 500));
       context.router.push(
         CustomAcknowledgementRoute(

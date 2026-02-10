@@ -27,6 +27,8 @@ import '../../../router/app_router.dart';
 import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
+import '../../../models/entities/status.dart' as status_local;
+
 @RoutePage()
 class CustomHouseholdOverviewSMCPage extends LocalizedStatefulWidget {
   const CustomHouseholdOverviewSMCPage({super.key, super.appLocalizations});
@@ -301,31 +303,35 @@ class CustomHouseholdOverviewSMCPageState
                                                       ?.clientReferenceId),
                                         )
                                         .toList();
-
+                                    // filter tasks for the current project beneficiary and exclude vaccine status tasks(as they are not relevant here)
                                     List<TaskModel>? taskData =
                                         (projectBeneficiary ?? []).isNotEmpty
                                             ? state.householdMemberWrapper.tasks
                                                 ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary?.first
-                                                        .clientReferenceId)
+                                                    element.projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary
+                                                            ?.first
+                                                            .clientReferenceId &&
+                                                    element.status !=
+                                                        status_local.Status
+                                                            .vaccineStatus
+                                                            .toValue())
                                                 .toList()
                                             : null;
 
-                                    // sort the task data based on created time in descending order
+                                    // // sort the task data based on created time in descending order
 
-                                    (taskData ?? []).sort(
-                                      (a, b) {
-                                        final aTime =
-                                            a.clientAuditDetails?.createdTime ??
-                                                0;
-                                        final bTime =
-                                            b.clientAuditDetails?.createdTime ??
-                                                0;
-                                        return bTime.compareTo(aTime);
-                                      },
-                                    );
+                                    // (taskData ?? []).sort(
+                                    //   (a, b) {
+                                    //     final aTime =
+                                    //         a.clientAuditDetails?.createdTime ??
+                                    //             0;
+                                    //     final bTime =
+                                    //         b.clientAuditDetails?.createdTime ??
+                                    //             0;
+                                    //     return bTime.compareTo(aTime);
+                                    //   },
+                                    // );
 
                                     final referralData = (projectBeneficiary ??
                                                 [])

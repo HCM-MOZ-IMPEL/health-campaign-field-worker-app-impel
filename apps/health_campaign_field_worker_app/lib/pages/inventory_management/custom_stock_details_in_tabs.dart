@@ -28,6 +28,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../blocs/auth/auth.dart';
 import '../../blocs/inventory_management/stock_bloc.dart';
+import '../../blocs/inventory_management/stock_count.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/extensions/extensions.dart';
@@ -73,7 +74,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _batchNumberKey = 'batchNumberKey';
   static const _commentsKey = 'comments';
   List<InventoryTransportTypes> transportTypes = [];
-  List<String> skuList = [];
   bool commentRequired = false;
   int maxCount = 100000000;
 
@@ -180,6 +180,23 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     for (final product in products) {
       _tabStocks[product.sku ?? ''] = await _createEmptyStock(product);
     }
+    final state = context.read<RecordStockBloc>().state;
+    StockRecordEntryType entryType = state.entryType;
+    var facilityId = "";
+    switch (entryType) {
+      case StockRecordEntryType.receipt:
+        facilityId = receiverId ?? "";
+        break;
+      case StockRecordEntryType.returned:
+      case StockRecordEntryType.dispatch:
+      case StockRecordEntryType.loss:
+      case StockRecordEntryType.damaged:
+        facilityId = senderId ?? "";
+        break;
+    }
+    context.read<StockCountBloc>().add(StockCountCalculateSKUEvent(
+          facilityId: facilityId,
+        ));
   }
 
   Future<StockModel> _createEmptyStock(ProductVariantModel product) async {
@@ -471,436 +488,446 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     }
 
     return _KeepAliveTabContent(
-      child: ReactiveForm(
-        formGroup: form,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            DigitCard(
+      child: BlocBuilder<StockCountBloc, StockCountState>(
+        builder: (context, stockCount) {
+          return ReactiveForm(
+            formGroup: form,
+            child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                DigitCard(
+                  padding: const EdgeInsets.all(16),
                   children: [
-                    Text(
-                      localizations.translate(pageTitle),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                            child: Text(localizations.translate(
-                                i18_local.stockDetails.resourceLabel))),
-                        Expanded(child: Text(productName)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text((context.isCommunityDistributor &&
-                                  entryType == StockRecordEntryType.dispatch)
-                              ? localizations
-                                  .translate(i18_local.stockDetails.returnedTo)
-                              : localizations.translate(
-                                  '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}')),
+                        Text(
+                          localizations.translate(pageTitle),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        Expanded(
-                            child: Text(
-                          secondaryPartyType == 'STAFF'
-                              ? receivedFrom.split(Constants.pipeSeparator)[0]
-                              : localizations.translate('FAC_$receivedFrom'),
-                        )),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Text(localizations.translate(
+                                    i18_local.stockDetails.resourceLabel))),
+                            Expanded(child: Text(productName)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text((context.isCommunityDistributor &&
+                                      entryType ==
+                                          StockRecordEntryType.dispatch)
+                                  ? localizations.translate(
+                                      i18_local.stockDetails.returnedTo)
+                                  : localizations.translate(
+                                      '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}')),
+                            ),
+                            Expanded(
+                                child: Text(
+                              secondaryPartyType == 'STAFF'
+                                  ? receivedFrom
+                                      .split(Constants.pipeSeparator)[0]
+                                  : localizations
+                                      .translate('FAC_$receivedFrom'),
+                            )),
+                          ],
+                        ),
                       ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            DigitCard(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 20),
+                DigitCard(
+                  padding: const EdgeInsets.all(16),
                   children: [
-                    Text(
-                      localizations
-                          .translate(i18_local.stockDetails.stockDetailsLabel),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    if (context.isSpaqManager &&
-                        entryType != StockRecordEntryType.returned &&
-                        secondaryPartyType != 'STAFF')
-                      ReactiveWrapperField(
-                          formControlName: _waybillNumberKey,
-                          validationMessages: {
-                            "minLength": (object) => localizations.translate(
-                                i18_local.stockDetails.minLengthLabel),
-                            "required": (object) => localizations.translate(
-                                  i18.common.corecommonRequired,
-                                ),
-                          },
-                          builder: (field) {
-                            return InputField(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              type: InputType.text,
-                              keyboardType: TextInputType.number,
-                              label: localizations.translate(
-                                i18.stockDetails.waybillNumberLabel,
-                              ),
-                              errorMessage: field.errorText,
-                              onChange: (val) {
-                                field.control.value = val;
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.translate(
+                              i18_local.stockDetails.stockDetailsLabel),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 12),
+                        if (context.isSpaqManager &&
+                            entryType != StockRecordEntryType.returned &&
+                            secondaryPartyType != 'STAFF')
+                          ReactiveWrapperField(
+                              formControlName: _waybillNumberKey,
+                              validationMessages: {
+                                "minLength": (object) =>
+                                    localizations.translate(
+                                        i18_local.stockDetails.minLengthLabel),
+                                "required": (object) => localizations.translate(
+                                      i18.common.corecommonRequired,
+                                    ),
                               },
-                              isRequired: true,
-                            );
-                          }),
+                              builder: (field) {
+                                return InputField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  type: InputType.text,
+                                  keyboardType: TextInputType.number,
+                                  label: localizations.translate(
+                                    i18.stockDetails.waybillNumberLabel,
+                                  ),
+                                  errorMessage: field.errorText,
+                                  onChange: (val) {
+                                    field.control.value = val;
+                                  },
+                                  isRequired: true,
+                                );
+                              }),
 
-                    if (context.isSpaqManager &&
-                        entryType != StockRecordEntryType.returned &&
-                        secondaryPartyType != 'STAFF')
-                      ReactiveWrapperField(
-                          formControlName: _waybillQuantityKey,
-                          validationMessages: {
-                            "required": (object) => localizations.translate(
-                                  i18.common.corecommonRequired,
-                                ),
-                            "number": (object) => localizations.translate(
-                                  '${quantityCountLabel}_ERROR',
-                                ),
-                            "max": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MAX_ERROR',
-                                ),
-                            "min": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MIN_ERROR',
-                                ),
-                          },
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                i18.stockDetails
-                                    .quantityOfProductIndicatedOnWaybillLabel,
-                              ),
-                              isRequired: true,
-                              child: BaseDigitFormInput(
-                                errorMessage: field.errorText,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]'),
-                                  ),
-                                  LengthLimitingTextInputFormatter(9),
-                                ],
-                                onChange: (val) {
-                                  field.control.markAsTouched();
-                                  if (val == "") {
-                                    field.control.value = null;
-                                    return;
-                                  }
-                                  if (val != '') {
-                                    field.control.value = int.parse(val);
-                                  } else {
-                                    field.control.value = null;
-                                  }
-                                  setState(() {
-                                    updateCommentValidation(form, entryType);
-                                  });
-                                },
-                              ),
-                            );
-                          }),
-                    if (context.isSpaqManager &&
-                        entryType != StockRecordEntryType.returned &&
-                        secondaryPartyType != 'STAFF')
-                      ReactiveWrapperField(
-                          formControlName: _batchNumberKey,
-                          builder: (field) {
-                            return InputField(
-                              type: InputType.text,
-                              label: localizations.translate(
-                                i18_local.stockDetails.batchNumberLabel,
-                              ),
-                              errorMessage: field.errorText,
-                              onChange: (val) {
-                                if (val == '') {
-                                  field.control.value = '0';
-                                } else {
-                                  field.control.value = val;
-                                }
+                        if (context.isSpaqManager &&
+                            entryType != StockRecordEntryType.returned &&
+                            secondaryPartyType != 'STAFF')
+                          ReactiveWrapperField(
+                              formControlName: _waybillQuantityKey,
+                              validationMessages: {
+                                "required": (object) => localizations.translate(
+                                      i18.common.corecommonRequired,
+                                    ),
+                                "number": (object) => localizations.translate(
+                                      '${quantityCountLabel}_ERROR',
+                                    ),
+                                "max": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MAX_ERROR',
+                                    ),
+                                "min": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MIN_ERROR',
+                                    ),
                               },
-                            );
-                          }),
-                    const SizedBox(height: 16),
-                    ReactiveWrapperField(
-                        formControlName: _transactionQuantityKey,
-                        validationMessages: {
-                          "number": (object) => localizations.translate(
-                                '${quantityCountLabel}_ERROR',
-                              ),
-                          "max": (object) => localizations.translate(
-                                '${quantityCountLabel}_MAX_ERROR',
-                              ),
-                          "min": (object) => localizations.translate(
-                                '${quantityCountLabel}_MIN_ERROR',
-                              ),
-                        },
-                        showErrors: (control) =>
-                            control.invalid && control.touched,
-                        builder: (field) {
-                          return LabeledField(
-                            label: localizations.translate(
-                              quantityCountLabel,
-                            ),
-                            isRequired: true,
-                            child: BaseDigitFormInput(
-                              errorMessage: field.errorText,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]'),
-                                ),
-                                LengthLimitingTextInputFormatter(9),
-                              ],
-                              onChange: (val) {
-                                field.control.markAsTouched();
-                                if (val == "") {
-                                  field.control.value = null;
-                                  return;
-                                }
-                                if (val != '') {
-                                  field.control.value = int.parse(val);
-                                } else {
-                                  field.control.value = null;
-                                }
-                                updateCommentValidation(form, entryType);
-                              },
-                            ),
-                          );
-                        }),
-                    // if ((entryType == StockRecordEntryType.dispatch &&
-                    //         context.isCommunityDistributor) ||
-                    //     entryType == StockRecordEntryType.returned)
-                    //   ReactiveWrapperField(
-                    //       formControlName: _transactionQuantityPartialKey,
-                    //       validationMessages: {
-                    //         "number": (object) => localizations.translate(
-                    //               '${quantityCountLabel}_ERROR',
-                    //             ),
-                    //         "max": (object) => localizations.translate(
-                    //               '${quantityCountLabel}_MAX_ERROR',
-                    //             ),
-                    //         "min": (object) => localizations.translate(
-                    //               '${quantityCountLabel}_MIN_ERROR',
-                    //             ),
-                    //       },
-                    //       showErrors: (control) =>
-                    //           control.invalid && control.touched,
-                    //       builder: (field) {
-                    //         return LabeledField(
-                    //           label: localizations.translate(
-                    //             quantityPartialCountLabel,
-                    //           ),
-                    //           isRequired: true,
-                    //           child: BaseDigitFormInput(
-                    //             errorMessage: field.errorText,
-                    //             keyboardType:
-                    //                 const TextInputType.numberWithOptions(
-                    //               decimal: true,
-                    //             ),
-                    //             inputFormatters: [
-                    //               FilteringTextInputFormatter.allow(
-                    //                 RegExp(r'[0-9]'),
-                    //               ),
-                    //               LengthLimitingTextInputFormatter(9),
-                    //             ],
-                    //             onChange: (val) {
-                    //               field.control.markAsTouched();
-                    //               if (val == "") {
-                    //                 field.control.value = null;
-                    //                 return;
-                    //               }
-                    //               if (int.parse(val) > 10000000000) {
-                    //                 field.control.value = 10000;
-                    //               } else {
-                    //                 if (val != '') {
-                    //                   field.control.value = int.parse(val);
-                    //                 } else {
-                    //                   field.control.value = null;
-                    //                 }
-                    //               }
-                    //             },
-                    //           ),
-                    //         );
-                    //       }),
-                    if (entryType == StockRecordEntryType.dispatch &&
-                        context.isCommunityDistributor)
-                      ReactiveWrapperField(
-                          formControlName: _transactionQuantityWastedKey,
-                          validationMessages: {
-                            "number": (object) => localizations.translate(
-                                  '${quantityCountLabel}_ERROR',
-                                ),
-                            "max": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MAX_ERROR',
-                                ),
-                            "min": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MIN_ERROR',
-                                ),
-                          },
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                quantityWastedCountLabel,
-                              ),
-                              isRequired: true,
-                              child: BaseDigitFormInput(
-                                errorMessage: field.errorText,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]'),
+                              showErrors: (control) =>
+                                  control.invalid && control.touched,
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.stockDetails
+                                        .quantityOfProductIndicatedOnWaybillLabel,
                                   ),
-                                  LengthLimitingTextInputFormatter(9),
-                                ],
-                                onChange: (val) {
-                                  field.control.markAsTouched();
-                                  if (val == "") {
-                                    field.control.value = null;
-                                    return;
-                                  }
-                                  if (int.parse(val) > 10000000000) {
-                                    field.control.value = 10000;
-                                  } else {
+                                  isRequired: true,
+                                  child: BaseDigitFormInput(
+                                    errorMessage: field.errorText,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]'),
+                                      ),
+                                      LengthLimitingTextInputFormatter(9),
+                                    ],
+                                    onChange: (val) {
+                                      field.control.markAsTouched();
+                                      if (val == "") {
+                                        field.control.value = null;
+                                        return;
+                                      }
+                                      if (val != '') {
+                                        field.control.value = int.parse(val);
+                                      } else {
+                                        field.control.value = null;
+                                      }
+                                      setState(() {
+                                        updateCommentValidation(
+                                            form, entryType);
+                                      });
+                                    },
+                                  ),
+                                );
+                              }),
+                        if (context.isSpaqManager &&
+                            entryType != StockRecordEntryType.returned &&
+                            secondaryPartyType != 'STAFF')
+                          ReactiveWrapperField(
+                              formControlName: _batchNumberKey,
+                              builder: (field) {
+                                return InputField(
+                                  type: InputType.text,
+                                  label: localizations.translate(
+                                    i18_local.stockDetails.batchNumberLabel,
+                                  ),
+                                  errorMessage: field.errorText,
+                                  onChange: (val) {
+                                    if (val == '') {
+                                      field.control.value = '0';
+                                    } else {
+                                      field.control.value = val;
+                                    }
+                                  },
+                                );
+                              }),
+                        const SizedBox(height: 16),
+                        ReactiveWrapperField(
+                            formControlName: _transactionQuantityKey,
+                            validationMessages: {
+                              "number": (object) => localizations.translate(
+                                    '${quantityCountLabel}_ERROR',
+                                  ),
+                              "max": (object) => localizations.translate(
+                                    '${quantityCountLabel}_MAX_ERROR',
+                                  ),
+                              "min": (object) => localizations.translate(
+                                    '${quantityCountLabel}_MIN_ERROR',
+                                  ),
+                            },
+                            showErrors: (control) =>
+                                control.invalid && control.touched,
+                            builder: (field) {
+                              return LabeledField(
+                                label: localizations.translate(
+                                  quantityCountLabel,
+                                ),
+                                isRequired: true,
+                                child: BaseDigitFormInput(
+                                  errorMessage: field.errorText,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]'),
+                                    ),
+                                    LengthLimitingTextInputFormatter(9),
+                                  ],
+                                  onChange: (val) {
+                                    field.control.markAsTouched();
+                                    if (val == "") {
+                                      field.control.value = null;
+                                      return;
+                                    }
                                     if (val != '') {
                                       field.control.value = int.parse(val);
                                     } else {
                                       field.control.value = null;
                                     }
-                                  }
-                                },
+                                    updateCommentValidation(form, entryType);
+                                  },
+                                ),
+                              );
+                            }),
+                        // if ((entryType == StockRecordEntryType.dispatch &&
+                        //         context.isCommunityDistributor) ||
+                        //     entryType == StockRecordEntryType.returned)
+                        //   ReactiveWrapperField(
+                        //       formControlName: _transactionQuantityPartialKey,
+                        //       validationMessages: {
+                        //         "number": (object) => localizations.translate(
+                        //               '${quantityCountLabel}_ERROR',
+                        //             ),
+                        //         "max": (object) => localizations.translate(
+                        //               '${quantityCountLabel}_MAX_ERROR',
+                        //             ),
+                        //         "min": (object) => localizations.translate(
+                        //               '${quantityCountLabel}_MIN_ERROR',
+                        //             ),
+                        //       },
+                        //       showErrors: (control) =>
+                        //           control.invalid && control.touched,
+                        //       builder: (field) {
+                        //         return LabeledField(
+                        //           label: localizations.translate(
+                        //             quantityPartialCountLabel,
+                        //           ),
+                        //           isRequired: true,
+                        //           child: BaseDigitFormInput(
+                        //             errorMessage: field.errorText,
+                        //             keyboardType:
+                        //                 const TextInputType.numberWithOptions(
+                        //               decimal: true,
+                        //             ),
+                        //             inputFormatters: [
+                        //               FilteringTextInputFormatter.allow(
+                        //                 RegExp(r'[0-9]'),
+                        //               ),
+                        //               LengthLimitingTextInputFormatter(9),
+                        //             ],
+                        //             onChange: (val) {
+                        //               field.control.markAsTouched();
+                        //               if (val == "") {
+                        //                 field.control.value = null;
+                        //                 return;
+                        //               }
+                        //               if (int.parse(val) > 10000000000) {
+                        //                 field.control.value = 10000;
+                        //               } else {
+                        //                 if (val != '') {
+                        //                   field.control.value = int.parse(val);
+                        //                 } else {
+                        //                   field.control.value = null;
+                        //                 }
+                        //               }
+                        //             },
+                        //           ),
+                        //         );
+                        //       }),
+                        if (entryType == StockRecordEntryType.dispatch &&
+                            context.isCommunityDistributor)
+                          ReactiveWrapperField(
+                              formControlName: _transactionQuantityWastedKey,
+                              validationMessages: {
+                                "number": (object) => localizations.translate(
+                                      '${quantityCountLabel}_ERROR',
+                                    ),
+                                "max": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MAX_ERROR',
+                                    ),
+                                "min": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MIN_ERROR',
+                                    ),
+                              },
+                              showErrors: (control) =>
+                                  control.invalid && control.touched,
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    quantityWastedCountLabel,
+                                  ),
+                                  isRequired: true,
+                                  child: BaseDigitFormInput(
+                                    errorMessage: field.errorText,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]'),
+                                      ),
+                                      LengthLimitingTextInputFormatter(9),
+                                    ],
+                                    onChange: (val) {
+                                      field.control.markAsTouched();
+                                      if (val == "") {
+                                        field.control.value = null;
+                                        return;
+                                      }
+                                      if (int.parse(val) > 10000000000) {
+                                        field.control.value = 10000;
+                                      } else {
+                                        if (val != '') {
+                                          field.control.value = int.parse(val);
+                                        } else {
+                                          field.control.value = null;
+                                        }
+                                      }
+                                    },
+                                  ),
+                                );
+                              }),
+                        const SizedBox(height: 16),
+                        ReactiveWrapperField(
+                          formControlName: _commentsKey,
+                          builder: (field) {
+                            return InputField(
+                              type: InputType.textArea,
+                              label: localizations.translate(
+                                i18.stockDetails.commentsLabel,
                               ),
+                              errorMessage: field.errorText,
+                              onChange: (val) => field.control.value = val,
                             );
-                          }),
-                    const SizedBox(height: 16),
-                    ReactiveWrapperField(
-                      formControlName: _commentsKey,
-                      builder: (field) {
-                        return InputField(
-                          type: InputType.textArea,
-                          label: localizations.translate(
-                            i18.stockDetails.commentsLabel,
-                          ),
-                          errorMessage: field.errorText,
-                          onChange: (val) => field.control.value = val,
-                        );
-                      },
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                DigitButton(
-                  size: DigitButtonSize.large,
-                  type: DigitButtonType.primary,
-                  onPressed: () async {
-                    final comments =
-                        form.control(_commentsKey).value as String?;
-                    final waybillQuantity =
-                        form.control(_waybillQuantityKey).value;
-                    final quantity =
-                        form.control(_transactionQuantityKey).value;
+                const SizedBox(height: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    DigitButton(
+                      size: DigitButtonSize.large,
+                      type: DigitButtonType.primary,
+                      onPressed: () async {
+                        final comments =
+                            form.control(_commentsKey).value as String?;
+                        final waybillQuantity =
+                            form.control(_waybillQuantityKey).value;
+                        final quantity =
+                            form.control(_transactionQuantityKey).value;
 
-                    if (context.isSpaqManager &&
-                        entryType != StockRecordEntryType.returned &&
-                        secondaryPartyType != 'STAFF') {
-                      int? quantityValue = quantity == null
-                          ? null
-                          : int.parse(quantity.toString());
-                      int? wayBillQuantityValue = waybillQuantity == null
-                          ? null
-                          : int.parse(waybillQuantity.toString());
-                      if (quantityValue != wayBillQuantityValue &&
-                          (comments == null || comments.length <= 2)) {
-                        DigitToast.show(
-                          context,
-                          options: DigitToastOptions(
-                            localizations.translate(
-                              i18_local
-                                  .stockDetails.stockMismatchCommentRequried,
-                            ),
-                            true,
-                            theme,
-                          ),
-                        );
-                        return;
-                      }
-                    }
-
-                    if (form.valid) {
-                      if (_tabController.index < products.length - 1) {
-                        if (form.valid) {
-                          _tabController.animateTo(_tabController.index + 1);
-                        }
-                      } else {
-                        int index = 0;
-                        for (final form in _forms.values) {
-                          form.markAllAsTouched();
-                          if (form.invalid) {
-                            _tabController.animateTo(index);
+                        if (context.isSpaqManager &&
+                            entryType != StockRecordEntryType.returned &&
+                            secondaryPartyType != 'STAFF') {
+                          int? quantityValue = quantity == null
+                              ? null
+                              : int.parse(quantity.toString());
+                          int? wayBillQuantityValue = waybillQuantity == null
+                              ? null
+                              : int.parse(waybillQuantity.toString());
+                          if (quantityValue != wayBillQuantityValue &&
+                              (comments == null || comments.length <= 2)) {
+                            DigitToast.show(
+                              context,
+                              options: DigitToastOptions(
+                                localizations.translate(
+                                  i18_local.stockDetails
+                                      .stockMismatchCommentRequried,
+                                ),
+                                true,
+                                theme,
+                              ),
+                            );
                             return;
                           }
-                          index++;
                         }
-                        await _handleFinalSubmission(
-                            context, entryType, selectedProducts);
-                      }
-                    } else {
-                      form.markAllAsTouched();
-                    }
-                  },
-                  label: isLastTab
-                      ? localizations.translate(i18.common.coreCommonSubmit)
-                      : localizations.translate(i18.common.coreCommonNext),
-                ),
-                const SizedBox(height: 12),
-                // DigitButton(
-                //   type: DigitButtonType.secondary,
-                //   size: DigitButtonSize.large,
-                //   onPressed: () {
-                //     // Secondary action if needed
-                //   },
-                //   label: localizations.translate(
-                //     i18.common.coreCommonCancel,
-                //   ),
-                // ),
+
+                        if (form.valid) {
+                          if (_tabController.index < products.length - 1) {
+                            if (form.valid) {
+                              _tabController
+                                  .animateTo(_tabController.index + 1);
+                            }
+                          } else {
+                            int index = 0;
+                            for (final form in _forms.values) {
+                              form.markAllAsTouched();
+                              if (form.invalid) {
+                                _tabController.animateTo(index);
+                                return;
+                              }
+                              index++;
+                            }
+                            await _handleFinalSubmission(context, entryType,
+                                selectedProducts, stockCount.skuCounts);
+                          }
+                        } else {
+                          form.markAllAsTouched();
+                        }
+                      },
+                      label: isLastTab
+                          ? localizations.translate(i18.common.coreCommonSubmit)
+                          : localizations.translate(i18.common.coreCommonNext),
+                    ),
+                    const SizedBox(height: 12),
+                    // DigitButton(
+                    //   type: DigitButtonType.secondary,
+                    //   size: DigitButtonSize.large,
+                    //   onPressed: () {
+                    //     // Secondary action if needed
+                    //   },
+                    //   label: localizations.translate(
+                    //     i18.common.coreCommonCancel,
+                    //   ),
+                    // ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -1021,8 +1048,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     }
   }
 
-  Future<void> _handleFinalSubmission(BuildContext context,
-      StockRecordEntryType entryType, List<String> selectedProducts) async {
+  Future<void> _handleFinalSubmission(
+      BuildContext context,
+      StockRecordEntryType entryType,
+      List<String> selectedProducts,
+      Map<String, int> skuRepoCounts) async {
     final theme = Theme.of(context);
     bool? submit;
 
@@ -1072,12 +1102,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       if (submit == true) {
         // Loop through all stocks and dispatch individual events
 
-        Map<String, int> skuCounts = context
-            .getAllProductSkuCounts()
-            .map((key, value) => MapEntry(key, value));
-
-        Map<String, int> currentSKUCounts = {};
-
         for (var product in selectedProducts) {
           await _saveCurrentTabData(product, entryType);
         }
@@ -1099,16 +1123,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               .firstWhereOrNull((element) => element.key == 'productName')
               ?.value;
 
-          if (skuCounts.isNotEmpty) {
-            skuList = skuCounts.keys.toList();
-          }
-
           // Custom logic based on productName
           if (entryType == StockRecordEntryType.dispatch) {
-            if ((skuList.contains(productName) &&
-                    // ignore: unnecessary_null_comparison
-                    (skuCounts[productName]! + totalQty < 0)) ||
-                (skuCounts[productName] == null)) {
+            if (((skuRepoCounts[productName]! + totalQty < 0)) ||
+                (skuRepoCounts[productName] == null)) {
               await DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -1123,7 +1141,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               return;
             }
           }
-          currentSKUCounts[productName!] = totalQty;
         }
 
         for (final stockModel in _tabStocks.values) {
@@ -1136,12 +1153,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 const RecordStockCreateStockEntryEvent(),
               );
         }
-
-        context.read<AuthBloc>().add(
-              AuthUpdateProductSKUCountsEvent(
-                skuCounts: currentSKUCounts,
-              ),
-            );
 
         (context.router.parent() as StackRouter).maybePop();
         context.router.push(CustomAcknowledgementRoute(
