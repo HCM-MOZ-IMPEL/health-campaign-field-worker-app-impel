@@ -92,6 +92,13 @@ class _CustomHouseholdLocationSMCPageState
                         DigitComponentsUtils().hideDialog(context);
                       });
                     }
+                  },
+                  editHousehold: (value) {
+                    if (locationState.accuracy != null) {
+                      Future.delayed(const Duration(seconds: 1), () {
+                        DigitComponentsUtils().hideDialog(context);
+                      });
+                    }
                   });
               if (locationState.accuracy != null) {
                 final lat = locationState.latitude;

@@ -1007,6 +1007,8 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+
+  String get checkFailedWarningDescription => 'SYNC_DIALOG_WARNING_DESCRIPTION';
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }

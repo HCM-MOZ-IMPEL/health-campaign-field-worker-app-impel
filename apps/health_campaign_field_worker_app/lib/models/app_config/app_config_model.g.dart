@@ -181,6 +181,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       refusalReasons: (json['REFUSAL_REASONS'] as List<dynamic>?)
           ?.map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      vaccine: (json['VACCINE'] as List<dynamic>?)
+          ?.map((e) => Vaccine.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      vaccineGroups: (json['VACCINE_GROUPS'] as List<dynamic>?)
+          ?.map((e) => VaccineGroup.fromJson(e as Map<String, dynamic>))
+          .toList(),
       firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
           ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -217,6 +223,8 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFERRAL_REASONS': instance.referralReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
+      'VACCINE': instance.vaccine,
+      'VACCINE_GROUPS': instance.vaccineGroups,
       'FIREBASE_CONFIG': instance.firebaseConfig,
     };
 
@@ -515,6 +523,34 @@ Map<String, dynamic> _$$VehicleTrackingReasonsImplToJson(
       'name': instance.name,
       'code': instance.code,
       'active': instance.active,
+    };
+
+_$VaccineGroupImpl _$$VaccineGroupImplFromJson(Map<String, dynamic> json) =>
+    _$VaccineGroupImpl(
+      code: json['code'] as String?,
+      name: json['name'] as String?,
+      vaccineData: (json['vaccineData'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$$VaccineGroupImplToJson(_$VaccineGroupImpl instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'name': instance.name,
+      'vaccineData': instance.vaccineData,
+    };
+
+_$VaccineImpl _$$VaccineImplFromJson(Map<String, dynamic> json) =>
+    _$VaccineImpl(
+      code: json['code'] as String?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$$VaccineImplToJson(_$VaccineImpl instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'name': instance.name,
     };
 
 _$SearchHouseHoldFiltersImpl _$$SearchHouseHoldFiltersImplFromJson(

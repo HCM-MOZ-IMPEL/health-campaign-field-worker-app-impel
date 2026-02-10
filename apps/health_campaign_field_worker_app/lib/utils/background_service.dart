@@ -39,6 +39,18 @@ Future<void> initializeService(dio, isar) async {
   }
 
   final service = FlutterBackgroundService();
+
+  // Check if service is already running and stop it first
+  try {
+    final isRunning = await service.isRunning();
+    if (isRunning) {
+      service.invoke('stopService');
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  } catch (e) {
+    debugPrint('Error checking service status: $e');
+  }
+
   const notificationId = 888;
   // this will be used as notification channel id
   const notificationChannelId = 'my_foreground';
@@ -105,136 +117,160 @@ void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
   DartPluginRegistrant.ensureInitialized();
 
-  service.on('stopService').listen((event) {
+  service.on('stopService').listen((event) async {
+    // Add delay to ensure proper cleanup of all plugins
+    await Future.delayed(const Duration(milliseconds: 500));
     service.stopSelf();
   });
-  await envConfig.initialize();
-  if (Isar.getInstance('HCM') == null) {
-    final info = await PackageInfo.fromPlatform();
-    await Constants().initialize(info.version);
-  }
 
-  _dio = DioClient().dio;
-  final _isar = await isarFuture;
+  // Wrap entire service logic in try-catch to handle errors gracefully
+  try {
+    await envConfig.initialize();
+    if (Isar.getInstance('HCM') == null) {
+      final info = await PackageInfo.fromPlatform();
+      await Constants().initialize(info.version);
+    }
 
-  final userRequestModel = await LocalSecureStore.instance.userRequestModel;
-  final selectedProject = await LocalSecureStore.instance.selectedProject;
+    _dio = DioClient().dio;
+    final _isar = await isarFuture;
 
-  location_tracker_utils.LocationTrackerSingleton()
-      .setTenantId(tenantId: userRequestModel!.tenantId!);
-  location_tracker_utils.LocationTrackerSingleton().setInitialData(
-      projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
+    final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+    final selectedProject = await LocalSecureStore.instance.selectedProject;
 
-  LocationTrackerService().processLocationData(
-      interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
+    location_tracker_utils.LocationTrackerSingleton()
+        .setTenantId(tenantId: userRequestModel!.tenantId!);
+    location_tracker_utils.LocationTrackerSingleton().setInitialData(
+        projectId: selectedProject!.id,
+        loggedInUserUuid: userRequestModel.uuid);
 
-  final appConfiguration = await _isar.appConfigurations.where().findAll();
-  final interval =
-      appConfiguration.first.backgroundServiceConfig?.serviceInterval;
-  final frequencyCount =
-      appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
+    LocationTrackerService().processLocationData(
+        interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
-  if (interval != null) {
-    int i = 0;
-    makePeriodicTimer(
-      Duration(seconds: interval),
-      (timer) async {
-        service.invoke('serviceRunning', {
-          "enablesManualSync": false,
-        });
-        var battery = Battery();
-        final int batteryPercent = await battery.batteryLevel;
-        if (batteryPercent <=
-            appConfiguration
-                .first.backgroundServiceConfig!.batteryPercentCutOff!) {
-          service.stopSelf();
-        } else {
-          final FlutterLocalNotificationsPlugin
-              flutterLocalNotificationsPlugin =
-              FlutterLocalNotificationsPlugin();
-          final isManualSyncRunning =
-              await LocalSecureStore.instance.isManualSyncRunning;
-          if (frequencyCount != null && !isManualSyncRunning) {
-            final serviceRegistryList =
-                await _isar.serviceRegistrys.where().findAll();
-            if (serviceRegistryList.isNotEmpty) {
-              final bandwidthService = serviceRegistryList.firstWhereOrNull(
-                (element) => element.service == 'BANDWIDTH-CHECK',
-              );
-              if (bandwidthService != null) {
-                final bandwidthPath = bandwidthService.actions.first.path;
+    final appConfiguration = await _isar.appConfigurations.where().findAll();
+    final interval =
+        appConfiguration.first.backgroundServiceConfig?.serviceInterval;
+    final frequencyCount =
+        appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
 
-                List speedArray = [];
-                for (var i = 0; i < frequencyCount; i++) {
-                  try {
-                    final double speed = await BandwidthCheckRepository(
-                      _dio,
-                      bandwidthPath: bandwidthPath,
-                    ).pingBandwidthCheck(bandWidthCheckModel: null);
-                    speedArray.add(speed);
-                  } catch (e) {
+    if (interval != null) {
+      int i = 0;
+      makePeriodicTimer(
+        Duration(seconds: interval),
+        (timer) async {
+          service.invoke('serviceRunning', {
+            "enablesManualSync": false,
+          });
+          var battery = Battery();
+          final int batteryPercent = await battery.batteryLevel;
+          if (batteryPercent <=
+              appConfiguration
+                  .first.backgroundServiceConfig!.batteryPercentCutOff!) {
+            await Future.delayed(const Duration(milliseconds: 500));
+            service.stopSelf();
+          } else {
+            final FlutterLocalNotificationsPlugin
+                flutterLocalNotificationsPlugin =
+                FlutterLocalNotificationsPlugin();
+            final isManualSyncRunning =
+                await LocalSecureStore.instance.isManualSyncRunning;
+            if (frequencyCount != null && !isManualSyncRunning) {
+              final serviceRegistryList =
+                  await _isar.serviceRegistrys.where().findAll();
+              if (serviceRegistryList.isNotEmpty) {
+                final bandwidthService = serviceRegistryList.firstWhereOrNull(
+                  (element) => element.service == 'BANDWIDTH-CHECK',
+                );
+                if (bandwidthService != null) {
+                  final bandwidthPath = bandwidthService.actions.first.path;
+
+                  List speedArray = [];
+                  for (var i = 0; i < frequencyCount; i++) {
+                    try {
+                      final double speed = await BandwidthCheckRepository(
+                        _dio,
+                        bandwidthPath: bandwidthPath,
+                      ).pingBandwidthCheck(bandWidthCheckModel: null);
+                      speedArray.add(speed);
+                    } catch (e) {
+                      service.invoke('serviceRunning', {
+                        "enablesManualSync": true,
+                      });
+                      break;
+                    }
+                  }
+
+                  // Check if speedArray has data before processing
+                  if (speedArray.isEmpty) {
                     service.invoke('serviceRunning', {
                       "enablesManualSync": true,
                     });
-                    service.stopSelf();
-                    break;
+                    return;
                   }
-                }
-                double sum = speedArray.fold(0, (p, c) => p + c);
 
-                int configuredBatchSize = getBatchSizeToBandwidth(
-                  sum / speedArray.length,
-                  appConfiguration,
-                );
-                final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                  'userId': userRequestModel?.uuid,
-                  'batchSize': configuredBatchSize,
-                });
-                flutterLocalNotificationsPlugin.show(
-                  888,
-                  'Auto Sync',
-                  'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
-                  const NotificationDetails(
-                    android: AndroidNotificationDetails(
-                      "my_foreground",
-                      'AUTO SYNC',
-                      icon: 'ic_bg_service_small',
-                      ongoing: true,
+                  double sum = speedArray.fold(0, (p, c) => p + c);
+
+                  int configuredBatchSize = getBatchSizeToBandwidth(
+                    sum / speedArray.length,
+                    appConfiguration,
+                  );
+                  final BandwidthModel bandwidthModel =
+                      BandwidthModel.fromJson({
+                    'userId': userRequestModel?.uuid,
+                    'batchSize': configuredBatchSize,
+                  });
+                  flutterLocalNotificationsPlugin.show(
+                    888,
+                    'Auto Sync',
+                    'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
+                    const NotificationDetails(
+                      android: AndroidNotificationDetails(
+                        "my_foreground",
+                        'AUTO SYNC',
+                        icon: 'ic_bg_service_small',
+                        ongoing: true,
+                      ),
                     ),
-                  ),
-                );
-                // Insert sync logic here
-                final isSyncCompleted = await SyncService().performSync(
-                  localRepositories: Constants.getLocalRepositories(
-                    _sql,
-                    _isar,
-                  ).toList(),
-                  remoteRepositories: Constants.getRemoteRepositories(
-                    _dio,
-                    getActionMap(serviceRegistryList),
-                  ),
-                  bandwidthModel: bandwidthModel,
-                  service: service,
-                );
+                  );
+                  // Insert sync logic here
+                  final isSyncCompleted = await SyncService().performSync(
+                    localRepositories: Constants.getLocalRepositories(
+                      _sql,
+                      _isar,
+                    ).toList(),
+                    remoteRepositories: Constants.getRemoteRepositories(
+                      _dio,
+                      getActionMap(serviceRegistryList),
+                    ),
+                    bandwidthModel: bandwidthModel,
+                    service: service,
+                  );
 
-                i++;
-                final isAppInActive =
-                    await LocalSecureStore.instance.isAppInActive;
+                  i++;
+                  final isAppInActive =
+                      await LocalSecureStore.instance.isAppInActive;
 
-                if (isSyncCompleted && i >= 2 && isAppInActive) {
-                  service.stopSelf();
+                  if (isSyncCompleted && i >= 2 && isAppInActive) {
+                    await Future.delayed(const Duration(milliseconds: 500));
+                    service.stopSelf();
+                  }
                 }
               }
             }
           }
-        }
-        service.invoke('serviceRunning', {
-          "enablesManualSync": true,
-        });
-      },
-      fireNow: true,
-    );
-  } else {
+          service.invoke('serviceRunning', {
+            "enablesManualSync": true,
+          });
+        },
+        fireNow: true,
+      );
+    } else {
+      await Future.delayed(const Duration(milliseconds: 500));
+      service.stopSelf();
+    }
+  } catch (e) {
+    // Log error and gracefully stop service
+    debugPrint('Background service error: $e');
+    await Future.delayed(const Duration(milliseconds: 500));
     service.stopSelf();
   }
 }

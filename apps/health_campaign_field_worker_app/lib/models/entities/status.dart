@@ -29,5 +29,7 @@ enum Status {
   toAdminister,
   @MappableValue("BENEFICIARY_INELIGIBLE")
   beneficiaryIneligible,
+  @MappableValue("VACCINE_STATUS")
+  vaccineStatus,
   ;
 }

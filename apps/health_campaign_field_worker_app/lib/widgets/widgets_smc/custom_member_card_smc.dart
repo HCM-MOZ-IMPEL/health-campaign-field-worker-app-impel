@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/app_localization.dart';
@@ -18,11 +19,10 @@ import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
-import 'package:registration_delivery/utils/utils.dart';
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 import '../../utils/utils_smc/utils_smc.dart'
-    show assessmentSMCPending, checkStatusSMC;
+    show assessmentSMCPending, checkStatusSMC, allDosesDelivered;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -77,6 +77,13 @@ class CustomMemberCardSMC extends StatelessWidget {
     bool smcAssessmentPendingStatus =
         assessmentSMCPending(tasks, context.selectedCycle);
 
+    String? beneficiaryId = individual.identifiers
+        ?.lastWhereOrNull(
+          (e) =>
+              e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
+        )
+        ?.identifierId;
+
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.background,
@@ -116,26 +123,9 @@ class CustomMemberCardSMC extends StatelessWidget {
                                 kPadding,
                               ),
                               child: Text(
-                                individual.identifiers
-                                        ?.lastWhere(
-                                          (e) =>
-                                              e.identifierType ==
-                                              IdentifierTypes
-                                                  .uniqueBeneficiaryID
-                                                  .toValue(),
-                                          orElse: () => IdentifierModel(
-                                            identifierId:
-                                                localizations.translate(
-                                                    i18.common.noResultsFound),
-                                            identifierType:
-                                                '', // Default to an empty string or appropriate fallback
-                                            clientReferenceId:
-                                                '', // Provide a default value for the required parameter
-                                          ),
-                                        )
-                                        .identifierId ??
+                                beneficiaryId ??
                                     localizations
-                                        .translate(i18.common.coreCommonNA),
+                                        .translate(i18.common.noResultsFound),
                                 style: theme.textTheme.headlineSmall,
                               ),
                             ),
@@ -299,39 +289,49 @@ class CustomMemberCardSMC extends StatelessWidget {
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
-                              onPressed: (projectBeneficiaries ?? []).isEmpty
-                                  ? null
+                              onPressed: beneficiaryId != null
+                                  ? ((projectBeneficiaries ?? []).isEmpty)
+                                      ? null
+                                      : () {
+                                          final bloc = context
+                                              .read<HouseholdOverviewBloc>();
+
+                                          bloc.add(
+                                            HouseholdOverviewEvent
+                                                .selectedIndividual(
+                                              individualModel: individual,
+                                            ),
+                                          );
+                                          bloc.add(HouseholdOverviewReloadEvent(
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!,
+                                            projectBeneficiaryType:
+                                                RegistrationDeliverySingleton()
+                                                        .beneficiaryType ??
+                                                    BeneficiaryType.individual,
+                                          ));
+
+                                          if (smcAssessmentPendingStatus) {
+                                            context.router.push(
+                                                VaccineInformationCaptureRoute(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              individual: individual,
+                                            ));
+                                            // context.router.push(
+                                            //     EligibilityChecklistViewRoute(
+                                            //   projectBeneficiaryClientReferenceId:
+                                            //       projectBeneficiaryClientReferenceId,
+                                            //   individual: individual,
+                                            // ));
+                                          } else {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          }
+                                        }
                                   : () {
-                                      final bloc =
-                                          context.read<HouseholdOverviewBloc>();
-
-                                      bloc.add(
-                                        HouseholdOverviewEvent
-                                            .selectedIndividual(
-                                          individualModel: individual,
-                                        ),
-                                      );
-                                      bloc.add(HouseholdOverviewReloadEvent(
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                    .beneficiaryType ??
-                                                BeneficiaryType.individual,
-                                      ));
-
-                                      if (smcAssessmentPendingStatus) {
-                                        context.router
-                                            .push(EligibilityChecklistViewRoute(
-                                          projectBeneficiaryClientReferenceId:
-                                              projectBeneficiaryClientReferenceId,
-                                          individual: individual,
-                                        ));
-                                      } else {
-                                        context.router
-                                            .push(BeneficiaryDetailsRoute());
-                                      }
+                                      showGenerateBeneficiaryIdDialog(context);
                                     },
                               child: Center(
                                 child: Text(
@@ -366,10 +366,41 @@ class CustomMemberCardSMC extends StatelessWidget {
     );
   }
 
+  showGenerateBeneficiaryIdDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            localizations
+                .translate(i18_local.common.generateBeneficiaryIdTitle),
+            style: theme.textTheme.headlineMedium,
+          ),
+          content: Text(
+            localizations
+                .translate(i18_local.common.generateBeneficiaryIdMessage),
+            style: theme.textTheme.bodyMedium,
+          ),
+          actions: [
+            DigitElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                localizations.translate(i18.common.coreCommonOk),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   bool isCurrentCycleData(BuildContext context, List<TaskModel> task) {
     if (task.isEmpty) return true;
     final currentCycle = context.selectedCycle;
-    final taskCycleIndex = task.first.additionalFields?.fields
+    final taskCycleIndex = task.last.additionalFields?.fields
         .firstWhereOrNull(
           (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
         )

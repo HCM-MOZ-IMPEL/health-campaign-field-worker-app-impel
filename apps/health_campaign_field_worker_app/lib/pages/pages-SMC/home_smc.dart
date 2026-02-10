@@ -314,25 +314,33 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
   }) {
     Navigator.of(context, rootNavigator: true).pop();
 
-    DigitSyncDialog.show(
+    DigitDialog.show(
       context,
-      type: DigitSyncDialogType.failed,
-      label: message,
-      primaryAction: DigitDialogActions(
-        label: localizations.translate(
-          i18.syncDialog.retryButtonLabel,
+      options: DigitDialogOptions(
+        titleIcon: Icon(
+          Icons.warning,
+          color: DigitTheme.instance.colorScheme.error,
         ),
-        action: (ctx) {
-          Navigator.pop(ctx);
-          // Sync Failed Manual Sync is Enabled
-          _attemptSyncUp(context);
-        },
-      ),
-      secondaryAction: DigitDialogActions(
-        label: localizations.translate(
-          i18.syncDialog.closeButtonLabel,
+        titleText: message,
+        contentText: localizations.translate(
+          i18.syncDialog.syncFailedDescriptionText,
         ),
-        action: (ctx) => Navigator.pop(ctx),
+        primaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.syncDialog.closeButtonFailedLabel,
+          ),
+          action: (ctx) => Navigator.pop(ctx),
+        ),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.syncDialog.retryButtonLabel,
+          ),
+          action: (ctx) {
+            Navigator.pop(ctx);
+            // Sync Failed Manual Sync is Enabled
+            _attemptSyncUp(context);
+          },
+        ),
       ),
     );
   }
@@ -360,7 +368,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(const CustomManageAttendanceRoute());
+            context.router.push(const CustomManageAttendanceSMCRoute());
           },
         ),
       ),
@@ -511,19 +519,19 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
           },
         ),
       ),
-      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
-        child: HomeItemCard(
-          icon: Icons.send,
-          label: i18.home.dataShare,
-          onPressed: () {
-            // if (isTriggerLocalisation) {
-            //   triggerLocalization(context);
-            //   isTriggerLocalisation = false;
-            // }
-            context.router.push(const DataShareHomeRoute());
-          },
-        ),
-      )
+      // i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.send,
+      //     label: i18.home.dataShare,
+      //     onPressed: () {
+      //       // if (isTriggerLocalisation) {
+      //       //   triggerLocalization(context);
+      //       //   isTriggerLocalisation = false;
+      //       // }
+      //       context.router.push(const DataShareHomeRoute());
+      //     },
+      //   ),
+      // )
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -540,7 +548,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
+      // i18.home.dataShare: homeShowcaseData.dataShare.showcaseKey,
       // INFO : Need to add showcase keys of package Here
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
@@ -577,7 +585,7 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
       i18.home.vehicleTrackingLabel,
-      i18.home.dataShare,
+      // i18.home.dataShare,
 
       i18.home.mySurveyForm,
       i18.home.fileComplaint,
@@ -588,10 +596,13 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element)) // TODO: need to add close household inside mdms
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element ==
+                i18.home.db) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -742,7 +753,6 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.complaintTypes!.map((e) => e.code).toList(),
           userName: context.loggedInUser.name ?? '',
         );
-        ComplaintsSingleton().setBoundary(boundary: context.boundary);
 
         InventorySingleton().setInitialData(
           isWareHouseMgr: context.loggedInUserRoles

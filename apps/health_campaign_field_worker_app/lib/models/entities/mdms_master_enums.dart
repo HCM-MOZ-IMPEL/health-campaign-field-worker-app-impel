@@ -61,6 +61,10 @@ enum MasterEnums {
   vechileTrackingTripReasons,
   @MappableValue("VEHICLE_TRACKING_TRIP_EVALUATION_REASONS")
   vechileTrackingTripEvaluationReasons,
+  @MappableValue("VACCINE")
+  vaccine,
+  @MappableValue("VACCINE_GROUPS")
+  vaccineGroups,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")
