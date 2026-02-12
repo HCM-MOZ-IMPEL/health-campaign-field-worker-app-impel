@@ -179,6 +179,7 @@ import '../pages/pages-SMC/attendance/custom_manage_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
+import '../pages/pages-SMC/beneficiary_registration/pre_eligibility_assessment.dart';
 
 part 'app_router.gr.dart';
 

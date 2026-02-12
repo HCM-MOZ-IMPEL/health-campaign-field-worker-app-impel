@@ -26,6 +26,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/utils/constants.dart' as survey_constants;
 
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
+import '../../../models/entities/project_types.dart';
 import '../../../router/app_router.dart';
 
 import '../../../utils/environment_config.dart';
@@ -118,12 +119,9 @@ class _EligibilityChecklistViewPage
               builder: (context, state) {
                 state.mapOrNull(
                   serviceDefinitionFetch: (value) {
-                    selectedServiceDefinition = value.serviceDefinitionList
-                        .where((element) => element.code.toString().contains(
-                              '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
-                            ))
-                        .toList()
-                        .first;
+                    selectedServiceDefinition =
+                        serviceDefinitionBasedOnProjectType(
+                            value.serviceDefinitionList);
 
                     initialAttributes = selectedServiceDefinition?.attributes;
                     if (!isControllersInitialized) {
@@ -1728,6 +1726,42 @@ class _EligibilityChecklistViewPage
     }
 
     return isReferral;
+  }
+
+// todo complete this method to handle and return correct service definition based on project type and other conditions
+  ServiceDefinitionModel? serviceDefinitionBasedOnProjectType(
+      List<ServiceDefinitionModel> serviceDefinitions) {
+    ServiceDefinitionModel? serviceDefinition;
+
+    // add check for oncho and smc
+    final individualAge = 0;
+
+    if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
+      serviceDefinition = serviceDefinitions
+          .where((element) => element.code.toString().contains(
+                '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+              ))
+          .toList()
+          .first;
+    } else if (context.projectTypeCode == ProjectTypes.smcAndOncho.toValue()) {
+      if (individualAge < 59) {
+        serviceDefinition = serviceDefinitions
+            .where((element) => element.code.toString().contains(
+                  '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+                ))
+            .toList()
+            .first;
+      } else {
+        serviceDefinition = serviceDefinitions
+            .where((element) => element.code.toString().contains(
+                  '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+                ))
+            .toList()
+            .first;
+      }
+    }
+
+    return serviceDefinition;
   }
 
   bool isDelivery(Map<String?, String> responses) {

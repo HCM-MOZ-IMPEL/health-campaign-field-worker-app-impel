@@ -583,6 +583,20 @@ class Checklist {
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+
+  String get checklistDetailsTitle => 'CHECKLIST_DETAILS_TITLE';
+
+  String get checklistDetailsDateLabel => 'CHECKLIST_DETAILS_DATE_LABEL';
+
+  String get checklistDetailsDatePlaceholder =>
+      'CHECKLIST_DETAILS_DATE_PLACEHOLDER';
+
+  String get checklistDetailsDateRequired => 'CHECKLIST_DETAILS_DATE_REQUIRED';
+
+  String get checklistDetailsOrgUnitLabel => 'CHECKLIST_DETAILS_ORG_UNIT_LABEL';
+
+  String get checklistDetailsOrgUnitRequired =>
+      'CHECKLIST_DETAILS_ORG_UNIT_REQUIRED';
 }
 
 class DataShare {

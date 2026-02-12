@@ -1224,6 +1224,20 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PreEligibilityAssessmentRoute.name: (routeData) {
+      final args = routeData.argsAs<PreEligibilityAssessmentRouteArgs>(
+          orElse: () => const PreEligibilityAssessmentRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PreEligibilityAssessmentPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          individual: args.individual,
+          projectBeneficiaryClientReferenceId:
+              args.projectBeneficiaryClientReferenceId,
+        ),
+      );
+    },
     ProfileRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileRouteArgs>(
           orElse: () => const ProfileRouteArgs());
@@ -5813,6 +5827,56 @@ class LoginRouteArgs {
   @override
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [PreEligibilityAssessmentPage]
+class PreEligibilityAssessmentRoute
+    extends PageRouteInfo<PreEligibilityAssessmentRouteArgs> {
+  PreEligibilityAssessmentRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    IndividualModel? individual,
+    String? projectBeneficiaryClientReferenceId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PreEligibilityAssessmentRoute.name,
+          args: PreEligibilityAssessmentRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            individual: individual,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PreEligibilityAssessmentRoute';
+
+  static const PageInfo<PreEligibilityAssessmentRouteArgs> page =
+      PageInfo<PreEligibilityAssessmentRouteArgs>(name);
+}
+
+class PreEligibilityAssessmentRouteArgs {
+  const PreEligibilityAssessmentRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.individual,
+    this.projectBeneficiaryClientReferenceId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final IndividualModel? individual;
+
+  final String? projectBeneficiaryClientReferenceId;
+
+  @override
+  String toString() {
+    return 'PreEligibilityAssessmentRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId}';
   }
 }
 
