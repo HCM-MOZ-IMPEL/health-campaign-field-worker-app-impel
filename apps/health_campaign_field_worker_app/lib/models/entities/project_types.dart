@@ -9,6 +9,10 @@ enum ProjectTypes {
   irs,
   @MappableValue("SMC-Moz")
   smc,
+  @MappableValue("LLIN-SMC")
+  smcAndBednet,
+  @MappableValue("Oncho")
+  smcAndOncho,
   @MappableValue("LLIN-Moz")
   bednet,
   ;

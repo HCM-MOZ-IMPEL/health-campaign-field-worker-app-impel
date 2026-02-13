@@ -967,6 +967,47 @@ bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   //return successfulTask == null;
 }
 
+bool assessmentOnchoPending(
+    List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  // this task confirms eligibility and dose administrations is done
+  if (currentCycle == null) {
+    return true;
+  }
+  if ((tasks ?? []).isEmpty) {
+    return true;
+  }
+  var successfulTask = tasks!
+      .where((element) =>
+          element.status == reg_del_status.Status.administeredSuccess.toValue())
+      // element.additionalFields?.fields.firstWhereOrNull(
+      //       (e) =>
+      //           e.key ==
+      //               additional_fields_local
+      //                   .AdditionalFieldsType.deliveryType
+      //                   .toValue() &&
+      //           e.value == EligibilityAssessmentStatus.vasDone.name,
+      //     ) !=
+      //     null)
+      .lastOrNull;
+
+  final successfulTaskCreatedTime =
+      successfulTask?.clientAuditDetails?.createdTime;
+
+  if (successfulTaskCreatedTime == null) {
+    return true;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(successfulTaskCreatedTime);
+
+  final isLastCycleRunning =
+      successfulTaskCreatedTime >= currentCycle.startDate &&
+          successfulTaskCreatedTime <= currentCycle.endDate;
+
+  return !isLastCycleRunning;
+
+  //return successfulTask == null;
+}
+
 bool allDosesDelivered(
   List<TaskModel>? tasks,
   ProjectCycle? selectedCycle,
@@ -1043,6 +1084,32 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   }
 
   return true;
+}
+
+bool checkIfBeneficiaryRefusedOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryRefused = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryRefused.toValue());
+
+  return isBeneficiaryRefused;
+}
+
+bool isSmcAndOnchoFlow(
+  BuildContext context,
+) {
+  final isSmcAndOnchoFlow = context.isSmcAndOnchoFlow;
+
+  return isSmcAndOnchoFlow;
+}
+
+bool isSmcAndBednetFlow(
+  BuildContext context,
+) {
+  final isSmcAndBednetFlow = context.isSmcAndBednetFlow;
+
+  return isSmcAndBednetFlow;
 }
 
 Future<void> requestDisableBatteryOptimization() async {
