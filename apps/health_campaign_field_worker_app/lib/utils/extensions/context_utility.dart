@@ -52,6 +52,30 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedCycle;
   }
 
+  ProjectTypeModel? get additionalSelectedProjectType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final projectType =
+        projectState.selectedProject?.additionalDetails?.additionalProjectType;
+
+    return projectType;
+  }
+
+  String? get additionalProjectTypeCode {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final projectType = projectState
+        .selectedProject?.additionalDetails?.additionalProjectType?.code;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType;
+  }
+
   ProjectTypeModel? get selectedProjectType {
     final projectBloc = _get<ProjectBloc>();
 
