@@ -50,6 +50,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart'
     as app_configuration_schema;
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/app_config/app_config_model.dart';
+import '../../models/entities/entities_smc/intervention_types.dart';
 import '../../models/entities/project_types.dart';
 import '../../models/entities/status.dart';
 import '../../router/app_router.dart';
@@ -978,16 +979,17 @@ bool assessmentOnchoPending(
   }
   var successfulTask = tasks!
       .where((element) =>
-          element.status == reg_del_status.Status.administeredSuccess.toValue())
-      // element.additionalFields?.fields.firstWhereOrNull(
-      //       (e) =>
-      //           e.key ==
-      //               additional_fields_local
-      //                   .AdditionalFieldsType.deliveryType
-      //                   .toValue() &&
-      //           e.value == EligibilityAssessmentStatus.vasDone.name,
-      //     ) !=
-      //     null)
+          element.status ==
+              reg_del_status.Status.administeredSuccess.toValue() &&
+          element.additionalFields?.fields.firstWhereOrNull(
+                (e) =>
+                    e.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    e.value == InterventionTypes.oncho.toValue(),
+              ) !=
+              null)
       .lastOrNull;
 
   final successfulTaskCreatedTime =
@@ -1091,9 +1093,68 @@ bool checkIfBeneficiaryRefusedOncho(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
+}
+
+bool checkIfBeneficiaryIneligibleOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferredOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
 }
 
 bool isSmcAndOnchoFlow(

@@ -24,10 +24,14 @@ import '../action_card/action_card.dart';
 import '../../utils/utils_smc/utils_smc.dart'
     show
         assessmentSMCPending,
+        assessmentOnchoPending,
         checkStatusSMC,
         allDosesDelivered,
         isSmcAndOnchoFlow,
-        isSmcAndBednetFlow;
+        isSmcAndBednetFlow,
+        checkIfBeneficiaryIneligibleOncho,
+        checkIfBeneficiaryReferredOncho,
+        checkIfBeneficiaryRefusedOncho;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -383,6 +387,13 @@ class CustomMemberCardSMC extends StatelessWidget {
       BuildContext context, ThemeData theme, BeneficiaryType? beneficiaryType) {
     bool smcAssessmentPendingStatus =
         assessmentSMCPending(tasks, context.selectedCycle);
+
+    bool onchoAssessmentPendingStatus =
+        assessmentOnchoPending(tasks, context.selectedCycle);
+
+    bool ineligibleOncho = checkIfBeneficiaryIneligibleOncho(tasks);
+    bool referredOncho = checkIfBeneficiaryReferredOncho(tasks);
+    bool refusedOncho = checkIfBeneficiaryRefusedOncho(tasks);
 
     String? beneficiaryId = individual.identifiers
         ?.lastWhereOrNull(
