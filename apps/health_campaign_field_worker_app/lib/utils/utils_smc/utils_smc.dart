@@ -1065,6 +1065,20 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     return true;
   }
 
+  if (tasks.firstWhereOrNull((e) =>
+          e.additionalFields?.fields.firstWhereOrNull(
+            (element) =>
+                element.key ==
+                    additional_fields_local
+                        .AdditionalFieldsType.interventionType
+                        .toValue() &&
+                element.value == InterventionTypes.smc.toValue(),
+          ) !=
+          null) ==
+      null) {
+    return true;
+  }
+
   final lastTask = tasks.last;
   final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
 
@@ -1083,6 +1097,96 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     }
 
     return false;
+  }
+
+  return true;
+}
+
+bool checkStatusOncho(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  if (currentCycle == null) {
+    return false;
+  }
+
+  if (tasks == null || tasks.isEmpty) {
+    return true;
+  }
+
+  if (tasks.firstWhereOrNull((e) =>
+          e.additionalFields?.fields.firstWhereOrNull(
+            (element) =>
+                element.key ==
+                    additional_fields_local
+                        .AdditionalFieldsType.interventionType
+                        .toValue() &&
+                element.value == InterventionTypes.oncho.toValue(),
+          ) !=
+          null) ==
+      null) {
+    return true;
+  }
+
+  final lastTask = tasks.last;
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+
+  if (lastTaskCreatedTime == null) {
+    return false;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+  final diff = DateTime.now().difference(date);
+  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
+      lastTaskCreatedTime <= currentCycle.endDate;
+
+  if (isLastCycleRunning) {
+    if (lastTask.status == Status.delivered.name) {
+      return true;
+    }
+    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
+  }
+
+  return true;
+}
+
+bool checkStatusBednet(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  if (currentCycle == null) {
+    return false;
+  }
+
+  if (tasks == null || tasks.isEmpty) {
+    return true;
+  }
+
+  if (tasks.firstWhereOrNull((e) =>
+          e.additionalFields?.fields.firstWhereOrNull(
+            (element) =>
+                element.key ==
+                    additional_fields_local
+                        .AdditionalFieldsType.interventionType
+                        .toValue() &&
+                element.value == InterventionTypes.bednet.toValue(),
+          ) !=
+          null) ==
+      null) {
+    return true;
+  }
+
+  final lastTask = tasks.last;
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+
+  if (lastTaskCreatedTime == null) {
+    return false;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+  final diff = DateTime.now().difference(date);
+  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
+      lastTaskCreatedTime <= currentCycle.endDate;
+
+  if (isLastCycleRunning) {
+    if (lastTask.status == Status.delivered.name) {
+      return true;
+    }
+    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
   }
 
   return true;

@@ -18,20 +18,22 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../models/entities/entities_smc/intervention_types.dart';
 import '../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../router/app_router.dart';
 import '../action_card/action_card.dart';
 import '../../utils/utils_smc/utils_smc.dart'
     show
-        assessmentSMCPending,
-        assessmentOnchoPending,
-        checkStatusSMC,
         allDosesDelivered,
-        isSmcAndOnchoFlow,
-        isSmcAndBednetFlow,
+        assessmentOnchoPending,
+        assessmentSMCPending,
         checkIfBeneficiaryIneligibleOncho,
         checkIfBeneficiaryReferredOncho,
-        checkIfBeneficiaryRefusedOncho;
+        checkIfBeneficiaryRefusedOncho,
+        checkStatusSMC,
+        fetchProductVariantSMC,
+        isSmcAndBednetFlow,
+        isSmcAndOnchoFlow;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -78,6 +80,56 @@ class CustomMemberCardSMC extends StatelessWidget {
     this.sideEffects,
   });
 
+  List<TaskModel>? _getSMCStatusData(BuildContext context) {
+    List<TaskModel>? tasks = this
+        .tasks
+        ?.where((e) =>
+            e.additionalFields?.fields
+                .where((field) =>
+                    field.key ==
+                        AdditionalFieldsType.interventionType.toValue() &&
+                    int.tryParse(field.value) == context.selectedCycle?.id)
+                .isNotEmpty ??
+            false)
+        .toList();
+    return tasks
+        ?.where((e) =>
+            e.additionalFields?.fields.firstWhereOrNull(
+              (element) =>
+                  element.key ==
+                      AdditionalFieldsType.interventionType.toValue() &&
+                  element.value == InterventionTypes.smc.toValue(),
+            ) !=
+            null)
+        .toList();
+  }
+
+  List<TaskModel>? _getOnchoStatusData() {
+    return tasks
+        ?.where((e) =>
+            e.additionalFields?.fields.firstWhereOrNull(
+              (element) =>
+                  element.key ==
+                      AdditionalFieldsType.interventionType.toValue() &&
+                  element.value == InterventionTypes.oncho.toValue(),
+            ) !=
+            null)
+        .toList();
+  }
+
+  List<TaskModel>? _getBednetStatusData() {
+    return tasks
+        ?.where((e) =>
+            e.additionalFields?.fields.firstWhereOrNull(
+              (element) =>
+                  element.key ==
+                      AdditionalFieldsType.interventionType.toValue() &&
+                  element.value == InterventionTypes.bednet.toValue(),
+            ) !=
+            null)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -86,10 +138,16 @@ class CustomMemberCardSMC extends StatelessWidget {
     final smcAndOnchoFlow = isSmcAndOnchoFlow(context);
     final smcAndBednetFlow = isSmcAndBednetFlow(context);
 
-    return smcFlow(context, theme, beneficiaryType);
+    if (smcAndOnchoFlow) {
+      return smcAndOnchoFlowWidget(context, theme, beneficiaryType);
+    } else if (smcAndBednetFlow) {
+      return smcAndBednetFlowWidget(context, theme, beneficiaryType);
+    } else {
+      return smcFlowWidget(context, theme, beneficiaryType);
+    }
   }
 
-  Container smcFlow(
+  Container smcFlowWidget(
       BuildContext context, ThemeData theme, BeneficiaryType? beneficiaryType) {
     bool smcAssessmentPendingStatus =
         assessmentSMCPending(tasks, context.selectedCycle);
@@ -383,17 +441,322 @@ class CustomMemberCardSMC extends StatelessWidget {
     );
   }
 
-  Container smcAndOnchoFlow(
+  Container smcAndBednetFlowWidget(
       BuildContext context, ThemeData theme, BeneficiaryType? beneficiaryType) {
     bool smcAssessmentPendingStatus =
         assessmentSMCPending(tasks, context.selectedCycle);
 
-    bool onchoAssessmentPendingStatus =
-        assessmentOnchoPending(tasks, context.selectedCycle);
+    String? beneficiaryId = individual.identifiers
+        ?.lastWhereOrNull(
+          (e) =>
+              e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
+        )
+        ?.identifierId;
 
-    bool ineligibleOncho = checkIfBeneficiaryIneligibleOncho(tasks);
-    bool referredOncho = checkIfBeneficiaryReferredOncho(tasks);
-    bool refusedOncho = checkIfBeneficiaryRefusedOncho(tasks);
+    return Container(
+      decoration: BoxDecoration(
+        color: DigitTheme.instance.colorScheme.background,
+        border: Border.all(
+          color: DigitTheme.instance.colorScheme.outline,
+          width: 1,
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(4.0),
+        ),
+      ),
+      margin: DigitTheme.instance.containerMargin,
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  individual.identifiers != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: DigitTheme.instance.colorScheme.primary,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(kPadding),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                kPadding,
+                              ),
+                              child: Text(
+                                beneficiaryId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                                style: theme.textTheme.headlineSmall,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const Offstage(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: kPadding, top: kPadding),
+                          child: Text(
+                            name,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              ((!isCurrentCycleData(context, tasks ?? []) ||
+                      (tasks ?? [])
+                              .where(
+                                (element) =>
+                                    element.status ==
+                                    Status.administeredSuccess.toValue(),
+                              )
+                              .lastOrNull ==
+                          null))
+                  ? Positioned(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: DigitIconButton(
+                          buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
+                          onPressed: (projectBeneficiaries ?? []).isEmpty
+                              ? null
+                              : () => DigitActionDialog.show(
+                                    context,
+                                    widget: ActionCard(
+                                      items: [
+                                        ActionCardModel(
+                                          icon: Icons.edit,
+                                          label: localizations.translate(
+                                            i18.memberCard
+                                                .editIndividualDetails,
+                                          ),
+                                          action: editMemberAction,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                          iconText: localizations.translate(
+                            i18.memberCard.editDetails,
+                          ),
+                          icon: Icons.edit,
+                        ),
+                      ),
+                    )
+                  : const Offstage()
+            ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: DigitTheme.instance.containerMargin,
+                  child: Text(
+                    gender != null
+                        ? localizations
+                            .translate('CORE_COMMON_${gender?.toUpperCase()}')
+                        : ' -- ',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    years != null && months != null
+                        ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                        : "|   --",
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: kPadding / 2,
+            ),
+            child: Offstage(
+              offstage: beneficiaryType != BeneficiaryType.individual,
+              child: !isDelivered ||
+                      isNotEligible ||
+                      isBeneficiaryRefused ||
+                      isBeneficiaryIneligible ||
+                      isBeneficiaryReferred
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: DigitIconButton(
+                        icon: Icons.info_rounded,
+                        iconSize: 20,
+                        iconText: localizations.translate(
+                          isHead
+                              ? i18_local.householdOverView
+                                  .householdOverViewHouseholderHeadLabelSMC
+                              : (isNotEligible || isBeneficiaryIneligible)
+                                  ? i18_local.householdOverView
+                                      .householdOverViewNotEligibleIconLabelSMC
+                                  : isBeneficiaryReferred
+                                      ? i18_local.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabelSMC
+                                      : isBeneficiaryRefused
+                                          ? i18_local.householdOverView
+                                              .householdOverViewBeneficiaryRefusedLabelSMC
+                                          : i18_local.householdOverView
+                                              .householdOverViewNotDeliveredIconLabelSMC,
+                        ),
+                        iconTextColor: theme.colorScheme.error,
+                        iconColor: theme.colorScheme.error,
+                      ),
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: DigitIconButton(
+                        icon: Icons.check_circle,
+                        iconText: localizations.translate(
+                          i18_local.householdOverView
+                              .householdOverViewDeliveredIconLabelSMC,
+                        ),
+                        iconSize: 20,
+                        iconTextColor:
+                            DigitTheme.instance.colorScheme.onSurfaceVariant,
+                        iconColor:
+                            DigitTheme.instance.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+            ),
+          ),
+          Offstage(
+            offstage: beneficiaryType != BeneficiaryType.individual ||
+                isNotEligible ||
+                isBeneficiaryRefused ||
+                isBeneficiaryIneligible ||
+                isBeneficiaryReferred,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  (isNotEligible ||
+                              isBeneficiaryRefused ||
+                              isBeneficiaryIneligible ||
+                              isBeneficiaryReferred) &&
+                          checkStatusSMC(tasks, context.selectedCycle)
+                      ? const Offstage()
+                      : !isNotEligible
+                          ? DigitElevatedButton(
+                              onPressed: beneficiaryId != null
+                                  ? ((projectBeneficiaries ?? []).isEmpty)
+                                      ? null
+                                      : () {
+                                          final bloc = context
+                                              .read<HouseholdOverviewBloc>();
+
+                                          bloc.add(
+                                            HouseholdOverviewEvent
+                                                .selectedIndividual(
+                                              individualModel: individual,
+                                            ),
+                                          );
+                                          bloc.add(HouseholdOverviewReloadEvent(
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!,
+                                            projectBeneficiaryType:
+                                                RegistrationDeliverySingleton()
+                                                        .beneficiaryType ??
+                                                    BeneficiaryType.individual,
+                                          ));
+
+                                          if (smcAssessmentPendingStatus) {
+                                            context.router.push(
+                                                VaccineInformationCaptureRoute(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              individual: individual,
+                                            ));
+                                            // context.router.push(
+                                            //     EligibilityChecklistViewRoute(
+                                            //   projectBeneficiaryClientReferenceId:
+                                            //       projectBeneficiaryClientReferenceId,
+                                            //   individual: individual,
+                                            // ));
+                                          } else {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          }
+                                        }
+                                  : () {
+                                      showGenerateBeneficiaryIdDialog(context);
+                                    },
+                              child: Center(
+                                child: Text(
+                                  allDosesDelivered(
+                                            tasks,
+                                            context.selectedCycle,
+                                            sideEffects,
+                                            individual,
+                                          ) &&
+                                          !checkStatusSMC(
+                                            tasks,
+                                            context.selectedCycle,
+                                          )
+                                      ? localizations.translate(
+                                          i18.householdOverView
+                                              .viewDeliveryLabel,
+                                        )
+                                      : localizations.translate(
+                                          i18_local.householdOverView
+                                              .householdOverViewActionTextSMC,
+                                        ),
+                                ),
+                              ),
+                            )
+                          : const Offstage(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container smcAndOnchoFlowWidget(
+      BuildContext context, ThemeData theme, BeneficiaryType? beneficiaryType) {
+    List<TaskModel>? smcTasks = _getSMCStatusData(context);
+    List<TaskModel>? onchoTasks = _getOnchoStatusData();
+    bool smcAssessmentPendingStatus =
+        assessmentSMCPending(smcTasks, context.selectedCycle);
+
+    bool onchoAssessmentPendingStatus =
+        assessmentOnchoPending(onchoTasks, context.selectedCycle);
+
+    bool ineligibleOncho = checkIfBeneficiaryIneligibleOncho(onchoTasks);
+    bool referredOncho = checkIfBeneficiaryReferredOncho(onchoTasks);
+    bool refusedOncho = checkIfBeneficiaryRefusedOncho(onchoTasks);
+    bool isOnchoDelivered = onchoTasks == null
+        ? false
+        : onchoTasks!.isNotEmpty &&
+                !checkStatusSMC(
+                  onchoTasks,
+                  context.selectedCycle,
+                )
+            ? true
+            : false;
 
     String? beneficiaryId = individual.identifiers
         ?.lastWhereOrNull(
