@@ -2,6 +2,8 @@ library app_utils;
 
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_ui_components/utils/date_utils.dart'
+    as digit_ui_date_utils;
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -704,6 +706,194 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
+bool checkEligibilityForAgeAndSideEffectOncho(
+  digit_ui_date_utils.DigitDOBAgeConvertor age,
+  ProjectTypeModel? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+) {
+  int totalAgeMonths = age.years * 12 + age.months;
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+    // Return null when no matching cycle is found
+  );
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
+      final lastTaskTime =
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
+      recordedSideEffect = lastTaskTime != null &&
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
+
+      return projectType?.validMinAge != null &&
+              projectType?.validMaxAge != null
+          ? totalAgeMonths >= projectType!.validMinAge! &&
+                  totalAgeMonths <= projectType.validMaxAge!
+              ? recordedSideEffect && !checkStatusOncho([tasks], currentCycle)
+                  ? false
+                  : true
+              : false
+          : false;
+    } else {
+      if (projectType?.validMaxAge != null &&
+          projectType?.validMinAge != null) {
+        return totalAgeMonths >= projectType!.validMinAge! &&
+                totalAgeMonths <= projectType.validMaxAge!
+            ? true
+            : false;
+      }
+      return false;
+    }
+  }
+
+  return false;
+}
+
+DeliveryDoseCriteria? fetchProductVariantForProjectType(
+  ProjectTypeModel? projectType,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+) {
+  if (projectType != null) {
+    var currentDelivery = projectType.cycles
+        ?.firstWhereOrNull((cycle) =>
+            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
+        ?.deliveries
+        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
+
+    return fetchProductVariantLocal(
+        currentDelivery, individualModel, householdModel);
+  }
+
+  return null;
+}
+
+DeliveryDoseCriteria? fetchProductVariantLocal(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel) {
+  if (currentDelivery != null) {
+    var individualAgeInMonths = 0;
+    var gender;
+    var roomCount;
+    var memberCount;
+    String? structureType;
+
+    if (individualModel != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
+
+      gender = individualModel.gender?.index;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
+    }
+
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
 }
 
 DeliveryDoseCriteria? fetchProductVariantSMC(

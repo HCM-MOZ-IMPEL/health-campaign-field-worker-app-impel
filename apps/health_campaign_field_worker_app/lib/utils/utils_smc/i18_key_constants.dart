@@ -694,6 +694,8 @@ class HouseholdOverView {
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+  String get householdOverViewActionTextOncho =>
+      'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_ONCHO';
   String get tracomaDeliveryAction => 'DELIVER_TRACOMA';
   String get headBednetDeliveryAction => 'DELIVER_BEDNET';
 
@@ -710,6 +712,18 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_SMC';
   String get householdOverViewNotDeliveredIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_SMC';
+
+  // Oncho Labels
+  String get householdOverViewDeliveredIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_ONCHO';
+  String get householdOverViewNotEligibleIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_ONCHO';
+  String get householdOverViewBeneficiaryReferredLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL_ONCHO';
+  String get householdOverViewBeneficiaryRefusedLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_ONCHO';
+  String get householdOverViewNotDeliveredIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_ONCHO';
 }
 
 class ForgotPassword {

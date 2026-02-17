@@ -1733,18 +1733,22 @@ class _EligibilityChecklistViewPage
       List<ServiceDefinitionModel> serviceDefinitions) {
     ServiceDefinitionModel? serviceDefinition;
 
-    // add check for oncho and smc
-    final individualAge = 0;
+// Note: dob is necessary to determine the service definition for smc and oncho project types as they have different service definitions based on age criteria. For other project types, dob is not necessary as there is only one service definition for eligibility assessment.
+    DigitDOBAgeConvertor individualAge = widget.individual?.dateOfBirth != null
+        ? DigitDateUtils.calculateAge(
+            DigitDateUtils.getFormattedDateToDateTime(
+                  widget.individual!.dateOfBirth!,
+                ) ??
+                DateTime.now(),
+          )
+        : DigitDOBAgeConvertor(days: 0, months: 0, years: 0);
 
-    if (context.projectTypeCode == ProjectTypes.smc.toValue()) {
-      serviceDefinition = serviceDefinitions
-          .where((element) => element.code.toString().contains(
-                '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
-              ))
-          .toList()
-          .first;
-    } else if (context.projectTypeCode == ProjectTypes.smcAndOncho.toValue()) {
-      if (individualAge < 59) {
+    final ageInMonths = individualAge.years * 12 + individualAge.months;
+
+    // add check for oncho and smc
+
+    if (context.isSmcAndOnchoFlow) {
+      if (ageInMonths < 60) {
         serviceDefinition = serviceDefinitions
             .where((element) => element.code.toString().contains(
                   '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
@@ -1754,11 +1758,18 @@ class _EligibilityChecklistViewPage
       } else {
         serviceDefinition = serviceDefinitions
             .where((element) => element.code.toString().contains(
-                  '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+                  '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT_TWO.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
                 ))
             .toList()
             .first;
       }
+    } else {
+      serviceDefinition = serviceDefinitions
+          .where((element) => element.code.toString().contains(
+                '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+              ))
+          .toList()
+          .first;
     }
 
     return serviceDefinition;
