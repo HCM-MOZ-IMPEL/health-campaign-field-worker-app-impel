@@ -747,6 +747,17 @@ class CustomMemberCardSMC extends StatelessWidget {
     final ageInMonths = age.months;
     List<TaskModel>? smcTasks = _getSMCStatusData(context);
     List<TaskModel>? onchoTasks = _getOnchoStatusData();
+
+    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    ProjectTypeModel? onchoAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
     bool smcAssessmentPendingStatus =
         assessmentSMCPending(smcTasks, context.selectedCycle);
 
@@ -760,7 +771,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                   years: ageInYears,
                   months: ageInMonths,
                 ),
-                RegistrationDeliverySingleton().projectType,
+                onchoAdditionalProjectType,
                 (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
                 null,
               )
@@ -773,17 +784,6 @@ class CustomMemberCardSMC extends StatelessWidget {
     bool isOnchoDelivered = onchoTasks != null &&
         onchoTasks.isNotEmpty &&
         !checkStatusOncho(onchoTasks, context.selectedCycle);
-
-    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
-        .selectedProject
-        ?.additionalDetails
-        ?.projectType;
-
-    ProjectTypeModel? onchoAdditionalProjectType =
-        RegistrationDeliverySingleton()
-            .selectedProject
-            ?.additionalDetails
-            ?.additionalProjectType;
 
     bool isSmcDeliveryCards =
         fetchProductVariantForProjectType(smcProjectType, individual, null) !=

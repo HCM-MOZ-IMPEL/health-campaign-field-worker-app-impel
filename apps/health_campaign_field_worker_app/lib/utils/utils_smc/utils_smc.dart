@@ -735,22 +735,17 @@ bool checkEligibilityForAgeAndSideEffectOncho(
           (lastTaskTime >= currentCycle.startDate! &&
               lastTaskTime <= currentCycle.endDate!);
 
-      return projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
+      return projectType?.validMinAge != null
+          ? totalAgeMonths >= 72
               ? recordedSideEffect && !checkStatusOncho([tasks], currentCycle)
                   ? false
                   : true
               : false
           : false;
     } else {
-      if (projectType?.validMaxAge != null &&
-          projectType?.validMinAge != null) {
-        return totalAgeMonths >= projectType!.validMinAge! &&
-                totalAgeMonths <= projectType.validMaxAge!
-            ? true
-            : false;
+      // add validMin and max age check here
+      if (true) {
+        return totalAgeMonths >= 72! ? true : false;
       }
       return false;
     }
@@ -788,6 +783,7 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
     var gender;
     var roomCount;
     var memberCount;
+    var height;
     String? structureType;
 
     if (individualModel != null) {
@@ -800,6 +796,12 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
       gender = individualModel.gender?.index;
+
+      final heightValue = individualModel.additionalFields?.fields
+          .where((element) => element.key == Constants.height)
+          .firstOrNull
+          ?.value;
+      height = int.tryParse(heightValue?.toString() ?? '0') ?? 0;
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
@@ -831,7 +833,8 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
                 'age': individualAgeInMonths,
                 if (gender != null) 'gender': gender,
                 if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
+                if (roomCount != null) 'roomCount': roomCount,
+                if (height != null) 'height': height
               },
             );
             final error = expression.parse;
@@ -851,6 +854,7 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
               if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
               'type_of_structure'
