@@ -28,6 +28,7 @@ const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
 const warehouseDetails = WarehouseDetails();
+const morbidityControl = MorbidityControl();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -1389,6 +1390,10 @@ class IndividualDetails {
       'HEIGHT_MIN_LENGTH_VALIDATION_SMC';
   String get heightLabelTextSMC => 'HEIGHT_LABEL_TEXT';
   String get heightLabelTextTracoma => 'HEIGHT_LABEL_TEXT_TRACOMA';
+  String get heightErrorValidationText => 'HEIGHT_ERROR_VALIDATION_TEXT';
+  String get heightHeadLabelText => 'CHILD_LABEL_HEIGHT_TEXT';
+  String get minHeightLengthError => 'MIN_HEIGHT_LENGTH_ERROR';
+  String get maxHeightLengthError => 'MAX_HEIGHT_LENGTH_ERROR';
 }
 
 class BeneficiaryDetails {
@@ -1556,4 +1561,22 @@ class Dashboard {
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
   String get noteDescriptionSMC => 'DSS_NOTE_DESCRIPTION_SMC';
+}
+
+
+class MorbidityControl {
+  const MorbidityControl();
+
+  String get pageTitle => 'MORBIDITY_CONTROL_PAGE_TITLE';
+  String get questionPrompt => 'MORBIDITY_CONTROL_QUESTION_PROMPT';
+  String get tinea => 'MORBIDITY_DISEASE_TINEA';
+  String get scabies => 'MORBIDITY_DISEASE_SCABIES';
+  String get tungiasis => 'MORBIDITY_DISEASE_TUNGIASIS';
+  String get lymphaticFilariasisStageLymphedema =>
+      'MORBIDITY_DISEASE_LYMPHATIC_FILARIASIS_LYMPHEDEMA';
+  String get lymphaticFilariasisStageMale =>
+      'MORBIDITY_DISEASE_LYMPHATIC_FILARIASIS_MALE';
+  String get tracomaFolicular => 'MORBIDITY_DISEASE_TRACOMA_FOLICULAR';
+  String get tracomaTrichiasis => 'MORBIDITY_DISEASE_TRACOMA_TRICHIASIS';
+  String get suspectedLeprosy => 'MORBIDITY_DISEASE_SUSPECTED_LEPROSY';
 }

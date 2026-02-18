@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -23,6 +24,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../models/entities/project_types.dart';
 import '../../../utils/constants.dart' as local_constants;
 import '../../../utils/utils.dart' as utils;
 import '../../../utils/date_utils.dart' as digits;
@@ -56,6 +58,7 @@ class CustomIndividualDetailsSMCPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const _height = 'height';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -63,9 +66,85 @@ class CustomIndividualDetailsSMCPageState
   bool isEditIndividual = false;
   Set<String>? beneficiaryId;
 
+  final ValueNotifier<dynamic> heightVisible = ValueNotifier(null);
+  StreamSubscription? _dobValueChangesSubscription;
+
+  void updateStatus(FormGroup form, dynamic age, BuildContext context) {
+    // Updating the Value updateStatuseNotifier
+    // Show height field if age is greater than 72 months
+
+    if (age == null) {
+      if (heightVisible.value != null) {
+        heightVisible.value = null; // Hide height field
+        form.control(_height).value = "";
+      }
+    } else {
+      final ageInMonths = utils.getAgeMonths(age);
+      final shouldShowHeight = ageInMonths > 72; // Greater than 72 months
+      final newValue = shouldShowHeight ? utils.Constants.height : null;
+
+      if (!shouldShowHeight) {
+        form.control(_height).value = "";
+      }
+
+      if (heightVisible.value != newValue) {
+        heightVisible.value = newValue; // Update only if changed
+      }
+    }
+  }
+
+  void _setupDobListener(FormGroup form, BuildContext context) {
+    // Cancel any existing subscription to prevent multiple listeners
+    _dobValueChangesSubscription?.cancel();
+
+    // Create a new subscription for DOB value changes
+    _dobValueChangesSubscription =
+        form.control(_dobKey).valueChanges.listen((value) {
+      if (value == null) {
+        updateStatus(form, null, context);
+      } else {
+        DigitDOBAge age = DigitDateUtils.calculateAge(value);
+        updateStatus(form, age, context);
+      }
+    });
+  }
+
+  /// Safely compute the category from a DOB string.
+  /// Returns [utils.Constants.height] if age > 72 months, or null otherwise.
+  /// Returns null if dobString is null or invalid.
+  String? _computeCategoryFromDob(String? dobString) {
+    if (dobString == null) return null;
+    try {
+      final category = utils.getCategory(
+        utils.getAgeMonths(
+          DigitDateUtils.calculateAge(
+            DateFormat(Constants().dateFormat).parse(dobString),
+          ),
+        ),
+      );
+      return category;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Safely format height value as a string with left padding.
+  /// Returns the formatted height string, or empty string if value is null.
+  String _formatHeightValue(dynamic value) {
+    if (value == null) return '';
+    final stringValue = value.toString();
+    return stringValue.length == 1 ? '0$stringValue' : stringValue;
+  }
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dobValueChangesSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -75,6 +154,12 @@ class CustomIndividualDetailsSMCPageState
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
+
+    final individual = bloc.state.mapOrNull<IndividualModel>(
+      editIndividual: (value) {
+        return value.individualModel;
+      },
+    );
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -129,6 +214,15 @@ class CustomIndividualDetailsSMCPageState
             );
           },
           builder: (context, state) {
+            // Initialize height visibility based on initial DOB value (for edit mode)
+            final initialDob = form.control(_dobKey).value;
+            if (initialDob != null && heightVisible.value == null) {
+              final age = DigitDateUtils.calculateAge(initialDob);
+              updateStatus(form, age, context);
+            }
+
+            // Set up the DOB valueChanges listener if not already subscribed
+            _setupDobListener(form, context);
             return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
@@ -227,6 +321,42 @@ class CustomIndividualDetailsSMCPageState
                                 );
 
                                 return;
+                              }
+                              final String? checkCategory = utils.getCategory(
+                                utils.getAgeMonths(
+                                  DigitDateUtils.calculateAge(
+                                    form.control(_dobKey).value,
+                                  ),
+                                ),
+                              );
+
+                              // Only require height if age category is valid and matches Constants.height
+                              if (checkCategory == null) {
+                                // Age category is invalid, skip height validation
+                                return;
+                              }
+
+                              switch (checkCategory) {
+                                case utils.Constants.height:
+                                  final value = form.control(_height).value;
+                                  if (value == null || value == "") {
+                                    await DigitToast.show(
+                                      context,
+                                      options: DigitToastOptions(
+                                        localizations.translate(
+                                          i18_local.individualDetails
+                                              .heightErrorValidationText,
+                                        ),
+                                        true,
+                                        theme,
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+                                  break;
+
+                                default:
                               }
 
                               final submit = await DigitDialog.show<bool>(
@@ -587,10 +717,12 @@ class CustomIndividualDetailsSMCPageState
                               // Handle changes to the control's value here
                               final value = formControl.value;
                               if (value == null) {
+                                updateStatus(form, null, context);
                                 formControl.setErrors({'': true});
                               } else {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
+                                updateStatus(form, age, context);
                                 if ((age.years == 0 && age.months == 0) ||
                                     age.months > 11 ||
                                     (age.years > 150 ||
@@ -684,6 +816,41 @@ class CustomIndividualDetailsSMCPageState
                               ),
                             ),
                           ),
+                        ),
+                        ValueListenableBuilder<dynamic>(
+                          valueListenable: heightVisible,
+                          builder: (context, isVisible, child) {
+                            // Show height field only if isVisible equals Constants.height
+                            // which is set when age > 72 months
+                            if (isVisible != utils.Constants.height) {
+                              return const SizedBox(); // Hide if age <= 72 months
+                            }
+
+                            return DigitTextFormField(
+                              key: const ValueKey('height_field'),
+                              maxLength: 3,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              formControlName: _height,
+                              label: localizations.translate(
+                                i18_local.individualDetails.heightHeadLabelText,
+                              ),
+                              isRequired: true,
+                              validationMessages: {
+                                'minAllowed': (object) =>
+                                    localizations.translate(
+                                      i18_local.individualDetails
+                                          .minHeightLengthError,
+                                    ),
+                                'maxAllowed': (object) =>
+                                    localizations.translate(
+                                      i18_local.individualDetails
+                                          .maxHeightLengthError,
+                                    ),
+                              },
+                            );
+                          },
                         ),
                         // Offstage(
                         //   offstage: widget.isHeadOfHousehold,
@@ -806,7 +973,7 @@ class CustomIndividualDetailsSMCPageState
 
     if (isEditIndividual == false) {
       if (identifiers.isEmpty) {
-        identifiers?.add(IdentifierModel(
+        identifiers.add(IdentifierModel(
           clientReferenceId: individual.clientReferenceId,
           identifierId: beneficiaryId,
           identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
@@ -850,6 +1017,47 @@ class CustomIndividualDetailsSMCPageState
                 identifierType: IdentifierTypes.uniqueBeneficiaryID.toValue(),
               ),
             ],
+    );
+
+    individual = individual.copyWith(
+      additionalFields: individual.additionalFields == null
+          ? IndividualAdditionalFields(
+              version: 1,
+              fields: [
+                AdditionalField(
+                  "projectId",
+                  context.projectId,
+                ),
+                // Only add height field if DOB is valid and height value is non-empty
+                if (dobString != null &&
+                    form.control(_height).value != null &&
+                    (form.control(_height).value.toString()).isNotEmpty)
+                  if (_computeCategoryFromDob(dobString) ==
+                      utils.Constants.height)
+                    AdditionalField(
+                      utils.Constants.height,
+                      _formatHeightValue(form.control(_height).value),
+                    ),
+              ],
+            )
+          : individual.additionalFields!.copyWith(
+              fields: [
+                // Filter out any existing `Constants.height` field
+                ...individual.additionalFields!.fields.where(
+                  (field) => field.key != utils.Constants.height,
+                ),
+                // Add new `Constants.height` field only if DOB is valid and height value is non-empty
+                if (dobString != null &&
+                    form.control(_height).value != null &&
+                    (form.control(_height).value.toString()).isNotEmpty)
+                  if (_computeCategoryFromDob(dobString) ==
+                      utils.Constants.height)
+                    AdditionalField(
+                      utils.Constants.height,
+                      _formatHeightValue(form.control(_height).value),
+                    ),
+              ],
+            ),
     );
 
     return individual;
@@ -897,6 +1105,24 @@ class CustomIndividualDetailsSMCPageState
         ],
         value: individual?.name?.familyName ?? '',
       ),
+      _height: FormControl<String>(
+        value: (individual != null &&
+                utils.getCategory(
+                      digits.DigitDateUtils.getAgeMonths(
+                          digits.DigitDateUtils.calculateAge(
+                        DateFormat('dd/MM/yyyy').parse(
+                          individual.dateOfBirth!,
+                        ),
+                      )),
+                    ) ==
+                    utils.Constants.height)
+            ? individual.additionalFields?.fields
+                    .firstWhereOrNull(
+                        (element) => element.key == utils.Constants.height)
+                    ?.value ??
+                ""
+            : "",
+      ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(
@@ -916,6 +1142,9 @@ class CustomIndividualDetailsSMCPageState
   bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
+    if (context.isSmcAndOnchoFlow || context.isSmcAndBednetFlow) {
+      return true;
+    }
 
     const validMinAge = local_constants.Constants.validMinAge;
     const validMaxAge = local_constants.Constants.validMaxAge;

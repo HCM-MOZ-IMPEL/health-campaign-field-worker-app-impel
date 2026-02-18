@@ -307,8 +307,15 @@ class _VaccineInformationCapturePageState
     );
 
     if (context.mounted && (shouldSubmit ?? false)) {
-      // If vaccine card is not present, just navigate to next page without creating task
+      // If vaccine card is not present, navigate to Morbidity Control page
       if (!vaccineCardPresent) {
+        // context.router.push(MorbidityControlRoute(
+        //   projectBeneficiaryClientReferenceId:
+        //       widget.projectBeneficiaryClientReferenceId,
+        //   individual: widget.individual,
+        // ));
+        // return;
+        // Commented out existing navigation code - will be replaced with backend integration
         context.router.push(EligibilityChecklistViewRoute(
           projectBeneficiaryClientReferenceId:
               widget.projectBeneficiaryClientReferenceId,

@@ -180,6 +180,7 @@ import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
 import '../pages/pages-SMC/beneficiary_registration/pre_eligibility_assessment.dart';
+import '../pages/pages-SMC/beneficiary_registration/morbidity_control.dart';
 
 part 'app_router.gr.dart';
 
@@ -937,6 +938,10 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: VaccineInformationCaptureRoute.page,
                       path: 'vaccine-information-capture',
+                    ),
+                    AutoRoute(
+                      page: MorbidityControlRoute.page,
+                      path: 'morbidity-control',
                     ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,
