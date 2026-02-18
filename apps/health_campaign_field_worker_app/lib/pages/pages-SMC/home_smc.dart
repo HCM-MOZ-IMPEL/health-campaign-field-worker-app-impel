@@ -61,6 +61,7 @@ import '../../widgets/home/home_item_card.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/progress_bar/custom_beneficiary_progress.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
+import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_oncho.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_smc.dart';
 import '../../widgets/widgets_smc/progress_bar/custom_beneficiary_progress_bednet.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
@@ -196,6 +197,65 @@ class HomeSMCPageState extends LocalizedState<HomeSMCPage> {
                                 i18.home.progressIndicatorPrefixLabel,
                               ),
                             ),
+                            if (_isCardExpanded && context.isSmcAndOnchoFlow)
+                              CustomBeneficiaryProgressBarOncho(
+                                label: localizations.translate(
+                                  i18.home.progressIndicatorTitleHeadOncho,
+                                ),
+                                prefixLabel: localizations.translate(
+                                  i18.home.progressIndicatorPrefixLabel,
+                                ),
+                              ),
+                            if (_isCardExpanded && context.isSmcAndBednetFlow)
+                              CustomBeneficiaryProgressBarBednet(
+                                label: localizations.translate(
+                                  i18.home.progressIndicatorTitleHeadBednet,
+                                ),
+                                prefixLabel: localizations.translate(
+                                  i18.home.progressIndicatorPrefixLabel,
+                                ),
+                              ),
+                            if (context.isSmcAndOnchoFlow ||
+                                context.isSmcAndBednetFlow)
+                              Container(
+                                height: 24,
+                                margin: const EdgeInsets.all(4),
+                                child: Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _isCardExpanded = !_isCardExpanded;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          _isCardExpanded
+                                              ? localizations
+                                                  .translate(i18.home.close)
+                                              : localizations
+                                                  .translate(i18.home.seeMore),
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color.fromARGB(
+                                                255, 251, 154, 7),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          _isCardExpanded
+                                              ? Icons.keyboard_arrow_up
+                                              : Icons.keyboard_arrow_down,
+                                          size: 20,
+                                          color: Colors.orange,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
