@@ -263,11 +263,11 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomBeneficiaryDetailsSMCRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomBeneficiaryDetailsSMCRouteArgs>(
-          orElse: () => const CustomBeneficiaryDetailsSMCRouteArgs());
+      final args = routeData.argsAs<CustomBeneficiaryDetailsSMCRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomBeneficiaryDetailsSMCPage(
+          interventionType: args.interventionType,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -389,13 +389,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomDeliverInterventionSMCRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomDeliverInterventionSMCRouteArgs>(
-          orElse: () => const CustomDeliverInterventionSMCRouteArgs());
+      final args = routeData.argsAs<CustomDeliverInterventionSMCRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomDeliverInterventionSMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          interventionType: args.interventionType,
           isEditing: args.isEditing,
         ),
       );
@@ -1134,19 +1134,18 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     DoseAdministeredVerificationRoute.name: (routeData) {
-      final args = routeData.argsAs<DoseAdministeredVerificationRouteArgs>(
-          orElse: () => const DoseAdministeredVerificationRouteArgs());
+      final args = routeData.argsAs<DoseAdministeredVerificationRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: DoseAdministeredVerificationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          interventionType: args.interventionType,
         ),
       );
     },
     EligibilityChecklistViewRoute.name: (routeData) {
-      final args = routeData.argsAs<EligibilityChecklistViewRouteArgs>(
-          orElse: () => const EligibilityChecklistViewRouteArgs());
+      final args = routeData.argsAs<EligibilityChecklistViewRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: EligibilityChecklistViewPage(
@@ -1155,6 +1154,7 @@ abstract class _$AppRouter extends RootStackRouter {
           individual: args.individual,
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
+          interventionType: args.interventionType,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -1242,8 +1242,7 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PreEligibilityAssessmentRoute.name: (routeData) {
-      final args = routeData.argsAs<PreEligibilityAssessmentRouteArgs>(
-          orElse: () => const PreEligibilityAssessmentRouteArgs());
+      final args = routeData.argsAs<PreEligibilityAssessmentRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PreEligibilityAssessmentPage(
@@ -1252,6 +1251,7 @@ abstract class _$AppRouter extends RootStackRouter {
           individual: args.individual,
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
+          interventionType: args.interventionType,
         ),
       );
     },
@@ -1334,8 +1334,7 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     VaccineInformationCaptureRoute.name: (routeData) {
-      final args = routeData.argsAs<VaccineInformationCaptureRouteArgs>(
-          orElse: () => const VaccineInformationCaptureRouteArgs());
+      final args = routeData.argsAs<VaccineInformationCaptureRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: VaccineInformationCapturePage(
@@ -1344,6 +1343,7 @@ abstract class _$AppRouter extends RootStackRouter {
           individual: args.individual,
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
+          interventionType: args.interventionType,
         ),
       );
     },
@@ -2343,12 +2343,14 @@ class CustomBeneficiaryDetailsBednetRouteArgs {
 class CustomBeneficiaryDetailsSMCRoute
     extends PageRouteInfo<CustomBeneficiaryDetailsSMCRouteArgs> {
   CustomBeneficiaryDetailsSMCRoute({
+    required InterventionTypes interventionType,
     Key? key,
     RegistrationDeliveryLocalization? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomBeneficiaryDetailsSMCRoute.name,
           args: CustomBeneficiaryDetailsSMCRouteArgs(
+            interventionType: interventionType,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -2363,9 +2365,12 @@ class CustomBeneficiaryDetailsSMCRoute
 
 class CustomBeneficiaryDetailsSMCRouteArgs {
   const CustomBeneficiaryDetailsSMCRouteArgs({
+    required this.interventionType,
     this.key,
     this.appLocalizations,
   });
+
+  final InterventionTypes interventionType;
 
   final Key? key;
 
@@ -2373,7 +2378,7 @@ class CustomBeneficiaryDetailsSMCRouteArgs {
 
   @override
   String toString() {
-    return 'CustomBeneficiaryDetailsSMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomBeneficiaryDetailsSMCRouteArgs{interventionType: $interventionType, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2794,6 +2799,7 @@ class CustomDeliverInterventionSMCRoute
   CustomDeliverInterventionSMCRoute({
     Key? key,
     RegistrationDeliveryLocalization? appLocalizations,
+    required InterventionTypes interventionType,
     bool isEditing = false,
     List<PageRouteInfo>? children,
   }) : super(
@@ -2801,6 +2807,7 @@ class CustomDeliverInterventionSMCRoute
           args: CustomDeliverInterventionSMCRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            interventionType: interventionType,
             isEditing: isEditing,
           ),
           initialChildren: children,
@@ -2816,6 +2823,7 @@ class CustomDeliverInterventionSMCRouteArgs {
   const CustomDeliverInterventionSMCRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.interventionType,
     this.isEditing = false,
   });
 
@@ -2823,11 +2831,13 @@ class CustomDeliverInterventionSMCRouteArgs {
 
   final RegistrationDeliveryLocalization? appLocalizations;
 
+  final InterventionTypes interventionType;
+
   final bool isEditing;
 
   @override
   String toString() {
-    return 'CustomDeliverInterventionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+    return 'CustomDeliverInterventionSMCRouteArgs{key: $key, appLocalizations: $appLocalizations, interventionType: $interventionType, isEditing: $isEditing}';
   }
 }
 
@@ -5549,12 +5559,14 @@ class DoseAdministeredVerificationRoute
   DoseAdministeredVerificationRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    required InterventionTypes interventionType,
     List<PageRouteInfo>? children,
   }) : super(
           DoseAdministeredVerificationRoute.name,
           args: DoseAdministeredVerificationRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            interventionType: interventionType,
           ),
           initialChildren: children,
         );
@@ -5569,15 +5581,18 @@ class DoseAdministeredVerificationRouteArgs {
   const DoseAdministeredVerificationRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.interventionType,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final InterventionTypes interventionType;
+
   @override
   String toString() {
-    return 'DoseAdministeredVerificationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'DoseAdministeredVerificationRouteArgs{key: $key, appLocalizations: $appLocalizations, interventionType: $interventionType}';
   }
 }
 
@@ -5590,6 +5605,7 @@ class EligibilityChecklistViewRoute
     String? referralClientRefId,
     IndividualModel? individual,
     String? projectBeneficiaryClientReferenceId,
+    required InterventionTypes interventionType,
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
@@ -5600,6 +5616,7 @@ class EligibilityChecklistViewRoute
             individual: individual,
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
+            interventionType: interventionType,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -5617,6 +5634,7 @@ class EligibilityChecklistViewRouteArgs {
     this.referralClientRefId,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
     this.appLocalizations,
   });
 
@@ -5628,11 +5646,13 @@ class EligibilityChecklistViewRouteArgs {
 
   final String? projectBeneficiaryClientReferenceId;
 
+  final InterventionTypes interventionType;
+
   final AppLocalizations? appLocalizations;
 
   @override
   String toString() {
-    return 'EligibilityChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, appLocalizations: $appLocalizations}';
+    return 'EligibilityChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -5920,6 +5940,7 @@ class PreEligibilityAssessmentRoute
     AppLocalizations? appLocalizations,
     IndividualModel? individual,
     String? projectBeneficiaryClientReferenceId,
+    required InterventionTypes interventionType,
     List<PageRouteInfo>? children,
   }) : super(
           PreEligibilityAssessmentRoute.name,
@@ -5929,6 +5950,7 @@ class PreEligibilityAssessmentRoute
             individual: individual,
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
+            interventionType: interventionType,
           ),
           initialChildren: children,
         );
@@ -5945,6 +5967,7 @@ class PreEligibilityAssessmentRouteArgs {
     this.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
   });
 
   final Key? key;
@@ -5955,9 +5978,11 @@ class PreEligibilityAssessmentRouteArgs {
 
   final String? projectBeneficiaryClientReferenceId;
 
+  final InterventionTypes interventionType;
+
   @override
   String toString() {
-    return 'PreEligibilityAssessmentRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId}';
+    return 'PreEligibilityAssessmentRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType}';
   }
 }
 
@@ -6237,6 +6262,7 @@ class VaccineInformationCaptureRoute
     AppLocalizations? appLocalizations,
     IndividualModel? individual,
     String? projectBeneficiaryClientReferenceId,
+    required InterventionTypes interventionType,
     List<PageRouteInfo>? children,
   }) : super(
           VaccineInformationCaptureRoute.name,
@@ -6246,6 +6272,7 @@ class VaccineInformationCaptureRoute
             individual: individual,
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
+            interventionType: interventionType,
           ),
           initialChildren: children,
         );
@@ -6262,6 +6289,7 @@ class VaccineInformationCaptureRouteArgs {
     this.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
   });
 
   final Key? key;
@@ -6272,9 +6300,11 @@ class VaccineInformationCaptureRouteArgs {
 
   final String? projectBeneficiaryClientReferenceId;
 
+  final InterventionTypes interventionType;
+
   @override
   String toString() {
-    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId}';
+    return 'VaccineInformationCaptureRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType}';
   }
 }
 

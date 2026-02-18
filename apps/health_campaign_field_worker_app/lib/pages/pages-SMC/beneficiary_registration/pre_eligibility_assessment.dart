@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/utils_smc.dart';
@@ -20,12 +21,14 @@ class PreEligibilityAssessmentPage extends LocalizedStatefulWidget {
   /// The individual/beneficiary whose vaccine information is being captured
   final IndividualModel? individual;
   final String? projectBeneficiaryClientReferenceId;
+  final InterventionTypes interventionType;
 
   const PreEligibilityAssessmentPage({
     super.key,
     super.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
   });
 
   @override
@@ -252,6 +255,7 @@ class _PreEligibilityAssessmentPageState
           projectBeneficiaryClientReferenceId:
               widget.projectBeneficiaryClientReferenceId,
           individual: widget.individual,
+          interventionType: widget.interventionType,
         ));
         return;
       }
@@ -271,6 +275,7 @@ class _PreEligibilityAssessmentPageState
         projectBeneficiaryClientReferenceId:
             widget.projectBeneficiaryClientReferenceId,
         individual: widget.individual,
+        interventionType: widget.interventionType,
       ));
     }
   }

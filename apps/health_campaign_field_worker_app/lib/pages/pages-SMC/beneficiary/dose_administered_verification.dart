@@ -19,6 +19,7 @@ import '../../../blocs/localization/app_localization.dart';
 import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
@@ -30,9 +31,11 @@ import '../../../utils/utils_smc/utils_smc.dart'
 
 @RoutePage()
 class DoseAdministeredVerificationPage extends LocalizedStatefulWidget {
+  final InterventionTypes interventionType;
   const DoseAdministeredVerificationPage({
     super.key,
     super.appLocalizations,
+    required this.interventionType,
   });
 
   @override

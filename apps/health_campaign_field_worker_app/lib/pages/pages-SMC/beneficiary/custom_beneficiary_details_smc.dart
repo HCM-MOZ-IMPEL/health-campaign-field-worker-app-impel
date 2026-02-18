@@ -17,6 +17,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -29,7 +30,9 @@ import 'widgets/past_delivery_smc.dart';
 
 @RoutePage()
 class CustomBeneficiaryDetailsSMCPage extends LocalizedStatefulWidget {
+  final InterventionTypes interventionType;
   const CustomBeneficiaryDetailsSMCPage({
+    required this.interventionType,
     super.key,
     super.appLocalizations,
   });
@@ -191,13 +194,14 @@ class CustomBeneficiaryDetailsSMCPageState
                                                           .beneficiaryDetails
                                                           .resourcesTobeDelivered),
                                                   content: buildTableContent(
-                                                      deliverState,
-                                                      context,
-                                                      variant,
-                                                      state.selectedIndividual,
-                                                      state
-                                                          .householdMemberWrapper
-                                                          .household),
+                                                    deliverState,
+                                                    context,
+                                                    variant,
+                                                    state.selectedIndividual,
+                                                    state.householdMemberWrapper
+                                                        .household,
+                                                    widget.interventionType,
+                                                  ),
                                                   barrierDismissible: true,
                                                   primaryAction:
                                                       DigitDialogActions(

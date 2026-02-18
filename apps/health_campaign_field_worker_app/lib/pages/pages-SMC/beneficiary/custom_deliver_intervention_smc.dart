@@ -21,6 +21,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
@@ -36,10 +37,12 @@ import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_car
 @RoutePage()
 class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
   final bool isEditing;
+  final InterventionTypes interventionType;
 
   const CustomDeliverInterventionSMCPage({
     super.key,
     super.appLocalizations,
+    required this.interventionType,
     this.isEditing = false,
   });
 

@@ -8,6 +8,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/utils_smc.dart';
@@ -22,12 +23,14 @@ class VaccineInformationCapturePage extends LocalizedStatefulWidget {
   /// The individual/beneficiary whose vaccine information is being captured
   final IndividualModel? individual;
   final String? projectBeneficiaryClientReferenceId;
+  final InterventionTypes interventionType;
 
   const VaccineInformationCapturePage({
     super.key,
     super.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
   });
 
   @override
@@ -320,6 +323,7 @@ class _VaccineInformationCapturePageState
           projectBeneficiaryClientReferenceId:
               widget.projectBeneficiaryClientReferenceId,
           individual: widget.individual,
+          interventionType: widget.interventionType,
         ));
         return;
       } else {
@@ -339,6 +343,7 @@ class _VaccineInformationCapturePageState
           projectBeneficiaryClientReferenceId:
               widget.projectBeneficiaryClientReferenceId,
           individual: widget.individual,
+          interventionType: widget.interventionType,
         ));
       }
     }

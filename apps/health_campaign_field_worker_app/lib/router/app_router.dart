@@ -181,6 +181,7 @@ import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
 import '../pages/pages-SMC/beneficiary_registration/pre_eligibility_assessment.dart';
 import '../pages/pages-SMC/beneficiary_registration/morbidity_control.dart';
+import '../models/entities/entities_smc/intervention_types.dart';
 
 part 'app_router.gr.dart';
 

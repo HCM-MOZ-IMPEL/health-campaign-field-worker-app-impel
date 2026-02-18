@@ -26,6 +26,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/utils/constants.dart' as survey_constants;
 
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../models/entities/project_types.dart';
 import '../../../router/app_router.dart';
 
@@ -45,12 +46,14 @@ class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   final IndividualModel? individual;
   final String? projectBeneficiaryClientReferenceId;
+  final InterventionTypes interventionType;
 
   const EligibilityChecklistViewPage({
     super.key,
     this.referralClientRefId,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
     super.appLocalizations,
   });
 

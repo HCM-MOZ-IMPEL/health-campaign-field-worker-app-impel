@@ -12,6 +12,7 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../../models/entities/project_types.dart';
 
 // This function builds a table with the given data and headers
@@ -21,6 +22,7 @@ Widget buildTableContent(
   List<ProductVariantModel>? variant,
   IndividualModel? individualModel,
   HouseholdModel? householdModel,
+  InterventionTypes interventionType,
 ) {
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
