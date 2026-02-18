@@ -23,6 +23,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
+import '../../../models/entities/project_types.dart';
 import '../../../utils/constants.dart' as local_constants;
 import '../../../utils/utils.dart' as utils;
 import '../../../utils/date_utils.dart' as digits;
@@ -56,12 +57,39 @@ class CustomIndividualDetailsSMCPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const _height = 'height';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
   bool isEditIndividual = false;
   Set<String>? beneficiaryId;
+
+  final ValueNotifier<dynamic> heightVisible = ValueNotifier(null);
+
+  void updateStatus(FormGroup form, dynamic age, BuildContext context) {
+    // Updating the Value updateStatuseNotifier
+    // Show height field if age is greater than 72 months
+
+    if (age == null) {
+      if (heightVisible.value != null) {
+        heightVisible.value = null; // Hide height field
+        form.control(_height).value = "";
+      }
+    } else {
+      final ageInMonths = utils.getAgeMonths(age);
+      final shouldShowHeight = ageInMonths > 72; // Greater than 72 months
+      final newValue = shouldShowHeight ? utils.Constants.height : null;
+
+      if (!shouldShowHeight) {
+        form.control(_height).value = "";
+      }
+
+      if (heightVisible.value != newValue) {
+        heightVisible.value = newValue; // Update only if changed
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -75,6 +103,12 @@ class CustomIndividualDetailsSMCPageState
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
+
+    final individual = bloc.state.mapOrNull<IndividualModel>(
+      editIndividual: (value) {
+        return value.individualModel;
+      },
+    );
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -129,6 +163,22 @@ class CustomIndividualDetailsSMCPageState
             );
           },
           builder: (context, state) {
+            // Initialize height visibility based on initial DOB value (for edit mode)
+            final initialDob = form.control(_dobKey).value;
+            if (initialDob != null && heightVisible.value == null) {
+              final age = DigitDateUtils.calculateAge(initialDob);
+              updateStatus(form, age, context);
+            }
+
+            form.control(_dobKey).valueChanges.listen((value) {
+              if (value == null) {
+                updateStatus(form, null, context);
+              } else {
+                DigitDOBAge age = DigitDateUtils.calculateAge(value);
+
+                updateStatus(form, age, context);
+              }
+            });
             return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
@@ -227,6 +277,36 @@ class CustomIndividualDetailsSMCPageState
                                 );
 
                                 return;
+                              }
+                              final String checkCategory = utils.getCategory(
+                                utils.getAgeMonths(
+                                  DigitDateUtils.calculateAge(
+                                    form.control(_dobKey).value,
+                                  ),
+                                ),
+                              );
+
+                              switch (checkCategory) {
+                                case utils.Constants.height:
+                                  final value = form.control(_height).value;
+                                  if (value == null || value == "") {
+                                    await DigitToast.show(
+                                      context,
+                                      options: DigitToastOptions(
+                                        localizations.translate(
+                                          i18_local.individualDetails
+                                              .heightErrorValidationText,
+                                        ),
+                                        true,
+                                        theme,
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+                                  break;
+
+                                default:
                               }
 
                               final submit = await DigitDialog.show<bool>(
@@ -587,10 +667,12 @@ class CustomIndividualDetailsSMCPageState
                               // Handle changes to the control's value here
                               final value = formControl.value;
                               if (value == null) {
+                                updateStatus(form, null, context);
                                 formControl.setErrors({'': true});
                               } else {
                                 DigitDOBAge age =
                                     DigitDateUtils.calculateAge(value);
+                                updateStatus(form, age, context);
                                 if ((age.years == 0 && age.months == 0) ||
                                     age.months > 11 ||
                                     (age.years > 150 ||
@@ -683,6 +765,45 @@ class CustomIndividualDetailsSMCPageState
                                 ],
                               ),
                             ),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: false,
+                          child: ValueListenableBuilder<dynamic>(
+                            valueListenable: heightVisible,
+                            builder: (context, isVisible, child) {
+                              // Show height field only if isVisible equals Constants.height
+                              // which is set when age > 72 months
+                              if (isVisible != utils.Constants.height) {
+                                return const SizedBox(); // Hide if age <= 72 months
+                              }
+
+                              return DigitTextFormField(
+                                key: const ValueKey('height_field'),
+                                maxLength: 3,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                formControlName: _height,
+                                label: localizations.translate(
+                                  i18_local
+                                      .individualDetails.heightHeadLabelText,
+                                ),
+                                isRequired: true,
+                                validationMessages: {
+                                  'minAllowed': (object) =>
+                                      localizations.translate(
+                                        i18_local.individualDetails
+                                            .minHeightLengthError,
+                                      ),
+                                  'maxAllowed': (object) =>
+                                      localizations.translate(
+                                        i18_local.individualDetails
+                                            .maxHeightLengthError,
+                                      ),
+                                },
+                              );
+                            },
                           ),
                         ),
                         // Offstage(
@@ -852,6 +973,58 @@ class CustomIndividualDetailsSMCPageState
             ],
     );
 
+    individual = individual.copyWith(
+      additionalFields: individual.additionalFields == null
+          ? IndividualAdditionalFields(
+              version: 1,
+              fields: [
+                AdditionalField(
+                  "projectId",
+                  context.projectId,
+                ),
+                if (utils.getCategory(
+                      utils.getAgeMonths(
+                        DigitDateUtils.calculateAge(
+                          DateFormat('dd/MM/yyyy').parse(
+                            dobString!,
+                          ),
+                        ),
+                      ),
+                    ) ==
+                    utils.Constants.height)
+                  AdditionalField(
+                    utils.Constants.height,
+                    (form.control(_height).value).toString().length == 1
+                        ? '0${(form.control(_height).value)}'
+                        : (form.control(_height).value),
+                  ),
+              ],
+            )
+          : individual.additionalFields!.copyWith(
+              fields: [
+                // Filter out any existing `Constants.height` field
+                ...individual.additionalFields!.fields.where(
+                  (field) => field.key != utils.Constants.height,
+                ),
+                // Add new `Constants.height` field if the condition matches
+                if (utils.getCategory(
+                      utils.getAgeMonths(
+                        DigitDateUtils.calculateAge(
+                          DateFormat('dd/MM/yyyy').parse(dobString!),
+                        ),
+                      ),
+                    ) ==
+                    utils.Constants.height)
+                  AdditionalField(
+                    utils.Constants.height,
+                    (form.control(_height).value).toString().length == 1
+                        ? '0${(form.control(_height).value)}'
+                        : (form.control(_height).value),
+                  ),
+              ],
+            ),
+    );
+
     return individual;
   }
 
@@ -897,6 +1070,24 @@ class CustomIndividualDetailsSMCPageState
         ],
         value: individual?.name?.familyName ?? '',
       ),
+      _height: FormControl<String>(
+        value: (individual != null &&
+                utils.getCategory(
+                      digits.DigitDateUtils.getAgeMonths(
+                          digits.DigitDateUtils.calculateAge(
+                        DateFormat('dd/MM/yyyy').parse(
+                          individual.dateOfBirth!,
+                        ),
+                      )),
+                    ) ==
+                    utils.Constants.height)
+            ? individual.additionalFields?.fields
+                    .firstWhereOrNull(
+                        (element) => element.key == utils.Constants.height)
+                    ?.value ??
+                ""
+            : "",
+      ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(
@@ -916,6 +1107,9 @@ class CustomIndividualDetailsSMCPageState
   bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
+    if (context.isSmcAndOnchoFlow || context.isSmcAndBednetFlow) {
+      return true;
+    }
 
     const validMinAge = local_constants.Constants.validMinAge;
     const validMaxAge = local_constants.Constants.validMaxAge;

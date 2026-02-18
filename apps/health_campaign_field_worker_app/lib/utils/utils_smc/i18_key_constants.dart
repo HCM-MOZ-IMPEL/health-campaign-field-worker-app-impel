@@ -1320,6 +1320,13 @@ class IndividualDetails {
 
   String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';
 
+  String get heightHeadLabelText => 'CHILD_LABEL_HEIGHT_TEXT';
+
+  String get heightErrorValidationText => 'HEIGHT_ERROR_VALIDATION_TEXT';
+
+  String get minHeightLengthError => "MIN_HEIGHT_LENGTH_ERROR";
+  String get maxHeightLengthError => "MAX_HEIGHT_LENGTH_ERROR";
+
   String get dobLabelText => 'DOB_LABEL_TEXT';
 
   String get ageLabelText => 'AGE_LABEL_TEXT';

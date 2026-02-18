@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/data/repositories/local/task.dart';
@@ -31,6 +32,8 @@ class CustomBeneficiaryProgressBarSMC extends StatefulWidget {
 class _CustomBeneficiaryProgressBarSMCState
     extends State<CustomBeneficiaryProgressBarSMC> {
   int current = 0;
+  bool isExpanded = false;
+
   @override
   void didChangeDependencies() {
     final taskRepository =
@@ -108,14 +111,80 @@ class _CustomBeneficiaryProgressBarSMCState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     const target = 65;
 
     return DigitCard(
-      child: ProgressIndicatorContainer(
-        label: '${max(target - current, 0).round()} ${widget.label}',
-        prefixLabel: '$current ${widget.prefixLabel}',
-        suffixLabel: target.toStringAsFixed(0),
-        value: target == 0 ? 0 : min(current / target, 1),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // FIRST CARD (Always visible)
+          ProgressIndicatorContainer(
+            label: '${max(target - current, 0)} ${widget.label}',
+            prefixLabel: '$current ${widget.prefixLabel}',
+            suffixLabel: target.toString(),
+            value: target == 0 ? 0 : min(current / target, 1),
+          ),
+
+          // SECOND CARD (Expandable)
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOutCubic,
+            child: ClipRect(
+              child: Align(
+                alignment: Alignment.topCenter,
+                heightFactor: isExpanded ? 1.0 : 0.0,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    ProgressIndicatorContainer(
+                      label: '${max(target - current, 0)} ${widget.label}',
+                      prefixLabel: '$current ${widget.prefixLabel}',
+                      suffixLabel: target.toString(),
+                      value: target == 0 ? 0 : min(current / target, 1),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // EXPAND / COLLAPSE BUTTON (Bottom Center)
+          InkWell(
+            onTap: () {
+              setState(() {
+                isExpanded = !isExpanded;
+              });
+            },
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    isExpanded ? 'Show less' : 'Show more',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: theme.colorTheme.primary.primary1,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    size: 20,
+                    color: theme.colorTheme.primary.primary1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
