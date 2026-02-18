@@ -476,12 +476,11 @@ Future<bool> getIsConnected() async {
   }
 }
 
-String getCategory(int number) {
+String? getCategory(int number) {
   if (number >= 72) {
     return Constants.height;
-  } else {
-    return "Invalid number";
   }
+  return null;
 }
 
 int getAgeMonths(DigitDOBAge age) {

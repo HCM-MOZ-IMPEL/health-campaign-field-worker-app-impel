@@ -91,6 +91,7 @@ class _CustomBeneficiaryProgressBarSMCState
             plannedStartDate: gte.millisecondsSinceEpoch,
             projectId: projectId,
           );
+
           List<TaskModel> results =
               await taskRepository.progressBarSearch(taskSearchQuery);
           final groupedEntries = results.groupListsBy(
@@ -137,11 +138,18 @@ class _CustomBeneficiaryProgressBarSMCState
                 child: Column(
                   children: [
                     const SizedBox(height: 12),
-                    ProgressIndicatorContainer(
-                      label: '${max(target - current, 0)} ${widget.label}',
-                      prefixLabel: '$current ${widget.prefixLabel}',
-                      suffixLabel: target.toString(),
-                      value: target == 0 ? 0 : min(current / target, 1),
+                    // TODO: Replace placeholder with per-category breakdown
+                    // This should display a detailed list of morbidity/category data
+                    // with per-item counts and individual progress
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Breakdown details coming soon',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: theme.colorTheme.primary.primary2,
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
                     ),
                   ],
                 ),
@@ -152,38 +160,38 @@ class _CustomBeneficiaryProgressBarSMCState
           const SizedBox(height: 8),
 
           // EXPAND / COLLAPSE BUTTON (Bottom Center)
-          InkWell(
-            onTap: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-            borderRadius: BorderRadius.circular(20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    isExpanded ? 'Show less' : 'Show more',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: theme.colorTheme.primary.primary1,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    isExpanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    size: 20,
-                    color: theme.colorTheme.primary.primary1,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     setState(() {
+          //       isExpanded = !isExpanded;
+          //     });
+          //   },
+          //   borderRadius: BorderRadius.circular(20),
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          //     child: Row(
+          //       mainAxisSize: MainAxisSize.min,
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Text(
+          //           isExpanded ? 'Show less' : 'Show more',
+          //           style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          //                 color: theme.colorTheme.primary.primary1,
+          //                 fontWeight: FontWeight.w600,
+          //               ),
+          //         ),
+          //         const SizedBox(width: 4),
+          //         Icon(
+          //           isExpanded
+          //               ? Icons.keyboard_arrow_up
+          //               : Icons.keyboard_arrow_down,
+          //           size: 20,
+          //           color: theme.colorTheme.primary.primary1,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
