@@ -18,6 +18,7 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -25,9 +26,11 @@ import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomDeliverySummarySMCPage extends LocalizedStatefulWidget {
+  final InterventionTypes interventionType;
   const CustomDeliverySummarySMCPage({
     super.key,
     super.appLocalizations,
+    required this.interventionType,
   });
 
   @override
@@ -155,7 +158,10 @@ class DeliverySummaryPageState
                                         );
 
                                         context.router.push(
-                                            DoseAdministeredVerificationRoute());
+                                            DoseAdministeredVerificationRoute(
+                                          interventionType:
+                                              widget.interventionType,
+                                        ));
                                       } else {
                                         final reloadState = context
                                             .read<HouseholdOverviewBloc>();

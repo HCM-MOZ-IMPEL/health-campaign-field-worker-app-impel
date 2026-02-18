@@ -398,6 +398,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               projectBeneficiaryClientReferenceId:
                                                   projectBeneficiaryClientReferenceId,
                                               individual: individual,
+                                              interventionType:
+                                                  InterventionTypes.smc,
                                             ));
                                             // context.router.push(
                                             //     EligibilityChecklistViewRoute(
@@ -685,14 +687,15 @@ class CustomMemberCardSMC extends StatelessWidget {
                                                         .beneficiaryType ??
                                                     BeneficiaryType.individual,
                                           ));
-
+                                          // TODO : pass valid intervention type based on the card type
                                           if (smcAssessmentPendingStatus) {
                                             context.router.push(
                                                 VaccineInformationCaptureRoute(
-                                              projectBeneficiaryClientReferenceId:
-                                                  projectBeneficiaryClientReferenceId,
-                                              individual: individual,
-                                            ));
+                                                    projectBeneficiaryClientReferenceId:
+                                                        projectBeneficiaryClientReferenceId,
+                                                    individual: individual,
+                                                    interventionType:
+                                                        InterventionTypes.smc));
                                             // context.router.push(
                                             //     EligibilityChecklistViewRoute(
                                             //   projectBeneficiaryClientReferenceId:
@@ -753,6 +756,8 @@ class CustomMemberCardSMC extends StatelessWidget {
         ?.additionalDetails
         ?.projectType;
 
+    // assumed it is onchoAdditionalProjectType , because above already checked if it is oncho flow or not
+
     ProjectTypeModel? onchoAdditionalProjectType =
         RegistrationDeliverySingleton()
             .selectedProject
@@ -798,6 +803,14 @@ class CustomMemberCardSMC extends StatelessWidget {
               e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
         )
         ?.identifierId;
+
+    // handles only smc and oncho , no other type
+
+    InterventionTypes? interventionType = isSmcDeliveryCards
+        ? InterventionTypes.smc
+        : isOnchoDeliveryCards
+            ? InterventionTypes.oncho
+            : InterventionTypes.smc;
 
     return Container(
       decoration: BoxDecoration(
@@ -989,6 +1002,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               isAssessmentPending:
                                                   smcAssessmentPendingStatus,
                                               beneficiaryId: beneficiaryId,
+                                              interventionType:
+                                                  interventionType,
                                             )
                                         : beneficiaryId == null
                                             ? () =>
@@ -1052,6 +1067,8 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               isAssessmentPending:
                                                   onchoAssessmentPendingStatus,
                                               beneficiaryId: beneficiaryId,
+                                              interventionType:
+                                                  interventionType,
                                             )
                                         : beneficiaryId == null
                                             ? () =>
@@ -1131,6 +1148,7 @@ class CustomMemberCardSMC extends StatelessWidget {
     required BuildContext context,
     required bool isAssessmentPending,
     required String? beneficiaryId,
+    required InterventionTypes interventionType,
   }) {
     if (beneficiaryId == null) {
       showGenerateBeneficiaryIdDialog(context);
@@ -1151,6 +1169,7 @@ class CustomMemberCardSMC extends StatelessWidget {
         projectBeneficiaryClientReferenceId:
             projectBeneficiaryClientReferenceId,
         individual: individual,
+        interventionType: interventionType,
       ));
     } else {
       context.router.push(BeneficiaryDetailsRoute());

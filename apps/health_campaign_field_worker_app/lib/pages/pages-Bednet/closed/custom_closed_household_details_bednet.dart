@@ -139,12 +139,10 @@ class CustomClosedHouseholdDetailsPageState
                           );
                           return;
                         }
+
                         context.router.push(
-                          VaccineInformationCaptureRoute(),
-                        );
-                        // context.router.push(
-                        //     CustomClosedHouseholdSummaryBednetRoute(
-                        //         reason: reason));
+                            CustomClosedHouseholdSummaryBednetRoute(
+                                reason: reason));
                       },
                       child: Center(
                         child: Text(

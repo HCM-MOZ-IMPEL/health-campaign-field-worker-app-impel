@@ -423,13 +423,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomDeliverySummarySMCRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomDeliverySummarySMCRouteArgs>(
-          orElse: () => const CustomDeliverySummarySMCRouteArgs());
+      final args = routeData.argsAs<CustomDeliverySummarySMCRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomDeliverySummarySMCPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          interventionType: args.interventionType,
         ),
       );
     },
@@ -1228,8 +1228,7 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     MorbidityControlRoute.name: (routeData) {
-      final args = routeData.argsAs<MorbidityControlRouteArgs>(
-          orElse: () => const MorbidityControlRouteArgs());
+      final args = routeData.argsAs<MorbidityControlRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: MorbidityControlPage(
@@ -1238,6 +1237,7 @@ abstract class _$AppRouter extends RootStackRouter {
           individual: args.individual,
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
+          interventionType: args.interventionType,
         ),
       );
     },
@@ -2926,12 +2926,14 @@ class CustomDeliverySummarySMCRoute
   CustomDeliverySummarySMCRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    required InterventionTypes interventionType,
     List<PageRouteInfo>? children,
   }) : super(
           CustomDeliverySummarySMCRoute.name,
           args: CustomDeliverySummarySMCRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            interventionType: interventionType,
           ),
           initialChildren: children,
         );
@@ -2946,15 +2948,18 @@ class CustomDeliverySummarySMCRouteArgs {
   const CustomDeliverySummarySMCRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.interventionType,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final InterventionTypes interventionType;
+
   @override
   String toString() {
-    return 'CustomDeliverySummarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomDeliverySummarySMCRouteArgs{key: $key, appLocalizations: $appLocalizations, interventionType: $interventionType}';
   }
 }
 
@@ -5890,6 +5895,7 @@ class MorbidityControlRoute extends PageRouteInfo<MorbidityControlRouteArgs> {
     AppLocalizations? appLocalizations,
     IndividualModel? individual,
     String? projectBeneficiaryClientReferenceId,
+    required InterventionTypes interventionType,
     List<PageRouteInfo>? children,
   }) : super(
           MorbidityControlRoute.name,
@@ -5899,6 +5905,7 @@ class MorbidityControlRoute extends PageRouteInfo<MorbidityControlRouteArgs> {
             individual: individual,
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
+            interventionType: interventionType,
           ),
           initialChildren: children,
         );
@@ -5915,6 +5922,7 @@ class MorbidityControlRouteArgs {
     this.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
+    required this.interventionType,
   });
 
   final Key? key;
@@ -5925,9 +5933,11 @@ class MorbidityControlRouteArgs {
 
   final String? projectBeneficiaryClientReferenceId;
 
+  final InterventionTypes interventionType;
+
   @override
   String toString() {
-    return 'MorbidityControlRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId}';
+    return 'MorbidityControlRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType}';
   }
 }
 
