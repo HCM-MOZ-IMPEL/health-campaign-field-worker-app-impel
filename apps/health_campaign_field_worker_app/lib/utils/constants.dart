@@ -161,6 +161,7 @@ class Constants {
   static const String smcDeliver = 'smc_delivered';
   static const int validMinAge = 3;
   static const int validMaxAge = 59;
+  static const int onchoMinAge = 60;
 
   static const String bednetSKU = "Redes Mosquiteiras";
   static const String vehicleSKU = "Vehicle";

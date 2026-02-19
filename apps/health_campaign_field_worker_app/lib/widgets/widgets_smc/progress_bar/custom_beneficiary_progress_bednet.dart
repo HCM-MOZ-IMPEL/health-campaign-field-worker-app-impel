@@ -10,9 +10,12 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../data/repositories/custom_project_beneficairy.dart';
 import '../../../data/repositories/custom_task.dart';
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../utils/extensions/extensions.dart';
 import '../../../utils/utils_smc/utils_smc.dart';
 import '../../progress_indicator/progress_indicator.dart';
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 class CustomBeneficiaryProgressBarBednet extends StatefulWidget {
   final String label;
@@ -97,33 +100,21 @@ class _CustomBeneficiaryProgressBarBednetState
           );
           List<TaskModel> allTasks =
               await taskRepository.progressBarSearch(taskSearchQuery);
-          // List<TaskModel> results = allTasks
-          //     .where((task) => isHeadBednetDelivered([task]))
-          //     .toList();
           List<TaskModel> results = allTasks.where((task) {
-            if (task == null) return false;
-            final additionalFields = task.additionalFields?.fields;
+            final additionalFields = task?.additionalFields?.fields;
             if (additionalFields == null || additionalFields.isEmpty) {
               return false;
             }
 
-            try {
-              final headBednetField = additionalFields.firstWhereOrNull(
-                (field) =>
-                    field != null && field.key == Constants.headBednetDeliver,
-              );
-
-              if (headBednetField == null) return false;
-
-              final fieldValue = headBednetField.value;
-              if (fieldValue == null) return false;
-
-              return fieldValue == true ||
-                  fieldValue == Constants.trueString ||
-                  fieldValue.toString().toLowerCase() == Constants.trueString;
-            } catch (e) {
-              return false;
-            }
+            return additionalFields.any(
+              (field) =>
+                  field != null &&
+                  field.key ==
+                      additional_fields_local
+                          .AdditionalFieldsType.interventionType
+                          .toValue() &&
+                  field.value == InterventionTypes.bednet.toValue(),
+            );
           }).toList();
           final groupedEntries = results.groupListsBy(
             (element) => element.projectBeneficiaryClientReferenceId,
