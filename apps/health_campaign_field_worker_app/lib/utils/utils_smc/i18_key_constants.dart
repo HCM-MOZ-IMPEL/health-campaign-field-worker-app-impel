@@ -804,6 +804,9 @@ class ReferBeneficiary {
 
 class DeliverIntervention {
   const DeliverIntervention();
+  String get vaccineGroupLabel => 'VACCINE_GROUP_LABEL';
+  String get vaccinesToAdministerLabel => 'VACCINES_TO_ADMINISTER_LABEL';
+  String get vaccineCardPresentLabel => 'VACCINE_CARD_PRESENT_LABEL';
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
   String get recordRedoseLabel => 'DELIVER_INTERVENTION_RECORD_REDOSE_LABEL';
@@ -1120,8 +1123,11 @@ class SyncDialog {
   String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
 
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
+  String get closeButtonFailedLabel => 'SYNC_DIALOG_CLOSE_BUTTON_FAILED_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+  String get syncFailedDescriptionText =>
+      'SYNC_DIALOG_SYNC_FAILED_DESCRIPTION_TEXT';
   String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
   String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }

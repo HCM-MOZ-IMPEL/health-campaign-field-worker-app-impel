@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.7.42+42
+version: 1.7.51+51
 
 environment:
   sdk: ">=3.0.0 <=4.0.0"
@@ -91,10 +91,10 @@ dependencies:
   logger: ^2.5.0
   mobile_scanner: ^3.4.1
   transit_post: 1.0.0+1
-  flutter_nearby_connections:
-    git:
-      url: https://github.com/champeauxr/flutter_nearby_connections
-      ref: master
+  # flutter_nearby_connections:
+  #   git:
+  #     url: https://github.com/champeauxr/flutter_nearby_connections
+  #     ref: master
   percent_indicator: ^4.2.4
   lottie: ^3.1.0
 

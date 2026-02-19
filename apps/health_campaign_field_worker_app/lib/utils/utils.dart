@@ -239,6 +239,8 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      service.invoke("stopService");
       if (!isBackground && context != null) {
         if (context.mounted) {
           DigitToast.show(
@@ -546,7 +548,6 @@ void showDownloadDialog(
 
   switch (dialogType) {
     case DigitProgressDialogType.failed:
-    case DigitProgressDialogType.checkFailed:
       DigitSyncDialog.show(
         context,
         type: DigitSyncDialogType.failed,
@@ -579,6 +580,45 @@ void showDownloadDialog(
             context.router.maybePop();
           },
         ),
+      );
+    case DigitProgressDialogType.checkFailed:
+      DigitDialog.show(
+        context,
+        options: DigitDialogOptions(
+            titleText: model.title,
+            titleIcon: Icon(
+              Icons.warning,
+              color: DigitTheme.instance.colorScheme.error,
+            ),
+            contentText: model.suffixLabel ?? '',
+            primaryAction: DigitDialogActions(
+              label: model.secondaryButtonLabel ?? '',
+              action: (ctx) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.maybePop();
+              },
+            ),
+            secondaryAction: DigitDialogActions(
+              label: model.primaryButtonLabel ?? '',
+              action: (ctx) {
+                if (dialogType == DigitProgressDialogType.failed ||
+                    dialogType == DigitProgressDialogType.checkFailed) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncGetBatchSizeEvent(
+                          appConfiguration: [model.appConfiguartion!],
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          pendingSyncCount: model.pendingSyncCount ?? 0,
+                          boundaryName: model.boundaryName,
+                        ),
+                      );
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.maybePop();
+                }
+              },
+            )),
       );
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:

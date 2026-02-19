@@ -1001,15 +1001,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_nearby_connections:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
-      url: "https://github.com/champeauxr/flutter_nearby_connections"
-    source: git
-    version: "1.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
