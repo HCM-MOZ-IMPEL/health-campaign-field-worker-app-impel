@@ -164,7 +164,7 @@ class _DoseAdministeredVerificationBednetPageState
                                                   overViewBloc
                                                       .householdMemberWrapper
                                                       .household,
-                                                )
+                                                )['criteria']
                                                     ?.productVariants
                                                     ?.map((variant) =>
                                                         TaskResourceModel(
