@@ -35,6 +35,7 @@ import '../../../utils/utils_smc/utils_smc.dart'
         fetchProductVariantForProjectType,
         fetchProductVariantLocal,
         getIndividualAdditionalFields;
+import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_oncho.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -816,7 +817,7 @@ class CustomDeliverInterventionSMCPageState
 
                 List<DeliveryProductVariant>? productVariants =
                     onchoAdditionalProjectType?.cycles?.isNotEmpty == true
-                        ? (fetchProductVariant(
+                        ? (fetchProductVariantLocal(
                                 onchoAdditionalProjectType
                                         ?.cycles![
                                             deliveryInterventionState.cycle - 1]
@@ -829,6 +830,7 @@ class CustomDeliverInterventionSMCPageState
                             ?.map((r) => DeliveryProductVariant(
                                 productVariantId: r.productVariantId))
                             .toList();
+                // state.householdMemberWrapper.household.memberCount
 
                 if ((productVariants ?? []).isEmpty && context.mounted) {
                   SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -990,7 +992,7 @@ class CustomDeliverInterventionSMCPageState
                                                 theme.textTheme.headlineLarge,
                                           ),
                                           ..._controllers.map((e) =>
-                                              CustomResourceBeneficiaryCardSMC(
+                                              CustomResourceBeneficiaryCardOncho(
                                                 form: form,
                                                 cardIndex:
                                                     _controllers.indexOf(e),
@@ -1020,48 +1022,6 @@ class CustomDeliverInterventionSMCPageState
                                                   });
                                                 },
                                               )),
-                                        ],
-                                      ),
-                                    ),
-                                    DigitCard(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          BlocBuilder<AppInitializationBloc,
-                                              AppInitializationState>(
-                                            builder: (context, state) {
-                                              if (state is! AppInitialized) {
-                                                return const Offstage();
-                                              }
-
-                                              final deliveryCommentOptionsOncho =
-                                                  state.appConfiguration
-                                                          .deliveryCommentOptionsSmc ??
-                                                      <DeliveryCommentOptions>[];
-
-                                              return DigitReactiveDropdown<
-                                                  String>(
-                                                label: localizations.translate(
-                                                  i18_local.deliverIntervention
-                                                      .deliveryCommentLabelSMC,
-                                                ),
-                                                menuItems:
-                                                    deliveryCommentOptionsOncho
-                                                        .map((e) {
-                                                  return e.code;
-                                                }).toList(),
-                                                formControlName:
-                                                    _deliveryCommentKey,
-                                                isRequired: doseAdministered,
-                                                valueMapper: (value) =>
-                                                    localizations.translate(
-                                                  value,
-                                                ),
-                                              );
-                                            },
-                                          ),
                                         ],
                                       ),
                                     ),

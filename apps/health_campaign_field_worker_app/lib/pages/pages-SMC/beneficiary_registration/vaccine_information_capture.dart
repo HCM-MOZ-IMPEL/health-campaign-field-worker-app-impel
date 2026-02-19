@@ -384,13 +384,23 @@ class _VaccineInformationCapturePageState
       // note this will handle both cases of smc and oncho as the flow is same after this point,
       //only difference is in the question asked in the beginning and the vaccines shown for selection in case of smc
       if (!vaccineCardPresent) {
-        context.router.push(EligibilityChecklistViewRoute(
-          projectBeneficiaryClientReferenceId:
-              widget.projectBeneficiaryClientReferenceId,
-          individual: widget.individual,
-          interventionType: widget.interventionType,
-        ));
+        // Navigate to deliver intervention page when vaccine card is not present (New Flow)
+        context.router.push(
+          CustomDeliverInterventionSMCRoute(
+            interventionType: widget.interventionType,
+            isEditing: false,
+          ),
+        );
         return;
+
+        // TODO: Old flow - commented out for new deliver intervention flow
+        // context.router.push(EligibilityChecklistViewRoute(
+        //   projectBeneficiaryClientReferenceId:
+        //       widget.projectBeneficiaryClientReferenceId,
+        //   individual: widget.individual,
+        //   interventionType: widget.interventionType,
+        // ));
+        // return;
       } else {
         // If vaccine card is present, show confirmation dialog and create task
 
