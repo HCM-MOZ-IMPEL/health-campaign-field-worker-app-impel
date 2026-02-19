@@ -71,7 +71,17 @@ class CustomIndividualDetailsSMCPageState
 
   void updateStatus(FormGroup form, dynamic age, BuildContext context) {
     // Updating the Value updateStatuseNotifier
-    // Show height field if age is greater than 72 months
+    // Show height field only for smcAndOncho flow and if age is greater than or equal to onchoMinAge
+
+    // Check if it's smcAndOncho flow
+    if (!context.isSmcAndOnchoFlow) {
+      // Hide height field if not smcAndOncho flow
+      if (heightVisible.value != null) {
+        heightVisible.value = null;
+        form.control(_height).value = "";
+      }
+      return;
+    }
 
     if (age == null) {
       if (heightVisible.value != null) {
@@ -80,7 +90,9 @@ class CustomIndividualDetailsSMCPageState
       }
     } else {
       final ageInMonths = utils.getAgeMonths(age);
-      final shouldShowHeight = ageInMonths > 72; // Greater than 72 months
+      final shouldShowHeight = ageInMonths >=
+          local_constants
+              .Constants.onchoMinAge; // Greater than or equal to onchoMinAge
       final newValue = shouldShowHeight ? utils.Constants.height : null;
 
       if (!shouldShowHeight) {
@@ -322,41 +334,38 @@ class CustomIndividualDetailsSMCPageState
 
                                 return;
                               }
-                              final String? checkCategory = utils.getCategory(
-                                utils.getAgeMonths(
-                                  DigitDateUtils.calculateAge(
-                                    form.control(_dobKey).value,
+                              // Only validate height for smcAndOncho flow
+                              if (context.isSmcAndOnchoFlow) {
+                                final String checkCategory = utils.getCategory(
+                                  utils.getAgeMonths(
+                                    DigitDateUtils.calculateAge(
+                                      form.control(_dobKey).value,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
 
-                              // Only require height if age category is valid and matches Constants.height
-                              if (checkCategory == null) {
-                                // Age category is invalid, skip height validation
-                                return;
-                              }
-
-                              switch (checkCategory) {
-                                case utils.Constants.height:
-                                  final value = form.control(_height).value;
-                                  if (value == null || value == "") {
-                                    await DigitToast.show(
-                                      context,
-                                      options: DigitToastOptions(
-                                        localizations.translate(
-                                          i18_local.individualDetails
-                                              .heightErrorValidationText,
+                                switch (checkCategory) {
+                                  case utils.Constants.height:
+                                    final value = form.control(_height).value;
+                                    if (value == null || value == "") {
+                                      await DigitToast.show(
+                                        context,
+                                        options: DigitToastOptions(
+                                          localizations.translate(
+                                            i18_local.individualDetails
+                                                .heightErrorValidationText,
+                                          ),
+                                          true,
+                                          theme,
                                         ),
-                                        true,
-                                        theme,
-                                      ),
-                                    );
+                                      );
 
-                                    return;
-                                  }
-                                  break;
+                                      return;
+                                    }
+                                    break;
 
-                                default:
+                                  default:
+                                }
                               }
 
                               final submit = await DigitDialog.show<bool>(
@@ -820,10 +829,15 @@ class CustomIndividualDetailsSMCPageState
                         ValueListenableBuilder<dynamic>(
                           valueListenable: heightVisible,
                           builder: (context, isVisible, child) {
+                            // Show height field only for smcAndOncho flow
+                            if (!context.isSmcAndOnchoFlow) {
+                              return const SizedBox(); // Hide if not smcAndOncho flow
+                            }
+
                             // Show height field only if isVisible equals Constants.height
-                            // which is set when age > 72 months
+                            // which is set when age >= onchoMinAge
                             if (isVisible != utils.Constants.height) {
-                              return const SizedBox(); // Hide if age <= 72 months
+                              return const SizedBox(); // Hide if age < onchoMinAge
                             }
 
                             return DigitTextFormField(
