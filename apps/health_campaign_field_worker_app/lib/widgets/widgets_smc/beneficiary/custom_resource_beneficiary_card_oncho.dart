@@ -95,6 +95,13 @@ class CustomResourceBeneficiaryCardOncoState
             minimum: 0,
             maximum: 3,
           ),
+          DigitTextFormField(
+            formControlName: 'quantityWasted.${widget.cardIndex}',
+            label: localizations.translate(
+              i18_local.deliverIntervention.quantityWastedLabel,
+            ),
+            isRequired: false,
+          ),
           DigitCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +124,7 @@ class CustomResourceBeneficiaryCardOncoState
                       menuItems: deliveryCommentOptionsOncho.map((e) {
                         return e.toString();
                       }).toList(),
-                      formControlName: _deliveryCommentKey,
+                      formControlName: 'deliveryComment.${widget.cardIndex}',
                       isRequired: doseAdministered,
                       valueMapper: (value) => localizations.translate(
                         value,

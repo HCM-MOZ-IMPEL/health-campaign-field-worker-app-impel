@@ -611,6 +611,15 @@ class CustomDeliverInterventionSMCPageState
                                                       .removeAt(
                                                     index,
                                                   );
+                                                  (form.control(
+                                                              _quantityWastedKey)
+                                                          as FormArray)
+                                                      .removeAt(index);
+                                                  (form.control(
+                                                              _deliveryCommentKey)
+                                                          as FormArray)
+                                                      .removeAt(index);
+
                                                   _controllers.removeAt(
                                                     index,
                                                   );
@@ -961,6 +970,10 @@ class CustomDeliverInterventionSMCPageState
                                 Column(
                                   children: [
                                     DigitCard(
+                                      padding: const EdgeInsets.all(
+                                          16), // more compact
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -973,6 +986,47 @@ class CustomDeliverInterventionSMCPageState
                                             ),
                                             style:
                                                 theme.textTheme.displayMedium,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          // ToDo: Remove the hard coded value and add localization
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Número de membros',
+                                                style: theme
+                                                    .textTheme.headlineSmall,
+                                              ),
+                                              Text(
+                                                '${householdMemberWrapper.household?.memberCount}',
+                                                style: theme
+                                                    .textTheme.titleSmall
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Número de recursos para entrega',
+                                                style: theme
+                                                    .textTheme.headlineSmall,
+                                              ),
+                                              Text(
+                                                '${_controllers.length}',
+                                                style: theme
+                                                    .textTheme.titleSmall
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -1762,24 +1816,24 @@ class CustomDeliverInterventionSMCPageState
                 .toString(),
         validators: [],
       ),
-      _deliveryCommentKey: FormControl<String>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.last.additionalFields?.fields
-                            .where((a) =>
-                                a.key ==
-                                AdditionalFieldsType.deliveryComment.toValue())
-                            .toList() ??
-                        [])
-                    .isNotEmpty
-                ? bloc.tasks?.last.additionalFields?.fields
-                    .where((a) =>
-                        a.key == AdditionalFieldsType.deliveryComment.toValue())
-                    .first
-                    .value
-                : ''
-            : null,
-        validators: [],
+      _deliveryCommentKey: FormArray<String>(
+        [
+          ..._controllers.mapIndexed((i, e) {
+            String? existingComment;
+
+            if (RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual) {
+              existingComment = bloc.tasks?.last.additionalFields?.fields
+                  .firstWhereOrNull((a) =>
+                      a.key == AdditionalFieldsType.deliveryComment.toValue())
+                  ?.value;
+            }
+
+            return FormControl<String>(
+              value: existingComment ?? '',
+            );
+          }),
+        ],
       ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
@@ -1814,7 +1868,13 @@ class CustomDeliverInterventionSMCPageState
           ),
         ),
       ]),
-      _quantityWastedKey: FormControl<String>(validators: []),
+      _quantityWastedKey: FormArray<String>(
+        [
+          ..._controllers.map(
+            (e) => FormControl<String>(value: ''),
+          ),
+        ],
+      ),
     });
   }
 
