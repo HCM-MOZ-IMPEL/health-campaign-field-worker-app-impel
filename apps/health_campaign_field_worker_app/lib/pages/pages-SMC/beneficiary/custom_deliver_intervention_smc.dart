@@ -31,7 +31,7 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../utils/utils_smc/utils_smc.dart'
-    show getIndividualAdditionalFields;
+    show fetchProductVariantLocal, getIndividualAdditionalFields;
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -1751,7 +1751,7 @@ class CustomDeliverInterventionSMCPageState
 
       final int r = onchoAdditionalProjectType?.cycles == null
           ? 1
-          : fetchProductVariant(
+          : fetchProductVariantLocal(
                       onchoAdditionalProjectType
                           ?.cycles![bloc.cycle - 1].deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
@@ -1772,25 +1772,6 @@ class CustomDeliverInterventionSMCPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.last.additionalFields?.fields
-                            .where((a) =>
-                                a.key ==
-                                AdditionalFieldsType.deliveryComment.toValue())
-                            .toList() ??
-                        [])
-                    .isNotEmpty
-                ? bloc.tasks?.last.additionalFields?.fields
-                    .where((a) =>
-                        a.key == AdditionalFieldsType.deliveryComment.toValue())
-                    .first
-                    .value
-                : ''
-            : null,
-        validators: [],
-      ),
-      _deliveryCommentWastedKey: FormControl<String>(
         value: RegistrationDeliverySingleton().beneficiaryType !=
                 BeneficiaryType.individual
             ? (bloc.tasks?.last.additionalFields?.fields
