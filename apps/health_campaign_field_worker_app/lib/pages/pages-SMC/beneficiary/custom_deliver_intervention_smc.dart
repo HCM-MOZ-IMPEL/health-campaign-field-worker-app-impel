@@ -63,9 +63,10 @@ class CustomDeliverInterventionSMCPageState
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
   static const _defaultQuantity = 1;
-  static const _administeredQuantity = 2;
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
+
+  final InterventionTypes interventionType = InterventionTypes.smc;
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -164,7 +165,7 @@ class CustomDeliverInterventionSMCPageState
         context.router.popAndPush(
           CustomReferBeneficiarySMCRoute(
               projectBeneficiaryClientRefId:
-                  projectBeneficiaryClientReferenceId ?? '',
+                  projectBeneficiaryClientReferenceId,
               individual: selectedIndividual!,
               quantityWasted: wastedCount,
               isReadministrationUnSuccessful: true,
@@ -239,564 +240,1182 @@ class CustomDeliverInterventionSMCPageState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    List<StepsModel> generateSteps(int numberOfDoses) {
-      return List.generate(numberOfDoses, (index) {
-        return StepsModel(
-          title:
-              '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
-          number: (index + 1).toString(),
-        );
-      });
-    }
-
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
-          final householdMemberWrapper = state.householdMemberWrapper;
+          // Route to appropriate flow based on intervention type
+          return switch (widget.interventionType) {
+            InterventionTypes.smc => _buildSmcFlowPage(context, state),
+            InterventionTypes.oncho => _buildOnchoFlowPage(context, state),
+            InterventionTypes.bednet => _buildBednetFlowPage(context, state),
+          };
+        },
+      ),
+    );
+  }
 
-          final projectBeneficiary =
-              RegistrationDeliverySingleton().beneficiaryType !=
-                      BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries!.first]
-                  : householdMemberWrapper.projectBeneficiaries
-                      ?.where(
-                        (element) =>
-                            element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
-                      )
-                      .toList();
+  Widget _buildSmcFlowPage(BuildContext context, HouseholdOverviewState state) {
+    final theme = Theme.of(context);
+    final householdMemberWrapper = state.householdMemberWrapper;
 
-          final selectedIndividual = state.selectedIndividual;
+    final projectBeneficiary =
+        RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? [householdMemberWrapper.projectBeneficiaries!.first]
+            : householdMemberWrapper.projectBeneficiaries
+                ?.where(
+                  (element) =>
+                      element.beneficiaryClientReferenceId ==
+                      state.selectedIndividual?.clientReferenceId,
+                )
+                .toList();
 
-          return Scaffold(
-            body: state.loading
-                ? const Center(child: CircularProgressIndicator())
-                : BlocBuilder<DeliverInterventionBloc,
-                    DeliverInterventionState>(
-                    builder: (context, deliveryInterventionState) {
-                      List<DeliveryProductVariant>? productVariants =
-                          RegistrationDeliverySingleton()
-                                      .selectedProject
-                                      ?.additionalDetails
-                                      ?.projectType
-                                      ?.cycles
-                                      ?.isNotEmpty ==
-                                  true
-                              ? (fetchProductVariant(
-                                      RegistrationDeliverySingleton()
-                                              .selectedProject
-                                              ?.additionalDetails
-                                              ?.projectType
-                                              ?.cycles![
-                                                  deliveryInterventionState
-                                                          .cycle -
-                                                      1]
-                                              .deliveries?[
-                                          deliveryInterventionState.dose - 1],
-                                      state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
-                                  ?.productVariants)
-                              : RegistrationDeliverySingleton()
-                                  .selectedProject
-                                  ?.additionalDetails
-                                  ?.projectType
-                                  ?.resources
-                                  ?.map((r) => DeliveryProductVariant(
-                                      productVariantId: r.productVariantId))
-                                  .toList();
+    final selectedIndividual = state.selectedIndividual;
 
-                      final int numberOfDoses = (RegistrationDeliverySingleton()
-                                  .projectType
-                                  ?.cycles
-                                  ?.isNotEmpty ==
-                              true)
-                          ? (RegistrationDeliverySingleton()
-                                  .projectType
-                                  ?.cycles?[deliveryInterventionState.cycle - 1]
-                                  .deliveries
-                                  ?.length) ??
-                              0
-                          : 0;
+    return Scaffold(
+      body: state.loading
+          ? const Center(child: CircularProgressIndicator())
+          : BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+              builder: (context, deliveryInterventionState) {
+                List<DeliveryProductVariant>? productVariants =
+                    RegistrationDeliverySingleton()
+                                .selectedProject
+                                ?.additionalDetails
+                                ?.projectType
+                                ?.cycles
+                                ?.isNotEmpty ==
+                            true
+                        ? (fetchProductVariant(
+                                RegistrationDeliverySingleton()
+                                        .selectedProject
+                                        ?.additionalDetails
+                                        ?.projectType
+                                        ?.cycles![
+                                            deliveryInterventionState.cycle - 1]
+                                        .deliveries?[
+                                    deliveryInterventionState.dose - 1],
+                                state.selectedIndividual,
+                                state.householdMemberWrapper.household)
+                            ?.productVariants)
+                        : RegistrationDeliverySingleton()
+                            .selectedProject
+                            ?.additionalDetails
+                            ?.projectType
+                            ?.resources
+                            ?.map((r) => DeliveryProductVariant(
+                                productVariantId: r.productVariantId))
+                            .toList();
 
-                      final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty && context.mounted) {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          DigitToast.show(
+                final int numberOfDoses = (RegistrationDeliverySingleton()
+                            .projectType
+                            ?.cycles
+                            ?.isNotEmpty ==
+                        true)
+                    ? (RegistrationDeliverySingleton()
+                            .projectType
+                            ?.cycles?[deliveryInterventionState.cycle - 1]
+                            .deliveries
+                            ?.length) ??
+                        0
+                    : 0;
+
+                List<StepsModel> generateSteps(int numberOfDoses) {
+                  return List.generate(numberOfDoses, (index) {
+                    return StepsModel(
+                      title:
+                          '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
+                      number: (index + 1).toString(),
+                    );
+                  });
+                }
+
+                final steps = generateSteps(numberOfDoses);
+
+                if ((productVariants ?? []).isEmpty && context.mounted) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        localizations.translate(
+                          i18.deliverIntervention.checkForProductVariantsConfig,
+                        ),
+                        true,
+                        theme,
+                      ),
+                    );
+                  });
+                }
+
+                return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                  builder: (context, productState) {
+                    return productState.maybeWhen(
+                      orElse: () => const Offstage(),
+                      fetched: (productVariantsValue) {
+                        final variant = productState.whenOrNull(
+                          fetched: (productVariants) {
+                            return productVariants;
+                          },
+                        );
+
+                        return ReactiveFormBuilder(
+                          form: () => buildFormSMC(
                             context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18.deliverIntervention
-                                    .checkForProductVariantsConfig,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
-                        });
-                      }
+                            productVariants,
+                            variant,
+                          ),
+                          builder: (context, form, child) {
+                            return ScrollableContent(
+                              enableFixedButton: true,
+                              footer: BlocBuilder<DeliverInterventionBloc,
+                                  DeliverInterventionState>(
+                                builder: (context, state) {
+                                  return DigitCard(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, kPadding, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        kPadding, 0, kPadding, 0),
+                                    child: ValueListenableBuilder(
+                                      valueListenable: clickedStatus,
+                                      builder: (context, bool isClicked, _) {
+                                        return BlocBuilder<LocationBloc,
+                                                LocationState>(
+                                            builder: (context, locationState) {
+                                          return DigitElevatedButton(
+                                            onPressed: () async {
+                                              final deliveredProducts = ((form
+                                                          .control(
+                                                _resourceDeliveredKey,
+                                              ) as FormArray)
+                                                      .value
+                                                  as List<
+                                                      ProductVariantModel?>);
+                                              final hasEmptyResources =
+                                                  hasEmptyOrNullResources(
+                                                      deliveredProducts);
+                                              final hasDuplicates =
+                                                  hasDuplicateResources(
+                                                      deliveredProducts, form);
 
-                      return BlocBuilder<ProductVariantBloc,
-                          ProductVariantState>(
-                        builder: (context, productState) {
-                          return productState.maybeWhen(
-                            orElse: () => const Offstage(),
-                            fetched: (productVariantsValue) {
-                              final variant = productState.whenOrNull(
-                                fetched: (productVariants) {
-                                  return productVariants;
-                                },
-                              );
-
-                              return ReactiveFormBuilder(
-                                form: () => buildForm(
-                                  context,
-                                  productVariants,
-                                  variant,
-                                ),
-                                builder: (context, form, child) {
-                                  return ScrollableContent(
-                                    enableFixedButton: true,
-                                    footer: BlocBuilder<DeliverInterventionBloc,
-                                        DeliverInterventionState>(
-                                      builder: (context, state) {
-                                        return DigitCard(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              0, kPadding, 0, 0),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              kPadding, 0, kPadding, 0),
-                                          child: ValueListenableBuilder(
-                                            valueListenable: clickedStatus,
-                                            builder:
-                                                (context, bool isClicked, _) {
-                                              return BlocBuilder<LocationBloc,
-                                                      LocationState>(
-                                                  builder:
-                                                      (context, locationState) {
-                                                return DigitElevatedButton(
-                                                  onPressed: () async {
-                                                    final deliveredProducts =
-                                                        ((form.control(_resourceDeliveredKey)
-                                                                    as FormArray)
-                                                                .value
-                                                            as List<
-                                                                ProductVariantModel?>);
-                                                    final hasEmptyResources =
-                                                        hasEmptyOrNullResources(
-                                                            deliveredProducts);
-                                                    // final hasZeroQuantity =
-                                                    //     hasEmptyOrZeroQuantity(
-                                                    //         form);
-                                                    final hasDuplicates =
-                                                        hasDuplicateResources(
-                                                            deliveredProducts,
-                                                            form);
-
-                                                    if (hasEmptyResources) {
-                                                      await DigitToast.show(
-                                                        context,
-                                                        options:
-                                                            DigitToastOptions(
-                                                          localizations.translate(i18
-                                                              .deliverIntervention
-                                                              .resourceDeliveredValidation),
-                                                          true,
-                                                          theme,
-                                                        ),
-                                                      );
-                                                    } else if (hasDuplicates) {
-                                                      await DigitToast.show(
-                                                        context,
-                                                        options:
-                                                            DigitToastOptions(
-                                                          localizations.translate(i18
-                                                              .deliverIntervention
-                                                              .resourceDuplicateValidation),
-                                                          true,
-                                                          theme,
-                                                        ),
-                                                      );
-                                                    }
-                                                    //  else if (hasZeroQuantity) {
-                                                    //   await DigitToast
-                                                    //       .show(
-                                                    //     context,
-                                                    //     options:
-                                                    //         DigitToastOptions(
-                                                    //       localizations
-                                                    //           .translate(i18
-                                                    //               .deliverIntervention
-                                                    //               .resourceCannotBeZero),
-                                                    //       true,
-                                                    //       theme,
-                                                    //     ),
-                                                    //   );
-                                                    // }
-                                                    else if (doseAdministered &&
-                                                        form
-                                                                .control(
-                                                                  _deliveryCommentKey,
-                                                                )
-                                                                .value ==
-                                                            null) {
-                                                      await DigitToast.show(
-                                                        context,
-                                                        options:
-                                                            DigitToastOptions(
-                                                          localizations.translate(
-                                                              i18_local
-                                                                  .deliverIntervention
-                                                                  .deliveryCommentRequired),
-                                                          true,
-                                                          theme,
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      context
-                                                          .read<LocationBloc>()
-                                                          .add(
-                                                              const LoadLocationEvent());
-                                                      handleLocationState(
-                                                        locationState,
-                                                        context,
-                                                        deliveryInterventionState,
-                                                        form,
-                                                        householdMemberWrapper,
-                                                        projectBeneficiary!
-                                                            .first,
-                                                        selectedIndividual,
-                                                      );
-                                                    }
-                                                  },
-                                                  child: Center(
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        i18.common
-                                                            .coreCommonSubmit,
-                                                      ),
-                                                    ),
+                                              if (hasEmptyResources) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(i18
+                                                        .deliverIntervention
+                                                        .resourceDeliveredValidation),
+                                                    true,
+                                                    theme,
                                                   ),
                                                 );
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(
-                                        showHelp: false,
-                                        showcaseButton: null,
-                                      ),
-                                    ]),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliverInterventionLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.displayMedium,
-                                                ),
-                                                if (RegistrationDeliverySingleton()
-                                                        .beneficiaryType ==
-                                                    BeneficiaryType.individual)
-                                                  DigitTextFormField(
-                                                    readOnly: true,
-                                                    formControlName:
-                                                        _doseAdministrationKey,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .deliverIntervention
-                                                            .currentCycle),
-                                                  ),
-                                                if (numberOfDoses > 1)
-                                                  DigitStepper(
-                                                    activeStep:
-                                                        deliveryInterventionState
-                                                                .dose -
-                                                            1,
-                                                    stepRadius: 12.5,
-                                                    steps: steps,
-                                                    maxStepReached: 3,
-                                                    lineLength: (MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width -
-                                                            12.5 *
-                                                                2 *
-                                                                steps.length -
-                                                            50) /
-                                                        (steps.length - 1),
-                                                  ),
-                                                DigitDateFormPicker(
-                                                  isEnabled: false,
-                                                  formControlName:
-                                                      _dateOfAdministrationKey,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.householdDetails
-                                                        .dateOfRegistrationLabel,
-                                                  ),
-                                                  confirmText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonOk,
-                                                  ),
-                                                  cancelText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonCancel,
-                                                  ),
-                                                  isRequired: false,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: kPadding,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18_local
+                                              } else if (hasDuplicates) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(i18
                                                         .deliverIntervention
-                                                        .deliverInterventionResourceLabelSMC,
+                                                        .resourceDuplicateValidation),
+                                                    true,
+                                                    theme,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
-                                                ..._controllers.map((e) =>
-                                                    CustomResourceBeneficiaryCardSMC(
-                                                      form: form,
-                                                      cardIndex: _controllers
-                                                          .indexOf(e),
-                                                      totalItems:
-                                                          _controllers.length,
-                                                      isAdministered:
-                                                          doseAdministered,
-                                                      checkDoseAdministration:
-                                                          checkDoseAdministration,
-                                                      onDelete: (index) {
-                                                        (form.control(
-                                                          _resourceDeliveredKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        (form.control(
-                                                          _quantityDistributedKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        _controllers.removeAt(
-                                                          index,
-                                                        );
-                                                        setState(() {
-                                                          _controllers;
-                                                        });
-                                                      },
-                                                    )),
-                                                DigitTextFormField(
-                                                  formControlName:
-                                                      _quantityWastedKey,
-                                                  keyboardType:
-                                                      const TextInputType
-                                                          .numberWithOptions(
-                                                          decimal: true),
-                                                  inputFormatters: [
-                                                    LengthLimitingTextInputFormatter(
-                                                        1),
-                                                    FilteringTextInputFormatter
-                                                        .allow(
-                                                      RegExp(r'^[123]$'),
-                                                    ),
-                                                  ],
-                                                  label:
-                                                      localizations.translate(
-                                                    i18_local
-                                                        .deliverIntervention
-                                                        .quantityWastedLabel,
-                                                  ),
-                                                  validationMessages: {
-                                                    "required": (control) {
-                                                      return localizations
-                                                          .translate(
-                                                        i18.common
-                                                            .corecommonRequired,
-                                                      );
-                                                    },
-                                                  },
-                                                  onChanged: (formControl) {
-                                                    final val =
-                                                        (formControl.value ??
-                                                                '')
-                                                            .toString();
-                                                    if (val.isNotEmpty &&
-                                                        val != '0') {
-                                                      setState(() {
-                                                        doseAdministered = true;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        doseAdministered =
-                                                            false;
-                                                      });
-                                                      // Clear delivery comment fields when wasted quantity is empty, null or zero
-                                                      try {
-                                                        form
-                                                            .control(
-                                                                _deliveryCommentKey)
-                                                            .value = '';
-                                                      } catch (_) {}
-                                                      try {
-                                                        form
-                                                            .control(
-                                                                _deliveryCommentWastedKey)
-                                                            .value = '';
-                                                      } catch (_) {}
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          IgnorePointer(
-                                            ignoring: !doseAdministered,
-                                            child: DigitCard(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Opacity(
-                                                    opacity: doseAdministered
-                                                        ? 1
-                                                        : 0.5,
-                                                    child: BlocBuilder<
-                                                        AppInitializationBloc,
-                                                        AppInitializationState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is! AppInitialized) {
-                                                          return const Offstage();
-                                                        }
-
-                                                        final deliveryCommentWastedOptionsSmc = state
-                                                                .appConfiguration
-                                                                .deliveryCommentWastedOptionsSmc ??
-                                                            <DeliveryCommentOptions>[];
-
-                                                        return DigitReactiveDropdown<
-                                                            String>(
-                                                          label: localizations
-                                                              .translate(
-                                                            i18_local
-                                                                .deliverIntervention
-                                                                .deliveryCommentLabelWastedSMC,
-                                                          ),
-                                                          menuItems:
-                                                              deliveryCommentWastedOptionsSmc
-                                                                  .map((e) {
-                                                            return e.code;
-                                                          }).toList(),
-                                                          formControlName:
-                                                              _deliveryCommentWastedKey,
-                                                          isRequired:
-                                                              doseAdministered,
-                                                          valueMapper: (value) =>
-                                                              localizations
-                                                                  .translate(
-                                                            value,
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                BlocBuilder<
-                                                    AppInitializationBloc,
-                                                    AppInitializationState>(
-                                                  builder: (context, state) {
-                                                    if (state
-                                                        is! AppInitialized) {
-                                                      return const Offstage();
-                                                    }
-
-                                                    final deliveryCommentOptionsSmc = state
-                                                            .appConfiguration
-                                                            .deliveryCommentOptionsSmc ??
-                                                        <DeliveryCommentOptions>[];
-
-                                                    return DigitReactiveDropdown<
-                                                        String>(
-                                                      label: localizations
-                                                          .translate(
+                                                );
+                                              } else if (doseAdministered &&
+                                                  form
+                                                          .control(
+                                                            _deliveryCommentKey,
+                                                          )
+                                                          .value ==
+                                                      null) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
                                                         i18_local
                                                             .deliverIntervention
-                                                            .deliveryCommentLabelSMC,
-                                                      ),
-                                                      menuItems:
-                                                          deliveryCommentOptionsSmc
-                                                              .map((e) {
-                                                        return e.code;
-                                                      }).toList(),
-                                                      formControlName:
-                                                          _deliveryCommentKey,
-                                                      isRequired:
-                                                          doseAdministered,
-                                                      valueMapper: (value) =>
-                                                          localizations
-                                                              .translate(
-                                                        value,
-                                                      ),
-                                                    );
-                                                  },
+                                                            .deliveryCommentRequired),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              } else {
+                                                context.read<LocationBloc>().add(
+                                                    const LoadLocationEvent());
+                                                handleLocationState(
+                                                  locationState,
+                                                  context,
+                                                  deliveryInterventionState,
+                                                  form,
+                                                  householdMemberWrapper,
+                                                  projectBeneficiary!.first,
+                                                  selectedIndividual,
+                                                );
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                localizations.translate(
+                                                  i18.common.coreCommonSubmit,
                                                 ),
-                                              ],
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                              header: const Column(children: [
+                                BackNavigationHelpHeaderWidget(
+                                  showHelp: false,
+                                  showcaseButton: null,
+                                ),
+                              ]),
+                              children: [
+                                Column(
+                                  children: [
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .deliverInterventionLabel,
+                                            ),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
+                                          if (RegistrationDeliverySingleton()
+                                                  .beneficiaryType ==
+                                              BeneficiaryType.individual)
+                                            DigitTextFormField(
+                                              readOnly: true,
+                                              formControlName:
+                                                  _doseAdministrationKey,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              label: localizations.translate(i18
+                                                  .deliverIntervention
+                                                  .currentCycle),
+                                            ),
+                                          if (numberOfDoses > 1)
+                                            DigitStepper(
+                                              activeStep:
+                                                  deliveryInterventionState
+                                                          .dose -
+                                                      1,
+                                              stepRadius: 12.5,
+                                              steps: steps,
+                                              maxStepReached: 3,
+                                              lineLength:
+                                                  (MediaQuery.of(context)
+                                                              .size
+                                                              .width -
+                                                          12.5 *
+                                                              2 *
+                                                              steps.length -
+                                                          50) /
+                                                      (steps.length - 1),
+                                            ),
+                                          DigitDateFormPicker(
+                                            isEnabled: false,
+                                            formControlName:
+                                                _dateOfAdministrationKey,
+                                            label: localizations.translate(
+                                              i18.householdDetails
+                                                  .dateOfRegistrationLabel,
+                                            ),
+                                            confirmText:
+                                                localizations.translate(
+                                              i18.common.coreCommonOk,
+                                            ),
+                                            cancelText: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            isRequired: false,
+                                            padding: const EdgeInsets.only(
+                                              top: kPadding,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18_local.deliverIntervention
+                                                  .deliverInterventionResourceLabelSMC,
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineLarge,
+                                          ),
+                                          ..._controllers.map((e) =>
+                                              CustomResourceBeneficiaryCardSMC(
+                                                form: form,
+                                                cardIndex:
+                                                    _controllers.indexOf(e),
+                                                totalItems: _controllers.length,
+                                                isAdministered:
+                                                    doseAdministered,
+                                                checkDoseAdministration:
+                                                    checkDoseAdministration,
+                                                onDelete: (index) {
+                                                  (form.control(
+                                                    _resourceDeliveredKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  (form.control(
+                                                    _quantityDistributedKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  _controllers.removeAt(
+                                                    index,
+                                                  );
+                                                  setState(() {
+                                                    _controllers;
+                                                  });
+                                                },
+                                              )),
+                                          DigitTextFormField(
+                                            formControlName: _quantityWastedKey,
+                                            keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                                decimal: true),
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  1),
+                                              FilteringTextInputFormatter.allow(
+                                                RegExp(r'^[123]$'),
+                                              ),
+                                            ],
+                                            label: localizations.translate(
+                                              i18_local.deliverIntervention
+                                                  .quantityWastedLabel,
+                                            ),
+                                            validationMessages: {
+                                              "required": (control) {
+                                                return localizations.translate(
+                                                  i18.common.corecommonRequired,
+                                                );
+                                              },
+                                            },
+                                            onChanged: (formControl) {
+                                              final val =
+                                                  (formControl.value ?? '')
+                                                      .toString();
+                                              if (val.isNotEmpty &&
+                                                  val != '0') {
+                                                setState(() {
+                                                  doseAdministered = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  doseAdministered = false;
+                                                });
+                                                try {
+                                                  form
+                                                      .control(
+                                                          _deliveryCommentKey)
+                                                      .value = '';
+                                                } catch (_) {}
+                                                try {
+                                                  form
+                                                      .control(
+                                                          _deliveryCommentWastedKey)
+                                                      .value = '';
+                                                } catch (_) {}
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IgnorePointer(
+                                      ignoring: !doseAdministered,
+                                      child: DigitCard(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Opacity(
+                                              opacity:
+                                                  doseAdministered ? 1 : 0.5,
+                                              child: BlocBuilder<
+                                                  AppInitializationBloc,
+                                                  AppInitializationState>(
+                                                builder: (context, state) {
+                                                  if (state
+                                                      is! AppInitialized) {
+                                                    return const Offstage();
+                                                  }
+
+                                                  final deliveryCommentWastedOptionsSmc = state
+                                                          .appConfiguration
+                                                          .deliveryCommentWastedOptionsSmc ??
+                                                      <DeliveryCommentOptions>[];
+
+                                                  return DigitReactiveDropdown<
+                                                      String>(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18_local
+                                                          .deliverIntervention
+                                                          .deliveryCommentLabelWastedSMC,
+                                                    ),
+                                                    menuItems:
+                                                        deliveryCommentWastedOptionsSmc
+                                                            .map((e) {
+                                                      return e.code;
+                                                    }).toList(),
+                                                    formControlName:
+                                                        _deliveryCommentWastedKey,
+                                                    isRequired:
+                                                        doseAdministered,
+                                                    valueMapper: (value) =>
+                                                        localizations.translate(
+                                                      value,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          BlocBuilder<AppInitializationBloc,
+                                              AppInitializationState>(
+                                            builder: (context, state) {
+                                              if (state is! AppInitialized) {
+                                                return const Offstage();
+                                              }
+
+                                              final deliveryCommentOptionsSmc = state
+                                                      .appConfiguration
+                                                      .deliveryCommentOptionsSmc ??
+                                                  <DeliveryCommentOptions>[];
+
+                                              return DigitReactiveDropdown<
+                                                  String>(
+                                                label: localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .deliveryCommentLabelSMC,
+                                                ),
+                                                menuItems:
+                                                    deliveryCommentOptionsSmc
+                                                        .map((e) {
+                                                  return e.code;
+                                                }).toList(),
+                                                formControlName:
+                                                    _deliveryCommentKey,
+                                                isRequired: doseAdministered,
+                                                valueMapper: (value) =>
+                                                    localizations.translate(
+                                                  value,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildOnchoFlowPage(
+      BuildContext context, HouseholdOverviewState state) {
+    final theme = Theme.of(context);
+    final householdMemberWrapper = state.householdMemberWrapper;
+
+    final projectBeneficiary =
+        RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? [householdMemberWrapper.projectBeneficiaries!.first]
+            : householdMemberWrapper.projectBeneficiaries
+                ?.where(
+                  (element) =>
+                      element.beneficiaryClientReferenceId ==
+                      state.selectedIndividual?.clientReferenceId,
+                )
+                .toList();
+
+    final selectedIndividual = state.selectedIndividual;
+
+    return Scaffold(
+      body: state.loading
+          ? const Center(child: CircularProgressIndicator())
+          : BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+              builder: (context, deliveryInterventionState) {
+                // Get Oncho additional project type
+                ProjectTypeModel? onchoAdditionalProjectType =
+                    RegistrationDeliverySingleton()
+                        .selectedProject
+                        ?.additionalDetails
+                        ?.additionalProjectType;
+
+                List<DeliveryProductVariant>? productVariants =
+                    onchoAdditionalProjectType?.cycles?.isNotEmpty == true
+                        ? (fetchProductVariant(
+                                onchoAdditionalProjectType
+                                        ?.cycles![
+                                            deliveryInterventionState.cycle - 1]
+                                        .deliveries?[
+                                    deliveryInterventionState.dose - 1],
+                                state.selectedIndividual,
+                                state.householdMemberWrapper.household)
+                            ?.productVariants)
+                        : onchoAdditionalProjectType?.resources
+                            ?.map((r) => DeliveryProductVariant(
+                                productVariantId: r.productVariantId))
+                            .toList();
+
+                if ((productVariants ?? []).isEmpty && context.mounted) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        localizations.translate(
+                          i18.deliverIntervention.checkForProductVariantsConfig,
+                        ),
+                        true,
+                        theme,
+                      ),
+                    );
+                  });
+                }
+
+                return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                  builder: (context, productState) {
+                    return productState.maybeWhen(
+                      orElse: () => const Offstage(),
+                      fetched: (productVariantsValue) {
+                        final variant = productState.whenOrNull(
+                          fetched: (productVariants) {
+                            return productVariants;
+                          },
+                        );
+
+                        return ReactiveFormBuilder(
+                          form: () => buildFormOncho(
+                            context,
+                            productVariants,
+                            variant,
+                          ),
+                          builder: (context, form, child) {
+                            return ScrollableContent(
+                              enableFixedButton: true,
+                              footer: BlocBuilder<DeliverInterventionBloc,
+                                  DeliverInterventionState>(
+                                builder: (context, state) {
+                                  return DigitCard(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, kPadding, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        kPadding, 0, kPadding, 0),
+                                    child: ValueListenableBuilder(
+                                      valueListenable: clickedStatus,
+                                      builder: (context, bool isClicked, _) {
+                                        return BlocBuilder<LocationBloc,
+                                                LocationState>(
+                                            builder: (context, locationState) {
+                                          return DigitElevatedButton(
+                                            onPressed: () async {
+                                              final deliveredProducts = ((form
+                                                          .control(
+                                                _resourceDeliveredKey,
+                                              ) as FormArray)
+                                                      .value
+                                                  as List<
+                                                      ProductVariantModel?>);
+                                              final hasEmptyResources =
+                                                  hasEmptyOrNullResources(
+                                                      deliveredProducts);
+
+                                              if (hasEmptyResources) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(i18
+                                                        .deliverIntervention
+                                                        .resourceDeliveredValidation),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              } else if (doseAdministered &&
+                                                  form
+                                                          .control(
+                                                            _deliveryCommentKey,
+                                                          )
+                                                          .value ==
+                                                      null) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentRequired),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              } else {
+                                                context.read<LocationBloc>().add(
+                                                    const LoadLocationEvent());
+                                                handleLocationState(
+                                                  locationState,
+                                                  context,
+                                                  deliveryInterventionState,
+                                                  form,
+                                                  householdMemberWrapper,
+                                                  projectBeneficiary!.first,
+                                                  selectedIndividual,
+                                                );
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                localizations.translate(
+                                                  i18.common.coreCommonSubmit,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                    ),
                                   );
                                 },
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-          );
-        },
-      ),
+                              ),
+                              header: const Column(children: [
+                                BackNavigationHelpHeaderWidget(
+                                  showHelp: false,
+                                  showcaseButton: null,
+                                ),
+                              ]),
+                              children: [
+                                Column(
+                                  children: [
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .deliverInterventionLabel,
+                                            ),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18_local.deliverIntervention
+                                                  .deliverInterventionResourceLabelSMC,
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineLarge,
+                                          ),
+                                          ..._controllers.map((e) =>
+                                              CustomResourceBeneficiaryCardSMC(
+                                                form: form,
+                                                cardIndex:
+                                                    _controllers.indexOf(e),
+                                                totalItems: _controllers.length,
+                                                isAdministered:
+                                                    doseAdministered,
+                                                checkDoseAdministration:
+                                                    checkDoseAdministration,
+                                                onDelete: (index) {
+                                                  (form.control(
+                                                    _resourceDeliveredKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  (form.control(
+                                                    _quantityDistributedKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  _controllers.removeAt(
+                                                    index,
+                                                  );
+                                                  setState(() {
+                                                    _controllers;
+                                                  });
+                                                },
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          BlocBuilder<AppInitializationBloc,
+                                              AppInitializationState>(
+                                            builder: (context, state) {
+                                              if (state is! AppInitialized) {
+                                                return const Offstage();
+                                              }
+
+                                              final deliveryCommentOptionsOncho =
+                                                  state.appConfiguration
+                                                          .deliveryCommentOptionsSmc ??
+                                                      <DeliveryCommentOptions>[];
+
+                                              return DigitReactiveDropdown<
+                                                  String>(
+                                                label: localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .deliveryCommentLabelSMC,
+                                                ),
+                                                menuItems:
+                                                    deliveryCommentOptionsOncho
+                                                        .map((e) {
+                                                  return e.code;
+                                                }).toList(),
+                                                formControlName:
+                                                    _deliveryCommentKey,
+                                                isRequired: doseAdministered,
+                                                valueMapper: (value) =>
+                                                    localizations.translate(
+                                                  value,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildBednetFlowPage(
+      BuildContext context, HouseholdOverviewState state) {
+    final theme = Theme.of(context);
+    final householdMemberWrapper = state.householdMemberWrapper;
+
+    final projectBeneficiary =
+        RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? [householdMemberWrapper.projectBeneficiaries!.first]
+            : householdMemberWrapper.projectBeneficiaries
+                ?.where(
+                  (element) =>
+                      element.beneficiaryClientReferenceId ==
+                      state.selectedIndividual?.clientReferenceId,
+                )
+                .toList();
+
+    final selectedIndividual = state.selectedIndividual;
+
+    return Scaffold(
+      body: state.loading
+          ? const Center(child: CircularProgressIndicator())
+          : BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+              builder: (context, deliveryInterventionState) {
+                // Get Bednet project type
+                ProjectTypeModel? bednetProjectType =
+                    RegistrationDeliverySingleton()
+                        .selectedProject
+                        ?.additionalDetails
+                        ?.projectType;
+
+                List<DeliveryProductVariant>? productVariants =
+                    bednetProjectType?.cycles?.isNotEmpty == true
+                        ? (fetchProductVariant(
+                                bednetProjectType
+                                        ?.cycles![
+                                            deliveryInterventionState.cycle - 1]
+                                        .deliveries?[
+                                    deliveryInterventionState.dose - 1],
+                                state.selectedIndividual,
+                                state.householdMemberWrapper.household)
+                            ?.productVariants)
+                        : bednetProjectType?.resources
+                            ?.map((r) => DeliveryProductVariant(
+                                productVariantId: r.productVariantId))
+                            .toList();
+
+                final int numberOfDoses =
+                    (bednetProjectType?.cycles?.isNotEmpty == true)
+                        ? (bednetProjectType
+                                ?.cycles?[deliveryInterventionState.cycle - 1]
+                                .deliveries
+                                ?.length) ??
+                            0
+                        : 0;
+
+                List<StepsModel> generateSteps(int numberOfDoses) {
+                  return List.generate(numberOfDoses, (index) {
+                    return StepsModel(
+                      title:
+                          '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
+                      number: (index + 1).toString(),
+                    );
+                  });
+                }
+
+                final steps = generateSteps(numberOfDoses);
+
+                if ((productVariants ?? []).isEmpty && context.mounted) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        localizations.translate(
+                          i18.deliverIntervention.checkForProductVariantsConfig,
+                        ),
+                        true,
+                        theme,
+                      ),
+                    );
+                  });
+                }
+
+                return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                  builder: (context, productState) {
+                    return productState.maybeWhen(
+                      orElse: () => const Offstage(),
+                      fetched: (productVariantsValue) {
+                        final variant = productState.whenOrNull(
+                          fetched: (productVariants) {
+                            return productVariants;
+                          },
+                        );
+
+                        return ReactiveFormBuilder(
+                          form: () => buildFormBednet(
+                            context,
+                            productVariants,
+                            variant,
+                          ),
+                          builder: (context, form, child) {
+                            return ScrollableContent(
+                              enableFixedButton: true,
+                              footer: BlocBuilder<DeliverInterventionBloc,
+                                  DeliverInterventionState>(
+                                builder: (context, state) {
+                                  return DigitCard(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, kPadding, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        kPadding, 0, kPadding, 0),
+                                    child: ValueListenableBuilder(
+                                      valueListenable: clickedStatus,
+                                      builder: (context, bool isClicked, _) {
+                                        return BlocBuilder<LocationBloc,
+                                                LocationState>(
+                                            builder: (context, locationState) {
+                                          return DigitElevatedButton(
+                                            onPressed: () async {
+                                              final deliveredProducts = ((form
+                                                          .control(
+                                                _resourceDeliveredKey,
+                                              ) as FormArray)
+                                                      .value
+                                                  as List<
+                                                      ProductVariantModel?>);
+                                              final hasEmptyResources =
+                                                  hasEmptyOrNullResources(
+                                                      deliveredProducts);
+
+                                              if (hasEmptyResources) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(i18
+                                                        .deliverIntervention
+                                                        .resourceDeliveredValidation),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              } else if (doseAdministered &&
+                                                  form
+                                                          .control(
+                                                            _deliveryCommentKey,
+                                                          )
+                                                          .value ==
+                                                      null) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentRequired),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              } else {
+                                                context.read<LocationBloc>().add(
+                                                    const LoadLocationEvent());
+                                                handleLocationState(
+                                                  locationState,
+                                                  context,
+                                                  deliveryInterventionState,
+                                                  form,
+                                                  householdMemberWrapper,
+                                                  projectBeneficiary!.first,
+                                                  selectedIndividual,
+                                                );
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                localizations.translate(
+                                                  i18.common.coreCommonSubmit,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                              header: const Column(children: [
+                                BackNavigationHelpHeaderWidget(
+                                  showHelp: false,
+                                  showcaseButton: null,
+                                ),
+                              ]),
+                              children: [
+                                Column(
+                                  children: [
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .deliverInterventionLabel,
+                                            ),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
+                                          if (RegistrationDeliverySingleton()
+                                                  .beneficiaryType ==
+                                              BeneficiaryType.individual)
+                                            DigitTextFormField(
+                                              readOnly: true,
+                                              formControlName:
+                                                  _doseAdministrationKey,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              label: localizations.translate(i18
+                                                  .deliverIntervention
+                                                  .currentCycle),
+                                            ),
+                                          if (numberOfDoses > 1)
+                                            DigitStepper(
+                                              activeStep:
+                                                  deliveryInterventionState
+                                                          .dose -
+                                                      1,
+                                              stepRadius: 12.5,
+                                              steps: steps,
+                                              maxStepReached: 3,
+                                              lineLength:
+                                                  (MediaQuery.of(context)
+                                                              .size
+                                                              .width -
+                                                          12.5 *
+                                                              2 *
+                                                              steps.length -
+                                                          50) /
+                                                      (steps.length - 1),
+                                            ),
+                                          DigitDateFormPicker(
+                                            isEnabled: false,
+                                            formControlName:
+                                                _dateOfAdministrationKey,
+                                            label: localizations.translate(
+                                              i18.householdDetails
+                                                  .dateOfRegistrationLabel,
+                                            ),
+                                            confirmText:
+                                                localizations.translate(
+                                              i18.common.coreCommonOk,
+                                            ),
+                                            cancelText: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            isRequired: false,
+                                            padding: const EdgeInsets.only(
+                                              top: kPadding,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18_local.deliverIntervention
+                                                  .deliverInterventionResourceLabelSMC,
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineLarge,
+                                          ),
+                                          ..._controllers.map((e) =>
+                                              CustomResourceBeneficiaryCardSMC(
+                                                form: form,
+                                                cardIndex:
+                                                    _controllers.indexOf(e),
+                                                totalItems: _controllers.length,
+                                                isAdministered:
+                                                    doseAdministered,
+                                                checkDoseAdministration:
+                                                    checkDoseAdministration,
+                                                onDelete: (index) {
+                                                  (form.control(
+                                                    _resourceDeliveredKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  (form.control(
+                                                    _quantityDistributedKey,
+                                                  ) as FormArray)
+                                                      .removeAt(
+                                                    index,
+                                                  );
+                                                  _controllers.removeAt(
+                                                    index,
+                                                  );
+                                                  setState(() {
+                                                    _controllers;
+                                                  });
+                                                },
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    DigitCard(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          BlocBuilder<AppInitializationBloc,
+                                              AppInitializationState>(
+                                            builder: (context, state) {
+                                              if (state is! AppInitialized) {
+                                                return const Offstage();
+                                              }
+
+                                              final deliveryCommentOptionsBednet =
+                                                  state.appConfiguration
+                                                          .deliveryCommentOptionsSmc ??
+                                                      <DeliveryCommentOptions>[];
+
+                                              return DigitReactiveDropdown<
+                                                  String>(
+                                                label: localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .deliveryCommentLabelSMC,
+                                                ),
+                                                menuItems:
+                                                    deliveryCommentOptionsBednet
+                                                        .map((e) {
+                                                  return e.code;
+                                                }).toList(),
+                                                formControlName:
+                                                    _deliveryCommentKey,
+                                                isRequired: doseAdministered,
+                                                valueMapper: (value) =>
+                                                    localizations.translate(
+                                                  value,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 
@@ -993,7 +1612,241 @@ class CustomDeliverInterventionSMCPageState
   }
 
   // This method builds a form used for delivering interventions.
-  FormGroup buildForm(
+  FormGroup buildFormSMC(
+    BuildContext context,
+    List<DeliveryProductVariant>? productVariants,
+    List<ProductVariantModel>? variants,
+  ) {
+    final bloc = context.read<DeliverInterventionBloc>().state;
+    final overViewbloc = context.read<HouseholdOverviewBloc>().state;
+    _controllers.forEachIndexed((index, element) {
+      _controllers.removeAt(index);
+    });
+
+    // Add controllers for each product variant to the _controllers list.
+    if (_controllers.isEmpty) {
+      final int r = RegistrationDeliverySingleton()
+                  .selectedProject
+                  ?.additionalDetails
+                  ?.projectType
+                  ?.cycles ==
+              null
+          ? 1
+          : fetchProductVariant(
+                      RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.additionalDetails
+                          ?.projectType
+                          ?.cycles![bloc.cycle - 1]
+                          .deliveries?[bloc.dose - 1],
+                      overViewbloc.selectedIndividual,
+                      overViewbloc.householdMemberWrapper.household)!
+                  .productVariants
+                  ?.length ??
+              0;
+
+      _controllers.addAll(List.generate(r, (index) => index)
+          .mapIndexed((index, element) => index));
+    }
+
+    return fb.group(<String, Object>{
+      _doseAdministrationKey: FormControl<String>(
+        value:
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
+        validators: [],
+      ),
+      _deliveryCommentKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
+        validators: [],
+      ),
+      _deliveryCommentWastedKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
+        validators: [],
+      ),
+      _dateOfAdministrationKey:
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _resourceDeliveredKey: FormArray<ProductVariantModel>(
+        [
+          ..._controllers.map((e) => FormControl<ProductVariantModel>(
+                value: variants != null && variants.length < _controllers.length
+                    ? variants.last
+                    : (variants != null &&
+                            _controllers.indexOf(e) < variants.length
+                        ? variants.firstWhereOrNull(
+                            (element) =>
+                                element.id ==
+                                productVariants
+                                    ?.elementAt(_controllers.indexOf(e))
+                                    .productVariantId,
+                          )
+                        : null),
+              )),
+        ],
+      ),
+      _quantityDistributedKey: FormArray<int>([
+        ..._controllers.mapIndexed(
+          (i, e) => FormControl<int>(
+            value: RegistrationDeliverySingleton().beneficiaryType !=
+                    BeneficiaryType.individual
+                ? int.tryParse(
+                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+                  )
+                : 0,
+            validators: [Validators.min(1)],
+          ),
+        ),
+      ]),
+      _quantityWastedKey: FormControl<String>(validators: []),
+    });
+  }
+
+  FormGroup buildFormOncho(
+    BuildContext context,
+    List<DeliveryProductVariant>? productVariants,
+    List<ProductVariantModel>? variants,
+  ) {
+    final bloc = context.read<DeliverInterventionBloc>().state;
+    final overViewbloc = context.read<HouseholdOverviewBloc>().state;
+    _controllers.forEachIndexed((index, element) {
+      _controllers.removeAt(index);
+    });
+
+    // Add controllers for each product variant to the _controllers list.
+    if (_controllers.isEmpty) {
+      final onchoAdditionalProjectType = RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.additionalProjectType;
+
+      final int r = onchoAdditionalProjectType?.cycles == null
+          ? 1
+          : fetchProductVariant(
+                      onchoAdditionalProjectType
+                          ?.cycles![bloc.cycle - 1].deliveries?[bloc.dose - 1],
+                      overViewbloc.selectedIndividual,
+                      overViewbloc.householdMemberWrapper.household)!
+                  .productVariants
+                  ?.length ??
+              0;
+
+      _controllers.addAll(List.generate(r, (index) => index)
+          .mapIndexed((index, element) => index));
+    }
+
+    return fb.group(<String, Object>{
+      _doseAdministrationKey: FormControl<String>(
+        value:
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
+        validators: [],
+      ),
+      _deliveryCommentKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
+        validators: [],
+      ),
+      _deliveryCommentWastedKey: FormControl<String>(
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
+        validators: [],
+      ),
+      _dateOfAdministrationKey:
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _resourceDeliveredKey: FormArray<ProductVariantModel>(
+        [
+          ..._controllers.map((e) => FormControl<ProductVariantModel>(
+                value: variants != null && variants.length < _controllers.length
+                    ? variants.last
+                    : (variants != null &&
+                            _controllers.indexOf(e) < variants.length
+                        ? variants.firstWhereOrNull(
+                            (element) =>
+                                element.id ==
+                                productVariants
+                                    ?.elementAt(_controllers.indexOf(e))
+                                    .productVariantId,
+                          )
+                        : null),
+              )),
+        ],
+      ),
+      _quantityDistributedKey: FormArray<int>([
+        ..._controllers.mapIndexed(
+          (i, e) => FormControl<int>(
+            value: RegistrationDeliverySingleton().beneficiaryType !=
+                    BeneficiaryType.individual
+                ? int.tryParse(
+                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+                  )
+                : 0,
+            validators: [Validators.min(1)],
+          ),
+        ),
+      ]),
+      _quantityWastedKey: FormControl<String>(validators: []),
+    });
+  }
+
+  FormGroup buildFormBednet(
     BuildContext context,
     List<DeliveryProductVariant>? productVariants,
     List<ProductVariantModel>? variants,

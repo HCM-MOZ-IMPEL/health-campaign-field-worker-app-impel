@@ -46,6 +46,7 @@ class _VaccineInformationCapturePageState
   List<Vaccine>? applicableVaccines = [];
   Map<String, bool> vaccineSelection = {};
   bool vaccineCardPresent = false;
+  bool vaccineRefused = false;
   final clickedStatus = ValueNotifier<bool>(false);
   @override
   void initState() {
@@ -59,26 +60,28 @@ class _VaccineInformationCapturePageState
         builder: (context, initState) {
       initState.maybeWhen(
         initialized: (appConfiguration, _, __) {
-          // Use mdmsData to access the loaded MDMS data
-          vaccineData = appConfiguration.vaccine;
-          vaccineGroupData = appConfiguration.vaccineGroups;
+          if (widget.interventionType == InterventionTypes.smc) {
+            // Use mdmsData to access the loaded MDMS data
+            vaccineData = appConfiguration.vaccine;
+            vaccineGroupData = appConfiguration.vaccineGroups;
 
-          // Get the applicable vaccine group based on individual's age
-          applicableVaccineGroup = getApplicableVaccineGroup(
-            widget.individual,
-            vaccineGroupData,
-          );
-
-          // Get vaccines for the applicable group
-          if (applicableVaccineGroup != null) {
-            applicableVaccines = getVaccinesForGroup(
-              applicableVaccineGroup,
-              vaccineData,
+            // Get the applicable vaccine group based on individual's age
+            applicableVaccineGroup = getApplicableVaccineGroup(
+              widget.individual,
+              vaccineGroupData,
             );
 
-            // Initialize vaccine selection map
-            for (final vaccine in applicableVaccines!) {
-              vaccineSelection.putIfAbsent(vaccine.code ?? '', () => false);
+            // Get vaccines for the applicable group
+            if (applicableVaccineGroup != null) {
+              applicableVaccines = getVaccinesForGroup(
+                applicableVaccineGroup,
+                vaccineData,
+              );
+
+              // Initialize vaccine selection map
+              for (final vaccine in applicableVaccines!) {
+                vaccineSelection.putIfAbsent(vaccine.code ?? '', () => false);
+              }
             }
           }
         },
@@ -117,6 +120,7 @@ class _VaccineInformationCapturePageState
                             Future.delayed(const Duration(seconds: 2), () {
                               // After delay, hide the initial dialog
                               DigitComponentsUtils().hideDialog(context);
+
                               submitTask(context, locationState);
                             });
                           }
@@ -138,68 +142,135 @@ class _VaccineInformationCapturePageState
               child: DigitCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      localizations.translate(
-                          i18_smc.deliverIntervention.vaccineCardPresentLabel),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Radio<bool>(
-                                  value: true,
-                                  groupValue: vaccineCardPresent,
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        vaccineCardPresent = value;
-                                      });
-                                    }
-                                  },
-                                ),
-                                Text(
-                                  localizations
-                                      .translate(i18.common.coreCommonYes),
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 24),
-                            Row(
-                              children: [
-                                Radio<bool>(
-                                  value: false,
-                                  groupValue: vaccineCardPresent,
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        vaccineCardPresent = value;
-                                      });
-                                    }
-                                  },
-                                ),
-                                Text(
-                                  localizations
-                                      .translate(i18.common.coreCommonNo),
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
+                  children: widget.interventionType == InterventionTypes.smc
+                      ? [
+                          Text(
+                            localizations.translate(i18_smc
+                                .deliverIntervention.vaccineCardPresentLabel),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Radio<bool>(
+                                        value: true,
+                                        groupValue: vaccineCardPresent,
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              vaccineCardPresent = value;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        localizations.translate(
+                                            i18.common.coreCommonYes),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Row(
+                                    children: [
+                                      Radio<bool>(
+                                        value: false,
+                                        groupValue: vaccineCardPresent,
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              vaccineCardPresent = value;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        localizations
+                                            .translate(i18.common.coreCommonNo),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ]
+                      : [
+                          Text(
+                            localizations.translate(i18_smc.deliverIntervention
+                                .didBeneficiaryRefuseVaccineLabel),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Radio<bool>(
+                                        value: true,
+                                        groupValue: vaccineRefused,
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              vaccineRefused = value;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        localizations.translate(
+                                            i18.common.coreCommonYes),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Row(
+                                    children: [
+                                      Radio<bool>(
+                                        value: false,
+                                        groupValue: vaccineRefused,
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              vaccineRefused = value;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        localizations
+                                            .translate(i18.common.coreCommonNo),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
                 ),
               ),
             ),
             // Show vaccine groups and list only if card is present
-            if (vaccineCardPresent)
+            if (vaccineCardPresent &&
+                InterventionTypes.smc == widget.interventionType)
               SliverToBoxAdapter(
                 child: DigitCard(
                   child: Column(
@@ -310,15 +381,9 @@ class _VaccineInformationCapturePageState
     );
 
     if (context.mounted && (shouldSubmit ?? false)) {
-      // If vaccine card is not present, navigate to Morbidity Control page
+      // note this will handle both cases of smc and oncho as the flow is same after this point,
+      //only difference is in the question asked in the beginning and the vaccines shown for selection in case of smc
       if (!vaccineCardPresent) {
-        // context.router.push(MorbidityControlRoute(
-        //   projectBeneficiaryClientReferenceId:
-        //       widget.projectBeneficiaryClientReferenceId,
-        //   individual: widget.individual,
-        // ));
-        // return;
-        // Commented out existing navigation code - will be replaced with backend integration
         context.router.push(EligibilityChecklistViewRoute(
           projectBeneficiaryClientReferenceId:
               widget.projectBeneficiaryClientReferenceId,
