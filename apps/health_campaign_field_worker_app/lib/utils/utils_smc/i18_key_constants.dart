@@ -764,6 +764,8 @@ class Home {
 
   String get progressIndicatorTitleTracoma =>
       'PROGRESS_INDICATOR_TITLE_TRACOMA';
+       String get progressIndicatorTitleHeadOncho =>
+      'PROGRESS_INDICATOR_TITLE_HEAD_ONCHO';
   String get progressIndicatorTitleHeadBednet =>
       'PROGRESS_INDICATOR_TITLE_HEAD_BEDNET';
 

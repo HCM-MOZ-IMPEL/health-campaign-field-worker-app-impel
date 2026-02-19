@@ -476,11 +476,11 @@ Future<bool> getIsConnected() async {
   }
 }
 
-String? getCategory(int number) {
-  if (number >= 72) {
+String getCategory(int number) {
+  if (number >= Constants.onchoMinAge) {
     return Constants.height;
   }
-  return null;
+  return "Invalid number";
 }
 
 int getAgeMonths(DigitDOBAge age) {
