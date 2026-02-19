@@ -31,7 +31,10 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../utils/utils_smc/utils_smc.dart'
-    show fetchProductVariantLocal, getIndividualAdditionalFields;
+    show
+        fetchProductVariantForProjectType,
+        fetchProductVariantLocal,
+        getIndividualAdditionalFields;
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 
 @RoutePage()
@@ -66,7 +69,7 @@ class CustomDeliverInterventionSMCPageState
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
 
-  final InterventionTypes interventionType = InterventionTypes.smc;
+  InterventionTypes interventionType = InterventionTypes.smc;
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -243,8 +246,36 @@ class CustomDeliverInterventionSMCPageState
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
+          final selectedIndividual = state.selectedIndividual;
+          ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+              .selectedProject
+              ?.additionalDetails
+              ?.projectType;
+
+          // assumed it is onchoAdditionalProjectType , because above already checked if it is oncho flow or not
+
+          ProjectTypeModel? onchoAdditionalProjectType =
+              RegistrationDeliverySingleton()
+                  .selectedProject
+                  ?.additionalDetails
+                  ?.additionalProjectType;
+          bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                  smcProjectType, selectedIndividual, null) !=
+              null;
+          bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                  onchoAdditionalProjectType, selectedIndividual, null) !=
+              null;
+
+          // handles only smc and oncho , no other type
+
+          interventionType = isSmcDeliveryCards
+              ? InterventionTypes.smc
+              : isOnchoDeliveryCards
+                  ? InterventionTypes.oncho
+                  : InterventionTypes.smc;
+
           // Route to appropriate flow based on intervention type
-          return switch (widget.interventionType) {
+          return switch (interventionType) {
             InterventionTypes.smc => _buildSmcFlowPage(context, state),
             InterventionTypes.oncho => _buildOnchoFlowPage(context, state),
             InterventionTypes.bednet => _buildBednetFlowPage(context, state),
