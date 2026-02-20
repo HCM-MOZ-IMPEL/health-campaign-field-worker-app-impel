@@ -764,7 +764,7 @@ class Home {
 
   String get progressIndicatorTitleTracoma =>
       'PROGRESS_INDICATOR_TITLE_TRACOMA';
-       String get progressIndicatorTitleHeadOncho =>
+  String get progressIndicatorTitleHeadOncho =>
       'PROGRESS_INDICATOR_TITLE_HEAD_ONCHO';
   String get progressIndicatorTitleHeadBednet =>
       'PROGRESS_INDICATOR_TITLE_HEAD_BEDNET';
@@ -990,6 +990,8 @@ class DeliverIntervention {
       'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT7';
   String get conductMobilityAssessmentText8 =>
       'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT8';
+  String get vaccineRefusalReasonLabel => 'VACCINE_REFUSAL_REASON_LABEL';
+  String get selectVaccineRefusalReason => 'SELECT_VACCINE_REFUSAL_REASON';
 }
 
 class AcknowledgementSuccess {

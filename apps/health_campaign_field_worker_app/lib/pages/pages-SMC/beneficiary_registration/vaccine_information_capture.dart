@@ -4,6 +4,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
@@ -47,7 +49,16 @@ class _VaccineInformationCapturePageState
   Map<String, bool> vaccineSelection = {};
   bool vaccineCardPresent = false;
   bool vaccineRefused = false;
+  String? vaccineRefusalReason;
   final clickedStatus = ValueNotifier<bool>(false);
+
+  // Vaccine refusal reasons list
+  final List<Map<String, String>> vaccineRefusalReasons = [
+    {'value': 'religion', 'label': 'Religião'},
+    {'value': 'parental_refusal', 'label': 'Pais não autorizaram'},
+    {'value': 'medical_condition', 'label': 'Condição médica'},
+    {'value': 'personal_refusal', 'label': 'Recusa pessoal'},
+  ];
   @override
   void initState() {
     context.read<LocationBloc>().add(const LoadLocationEvent());
@@ -340,6 +351,64 @@ class _VaccineInformationCapturePageState
                   ),
                 ),
               ),
+            // Show vaccine refusal reason only if vaccine is refused
+            if (vaccineRefused)
+              SliverToBoxAdapter(
+                child: DigitCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.translate(
+                            i18_smc
+                                .deliverIntervention.vaccineRefusalReasonLabel,
+                          ),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: DigitTheme
+                                  .instance.colorScheme.outlineVariant,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            value: vaccineRefusalReason,
+                            hint: Text(
+                              localizations.translate(
+                                i18_smc.deliverIntervention
+                                    .selectVaccineRefusalReason,
+                              ),
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            underline: const SizedBox.shrink(),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 8.0,
+                            ),
+                            items: vaccineRefusalReasons
+                                .map((reason) => DropdownMenuItem<String>(
+                                      value: reason['value'],
+                                      child: Text(reason['label'] ?? ''),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                vaccineRefusalReason = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       );
@@ -350,78 +419,145 @@ class _VaccineInformationCapturePageState
     final shouldSubmit = await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
-        titleText: localizations.translate(
-          i18.deliverIntervention.dialogTitle,
-        ),
-        contentText: localizations.translate(
-          i18.deliverIntervention.dialogContent,
-        ),
+        titleText: localizations.translate(i18.deliverIntervention.dialogTitle),
+        contentText:
+            localizations.translate(i18.deliverIntervention.dialogContent),
         primaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.common.coreCommonSubmit,
-          ),
+          label: localizations.translate(i18.common.coreCommonSubmit),
           action: (context) {
             clickedStatus.value = true;
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(true);
+            Navigator.of(context, rootNavigator: true).pop(true);
           },
         ),
         secondaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.common.coreCommonCancel,
-          ),
-          action: (context) => Navigator.of(
-            context,
-            rootNavigator: true,
-          ).pop(false),
+          label: localizations.translate(i18.common.coreCommonCancel),
+          action: (context) =>
+              Navigator.of(context, rootNavigator: true).pop(false),
         ),
       ),
     );
 
-    if (context.mounted && (shouldSubmit ?? false)) {
-      // note this will handle both cases of smc and oncho as the flow is same after this point,
-      //only difference is in the question asked in the beginning and the vaccines shown for selection in case of smc
-      if (!vaccineCardPresent) {
-        // Navigate to deliver intervention page when vaccine card is not present (New Flow)
-        context.router.push(
-          CustomDeliverInterventionSMCRoute(
-            interventionType: widget.interventionType,
-            isEditing: false,
-          ),
-        );
-        return;
+    if (!context.mounted || !(shouldSubmit ?? false)) return;
 
-        // TODO: Old flow - commented out for new deliver intervention flow
-        // context.router.push(EligibilityChecklistViewRoute(
-        //   projectBeneficiaryClientReferenceId:
-        //       widget.projectBeneficiaryClientReferenceId,
-        //   individual: widget.individual,
-        //   interventionType: widget.interventionType,
-        // ));
-        // return;
-      } else {
-        // If vaccine card is present, show confirmation dialog and create task
-
-        final task = getTaskModel(locationState);
-        context
-            .read<DeliverInterventionBloc>()
-            .add(DeliverInterventionSubmitEvent(
-              task: task,
-              isEditing: false,
-              boundaryModel: context.boundary,
-              navigateToSummary: false,
-            ));
-
-        context.router.push(EligibilityChecklistViewRoute(
-          projectBeneficiaryClientReferenceId:
-              widget.projectBeneficiaryClientReferenceId,
-          individual: widget.individual,
-          interventionType: widget.interventionType,
-        ));
-      }
+    if (widget.interventionType == InterventionTypes.oncho) {
+      _handleOnchoFlow(context, locationState);
+    } else if (widget.interventionType == InterventionTypes.smc) {
+      _handleSmcFlow(context, locationState);
     }
+  }
+
+  void _handleOnchoFlow(BuildContext context, LocationState locationState) {
+    if (!vaccineRefused) {
+      context.router.push(EligibilityChecklistViewRoute(
+        projectBeneficiaryClientReferenceId:
+            widget.projectBeneficiaryClientReferenceId,
+        individual: widget.individual,
+        interventionType: widget.interventionType,
+      ));
+      return;
+    }
+
+    final refusedTask = getRefusedTaskModel(locationState);
+    context.read<DeliverInterventionBloc>().add(DeliverInterventionSubmitEvent(
+          task: refusedTask,
+          isEditing: false,
+          boundaryModel: context.boundary,
+          navigateToSummary: true,
+        ));
+
+    context
+        .read<SearchHouseholdsBloc>()
+        .add(const SearchHouseholdsClearEvent());
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      context.read<HouseholdOverviewBloc>().add(HouseholdOverviewReloadEvent(
+            projectId: context.projectId,
+            projectBeneficiaryType: context.beneficiaryType,
+          ));
+    }).then((_) => context.router.popAndPush(
+          CustomHouseholdAcknowledgementSMCRoute(enableViewHousehold: true),
+        ));
+  }
+
+  void _handleSmcFlow(BuildContext context, LocationState locationState) {
+    if (!vaccineCardPresent) {
+      context.router.push(EligibilityChecklistViewRoute(
+        projectBeneficiaryClientReferenceId:
+            widget.projectBeneficiaryClientReferenceId,
+        individual: widget.individual,
+        interventionType: widget.interventionType,
+      ));
+      return;
+    }
+
+    final task = getTaskModel(locationState);
+    context.read<DeliverInterventionBloc>().add(DeliverInterventionSubmitEvent(
+          task: task,
+          isEditing: false,
+          boundaryModel: context.boundary,
+          navigateToSummary: false,
+        ));
+
+    context.router.push(EligibilityChecklistViewRoute(
+      projectBeneficiaryClientReferenceId:
+          widget.projectBeneficiaryClientReferenceId,
+      individual: widget.individual,
+      interventionType: widget.interventionType,
+    ));
+  }
+
+  TaskModel getRefusedTaskModel(LocationState locationState) {
+    final clientReferenceId = IdGen.i.identifier;
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+
+    return TaskModel(
+      projectBeneficiaryClientReferenceId:
+          widget.projectBeneficiaryClientReferenceId,
+      clientReferenceId: clientReferenceId,
+      tenantId: envConfig.variables.tenantId,
+      rowVersion: 1,
+      auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      projectId: context.projectId,
+      status: status_local.Status.beneficiaryRefused.toValue(),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
+      ),
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            'taskStatus',
+            status_local.Status.beneficiaryRefused.toValue(),
+          ),
+          if (lat != null)
+            AdditionalField(
+              'latitude',
+              lat,
+            ),
+          if (long != null)
+            AdditionalField(
+              'longitude',
+              long,
+            ),
+          if (vaccineRefused && vaccineRefusalReason != null)
+            AdditionalField(
+              'vaccineRefusalReason',
+              vaccineRefusalReason,
+            ),
+        ],
+      ),
+      address: widget.individual!.address?.first.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
+    );
   }
 
   TaskModel getTaskModel(LocationState locationState) {
