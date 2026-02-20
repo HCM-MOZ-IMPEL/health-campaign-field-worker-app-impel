@@ -19,6 +19,8 @@ import '../../../widgets/localized.dart';
 import '../../../models/entities/status.dart' as status_local;
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_smc;
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 @RoutePage()
 class VaccineInformationCapturePage extends LocalizedStatefulWidget {
@@ -545,6 +547,12 @@ class _VaccineInformationCapturePageState
             AdditionalField(
               'longitude',
               long,
+            ),
+          if (widget.interventionType == InterventionTypes.oncho)
+            AdditionalField(
+              additional_fields_local.AdditionalFieldsType.interventionType
+                  .toValue(),
+              InterventionTypes.oncho.toValue(),
             ),
           if (vaccineRefused && vaccineRefusalReason != null)
             AdditionalField(
