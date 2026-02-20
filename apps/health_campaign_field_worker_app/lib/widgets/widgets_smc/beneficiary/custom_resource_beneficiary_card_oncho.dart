@@ -77,7 +77,7 @@ class CustomResourceBeneficiaryCardOncoState
                     formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {
                       return localizations.translate(
-                        value.sku ?? value.id,
+                        value.variation ?? value.sku ?? value.id,
                       );
                     },
                   );

@@ -21,6 +21,8 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
@@ -41,12 +43,10 @@ import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_car
 @RoutePage()
 class CustomDeliverInterventionSMCPage extends LocalizedStatefulWidget {
   final bool isEditing;
-  final InterventionTypes interventionType;
 
   const CustomDeliverInterventionSMCPage({
     super.key,
     super.appLocalizations,
-    required this.interventionType,
     this.isEditing = false,
   });
 
@@ -230,6 +230,161 @@ class CustomDeliverInterventionSMCPageState
         // After delay, hide the initial dialog
         DigitComponentsUtils().hideDialog(context);
         handleCapturedLocationState(
+          locationState,
+          context,
+          deliverInterventionState,
+          form,
+          householdMember,
+          projectBeneficiary,
+          selectedIndividual,
+        );
+      });
+    }
+  }
+
+  Future<void> handleCapturedLocationStateOncho(
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    IndividualModel? selectedIndividual,
+  ) async {
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    final projectBeneficiaryClientReferenceId =
+        projectBeneficiary.clientReferenceId;
+
+    bool isReferral = form
+                .control(
+                  _deliveryCommentKey,
+                )
+                .value !=
+            null &&
+        form
+                .control(
+                  _deliveryCommentKey,
+                )
+                .value ==
+            "ADMINISTRATION_NOT_SUCCESSFUL";
+// todo verify this how to handle this should pass default 00 or make user enter some value
+    String? wastedCount =
+        ((form.control(_quantityWastedKey).value) ?? "00").toString();
+    final shouldSubmit = await DigitDialog.show<bool>(
+      context,
+      options: DigitDialogOptions(
+        titleText: localizations.translate(
+          i18.deliverIntervention.dialogTitle,
+        ),
+        contentText: localizations.translate(
+          isReferral
+              ? i18_local.deliverIntervention.dialogReferralContentSMC
+              : i18.deliverIntervention.dialogContent,
+        ),
+        primaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonSubmit,
+          ),
+          action: (context) {
+            clickedStatus.value = true;
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop(true);
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: localizations.translate(
+            i18.common.coreCommonCancel,
+          ),
+          action: (context) => Navigator.of(
+            context,
+            rootNavigator: true,
+          ).pop(false),
+        ),
+      ),
+    );
+    if (context.mounted && (shouldSubmit ?? false)) {
+      if (isReferral) {
+        // todo set other params as per old smc
+        final productVariantId =
+            ((form.control(_resourceDeliveredKey) as FormArray).value
+                    as List<ProductVariantModel?>)
+                .first
+                ?.id;
+
+        context.router.popAndPush(
+          CustomReferBeneficiarySMCRoute(
+              projectBeneficiaryClientRefId:
+                  projectBeneficiaryClientReferenceId,
+              individual: selectedIndividual!,
+              quantityWasted: wastedCount,
+              isReadministrationUnSuccessful: true,
+              productVariantId: productVariantId),
+        );
+      } else {
+        context.read<DeliverInterventionBloc>().add(
+              DeliverInterventionSubmitEvent(
+                  task: _getTaskModelOncho(
+                    context,
+                    form: form,
+                    oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                            BeneficiaryType.household
+                        ? deliverInterventionState.tasks?.last
+                        : null,
+                    projectBeneficiaryClientReferenceId:
+                        projectBeneficiary.clientReferenceId,
+                    dose: deliverInterventionState.dose,
+                    cycle: deliverInterventionState.cycle,
+                    deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                    address: householdMember.members?.first.address?.first,
+                    latitude: lat,
+                    longitude: long,
+                    selectedIndividual: selectedIndividual,
+                    householdMemberWrapper: householdMember,
+                  ),
+                  isEditing:
+                      (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                              RegistrationDeliverySingleton().beneficiaryType ==
+                                  BeneficiaryType.household
+                          ? true
+                          : false,
+                  boundaryModel: RegistrationDeliverySingleton().boundary!,
+                  navigateToSummary: true,
+                  householdMemberWrapper: householdMember),
+            );
+        context.router.push(
+          MorbidityControlRoute(
+            individual: selectedIndividual,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            interventionType: InterventionTypes.oncho,
+          ),
+        );
+      }
+    }
+  }
+
+  void handleLocationStateOncho(
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    IndividualModel? selectedIndividual,
+  ) {
+    if (context.mounted && selectedIndividual != null) {
+      DigitComponentsUtils().showLocationCapturingDialog(
+          context,
+          localizations.translate(i18.common.locationCapturing),
+          DigitSyncDialogType.inProgress);
+
+      Future.delayed(const Duration(seconds: 2), () {
+        // After delay, hide the initial dialog
+        DigitComponentsUtils().hideDialog(context);
+        handleCapturedLocationStateOncho(
           locationState,
           context,
           deliverInterventionState,
@@ -824,13 +979,13 @@ class CustomDeliverInterventionSMCPageState
                         ?.additionalDetails
                         ?.additionalProjectType;
 
+                // ToDo: deliveryInterventionState.cycle should be 1
+
                 List<DeliveryProductVariant>? productVariants =
                     onchoAdditionalProjectType?.cycles?.isNotEmpty == true
                         ? (fetchProductVariantLocal(
                                 onchoAdditionalProjectType
-                                        ?.cycles![
-                                            deliveryInterventionState.cycle - 1]
-                                        .deliveries?[
+                                        ?.cycles![1 - 1].deliveries?[
                                     deliveryInterventionState.dose - 1],
                                 state.selectedIndividual,
                                 state.householdMemberWrapper.household)
@@ -935,7 +1090,7 @@ class CustomDeliverInterventionSMCPageState
                                               } else {
                                                 context.read<LocationBloc>().add(
                                                     const LoadLocationEvent());
-                                                handleLocationState(
+                                                handleLocationStateOncho(
                                                   locationState,
                                                   context,
                                                   deliveryInterventionState,
@@ -1656,6 +1811,145 @@ class CustomDeliverInterventionSMCPageState
     return task;
   }
 
+  // ignore: long-parameter-list
+  TaskModel _getTaskModelOncho(BuildContext context,
+      {required FormGroup form,
+      TaskModel? oldTask,
+      int? cycle,
+      int? dose,
+      String? deliveryStrategy,
+      String? projectBeneficiaryClientReferenceId,
+      AddressModel? address,
+      double? latitude,
+      double? longitude,
+      IndividualModel? selectedIndividual,
+      HouseholdMemberWrapper? householdMemberWrapper}) {
+    // Initialize task with oldTask if available, or create a new one
+    var task = oldTask;
+    var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
+    task ??= TaskModel(
+      projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
+      clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+      ),
+      tenantId: RegistrationDeliverySingleton().tenantId,
+      rowVersion: 1,
+      auditDetails: AuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+    );
+
+    // Extract productvariantList from the form
+    final productvariantList =
+        ((form.control(_resourceDeliveredKey) as FormArray).value
+            as List<ProductVariantModel?>);
+    final deliveryCommentList =
+        (form.control(_deliveryCommentKey) as FormArray).value as List<String?>;
+    // Join all comments with pipe separator for storage
+    final deliveryComment = deliveryCommentList
+        .whereType<String>()
+        .where((c) => c.trim().isNotEmpty)
+        .join(' | ');
+    task = task.copyWith(
+      projectId: RegistrationDeliverySingleton().projectId,
+      resources: productvariantList
+          .map((e) => TaskResourceModel(
+              taskclientReferenceId: clientReferenceId,
+              clientReferenceId: IdGen.i.identifier,
+              productVariantId: e?.id,
+              isDelivered: true,
+              taskId: task?.id,
+              tenantId: RegistrationDeliverySingleton().tenantId,
+              rowVersion: oldTask?.rowVersion ?? 1,
+              quantity: _defaultQuantity.toString(),
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+              ),
+              auditDetails: AuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+              ),
+              additionalFields:
+                  TaskResourceAdditionalFields(version: 1, fields: [
+                AdditionalField(
+                  _quantityWastedKey,
+                  (((form.control(_quantityWastedKey)).value ?? "00"))
+                      .toString(),
+                ),
+              ])))
+          .toList(),
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+        id: null,
+      ),
+      status: Status.administeredSuccess.toValue(),
+      additionalFields: TaskAdditionalFields(
+        version: task.additionalFields?.version ?? 1,
+        fields: [
+          AdditionalField(
+            RegistrationDeliveryEnums.name.toValue(),
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
+          AdditionalField(
+            AdditionalFieldsType.dateOfDelivery.toValue(),
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+          AdditionalField(
+            AdditionalFieldsType.dateOfAdministration.toValue(),
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+          AdditionalField(
+            AdditionalFieldsType.dateOfVerification.toValue(),
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+          AdditionalField(
+            AdditionalFieldsType.cycleIndex.toValue(),
+            "0${cycle ?? 1}",
+          ),
+          AdditionalField(
+            AdditionalFieldsType.doseIndex.toValue(),
+            "0${dose ?? 1}",
+          ),
+          AdditionalField(
+            AdditionalFieldsType.deliveryStrategy.toValue(),
+            deliveryStrategy,
+          ),
+          AdditionalField(
+            additional_fields_local.AdditionalFieldsType.interventionType
+                .toValue(),
+            InterventionTypes.oncho.toValue(),
+          ),
+          if (latitude != null)
+            AdditionalField(
+              AdditionalFieldsType.latitude.toValue(),
+              latitude,
+            ),
+          if (longitude != null)
+            AdditionalField(
+              AdditionalFieldsType.longitude.toValue(),
+              longitude,
+            ),
+          if (deliveryComment.trim().isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.deliveryComment.toValue(),
+              deliveryComment,
+            ),
+          ...getIndividualAdditionalFields(
+              selectedIndividual, householdMemberWrapper)
+        ],
+      ),
+    );
+
+    return task;
+  }
+
   // This method builds a form used for delivering interventions.
   FormGroup buildFormSMC(
     BuildContext context,
@@ -1793,12 +2087,12 @@ class CustomDeliverInterventionSMCPageState
           .selectedProject
           ?.additionalDetails
           ?.additionalProjectType;
-
+// bloc.cycle should be
       final int r = onchoAdditionalProjectType?.cycles == null
           ? 1
           : fetchProductVariantLocal(
                       onchoAdditionalProjectType
-                          ?.cycles![bloc.cycle - 1].deliveries?[bloc.dose - 1],
+                          ?.cycles![1 - 1].deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
                       overViewbloc.householdMemberWrapper.household)!
                   .productVariants

@@ -1761,7 +1761,7 @@ class _EligibilityChecklistViewPage
       } else {
         serviceDefinition = serviceDefinitions
             .where((element) => element.code.toString().contains(
-                  '${context.selectedProject.name}.ELIGIBLITY_ASSESSMENT_TWO.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
+                  '${context.selectedProject.name}.ELIGIBILITY_ASSESSMENT_TWO.${context.isCommunityDistributor ? RolesType.communityDistributor.toValue() : RolesType.healthFacilitySupervisor.toValue()}',
                 ))
             .toList()
             .first;

@@ -256,11 +256,8 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
 
         // Navigate to next screen after submission
         context.router.push(
-          EligibilityChecklistViewRoute(
-            projectBeneficiaryClientReferenceId:
-                widget.projectBeneficiaryClientReferenceId,
-            individual: widget.individual,
-            interventionType: widget.interventionType,
+          CustomHouseholdAcknowledgementSMCRoute(
+            enableViewHousehold: true,
           ),
         );
       }
