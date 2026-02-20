@@ -49,9 +49,6 @@ class AppConfiguration {
   @Name('BANDWIDTH_BATCH_SIZE')
   late List<BandwidthBatchSize>? bandwidthBatchSize;
 
-  @Name('BENEFICIARY_ID_CONFIG')
-  late List<BeneficiaryIdConfig>? beneficiaryIdConfig;
-
   @Name('DOWNSYNC-BANDWIDTH_BATCH_SIZE')
   late List<BandwidthBatchSize>? downSyncBandwidthBatchSize;
 
@@ -142,14 +139,6 @@ class BandwidthBatchSize {
   late double maxRange;
   @Name("MIN_RANGE")
   late double minRange;
-  @Name("BATCH_SIZE")
-  late int batchSize;
-}
-
-@embedded
-class BeneficiaryIdConfig {
-  @Name("MIN_COUNT")
-  late double minCount;
   @Name("BATCH_SIZE")
   late int batchSize;
 }
