@@ -22,12 +22,16 @@ class MorbidityControlPage extends LocalizedStatefulWidget {
   final String? projectBeneficiaryClientReferenceId;
   final InterventionTypes interventionType;
 
+  /// The delivery task from delivery intervention page to merge morbidity data into
+  final TaskModel? deliveryTask;
+
   const MorbidityControlPage({
     super.key,
     super.appLocalizations,
     this.individual,
     this.projectBeneficiaryClientReferenceId,
     required this.interventionType,
+    this.deliveryTask,
   });
 
   @override
@@ -38,28 +42,29 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
   // Map of disease keys to localization key references
   late final List<MapEntry<String, String>> _diseaseList;
   final clickedStatus = ValueNotifier<bool>(false);
+  static const _individualNameKey = 'tinea';
+  static const _individualLastNameKey = 'scabies';
+  static const _dobKey = 'tungiasis';
+  static const _genderKey = 'lymphaticFilariasisStageLymphedema';
+  static const _mobileNumberKey = 'lymphaticFilariasisStageMale';
+  static const _height = 'tracomaFolicular';
+  static const _weight = 'tracomaTrichiasis';
+  static const _bmi = 'suspectedLeprosy';
+  static const _tineaKey = 'tinea';
+  static const _scabiesKey = 'scabies';
+  static const _tungiasisKey = 'tungiasis';
+  static const _lymphaticFilariasisStageLymphedemaKey =
+      'lymphaticFilariasisStageLymphedema';
+  static const _lymphaticFilariasisStageMaleKey =
+      'lymphaticFilariasisStageMale';
+  static const _tracomaFolicularKey = 'tracomaFolicular';
+  static const _tracomaTrichiasisKey = 'tracomaTrichiasis';
+  static const _suspectedLeprosyKey = 'suspectedLeprosy';
 
   @override
   void initState() {
     super.initState();
-    // Initialize disease list with localization key references
-    _diseaseList = [
-      MapEntry('tinea', i18_local.morbidityControl.tinea),
-      MapEntry('scabies', i18_local.morbidityControl.scabies),
-      MapEntry('tungiasis', i18_local.morbidityControl.tungiasis),
-      MapEntry(
-        'lymphaticFilariasisStageLymphedema',
-        i18_local.morbidityControl.lymphaticFilariasisStageLymphedema,
-      ),
-      MapEntry(
-        'lymphaticFilariasisStageMale',
-        i18_local.morbidityControl.lymphaticFilariasisStageMale,
-      ),
-      MapEntry('tracomaFolicular', i18_local.morbidityControl.tracomaFolicular),
-      MapEntry(
-          'tracomaTrichiasis', i18_local.morbidityControl.tracomaTrichiasis),
-      MapEntry('suspectedLeprosy', i18_local.morbidityControl.suspectedLeprosy),
-    ];
+    _diseaseList = _initializeDiseaseList();
 
     // Initialize all diseases as unselected
     for (final disease in _diseaseList) {
@@ -69,6 +74,29 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
 
   // Map to track selected diseases
   Map<String, bool> _diseaseSelection = {};
+
+  /// Initialize and return the disease list with localization key references
+  List<MapEntry<String, String>> _initializeDiseaseList() {
+    return [
+      MapEntry(_tineaKey, i18_local.morbidityControl.tinea),
+      MapEntry(_scabiesKey, i18_local.morbidityControl.scabies),
+      MapEntry(_tungiasisKey, i18_local.morbidityControl.tungiasis),
+      MapEntry(
+        _lymphaticFilariasisStageLymphedemaKey,
+        i18_local.morbidityControl.lymphaticFilariasisStageLymphedema,
+      ),
+      MapEntry(
+        _lymphaticFilariasisStageMaleKey,
+        i18_local.morbidityControl.lymphaticFilariasisStageMale,
+      ),
+      MapEntry(
+          _tracomaFolicularKey, i18_local.morbidityControl.tracomaFolicular),
+      MapEntry(
+          _tracomaTrichiasisKey, i18_local.morbidityControl.tracomaTrichiasis),
+      MapEntry(
+          _suspectedLeprosyKey, i18_local.morbidityControl.suspectedLeprosy),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,45 +237,71 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
           .map((entry) => entry.key)
           .toList();
 
-      // Create a task model to persist the morbidity selection
-      final task = TaskModel(
-        projectBeneficiaryClientReferenceId:
-            widget.projectBeneficiaryClientReferenceId,
-        clientReferenceId: IdGen.i.identifier,
-        tenantId: envConfig.variables.tenantId,
-        rowVersion: 1,
-        auditDetails: AuditDetails(
-          createdBy: context.loggedInUserUuid,
-          createdTime: context.millisecondsSinceEpoch(),
-        ),
-        projectId: context.projectId,
-        status: 'COMPLETED',
-        clientAuditDetails: ClientAuditDetails(
-          createdBy: context.loggedInUserUuid,
-          createdTime: context.millisecondsSinceEpoch(),
-          lastModifiedBy: context.loggedInUserUuid,
-          lastModifiedTime: context.millisecondsSinceEpoch(),
-        ),
-        additionalFields: TaskAdditionalFields(
-          version: 1,
-          fields: [
-            AdditionalField(
-              'selectedDiseases',
-              selectedDiseases.join(','),
-            ),
-            AdditionalField(
-              'morbidityStatus',
-              selectedDiseases.isNotEmpty ? 'Yes' : 'No',
-            ),
-          ],
-        ),
-      );
+      // Use the delivery task passed from delivery intervention page
+      // and add morbidity data to it
+      TaskModel? deliveryTask = widget.deliveryTask;
 
-      // Dispatch the submit event to persist the data
+      if (deliveryTask != null) {
+        // Add morbidity fields to the existing delivery task
+        final existingFields = deliveryTask.additionalFields?.fields ?? [];
+        final updatedFields = [
+          ...existingFields,
+          AdditionalField(
+            'selectedDiseases',
+            selectedDiseases.join(' | '),
+          ),
+          AdditionalField(
+            'morbidityStatus',
+            selectedDiseases.isNotEmpty ? 'Yes' : 'No',
+          ),
+        ];
+
+        deliveryTask = deliveryTask.copyWith(
+          additionalFields: TaskAdditionalFields(
+            version: deliveryTask.additionalFields?.version ?? 1,
+            fields: updatedFields,
+          ),
+        );
+      } else {
+        // Fallback: Create a new task if deliveryTask is not provided
+        deliveryTask = TaskModel(
+          projectBeneficiaryClientReferenceId:
+              widget.projectBeneficiaryClientReferenceId,
+          clientReferenceId: IdGen.i.identifier,
+          tenantId: envConfig.variables.tenantId,
+          rowVersion: 1,
+          auditDetails: AuditDetails(
+            createdBy: context.loggedInUserUuid,
+            createdTime: context.millisecondsSinceEpoch(),
+          ),
+          projectId: context.projectId,
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: context.loggedInUserUuid,
+            createdTime: context.millisecondsSinceEpoch(),
+            lastModifiedBy: context.loggedInUserUuid,
+            lastModifiedTime: context.millisecondsSinceEpoch(),
+          ),
+          additionalFields: TaskAdditionalFields(
+            version: 1,
+            fields: [
+              AdditionalField(
+                'selectedDiseases',
+                selectedDiseases.join(','),
+              ),
+              AdditionalField(
+                'morbidityStatus',
+                selectedDiseases.isNotEmpty ? 'Yes' : 'No',
+              ),
+            ],
+          ),
+        );
+      }
+
+      // Dispatch the submit event to persist the combined data
       if (context.mounted) {
         context.read<DeliverInterventionBloc>().add(
               DeliverInterventionSubmitEvent(
-                task: task,
+                task: deliveryTask,
                 isEditing: false,
                 boundaryModel: context.boundary,
                 navigateToSummary: false,

@@ -354,12 +354,33 @@ class CustomDeliverInterventionSMCPageState
                   navigateToSummary: true,
                   householdMemberWrapper: householdMember),
             );
+        // Create task model and pass to morbidity page for task data
+        final deliveryTask = _getTaskModelOncho(
+          context,
+          form: form,
+          oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                  BeneficiaryType.household
+              ? deliverInterventionState.tasks?.last
+              : null,
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiary.clientReferenceId,
+          dose: deliverInterventionState.dose,
+          cycle: deliverInterventionState.cycle,
+          deliveryStrategy: DeliverStrategyType.direct.toValue(),
+          address: householdMember.members?.first.address?.first,
+          latitude: lat,
+          longitude: long,
+          selectedIndividual: selectedIndividual,
+          householdMemberWrapper: householdMember,
+        );
+
         context.router.push(
           MorbidityControlRoute(
             individual: selectedIndividual,
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
             interventionType: InterventionTypes.oncho,
+            deliveryTask: deliveryTask,
           ),
         );
       }
@@ -1210,26 +1231,6 @@ class CustomDeliverInterventionSMCPageState
                                                     doseAdministered,
                                                 checkDoseAdministration:
                                                     checkDoseAdministration,
-                                                onDelete: (index) {
-                                                  (form.control(
-                                                    _resourceDeliveredKey,
-                                                  ) as FormArray)
-                                                      .removeAt(
-                                                    index,
-                                                  );
-                                                  (form.control(
-                                                    _quantityDistributedKey,
-                                                  ) as FormArray)
-                                                      .removeAt(
-                                                    index,
-                                                  );
-                                                  _controllers.removeAt(
-                                                    index,
-                                                  );
-                                                  setState(() {
-                                                    _controllers;
-                                                  });
-                                                },
                                               )),
                                         ],
                                       ),
@@ -2087,7 +2088,7 @@ class CustomDeliverInterventionSMCPageState
           .selectedProject
           ?.additionalDetails
           ?.additionalProjectType;
-// bloc.cycle should be
+// ToDo:  bloc.cycle should be 1
       final int r = onchoAdditionalProjectType?.cycles == null
           ? 1
           : fetchProductVariantLocal(
@@ -2151,15 +2152,24 @@ class CustomDeliverInterventionSMCPageState
       ),
       _quantityDistributedKey: FormArray<int>([
         ..._controllers.mapIndexed(
-          (i, e) => FormControl<int>(
-            value: RegistrationDeliverySingleton().beneficiaryType !=
-                    BeneficiaryType.individual
-                ? int.tryParse(
-                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
-                  )
-                : 0,
-            validators: [Validators.min(1)],
-          ),
+          (i, e) {
+            int? productQuantity;
+
+            if (RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual) {
+              productQuantity = int.tryParse(
+                bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+              );
+            } else {
+              // For individual beneficiary type, get quantity from productVariants
+              productQuantity = productVariants?.elementAt(i).quantity ?? 0;
+            }
+
+            return FormControl<int>(
+              value: productQuantity,
+              validators: [Validators.min(1)],
+            );
+          },
         ),
       ]),
       _quantityWastedKey: FormArray<String>(

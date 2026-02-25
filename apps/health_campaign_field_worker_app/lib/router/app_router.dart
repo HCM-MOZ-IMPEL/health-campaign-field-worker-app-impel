@@ -21,6 +21,7 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 

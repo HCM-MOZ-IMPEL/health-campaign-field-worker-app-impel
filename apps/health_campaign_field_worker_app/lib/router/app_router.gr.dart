@@ -1238,6 +1238,7 @@ abstract class _$AppRouter extends RootStackRouter {
           projectBeneficiaryClientReferenceId:
               args.projectBeneficiaryClientReferenceId,
           interventionType: args.interventionType,
+          deliveryTask: args.deliveryTask,
         ),
       );
     },
@@ -5881,6 +5882,7 @@ class MorbidityControlRoute extends PageRouteInfo<MorbidityControlRouteArgs> {
     IndividualModel? individual,
     String? projectBeneficiaryClientReferenceId,
     required InterventionTypes interventionType,
+    TaskModel? deliveryTask,
     List<PageRouteInfo>? children,
   }) : super(
           MorbidityControlRoute.name,
@@ -5891,6 +5893,7 @@ class MorbidityControlRoute extends PageRouteInfo<MorbidityControlRouteArgs> {
             projectBeneficiaryClientReferenceId:
                 projectBeneficiaryClientReferenceId,
             interventionType: interventionType,
+            deliveryTask: deliveryTask,
           ),
           initialChildren: children,
         );
@@ -5908,6 +5911,7 @@ class MorbidityControlRouteArgs {
     this.individual,
     this.projectBeneficiaryClientReferenceId,
     required this.interventionType,
+    this.deliveryTask,
   });
 
   final Key? key;
@@ -5920,9 +5924,11 @@ class MorbidityControlRouteArgs {
 
   final InterventionTypes interventionType;
 
+  final TaskModel? deliveryTask;
+
   @override
   String toString() {
-    return 'MorbidityControlRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType}';
+    return 'MorbidityControlRouteArgs{key: $key, appLocalizations: $appLocalizations, individual: $individual, projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, interventionType: $interventionType, deliveryTask: $deliveryTask}';
   }
 }
 

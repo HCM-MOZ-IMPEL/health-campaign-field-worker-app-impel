@@ -1,22 +1,19 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../blocs/app_initialization/app_initialization.dart';
-import '../../../models/app_config/app_config_model.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import '../../localized.dart';
+import '../../widgets_bednet/custom_digit_integer_form_picker.dart';
 import '../custom_digit_reactive_dropdown_smc.dart';
 
 class CustomResourceBeneficiaryCardOncho extends LocalizedStatefulWidget {
-  final void Function(int) onDelete;
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
@@ -26,7 +23,6 @@ class CustomResourceBeneficiaryCardOncho extends LocalizedStatefulWidget {
   const CustomResourceBeneficiaryCardOncho(
       {super.key,
       super.appLocalizations,
-      required this.onDelete,
       required this.cardIndex,
       required this.form,
       required this.totalItems,
@@ -41,7 +37,6 @@ class CustomResourceBeneficiaryCardOncho extends LocalizedStatefulWidget {
 class CustomResourceBeneficiaryCardOncoState
     extends LocalizedState<CustomResourceBeneficiaryCardOncho> {
   bool doseAdministered = false;
-  static const _deliveryCommentKey = 'deliveryComment';
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +80,7 @@ class CustomResourceBeneficiaryCardOncoState
               );
             },
           ),
-          DigitIntegerFormPicker(
+          CustomDigitIntegerFormPicker(
             incrementer: true,
             formControlName: 'quantityDistributed.${widget.cardIndex}',
             form: widget.form,
@@ -94,6 +89,7 @@ class CustomResourceBeneficiaryCardOncoState
             ),
             minimum: 0,
             maximum: 3,
+            readOnly: true,
           ),
           DigitTextFormField(
             formControlName: 'quantityWasted.${widget.cardIndex}',
@@ -121,9 +117,9 @@ class CustomResourceBeneficiaryCardOncoState
                       label: localizations.translate(
                         i18_local.deliverIntervention.deliveryCommentLabelSMC,
                       ),
-                      menuItems: deliveryCommentOptionsOncho.map((e) {
-                        return e.toString();
-                      }).toList(),
+                      menuItems: deliveryCommentOptionsOncho
+                          .map((e) => e.name)
+                          .toList(),
                       formControlName: 'deliveryComment.${widget.cardIndex}',
                       isRequired: doseAdministered,
                       valueMapper: (value) => localizations.translate(
