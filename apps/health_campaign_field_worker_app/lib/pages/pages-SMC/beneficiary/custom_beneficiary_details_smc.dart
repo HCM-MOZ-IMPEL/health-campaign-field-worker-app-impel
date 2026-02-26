@@ -73,6 +73,7 @@ class CustomBeneficiaryDetailsSMCPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
+          final selectedIndividual = state.selectedIndividual;
 
           // Determine intervention type based on product variants
           bool isSmcDeliveryCards = fetchProductVariantForProjectType(
@@ -482,7 +483,7 @@ class CustomBeneficiaryDetailsSMCPageState
             final cycles = projectType?.cycles;
 
             return cycles != null && cycles.isNotEmpty
-                ? deliverState.oldTask != null
+                ? (taskData ?? []).isEmpty
                     ? DigitCard(
                         margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                         padding:

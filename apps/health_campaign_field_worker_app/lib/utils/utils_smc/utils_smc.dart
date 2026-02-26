@@ -878,6 +878,7 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
               if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
               'type_of_structure'

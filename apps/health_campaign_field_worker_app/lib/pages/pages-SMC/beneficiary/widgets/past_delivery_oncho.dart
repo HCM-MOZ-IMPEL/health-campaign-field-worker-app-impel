@@ -48,10 +48,13 @@ Widget buildTableContentOncho(
 
   // Calculate the height of the container based on the number of items in the table
 
-  final ProjectTypeModel projectType =
-      RegistrationDeliverySingleton().projectType!;
-  final item =
-      projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+  final ProjectTypeModel? onchoAdditionalProjectType =
+      RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.additionalProjectType;
+  final item = onchoAdditionalProjectType
+      ?.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
       fetchProductVariantLocal(item, individualModel, householdModel)
           ?.productVariants;
