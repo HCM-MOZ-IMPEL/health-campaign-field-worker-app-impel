@@ -250,7 +250,84 @@ class CustomBeneficiaryDetailsSMCPageState
                                                         .translate(i18
                                                             .beneficiaryDetails
                                                             .ctaProceed),
-                                                    action: (ctx) {
+                                                    action: (ctx) async {
+                                                      // Check if it's oncho intervention and product variant is null
+                                                      if (interventionType ==
+                                                          InterventionTypes
+                                                              .oncho) {
+                                                        final currentCycle =
+                                                            deliverState.cycle >=
+                                                                    0
+                                                                ? deliverState
+                                                                    .cycle
+                                                                : 0;
+                                                        final currentDose =
+                                                            deliverState.dose >=
+                                                                    0
+                                                                ? deliverState
+                                                                    .dose
+                                                                : 0;
+                                                        final projectType =
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType;
+                                                        final item = projectType
+                                                                ?.cycles?[
+                                                                    currentCycle -
+                                                                        1]
+                                                                .deliveries?[
+                                                            currentDose - 1];
+                                                        final productVariants =
+                                                            fetchProductVariantLocal(
+                                                                    item,
+                                                                    state
+                                                                        .selectedIndividual,
+                                                                    state
+                                                                        .householdMemberWrapper
+                                                                        .household)
+                                                                ?.productVariants;
+
+                                                        // If product variant is null, show error message
+                                                        if (productVariants ==
+                                                            null) {
+                                                          Navigator.of(ctx)
+                                                              .pop();
+                                                          await DigitDialog
+                                                              .show<bool>(
+                                                            context,
+                                                            options:
+                                                                DigitDialogOptions(
+                                                              titleText:
+                                                                  localizations
+                                                                      .translate(
+                                                                i18.deliverIntervention
+                                                                    .dialogTitle,
+                                                              ),
+                                                              contentText:
+                                                                  localizations
+                                                                      .translate(
+                                                                i18.common
+                                                                    .noProjectSelected,
+                                                              ),
+                                                              primaryAction:
+                                                                  DigitDialogActions(
+                                                                label: localizations
+                                                                    .translate(
+                                                                  i18.common
+                                                                      .coreCommonOk,
+                                                                ),
+                                                                action:
+                                                                    (dialogCtx) {
+                                                                  Navigator.of(
+                                                                          dialogCtx)
+                                                                      .pop();
+                                                                },
+                                                              ),
+                                                            ),
+                                                          );
+                                                          return;
+                                                        }
+                                                      }
+
                                                       Navigator.of(ctx).pop();
                                                       router.push(
                                                         DeliverInterventionRoute(),
