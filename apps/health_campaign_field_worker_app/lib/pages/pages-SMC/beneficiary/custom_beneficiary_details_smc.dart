@@ -27,12 +27,12 @@ import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
+import 'widgets/past_delivery_oncho.dart';
 import 'widgets/past_delivery_smc.dart';
 
 @RoutePage()
 class CustomBeneficiaryDetailsSMCPage extends LocalizedStatefulWidget {
   const CustomBeneficiaryDetailsSMCPage({
-  
     super.key,
     super.appLocalizations,
   });
@@ -218,15 +218,31 @@ class CustomBeneficiaryDetailsSMCPageState
                                                       .translate(i18
                                                           .beneficiaryDetails
                                                           .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper
-                                                        .household,
-                                                    interventionType,
-                                                  ),
+                                                  content: interventionType ==
+                                                          InterventionTypes
+                                                              .oncho
+                                                      ? buildTableContentOncho(
+                                                          deliverState,
+                                                          context,
+                                                          variant,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          interventionType,
+                                                        )
+                                                      : buildTableContent(
+                                                          deliverState,
+                                                          context,
+                                                          variant,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          interventionType,
+                                                        ),
                                                   barrierDismissible: true,
                                                   primaryAction:
                                                       DigitDialogActions(

@@ -306,84 +306,84 @@ class CustomDeliverInterventionSMCPageState
       ),
     );
     if (context.mounted && (shouldSubmit ?? false)) {
-      if (isReferral) {
-        // todo set other params as per old smc
-        final productVariantId =
-            ((form.control(_resourceDeliveredKey) as FormArray).value
-                    as List<ProductVariantModel?>)
-                .first
-                ?.id;
+      // if (isReferral) {
+      //   // todo set other params as per old smc
+      //   final productVariantId =
+      //       ((form.control(_resourceDeliveredKey) as FormArray).value
+      //               as List<ProductVariantModel?>)
+      //           .first
+      //           ?.id;
 
-        context.router.popAndPush(
-          CustomReferBeneficiarySMCRoute(
-              projectBeneficiaryClientRefId:
-                  projectBeneficiaryClientReferenceId,
-              individual: selectedIndividual!,
-              quantityWasted: wastedCount,
-              isReadministrationUnSuccessful: true,
-              productVariantId: productVariantId),
-        );
-      } else {
-        context.read<DeliverInterventionBloc>().add(
-              DeliverInterventionSubmitEvent(
-                  task: _getTaskModelOncho(
-                    context,
-                    form: form,
-                    oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.household
-                        ? deliverInterventionState.tasks?.last
-                        : null,
-                    projectBeneficiaryClientReferenceId:
-                        projectBeneficiary.clientReferenceId,
-                    dose: deliverInterventionState.dose,
-                    cycle: deliverInterventionState.cycle,
-                    deliveryStrategy: DeliverStrategyType.direct.toValue(),
-                    address: householdMember.members?.first.address?.first,
-                    latitude: lat,
-                    longitude: long,
-                    selectedIndividual: selectedIndividual,
-                    householdMemberWrapper: householdMember,
-                  ),
-                  isEditing:
-                      (deliverInterventionState.tasks ?? []).isNotEmpty &&
-                              RegistrationDeliverySingleton().beneficiaryType ==
-                                  BeneficiaryType.household
-                          ? true
-                          : false,
-                  boundaryModel: RegistrationDeliverySingleton().boundary!,
-                  navigateToSummary: true,
-                  householdMemberWrapper: householdMember),
-            );
-        // Create task model and pass to morbidity page for task data
-        final deliveryTask = _getTaskModelOncho(
-          context,
-          form: form,
-          oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                  BeneficiaryType.household
-              ? deliverInterventionState.tasks?.last
-              : null,
+      //   context.router.popAndPush(
+      //     CustomReferBeneficiarySMCRoute(
+      //         projectBeneficiaryClientRefId:
+      //             projectBeneficiaryClientReferenceId,
+      //         individual: selectedIndividual!,
+      //         quantityWasted: wastedCount,
+      //         isReadministrationUnSuccessful: true,
+      //         productVariantId: productVariantId),
+      //   );
+      // } else {
+      //   context.read<DeliverInterventionBloc>().add(
+      //         DeliverInterventionSubmitEvent(
+      //             task: _getTaskModelOncho(
+      //               context,
+      //               form: form,
+      //               oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+      //                       BeneficiaryType.household
+      //                   ? deliverInterventionState.tasks?.last
+      //                   : null,
+      //               projectBeneficiaryClientReferenceId:
+      //                   projectBeneficiary.clientReferenceId,
+      //               dose: deliverInterventionState.dose,
+      //               cycle: deliverInterventionState.cycle,
+      //               deliveryStrategy: DeliverStrategyType.direct.toValue(),
+      //               address: householdMember.members?.first.address?.first,
+      //               latitude: lat,
+      //               longitude: long,
+      //               selectedIndividual: selectedIndividual,
+      //               householdMemberWrapper: householdMember,
+      //             ),
+      //             isEditing:
+      //                 (deliverInterventionState.tasks ?? []).isNotEmpty &&
+      //                         RegistrationDeliverySingleton().beneficiaryType ==
+      //                             BeneficiaryType.household
+      //                     ? true
+      //                     : false,
+      //             boundaryModel: RegistrationDeliverySingleton().boundary!,
+      //             navigateToSummary: true,
+      //             householdMemberWrapper: householdMember),
+      //       );
+      // Create task model and pass to morbidity page for task data
+      final deliveryTask = _getTaskModelOncho(
+        context,
+        form: form,
+        oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                BeneficiaryType.household
+            ? deliverInterventionState.tasks?.last
+            : null,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiary.clientReferenceId,
+        dose: deliverInterventionState.dose,
+        cycle: deliverInterventionState.cycle,
+        deliveryStrategy: DeliverStrategyType.direct.toValue(),
+        address: householdMember.members?.first.address?.first,
+        latitude: lat,
+        longitude: long,
+        selectedIndividual: selectedIndividual,
+        householdMemberWrapper: householdMember,
+      );
+
+      context.router.push(
+        MorbidityControlRoute(
+          individual: selectedIndividual,
           projectBeneficiaryClientReferenceId:
-              projectBeneficiary.clientReferenceId,
-          dose: deliverInterventionState.dose,
-          cycle: deliverInterventionState.cycle,
-          deliveryStrategy: DeliverStrategyType.direct.toValue(),
-          address: householdMember.members?.first.address?.first,
-          latitude: lat,
-          longitude: long,
-          selectedIndividual: selectedIndividual,
-          householdMemberWrapper: householdMember,
-        );
-
-        context.router.push(
-          MorbidityControlRoute(
-            individual: selectedIndividual,
-            projectBeneficiaryClientReferenceId:
-                projectBeneficiaryClientReferenceId,
-            interventionType: InterventionTypes.oncho,
-            deliveryTask: deliveryTask,
-          ),
-        );
-      }
+              projectBeneficiaryClientReferenceId,
+          interventionType: InterventionTypes.oncho,
+          deliveryTask: deliveryTask,
+        ),
+      );
+      // }
     }
   }
 
