@@ -847,9 +847,11 @@ class CustomIndividualDetailsSMCPageState
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
                               formControlName: _height,
-                              label: localizations.translate(
-                                i18_local.individualDetails.heightHeadLabelText,
-                              ),
+                              label: widget.isHeadOfHousehold
+                                  ? localizations.translate(i18_local
+                                      .individualDetails.heightHeadLabelText)
+                                  : localizations.translate(i18_local
+                                      .individualDetails.heightChildLabelText),
                               isRequired: true,
                               validationMessages: {
                                 'minAllowed': (object) =>

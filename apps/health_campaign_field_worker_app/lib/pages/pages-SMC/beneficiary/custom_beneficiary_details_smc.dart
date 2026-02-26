@@ -25,14 +25,14 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
+import 'widgets/past_delivery_oncho.dart';
 import 'widgets/past_delivery_smc.dart';
 
 @RoutePage()
 class CustomBeneficiaryDetailsSMCPage extends LocalizedStatefulWidget {
-  final InterventionTypes interventionType;
   const CustomBeneficiaryDetailsSMCPage({
-    required this.interventionType,
     super.key,
     super.appLocalizations,
   });
@@ -55,11 +55,36 @@ class CustomBeneficiaryDetailsSMCPageState
     final theme = Theme.of(context);
     final localizations = RegistrationDeliveryLocalization.of(context);
     final router = context.router;
+    final smcAndOnchoFlow = isSmcAndOnchoFlow(context);
+    final smcAndBednetFlow = isSmcAndBednetFlow(context);
+    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    ProjectTypeModel? onchoAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
+
+          // Determine intervention type based on product variants
+          bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                  smcProjectType, state.selectedIndividual, null) !=
+              null;
+          bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                  onchoAdditionalProjectType, state.selectedIndividual, null) !=
+              null;
+          InterventionTypes? interventionType = isSmcDeliveryCards
+              ? InterventionTypes.smc
+              : isOnchoDeliveryCards
+                  ? InterventionTypes.oncho
+                  : InterventionTypes.smc;
 
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
@@ -193,15 +218,31 @@ class CustomBeneficiaryDetailsSMCPageState
                                                       .translate(i18
                                                           .beneficiaryDetails
                                                           .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper
-                                                        .household,
-                                                    widget.interventionType,
-                                                  ),
+                                                  content: interventionType ==
+                                                          InterventionTypes
+                                                              .oncho
+                                                      ? buildTableContentOncho(
+                                                          deliverState,
+                                                          context,
+                                                          variant,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          interventionType,
+                                                        )
+                                                      : buildTableContent(
+                                                          deliverState,
+                                                          context,
+                                                          variant,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          interventionType,
+                                                        ),
                                                   barrierDismissible: true,
                                                   primaryAction:
                                                       DigitDialogActions(

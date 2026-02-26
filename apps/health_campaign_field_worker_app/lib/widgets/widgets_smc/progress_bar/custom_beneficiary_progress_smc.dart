@@ -105,23 +105,20 @@ class _CustomBeneficiaryProgressBarSMCState
           final intervetionValue = InterventionTypes.smc.toValue();
 
           List<TaskModel> results = allTasks.where((task) {
-            final fields = task.additionalFields?.fields;
+            final fields = task.additionalFields?.fields ?? [];
 
-            if (fields == null || fields.isEmpty) {
-              // interventionType not present → include
-              return true;
-            }
+            final hasMatchingIntervention = fields.any((field) =>
+                field != null &&
+                field.key == interventionKey &&
+                field.value == intervetionValue);
 
-            final interventionField =
-                fields.firstWhere((field) => field.key == interventionKey);
+            final hasInterventionField = fields
+                .any((field) => field != null && field.key == interventionKey);
 
-            if (interventionField == null) {
-              // interventionType not present → include
-              return true;
-            }
-
-            // interventionType exists → include only if smc
-            return interventionField.value == intervetionValue;
+            // Include if:
+            // 1. No intervention field exists
+            // 2. OR matching value exists
+            return !hasInterventionField || hasMatchingIntervention;
           }).toList();
 
           final groupedEntries = results.groupListsBy(
