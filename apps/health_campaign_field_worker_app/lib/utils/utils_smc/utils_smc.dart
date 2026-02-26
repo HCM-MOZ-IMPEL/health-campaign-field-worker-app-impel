@@ -1259,21 +1259,26 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     return true;
   }
 
-  if (tasks.firstWhereOrNull((e) =>
-          e.additionalFields?.fields.firstWhereOrNull(
-            (element) =>
-                element.key ==
-                    additional_fields_local
-                        .AdditionalFieldsType.interventionType
-                        .toValue() &&
-                element.value == InterventionTypes.smc.toValue(),
-          ) !=
-          null) ==
-      null) {
+  // Find the last task with SMC intervention type
+  final lastTask = tasks.lastWhereOrNull((e) {
+    final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+      (element) =>
+          element.key ==
+          additional_fields_local.AdditionalFieldsType.interventionType
+              .toValue(),
+    );
+
+    // If field is missing → assume SMC (return true)
+    if (interventionField == null) {
+      return true;
+    }
+
+    // If field exists → must be SMC
+    return interventionField.value == InterventionTypes.smc.toValue();
+  });
+  if (lastTask == null) {
     return true;
   }
-
-  final lastTask = tasks.last;
   final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
 
   if (lastTaskCreatedTime == null) {

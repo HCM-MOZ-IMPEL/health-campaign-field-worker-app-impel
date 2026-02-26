@@ -86,27 +86,33 @@ class CustomMemberCardSMC extends StatelessWidget {
   });
 
   List<TaskModel>? _getSMCStatusData(BuildContext context) {
-    List<TaskModel>? tasks = this
-        .tasks
-        ?.where((e) =>
-            e.additionalFields?.fields
-                .where((field) =>
-                    field.key ==
-                        AdditionalFieldsType.interventionType.toValue() &&
-                    int.tryParse(field.value) == context.selectedCycle?.id)
-                .isNotEmpty ??
-            false)
-        .toList();
-    return tasks
-        ?.where((e) =>
-            e.additionalFields?.fields.firstWhereOrNull(
-              (element) =>
-                  element.key ==
-                      AdditionalFieldsType.interventionType.toValue() &&
-                  element.value == InterventionTypes.smc.toValue(),
-            ) !=
-            null)
-        .toList();
+    // todo correct this logic when there are multiple tasks for different cycles. currently it is assumed that there will be only one task for smc intervention type and if there are multiple tasks, it will filter based on the cycle id in additional field which might not be correct always as there can be multiple tasks for smc with same cycle id as well
+    // final tasks = this
+    //     .tasks
+    //     ?.where((e) =>
+    //         e.additionalFields?.fields
+    //             .where((field) =>
+    //                 field.key ==
+    //                     AdditionalFieldsType.interventionType.toValue() &&
+    //                 int.tryParse(field.value) == context.selectedCycle?.id)
+    //             .isNotEmpty ??
+    //         false)
+    //     .toList();
+
+    return tasks?.where((e) {
+      final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+        (element) =>
+            element.key == AdditionalFieldsType.interventionType.toValue(),
+      );
+
+      // If field is missing → assume SMC
+      if (interventionField == null) {
+        return true;
+      }
+
+      // If field exists → must be SMC
+      return interventionField.value == InterventionTypes.smc.toValue();
+    }).toList();
   }
 
   List<TaskModel>? _getOnchoStatusData() {
@@ -770,17 +776,22 @@ class CustomMemberCardSMC extends StatelessWidget {
         assessmentOnchoPending(onchoTasks, context.selectedCycle);
 
     bool isNotEligibleOncho =
-        RegistrationDeliverySingleton().projectType?.cycles != null
-            ? !checkEligibilityForAgeAndSideEffectOncho(
-                digit_ui_date_utils.DigitDOBAgeConvertor(
-                  years: ageInYears,
-                  months: ageInMonths,
-                ),
-                onchoAdditionalProjectType,
-                (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
-                null,
-              )
-            : false;
+        (RegistrationDeliverySingleton().projectType?.cycles != null
+                ? !checkEligibilityForAgeAndSideEffectOncho(
+                    digit_ui_date_utils.DigitDOBAgeConvertor(
+                      years: ageInYears,
+                      months: ageInMonths,
+                    ),
+                    onchoAdditionalProjectType,
+                    (onchoTasks ?? []).isNotEmpty
+                        ? onchoTasks!.lastOrNull
+                        : null,
+                    null,
+                  )
+                : false) &&
+            fetchProductVariantForProjectType(
+                    onchoAdditionalProjectType, individual, null) !=
+                null;
 
     bool inBeneficiaryEligibleOncho =
         checkIfBeneficiaryIneligibleOncho(onchoTasks);
