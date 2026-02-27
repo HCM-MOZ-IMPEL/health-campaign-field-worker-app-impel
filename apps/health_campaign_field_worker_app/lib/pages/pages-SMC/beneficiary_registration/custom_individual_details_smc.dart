@@ -27,6 +27,7 @@ import '../../../models/entities/entities_smc/identifier_types.dart'
 import '../../../models/entities/project_types.dart';
 import '../../../utils/constants.dart' as local_constants;
 import '../../../utils/utils.dart' as utils;
+import '../../../utils/utils_smc/utils_smc.dart' as utils_smc;
 import '../../../utils/date_utils.dart' as digits;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
@@ -854,6 +855,11 @@ class CustomIndividualDetailsSMCPageState
                                       .individualDetails.heightChildLabelText),
                               isRequired: true,
                               validationMessages: {
+                                'minHeightGreaterThanZero': (object) =>
+                                    localizations.translate(
+                                      i18_local.individualDetails
+                                          .minHeightLengthError,
+                                    ),
                                 'minAllowed': (object) =>
                                     localizations.translate(
                                       i18_local.individualDetails
@@ -863,6 +869,11 @@ class CustomIndividualDetailsSMCPageState
                                     localizations.translate(
                                       i18_local.individualDetails
                                           .maxHeightLengthError,
+                                    ),
+                                'invalidHeight': (object) =>
+                                    localizations.translate(
+                                      i18_local.individualDetails
+                                          .heightErrorValidationText,
                                     ),
                               },
                             );
@@ -1122,6 +1133,19 @@ class CustomIndividualDetailsSMCPageState
         value: individual?.name?.familyName ?? '',
       ),
       _height: FormControl<String>(
+        validators: [
+          Validators.delegate((AbstractControl<dynamic> control) {
+            final value = control.value;
+            if (value != null && value.toString().isNotEmpty) {
+              final height = int.tryParse(value.toString());
+              if (height == null || height <= 0) {
+                return {'minHeightGreaterThanZero': true};
+              }
+            }
+            return null;
+          }),
+          // Validators.delegate(utils_smc.CustomValidator.validateHeight),
+        ],
         value: (individual != null &&
                 utils.getCategory(
                       digits.DigitDateUtils.getAgeMonths(
