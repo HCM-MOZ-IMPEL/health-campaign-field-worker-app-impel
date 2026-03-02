@@ -1006,7 +1006,9 @@ class CustomDeliverInterventionSMCPageState
                     onchoAdditionalProjectType?.cycles?.isNotEmpty == true
                         ? (fetchProductVariantLocal(
                                 onchoAdditionalProjectType
-                                        ?.cycles![1 - 1].deliveries?[
+                                        ?.cycles![
+                                            deliveryInterventionState.cycle - 1]
+                                        .deliveries?[
                                     deliveryInterventionState.dose - 1],
                                 state.selectedIndividual,
                                 state.householdMemberWrapper.household)
@@ -2093,7 +2095,7 @@ class CustomDeliverInterventionSMCPageState
           ? 1
           : fetchProductVariantLocal(
                       onchoAdditionalProjectType
-                          ?.cycles![1 - 1].deliveries?[bloc.dose - 1],
+                          ?.cycles![bloc.cycle - 1].deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
                       overViewbloc.householdMemberWrapper.household)!
                   .productVariants

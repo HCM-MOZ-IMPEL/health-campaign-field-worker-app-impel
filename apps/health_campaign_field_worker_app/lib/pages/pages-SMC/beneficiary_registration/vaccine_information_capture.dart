@@ -464,7 +464,7 @@ class _VaccineInformationCapturePageState
           task: refusedTask,
           isEditing: false,
           boundaryModel: context.boundary,
-          navigateToSummary: true,
+          navigateToSummary: false,
         ));
 
     context

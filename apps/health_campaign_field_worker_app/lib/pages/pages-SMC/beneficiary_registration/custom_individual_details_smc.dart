@@ -1144,7 +1144,7 @@ class CustomIndividualDetailsSMCPageState
             }
             return null;
           }),
-          // Validators.delegate(utils_smc.CustomValidator.validateHeight),
+          Validators.delegate(utils_smc.CustomValidator.validateHeight),
         ],
         value: (individual != null &&
                 utils.getCategory(
