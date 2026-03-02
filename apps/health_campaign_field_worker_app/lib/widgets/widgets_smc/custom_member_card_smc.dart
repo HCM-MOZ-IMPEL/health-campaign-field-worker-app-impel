@@ -1258,17 +1258,26 @@ class CustomMemberCardSMC extends StatelessWidget {
           icon: Icons.info_rounded,
           iconSize: 20,
           iconText: localizations.translate(
-            isHead
-                ? i18_local
-                    .householdOverView.householdOverViewHouseholderHeadLabelSMC
-                : (isNotEligible || isBeneficiaryIneligible)
-                    ? _getNotEligibleLabel(interventionType)
-                    : isBeneficiaryReferred
-                        ? _getBeneficiaryReferredLabel(interventionType)
-                        : isBeneficiaryRefused
-                            ? _getBeneficiaryRefusedLabel(interventionType)
-                            : _getNotDeliveredLabel(interventionType),
+            (isNotEligible || isBeneficiaryIneligible)
+                ? _getNotEligibleLabel(interventionType)
+                : isBeneficiaryReferred
+                    ? _getBeneficiaryReferredLabel(interventionType)
+                    : isBeneficiaryRefused
+                        ? _getBeneficiaryRefusedLabel(interventionType)
+                        : _getNotDeliveredLabel(interventionType),
           ),
+          iconTextColor: theme.colorScheme.error,
+          iconColor: theme.colorScheme.error,
+        ),
+      );
+    } else if (isHead && interventionType == InterventionTypes.smc.toValue()) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: DigitIconButton(
+          icon: Icons.info_rounded,
+          iconSize: 20,
+          iconText: localizations.translate(i18_local
+              .householdOverView.householdOverViewHouseholderHeadLabelSMC),
           iconTextColor: theme.colorScheme.error,
           iconColor: theme.colorScheme.error,
         ),
