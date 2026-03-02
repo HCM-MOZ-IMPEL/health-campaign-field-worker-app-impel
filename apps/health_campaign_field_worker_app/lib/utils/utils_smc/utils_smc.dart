@@ -87,7 +87,7 @@ class CustomValidator {
     final value = control.value;
     if (value != null && value.isNotEmpty) {
       final height = int.tryParse(value);
-      if (height == null || height < 30 || height > 250) {
+      if (height == null || height < 90) {
         return {'invalidHeight': true};
       }
     }
@@ -1023,6 +1023,23 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
     return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
   }
 
+  return null;
+}
+
+String? getHeightConditionStringFromDeliveryDoseCriteria(
+    DeliveryDoseCriteria? doseCriteria) {
+  String condition = doseCriteria?.condition.toString() ?? '';
+  if (condition.contains('and')) {
+    final criterias = condition.split('and');
+    List validHeightCriteria = [];
+    for (var element in criterias) {
+      if (element.contains('height')) {
+        validHeightCriteria.add(element);
+      }
+    }
+
+    return validHeightCriteria.join(' and ');
+  }
   return null;
 }
 

@@ -89,7 +89,7 @@ Widget buildTableContentOncho(
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel))}'
                 : null,
           },
         ),
