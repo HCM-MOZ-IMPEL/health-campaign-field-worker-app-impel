@@ -40,6 +40,8 @@ import '../../../utils/utils_smc/utils_smc.dart'
     show getIndividualAdditionalFields;
 
 import '../../../models/entities/status.dart' as status_local;
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 @RoutePage()
 class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
@@ -242,7 +244,9 @@ class _EligibilityChecklistViewPage
                                             i18_local.deliverIntervention
                                                 .beneficiaryIneligibleDescription,
                                           )
-                                        : ifReferral
+                                        : ifReferral &&
+                                                widget.interventionType ==
+                                                    InterventionTypes.smc
                                             ? localizations.translate(
                                                 i18_local.deliverIntervention
                                                     .beneficiaryReferralDescription,
@@ -493,87 +497,90 @@ class _EligibilityChecklistViewPage
                                           // added the deliversubmitevent here
                                           final clientReferenceId =
                                               IdGen.i.identifier;
+                                          final task = TaskModel(
+                                            projectBeneficiaryClientReferenceId:
+                                                projectBeneficiaryClientReferenceId,
+                                            clientReferenceId:
+                                                clientReferenceId,
+                                            tenantId:
+                                                envConfig.variables.tenantId,
+                                            rowVersion: 1,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            projectId: context.projectId,
+                                            status: status_local
+                                                .Status.beneficiaryInEligible
+                                                .toValue(),
+                                            clientAuditDetails:
+                                                ClientAuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  context.loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalFields:
+                                                TaskAdditionalFields(
+                                              version: 1,
+                                              fields: [
+                                                AdditionalField(
+                                                  'taskStatus',
+                                                  status_local.Status
+                                                      .beneficiaryInEligible
+                                                      .toValue(),
+                                                ),
+                                                AdditionalField(
+                                                  'ineligibleReasons',
+                                                  ineligibilityReasons
+                                                      .join(","),
+                                                ),
+                                                ...getIndividualAdditionalFields(
+                                                  widget.individual,
+                                                  householdOverviewState
+                                                      .householdMemberWrapper,
+                                                ),
+                                                if (longitude != null)
+                                                  AdditionalField(
+                                                      'lng', longitude),
+                                                if (latitude != null)
+                                                  AdditionalField(
+                                                      'lat', latitude),
+                                                if (boundaryCode != null)
+                                                  AdditionalField(
+                                                      'boundaryCode',
+                                                      boundaryCode),
+                                                if (widget.interventionType !=
+                                                    null)
+                                                  AdditionalField(
+                                                    additional_fields_local
+                                                        .AdditionalFieldsType
+                                                        .interventionType
+                                                        .toValue(),
+                                                    widget.interventionType
+                                                        .toValue(),
+                                                  ),
+                                              ],
+                                            ),
+                                            address: widget
+                                                .individual!.address?.first
+                                                .copyWith(
+                                              relatedClientReferenceId:
+                                                  clientReferenceId,
+                                              id: null,
+                                            ),
+                                          );
                                           context
                                               .read<DeliverInterventionBloc>()
                                               .add(
                                                 DeliverInterventionSubmitEvent(
-                                                    task: TaskModel(
-                                                      projectBeneficiaryClientReferenceId:
-                                                          projectBeneficiaryClientReferenceId,
-                                                      clientReferenceId:
-                                                          clientReferenceId,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
-                                                      rowVersion: 1,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      projectId:
-                                                          context.projectId,
-                                                      status: status_local
-                                                          .Status
-                                                          .beneficiaryInEligible
-                                                          .toValue(),
-                                                      clientAuditDetails:
-                                                          ClientAuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                        lastModifiedBy: context
-                                                            .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      additionalFields:
-                                                          TaskAdditionalFields(
-                                                        version: 1,
-                                                        fields: [
-                                                          AdditionalField(
-                                                            'taskStatus',
-                                                            status_local.Status
-                                                                .beneficiaryInEligible
-                                                                .toValue(),
-                                                          ),
-                                                          AdditionalField(
-                                                            'ineligibleReasons',
-                                                            ineligibilityReasons
-                                                                .join(","),
-                                                          ),
-                                                          ...getIndividualAdditionalFields(
-                                                            widget.individual,
-                                                            householdOverviewState
-                                                                .householdMemberWrapper,
-                                                          ),
-                                                          if (longitude != null)
-                                                            AdditionalField(
-                                                                'lng',
-                                                                longitude),
-                                                          if (latitude != null)
-                                                            AdditionalField(
-                                                                'lat',
-                                                                latitude),
-                                                          if (boundaryCode !=
-                                                              null)
-                                                            AdditionalField(
-                                                                'boundaryCode',
-                                                                boundaryCode)
-                                                        ],
-                                                      ),
-                                                      address: widget
-                                                          .individual!
-                                                          .address
-                                                          ?.first
-                                                          .copyWith(
-                                                        relatedClientReferenceId:
-                                                            clientReferenceId,
-                                                        id: null,
-                                                      ),
-                                                    ),
+                                                    task: task,
                                                     isEditing: false,
                                                     boundaryModel:
                                                         context.boundary,
@@ -592,7 +599,9 @@ class _EligibilityChecklistViewPage
                                             CustomHouseholdAcknowledgementSMCRoute(
                                                 enableViewHousehold: true),
                                           );
-                                        } else if (ifReferral) {
+                                        } else if (ifReferral &&
+                                            widget.interventionType ==
+                                                InterventionTypes.smc) {
                                           router.push(
                                             CustomReferBeneficiarySMCRoute(
                                               projectBeneficiaryClientRefId:

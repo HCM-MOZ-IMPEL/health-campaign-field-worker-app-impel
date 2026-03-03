@@ -133,18 +133,23 @@ class _CustomViewBeneficiaryCardSMCState
           .toList();
     } else {
       // SMC tasks - default
-      return allTaskData
-          .where((e) =>
-              e.additionalFields?.fields.firstWhereOrNull(
-                (element) =>
-                    element.key ==
-                        additional_fields_local
-                            .AdditionalFieldsType.interventionType
-                            .toValue() &&
-                    element.value == InterventionTypes.smc.toValue(),
-              ) !=
-              null)
-          .toList();
+
+      return allTaskData?.where((e) {
+        final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+          (element) =>
+              element.key ==
+              additional_fields_local.AdditionalFieldsType.interventionType
+                  .toValue(),
+        );
+
+        // If field is missing → assume SMC
+        if (interventionField == null) {
+          return true;
+        }
+
+        // If field exists → must be SMC
+        return interventionField.value == InterventionTypes.smc.toValue();
+      }).toList();
     }
   }
 
