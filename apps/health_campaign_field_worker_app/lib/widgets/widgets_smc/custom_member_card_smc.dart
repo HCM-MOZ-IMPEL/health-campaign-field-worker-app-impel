@@ -777,21 +777,20 @@ class CustomMemberCardSMC extends StatelessWidget {
 
     bool isNotEligibleOncho =
         (RegistrationDeliverySingleton().projectType?.cycles != null
-                ? !checkEligibilityForAgeAndSideEffectOncho(
-                    digit_ui_date_utils.DigitDOBAgeConvertor(
-                      years: ageInYears,
-                      months: ageInMonths,
-                    ),
-                    onchoAdditionalProjectType,
-                    (onchoTasks ?? []).isNotEmpty
-                        ? onchoTasks!.lastOrNull
-                        : null,
-                    null,
-                  )
-                : false) &&
-            fetchProductVariantForProjectType(
-                    onchoAdditionalProjectType, individual, null) !=
-                null;
+            ? !checkEligibilityForAgeAndSideEffectOncho(
+                digit_ui_date_utils.DigitDOBAgeConvertor(
+                  years: ageInYears,
+                  months: ageInMonths,
+                ),
+                onchoAdditionalProjectType,
+                (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
+                null,
+              )
+            : false);
+    isNotEligibleOncho = isNotEligibleOncho ||
+        fetchProductVariantForProjectType(
+                onchoAdditionalProjectType, individual, null) ==
+            null;
 
     bool inBeneficiaryEligibleOncho =
         checkIfBeneficiaryIneligibleOncho(onchoTasks);
