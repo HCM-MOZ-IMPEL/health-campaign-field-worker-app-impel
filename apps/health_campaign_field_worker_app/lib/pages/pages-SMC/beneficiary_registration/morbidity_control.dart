@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
+import '../../../blocs/app_initialization/app_initialization.dart';
+import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/environment_config.dart';
@@ -39,142 +41,140 @@ class MorbidityControlPage extends LocalizedStatefulWidget {
 }
 
 class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
-  // Map of disease keys to localization key references
-  late final List<MapEntry<String, String>> _diseaseList;
+  // List of disease options loaded from MDMS
+  List<DiseaseOptions>? _diseaseOptions = [];
   final clickedStatus = ValueNotifier<bool>(false);
-  static const _individualNameKey = 'tinea';
-  static const _individualLastNameKey = 'scabies';
-  static const _dobKey = 'tungiasis';
-  static const _genderKey = 'lymphaticFilariasisStageLymphedema';
-  static const _mobileNumberKey = 'lymphaticFilariasisStageMale';
-  static const _height = 'tracomaFolicular';
-  static const _weight = 'tracomaTrichiasis';
-  static const _bmi = 'suspectedLeprosy';
-  static const _tineaKey = 'tinea';
-  static const _scabiesKey = 'scabies';
-  static const _tungiasisKey = 'tungiasis';
-  static const _lymphaticFilariasisStageLymphedemaKey =
-      'lymphaticFilariasisStageLymphedema';
-  static const _lymphaticFilariasisStageMaleKey =
-      'lymphaticFilariasisStageMale';
-  static const _tracomaFolicularKey = 'tracomaFolicular';
-  static const _tracomaTrichiasisKey = 'tracomaTrichiasis';
-  static const _suspectedLeprosyKey = 'suspectedLeprosy';
 
   @override
   void initState() {
     super.initState();
-    _diseaseList = _initializeDiseaseList();
-
-    // Initialize all diseases as unselected
-    for (final disease in _diseaseList) {
-      _diseaseSelection[disease.key] = false;
-    }
   }
 
-  // Map to track selected diseases
+  // Map to track selected diseases (using code as key)
   Map<String, bool> _diseaseSelection = {};
-
-  /// Initialize and return the disease list with localization key references
-  List<MapEntry<String, String>> _initializeDiseaseList() {
-    return [
-      MapEntry(_tineaKey, i18_local.morbidityControl.tinea),
-      MapEntry(_scabiesKey, i18_local.morbidityControl.scabies),
-      MapEntry(_tungiasisKey, i18_local.morbidityControl.tungiasis),
-      MapEntry(
-        _lymphaticFilariasisStageLymphedemaKey,
-        i18_local.morbidityControl.lymphaticFilariasisStageLymphedema,
-      ),
-      MapEntry(
-        _lymphaticFilariasisStageMaleKey,
-        i18_local.morbidityControl.lymphaticFilariasisStageMale,
-      ),
-      MapEntry(
-          _tracomaFolicularKey, i18_local.morbidityControl.tracomaFolicular),
-      MapEntry(
-          _tracomaTrichiasisKey, i18_local.morbidityControl.tracomaTrichiasis),
-      MapEntry(
-          _suspectedLeprosyKey, i18_local.morbidityControl.suspectedLeprosy),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ScrollableContent(
-        header: BackNavigationHelpHeaderWidget(
-          handleBack: () => Navigator.pop(context),
-          showHelp: false,
-          showcaseButton: null,
-        ),
-        enableFixedButton: true,
-        footer: DigitCard(
-          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-          padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-          child: ValueListenableBuilder(
-            valueListenable: clickedStatus,
-            builder: (context, bool isClicked, _) {
-              return DigitElevatedButton(
-                onPressed: isClicked
-                    ? null
-                    : () async {
-                        _handleSubmit(context);
-                      },
-                child: Center(
-                  child: Text(
-                    localizations.translate(i18.common.coreCommonSubmit),
+    return BlocBuilder<AppInitializationBloc, AppInitializationState>(
+      builder: (context, initState) {
+        return initState.maybeWhen(
+          initialized: (appConfiguration, _, __) {
+            // Load disease options from MDMS
+            _diseaseOptions = appConfiguration.diseaseOptions;
+
+            // Initialize disease selection map if not already initialized
+            if (_diseaseOptions != null && _diseaseSelection.isEmpty) {
+              for (final disease in _diseaseOptions!) {
+                if (disease.code != null) {
+                  _diseaseSelection[disease.code!] = false;
+                }
+              }
+            }
+
+            return Scaffold(
+              body: ScrollableContent(
+                header: BackNavigationHelpHeaderWidget(
+                  handleBack: () => Navigator.pop(context),
+                  showHelp: false,
+                  showcaseButton: null,
+                ),
+                enableFixedButton: true,
+                footer: DigitCard(
+                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                  child: ValueListenableBuilder(
+                    valueListenable: clickedStatus,
+                    builder: (context, bool isClicked, _) {
+                      return DigitElevatedButton(
+                        onPressed: isClicked
+                            ? null
+                            : () async {
+                                _handleSubmit(context);
+                              },
+                        child: Center(
+                          child: Text(
+                            localizations
+                                .translate(i18.common.coreCommonSubmit),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: DigitCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    localizations
-                        .translate(i18_local.morbidityControl.pageTitle),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: DigitCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          Text(
+                            localizations.translate(
+                                i18_local.morbidityControl.pageTitle),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          // Question
+                          Text(
+                            localizations.translate(
+                                i18_local.morbidityControl.questionPrompt),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const SizedBox(height: 16),
+                          // Disease checkboxes list
+                          if (_diseaseOptions != null &&
+                              _diseaseOptions!.isNotEmpty)
+                            ..._buildDiseaseCheckboxList(context)
+                          else
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'No disease options available',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  // Question
-                  Text(
-                    localizations
-                        .translate(i18_local.morbidityControl.questionPrompt),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 16),
-                  // Disease checkboxes list
-                  ..._buildDiseaseCheckboxList(context),
                 ],
+              ),
+            );
+          },
+          orElse: () => Scaffold(
+            body: Center(
+              child: Text(
+                localizations.translate(i18.common.coreCommonLoadingText),
               ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  /// Build the list of disease checkboxes
+  /// Build the list of disease checkboxes from MDMS data
   List<Widget> _buildDiseaseCheckboxList(BuildContext context) {
-    return _diseaseList.map((diseaseEntry) {
-      final diseaseKey = diseaseEntry.key;
-      final localizationKey = diseaseEntry.value;
+    if (_diseaseOptions == null || _diseaseOptions!.isEmpty) {
+      return [];
+    }
+
+    return _diseaseOptions!.map((disease) {
+      final diseaseCode = disease.code ?? '';
+      final diseaseName = disease.name ?? '';
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Checkbox(
-            value: _diseaseSelection[diseaseKey] ?? false,
+            value: _diseaseSelection[diseaseCode] ?? false,
             onChanged: (bool? selected) {
               setState(() {
-                _diseaseSelection[diseaseKey] = selected ?? false;
+                _diseaseSelection[diseaseCode] = selected ?? false;
               });
             },
           ),
@@ -182,7 +182,7 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
             child: Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Text(
-                localizations.translate(localizationKey),
+                diseaseName,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
@@ -231,7 +231,7 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
     if (!context.mounted) return;
 
     if (shouldSubmit ?? false) {
-      // Get selected diseases from the _diseaseSelection map
+      // Get selected diseases from the _diseaseSelection map (using codes)
       final selectedDiseases = _diseaseSelection.entries
           .where((entry) => entry.value)
           .map((entry) => entry.key)

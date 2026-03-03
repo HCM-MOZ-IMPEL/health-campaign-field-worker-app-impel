@@ -61,6 +61,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
 
+  @Name('DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptionsOncho;
+
   @Name('DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc;
 
@@ -97,6 +100,8 @@ class AppConfiguration {
   late List<Vaccine>? vaccine;
   @Name('VACCINE_GROUPS')
   late List<VaccineGroup>? vaccineGroups;
+  @Name('DISEASE_OPTIONS')
+  late List<DiseaseOptions>? diseaseOptions;
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -264,6 +269,12 @@ class VaccineGroup {
 
 @embedded
 class Vaccine {
+  late String? code;
+  late String? name;
+}
+
+@embedded
+class DiseaseOptions {
   late String? code;
   late String? name;
 }

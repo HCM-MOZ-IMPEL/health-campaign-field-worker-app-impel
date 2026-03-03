@@ -288,6 +288,15 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
+    final List<DeliveryCommentOptions>? deliveryCommentOptionsOncho =
+        element?.deliveryCommentOptionsOncho.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return deliveryCommentOption;
+    }).toList();
+
     final List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc =
         element?.deliveryCommentWastedOptionsSmc.map((element) {
       final deliveryCommentWastedOption = DeliveryCommentOptions()
@@ -325,6 +334,7 @@ class MdmsRepository {
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
+    appConfiguration.deliveryCommentOptionsOncho = deliveryCommentOptionsOncho;
     appConfiguration.deliveryCommentWastedOptionsSmc =
         deliveryCommentWastedOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =
@@ -439,6 +449,14 @@ class MdmsRepository {
         ..code = e.code
         ..vaccineData = e.vaccineData;
       return vaccineGroup;
+    }).toList();
+
+    appConfiguration.diseaseOptions =
+        element?.diseaseOptions?.map((e) {
+      final diseaseOption = DiseaseOptions()
+        ..name = e.name.toString()
+        ..code = e.code;
+      return diseaseOption;
     }).toList();
 
     isar.writeTxnSync(() {
