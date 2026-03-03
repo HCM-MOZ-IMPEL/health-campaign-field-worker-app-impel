@@ -956,29 +956,27 @@ class CustomMemberCardSMC extends StatelessWidget {
               offstage: beneficiaryType != BeneficiaryType.individual,
               child: Column(
                 children: [
-                  if (isSmcDeliveryCards || isOnchoDeliveryCards)
-                    _buildStatusIndicator(
-                      isDelivered:
-                          isSmcDeliveryCards ? isDelivered : isOnchoDelivered,
-                      isNotEligible: isSmcDeliveryCards
-                          ? isNotEligible
-                          : isNotEligibleOncho,
-                      isBeneficiaryRefused: isSmcDeliveryCards
-                          ? isBeneficiaryRefused
-                          : beneficiaryRefusedOncho,
-                      isBeneficiaryIneligible: isSmcDeliveryCards
-                          ? isBeneficiaryIneligible
-                          : inBeneficiaryEligibleOncho,
-                      isBeneficiaryReferred: isSmcDeliveryCards
-                          ? isBeneficiaryReferred
-                          : beneficiaryReferredOncho,
-                      isHead: isHead,
-                      interventionType: isSmcDeliveryCards
-                          ? InterventionTypes.smc.toValue()
-                          : InterventionTypes.oncho.toValue(),
-                      context: context,
-                      theme: theme,
-                    ),
+                  _buildStatusIndicator(
+                    isDelivered:
+                        isSmcDeliveryCards ? isDelivered : isOnchoDelivered,
+                    isNotEligible:
+                        isSmcDeliveryCards ? isNotEligible : isNotEligibleOncho,
+                    isBeneficiaryRefused: isSmcDeliveryCards
+                        ? isBeneficiaryRefused
+                        : beneficiaryRefusedOncho,
+                    isBeneficiaryIneligible: isSmcDeliveryCards
+                        ? isBeneficiaryIneligible
+                        : inBeneficiaryEligibleOncho,
+                    isBeneficiaryReferred: isSmcDeliveryCards
+                        ? isBeneficiaryReferred
+                        : beneficiaryReferredOncho,
+                    isHead: isHead,
+                    interventionType: isSmcDeliveryCards
+                        ? InterventionTypes.smc.toValue()
+                        : InterventionTypes.oncho.toValue(),
+                    context: context,
+                    theme: theme,
+                  ),
                 ],
               ),
             ),

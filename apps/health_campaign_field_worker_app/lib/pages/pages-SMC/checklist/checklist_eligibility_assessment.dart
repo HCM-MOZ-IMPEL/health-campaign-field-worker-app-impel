@@ -244,7 +244,9 @@ class _EligibilityChecklistViewPage
                                             i18_local.deliverIntervention
                                                 .beneficiaryIneligibleDescription,
                                           )
-                                        : ifReferral
+                                        : ifReferral &&
+                                                widget.interventionType ==
+                                                    InterventionTypes.smc
                                             ? localizations.translate(
                                                 i18_local.deliverIntervention
                                                     .beneficiaryReferralDescription,
@@ -597,7 +599,9 @@ class _EligibilityChecklistViewPage
                                             CustomHouseholdAcknowledgementSMCRoute(
                                                 enableViewHousehold: true),
                                           );
-                                        } else if (ifReferral) {
+                                        } else if (ifReferral &&
+                                            widget.interventionType ==
+                                                InterventionTypes.smc) {
                                           router.push(
                                             CustomReferBeneficiarySMCRoute(
                                               projectBeneficiaryClientRefId:
