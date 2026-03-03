@@ -814,6 +814,17 @@ class CustomMemberCardSMC extends StatelessWidget {
         )
         ?.identifierId;
 
+    final onchoAllDoseDelivered = allDosesDelivered(
+      onchoTasks,
+      context.selectedCycle,
+      sideEffects,
+      individual,
+    );
+    final checkOnchoStatus = checkStatusOncho(
+      onchoTasks,
+      context.selectedCycle,
+    );
+
     // handles only smc and oncho , no other type
 
     InterventionTypes? interventionType = isSmcDeliveryCards
@@ -1062,8 +1073,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                     beneficiaryRefusedOncho ||
                                     inBeneficiaryEligibleOncho ||
                                     beneficiaryReferredOncho) &&
-                                checkStatusOncho(
-                                    onchoTasks, context.selectedCycle)
+                                checkOnchoStatus
                             ? const Offstage()
                             : !isNotEligibleOncho
                                 ? DigitElevatedButton(
@@ -1085,16 +1095,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                             : null,
                                     child: Center(
                                       child: Text(
-                                        allDosesDelivered(
-                                                  onchoTasks,
-                                                  context.selectedCycle,
-                                                  sideEffects,
-                                                  individual,
-                                                ) &&
-                                                !checkStatusOncho(
-                                                  onchoTasks,
-                                                  context.selectedCycle,
-                                                )
+                                        !checkOnchoStatus
                                             ? localizations.translate(
                                                 i18.householdOverView
                                                     .viewDeliveryLabel,
