@@ -1670,8 +1670,10 @@ class _EligibilityChecklistViewPage
   ) {
     var isIneligible = false;
     var q4Key = "SEA3";
+    var q5Key = "SEA4";
     Map<String, String> keyVsReason = {
       q4Key: "CHILD_ON_MEDICATION_1",
+      q5Key: "CHILD_ILL_DURING_CAMPAIGN",
     };
 
     if (responses.isNotEmpty) {
@@ -1679,10 +1681,15 @@ class _EligibilityChecklistViewPage
           (responses.containsKey(q4Key) && responses[q4Key]!.isNotEmpty)) {
         isIneligible = responses[q4Key] == yes ? true : false;
       }
+
+      if (!isIneligible &&
+          (responses.containsKey(q5Key) && responses[q5Key]!.isNotEmpty)) {
+        isIneligible = responses[q5Key] == yes ? true : false;
+      }
       // passing all the reasons which have response as true
       if (isIneligible) {
         for (var entry in responses.entries) {
-          if (entry.key == q4Key) {
+          if (entry.key == q4Key || entry.key == q5Key) {
             entry.value == yes
                 ? ineligibilityReasons.add(keyVsReason[entry.key])
                 : null;

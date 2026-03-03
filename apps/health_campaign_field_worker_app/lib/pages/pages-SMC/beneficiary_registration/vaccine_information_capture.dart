@@ -49,8 +49,8 @@ class _VaccineInformationCapturePageState
   VaccineGroup? applicableVaccineGroup;
   List<Vaccine>? applicableVaccines = [];
   Map<String, bool> vaccineSelection = {};
-  bool vaccineCardPresent = false;
-  bool vaccineRefused = false;
+  bool vaccineCardPresent = true;
+  bool vaccineRefused = true;
   String? vaccineRefusalReason;
   final clickedStatus = ValueNotifier<bool>(false);
 
@@ -354,7 +354,8 @@ class _VaccineInformationCapturePageState
                 ),
               ),
             // Show vaccine refusal reason only if vaccine is refused
-            if (vaccineRefused)
+            if (vaccineRefused &&
+                widget.interventionType == InterventionTypes.oncho)
               SliverToBoxAdapter(
                 child: DigitCard(
                   child: Padding(
