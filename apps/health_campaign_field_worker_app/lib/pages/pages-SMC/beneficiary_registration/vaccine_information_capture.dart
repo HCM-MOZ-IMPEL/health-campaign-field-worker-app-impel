@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -449,7 +450,24 @@ class _VaccineInformationCapturePageState
     }
   }
 
-  void _handleOnchoFlow(BuildContext context, LocationState locationState) {
+  void _handleOnchoFlow(
+      BuildContext context, LocationState locationState) async {
+    final theme = Theme.of(context);
+    if (vaccineRefused && (vaccineRefusalReason ?? '').isEmpty) {
+      await DigitToast.show(
+        context,
+        options: DigitToastOptions(
+          localizations.translate(
+            i18_smc.deliverIntervention.refusalReasonEmpty,
+          ),
+          true,
+          theme,
+        ),
+      );
+
+      return;
+    }
+
     if (!vaccineRefused) {
       context.router.push(EligibilityChecklistViewRoute(
         projectBeneficiaryClientReferenceId:
