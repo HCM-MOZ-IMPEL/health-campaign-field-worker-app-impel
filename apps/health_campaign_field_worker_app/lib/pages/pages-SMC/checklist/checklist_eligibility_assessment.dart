@@ -26,6 +26,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/utils/constants.dart' as survey_constants;
 
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
+import '../../../main.dart';
 import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../models/entities/project_types.dart';
 import '../../../router/app_router.dart';
@@ -227,11 +228,16 @@ class _EligibilityChecklistViewPage
                                     ifReferral =
                                         isReferral(responses, referralReasons);
                                     ifDeliver = isDelivery(responses);
-                                    checkIfIneligibleFlow = isIneligible(
-                                      responses,
-                                      ineligibilityReasons,
-                                      ifAdministration,
-                                    );
+                                    checkIfIneligibleFlow = widget
+                                                .interventionType ==
+                                            InterventionTypes.smc
+                                        ? isIneligible(
+                                            responses,
+                                            ineligibilityReasons,
+                                            ifAdministration,
+                                          )
+                                        : isIneligibleOncho(
+                                            responses, ineligibilityReasons);
                                     if (checkIfIneligibleFlow.isNotEmpty &&
                                         checkIfIneligibleFlow.length >= 2) {
                                       ifIneligible = checkIfIneligibleFlow[0];
@@ -1674,10 +1680,9 @@ class _EligibilityChecklistViewPage
   ) {
     var isIneligible = false;
     var q4Key = "SEA3";
-    var q5Key = "SEA4";
+
     Map<String, String> keyVsReason = {
       q4Key: "CHILD_ON_MEDICATION_1",
-      q5Key: "CHILD_ILL_DURING_CAMPAIGN",
     };
 
     if (responses.isNotEmpty) {
@@ -1686,19 +1691,36 @@ class _EligibilityChecklistViewPage
         isIneligible = responses[q4Key] == yes ? true : false;
       }
 
-      if (!isIneligible &&
-          (responses.containsKey(q5Key) && responses[q5Key]!.isNotEmpty)) {
-        isIneligible = responses[q5Key] == yes ? true : false;
-      }
       // passing all the reasons which have response as true
       if (isIneligible) {
         for (var entry in responses.entries) {
-          if (entry.key == q4Key || entry.key == q5Key) {
+          if (entry.key == q4Key) {
             entry.value == yes
                 ? ineligibilityReasons.add(keyVsReason[entry.key])
                 : null;
           }
         }
+      }
+    }
+
+    return [isIneligible, ifAdministration];
+  }
+
+  List<bool> isIneligibleOncho(
+      Map<String?, String> responses, List<String?> ineligibilityReasons) {
+    var isIneligible = false;
+    var ifAdministration = false;
+
+    for (var entry in responses.entries) {
+      if (entry.value == yes) {
+        isIneligible = true;
+        break;
+      }
+    }
+
+    for (var entry in responses.entries) {
+      if (entry.value == yes) {
+        ineligibilityReasons.add(entry.key);
       }
     }
 
