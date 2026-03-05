@@ -139,7 +139,7 @@ class _CustomBeneficiaryProgressBarOnchoState
         mainAxisSize: MainAxisSize.min,
         children: [
           ProgressIndicatorContainer(
-            label: '${max(target - current, 0)} ${widget.label}',
+            label: widget.label.replaceAll('{}', '${max(target - current, 0)}'),
             prefixLabel: '$current ${widget.prefixLabel}',
             suffixLabel: target.toString(),
             value: target == 0 ? 0 : min(current / target, 1),

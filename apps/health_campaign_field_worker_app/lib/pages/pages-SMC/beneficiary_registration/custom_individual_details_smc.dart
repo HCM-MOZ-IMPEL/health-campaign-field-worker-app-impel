@@ -102,6 +102,12 @@ class CustomIndividualDetailsSMCPageState
 
       if (heightVisible.value != newValue) {
         heightVisible.value = newValue; // Update only if changed
+        // Trigger validation when height field becomes visible
+        if (shouldShowHeight) {
+          form.control(_height).updateValueAndValidity();
+          // Mark as touched so error shows immediately
+          form.control(_height).markAsTouched();
+        }
       }
     }
   }
@@ -119,6 +125,8 @@ class CustomIndividualDetailsSMCPageState
         DigitDOBAge age = DigitDateUtils.calculateAge(value);
         updateStatus(form, age, context);
       }
+      // Trigger height field validation when DOB changes
+      form.control(_height).updateValueAndValidity();
     });
   }
 
@@ -855,6 +863,10 @@ class CustomIndividualDetailsSMCPageState
                                       .individualDetails.heightChildLabelText),
                               isRequired: true,
                               validationMessages: {
+                                'required': (object) => localizations.translate(
+                                      i18_local.individualDetails
+                                          .minHeightLengthError,
+                                    ),
                                 'minHeightGreaterThanZero': (object) =>
                                     localizations.translate(
                                       i18_local.individualDetails
@@ -1134,6 +1146,43 @@ class CustomIndividualDetailsSMCPageState
       ),
       _height: FormControl<String>(
         validators: [
+          // Only require height if the field is visible (smcAndOncho flow and age >= 60 months)
+          Validators.delegate((AbstractControl<dynamic> control) {
+            // Check if height field should be visible
+            if (!context.isSmcAndOnchoFlow) {
+              return null; // Don't validate if not smcAndOncho flow
+            }
+
+            // Get DOB from parent form
+            final parent = control.parent;
+            if (parent == null || parent is! FormGroup) return null;
+
+            final formGroup = parent as FormGroup;
+            final dobControl = formGroup.control(_dobKey);
+            final dob = dobControl.value as DateTime?;
+
+            if (dob == null) {
+              return null; // Don't validate if DOB is not set
+            }
+
+            // Calculate age and check if height should be visible
+            final age = DigitDateUtils.calculateAge(dob);
+            final ageInMonths = utils.getAgeMonths(age);
+            final shouldShowHeight =
+                ageInMonths >= local_constants.Constants.onchoMinAge;
+
+            if (!shouldShowHeight) {
+              return null; // Don't validate if age < 60 months
+            }
+
+            // Height field is visible, so it's required
+            final value = control.value;
+            if (value == null || value.toString().trim().isEmpty) {
+              return {'required': true};
+            }
+
+            return null;
+          }),
           Validators.delegate((AbstractControl<dynamic> control) {
             final value = control.value;
             if (value != null && value.toString().isNotEmpty) {

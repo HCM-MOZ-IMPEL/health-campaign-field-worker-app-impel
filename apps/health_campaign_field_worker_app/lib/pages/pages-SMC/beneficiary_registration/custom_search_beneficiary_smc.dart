@@ -210,8 +210,9 @@ class _CustomSearchBeneficiarySMCPageState
                                               },
                                             ),
                                             Text(
-                                              localizations.translate(
-                                                  'SEARCH_BY_BENEFICIARY_ID'),
+                                              localizations.translate(i18Local
+                                                  .searchBeneficiary
+                                                  .searchByBeneficiaryId),
                                             ),
                                           ],
                                         )
