@@ -289,9 +289,7 @@ class _CustomSearchBeneficiarySMCPageState
                                                       children: [
                                                         Text(
                                                             localizations.translate(
-                                                                getStatus(
-                                                                    selectedFilters[
-                                                                        index])),
+                                                                '${getStatus(selectedFilters[index])}_SMC'),
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),

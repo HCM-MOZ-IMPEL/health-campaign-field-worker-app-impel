@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -92,12 +93,16 @@ class CustomResourceBeneficiaryCardOncoState
             readOnly: true,
           ),
           DigitTextFormField(
-            formControlName: 'quantityWasted.${widget.cardIndex}',
-            label: localizations.translate(
-              i18_local.deliverIntervention.quantityWastedLabel,
-            ),
-            isRequired: false,
-          ),
+              formControlName: 'quantityWasted.${widget.cardIndex}',
+              label: localizations.translate(
+                i18_local.deliverIntervention.quantityWastedLabel,
+              ),
+              isRequired: false,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(
+                  "[a-zA-Z0-9]",
+                )),
+              ]),
           DigitCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
