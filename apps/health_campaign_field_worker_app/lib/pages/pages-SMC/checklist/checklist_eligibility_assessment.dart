@@ -26,6 +26,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:survey_form/utils/constants.dart' as survey_constants;
 
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
+import '../../../main.dart';
 import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../models/entities/project_types.dart';
 import '../../../router/app_router.dart';
@@ -40,6 +41,8 @@ import '../../../utils/utils_smc/utils_smc.dart'
     show getIndividualAdditionalFields;
 
 import '../../../models/entities/status.dart' as status_local;
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 @RoutePage()
 class EligibilityChecklistViewPage extends LocalizedStatefulWidget {
@@ -225,11 +228,16 @@ class _EligibilityChecklistViewPage
                                     ifReferral =
                                         isReferral(responses, referralReasons);
                                     ifDeliver = isDelivery(responses);
-                                    checkIfIneligibleFlow = isIneligible(
-                                      responses,
-                                      ineligibilityReasons,
-                                      ifAdministration,
-                                    );
+                                    checkIfIneligibleFlow = widget
+                                                .interventionType ==
+                                            InterventionTypes.smc
+                                        ? isIneligible(
+                                            responses,
+                                            ineligibilityReasons,
+                                            ifAdministration,
+                                          )
+                                        : isIneligibleOncho(
+                                            responses, ineligibilityReasons);
                                     if (checkIfIneligibleFlow.isNotEmpty &&
                                         checkIfIneligibleFlow.length >= 2) {
                                       ifIneligible = checkIfIneligibleFlow[0];
@@ -242,7 +250,9 @@ class _EligibilityChecklistViewPage
                                             i18_local.deliverIntervention
                                                 .beneficiaryIneligibleDescription,
                                           )
-                                        : ifReferral
+                                        : ifReferral &&
+                                                widget.interventionType ==
+                                                    InterventionTypes.smc
                                             ? localizations.translate(
                                                 i18_local.deliverIntervention
                                                     .beneficiaryReferralDescription,
@@ -493,87 +503,90 @@ class _EligibilityChecklistViewPage
                                           // added the deliversubmitevent here
                                           final clientReferenceId =
                                               IdGen.i.identifier;
+                                          final task = TaskModel(
+                                            projectBeneficiaryClientReferenceId:
+                                                projectBeneficiaryClientReferenceId,
+                                            clientReferenceId:
+                                                clientReferenceId,
+                                            tenantId:
+                                                envConfig.variables.tenantId,
+                                            rowVersion: 1,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            projectId: context.projectId,
+                                            status: status_local
+                                                .Status.beneficiaryInEligible
+                                                .toValue(),
+                                            clientAuditDetails:
+                                                ClientAuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  context.loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalFields:
+                                                TaskAdditionalFields(
+                                              version: 1,
+                                              fields: [
+                                                AdditionalField(
+                                                  'taskStatus',
+                                                  status_local.Status
+                                                      .beneficiaryInEligible
+                                                      .toValue(),
+                                                ),
+                                                AdditionalField(
+                                                  'ineligibleReasons',
+                                                  ineligibilityReasons
+                                                      .join(","),
+                                                ),
+                                                ...getIndividualAdditionalFields(
+                                                  widget.individual,
+                                                  householdOverviewState
+                                                      .householdMemberWrapper,
+                                                ),
+                                                if (longitude != null)
+                                                  AdditionalField(
+                                                      'lng', longitude),
+                                                if (latitude != null)
+                                                  AdditionalField(
+                                                      'lat', latitude),
+                                                if (boundaryCode != null)
+                                                  AdditionalField(
+                                                      'boundaryCode',
+                                                      boundaryCode),
+                                                if (widget.interventionType !=
+                                                    null)
+                                                  AdditionalField(
+                                                    additional_fields_local
+                                                        .AdditionalFieldsType
+                                                        .interventionType
+                                                        .toValue(),
+                                                    widget.interventionType
+                                                        .toValue(),
+                                                  ),
+                                              ],
+                                            ),
+                                            address: widget
+                                                .individual!.address?.first
+                                                .copyWith(
+                                              relatedClientReferenceId:
+                                                  clientReferenceId,
+                                              id: null,
+                                            ),
+                                          );
                                           context
                                               .read<DeliverInterventionBloc>()
                                               .add(
                                                 DeliverInterventionSubmitEvent(
-                                                    task: TaskModel(
-                                                      projectBeneficiaryClientReferenceId:
-                                                          projectBeneficiaryClientReferenceId,
-                                                      clientReferenceId:
-                                                          clientReferenceId,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
-                                                      rowVersion: 1,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      projectId:
-                                                          context.projectId,
-                                                      status: status_local
-                                                          .Status
-                                                          .beneficiaryInEligible
-                                                          .toValue(),
-                                                      clientAuditDetails:
-                                                          ClientAuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                        lastModifiedBy: context
-                                                            .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                      additionalFields:
-                                                          TaskAdditionalFields(
-                                                        version: 1,
-                                                        fields: [
-                                                          AdditionalField(
-                                                            'taskStatus',
-                                                            status_local.Status
-                                                                .beneficiaryInEligible
-                                                                .toValue(),
-                                                          ),
-                                                          AdditionalField(
-                                                            'ineligibleReasons',
-                                                            ineligibilityReasons
-                                                                .join(","),
-                                                          ),
-                                                          ...getIndividualAdditionalFields(
-                                                            widget.individual,
-                                                            householdOverviewState
-                                                                .householdMemberWrapper,
-                                                          ),
-                                                          if (longitude != null)
-                                                            AdditionalField(
-                                                                'lng',
-                                                                longitude),
-                                                          if (latitude != null)
-                                                            AdditionalField(
-                                                                'lat',
-                                                                latitude),
-                                                          if (boundaryCode !=
-                                                              null)
-                                                            AdditionalField(
-                                                                'boundaryCode',
-                                                                boundaryCode)
-                                                        ],
-                                                      ),
-                                                      address: widget
-                                                          .individual!
-                                                          .address
-                                                          ?.first
-                                                          .copyWith(
-                                                        relatedClientReferenceId:
-                                                            clientReferenceId,
-                                                        id: null,
-                                                      ),
-                                                    ),
+                                                    task: task,
                                                     isEditing: false,
                                                     boundaryModel:
                                                         context.boundary,
@@ -592,7 +605,9 @@ class _EligibilityChecklistViewPage
                                             CustomHouseholdAcknowledgementSMCRoute(
                                                 enableViewHousehold: true),
                                           );
-                                        } else if (ifReferral) {
+                                        } else if (ifReferral &&
+                                            widget.interventionType ==
+                                                InterventionTypes.smc) {
                                           router.push(
                                             CustomReferBeneficiarySMCRoute(
                                               projectBeneficiaryClientRefId:
@@ -1665,6 +1680,7 @@ class _EligibilityChecklistViewPage
   ) {
     var isIneligible = false;
     var q4Key = "SEA3";
+
     Map<String, String> keyVsReason = {
       q4Key: "CHILD_ON_MEDICATION_1",
     };
@@ -1674,6 +1690,7 @@ class _EligibilityChecklistViewPage
           (responses.containsKey(q4Key) && responses[q4Key]!.isNotEmpty)) {
         isIneligible = responses[q4Key] == yes ? true : false;
       }
+
       // passing all the reasons which have response as true
       if (isIneligible) {
         for (var entry in responses.entries) {
@@ -1683,6 +1700,27 @@ class _EligibilityChecklistViewPage
                 : null;
           }
         }
+      }
+    }
+
+    return [isIneligible, ifAdministration];
+  }
+
+  List<bool> isIneligibleOncho(
+      Map<String?, String> responses, List<String?> ineligibilityReasons) {
+    var isIneligible = false;
+    var ifAdministration = false;
+
+    for (var entry in responses.entries) {
+      if (entry.value == yes) {
+        isIneligible = true;
+        break;
+      }
+    }
+
+    for (var entry in responses.entries) {
+      if (entry.value == yes) {
+        ineligibilityReasons.add(entry.key);
       }
     }
 

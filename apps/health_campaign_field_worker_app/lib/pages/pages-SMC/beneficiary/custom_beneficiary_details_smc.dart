@@ -657,13 +657,22 @@ class CustomBeneficiaryDetailsSMCPageState
               ],
             ),
           ),
-          if ((RegistrationDeliverySingleton().projectType?.cycles ?? [])
+          if ((RegistrationDeliverySingleton()
+                      .selectedProject
+                      ?.additionalDetails
+                      ?.additionalProjectType
+                      ?.cycles ??
+                  [])
               .isNotEmpty)
             DigitCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: RegistrationDeliverySingleton().projectType?.cycles !=
+                children: RegistrationDeliverySingleton()
+                            .selectedProject
+                            ?.additionalDetails
+                            ?.additionalProjectType
+                            ?.cycles !=
                         null
                     ? [
                         BlocBuilder<DeliverInterventionBloc,
@@ -672,14 +681,18 @@ class CustomBeneficiaryDetailsSMCPageState
                             return Column(
                               children: [
                                 (RegistrationDeliverySingleton()
-                                                .projectType
+                                                .selectedProject
+                                                ?.additionalDetails
+                                                ?.additionalProjectType
                                                 ?.cycles ??
                                             [])
                                         .isNotEmpty
                                     ? CustomRecordDeliveryCycle(
                                         projectCycles:
                                             RegistrationDeliverySingleton()
-                                                    .projectType
+                                                    .selectedProject
+                                                    ?.additionalDetails
+                                                    ?.additionalProjectType
                                                     ?.cycles ??
                                                 [],
                                         taskData:

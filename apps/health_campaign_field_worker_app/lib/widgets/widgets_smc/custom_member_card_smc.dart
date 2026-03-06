@@ -777,21 +777,20 @@ class CustomMemberCardSMC extends StatelessWidget {
 
     bool isNotEligibleOncho =
         (RegistrationDeliverySingleton().projectType?.cycles != null
-                ? !checkEligibilityForAgeAndSideEffectOncho(
-                    digit_ui_date_utils.DigitDOBAgeConvertor(
-                      years: ageInYears,
-                      months: ageInMonths,
-                    ),
-                    onchoAdditionalProjectType,
-                    (onchoTasks ?? []).isNotEmpty
-                        ? onchoTasks!.lastOrNull
-                        : null,
-                    null,
-                  )
-                : false) &&
-            fetchProductVariantForProjectType(
-                    onchoAdditionalProjectType, individual, null) !=
-                null;
+            ? !checkEligibilityForAgeAndSideEffectOncho(
+                digit_ui_date_utils.DigitDOBAgeConvertor(
+                  years: ageInYears,
+                  months: ageInMonths,
+                ),
+                onchoAdditionalProjectType,
+                (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
+                null,
+              )
+            : false);
+    isNotEligibleOncho = isNotEligibleOncho ||
+        fetchProductVariantForProjectType(
+                onchoAdditionalProjectType, individual, null) ==
+            null;
 
     bool inBeneficiaryEligibleOncho =
         checkIfBeneficiaryIneligibleOncho(onchoTasks);
@@ -814,6 +813,17 @@ class CustomMemberCardSMC extends StatelessWidget {
               e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
         )
         ?.identifierId;
+
+    final onchoAllDoseDelivered = allDosesDelivered(
+      onchoTasks,
+      context.selectedCycle,
+      sideEffects,
+      individual,
+    );
+    final checkOnchoStatus = checkStatusOncho(
+      onchoTasks,
+      context.selectedCycle,
+    );
 
     // handles only smc and oncho , no other type
 
@@ -957,29 +967,27 @@ class CustomMemberCardSMC extends StatelessWidget {
               offstage: beneficiaryType != BeneficiaryType.individual,
               child: Column(
                 children: [
-                  if (isSmcDeliveryCards || isOnchoDeliveryCards)
-                    _buildStatusIndicator(
-                      isDelivered:
-                          isSmcDeliveryCards ? isDelivered : isOnchoDelivered,
-                      isNotEligible: isSmcDeliveryCards
-                          ? isNotEligible
-                          : isNotEligibleOncho,
-                      isBeneficiaryRefused: isSmcDeliveryCards
-                          ? isBeneficiaryRefused
-                          : beneficiaryRefusedOncho,
-                      isBeneficiaryIneligible: isSmcDeliveryCards
-                          ? isBeneficiaryIneligible
-                          : inBeneficiaryEligibleOncho,
-                      isBeneficiaryReferred: isSmcDeliveryCards
-                          ? isBeneficiaryReferred
-                          : beneficiaryReferredOncho,
-                      isHead: isHead,
-                      interventionType: isSmcDeliveryCards
-                          ? InterventionTypes.smc.toValue()
-                          : InterventionTypes.oncho.toValue(),
-                      context: context,
-                      theme: theme,
-                    ),
+                  _buildStatusIndicator(
+                    isDelivered:
+                        isSmcDeliveryCards ? isDelivered : isOnchoDelivered,
+                    isNotEligible:
+                        isSmcDeliveryCards ? isNotEligible : isNotEligibleOncho,
+                    isBeneficiaryRefused: isSmcDeliveryCards
+                        ? isBeneficiaryRefused
+                        : beneficiaryRefusedOncho,
+                    isBeneficiaryIneligible: isSmcDeliveryCards
+                        ? isBeneficiaryIneligible
+                        : inBeneficiaryEligibleOncho,
+                    isBeneficiaryReferred: isSmcDeliveryCards
+                        ? isBeneficiaryReferred
+                        : beneficiaryReferredOncho,
+                    isHead: isHead,
+                    interventionType: isSmcDeliveryCards
+                        ? InterventionTypes.smc.toValue()
+                        : InterventionTypes.oncho.toValue(),
+                    context: context,
+                    theme: theme,
+                  ),
                 ],
               ),
             ),
@@ -1065,8 +1073,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                     beneficiaryRefusedOncho ||
                                     inBeneficiaryEligibleOncho ||
                                     beneficiaryReferredOncho) &&
-                                checkStatusOncho(
-                                    onchoTasks, context.selectedCycle)
+                                checkOnchoStatus
                             ? const Offstage()
                             : !isNotEligibleOncho
                                 ? DigitElevatedButton(
@@ -1088,16 +1095,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                             : null,
                                     child: Center(
                                       child: Text(
-                                        allDosesDelivered(
-                                                  onchoTasks,
-                                                  context.selectedCycle,
-                                                  sideEffects,
-                                                  individual,
-                                                ) &&
-                                                !checkStatusOncho(
-                                                  onchoTasks,
-                                                  context.selectedCycle,
-                                                )
+                                        !checkOnchoStatus
                                             ? localizations.translate(
                                                 i18.householdOverView
                                                     .viewDeliveryLabel,
@@ -1258,17 +1256,26 @@ class CustomMemberCardSMC extends StatelessWidget {
           icon: Icons.info_rounded,
           iconSize: 20,
           iconText: localizations.translate(
-            isHead
-                ? i18_local
-                    .householdOverView.householdOverViewHouseholderHeadLabelSMC
-                : (isNotEligible || isBeneficiaryIneligible)
-                    ? _getNotEligibleLabel(interventionType)
-                    : isBeneficiaryReferred
-                        ? _getBeneficiaryReferredLabel(interventionType)
-                        : isBeneficiaryRefused
-                            ? _getBeneficiaryRefusedLabel(interventionType)
-                            : _getNotDeliveredLabel(interventionType),
+            (isNotEligible || isBeneficiaryIneligible)
+                ? _getNotEligibleLabel(interventionType)
+                : isBeneficiaryReferred
+                    ? _getBeneficiaryReferredLabel(interventionType)
+                    : isBeneficiaryRefused
+                        ? _getBeneficiaryRefusedLabel(interventionType)
+                        : _getNotDeliveredLabel(interventionType),
           ),
+          iconTextColor: theme.colorScheme.error,
+          iconColor: theme.colorScheme.error,
+        ),
+      );
+    } else if (isHead && interventionType == InterventionTypes.smc.toValue()) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: DigitIconButton(
+          icon: Icons.info_rounded,
+          iconSize: 20,
+          iconText: localizations.translate(i18_local
+              .householdOverView.householdOverViewHouseholderHeadLabelSMC),
           iconTextColor: theme.colorScheme.error,
           iconColor: theme.colorScheme.error,
         ),

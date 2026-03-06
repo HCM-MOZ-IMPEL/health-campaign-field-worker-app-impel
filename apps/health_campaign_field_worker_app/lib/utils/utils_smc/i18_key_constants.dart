@@ -840,6 +840,7 @@ class DeliverIntervention {
   String get vaccineCardPresentLabel => 'VACCINE_CARD_PRESENT_LABEL';
   String get didBeneficiaryRefuseVaccineLabel =>
       'DID_BENEFICIARY_REFUSE_VACCINE_LABEL';
+  String get refusalReasonEmpty => 'REFUSAL_REASON_EMPTY_VALIDATION_MESSAGE';
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
   String get recordRedoseLabel => 'DELIVER_INTERVENTION_RECORD_REDOSE_LABEL';

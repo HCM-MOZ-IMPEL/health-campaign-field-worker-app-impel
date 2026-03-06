@@ -8,6 +8,7 @@ import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaign_field_worker_app/utils/utils_smc/registration_delivery/registration_delivery_utils_smc.dart';
+import 'package:intl/intl.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -113,10 +114,23 @@ class ClosedHouseholdBloc
           lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
         ),
       );
+
+      // Note : setting date of birth for individual as 18 years ago
+      //since it's a mandatory field and we don't have the data for it.
+
+      final DateTime now = DateTime.now();
+
+      final DateTime eighteenYearsAgo =
+          DateTime(now.year - 18, now.month, now.day);
+
+      final String dobString =
+          DateFormat('dd/MM/yyyy').format(eighteenYearsAgo);
+
       var individual = IndividualModel(
         clientReferenceId: IdGen.i.identifier,
         tenantId: event.tenantId,
         rowVersion: 1,
+        dateOfBirth: dobString,
         clientAuditDetails: ClientAuditDetails(
           createdBy: event.loggedInUserUuid!,
           createdTime: DateTime.now().millisecondsSinceEpoch,
