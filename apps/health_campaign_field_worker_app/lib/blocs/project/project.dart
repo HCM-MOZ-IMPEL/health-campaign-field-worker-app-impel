@@ -399,6 +399,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
         ProjectResourceSearchModel(projectId: [project.id]),
+        limit: 1000,
       );
 
       for (final projectResource in projectResources) {
@@ -411,6 +412,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ProductVariantSearchModel(
             id: [projectResource.resource.productVariantId],
           ),
+          limit: 1000,
         );
 
         for (final productVariant in productVariants) {
