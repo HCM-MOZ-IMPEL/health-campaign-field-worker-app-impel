@@ -688,7 +688,7 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 ?.cycles ??
                                             [])
                                         .isNotEmpty
-                                    ? CustomRecordDeliveryCycleOncho(
+                                    ? CustomRecordDeliveryCycle(
                                         projectCycles:
                                             RegistrationDeliverySingleton()
                                                     .selectedProject
