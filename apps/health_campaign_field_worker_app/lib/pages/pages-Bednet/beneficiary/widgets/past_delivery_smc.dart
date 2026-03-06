@@ -52,6 +52,9 @@ Widget buildTableContent(
   final productVariants =
       fetchProductVariant(item, individualModel, householdModel)['criteria']
           ?.productVariants;
+  final condition =
+      fetchProductVariant(item, individualModel, householdModel)['criteria']
+          ?.condition;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -79,11 +82,8 @@ Widget buildTableContent(
           element: {
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(
-                            item, individualModel, householdModel)['criteria']
-                        ?.condition !=
-                    null
-                ? '${utilsLocal.getAgeConditionString('${fetchProductVariant(item, individualModel, householdModel)['criteria']?.condition}', context)} ${localizations.translate(context.projectTypeCode == ProjectTypes.smc.toValue() ? i18.individualDetails.monthsHintText : i18.individualDetails.yearsHintText)}'
+            ): condition != null
+                ? '${utilsLocal.getAgeConditionString('$condition', context)} ${localizations.translate(context.projectTypeCode == ProjectTypes.smc.toValue() ? i18.individualDetails.monthsHintText : i18.individualDetails.yearsHintText)}'
                 : null,
           },
         ),
@@ -91,16 +91,11 @@ Widget buildTableContent(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)['criteria']
-                    ?.productVariants !=
-                null
+        productVariants != null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariant(
-                          item, individualModel, householdModel)['criteria']
-                      ?.productVariants!
-                      .map(
+                  ...productVariants!.map(
                     (e) {
                       // Retrieve the SKU value for the product variant.
                       final value = variant
@@ -114,11 +109,7 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(item, individualModel,
-                                        householdModel)['criteria']
-                                    ?.productVariants
-                                    ?.indexOf(e) ==
-                                0
+                        productVariants?.indexOf(e) == 0
                             ? TableData(
                                 '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
                                 cellKey: 'dose',
@@ -134,13 +125,7 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height: ((fetchProductVariant(item, individualModel,
-                                        householdModel)['criteria']
-                                    ?.productVariants ??
-                                [])
-                            .length +
-                        1) *
-                    cellHeight,
+                height: ((productVariants ?? []).length + 1) * cellHeight,
               )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],
