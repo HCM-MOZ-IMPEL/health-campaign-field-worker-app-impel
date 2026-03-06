@@ -65,6 +65,12 @@ enum MasterEnums {
   vaccine,
   @MappableValue("VACCINE_GROUPS")
   vaccineGroups,
+  @MappableValue("VACCINE_REFUSAL_REASONS")
+  vaccineRefusalReasons,
+  @MappableValue("DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR")
+  deliveryCommentOptionsOncho,
+  @MappableValue("DISEASE_OPTIONS")
+  diseaseOptions,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")

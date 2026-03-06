@@ -414,6 +414,16 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.vaccineRefusalReasons =
+        result.hcmWrapperModel?.vaccineRefusalReasons?.map((e) {
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
     appConfiguration.vehicleTrackingTripReasons =
         result.hcmWrapperModel?.vehicleTrackingTripReasons?.map((e) {
       final vehicleTrackingTripReasons = VehicleTrackingReasons()

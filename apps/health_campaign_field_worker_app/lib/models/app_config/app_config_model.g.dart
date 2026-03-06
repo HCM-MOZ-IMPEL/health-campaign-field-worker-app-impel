@@ -219,6 +219,9 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
       'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentOptionsSmc,
+      'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR':
+          instance.deliveryCommentOptionsOncho,
+      'VACCINE_REFUSAL_REASONS': instance.vaccineRefusalReasons,
       'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentWastedOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
