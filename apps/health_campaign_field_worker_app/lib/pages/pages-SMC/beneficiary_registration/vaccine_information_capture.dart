@@ -55,13 +55,6 @@ class _VaccineInformationCapturePageState
   String? vaccineRefusalReason;
   final clickedStatus = ValueNotifier<bool>(false);
 
-  // Vaccine refusal reasons list
-  final List<Map<String, String>> vaccineRefusalReasons = [
-    {'value': 'religion', 'label': 'Religião'},
-    {'value': 'parental_refusal', 'label': 'Pais não autorizaram'},
-    {'value': 'medical_condition', 'label': 'Condição médica'},
-    {'value': 'personal_refusal', 'label': 'Recusa pessoal'},
-  ];
   @override
   void initState() {
     context.read<LocationBloc>().add(const LoadLocationEvent());
@@ -372,41 +365,54 @@ class _VaccineInformationCapturePageState
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: DigitTheme
-                                  .instance.colorScheme.outlineVariant,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            value: vaccineRefusalReason,
-                            hint: Text(
-                              localizations.translate(
-                                i18_smc.deliverIntervention
-                                    .selectVaccineRefusalReason,
-                              ),
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            underline: const SizedBox.shrink(),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 8.0,
-                            ),
-                            items: vaccineRefusalReasons
-                                .map((reason) => DropdownMenuItem<String>(
-                                      value: reason['value'],
-                                      child: Text(reason['label'] ?? ''),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                vaccineRefusalReason = value;
-                              });
-                            },
-                          ),
+                        DigitCard(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                BlocBuilder<AppInitializationBloc,
+                                        AppInitializationState>(
+                                    builder: (context, state) {
+                                  if (state is! AppInitialized) {
+                                    return const Offstage();
+                                  }
+
+                                  final vaccineRefusalReasonsLoaded = state
+                                          .appConfiguration
+                                          .vaccineRefusalReasons ??
+                                      <RefusalReasons>[];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: DigitTheme.instance.colorScheme
+                                            .outlineVariant,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      value: vaccineRefusalReason,
+                                      underline: const SizedBox.shrink(),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0,
+                                        vertical: 8.0,
+                                      ),
+                                      items: vaccineRefusalReasonsLoaded
+                                          .map((reason) =>
+                                              DropdownMenuItem<String>(
+                                                value: reason.code,
+                                                child: Text(reason.name ?? ''),
+                                              ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          vaccineRefusalReason = value;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                })
+                              ]),
                         ),
                       ],
                     ),
