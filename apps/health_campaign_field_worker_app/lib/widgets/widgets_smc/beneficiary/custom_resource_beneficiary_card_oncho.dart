@@ -116,7 +116,7 @@ class CustomResourceBeneficiaryCardOncoState
                     }
 
                     final deliveryCommentOptionsOncho =
-                        state.appConfiguration.deliveryCommentOptionsSmc ??
+                        state.appConfiguration.deliveryCommentOptionsOncho ??
                             <DeliveryCommentOptions>[];
 
                     return DigitReactiveDropdown<String>(

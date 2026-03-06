@@ -27,6 +27,7 @@ import 'package:registration_delivery/widgets/component_wrapper/product_variant_
 import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../utils/utils_smc/utils_smc.dart';
+import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_oncho.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
 import 'widgets/past_delivery_oncho.dart';
 import 'widgets/past_delivery_smc.dart';
@@ -657,6 +658,59 @@ class CustomBeneficiaryDetailsSMCPageState
               ],
             ),
           ),
+          if ((RegistrationDeliverySingleton()
+                      .selectedProject
+                      ?.additionalDetails
+                      ?.additionalProjectType
+                      ?.cycles ??
+                  [])
+              .isNotEmpty)
+            DigitCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: RegistrationDeliverySingleton()
+                            .selectedProject
+                            ?.additionalDetails
+                            ?.additionalProjectType
+                            ?.cycles !=
+                        null
+                    ? [
+                        BlocBuilder<DeliverInterventionBloc,
+                            DeliverInterventionState>(
+                          builder: (context, deliverState) {
+                            return Column(
+                              children: [
+                                (RegistrationDeliverySingleton()
+                                                .selectedProject
+                                                ?.additionalDetails
+                                                ?.additionalProjectType
+                                                ?.cycles ??
+                                            [])
+                                        .isNotEmpty
+                                    ? CustomRecordDeliveryCycleOncho(
+                                        projectCycles:
+                                            RegistrationDeliverySingleton()
+                                                    .selectedProject
+                                                    ?.additionalDetails
+                                                    ?.additionalProjectType
+                                                    ?.cycles ??
+                                                [],
+                                        taskData:
+                                            (taskData as List<TaskModel>?) ??
+                                                [],
+                                        individualModel:
+                                            state.selectedIndividual,
+                                      )
+                                    : const Offstage(),
+                              ],
+                            );
+                          },
+                        ),
+                      ]
+                    : [],
+              ),
+            )
         ],
       ),
     );
