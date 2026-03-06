@@ -657,59 +657,6 @@ class CustomBeneficiaryDetailsSMCPageState
               ],
             ),
           ),
-          if ((RegistrationDeliverySingleton()
-                      .selectedProject
-                      ?.additionalDetails
-                      ?.additionalProjectType
-                      ?.cycles ??
-                  [])
-              .isNotEmpty)
-            DigitCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: RegistrationDeliverySingleton()
-                            .selectedProject
-                            ?.additionalDetails
-                            ?.additionalProjectType
-                            ?.cycles !=
-                        null
-                    ? [
-                        BlocBuilder<DeliverInterventionBloc,
-                            DeliverInterventionState>(
-                          builder: (context, deliverState) {
-                            return Column(
-                              children: [
-                                (RegistrationDeliverySingleton()
-                                                .selectedProject
-                                                ?.additionalDetails
-                                                ?.additionalProjectType
-                                                ?.cycles ??
-                                            [])
-                                        .isNotEmpty
-                                    ? CustomRecordDeliveryCycle(
-                                        projectCycles:
-                                            RegistrationDeliverySingleton()
-                                                    .selectedProject
-                                                    ?.additionalDetails
-                                                    ?.additionalProjectType
-                                                    ?.cycles ??
-                                                [],
-                                        taskData:
-                                            (taskData as List<TaskModel>?) ??
-                                                [],
-                                        individualModel:
-                                            state.selectedIndividual,
-                                      )
-                                    : const Offstage(),
-                              ],
-                            );
-                          },
-                        ),
-                      ]
-                    : [],
-              ),
-            )
         ],
       ),
     );

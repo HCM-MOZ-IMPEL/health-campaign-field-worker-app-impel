@@ -943,7 +943,7 @@ class CustomDeliverInterventionSMCPageState
                                                 }).toList(),
                                                 formControlName:
                                                     _deliveryCommentKey,
-                                                isRequired: doseAdministered,
+                                                isRequired: false,
                                                 valueMapper: (value) =>
                                                     localizations.translate(
                                                   value,
