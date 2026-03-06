@@ -215,7 +215,6 @@ class _CustomViewBeneficiaryCardSMCState
 
   bool _checkEligibilityForAgeAndSideEffect(
     DigitDOBAgeConvertor age,
-    ProjectTypeModel? projectType,
     TaskModel? lastTask,
     List<SideEffectModel>? sideEffects,
     String interventionType,
@@ -223,7 +222,10 @@ class _CustomViewBeneficiaryCardSMCState
     if (interventionType == InterventionTypes.oncho.toValue()) {
       return checkEligibilityForAgeAndSideEffectOncho(
         age,
-        projectType,
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType,
         lastTask,
         sideEffects,
       );
@@ -231,14 +233,14 @@ class _CustomViewBeneficiaryCardSMCState
       // Bednet uses SMC logic
       return checkEligibilityForAgeAndSideEffect(
         age,
-        projectType,
+        RegistrationDeliverySingleton().projectType,
         lastTask,
         sideEffects,
       );
     } else {
       return checkEligibilityForAgeAndSideEffect(
         age,
-        projectType,
+        RegistrationDeliverySingleton().projectType,
         lastTask,
         sideEffects,
       );
@@ -336,6 +338,46 @@ class _CustomViewBeneficiaryCardSMCState
 
     final tableData = householdMember.members?.map(
       (e) {
+        // Determine which intervention type has delivery cards (important for SMC+ONCHO flow)
+        ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType;
+
+        ProjectTypeModel? onchoAdditionalProjectType =
+            RegistrationDeliverySingleton()
+                .selectedProject
+                ?.additionalDetails
+                ?.additionalProjectType;
+
+        bool isSmcDeliveryCards =
+            fetchProductVariantForProjectType(smcProjectType, e, null) != null;
+        bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                onchoAdditionalProjectType, e, null) !=
+            null;
+        bool isBednetDeliveryCards = _isSmcAndBednetFlow
+            ? fetchProductVariantForProjectType(
+                    onchoAdditionalProjectType, e, null) !=
+                null
+            : false;
+
+        // For SMC+ONCHO flow, determine which one to show based on delivery cards availability
+        // Priority: If individual is valid for both, show SMC (primary intervention)
+        // If only ONCHO, show ONCHO. If neither, default to SMC.
+        final effectiveInterventionType = _isSmcAndOnchoFlow
+            ? (isSmcDeliveryCards
+                ? InterventionTypes.smc.toValue()
+                : isOnchoDeliveryCards
+                    ? InterventionTypes.oncho.toValue()
+                    : InterventionTypes.smc.toValue())
+            : _isSmcAndBednetFlow
+                ? (isSmcDeliveryCards
+                    ? InterventionTypes.smc.toValue()
+                    : isBednetDeliveryCards
+                        ? InterventionTypes.bednet.toValue()
+                        : InterventionTypes.smc.toValue())
+                : InterventionTypes.smc.toValue();
+
         final projectBeneficiary =
             householdMember.projectBeneficiaries?.where((element) {
           if (RegistrationDeliverySingleton().beneficiaryType ==
@@ -396,7 +438,6 @@ class _CustomViewBeneficiaryCardSMCState
             years: ageInYears,
             months: ageInMonths,
           ),
-          RegistrationDeliverySingleton().projectType,
           (filteredTaskData ?? []).isNotEmpty ? filteredTaskData?.last : null,
           sideEffects,
           effectiveInterventionType,
@@ -434,7 +475,8 @@ class _CustomViewBeneficiaryCardSMCState
             cellKey: 'beneficiary',
           ),
           TableData(
-            isHead
+            isHead &&
+                    effectiveInterventionType == InterventionTypes.smc.toValue()
                 ? localizations.translate(
                     i18Local.householdOverView
                         .householdOverViewHouseholderHeadLabelSMC,
@@ -544,7 +586,6 @@ class _CustomViewBeneficiaryCardSMCState
         years: ageInYears,
         months: ageInMonths,
       ),
-      RegistrationDeliverySingleton().projectType,
       (tasks ?? []).isNotEmpty ? tasks?.last : null,
       householdMember.sideEffects,
       effectiveInterventionType,
