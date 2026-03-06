@@ -129,6 +129,14 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryCommentOptionsOncho:
+          (json['DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR'] as List<dynamic>)
+              .map((e) =>
+                  DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
+              .toList(),
+      vaccineRefusalReasons: (json['VACCINE_REFUSAL_REASONS'] as List<dynamic>?)
+          ?.map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       deliveryCommentWastedOptionsSmc:
           (json['DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR']
                   as List<dynamic>)
@@ -187,6 +195,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       vaccineGroups: (json['VACCINE_GROUPS'] as List<dynamic>?)
           ?.map((e) => VaccineGroup.fromJson(e as Map<String, dynamic>))
           .toList(),
+      diseaseOptions: (json['DISEASE_OPTIONS'] as List<dynamic>?)
+          ?.map((e) => DiseaseOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
           ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -208,6 +219,9 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
       'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentOptionsSmc,
+      'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR':
+          instance.deliveryCommentOptionsOncho,
+      'VACCINE_REFUSAL_REASONS': instance.vaccineRefusalReasons,
       'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentWastedOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
@@ -225,6 +239,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'VACCINE': instance.vaccine,
       'VACCINE_GROUPS': instance.vaccineGroups,
+      'DISEASE_OPTIONS': instance.diseaseOptions,
       'FIREBASE_CONFIG': instance.firebaseConfig,
     };
 
@@ -548,6 +563,19 @@ _$VaccineImpl _$$VaccineImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$VaccineImplToJson(_$VaccineImpl instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'name': instance.name,
+    };
+
+_$DiseaseOptionsImpl _$$DiseaseOptionsImplFromJson(Map<String, dynamic> json) =>
+    _$DiseaseOptionsImpl(
+      code: json['code'] as String?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$$DiseaseOptionsImplToJson(
+        _$DiseaseOptionsImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

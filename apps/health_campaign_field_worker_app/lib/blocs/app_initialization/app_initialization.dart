@@ -113,6 +113,9 @@ class AppInitializationBloc
                     MasterEnums.vechileTrackingTripReasons.toValue(),
                     MasterEnums.vaccine.toValue(),
                     MasterEnums.vaccineGroups.toValue(),
+                    MasterEnums.vaccineRefusalReasons.toValue(),
+                    MasterEnums.diseaseOptions.toValue(),
+                    MasterEnums.deliveryCommentOptionsOncho.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

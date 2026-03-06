@@ -1,5 +1,6 @@
 import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 
 import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
@@ -83,6 +84,10 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
+    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
+    @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
+    List<CommonMasterModel>? vaccineRefusalReasons,
     @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentWastedOptionsSmc,
     @JsonKey(name: 'BACKEND_INTERFACE')
@@ -109,6 +114,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'VACCINE') List<Vaccine>? vaccine,
     @JsonKey(name: 'VACCINE_GROUPS') List<VaccineGroup>? vaccineGroups,
+    @JsonKey(name: 'DISEASE_OPTIONS') List<DiseaseOptions>? diseaseOptions,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;
@@ -376,6 +382,17 @@ class Vaccine with _$Vaccine {
 
   factory Vaccine.fromJson(Map<String, dynamic> json) =>
       _$VaccineFromJson(json);
+}
+
+@freezed
+class DiseaseOptions with _$DiseaseOptions {
+  factory DiseaseOptions({
+    required String? code,
+    required String? name,
+  }) = _DiseaseOptions;
+
+  factory DiseaseOptions.fromJson(Map<String, dynamic> json) =>
+      _$DiseaseOptionsFromJson(json);
 }
 
 @freezed

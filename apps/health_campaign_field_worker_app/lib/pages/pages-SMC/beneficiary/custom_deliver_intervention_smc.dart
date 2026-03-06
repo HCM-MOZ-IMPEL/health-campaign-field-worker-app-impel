@@ -120,7 +120,7 @@ class CustomDeliverInterventionSMCPageState
                 )
                 .value ==
             "ADMINISTRATION_NOT_SUCCESSFUL";
-// todo verify this how to handle this should pass default 00 or make user enter some value
+// todo verify this how to handle this should pass default 00 or make user enter some value.
     String? wastedCount =
         ((form.control(_quantityWastedKey).value) ?? "00").toString();
     final shouldSubmit = await DigitDialog.show<bool>(
