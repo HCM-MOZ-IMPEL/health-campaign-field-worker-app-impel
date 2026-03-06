@@ -129,7 +129,8 @@ class CustomBeneficiaryDetailsSMCPageState
               : '1';
 
           // [TODO] Need to move this to Bloc Lisitner or consumer
-          if (RegistrationDeliverySingleton().projectType != null) {
+          if (RegistrationDeliverySingleton().projectType != null &&
+              isSmcDeliveryCards) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
                 lastDose: taskData != null && taskData.isNotEmpty
@@ -462,6 +463,25 @@ class CustomBeneficiaryDetailsSMCPageState
     List<dynamic>? projectBeneficiary,
     ProductVariantState productState,
   ) {
+    final ProjectTypeModel? onchoAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
+
+    // [TODO] Need to move this to Bloc Lisitner or consumer
+    // Note : setting active cycle and dose for oncho flow as oncho cycle
+    // setting as last dose 0 and cycle 1, as there are no future cycles sceanrio currently
+    if (onchoAdditionalProjectType != null) {
+      bloc.add(
+        DeliverInterventionEvent.setActiveCycleDose(
+          lastDose: 0,
+          lastCycle: 1,
+          individualModel: state.selectedIndividual,
+          projectType: onchoAdditionalProjectType,
+        ),
+      );
+    }
     final variant = productState.whenOrNull(
       fetched: (productVariants) {
         return productVariants;
@@ -688,7 +708,7 @@ class CustomBeneficiaryDetailsSMCPageState
                                                 ?.cycles ??
                                             [])
                                         .isNotEmpty
-                                    ? CustomRecordDeliveryCycle(
+                                    ? CustomRecordDeliveryCycleOncho(
                                         projectCycles:
                                             RegistrationDeliverySingleton()
                                                     .selectedProject
