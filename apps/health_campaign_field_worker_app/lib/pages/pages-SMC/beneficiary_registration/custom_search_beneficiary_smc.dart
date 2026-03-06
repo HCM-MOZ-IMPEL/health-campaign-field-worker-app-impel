@@ -143,82 +143,38 @@ class _CustomSearchBeneficiarySMCPageState
                         builder: (context, locationState) {
                           return Column(
                             children: [
-                              locationState.latitude != null
-                                  ? Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Switch(
-                                              value: isProximityEnabled,
-                                              onChanged: (value) {
-                                                searchController.clear();
-                                                setState(() {
-                                                  isProximityEnabled = value;
-                                                  isSearchByBeneficaryIdEnabled =
-                                                      false;
-                                                  lat = locationState.latitude!;
-                                                  long =
-                                                      locationState.longitude!;
-                                                });
-
-                                                if (locationState
-                                                        .hasPermissions &&
-                                                    value &&
-                                                    locationState.latitude !=
-                                                        null &&
-                                                    locationState.longitude !=
-                                                        null &&
-                                                    RegistrationDeliverySingleton()
-                                                            .maxRadius !=
-                                                        null &&
-                                                    isProximityEnabled) {
-                                                  triggerGlobalSearchEvent();
-                                                } else {
-                                                  blocWrapper.clearEvent();
-                                                  triggerGlobalSearchEvent();
-                                                }
-                                              },
-                                            ),
-                                            Text(
-                                              localizations.translate(
-                                                i18.searchBeneficiary
-                                                    .proximityLabel,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Switch(
-                                              value:
-                                                  isSearchByBeneficaryIdEnabled,
-                                              onChanged: (value) {
-                                                searchController.clear();
-                                                context
-                                                    .read<
-                                                        IndividualGlobalSearchSMCBloc>()
-                                                    .add(
-                                                        const SearchHouseholdsSMCEvent
-                                                            .clear());
-                                                setState(() {
-                                                  isSearchByBeneficaryIdEnabled =
-                                                      value;
-                                                  isProximityEnabled = false;
-                                                  searchController.clear();
-                                                  blocWrapper.clearEvent();
-                                                });
-                                              },
-                                            ),
-                                            Text(
-                                              localizations.translate(i18Local
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Switch(
+                                        value: isSearchByBeneficaryIdEnabled,
+                                        onChanged: (value) {
+                                          searchController.clear();
+                                          context
+                                              .read<
+                                                  IndividualGlobalSearchSMCBloc>()
+                                              .add(
+                                                  const SearchHouseholdsSMCEvent
+                                                      .clear());
+                                          setState(() {
+                                            isSearchByBeneficaryIdEnabled =
+                                                value;
+                                            isProximityEnabled = false;
+                                            searchController.clear();
+                                            blocWrapper.clearEvent();
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        localizations.translate(i18Local
                                                   .searchBeneficiary
-                                                  .searchByBeneficiaryId),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    )
-                                  : const Offstage(),
+                                            .searchByBeneficiaryId),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                               DigitSearchBar(
                                 controller: searchController,
                                 hintText: localizations.translate(

@@ -98,9 +98,10 @@ class CustomResourceBeneficiaryCardOncoState
                 i18_local.deliverIntervention.quantityWastedLabel,
               ),
               isRequired: false,
+              keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(
-                  "[a-zA-Z0-9]",
+                  "[0-9]",
                 )),
               ]),
           DigitCard(
