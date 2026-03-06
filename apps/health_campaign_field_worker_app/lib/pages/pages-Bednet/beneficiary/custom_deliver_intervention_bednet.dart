@@ -205,14 +205,13 @@ class CustomDeliverInterventionBednetPageState
                                                 .selectedProject
                                                 ?.additionalDetails
                                                 ?.projectType
-                                                ?.cycles![
-                                                    deliveryInterventionState
-                                                            .cycle -
-                                                        1]
+                                                ?.cycles![deliveryInterventionState.cycle -
+                                                    1]
                                                 .deliveries?[
                                             deliveryInterventionState.dose - 1],
                                         state.selectedIndividual,
-                                        state.householdMemberWrapper.household)
+                                        state.householdMemberWrapper
+                                            .household)['criteria']
                                     ?.productVariants)
                                 : RegistrationDeliverySingleton()
                                     .selectedProject
@@ -1067,8 +1066,8 @@ class CustomDeliverInterventionBednetPageState
                           ?.cycles![bloc.cycle - 1]
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
-                  .productVariants
+                      overViewbloc.householdMemberWrapper.household)['criteria']
+                  ?.productVariants
                   ?.length ??
               0;
 

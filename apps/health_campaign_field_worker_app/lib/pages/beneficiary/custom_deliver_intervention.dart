@@ -201,7 +201,8 @@ class CustomDeliverInterventionPageState
                                               .deliveries?[
                                           deliveryInterventionState.dose - 1],
                                       state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
+                                      state.householdMemberWrapper
+                                          .household)['criteria']
                                   ?.productVariants)
                               : RegistrationDeliverySingleton()
                                   .selectedProject

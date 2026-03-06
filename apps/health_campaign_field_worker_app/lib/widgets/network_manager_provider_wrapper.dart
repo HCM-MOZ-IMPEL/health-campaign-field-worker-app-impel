@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
+import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 import 'package:survey_form/data/repositories/local/service.dart';
 import 'package:survey_form/data/repositories/local/service_definition.dart';
 import 'package:survey_form/data/repositories/oplog/oplog.dart';
@@ -126,6 +128,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
     Isar isar,
   ) {
     return [
+      RepositoryProvider<
+          LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(
+        create: (_) => UniqueIdPoolLocalRepository(
+          sql,
+          UniqueIdOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<UserActionModel, UserActionSearchModel>>(
         create: (_) => LocationTrackerLocalBaseRepository(

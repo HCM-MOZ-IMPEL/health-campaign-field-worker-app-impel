@@ -134,6 +134,16 @@ class _DoseAdministeredVerificationPageState
                                                 IdGen.i.identifier;
                                             final address =
                                                 bloc.oldTask?.address;
+                                            List<DeliveryProductVariant>?
+                                                productVariants =
+                                                fetchProductVariant(
+                                              e,
+                                              overViewBloc.selectedIndividual,
+                                              overViewBloc
+                                                  .householdMemberWrapper
+                                                  .household,
+                                            )['criteria']
+                                                    ?.productVariants;
                                             // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
                                             completedTask.add(
                                               TaskModel(
@@ -166,15 +176,7 @@ class _DoseAdministeredVerificationPageState
                                                   createdTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
-                                                resources: fetchProductVariant(
-                                                  e,
-                                                  overViewBloc
-                                                      .selectedIndividual,
-                                                  overViewBloc
-                                                      .householdMemberWrapper
-                                                      .household,
-                                                )
-                                                    ?.productVariants
+                                                resources: productVariants
                                                     ?.map((variant) =>
                                                         TaskResourceModel(
                                                           clientReferenceId:

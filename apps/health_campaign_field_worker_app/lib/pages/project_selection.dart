@@ -366,6 +366,8 @@ void setPackagesSingleton(BuildContext context) {
             ));
 
         RegistrationDeliverySingleton().setInitialData(
+          beneficiaryIdMinCount: 0,
+          beneficiaryIdBatchSize: 0,
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
