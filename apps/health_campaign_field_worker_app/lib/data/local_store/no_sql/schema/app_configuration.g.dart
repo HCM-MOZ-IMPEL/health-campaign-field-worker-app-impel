@@ -191,44 +191,50 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'VaccineGroup',
     ),
-    r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS': PropertySchema(
+    r'VACCINE_REFUSAL_REASONS': PropertySchema(
       id: 30,
+      name: r'VACCINE_REFUSAL_REASONS',
+      type: IsarType.objectList,
+      target: r'RefusalReasons',
+    ),
+    r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS': PropertySchema(
+      id: 28,
       name: r'VEHICLE_TRACKING_TRIP_EVALUATION_REASONS',
       type: IsarType.objectList,
       target: r'VehicleTrackingReasons',
     ),
     r'VEHICLE_TRACKING_TRIP_REASONS': PropertySchema(
-      id: 31,
+      id: 29,
       name: r'VEHICLE_TRACKING_TRIP_REASONS',
       type: IsarType.objectList,
       target: r'VehicleTrackingReasons',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 32,
+      id: 30,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 33,
+      id: 31,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 34,
+      id: 32,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 35,
+      id: 33,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 36,
+      id: 34,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -255,6 +261,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'BandwidthBatchSize': BandwidthBatchSizeSchema,
     r'IdTypeOptions': IdTypeOptionsSchema,
     r'DeliveryCommentOptions': DeliveryCommentOptionsSchema,
+    r'RefusalReasons': RefusalReasonsSchema,
     r'TransportTypes': TransportTypesSchema,
     r'ComplaintTypes': ComplaintTypesSchema,
     r'CallSupportList': CallSupportListSchema,
@@ -267,7 +274,6 @@ const AppConfigurationSchema = CollectionSchema(
     r'DiseaseOptions': DiseaseOptionsSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
-    r'RefusalReasons': RefusalReasonsSchema,
     r'PrivacyPolicy': PrivacyPolicySchema,
     r'Content': ContentSchema,
     r'Description': DescriptionSchema,
@@ -633,6 +639,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.vaccineRefusalReasons;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[RefusalReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              RefusalReasonsSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.vehicleTrackingTripEvaluationReasons;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -883,44 +903,50 @@ void _appConfigurationSerialize(
     VaccineGroupSchema.serialize,
     object.vaccineGroups,
   );
-  writer.writeObjectList<VehicleTrackingReasons>(
+  writer.writeObjectList<RefusalReasons>(
     offsets[30],
+    allOffsets,
+    RefusalReasonsSchema.serialize,
+    object.vaccineRefusalReasons,
+  );
+  writer.writeObjectList<VehicleTrackingReasons>(
+    offsets[28],
     allOffsets,
     VehicleTrackingReasonsSchema.serialize,
     object.vehicleTrackingTripEvaluationReasons,
   );
   writer.writeObjectList<VehicleTrackingReasons>(
-    offsets[31],
+    offsets[29],
     allOffsets,
     VehicleTrackingReasonsSchema.serialize,
     object.vehicleTrackingTripReasons,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[32],
+    offsets[30],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[33],
+    offsets[31],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[34],
+    offsets[32],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[35],
+    offsets[33],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[36],
+    offsets[34],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -1089,46 +1115,52 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     VaccineGroup(),
   );
+  object.vaccineRefusalReasons = reader.readObjectList<RefusalReasons>(
+    offsets[30],
+    RefusalReasonsSchema.deserialize,
+    allOffsets,
+    RefusalReasons(),
+  );
   object.vehicleTrackingTripEvaluationReasons =
       reader.readObjectList<VehicleTrackingReasons>(
-    offsets[30],
+    offsets[28],
     VehicleTrackingReasonsSchema.deserialize,
     allOffsets,
     VehicleTrackingReasons(),
   );
   object.vehicleTrackingTripReasons =
       reader.readObjectList<VehicleTrackingReasons>(
-    offsets[31],
+    offsets[29],
     VehicleTrackingReasonsSchema.deserialize,
     allOffsets,
     VehicleTrackingReasons(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[32],
+    offsets[30],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[33],
+    offsets[31],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[34],
+    offsets[32],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[35],
+    offsets[33],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[36],
+    offsets[34],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1320,48 +1352,48 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         VaccineGroup(),
       )) as P;
+    case 28:
+      return (reader.readObjectList<VehicleTrackingReasons>(
+        offset,
+        VehicleTrackingReasonsSchema.deserialize,
+        allOffsets,
+        VehicleTrackingReasons(),
+      )) as P;
+    case 29:
+      return (reader.readObjectList<VehicleTrackingReasons>(
+        offset,
+        VehicleTrackingReasonsSchema.deserialize,
+        allOffsets,
+        VehicleTrackingReasons(),
+      )) as P;
     case 30:
-      return (reader.readObjectList<VehicleTrackingReasons>(
-        offset,
-        VehicleTrackingReasonsSchema.deserialize,
-        allOffsets,
-        VehicleTrackingReasons(),
-      )) as P;
-    case 31:
-      return (reader.readObjectList<VehicleTrackingReasons>(
-        offset,
-        VehicleTrackingReasonsSchema.deserialize,
-        allOffsets,
-        VehicleTrackingReasons(),
-      )) as P;
-    case 32:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 33:
+    case 31:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 34:
+    case 32:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 35:
+    case 33:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 36:
+    case 34:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -4623,6 +4655,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'VACCINE_REFUSAL_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'VACCINE_REFUSAL_REASONS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'VACCINE_REFUSAL_REASONS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       vehicleTrackingTripEvaluationReasonsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -5515,6 +5654,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      vaccineRefusalReasonsElement(FilterQuery<RefusalReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'VACCINE_REFUSAL_REASONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       vehicleTrackingTripEvaluationReasonsElement(
           FilterQuery<VehicleTrackingReasons> q) {
     return QueryBuilder.apply(this, (query) {
@@ -6017,6 +6163,13 @@ extension AppConfigurationQueryProperty
       vaccineGroupsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'VACCINE_GROUPS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<RefusalReasons>?, QQueryOperations>
+      vaccineRefusalReasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'VACCINE_REFUSAL_REASONS');
     });
   }
 

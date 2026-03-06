@@ -451,14 +451,6 @@ class MdmsRepository {
       return vaccineGroup;
     }).toList();
 
-    appConfiguration.diseaseOptions =
-        element?.diseaseOptions?.map((e) {
-      final diseaseOption = DiseaseOptions()
-        ..name = e.name.toString()
-        ..code = e.code;
-      return diseaseOption;
-    }).toList();
-
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
       isar.rowVersionLists.putAllSync(rowVersionList);
