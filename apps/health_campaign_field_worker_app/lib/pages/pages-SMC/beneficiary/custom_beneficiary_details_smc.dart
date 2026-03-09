@@ -32,6 +32,8 @@ import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_oncho.da
 import '../../../widgets/widgets_smc/beneficiary/custom_record_delivery_smc.dart';
 import 'widgets/past_delivery_oncho.dart';
 import 'widgets/past_delivery_smc.dart';
+import 'package:registration_delivery/models/entities/status.dart'
+    as reg_status;
 
 @RoutePage()
 class CustomBeneficiaryDetailsSMCPage extends LocalizedStatefulWidget {
@@ -469,6 +471,8 @@ class CustomBeneficiaryDetailsSMCPageState
             .selectedProject
             ?.additionalDetails
             ?.additionalProjectType;
+    final height =
+        getValueForTheKeyIndividual(Constants.height, state.selectedIndividual);
 
     // [TODO] Need to move this to Bloc Lisitner or consumer
     // Note : setting active cycle and dose for oncho flow as oncho cycle
@@ -490,6 +494,14 @@ class CustomBeneficiaryDetailsSMCPageState
     );
     final router = context.router;
 
+    final skuQuantityMap = buildSkuQuantityMap(
+      task: taskData?.firstWhereOrNull(
+        (task) =>
+            task.status == reg_status.Status.administeredSuccess.toValue(),
+      ),
+      productVariants: variant,
+    );
+
     return Scaffold(
       body: ScrollableContent(
         enableFixedButton: true,
@@ -508,7 +520,8 @@ class CustomBeneficiaryDetailsSMCPageState
             return cycles != null && cycles.isNotEmpty
                 ? (taskData ?? [])
                         .where((task) =>
-                            task.status == Status.administeredSuccess.toValue())
+                            task.status ==
+                            reg_status.Status.administeredSuccess.toValue())
                         .isEmpty
                     ? DigitCard(
                         margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
@@ -664,6 +677,9 @@ class CustomBeneficiaryDetailsSMCPageState
                                     .toUpperCase() ??
                                 '--'),
                     localizations.translate(
+                            i18_local.individualDetails.heightLabelText):
+                        height != null ? '${height.toString()} cm' : '--',
+                    localizations.translate(
                         i18.deliverIntervention.dateOfRegistrationLabel): () {
                       final date =
                           projectBeneficiary?.first?.dateOfRegistration;
@@ -676,6 +692,16 @@ class CustomBeneficiaryDetailsSMCPageState
                       return DateFormat('dd MMMM yyyy')
                           .format(registrationDate);
                     }(),
+                    localizations.translate(
+                            i18.deliverIntervention.resourceDeliveredLabel):
+                        skuQuantityMap.isNotEmpty
+                            ? skuQuantityMap.entries
+                                .map(
+                                  (e) =>
+                                      '${localizations.translate(e.key.toString())} - ${e.value}',
+                                )
+                                .join(', ')
+                            : '--',
                   },
                 ),
               ],
@@ -737,5 +763,54 @@ class CustomBeneficiaryDetailsSMCPageState
         ],
       ),
     );
+  }
+
+  Map<String, int> buildSkuQuantityMap({
+    required TaskModel? task,
+    required List<ProductVariantModel>? productVariants,
+  }) {
+    if (task == null || task.resources == null || task.resources!.isEmpty) {
+      return <String, int>{};
+    }
+    if (productVariants == null || productVariants.isEmpty) {
+      return <String, int>{};
+    }
+    // Index variants by id for fast lookup
+    final variantById = <String, ProductVariantModel>{};
+    for (final v in productVariants) {
+      final id = v.id;
+      if (id != null) {
+        variantById[id] = v;
+      }
+    }
+    final result = <String, int>{};
+    for (final resource in task.resources!) {
+      final variantId = resource.productVariantId;
+      if (variantId == null) continue;
+      final variant = variantById[variantId];
+      final sku = variant?.sku;
+      if (sku == null || sku.toString().trim().isEmpty) continue;
+      // Safely parse quantity from different possible types
+      final qty = _parseQuantity(resource.quantity);
+      if (qty <= 0) continue;
+      final key = sku.toString();
+      result[key] = (result[key] ?? 0) + qty;
+    }
+    return result;
+  }
+
+  int _parseQuantity(dynamic rawQty) {
+    if (rawQty == null) return 0;
+    if (rawQty is int) return rawQty;
+    if (rawQty is double) return rawQty.round();
+    if (rawQty is String) {
+      // Try int first
+      final asInt = int.tryParse(rawQty);
+      if (asInt != null) return asInt;
+      // Fallback: parse as double like "1.0"
+      final asDouble = double.tryParse(rawQty);
+      if (asDouble != null) return asDouble.round();
+    }
+    return 0;
   }
 }

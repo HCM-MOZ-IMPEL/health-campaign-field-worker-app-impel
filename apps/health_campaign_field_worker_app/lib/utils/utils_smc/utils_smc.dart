@@ -571,6 +571,20 @@ void showDownloadDialog(
   }
 }
 
+dynamic getValueForTheKeyIndividual(
+    String key, IndividualModel? individualModel) {
+  if (individualModel == null ||
+      individualModel.additionalFields == null ||
+      individualModel.additionalFields!.fields.isEmpty) {
+    return null;
+  }
+  final object = individualModel.additionalFields!.fields
+      .where((element) => element.key == key)
+      .firstOrNull;
+
+  return object == null ? object : object.value;
+}
+
 //Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];

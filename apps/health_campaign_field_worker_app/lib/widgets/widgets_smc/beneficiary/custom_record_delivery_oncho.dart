@@ -70,8 +70,6 @@ class CustomRecordDeliveryCycleOnchoState
                 return BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                   builder: (context, deliverState) {
-                    final pastCycles = deliverState.pastCycles;
-
                     return Column(children: [
                       deliverState.hasCycleArrived
                           ? buildCycleAndDoseTable(
@@ -165,25 +163,18 @@ class CustomRecordDeliveryCycleOnchoState
                     ),
                     TableData(
                       localizations.translate(
-                        index == selectedIndex
-                            ? Status.toAdminister.toValue()
-                            : (tasks?.status ==
-                                        Status.administeredSuccess.toValue()
-                                    ? '${tasks?.status}_SMC'
-                                    : tasks?.status) ??
-                                Status.inComplete.toValue(),
+                        (tasks?.status == Status.administeredSuccess.toValue()
+                                ? '${tasks?.status}_SMC'
+                                : tasks?.status) ??
+                            Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
                       style: TextStyle(
-                        color: index == selectedIndex
-                            ? null
-                            : tasks?.status ==
-                                    Status.administeredSuccess.toValue()
-                                ? DigitTheme
-                                    .instance.colorScheme.onSurfaceVariant
-                                : DigitTheme.instance.colorScheme.error,
-                        fontWeight:
-                            index == selectedIndex ? FontWeight.w700 : null,
+                        color: tasks?.status ==
+                                Status.administeredSuccess.toValue()
+                            ? DigitTheme.instance.colorScheme.onSurfaceVariant
+                            : DigitTheme.instance.colorScheme.error,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     TableData(
