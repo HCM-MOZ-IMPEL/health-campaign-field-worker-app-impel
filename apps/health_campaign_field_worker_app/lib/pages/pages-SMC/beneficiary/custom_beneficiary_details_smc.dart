@@ -19,6 +19,7 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../models/entities/entities_smc/identifier_types.dart'
     as identifier_types;
 import '../../../models/entities/entities_smc/intervention_types.dart';
+import '../../../models/entities/status.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 import 'package:registration_delivery/utils/utils.dart';
@@ -500,11 +501,15 @@ class CustomBeneficiaryDetailsSMCPageState
         ]),
         footer: BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
           builder: (context, deliverState) {
-            final projectType = RegistrationDeliverySingleton().projectType;
+            final projectType = onchoAdditionalProjectType;
             final cycles = projectType?.cycles;
+            // count only oncho successful delivered tasks to check if button should be shown or not
 
             return cycles != null && cycles.isNotEmpty
-                ? (taskData ?? []).isEmpty
+                ? (taskData ?? [])
+                        .where((task) =>
+                            task.status == Status.administeredSuccess.toValue())
+                        .isEmpty
                     ? DigitCard(
                         margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                         padding:
@@ -517,9 +522,7 @@ class CustomBeneficiaryDetailsSMCPageState
                               bloc.add(
                                 DeliverInterventionEvent.selectFutureCycleDose(
                                   dose: deliverState.dose,
-                                  cycle: RegistrationDeliverySingleton()
-                                      .projectType!
-                                      .cycles!
+                                  cycle: onchoAdditionalProjectType!.cycles!
                                       .firstWhere(
                                           (c) => c.id == deliverState.cycle),
                                   individualModel: state.selectedIndividual,
