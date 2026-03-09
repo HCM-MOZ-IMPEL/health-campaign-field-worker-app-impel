@@ -1791,7 +1791,9 @@ class CustomDeliverInterventionSMCPageState
               taskId: task?.id,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: oldTask?.rowVersion ?? 1,
-              quantity: _defaultQuantity.toString(),
+              quantity: (((form.control(_quantityDistributedKey) as FormArray)
+                      .value)?[productvariantList.indexOf(e)])
+                  .toString(),
               clientAuditDetails: ClientAuditDetails(
                 createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                 createdTime: context.millisecondsSinceEpoch(),

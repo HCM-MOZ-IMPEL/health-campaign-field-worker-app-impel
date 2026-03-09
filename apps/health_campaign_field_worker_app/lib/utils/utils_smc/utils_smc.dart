@@ -15,6 +15,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
@@ -1041,18 +1042,21 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
 }
 
 String? getHeightConditionStringFromDeliveryDoseCriteria(
-    DeliveryDoseCriteria? doseCriteria) {
+    DeliveryDoseCriteria? doseCriteria,
+    RegistrationDeliveryLocalization? appLocalization) {
   String condition = doseCriteria?.condition.toString() ?? '';
   if (condition.contains('and')) {
     final criterias = condition.split('and');
     List validHeightCriteria = [];
     for (var element in criterias) {
       if (element.contains('height')) {
-        validHeightCriteria.add(element);
+        validHeightCriteria.add(appLocalization?.translate(
+          element,
+        ));
       }
     }
 
-    return validHeightCriteria.join(' and ');
+    return validHeightCriteria.join(' ${appLocalization?.translate("and")} ');
   }
   return null;
 }

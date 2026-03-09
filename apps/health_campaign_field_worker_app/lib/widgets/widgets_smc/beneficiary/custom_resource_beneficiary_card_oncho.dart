@@ -66,7 +66,7 @@ class CustomResourceBeneficiaryCardOncoState
                 fetched: (productVariants) {
                   return CustomDigitReactiveDropdownSMC(
                     label: '${localizations.translate(
-                      i18_local.deliverIntervention.resourceDeliveredLabelSMC,
+                      i18_local.deliverIntervention.resourceDeliveredLabelONCHO,
                     )}*',
                     readOnly: true,
                     menuItems: productVariants,
@@ -86,7 +86,7 @@ class CustomResourceBeneficiaryCardOncoState
             formControlName: 'quantityDistributed.${widget.cardIndex}',
             form: widget.form,
             label: localizations.translate(
-              i18.deliverIntervention.quantityDistributedLabel,
+              i18_local.deliverIntervention.quantityDistributedLabelONCHO,
             ),
             minimum: 0,
             maximum: 3,
@@ -95,7 +95,7 @@ class CustomResourceBeneficiaryCardOncoState
           DigitTextFormField(
               formControlName: 'quantityWasted.${widget.cardIndex}',
               label: localizations.translate(
-                i18_local.deliverIntervention.quantityWastedLabel,
+                i18_local.deliverIntervention.quantityWastedLabelONCHO,
               ),
               isRequired: false,
               keyboardType: TextInputType.number,
@@ -121,7 +121,8 @@ class CustomResourceBeneficiaryCardOncoState
 
                     return DigitReactiveDropdown<String>(
                       label: localizations.translate(
-                        i18_local.deliverIntervention.deliveryCommentLabelSMC,
+                        i18_local.deliverIntervention
+                            .deliveryCommentLabelWastedONCHO,
                       ),
                       menuItems: deliveryCommentOptionsOncho
                           .map((e) => e.name)

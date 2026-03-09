@@ -864,6 +864,8 @@ class DeliverIntervention {
 
   String get resourceDeliveredLabelSMC =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ_SMC';
+  String get resourceDeliveredLabelONCHO =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ_ONCHO';
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
@@ -871,11 +873,15 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+  String get quantityDistributedLabelONCHO =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_ONCHO';
   String get quantityDistributedLabelTracoma =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_TRACOMA';
 
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
+  String get quantityWastedLabelONCHO =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_ONCHO';
   String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
   String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
   String get patternValidationFailed => 'PATTERN_VALIDATION_FAILED';
@@ -888,6 +894,8 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
   String get deliveryCommentLabelWastedSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
+  String get deliveryCommentLabelWastedONCHO =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_ONCHO';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>
@@ -1406,6 +1414,7 @@ class IndividualDetails {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+  String get beneficiaryAgeOncho => 'BENEFICIARY_AGE_ONCHO';
   String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>

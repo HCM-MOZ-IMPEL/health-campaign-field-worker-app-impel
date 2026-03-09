@@ -86,12 +86,12 @@ Widget buildTableContentOncho(
           fraction: 2.5,
           element: {
             localizations.translate(
-              i18.beneficiaryDetails.beneficiaryAge,
+              i18_local.beneficiaryDetails.beneficiaryAgeOncho,
             ): fetchProductVariantLocal(item, individualModel, householdModel)
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel))}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel), localizations)}'
                 : null,
           },
         ),
