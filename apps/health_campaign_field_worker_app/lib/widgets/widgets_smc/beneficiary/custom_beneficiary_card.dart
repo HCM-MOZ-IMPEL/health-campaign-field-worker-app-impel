@@ -45,7 +45,9 @@ class CustomBeneficiaryCard extends StatelessWidget {
               ? DigitIconButton(
                   icon: Icons.check_circle,
                   iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
+                      .translate(status == Status.administeredSuccess.toValue()
+                          ? '${status}_SMC'
+                          : status.toString()),
                   iconTextColor: theme.colorScheme.onSurfaceVariant,
                   iconColor: theme.colorScheme.onSurfaceVariant,
                 )
