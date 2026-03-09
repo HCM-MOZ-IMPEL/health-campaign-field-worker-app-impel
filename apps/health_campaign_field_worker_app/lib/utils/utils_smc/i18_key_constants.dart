@@ -1415,6 +1415,7 @@ class BeneficiaryDetails {
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
   String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeDeliveredOncho => 'RESOURCES_TO_BE_DELIVERED_ONCHO';
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
   String get resourcesTobeDeliveredTracoma =>
       'RESOURCES_TO_BE_DELIVERED_TRACOMA';
@@ -1426,6 +1427,7 @@ class BeneficiaryDetails {
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResourcesOncho => 'BENEFICIARY_DETAILS_RESOURCES_ONCHO';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryResourcesTracoma =>
       'BENEFICIARY_DETAILS_RESOURCES_TRACOMA';

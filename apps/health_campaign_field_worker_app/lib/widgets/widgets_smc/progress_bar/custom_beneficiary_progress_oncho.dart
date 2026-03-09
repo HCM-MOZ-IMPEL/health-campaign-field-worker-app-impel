@@ -132,14 +132,14 @@ class _CustomBeneficiaryProgressBarOnchoState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const target = 65;
+    const target = 200;
 
     return DigitCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ProgressIndicatorContainer(
-            label: '${max(target - current, 0)} ${widget.label}',
+            label: widget.label.replaceAll("{}", target.toString()),
             prefixLabel: '$current ${widget.prefixLabel}',
             suffixLabel: target.toString(),
             value: target == 0 ? 0 : min(current / target, 1),

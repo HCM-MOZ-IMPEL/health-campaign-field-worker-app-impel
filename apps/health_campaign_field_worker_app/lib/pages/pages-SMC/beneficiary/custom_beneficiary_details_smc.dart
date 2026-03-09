@@ -537,9 +537,9 @@ class CustomBeneficiaryDetailsSMCPageState
                                     kPadding,
                                     0,
                                   ),
-                                  titleText: localizations.translate(i18
+                                  titleText: localizations.translate(i18_local
                                       .beneficiaryDetails
-                                      .resourcesTobeDelivered),
+                                      .resourcesTobeDeliveredOncho),
                                   content: buildTableContentOncho(
                                     deliverState,
                                     context,

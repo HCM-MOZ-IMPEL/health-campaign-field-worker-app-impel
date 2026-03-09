@@ -15,6 +15,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../../models/entities/project_types.dart';
 import '../../../../utils/utils_smc/utils_smc.dart';
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 // This function builds a table with the given data and headers
 Widget buildTableContentOncho(
@@ -41,7 +42,8 @@ Widget buildTableContentOncho(
       cellKey: 'dose',
     ),
     TableHeader(
-      localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+      localizations
+          .translate(i18_local.beneficiaryDetails.beneficiaryResourcesOncho),
       cellKey: 'resources',
     ),
   ];
