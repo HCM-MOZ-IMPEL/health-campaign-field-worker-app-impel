@@ -12,6 +12,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/widgets/inventory/no_facilities_assigned_dialog.dart';
 import 'package:survey_form/utils/utils.dart';
 
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -23,6 +24,8 @@ import '../../../utils/environment_config.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 import '../../../utils/utils_smc/utils_smc.dart'
     show getIndividualAdditionalFields;
 
@@ -287,6 +290,14 @@ class CustomReferBeneficiarySMCPageState
                                                         'taskStatus',
                                                         Status
                                                             .beneficiaryReferred
+                                                            .toValue(),
+                                                      ),
+                                                      AdditionalField(
+                                                        additional_fields_local
+                                                            .AdditionalFieldsType
+                                                            .interventionType
+                                                            .toValue(),
+                                                        InterventionTypes.smc
                                                             .toValue(),
                                                       ),
                                                       if (widget

@@ -623,6 +623,11 @@ class _VaccineInformationCapturePageState
             'taskStatus',
             status_local.Status.vaccineStatus.toValue(),
           ),
+          AdditionalField(
+            additional_fields_local.AdditionalFieldsType.interventionType
+                .toValue(),
+            InterventionTypes.smc.toValue(),
+          ),
           if (lat != null)
             AdditionalField(
               'latitude',

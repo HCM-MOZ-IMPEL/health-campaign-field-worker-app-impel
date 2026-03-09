@@ -542,6 +542,16 @@ class _EligibilityChecklistViewPage
                                                       .beneficiaryInEligible
                                                       .toValue(),
                                                 ),
+                                                if (widget.interventionType !=
+                                                    null)
+                                                  AdditionalField(
+                                                    additional_fields_local
+                                                        .AdditionalFieldsType
+                                                        .interventionType
+                                                        .toValue(),
+                                                    widget.interventionType
+                                                        .toValue(),
+                                                  ),
                                                 AdditionalField(
                                                   'ineligibleReasons',
                                                   ineligibilityReasons

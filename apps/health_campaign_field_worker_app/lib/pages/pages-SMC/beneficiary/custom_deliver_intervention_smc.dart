@@ -1783,6 +1783,11 @@ class CustomDeliverInterventionSMCPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          AdditionalField(
+            additional_fields_local.AdditionalFieldsType.interventionType
+                .toValue(),
+            InterventionTypes.smc.toValue(),
+          ),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),

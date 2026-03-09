@@ -16,6 +16,8 @@ import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 @RoutePage()
 class MorbidityControlPage extends LocalizedStatefulWidget {
@@ -292,6 +294,11 @@ class _MorbidityControlPageState extends LocalizedState<MorbidityControlPage> {
                 'morbidityStatus',
                 selectedDiseases.isNotEmpty ? 'Yes' : 'No',
               ),
+              AdditionalField(
+                additional_fields_local.AdditionalFieldsType.interventionType
+                    .toValue(),
+                InterventionTypes.oncho.toValue(),
+              )
             ],
           ),
         );
