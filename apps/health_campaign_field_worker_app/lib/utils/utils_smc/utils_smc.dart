@@ -1042,22 +1042,30 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
 }
 
 String? getHeightConditionStringFromDeliveryDoseCriteria(
-    DeliveryDoseCriteria? doseCriteria,
-    RegistrationDeliveryLocalization? appLocalization) {
+  DeliveryDoseCriteria? doseCriteria,
+  RegistrationDeliveryLocalization? appLocalization,
+) {
   String condition = doseCriteria?.condition.toString() ?? '';
+
   if (condition.contains('and')) {
     final criterias = condition.split('and');
-    List validHeightCriteria = [];
+    List<String> validHeightCriteria = [];
+
     for (var element in criterias) {
       if (element.contains('height')) {
-        validHeightCriteria.add(appLocalization?.translate(
-          element,
-        ));
+        final translatedHeight =
+            appLocalization?.translate("height") ?? "height";
+
+        final translatedElement =
+            element.replaceFirst("height", translatedHeight);
+
+        validHeightCriteria.add(translatedElement);
       }
     }
 
     return validHeightCriteria.join(' ${appLocalization?.translate("and")} ');
   }
+
   return null;
 }
 
