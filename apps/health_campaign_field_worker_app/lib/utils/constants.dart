@@ -167,6 +167,9 @@ class Constants {
   static const String vehicleSKU = "Vehicle";
   static const String productSKUCounts = "productSKUCounts";
   static const String deliveryCommentWastedKey = "deliveryCommentWasted";
+  static const String eligibilityAssessmentKey = "ELIGIBLITY_ASSESSMENT";
+  static const String eligibilityAssessmentTwoKey =
+      "ELIGIBILITY_ASSESSMENT_TWO";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
