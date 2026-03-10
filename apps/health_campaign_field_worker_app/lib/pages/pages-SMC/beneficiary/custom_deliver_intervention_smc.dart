@@ -269,8 +269,7 @@ class CustomDeliverInterventionSMCPageState
                 .value ==
             "ADMINISTRATION_NOT_SUCCESSFUL";
 // todo verify this how to handle this should pass default 00 or make user enter some value
-    String? wastedCount =
-        ((form.control(_quantityWastedKey).value) ?? "00").toString();
+
     final shouldSubmit = await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
@@ -1027,6 +1026,98 @@ class CustomDeliverInterventionSMCPageState
                                                   ),
                                                 );
                                               } else {
+                                                // Validate: for any resource where quantity wasted > 0,
+                                                // a delivery comment must be selected.
+                                                int _parseNonNegativeInt(
+                                                    dynamic value) {
+                                                  if (value == null) return 0;
+                                                  if (value is int) {
+                                                    return value < 0
+                                                        ? 0
+                                                        : value;
+                                                  }
+                                                  if (value is double) {
+                                                    if (value.isNaN) return 0;
+                                                    return value
+                                                        .round()
+                                                        .clamp(0, 1 << 30);
+                                                  }
+                                                  if (value is String) {
+                                                    final trimmed =
+                                                        value.trim();
+                                                    if (trimmed.isEmpty) {
+                                                      return 0;
+                                                    }
+                                                    return (int.tryParse(
+                                                              trimmed,
+                                                            ) ??
+                                                            double.tryParse(
+                                                              trimmed,
+                                                            )?.round() ??
+                                                            0)
+                                                        .clamp(0, 1 << 30);
+                                                  }
+                                                  return 0;
+                                                }
+
+                                                final wastedValues =
+                                                    (form.control(
+                                                  _quantityWastedKey,
+                                                ) as FormArray)
+                                                        .value as List<String?>;
+                                                final commentValues =
+                                                    (form.control(
+                                                  _deliveryCommentKey,
+                                                ) as FormArray)
+                                                        .value as List<String?>;
+
+                                                bool hasMissingComments = false;
+
+                                                for (var i = 0;
+                                                    i < wastedValues.length &&
+                                                        i <
+                                                            commentValues
+                                                                .length;
+                                                    i++) {
+                                                  final wastedQty =
+                                                      _parseNonNegativeInt(
+                                                    wastedValues[i],
+                                                  );
+                                                  final comment =
+                                                      commentValues[i];
+                                                  final isCommentEmpty =
+                                                      comment == null ||
+                                                          comment
+                                                              .trim()
+                                                              .isEmpty;
+
+                                                  if (wastedQty > 0 &&
+                                                      isCommentEmpty) {
+                                                    hasMissingComments = true;
+                                                    // Mark specific control as touched
+                                                    form
+                                                        .control(
+                                                            '$_deliveryCommentKey.$i')
+                                                        .markAsTouched();
+                                                  }
+                                                }
+
+                                                if (hasMissingComments) {
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentRequired,
+                                                      ),
+                                                      true,
+                                                      theme,
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
+
                                                 context.read<LocationBloc>().add(
                                                     const LoadLocationEvent());
                                                 handleLocationStateOncho(
