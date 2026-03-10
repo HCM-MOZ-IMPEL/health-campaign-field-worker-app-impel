@@ -212,6 +212,14 @@ class CustomResourceBeneficiaryCardOncoState
                                 control.setValidators([]);
                                 control.updateValueAndValidity();
                               }
+
+                              // If comment is required and empty, mark invalid.
+                              final value = control.value;
+                              final isEmpty = value == null ||
+                                  (value is String && value.trim().isEmpty);
+                              if (isCommentRequired && isEmpty) {
+                                control.markAsTouched();
+                              }
                             });
 
                             final filteredOptions =
@@ -239,17 +247,23 @@ class CustomResourceBeneficiaryCardOncoState
                               });
                             }
 
-                            return DigitReactiveDropdown<String>(
-                              label: localizations.translate(
-                                i18_local.deliverIntervention
-                                    .deliveryCommentLabelWastedONCHO,
+                            return IgnorePointer(
+                              ignoring: !isCommentRequired,
+                              child: Opacity(
+                                opacity: isCommentRequired ? 1 : 0.5,
+                                child: DigitReactiveDropdown<String>(
+                                  label: localizations.translate(
+                                    i18_local.deliverIntervention
+                                        .deliveryCommentLabelWastedONCHO,
+                                  ),
+                                  menuItems: filteredNames,
+                                  formControlName:
+                                      'deliveryComment.${widget.cardIndex}',
+                                  isRequired: isCommentRequired,
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
+                                ),
                               ),
-                              menuItems: filteredNames,
-                              formControlName:
-                                  'deliveryComment.${widget.cardIndex}',
-                              isRequired: isCommentRequired,
-                              valueMapper: (value) =>
-                                  localizations.translate(value),
                             );
                           },
                         );
