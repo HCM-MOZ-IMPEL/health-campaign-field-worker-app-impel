@@ -894,6 +894,8 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
   String get deliveryCommentLabelWastedSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
+  String get deliveryCommentLabelWastedRequiredSMC =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_REQUIRED_SMC';
   String get deliveryCommentLabelWastedONCHO =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_ONCHO';
   String get reasonForRedoseLabel =>

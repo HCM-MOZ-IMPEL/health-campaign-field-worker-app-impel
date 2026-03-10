@@ -577,6 +577,29 @@ class CustomDeliverInterventionSMCPageState
                                                     theme,
                                                   ),
                                                 );
+                                              } else if (doseAdministered &&
+                                                  (form
+                                                              .control(
+                                                                  _deliveryCommentWastedKey)
+                                                              .value ==
+                                                          null ||
+                                                      (form
+                                                              .control(
+                                                                  _deliveryCommentWastedKey)
+                                                              .value as String)
+                                                          .trim()
+                                                          .isEmpty)) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentLabelWastedRequiredSMC),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
                                               } else {
                                                 context.read<LocationBloc>().add(
                                                     const LoadLocationEvent());
