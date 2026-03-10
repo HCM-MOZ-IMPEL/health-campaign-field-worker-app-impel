@@ -801,7 +801,7 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
     var height;
     String? structureType;
 
-    if (individualModel != null) {
+    if (individualModel != null && individualModel.dateOfBirth != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
               individualModel.dateOfBirth!,
