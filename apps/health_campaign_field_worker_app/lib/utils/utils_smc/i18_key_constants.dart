@@ -1513,6 +1513,7 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycleSMC => 'BENEFICIARY_DETAILS_RECORD_CYCLE_SMC';
+  String get recordCycleOncho => 'BENEFICIARY_DETAILS_RECORD_CYCLE_ONCHO';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
   String get recordCycleTracoma => 'BENEFICIARY_DETAILS_RECORD_CYCLE_TRACOMA';
 
