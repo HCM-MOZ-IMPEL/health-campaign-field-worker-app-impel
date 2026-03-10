@@ -256,6 +256,13 @@ class CustomResourceBeneficiaryCardOncoState
                                     i18_local.deliverIntervention
                                         .deliveryCommentLabelWastedONCHO,
                                   ),
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          i18_local.deliverIntervention
+                                              .deliveryCommentLabelWastedONCHO,
+                                        ),
+                                  },
                                   menuItems: filteredNames,
                                   formControlName:
                                       'deliveryComment.${widget.cardIndex}',
