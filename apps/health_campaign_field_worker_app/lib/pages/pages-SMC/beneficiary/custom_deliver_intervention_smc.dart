@@ -1132,7 +1132,7 @@ class CustomDeliverInterventionSMCPageState
                                                       localizations.translate(
                                                         i18_local
                                                             .deliverIntervention
-                                                            .deliveryCommentRequired,
+                                                            .deliveryCommentLabelWastedRequiredONCHO,
                                                       ),
                                                       true,
                                                       theme,
