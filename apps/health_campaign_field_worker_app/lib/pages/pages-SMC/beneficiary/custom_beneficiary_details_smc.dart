@@ -34,6 +34,8 @@ import 'widgets/past_delivery_oncho.dart';
 import 'widgets/past_delivery_smc.dart';
 import 'package:registration_delivery/models/entities/status.dart'
     as reg_status;
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 
 @RoutePage()
 class CustomBeneficiaryDetailsSMCPage extends LocalizedStatefulWidget {
@@ -79,19 +81,6 @@ class CustomBeneficiaryDetailsSMCPageState
           final householdMemberWrapper = state.householdMemberWrapper;
           final selectedIndividual = state.selectedIndividual;
 
-          // Determine intervention type based on product variants
-          bool isSmcDeliveryCards = fetchProductVariantForProjectType(
-                  smcProjectType, state.selectedIndividual, null) !=
-              null;
-          bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
-                  onchoAdditionalProjectType, state.selectedIndividual, null) !=
-              null;
-          InterventionTypes? interventionType = isSmcDeliveryCards
-              ? InterventionTypes.smc
-              : isOnchoDeliveryCards
-                  ? InterventionTypes.oncho
-                  : InterventionTypes.smc;
-
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
@@ -111,6 +100,25 @@ class CustomBeneficiaryDetailsSMCPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary?.first?.clientReferenceId)
               .toList();
+
+          final smcTasks = _getSMCStatusData(taskData);
+
+          // Determine intervention type based on product variants
+          bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                  smcProjectType, state.selectedIndividual, null, smcTasks) !=
+              null;
+          bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                  onchoAdditionalProjectType,
+                  state.selectedIndividual,
+                  null,
+                  null) !=
+              null;
+
+          InterventionTypes? interventionType = isSmcDeliveryCards
+              ? InterventionTypes.smc
+              : isOnchoDeliveryCards
+                  ? InterventionTypes.oncho
+                  : InterventionTypes.smc;
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
@@ -184,6 +192,7 @@ class CustomBeneficiaryDetailsSMCPageState
                             taskData,
                             projectBeneficiary,
                             productState,
+                            smcTasks,
                           );
                   },
                   empty: () => Center(
@@ -212,6 +221,7 @@ class CustomBeneficiaryDetailsSMCPageState
     List<dynamic>? taskData,
     List<dynamic>? projectBeneficiary,
     ProductVariantState productState,
+    List<TaskModel>? smcTasks,
   ) {
     final variant = productState.whenOrNull(
       fetched: (productVariants) {
@@ -275,6 +285,8 @@ class CustomBeneficiaryDetailsSMCPageState
                                     state.selectedIndividual,
                                     state.householdMemberWrapper.household,
                                     interventionType,
+                                    taskData,
+                                    smcTasks,
                                   ),
                                   barrierDismissible: true,
                                   primaryAction: DigitDialogActions(
@@ -764,6 +776,38 @@ class CustomBeneficiaryDetailsSMCPageState
         ],
       ),
     );
+  }
+
+  List<TaskModel>? _getSMCStatusData(List<TaskModel>? tasks) {
+    // todo correct this logic when there are multiple tasks for different cycles. currently it is assumed that there will be only one task for smc intervention type and if there are multiple tasks, it will filter based on the cycle id in additional field which might not be correct always as there can be multiple tasks for smc with same cycle id as well
+    // final tasks = this
+    //     .tasks
+    //     ?.where((e) =>
+    //         e.additionalFields?.fields
+    //             .where((field) =>
+    //                 field.key ==
+    //                     AdditionalFieldsType.interventionType.toValue() &&
+    //                 int.tryParse(field.value) == context.selectedCycle?.id)
+    //             .isNotEmpty ??
+    //         false)
+    //     .toList();
+
+    return tasks?.where((e) {
+      final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+        (element) =>
+            element.key ==
+            additional_fields_local.AdditionalFieldsType.interventionType
+                .toValue(),
+      );
+
+      // If field is missing → assume SMC
+      if (interventionField == null) {
+        return true;
+      }
+
+      // If field exists → must be SMC
+      return interventionField.value == InterventionTypes.smc.toValue();
+    }).toList();
   }
 
   Map<String, int> buildSkuQuantityMap({

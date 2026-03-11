@@ -306,16 +306,17 @@ class _CustomViewBeneficiaryCardSMCState
             ?.additionalProjectType;
 
     bool isSmcDeliveryCards = fetchProductVariantForProjectType(
-            smcProjectType, householdMember.headOfHousehold, null) !=
+            smcProjectType, householdMember.headOfHousehold, null, null) !=
         null;
     bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
             onchoAdditionalProjectType,
             householdMember.headOfHousehold,
+            null,
             null) !=
         null;
     bool isBednetDeliveryCards = _isSmcAndBednetFlow
         ? fetchProductVariantForProjectType(onchoAdditionalProjectType,
-                householdMember.headOfHousehold, null) !=
+                householdMember.headOfHousehold, null, null) !=
             null
         : false;
 
@@ -351,13 +352,14 @@ class _CustomViewBeneficiaryCardSMCState
                 ?.additionalProjectType;
 
         bool isSmcDeliveryCards =
-            fetchProductVariantForProjectType(smcProjectType, e, null) != null;
+            fetchProductVariantForProjectType(smcProjectType, e, null, null) !=
+                null;
         bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
-                onchoAdditionalProjectType, e, null) !=
+                onchoAdditionalProjectType, e, null, null) !=
             null;
         bool isBednetDeliveryCards = _isSmcAndBednetFlow
             ? fetchProductVariantForProjectType(
-                    onchoAdditionalProjectType, e, null) !=
+                    onchoAdditionalProjectType, e, null, null) !=
                 null
             : false;
 

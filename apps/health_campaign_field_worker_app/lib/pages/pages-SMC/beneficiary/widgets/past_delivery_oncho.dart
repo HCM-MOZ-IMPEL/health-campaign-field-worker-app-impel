@@ -57,9 +57,9 @@ Widget buildTableContentOncho(
           ?.additionalProjectType;
   final item = onchoAdditionalProjectType
       ?.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
-  final productVariants =
-      fetchProductVariantLocal(item, individualModel, householdModel)
-          ?.productVariants;
+  final productVariants = fetchProductVariantLocal(item, individualModel,
+          householdModel, null, onchoAdditionalProjectType)
+      ?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -87,11 +87,12 @@ Widget buildTableContentOncho(
           element: {
             localizations.translate(
               i18_local.beneficiaryDetails.beneficiaryAgeOncho,
-            ): fetchProductVariantLocal(item, individualModel, householdModel)
+            ): fetchProductVariantLocal(item, individualModel, householdModel,
+                            null, onchoAdditionalProjectType)
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel), localizations)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel, null, onchoAdditionalProjectType)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel, null, onchoAdditionalProjectType), localizations)}'
                 : null,
           },
         ),
@@ -99,14 +100,15 @@ Widget buildTableContentOncho(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariantLocal(item, individualModel, householdModel)
+        fetchProductVariantLocal(item, individualModel, householdModel, null,
+                        onchoAdditionalProjectType)
                     ?.productVariants !=
                 null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariantLocal(
-                          item, individualModel, householdModel)!
+                  ...fetchProductVariantLocal(item, individualModel,
+                          householdModel, null, onchoAdditionalProjectType)!
                       .productVariants!
                       .map(
                     (e) {
@@ -123,7 +125,11 @@ Widget buildTableContentOncho(
                         // otherwise, display an empty cell.
 
                         fetchProductVariantLocal(
-                                        item, individualModel, householdModel)
+                                        item,
+                                        individualModel,
+                                        householdModel,
+                                        null,
+                                        onchoAdditionalProjectType)
                                     ?.productVariants
                                     ?.indexOf(e) ==
                                 0
@@ -143,7 +149,11 @@ Widget buildTableContentOncho(
                 ],
                 columnWidth: columnWidth,
                 height: ((fetchProductVariantLocal(
-                                        item, individualModel, householdModel)
+                                        item,
+                                        individualModel,
+                                        householdModel,
+                                        null,
+                                        onchoAdditionalProjectType)
                                     ?.productVariants ??
                                 [])
                             .length +

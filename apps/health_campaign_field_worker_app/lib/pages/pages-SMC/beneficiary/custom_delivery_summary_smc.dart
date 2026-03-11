@@ -68,12 +68,13 @@ class DeliverySummaryPageState
             builder: (context, state) {
           // Determine intervention type based on product variants
           bool isSmcDeliveryCards = utils_smc.fetchProductVariantForProjectType(
-                  smcProjectType, state.selectedIndividual, null) !=
+                  smcProjectType, state.selectedIndividual, null, null) !=
               null;
           bool isOnchoDeliveryCards =
               utils_smc.fetchProductVariantForProjectType(
                       onchoAdditionalProjectType,
                       state.selectedIndividual,
+                      null,
                       null) !=
                   null;
           InterventionTypes? interventionType = isSmcDeliveryCards

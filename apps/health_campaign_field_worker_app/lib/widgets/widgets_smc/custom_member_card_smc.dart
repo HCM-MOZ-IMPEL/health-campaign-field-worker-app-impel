@@ -789,7 +789,7 @@ class CustomMemberCardSMC extends StatelessWidget {
             : false);
     isNotEligibleOncho = isNotEligibleOncho ||
         fetchProductVariantForProjectType(
-                onchoAdditionalProjectType, individual, null) ==
+                onchoAdditionalProjectType, individual, null, onchoTasks) ==
             null;
 
     bool inBeneficiaryEligibleOncho =
@@ -800,11 +800,11 @@ class CustomMemberCardSMC extends StatelessWidget {
         onchoTasks.isNotEmpty &&
         !checkStatusOncho(onchoTasks, context.selectedCycle);
 
-    bool isSmcDeliveryCards =
-        fetchProductVariantForProjectType(smcProjectType, individual, null) !=
-            null;
+    bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+            smcProjectType, individual, null, smcTasks) !=
+        null;
     bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
-            onchoAdditionalProjectType, individual, null) !=
+            onchoAdditionalProjectType, individual, null, null) !=
         null;
 
     String? beneficiaryId = individual.identifiers

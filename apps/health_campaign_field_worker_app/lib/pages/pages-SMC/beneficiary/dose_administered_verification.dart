@@ -3,6 +3,7 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -27,7 +28,7 @@ import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/utils_smc.dart'
-    show getIndividualAdditionalFields;
+    show fetchProductVariantForSmcValidAge, getIndividualAdditionalFields;
 
 @RoutePage()
 class DoseAdministeredVerificationPage extends LocalizedStatefulWidget {
@@ -74,6 +75,7 @@ class _DoseAdministeredVerificationPageState
               return BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (context, deliveryInterventionstate) {
+                  final selectedIndividual = state.selectedIndividual;
                   var beneficiaryId = state.selectedIndividual?.identifiers
                           ?.lastWhere(
                             (e) =>
@@ -92,6 +94,20 @@ class _DoseAdministeredVerificationPageState
                       localizations.translate(
                         i18.common.noResultsFound,
                       );
+                  var individualAgeInMonths = 0;
+                  var changeAge = false;
+                  if (selectedIndividual != null &&
+                      selectedIndividual.dateOfBirth != null) {
+                    var individualAge = DigitDateUtils.calculateAge(
+                      DigitDateUtils.getFormattedDateToDateTime(
+                            selectedIndividual.dateOfBirth!,
+                          ) ??
+                          DateTime.now(),
+                    );
+                    individualAgeInMonths =
+                        (individualAge.years * 12 + individualAge.months);
+                    changeAge = individualAgeInMonths > 59;
+                  }
 
                   return ReactiveFormBuilder(
                     form: () => buildForm(context),
@@ -169,14 +185,14 @@ class _DoseAdministeredVerificationPageState
                                                   createdTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
-                                                resources: fetchProductVariant(
-                                                  e,
-                                                  overViewBloc
-                                                      .selectedIndividual,
-                                                  overViewBloc
-                                                      .householdMemberWrapper
-                                                      .household,
-                                                )
+                                                resources: fetchProductVariantForSmcValidAge(
+                                                        e,
+                                                        overViewBloc
+                                                            .selectedIndividual,
+                                                        overViewBloc
+                                                            .householdMemberWrapper
+                                                            .household,
+                                                        changeAge)
                                                     ?.productVariants
                                                     ?.map((variant) =>
                                                         TaskResourceModel(

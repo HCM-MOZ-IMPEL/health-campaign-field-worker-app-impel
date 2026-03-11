@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'dart:math';
+
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_ui_components/utils/date_utils.dart'
@@ -773,6 +775,7 @@ DeliveryDoseCriteria? fetchProductVariantForProjectType(
   ProjectTypeModel? projectType,
   IndividualModel? individualModel,
   HouseholdModel? householdModel,
+  List<TaskModel>? tasks,
 ) {
   if (projectType != null) {
     var currentDelivery = projectType.cycles
@@ -783,18 +786,22 @@ DeliveryDoseCriteria? fetchProductVariantForProjectType(
         ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
 
     return fetchProductVariantLocal(
-        currentDelivery, individualModel, householdModel);
+        currentDelivery, individualModel, householdModel, tasks, projectType);
   }
 
   return null;
 }
 
-DeliveryDoseCriteria? fetchProductVariantLocal(
-    ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel,
-    HouseholdModel? householdModel) {
+DeliveryDoseCriteria? fetchProductVariantForSmcValidAge(
+  ProjectCycleDelivery? currentDelivery,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+  bool changeAgeSet,
+) {
+  var individualAgeInMonths = 0;
+  bool changeAge = changeAgeSet;
+
   if (currentDelivery != null) {
-    var individualAgeInMonths = 0;
     var gender;
     var roomCount;
     var memberCount;
@@ -808,7 +815,188 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
             ) ??
             DateTime.now(),
       );
-      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
+      individualAgeInMonths =
+          changeAge ? 59 : (individualAge.years * 12 + individualAge.months);
+
+      gender = individualModel.gender?.index;
+
+      final heightValue = individualModel.additionalFields?.fields
+          .where((element) => element.key == Constants.height)
+          .firstOrNull
+          ?.value;
+      height = int.tryParse(heightValue?.toString() ?? '0') ?? 0;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
+    }
+
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount,
+                if (height != null) 'height': height
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
+}
+
+DeliveryDoseCriteria? fetchProductVariantLocal(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel,
+    List<TaskModel>? tasks,
+    ProjectTypeModel? projectType) {
+  var individualAgeInMonths = 0;
+  bool changeAge = false;
+
+  if (tasks != null && tasks.isNotEmpty && projectType != null) {
+    final currentCycle = projectType.cycles?.firstWhereOrNull((cycle) =>
+        cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+        cycle.endDate! > DateTime.now().millisecondsSinceEpoch);
+    // sort in descending order of created time
+    tasks.sort((a, b) =>
+        b.clientAuditDetails?.createdTime
+            ?.compareTo(a.clientAuditDetails?.createdTime ?? 0) ??
+        0);
+    // major assumption here is that the tasks are sorted in descending order of created time
+    //and they don't have auditDetails as null
+    final filteredTasks = tasks
+        .where((task) =>
+            (task.clientAuditDetails?.createdTime != null ||
+                task.auditDetails?.createdTime != null ||
+                task.createdDate != null) &&
+            ((task.clientAuditDetails?.createdTime ??
+                        task.auditDetails?.createdTime ??
+                        DateTime.fromMillisecondsSinceEpoch(task.createdDate ??
+                                DateTime.now().millisecondsSinceEpoch)
+                            .millisecondsSinceEpoch) <
+                    currentCycle!.startDate &&
+                (task.clientAuditDetails?.createdTime ??
+                        task.auditDetails?.createdTime ??
+                        DateTime.fromMillisecondsSinceEpoch(task.createdDate ??
+                                DateTime.now().millisecondsSinceEpoch)
+                            .millisecondsSinceEpoch) <
+                    currentCycle.endDate))
+        .toList();
+    // latest successfully delivered task first
+    final latestSuccessfullyDeliveredTask = filteredTasks.firstWhereOrNull(
+        (task) =>
+            task.status ==
+                reg_del_status.Status.administeredSuccess.toValue() ||
+            task.status == Status.administeredSuccess.toValue());
+
+    if (latestSuccessfullyDeliveredTask != null && currentCycle != null) {
+      final lastTaskTime =
+          latestSuccessfullyDeliveredTask.clientAuditDetails?.createdTime;
+      // check if the task is delivered in the current cycle or not
+      // if not then change the age to the age of the individual at the time of the task delivery
+      if (lastTaskTime != null &&
+          lastTaskTime < currentCycle.startDate! &&
+          lastTaskTime < currentCycle.endDate!) {
+        changeAge = true;
+      }
+    }
+  }
+  if (currentDelivery != null) {
+    var gender;
+    var roomCount;
+    var memberCount;
+    var height;
+    String? structureType;
+
+    if (individualModel != null && individualModel.dateOfBirth != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths =
+          changeAge ? 59 : (individualAge.years * 12 + individualAge.months);
 
       gender = individualModel.gender?.index;
 
@@ -1619,7 +1807,7 @@ app_configuration_schema.VaccineGroup? getApplicableVaccineGroup(
   }
 
   // Convert age to total months for easier comparison
-  final ageInMonths = (age.years * 12) + age.months;
+  final ageInMonths = min(59, (age.years * 12) + age.months);
 
   // Find the matching vaccine group based on age
   // This logic should match your vaccine group definitions

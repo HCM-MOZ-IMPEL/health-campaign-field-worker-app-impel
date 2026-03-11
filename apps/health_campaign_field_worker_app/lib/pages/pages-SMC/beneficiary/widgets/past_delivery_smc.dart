@@ -14,6 +14,7 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../../models/entities/project_types.dart';
+import '../../../../utils/utils_smc/utils_smc.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
@@ -23,6 +24,8 @@ Widget buildTableContent(
   IndividualModel? individualModel,
   HouseholdModel? householdModel,
   InterventionTypes interventionType,
+  List<dynamic>? taskData,
+  List<TaskModel>? smcTasks,
 ) {
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
@@ -51,9 +54,9 @@ Widget buildTableContent(
       RegistrationDeliverySingleton().projectType!;
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
-  final productVariants =
-      fetchProductVariant(item, individualModel, householdModel)
-          ?.productVariants;
+  final productVariants = fetchProductVariantLocal(
+          item, individualModel, householdModel, smcTasks, projectType)
+      ?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -81,11 +84,12 @@ Widget buildTableContent(
           element: {
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(item, individualModel, householdModel)
+            ): fetchProductVariantLocal(item, individualModel, householdModel,
+                            smcTasks, projectType)
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariant(item, individualModel, householdModel)!.productVariants!.firstOrNull!, variant)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel, smcTasks, projectType)!.productVariants!.firstOrNull!, variant)}'
                 : null,
           },
         ),
@@ -93,13 +97,15 @@ Widget buildTableContent(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)
+        fetchProductVariantLocal(item, individualModel, householdModel,
+                        smcTasks, projectType)
                     ?.productVariants !=
                 null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariant(item, individualModel, householdModel)!
+                  ...fetchProductVariantLocal(item, individualModel,
+                          householdModel, smcTasks, projectType)!
                       .productVariants!
                       .map(
                     (e) {
@@ -115,8 +121,8 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(
-                                        item, individualModel, householdModel)
+                        fetchProductVariantLocal(item, individualModel,
+                                        householdModel, smcTasks, projectType)
                                     ?.productVariants
                                     ?.indexOf(e) ==
                                 0
@@ -135,13 +141,13 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height:
-                    ((fetchProductVariant(item, individualModel, householdModel)
-                                        ?.productVariants ??
-                                    [])
-                                .length +
-                            1) *
-                        cellHeight,
+                height: ((fetchProductVariantLocal(item, individualModel,
+                                        householdModel, smcTasks, projectType)
+                                    ?.productVariants ??
+                                [])
+                            .length +
+                        1) *
+                    cellHeight,
               )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],

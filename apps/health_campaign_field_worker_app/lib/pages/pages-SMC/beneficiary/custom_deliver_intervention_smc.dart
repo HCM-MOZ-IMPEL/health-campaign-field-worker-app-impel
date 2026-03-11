@@ -374,7 +374,31 @@ class CustomDeliverInterventionSMCPageState
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
+          final householdMemberWrapper = state.householdMemberWrapper;
           final selectedIndividual = state.selectedIndividual;
+
+          // Filtering project beneficiaries based on the selected individual
+          final projectBeneficiary =
+              RegistrationDeliverySingleton().beneficiaryType !=
+                      BeneficiaryType.individual
+                  ? [householdMemberWrapper.projectBeneficiaries?.first]
+                  : householdMemberWrapper.projectBeneficiaries
+                      ?.where(
+                        (element) =>
+                            element.beneficiaryClientReferenceId ==
+                            state.selectedIndividual?.clientReferenceId,
+                      )
+                      .toList();
+
+          // Extracting task data related to the selected project beneficiary
+          final taskData = state.householdMemberWrapper.tasks
+              ?.where((element) =>
+                  element.projectBeneficiaryClientReferenceId ==
+                  projectBeneficiary?.first?.clientReferenceId)
+              .toList();
+
+          final smcTasks = _getSMCStatusData(taskData);
+
           ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
               .selectedProject
               ?.additionalDetails
@@ -388,10 +412,10 @@ class CustomDeliverInterventionSMCPageState
                   ?.additionalDetails
                   ?.additionalProjectType;
           bool isSmcDeliveryCards = fetchProductVariantForProjectType(
-                  smcProjectType, selectedIndividual, null) !=
+                  smcProjectType, selectedIndividual, null, smcTasks) !=
               null;
           bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
-                  onchoAdditionalProjectType, selectedIndividual, null) !=
+                  onchoAdditionalProjectType, selectedIndividual, null, null) !=
               null;
 
           // handles only smc and oncho , no other type
@@ -404,7 +428,8 @@ class CustomDeliverInterventionSMCPageState
 
           // Route to appropriate flow based on intervention type
           return switch (interventionType) {
-            InterventionTypes.smc => _buildSmcFlowPage(context, state),
+            InterventionTypes.smc =>
+              _buildSmcFlowPage(context, state, smcTasks),
             InterventionTypes.oncho => _buildOnchoFlowPage(context, state),
             InterventionTypes.bednet => _buildBednetFlowPage(context, state),
           };
@@ -413,7 +438,8 @@ class CustomDeliverInterventionSMCPageState
     );
   }
 
-  Widget _buildSmcFlowPage(BuildContext context, HouseholdOverviewState state) {
+  Widget _buildSmcFlowPage(BuildContext context, HouseholdOverviewState state,
+      List<TaskModel>? smcTasks) {
     final theme = Theme.of(context);
     final householdMemberWrapper = state.householdMemberWrapper;
 
@@ -444,7 +470,7 @@ class CustomDeliverInterventionSMCPageState
                                 ?.cycles
                                 ?.isNotEmpty ==
                             true
-                        ? (fetchProductVariant(
+                        ? (fetchProductVariantLocal(
                                 RegistrationDeliverySingleton()
                                         .selectedProject
                                         ?.additionalDetails
@@ -454,7 +480,12 @@ class CustomDeliverInterventionSMCPageState
                                         .deliveries?[
                                     deliveryInterventionState.dose - 1],
                                 state.selectedIndividual,
-                                state.householdMemberWrapper.household)
+                                state.householdMemberWrapper.household,
+                                smcTasks,
+                                RegistrationDeliverySingleton()
+                                    .selectedProject
+                                    ?.additionalDetails
+                                    ?.projectType)
                             ?.productVariants)
                         : RegistrationDeliverySingleton()
                             .selectedProject
@@ -521,6 +552,7 @@ class CustomDeliverInterventionSMCPageState
                             context,
                             productVariants,
                             variant,
+                            smcTasks,
                           ),
                           builder: (context, form, child) {
                             return ScrollableContent(
@@ -967,7 +999,9 @@ class CustomDeliverInterventionSMCPageState
                                         .deliveries?[
                                     deliveryInterventionState.dose - 1],
                                 state.selectedIndividual,
-                                state.householdMemberWrapper.household)
+                                state.householdMemberWrapper.household,
+                                null,
+                                onchoAdditionalProjectType)
                             ?.productVariants)
                         : onchoAdditionalProjectType?.resources
                             ?.map((r) => DeliveryProductVariant(
@@ -1995,6 +2029,7 @@ class CustomDeliverInterventionSMCPageState
     BuildContext context,
     List<DeliveryProductVariant>? productVariants,
     List<ProductVariantModel>? variants,
+    List<TaskModel>? smcTasks,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
     final overViewbloc = context.read<HouseholdOverviewBloc>().state;
@@ -2011,7 +2046,7 @@ class CustomDeliverInterventionSMCPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariant(
+          : fetchProductVariantLocal(
                       RegistrationDeliverySingleton()
                           .selectedProject
                           ?.additionalDetails
@@ -2019,7 +2054,12 @@ class CustomDeliverInterventionSMCPageState
                           ?.cycles![bloc.cycle - 1]
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
+                      overViewbloc.householdMemberWrapper.household,
+                      smcTasks,
+                      RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.additionalDetails
+                          ?.projectType)!
                   .productVariants
                   ?.length ??
               0;
@@ -2134,7 +2174,9 @@ class CustomDeliverInterventionSMCPageState
                       onchoAdditionalProjectType
                           ?.cycles![bloc.cycle - 1].deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
+                      overViewbloc.householdMemberWrapper.household,
+                      null,
+                      onchoAdditionalProjectType)!
                   .productVariants
                   ?.length ??
               0;
@@ -2338,5 +2380,37 @@ class CustomDeliverInterventionSMCPageState
       ]),
       _quantityWastedKey: FormControl<String>(validators: []),
     });
+  }
+
+  List<TaskModel>? _getSMCStatusData(List<TaskModel>? tasks) {
+    // todo correct this logic when there are multiple tasks for different cycles. currently it is assumed that there will be only one task for smc intervention type and if there are multiple tasks, it will filter based on the cycle id in additional field which might not be correct always as there can be multiple tasks for smc with same cycle id as well
+    // final tasks = this
+    //     .tasks
+    //     ?.where((e) =>
+    //         e.additionalFields?.fields
+    //             .where((field) =>
+    //                 field.key ==
+    //                     AdditionalFieldsType.interventionType.toValue() &&
+    //                 int.tryParse(field.value) == context.selectedCycle?.id)
+    //             .isNotEmpty ??
+    //         false)
+    //     .toList();
+
+    return tasks?.where((e) {
+      final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+        (element) =>
+            element.key ==
+            additional_fields_local.AdditionalFieldsType.interventionType
+                .toValue(),
+      );
+
+      // If field is missing → assume SMC
+      if (interventionField == null) {
+        return true;
+      }
+
+      // If field exists → must be SMC
+      return interventionField.value == InterventionTypes.smc.toValue();
+    }).toList();
   }
 }
