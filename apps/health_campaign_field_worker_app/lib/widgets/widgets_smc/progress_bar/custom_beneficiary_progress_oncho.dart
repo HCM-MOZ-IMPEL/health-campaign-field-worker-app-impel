@@ -6,34 +6,34 @@ import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/models/entities/entities_smc/intervention_types.dart';
 import 'package:registration_delivery/data/repositories/local/task.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-
-import '../../../data/repositories/custom_task.dart';
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
+
+import '../../../data/repositories/custom_task.dart';
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../progress_indicator/progress_indicator.dart';
 
-class CustomBeneficiaryProgressBarSMC extends StatefulWidget {
+class CustomBeneficiaryProgressBarOncho extends StatefulWidget {
   final String label;
   final String prefixLabel;
 
-  const CustomBeneficiaryProgressBarSMC({
+  const CustomBeneficiaryProgressBarOncho({
     Key? key,
     required this.label,
     required this.prefixLabel,
   }) : super(key: key);
 
   @override
-  State<CustomBeneficiaryProgressBarSMC> createState() =>
-      _CustomBeneficiaryProgressBarSMCState();
+  State<CustomBeneficiaryProgressBarOncho> createState() =>
+      _CustomBeneficiaryProgressBarOnchoState();
 }
 
-class _CustomBeneficiaryProgressBarSMCState
-    extends State<CustomBeneficiaryProgressBarSMC> {
+class _CustomBeneficiaryProgressBarOnchoState
+    extends State<CustomBeneficiaryProgressBarOncho> {
   int current = 0;
   bool isExpanded = false;
 
@@ -97,30 +97,22 @@ class _CustomBeneficiaryProgressBarSMCState
 
           List<TaskModel> allTasks =
               await taskRepository.progressBarSearch(taskSearchQuery);
-
-          final interventionKey = additional_fields_local
-              .AdditionalFieldsType.interventionType
-              .toValue();
-
-          final intervetionValue = InterventionTypes.smc.toValue();
-
           List<TaskModel> results = allTasks.where((task) {
-            final fields = task.additionalFields?.fields ?? [];
+            final additionalFields = task?.additionalFields?.fields;
+            if (additionalFields == null || additionalFields.isEmpty) {
+              return false;
+            }
 
-            final hasMatchingIntervention = fields.any((field) =>
-                field != null &&
-                field.key == interventionKey &&
-                field.value == intervetionValue);
-
-            final hasInterventionField = fields
-                .any((field) => field != null && field.key == interventionKey);
-
-            // Include if:
-            // 1. No intervention field exists
-            // 2. OR matching value exists
-            return !hasInterventionField || hasMatchingIntervention;
+            return additionalFields.any(
+              (field) =>
+                  field != null &&
+                  field.key ==
+                      additional_fields_local
+                          .AdditionalFieldsType.interventionType
+                          .toValue() &&
+                  field.value == InterventionTypes.oncho.toValue(),
+            );
           }).toList();
-
           final groupedEntries = results.groupListsBy(
             (element) => element.projectBeneficiaryClientReferenceId,
           );
@@ -140,7 +132,7 @@ class _CustomBeneficiaryProgressBarSMCState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const target = 65;
+    const target = 200;
 
     return DigitCard(
       child: Column(

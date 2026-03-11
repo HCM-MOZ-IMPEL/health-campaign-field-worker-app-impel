@@ -1,7 +1,11 @@
 library app_utils;
 
+import 'dart:math';
+
 import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_ui_components/utils/date_utils.dart'
+    as digit_ui_date_utils;
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -13,6 +17,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
@@ -50,6 +55,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart'
     as app_configuration_schema;
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/app_config/app_config_model.dart';
+import '../../models/entities/entities_smc/intervention_types.dart';
 import '../../models/entities/project_types.dart';
 import '../../models/entities/status.dart';
 import '../../router/app_router.dart';
@@ -84,7 +90,7 @@ class CustomValidator {
     final value = control.value;
     if (value != null && value.isNotEmpty) {
       final height = int.tryParse(value);
-      if (height == null || height < 30 || height > 250) {
+      if (height == null || height < 90) {
         return {'invalidHeight': true};
       }
     }
@@ -568,6 +574,20 @@ void showDownloadDialog(
   }
 }
 
+dynamic getValueForTheKeyIndividual(
+    String key, IndividualModel? individualModel) {
+  if (individualModel == null ||
+      individualModel.additionalFields == null ||
+      individualModel.additionalFields!.fields.isEmpty) {
+    return null;
+  }
+  final object = individualModel.additionalFields!.fields
+      .where((element) => element.key == key)
+      .firstOrNull;
+
+  return object == null ? object : object.value;
+}
+
 //Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
@@ -705,6 +725,385 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
+///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
+bool checkEligibilityForAgeAndSideEffectOncho(
+  digit_ui_date_utils.DigitDOBAgeConvertor age,
+  ProjectTypeModel? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+) {
+  int totalAgeMonths = age.years * 12 + age.months;
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+    // Return null when no matching cycle is found
+  );
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
+      final lastTaskTime =
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
+      recordedSideEffect = lastTaskTime != null &&
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
+
+      return projectType?.validMinAge != null
+          ? totalAgeMonths >= 72
+              ? recordedSideEffect && !checkStatusOncho([tasks], currentCycle)
+                  ? false
+                  : true
+              : false
+          : false;
+    } else {
+      // add validMin and max age check here
+      if (true) {
+        return totalAgeMonths >= 72! ? true : false;
+      }
+      return false;
+    }
+  }
+
+  return false;
+}
+
+DeliveryDoseCriteria? fetchProductVariantForProjectType(
+  ProjectTypeModel? projectType,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+  List<TaskModel>? tasks,
+) {
+  if (projectType != null) {
+    var currentDelivery = projectType.cycles
+        ?.firstWhereOrNull((cycle) =>
+            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
+        ?.deliveries
+        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
+
+    return fetchProductVariantLocal(
+        currentDelivery, individualModel, householdModel, tasks, projectType);
+  }
+
+  return null;
+}
+
+DeliveryDoseCriteria? fetchProductVariantForSmcValidAge(
+  ProjectCycleDelivery? currentDelivery,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+  bool changeAgeSet,
+) {
+  var individualAgeInMonths = 0;
+  bool changeAge = changeAgeSet;
+
+  if (currentDelivery != null) {
+    var gender;
+    var roomCount;
+    var memberCount;
+    var height;
+    String? structureType;
+
+    if (individualModel != null && individualModel.dateOfBirth != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths =
+          changeAge ? 59 : (individualAge.years * 12 + individualAge.months);
+
+      gender = individualModel.gender?.index;
+
+      final heightValue = individualModel.additionalFields?.fields
+          .where((element) => element.key == Constants.height)
+          .firstOrNull
+          ?.value;
+      height = int.tryParse(heightValue?.toString() ?? '0') ?? 0;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
+    }
+
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount,
+                if (height != null) 'height': height
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
+}
+
+DeliveryDoseCriteria? fetchProductVariantLocal(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel,
+    List<TaskModel>? tasks,
+    ProjectTypeModel? projectType) {
+  var individualAgeInMonths = 0;
+  bool changeAge = false;
+
+  if (tasks != null && tasks.isNotEmpty && projectType != null) {
+    final currentCycle = projectType.cycles?.firstWhereOrNull((cycle) =>
+        cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+        cycle.endDate! > DateTime.now().millisecondsSinceEpoch);
+    // sort in descending order of created time
+    tasks.sort((a, b) =>
+        b.clientAuditDetails?.createdTime
+            ?.compareTo(a.clientAuditDetails?.createdTime ?? 0) ??
+        0);
+    // major assumption here is that the tasks are sorted in descending order of created time
+    //and they don't have auditDetails as null
+    final filteredTasks = tasks
+        .where((task) =>
+            (task.clientAuditDetails?.createdTime != null ||
+                task.auditDetails?.createdTime != null ||
+                task.createdDate != null) &&
+            ((task.clientAuditDetails?.createdTime ??
+                        task.auditDetails?.createdTime ??
+                        DateTime.fromMillisecondsSinceEpoch(task.createdDate ??
+                                DateTime.now().millisecondsSinceEpoch)
+                            .millisecondsSinceEpoch) <
+                    currentCycle!.startDate &&
+                (task.clientAuditDetails?.createdTime ??
+                        task.auditDetails?.createdTime ??
+                        DateTime.fromMillisecondsSinceEpoch(task.createdDate ??
+                                DateTime.now().millisecondsSinceEpoch)
+                            .millisecondsSinceEpoch) <
+                    currentCycle.endDate))
+        .toList();
+    // latest successfully delivered task first
+    final latestSuccessfullyDeliveredTask = filteredTasks.firstWhereOrNull(
+        (task) =>
+            task.status ==
+                reg_del_status.Status.administeredSuccess.toValue() ||
+            task.status == Status.administeredSuccess.toValue());
+
+    if (latestSuccessfullyDeliveredTask != null && currentCycle != null) {
+      final lastTaskTime =
+          latestSuccessfullyDeliveredTask.clientAuditDetails?.createdTime;
+      // check if the task is delivered in the current cycle or not
+      // if not then change the age to the age of the individual at the time of the task delivery
+      if (lastTaskTime != null &&
+          lastTaskTime < currentCycle.startDate! &&
+          lastTaskTime < currentCycle.endDate!) {
+        changeAge = true;
+      }
+    }
+  }
+  if (currentDelivery != null) {
+    var gender;
+    var roomCount;
+    var memberCount;
+    var height;
+    String? structureType;
+
+    if (individualModel != null && individualModel.dateOfBirth != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths =
+          changeAge ? 59 : (individualAge.years * 12 + individualAge.months);
+
+      gender = individualModel.gender?.index;
+
+      final heightValue = individualModel.additionalFields?.fields
+          .where((element) => element.key == Constants.height)
+          .firstOrNull
+          ?.value;
+      height = int.tryParse(heightValue?.toString() ?? '0') ?? 0;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
+    }
+
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount,
+                if (height != null) 'height': height
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (height != null) 'height': height,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
+}
+
 DeliveryDoseCriteria? fetchProductVariantSMC(
     ProjectCycleDelivery? currentDelivery,
     IndividualModel? individualModel,
@@ -825,6 +1224,34 @@ DeliveryDoseCriteria? fetchProductVariantSMC(
     }).toList();
 
     return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
+}
+
+String? getHeightConditionStringFromDeliveryDoseCriteria(
+  DeliveryDoseCriteria? doseCriteria,
+  RegistrationDeliveryLocalization? appLocalization,
+) {
+  String condition = doseCriteria?.condition.toString() ?? '';
+
+  if (condition.contains('and')) {
+    final criterias = condition.split('and');
+    List<String> validHeightCriteria = [];
+
+    for (var element in criterias) {
+      if (element.contains('height')) {
+        final translatedHeight =
+            appLocalization?.translate("height") ?? "height";
+
+        final translatedElement =
+            element.replaceFirst("height", translatedHeight);
+
+        validHeightCriteria.add(translatedElement);
+      }
+    }
+
+    return validHeightCriteria.join(' ${appLocalization?.translate("and")} ');
   }
 
   return null;
@@ -967,6 +1394,48 @@ bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   //return successfulTask == null;
 }
 
+bool assessmentOnchoPending(
+    List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  // this task confirms eligibility and dose administrations is done
+  if (currentCycle == null) {
+    return true;
+  }
+  if ((tasks ?? []).isEmpty) {
+    return true;
+  }
+  var successfulTask = tasks!
+      .where((element) =>
+          element.status ==
+              reg_del_status.Status.administeredSuccess.toValue() &&
+          element.additionalFields?.fields.firstWhereOrNull(
+                (e) =>
+                    e.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    e.value == InterventionTypes.oncho.toValue(),
+              ) !=
+              null)
+      .lastOrNull;
+
+  final successfulTaskCreatedTime =
+      successfulTask?.clientAuditDetails?.createdTime;
+
+  if (successfulTaskCreatedTime == null) {
+    return true;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(successfulTaskCreatedTime);
+
+  final isLastCycleRunning =
+      successfulTaskCreatedTime >= currentCycle.startDate &&
+          successfulTaskCreatedTime <= currentCycle.endDate;
+
+  return !isLastCycleRunning;
+
+  //return successfulTask == null;
+}
+
 bool allDosesDelivered(
   List<TaskModel>? tasks,
   ProjectCycle? selectedCycle,
@@ -1022,7 +1491,26 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     return true;
   }
 
-  final lastTask = tasks.last;
+  // Find the last task with SMC intervention type
+  final lastTask = tasks.lastWhereOrNull((e) {
+    final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+      (element) =>
+          element.key ==
+          additional_fields_local.AdditionalFieldsType.interventionType
+              .toValue(),
+    );
+
+    // If field is missing → assume SMC (return true)
+    if (interventionField == null) {
+      return true;
+    }
+
+    // If field exists → must be SMC
+    return interventionField.value == InterventionTypes.smc.toValue();
+  });
+  if (lastTask == null) {
+    return true;
+  }
   final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
 
   if (lastTaskCreatedTime == null) {
@@ -1043,6 +1531,181 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   }
 
   return true;
+}
+
+bool checkStatusOncho(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  if (currentCycle == null) {
+    return false;
+  }
+
+  if (tasks == null || tasks.isEmpty) {
+    return true;
+  }
+
+  if (tasks.firstWhereOrNull((e) =>
+          e.additionalFields?.fields.firstWhereOrNull(
+            (element) =>
+                element.key ==
+                    additional_fields_local
+                        .AdditionalFieldsType.interventionType
+                        .toValue() &&
+                element.value == InterventionTypes.oncho.toValue(),
+          ) !=
+          null) ==
+      null) {
+    return true;
+  }
+
+  final lastTask = tasks.last;
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+
+  if (lastTaskCreatedTime == null) {
+    return false;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+  final diff = DateTime.now().difference(date);
+  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
+      lastTaskCreatedTime <= currentCycle.endDate;
+
+  if (isLastCycleRunning) {
+    if (lastTask.status == Status.delivered.name) {
+      return true;
+    }
+    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
+  }
+
+  return true;
+}
+
+bool checkStatusBednet(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  if (currentCycle == null) {
+    return false;
+  }
+
+  if (tasks == null || tasks.isEmpty) {
+    return true;
+  }
+
+  if (tasks.firstWhereOrNull((e) =>
+          e.additionalFields?.fields.firstWhereOrNull(
+            (element) =>
+                element.key ==
+                    additional_fields_local
+                        .AdditionalFieldsType.interventionType
+                        .toValue() &&
+                element.value == InterventionTypes.bednet.toValue(),
+          ) !=
+          null) ==
+      null) {
+    return true;
+  }
+
+  final lastTask = tasks.last;
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+
+  if (lastTaskCreatedTime == null) {
+    return false;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+  final diff = DateTime.now().difference(date);
+  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
+      lastTaskCreatedTime <= currentCycle.endDate;
+
+  if (isLastCycleRunning) {
+    if (lastTask.status == Status.delivered.name) {
+      return true;
+    }
+    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
+  }
+
+  return true;
+}
+
+bool checkIfBeneficiaryRefusedOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryRefused = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryRefused.toValue());
+
+  return isBeneficiaryRefused;
+}
+
+bool checkIfBeneficiaryIneligibleOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferredOncho(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.oncho.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
+}
+
+bool isSmcAndOnchoFlow(
+  BuildContext context,
+) {
+  final isSmcAndOnchoFlow = context.isSmcAndOnchoFlow;
+
+  return isSmcAndOnchoFlow;
+}
+
+bool isSmcAndBednetFlow(
+  BuildContext context,
+) {
+  final isSmcAndBednetFlow = context.isSmcAndBednetFlow;
+
+  return isSmcAndBednetFlow;
 }
 
 Future<void> requestDisableBatteryOptimization() async {
@@ -1144,7 +1807,7 @@ app_configuration_schema.VaccineGroup? getApplicableVaccineGroup(
   }
 
   // Convert age to total months for easier comparison
-  final ageInMonths = (age.years * 12) + age.months;
+  final ageInMonths = min(59, (age.years * 12) + age.months);
 
   // Find the matching vaccine group based on age
   // This logic should match your vaccine group definitions

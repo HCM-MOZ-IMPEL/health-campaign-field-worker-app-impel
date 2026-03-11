@@ -29,6 +29,10 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
         return ProjectTypes.irs;
       case "SMC-Moz26":
         return ProjectTypes.smc;
+      case "LLIN-SMC":
+        return ProjectTypes.smcAndBednet;
+      case "Oncho":
+        return ProjectTypes.smcAndOncho;
       case "LLIN-Moz":
         return ProjectTypes.bednet;
       default:
@@ -43,6 +47,10 @@ class ProjectTypesMapper extends EnumMapper<ProjectTypes> {
         return "IRS";
       case ProjectTypes.smc:
         return "SMC-Moz26";
+      case ProjectTypes.smcAndBednet:
+        return "LLIN-SMC";
+      case ProjectTypes.smcAndOncho:
+        return "Oncho";
       case ProjectTypes.bednet:
         return "LLIN-Moz";
     }

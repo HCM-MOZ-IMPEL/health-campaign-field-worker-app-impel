@@ -476,6 +476,13 @@ Future<bool> getIsConnected() async {
   }
 }
 
+String getCategory(int number) {
+  if (number >= Constants.onchoMinAge) {
+    return Constants.height;
+  }
+  return "Invalid number";
+}
+
 int getAgeMonths(DigitDOBAge age) {
   return (age.years * 12) + age.months;
 }

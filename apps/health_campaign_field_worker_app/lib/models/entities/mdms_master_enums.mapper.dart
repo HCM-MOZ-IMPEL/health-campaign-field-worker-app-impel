@@ -85,6 +85,12 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.vaccine;
       case "VACCINE_GROUPS":
         return MasterEnums.vaccineGroups;
+      case "VACCINE_REFUSAL_REASONS":
+        return MasterEnums.vaccineRefusalReasons;
+      case "DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR":
+        return MasterEnums.deliveryCommentOptionsOncho;
+      case "DISEASE_OPTIONS":
+        return MasterEnums.diseaseOptions;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
@@ -157,6 +163,12 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "VACCINE";
       case MasterEnums.vaccineGroups:
         return "VACCINE_GROUPS";
+      case MasterEnums.vaccineRefusalReasons:
+        return "VACCINE_REFUSAL_REASONS";
+      case MasterEnums.deliveryCommentOptionsOncho:
+        return "DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR";
+      case MasterEnums.diseaseOptions:
+        return "DISEASE_OPTIONS";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:

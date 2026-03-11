@@ -53,5 +53,7 @@ enum AdditionalFieldsType {
   householdHeadGender,
   @MappableValue("householdHeadAge")
   householdHeadAge,
+  @MappableValue("InterventionType")
+  interventionType,
   ;
 }

@@ -4,22 +4,35 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart'
     as utilsLocal;
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import '../../../models/entities/additional_fields_type.dart'
+    as additional_fields_local;
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
-import '../../../utils/utils_smc/utils_smc.dart' show checkStatusSMC;
-
+import '../../../utils/utils_smc/utils_smc.dart'
+    show
+        checkStatusSMC,
+        checkStatusOncho,
+        checkIfBeneficiaryRefusedOncho,
+        checkIfBeneficiaryIneligibleOncho,
+        checkIfBeneficiaryReferredOncho,
+        checkEligibilityForAgeAndSideEffectOncho,
+        isSmcAndOnchoFlow,
+        isSmcAndBednetFlow,
+        fetchProductVariantForProjectType;
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../localized.dart';
@@ -67,6 +80,173 @@ class _CustomViewBeneficiaryCardSMCState
 
   set isCardExpanded(bool value) => setState(() => _isCardExpanded = value);
 
+  // Flow detection getters
+  bool get _isSmcAndOnchoFlow => isSmcAndOnchoFlow(context);
+
+  bool get _isSmcAndBednetFlow => isSmcAndBednetFlow(context);
+
+  // Get intervention type for current flow
+  String _getInterventionType() {
+    if (_isSmcAndOnchoFlow) {
+      return InterventionTypes.oncho.toValue();
+    } else if (_isSmcAndBednetFlow) {
+      return InterventionTypes.bednet.toValue();
+    } else {
+      return InterventionTypes.smc.toValue();
+    }
+  }
+
+  // Get task data filtered by intervention type for current flow
+  List<TaskModel>? _getTaskDataForCurrentFlow(
+    List<TaskModel>? allTaskData,
+    String interventionType,
+  ) {
+    if (allTaskData == null || allTaskData.isEmpty) {
+      return allTaskData;
+    }
+
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return allTaskData
+          .where((e) =>
+              e.additionalFields?.fields.firstWhereOrNull(
+                (element) =>
+                    element.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    element.value == InterventionTypes.oncho.toValue(),
+              ) !=
+              null)
+          .toList();
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      return allTaskData
+          .where((e) =>
+              e.additionalFields?.fields.firstWhereOrNull(
+                (element) =>
+                    element.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    element.value == InterventionTypes.bednet.toValue(),
+              ) !=
+              null)
+          .toList();
+    } else {
+      // SMC tasks - default
+
+      return allTaskData?.where((e) {
+        final interventionField = e.additionalFields?.fields.firstWhereOrNull(
+          (element) =>
+              element.key ==
+              additional_fields_local.AdditionalFieldsType.interventionType
+                  .toValue(),
+        );
+
+        // If field is missing → assume SMC
+        if (interventionField == null) {
+          return true;
+        }
+
+        // If field exists → must be SMC
+        return interventionField.value == InterventionTypes.smc.toValue();
+      }).toList();
+    }
+  }
+
+  // Status check wrapper methods - dynamically call intervention-specific methods
+  bool _checkIfBeneficiaryRefused(
+    List<TaskModel>? taskData,
+    String interventionType,
+  ) {
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return checkIfBeneficiaryRefusedOncho(taskData);
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      // Bednet uses SMC logic
+      return checkIfBeneficiaryRefused(taskData);
+    } else {
+      return checkIfBeneficiaryRefused(taskData);
+    }
+  }
+
+  bool _checkIfBeneficiaryIneligible(
+    List<TaskModel>? taskData,
+    String interventionType,
+  ) {
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return checkIfBeneficiaryIneligibleOncho(taskData);
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      // Bednet uses SMC logic
+      return utilsLocal.checkIfBeneficiaryIneligible(taskData);
+    } else {
+      return utilsLocal.checkIfBeneficiaryIneligible(taskData);
+    }
+  }
+
+  bool _checkIfBeneficiaryReferred(
+    List<ReferralModel>? referralData,
+    List<TaskModel>? taskData,
+    ProjectCycle? currentCycle,
+    String interventionType,
+  ) {
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return checkIfBeneficiaryReferredOncho(taskData);
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      // Bednet uses SMC logic
+      return checkIfBeneficiaryReferred(referralData, currentCycle);
+    } else {
+      return checkIfBeneficiaryReferred(referralData, currentCycle);
+    }
+  }
+
+  bool _checkStatus(
+    List<TaskModel>? taskData,
+    ProjectCycle? currentCycle,
+    String interventionType,
+  ) {
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return checkStatusOncho(taskData, currentCycle);
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      // Bednet uses SMC logic
+      return checkStatusSMC(taskData, currentCycle);
+    } else {
+      return checkStatusSMC(taskData, currentCycle);
+    }
+  }
+
+  bool _checkEligibilityForAgeAndSideEffect(
+    DigitDOBAgeConvertor age,
+    TaskModel? lastTask,
+    List<SideEffectModel>? sideEffects,
+    String interventionType,
+  ) {
+    if (interventionType == InterventionTypes.oncho.toValue()) {
+      return checkEligibilityForAgeAndSideEffectOncho(
+        age,
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType,
+        lastTask,
+        sideEffects,
+      );
+    } else if (interventionType == InterventionTypes.bednet.toValue()) {
+      // Bednet uses SMC logic
+      return checkEligibilityForAgeAndSideEffect(
+        age,
+        RegistrationDeliverySingleton().projectType,
+        lastTask,
+        sideEffects,
+      );
+    } else {
+      return checkEligibilityForAgeAndSideEffect(
+        age,
+        RegistrationDeliverySingleton().projectType,
+        lastTask,
+        sideEffects,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -111,8 +291,95 @@ class _CustomViewBeneficiaryCardSMCState
     final noOfRooms =
         getValueForTheKey(AdditionalFieldsType.noOfRooms.toValue(), household);
 
+    final interventionType = _getInterventionType();
+
+    // Determine which intervention type has delivery cards (important for SMC+ONCHO flow)
+    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    ProjectTypeModel? onchoAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
+
+    bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+            smcProjectType, householdMember.headOfHousehold, null, null) !=
+        null;
+    bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+            onchoAdditionalProjectType,
+            householdMember.headOfHousehold,
+            null,
+            null) !=
+        null;
+    bool isBednetDeliveryCards = _isSmcAndBednetFlow
+        ? fetchProductVariantForProjectType(onchoAdditionalProjectType,
+                householdMember.headOfHousehold, null, null) !=
+            null
+        : false;
+
+    // For SMC+ONCHO flow, determine which one to show based on delivery cards availability
+    // Priority: If individual is valid for both, show SMC (primary intervention)
+    // If only ONCHO, show ONCHO. If neither, default to SMC.
+    final effectiveInterventionType = _isSmcAndOnchoFlow
+        ? (isSmcDeliveryCards
+            ? InterventionTypes.smc.toValue()
+            : isOnchoDeliveryCards
+                ? InterventionTypes.oncho.toValue()
+                : InterventionTypes.smc.toValue())
+        : _isSmcAndBednetFlow
+            ? (isSmcDeliveryCards
+                ? InterventionTypes.smc.toValue()
+                : isBednetDeliveryCards
+                    ? InterventionTypes.bednet.toValue()
+                    : InterventionTypes.smc.toValue())
+            : InterventionTypes.smc.toValue();
+
     final tableData = householdMember.members?.map(
       (e) {
+        // Determine which intervention type has delivery cards (important for SMC+ONCHO flow)
+        ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType;
+
+        ProjectTypeModel? onchoAdditionalProjectType =
+            RegistrationDeliverySingleton()
+                .selectedProject
+                ?.additionalDetails
+                ?.additionalProjectType;
+
+        bool isSmcDeliveryCards =
+            fetchProductVariantForProjectType(smcProjectType, e, null, null) !=
+                null;
+        bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                onchoAdditionalProjectType, e, null, null) !=
+            null;
+        bool isBednetDeliveryCards = _isSmcAndBednetFlow
+            ? fetchProductVariantForProjectType(
+                    onchoAdditionalProjectType, e, null, null) !=
+                null
+            : false;
+
+        // For SMC+ONCHO flow, determine which one to show based on delivery cards availability
+        // Priority: If individual is valid for both, show SMC (primary intervention)
+        // If only ONCHO, show ONCHO. If neither, default to SMC.
+        final effectiveInterventionType = _isSmcAndOnchoFlow
+            ? (isSmcDeliveryCards
+                ? InterventionTypes.smc.toValue()
+                : isOnchoDeliveryCards
+                    ? InterventionTypes.oncho.toValue()
+                    : InterventionTypes.smc.toValue())
+            : _isSmcAndBednetFlow
+                ? (isSmcDeliveryCards
+                    ? InterventionTypes.smc.toValue()
+                    : isBednetDeliveryCards
+                        ? InterventionTypes.bednet.toValue()
+                        : InterventionTypes.smc.toValue())
+                : InterventionTypes.smc.toValue();
+
         final projectBeneficiary =
             householdMember.projectBeneficiaries?.where((element) {
           if (RegistrationDeliverySingleton().beneficiaryType ==
@@ -132,15 +399,9 @@ class _CustomViewBeneficiaryCardSMCState
                 .toList()
             : null;
 
-        // // sort the task data based on created time in descending order
-
-        // (taskData ?? []).sort(
-        //   (a, b) {
-        //     final aTime = a.clientAuditDetails?.createdTime ?? 0;
-        //     final bTime = b.clientAuditDetails?.createdTime ?? 0;
-        //     return bTime.compareTo(aTime);
-        //   },
-        // );
+        // Filter tasks by intervention type for current flow
+        final filteredTaskData =
+            _getTaskDataForCurrentFlow(taskData, effectiveInterventionType);
         final referralData = (projectBeneficiary ?? []).isNotEmpty
             ? householdMember.referrals
                 ?.where((element) =>
@@ -148,13 +409,14 @@ class _CustomViewBeneficiaryCardSMCState
                     projectBeneficiary?.first.clientReferenceId)
                 .toList()
             : null;
-        final sideEffects = taskData != null && taskData.isNotEmpty
-            ? householdMember.sideEffects
-                ?.where((element) =>
-                    element.taskClientReferenceId ==
-                    taskData.last.clientReferenceId)
-                .toList()
-            : null;
+        final sideEffects =
+            filteredTaskData != null && filteredTaskData.isNotEmpty
+                ? householdMember.sideEffects
+                    ?.where((element) =>
+                        element.taskClientReferenceId ==
+                        filteredTaskData.last.clientReferenceId)
+                    .toList()
+                : null;
 
         final ageInYears = DigitDateUtils.calculateAge(
           e.dateOfBirth != null
@@ -173,33 +435,38 @@ class _CustomViewBeneficiaryCardSMCState
               : DateTime.now(),
         ).months;
 
-        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
+        final isNotEligible = !_checkEligibilityForAgeAndSideEffect(
           DigitDOBAgeConvertor(
             years: ageInYears,
             months: ageInMonths,
           ),
-          RegistrationDeliverySingleton().projectType,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
+          (filteredTaskData ?? []).isNotEmpty ? filteredTaskData?.last : null,
           sideEffects,
+          effectiveInterventionType,
         );
         final isHead = e.clientReferenceId ==
             householdMember.headOfHousehold!.clientReferenceId;
 
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
+          (filteredTaskData ?? []).isNotEmpty ? filteredTaskData?.last : null,
           sideEffects,
         );
-        final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
-        final isBeneficiaryReferred = checkIfBeneficiaryReferred(
+        final isBeneficiaryRefused = _checkIfBeneficiaryRefused(
+            filteredTaskData, effectiveInterventionType);
+        final isBeneficiaryReferred = _checkIfBeneficiaryReferred(
           referralData,
+          filteredTaskData,
           currentCycle,
+          effectiveInterventionType,
         );
-        final isBeneficiaryIneligible = utilsLocal.checkIfBeneficiaryIneligible(
-          taskData,
+        final isBeneficiaryIneligible = _checkIfBeneficiaryIneligible(
+          filteredTaskData,
+          effectiveInterventionType,
         );
 
-        final isStatusReset = checkStatusSMC(taskData, currentCycle);
+        final isStatusReset = _checkStatus(
+            filteredTaskData, currentCycle, effectiveInterventionType);
 
         final rowTableData = [
           TableData(
@@ -210,7 +477,8 @@ class _CustomViewBeneficiaryCardSMCState
             cellKey: 'beneficiary',
           ),
           TableData(
-            isHead
+            isHead &&
+                    effectiveInterventionType == InterventionTypes.smc.toValue()
                 ? localizations.translate(
                     i18Local.householdOverView
                         .householdOverViewHouseholderHeadLabelSMC,
@@ -222,14 +490,15 @@ class _CustomViewBeneficiaryCardSMCState
                       isBeneficiaryReferred,
                       isStatusReset,
                     ),
-                    taskData,
+                    filteredTaskData,
                     isBeneficiaryIneligible,
+                    effectiveInterventionType,
                   ),
             cellKey: 'delivery',
             style: TextStyle(
               color: getTableCellTextColor(
                 isNotEligible: isNotEligible,
-                taskdata: taskData,
+                taskdata: filteredTaskData,
                 isBeneficiaryRefused:
                     isBeneficiaryRefused || isBeneficiaryReferred,
                 isStatusReset: isStatusReset,
@@ -292,18 +561,6 @@ class _CustomViewBeneficiaryCardSMCState
           : DateTime.now(),
     ).months;
 
-    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAgeConvertor(
-        years: ageInYears,
-        months: ageInMonths,
-      ),
-      RegistrationDeliverySingleton().projectType,
-      householdMember.tasks?.last,
-      householdMember.sideEffects,
-    );
-
-    final isBeneficiaryRefused =
-        checkIfBeneficiaryRefused(householdMember.tasks);
     final projectBeneficiary = householdMember.projectBeneficiaries?.where((p) {
       if (RegistrationDeliverySingleton().beneficiaryType ==
           BeneficiaryType.individual) {
@@ -315,9 +572,29 @@ class _CustomViewBeneficiaryCardSMCState
       }
     }).firstOrNull;
 
-    final tasks = householdMember.tasks?.where((t) =>
-        t.projectBeneficiaryClientReferenceId ==
-        projectBeneficiary?.clientReferenceId);
+    final allFilteredByBeneficiary = householdMember.tasks
+        ?.where((t) =>
+            t.projectBeneficiaryClientReferenceId ==
+            projectBeneficiary?.clientReferenceId)
+        .toList();
+
+    final tasks = _getTaskDataForCurrentFlow(
+      allFilteredByBeneficiary,
+      effectiveInterventionType,
+    );
+
+    final isNotEligible = !_checkEligibilityForAgeAndSideEffect(
+      DigitDOBAgeConvertor(
+        years: ageInYears,
+        months: ageInMonths,
+      ),
+      (tasks ?? []).isNotEmpty ? tasks?.last : null,
+      householdMember.sideEffects,
+      effectiveInterventionType,
+    );
+
+    final isBeneficiaryRefused =
+        _checkIfBeneficiaryRefused(tasks, effectiveInterventionType);
 
     return DigitCard(
       child: Column(
@@ -414,30 +691,66 @@ class _CustomViewBeneficiaryCardSMCState
     StatusKeys statusKeys,
     List<TaskModel>? taskData,
     bool isBeneficiaryIneligible,
+    String interventionType,
   ) {
     if (statusKeys.isNotEligible || isBeneficiaryIneligible) {
       return localizations.translate(
-          i18Local.householdOverView.householdOverViewNotEligibleIconLabelSMC);
+        interventionType == InterventionTypes.oncho.toValue()
+            ? i18Local
+                .householdOverView.householdOverViewNotEligibleIconLabelOncho
+            : i18Local
+                .householdOverView.householdOverViewNotEligibleIconLabelSMC,
+      );
     } else if (statusKeys.isBeneficiaryReferred) {
-      return localizations.translate(i18Local
-          .householdOverView.householdOverViewBeneficiaryReferredLabelSMC);
+      return localizations.translate(
+        interventionType == InterventionTypes.oncho.toValue()
+            ? i18Local.householdOverView
+                .householdOverViewBeneficiaryReferredLabelOncho
+            : i18Local
+                .householdOverView.householdOverViewBeneficiaryReferredLabelSMC,
+      );
     } else if (taskData != null) {
       if (taskData.isEmpty) {
-        return localizations.translate(i18Local
-            .householdOverView.householdOverViewNotDeliveredIconLabelSMC);
+        return localizations.translate(
+          interventionType == InterventionTypes.oncho.toValue()
+              ? i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelOncho
+              : i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+        );
       } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
-        return localizations.translate(i18Local
-            .householdOverView.householdOverViewBeneficiaryRefusedLabelSMC);
+        return localizations.translate(
+          interventionType == InterventionTypes.oncho.toValue()
+              ? i18Local.householdOverView
+                  .householdOverViewBeneficiaryRefusedLabelOncho
+              : i18Local.householdOverView
+                  .householdOverViewBeneficiaryRefusedLabelSMC,
+        );
       } else if (statusKeys.isStatusReset) {
-        return localizations.translate(i18Local
-            .householdOverView.householdOverViewNotDeliveredIconLabelSMC);
+        return localizations.translate(
+          interventionType == InterventionTypes.oncho.toValue()
+              ? i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelOncho
+              : i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+        );
       } else {
         return localizations.translate(
-            i18Local.householdOverView.householdOverViewDeliveredIconLabelSMC);
+          interventionType == InterventionTypes.oncho.toValue()
+              ? i18Local
+                  .householdOverView.householdOverViewDeliveredIconLabelOncho
+              : i18Local
+                  .householdOverView.householdOverViewDeliveredIconLabelSMC,
+        );
       }
     } else {
       return localizations.translate(
-          i18Local.householdOverView.householdOverViewNotDeliveredIconLabelSMC);
+        interventionType == InterventionTypes.oncho.toValue()
+            ? i18Local
+                .householdOverView.householdOverViewNotDeliveredIconLabelOncho
+            : i18Local
+                .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+      );
     }
   }
 

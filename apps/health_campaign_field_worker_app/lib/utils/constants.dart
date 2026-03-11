@@ -161,11 +161,15 @@ class Constants {
   static const String smcDeliver = 'smc_delivered';
   static const int validMinAge = 3;
   static const int validMaxAge = 59;
+  static const int onchoMinAge = 60;
 
   static const String bednetSKU = "Redes Mosquiteiras";
   static const String vehicleSKU = "Vehicle";
   static const String productSKUCounts = "productSKUCounts";
   static const String deliveryCommentWastedKey = "deliveryCommentWasted";
+  static const String eligibilityAssessmentKey = "ELIGIBLITY_ASSESSMENT";
+  static const String eligibilityAssessmentTwoKey =
+      "ELIGIBILITY_ASSESSMENT_TWO";
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

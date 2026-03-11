@@ -12,6 +12,7 @@ import 'package:survey_form/utils/i18_key_constants.dart' as i18;
 import 'package:survey_form/widgets/back_navigation_help_header.dart';
 import 'package:survey_form/widgets/localized.dart';
 import 'package:survey_form/widgets/no_result_card.dart';
+import '../../../utils/constants.dart' as local_constants;
 
 import '../../../router/app_router.dart';
 
@@ -65,7 +66,11 @@ class CustomSurveyFormPageState extends State<CustomSurveyformPage> {
                       !item.code!
                           .contains(Constants.eligibilitySurveyFormPrefix) &&
                       (item.code ?? '')
-                          .contains(SurveyFormSingleton().projectName));
+                          .contains(SurveyFormSingleton().projectName) &&
+                      !(item.code!.contains(local_constants
+                              .Constants.eligibilityAssessmentKey) ||
+                          item.code!.contains(local_constants
+                              .Constants.eligibilityAssessmentTwoKey)));
 
                   if (values.isEmpty) {
                     return Column(

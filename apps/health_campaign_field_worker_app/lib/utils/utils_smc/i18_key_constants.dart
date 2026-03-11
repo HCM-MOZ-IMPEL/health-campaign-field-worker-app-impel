@@ -28,6 +28,7 @@ const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 const stockReconciliationDetails = StockReconciliationDetails();
 const warehouseDetails = WarehouseDetails();
+const morbidityControl = MorbidityControl();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -583,6 +584,20 @@ class Checklist {
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+
+  String get checklistDetailsTitle => 'CHECKLIST_DETAILS_TITLE';
+
+  String get checklistDetailsDateLabel => 'CHECKLIST_DETAILS_DATE_LABEL';
+
+  String get checklistDetailsDatePlaceholder =>
+      'CHECKLIST_DETAILS_DATE_PLACEHOLDER';
+
+  String get checklistDetailsDateRequired => 'CHECKLIST_DETAILS_DATE_REQUIRED';
+
+  String get checklistDetailsOrgUnitLabel => 'CHECKLIST_DETAILS_ORG_UNIT_LABEL';
+
+  String get checklistDetailsOrgUnitRequired =>
+      'CHECKLIST_DETAILS_ORG_UNIT_REQUIRED';
 }
 
 class DataShare {
@@ -680,6 +695,8 @@ class HouseholdOverView {
 
   String get householdOverViewActionTextSMC =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
+  String get householdOverViewActionTextOncho =>
+      'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_ONCHO';
   String get tracomaDeliveryAction => 'DELIVER_TRACOMA';
   String get headBednetDeliveryAction => 'DELIVER_BEDNET';
 
@@ -696,6 +713,18 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_SMC';
   String get householdOverViewNotDeliveredIconLabelSMC =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_SMC';
+
+  // Oncho Labels
+  String get householdOverViewDeliveredIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL_ONCHO';
+  String get householdOverViewNotEligibleIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL_ONCHO';
+  String get householdOverViewBeneficiaryReferredLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL_ONCHO';
+  String get householdOverViewBeneficiaryRefusedLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFUSED_LABEL_ONCHO';
+  String get householdOverViewNotDeliveredIconLabelOncho =>
+      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL_ONCHO';
 }
 
 class ForgotPassword {
@@ -735,6 +764,8 @@ class Home {
 
   String get progressIndicatorTitleTracoma =>
       'PROGRESS_INDICATOR_TITLE_TRACOMA';
+  String get progressIndicatorTitleHeadOncho =>
+      'PROGRESS_INDICATOR_TITLE_HEAD_ONCHO';
   String get progressIndicatorTitleHeadBednet =>
       'PROGRESS_INDICATOR_TITLE_HEAD_BEDNET';
 
@@ -807,6 +838,9 @@ class DeliverIntervention {
   String get vaccineGroupLabel => 'VACCINE_GROUP_LABEL';
   String get vaccinesToAdministerLabel => 'VACCINES_TO_ADMINISTER_LABEL';
   String get vaccineCardPresentLabel => 'VACCINE_CARD_PRESENT_LABEL';
+  String get didBeneficiaryRefuseVaccineLabel =>
+      'DID_BENEFICIARY_REFUSE_VACCINE_LABEL';
+  String get refusalReasonEmpty => 'REFUSAL_REASON_EMPTY_VALIDATION_MESSAGE';
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
   String get recordRedoseLabel => 'DELIVER_INTERVENTION_RECORD_REDOSE_LABEL';
@@ -830,6 +864,8 @@ class DeliverIntervention {
 
   String get resourceDeliveredLabelSMC =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ_SMC';
+  String get resourceDeliveredLabelONCHO =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ_ONCHO';
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
@@ -837,11 +873,15 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+  String get quantityDistributedLabelONCHO =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_ONCHO';
   String get quantityDistributedLabelTracoma =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_TRACOMA';
 
   String get quantityWastedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
+  String get quantityWastedLabelONCHO =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_ONCHO';
   String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
   String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
   String get patternValidationFailed => 'PATTERN_VALIDATION_FAILED';
@@ -854,6 +894,12 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
   String get deliveryCommentLabelWastedSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
+  String get deliveryCommentLabelWastedRequiredSMC =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_REQUIRED_SMC';
+  String get deliveryCommentLabelWastedRequiredONCHO =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_REQUIRED_ONCHO';
+  String get deliveryCommentLabelWastedONCHO =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_ONCHO';
   String get reasonForRedoseLabel =>
       'DELIVER_INTERVENTION_REASON_FOR_REDOSE_LABEL';
   String get selectReasonForRedoseLabel =>
@@ -957,6 +1003,8 @@ class DeliverIntervention {
       'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT7';
   String get conductMobilityAssessmentText8 =>
       'CONDUCT_MOBILITY_CONTROL_ASSESSMENT_TEXT8';
+  String get vaccineRefusalReasonLabel => 'VACCINE_REFUSAL_REASON_LABEL';
+  String get selectVaccineRefusalReason => 'SELECT_VACCINE_REFUSAL_REASON';
 }
 
 class AcknowledgementSuccess {
@@ -1361,10 +1409,16 @@ class IndividualDetails {
       'HEIGHT_MIN_LENGTH_VALIDATION_SMC';
   String get heightLabelTextSMC => 'HEIGHT_LABEL_TEXT';
   String get heightLabelTextTracoma => 'HEIGHT_LABEL_TEXT_TRACOMA';
+  String get heightErrorValidationText => 'HEIGHT_ERROR_VALIDATION_TEXT';
+  String get heightHeadLabelText => 'HEAD_LABEL_HEIGHT_TEXT';
+  String get heightChildLabelText => 'CHILD_LABEL_HEIGHT_TEXT';
+  String get minHeightLengthError => 'MIN_HEIGHT_LENGTH_ERROR';
+  String get maxHeightLengthError => 'MAX_HEIGHT_LENGTH_ERROR';
 }
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+  String get beneficiaryAgeOncho => 'BENEFICIARY_AGE_ONCHO';
   String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
@@ -1374,6 +1428,7 @@ class BeneficiaryDetails {
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
   String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeDeliveredOncho => 'RESOURCES_TO_BE_DELIVERED_ONCHO';
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
   String get resourcesTobeDeliveredTracoma =>
       'RESOURCES_TO_BE_DELIVERED_TRACOMA';
@@ -1385,6 +1440,7 @@ class BeneficiaryDetails {
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResourcesOncho => 'BENEFICIARY_DETAILS_RESOURCES_ONCHO';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryResourcesTracoma =>
       'BENEFICIARY_DETAILS_RESOURCES_TRACOMA';
@@ -1461,6 +1517,7 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycleSMC => 'BENEFICIARY_DETAILS_RECORD_CYCLE_SMC';
+  String get recordCycleOncho => 'BENEFICIARY_DETAILS_RECORD_CYCLE_ONCHO';
   String get noOfRoomsValidation => 'ROOMS_VALIDATION';
   String get recordCycleTracoma => 'BENEFICIARY_DETAILS_RECORD_CYCLE_TRACOMA';
 
@@ -1528,4 +1585,21 @@ class Dashboard {
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
   String get noteDescriptionSMC => 'DSS_NOTE_DESCRIPTION_SMC';
+}
+
+class MorbidityControl {
+  const MorbidityControl();
+
+  String get pageTitle => 'MORBIDITY_CONTROL_PAGE_TITLE';
+  String get questionPrompt => 'MORBIDITY_CONTROL_QUESTION_PROMPT';
+  String get tinea => 'MORBIDITY_DISEASE_TINEA';
+  String get scabies => 'MORBIDITY_DISEASE_SCABIES';
+  String get tungiasis => 'MORBIDITY_DISEASE_TUNGIASIS';
+  String get lymphaticFilariasisStageLymphedema =>
+      'MORBIDITY_DISEASE_LYMPHATIC_FILARIASIS_LYMPHEDEMA';
+  String get lymphaticFilariasisStageMale =>
+      'MORBIDITY_DISEASE_LYMPHATIC_FILARIASIS_MALE';
+  String get tracomaFolicular => 'MORBIDITY_DISEASE_TRACOMA_FOLICULAR';
+  String get tracomaTrichiasis => 'MORBIDITY_DISEASE_TRACOMA_TRICHIASIS';
+  String get suspectedLeprosy => 'MORBIDITY_DISEASE_SUSPECTED_LEPROSY';
 }

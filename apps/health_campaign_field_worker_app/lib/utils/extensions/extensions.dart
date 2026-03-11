@@ -20,6 +20,7 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/project/project.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/entities/project_types.dart';
 import '../../models/entities/roles_type.dart';
 import '../app_exception.dart';
 import '../constants.dart';

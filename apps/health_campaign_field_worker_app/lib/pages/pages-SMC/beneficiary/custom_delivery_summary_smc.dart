@@ -18,7 +18,9 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../router/app_router.dart';
+import '../../../utils/utils_smc/utils_smc.dart' as utils_smc;
 import '../../../widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
@@ -47,10 +49,39 @@ class DeliverySummaryPageState
   Widget build(BuildContext context) {
     final localizations = RegistrationDeliveryLocalization.of(context);
 
+    final smcAndOnchoFlow = utils_smc.isSmcAndOnchoFlow(context);
+    final smcAndBednetFlow = utils_smc.isSmcAndBednetFlow(context);
+    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    ProjectTypeModel? onchoAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
+
     return ProductVariantBlocWrapper(
       child: Scaffold(
         body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
             builder: (context, state) {
+          // Determine intervention type based on product variants
+          bool isSmcDeliveryCards = utils_smc.fetchProductVariantForProjectType(
+                  smcProjectType, state.selectedIndividual, null, null) !=
+              null;
+          bool isOnchoDeliveryCards =
+              utils_smc.fetchProductVariantForProjectType(
+                      onchoAdditionalProjectType,
+                      state.selectedIndividual,
+                      null,
+                      null) !=
+                  null;
+          InterventionTypes? interventionType = isSmcDeliveryCards
+              ? InterventionTypes.smc
+              : isOnchoDeliveryCards
+                  ? InterventionTypes.oncho
+                  : InterventionTypes.smc;
           return BlocConsumer<DeliverInterventionBloc,
               DeliverInterventionState>(
             listener: (context, deliverState) {
@@ -155,7 +186,9 @@ class DeliverySummaryPageState
                                         );
 
                                         context.router.push(
-                                            DoseAdministeredVerificationRoute());
+                                            DoseAdministeredVerificationRoute(
+                                          interventionType: interventionType,
+                                        ));
                                       } else {
                                         final reloadState = context
                                             .read<HouseholdOverviewBloc>();

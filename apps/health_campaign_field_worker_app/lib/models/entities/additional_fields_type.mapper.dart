@@ -73,6 +73,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.householdHeadGender;
       case "householdHeadAge":
         return AdditionalFieldsType.householdHeadAge;
+      case "InterventionType":
+        return AdditionalFieldsType.interventionType;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -129,6 +131,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "householdHeadGender";
       case AdditionalFieldsType.householdHeadAge:
         return "householdHeadAge";
+      case AdditionalFieldsType.interventionType:
+        return "InterventionType";
     }
   }
 }

@@ -21,6 +21,7 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 
@@ -179,6 +180,9 @@ import '../pages/pages-SMC/attendance/custom_manage_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_mark_attendance_smc.dart';
 import '../pages/pages-SMC/attendance/custom_session_select_smc.dart';
 import '../pages/pages-SMC/beneficiary_registration/vaccine_information_capture.dart';
+import '../pages/pages-SMC/beneficiary_registration/pre_eligibility_assessment.dart';
+import '../pages/pages-SMC/beneficiary_registration/morbidity_control.dart';
+import '../models/entities/entities_smc/intervention_types.dart';
 
 part 'app_router.gr.dart';
 
@@ -936,6 +940,10 @@ class AppRouter extends _$AppRouter {
                     AutoRoute(
                       page: VaccineInformationCaptureRoute.page,
                       path: 'vaccine-information-capture',
+                    ),
+                    AutoRoute(
+                      page: MorbidityControlRoute.page,
+                      path: 'morbidity-control',
                     ),
                     AutoRoute(
                       page: RefusedDeliveryRoute.page,

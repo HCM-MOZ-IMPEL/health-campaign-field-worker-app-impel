@@ -15,17 +15,16 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../../../models/entities/entities_smc/intervention_types.dart';
 import '../../../../models/entities/project_types.dart';
 import '../../../../utils/utils_smc/utils_smc.dart';
+import '../../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 // This function builds a table with the given data and headers
-Widget buildTableContent(
+Widget buildTableContentOncho(
   DeliverInterventionState deliverInterventionState,
   BuildContext context,
   List<ProductVariantModel>? variant,
   IndividualModel? individualModel,
   HouseholdModel? householdModel,
   InterventionTypes interventionType,
-  List<dynamic>? taskData,
-  List<TaskModel>? smcTasks,
 ) {
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
@@ -43,19 +42,23 @@ Widget buildTableContent(
       cellKey: 'dose',
     ),
     TableHeader(
-      localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+      localizations
+          .translate(i18_local.beneficiaryDetails.beneficiaryResourcesOncho),
       cellKey: 'resources',
     ),
   ];
 
   // Calculate the height of the container based on the number of items in the table
 
-  final ProjectTypeModel projectType =
-      RegistrationDeliverySingleton().projectType!;
-  final item =
-      projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
-  final productVariants = fetchProductVariantLocal(
-          item, individualModel, householdModel, smcTasks, projectType)
+  final ProjectTypeModel? onchoAdditionalProjectType =
+      RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.additionalProjectType;
+  final item = onchoAdditionalProjectType
+      ?.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+  final productVariants = fetchProductVariantLocal(item, individualModel,
+          householdModel, null, onchoAdditionalProjectType)
       ?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
@@ -83,13 +86,13 @@ Widget buildTableContent(
           fraction: 2.5,
           element: {
             localizations.translate(
-              i18.beneficiaryDetails.beneficiaryAge,
+              i18_local.beneficiaryDetails.beneficiaryAgeOncho,
             ): fetchProductVariantLocal(item, individualModel, householdModel,
-                            smcTasks, projectType)
+                            null, onchoAdditionalProjectType)
                         ?.productVariants
                         ?.firstOrNull !=
                     null
-                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel, smcTasks, projectType)!.productVariants!.firstOrNull!, variant)}'
+                ? '${utilsLocal.getAgeConditionStringFromVariant(fetchProductVariantLocal(item, individualModel, householdModel, null, onchoAdditionalProjectType)!.productVariants!.firstOrNull!, variant)} , ${getHeightConditionStringFromDeliveryDoseCriteria(fetchProductVariantLocal(item, individualModel, householdModel, null, onchoAdditionalProjectType), localizations)}'
                 : null,
           },
         ),
@@ -97,15 +100,15 @@ Widget buildTableContent(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariantLocal(item, individualModel, householdModel,
-                        smcTasks, projectType)
+        fetchProductVariantLocal(item, individualModel, householdModel, null,
+                        onchoAdditionalProjectType)
                     ?.productVariants !=
                 null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
                   ...fetchProductVariantLocal(item, individualModel,
-                          householdModel, smcTasks, projectType)!
+                          householdModel, null, onchoAdditionalProjectType)!
                       .productVariants!
                       .map(
                     (e) {
@@ -121,8 +124,12 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariantLocal(item, individualModel,
-                                        householdModel, smcTasks, projectType)
+                        fetchProductVariantLocal(
+                                        item,
+                                        individualModel,
+                                        householdModel,
+                                        null,
+                                        onchoAdditionalProjectType)
                                     ?.productVariants
                                     ?.indexOf(e) ==
                                 0
@@ -141,8 +148,12 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height: ((fetchProductVariantLocal(item, individualModel,
-                                        householdModel, smcTasks, projectType)
+                height: ((fetchProductVariantLocal(
+                                        item,
+                                        individualModel,
+                                        householdModel,
+                                        null,
+                                        onchoAdditionalProjectType)
                                     ?.productVariants ??
                                 [])
                             .length +

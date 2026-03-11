@@ -52,6 +52,50 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedCycle;
   }
 
+  ProjectTypeModel? get additionalSelectedProjectType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final projectType =
+        projectState.selectedProject?.additionalDetails?.additionalProjectType;
+
+    return projectType;
+  }
+
+  String? get additionalProjectTypeCode {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final projectType = projectState
+        .selectedProject?.additionalDetails?.additionalProjectType?.code;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType;
+  }
+
+  bool get isSmcAndOnchoFlow {
+    final projectTypeCode = additionalProjectTypeCode;
+
+    if (projectTypeCode == null) {
+      return false;
+    }
+
+    return projectTypeCode == ProjectTypes.smcAndOncho.toValue();
+  }
+
+  bool get isSmcAndBednetFlow {
+    final projectTypeCode = additionalProjectTypeCode;
+
+    if (projectTypeCode == null) {
+      return false;
+    }
+
+    return projectTypeCode == ProjectTypes.smcAndBednet.toValue();
+  }
+
   ProjectTypeModel? get selectedProjectType {
     final projectBloc = _get<ProjectBloc>();
 

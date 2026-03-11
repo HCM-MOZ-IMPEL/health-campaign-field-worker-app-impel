@@ -1,0 +1,217 @@
+import 'package:collection/collection.dart';
+import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/digit_table_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
+
+import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/widgets/localized.dart';
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
+
+class CustomRecordDeliveryCycleOncho extends LocalizedStatefulWidget {
+  final List<TaskModel>? taskData;
+  final List<ProjectCycle> projectCycles;
+  final IndividualModel? individualModel;
+
+  const CustomRecordDeliveryCycleOncho({
+    super.key,
+    this.taskData,
+    required this.projectCycles,
+    required this.individualModel,
+  });
+
+  @override
+  State<CustomRecordDeliveryCycleOncho> createState() =>
+      CustomRecordDeliveryCycleOnchoState();
+}
+
+class CustomRecordDeliveryCycleOnchoState
+    extends LocalizedState<CustomRecordDeliveryCycleOncho> {
+  bool isExpanded = false;
+  bool isDivider = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = RegistrationDeliveryLocalization.of(context);
+
+    final headerList = [
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
+        cellKey: 'dose',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
+        cellKey: 'status',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
+        cellKey: 'completedOn',
+      ),
+    ]; // List of table headers for displaying cycle and dose information
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        BlocBuilder<ProductVariantBloc, ProductVariantState>(
+          builder: (context, productState) {
+            return productState.maybeWhen(
+              orElse: () => const Offstage(),
+              fetched: (productVariants) {
+                // Calculate current cycle and dose index
+                return BlocBuilder<DeliverInterventionBloc,
+                    DeliverInterventionState>(
+                  builder: (context, deliverState) {
+                    return Column(children: [
+                      deliverState.hasCycleArrived
+                          ? buildCycleAndDoseTable(
+                              widget.projectCycles
+                                  .where(
+                                    (e) => e.id == deliverState.cycle,
+                                  )
+                                  .toList(),
+                              headerList,
+                              deliverState.dose - 1,
+                              true,
+                            )
+                          : const SizedBox.shrink(),
+                    ]);
+                  },
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildCycleAndDoseTable(
+    List<ProjectCycle> cycles,
+    List<TableHeader> headerList,
+    int? selectedIndex,
+    bool isCurrentCycle,
+  ) {
+    final theme = DigitTheme.instance.mobileTheme;
+
+    final widgetList = <Widget>[];
+
+    // Iterate over the cycles list in reverse order
+    for (int i = cycles.length - 1; i >= 0; i--) {
+      final e = cycles[i];
+      widgetList.add(
+        Column(
+          children: [
+            Padding(
+              padding: isCurrentCycle
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.only(
+                      top: kPadding + 2,
+                      bottom: 0,
+                    ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  isCurrentCycle
+                      ? localizations
+                          .translate(i18.beneficiaryDetails.currentCycleLabel)
+                      : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                  style: theme.textTheme.headlineLarge,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+            DigitTable(
+              selectedIndex: selectedIndex,
+              headerList: headerList,
+              tableData: e.deliveries!.mapIndexed(
+                (index, item) {
+                  final tasks = widget.taskData
+                      ?.where((element) =>
+                          element.additionalFields?.fields
+                                  .firstWhereOrNull(
+                                    (f) =>
+                                        f.key ==
+                                        AdditionalFieldsType.doseIndex
+                                            .toValue(),
+                                  )
+                                  ?.value ==
+                              '0${item.id}' &&
+                          element.additionalFields?.fields
+                                  .firstWhereOrNull(
+                                    (c) =>
+                                        c.key ==
+                                        AdditionalFieldsType.cycleIndex
+                                            .toValue(),
+                                  )
+                                  ?.value ==
+                              '0${e.id}')
+                      .lastOrNull;
+
+                  return TableDataRow([
+                    TableData(
+                      '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
+                      cellKey: 'dose',
+                    ),
+                    TableData(
+                      localizations.translate(
+                        (tasks?.status == Status.administeredSuccess.toValue()
+                                ? '${tasks?.status}_SMC'
+                                : tasks?.status) ??
+                            Status.inComplete.toValue(),
+                      ),
+                      cellKey: 'status',
+                      style: TextStyle(
+                        color: tasks?.status ==
+                                Status.administeredSuccess.toValue()
+                            ? DigitTheme.instance.colorScheme.onSurfaceVariant
+                            : DigitTheme.instance.colorScheme.error,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    TableData(
+                      tasks?.status == Status.administeredFailed.toValue() ||
+                              (tasks?.additionalFields?.fields
+                                      .where((e) =>
+                                          e.key ==
+                                          AdditionalFieldsType.deliveryStrategy
+                                              .toValue())
+                                      .firstOrNull
+                                      ?.value ==
+                                  DeliverStrategyType.indirect.toValue())
+                          ? ' -- '
+                          : tasks?.clientAuditDetails?.createdTime.toDateTime
+                                  .getFormattedDate() ??
+                              ' -- ',
+                      cellKey: 'completedOn',
+                    ),
+                  ]);
+                },
+              ).toList(),
+              columnWidth: 130,
+              height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Divider(
+              thickness: 1.0,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: widgetList,
+    );
+  }
+}

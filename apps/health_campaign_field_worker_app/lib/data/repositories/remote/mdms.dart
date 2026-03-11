@@ -288,6 +288,15 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
+    final List<DeliveryCommentOptions>? deliveryCommentOptionsOncho =
+        element?.deliveryCommentOptionsOncho.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return deliveryCommentOption;
+    }).toList();
+
     final List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc =
         element?.deliveryCommentWastedOptionsSmc.map((element) {
       final deliveryCommentWastedOption = DeliveryCommentOptions()
@@ -325,6 +334,7 @@ class MdmsRepository {
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
+    appConfiguration.deliveryCommentOptionsOncho = deliveryCommentOptionsOncho;
     appConfiguration.deliveryCommentWastedOptionsSmc =
         deliveryCommentWastedOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =
@@ -404,6 +414,16 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.vaccineRefusalReasons =
+        result.hcmWrapperModel?.vaccineRefusalReasons?.map((e) {
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
     appConfiguration.vehicleTrackingTripReasons =
         result.hcmWrapperModel?.vehicleTrackingTripReasons?.map((e) {
       final vehicleTrackingTripReasons = VehicleTrackingReasons()
@@ -439,6 +459,14 @@ class MdmsRepository {
         ..code = e.code
         ..vaccineData = e.vaccineData;
       return vaccineGroup;
+    }).toList();
+
+    appConfiguration.diseaseOptions =
+        result.hcmWrapperModel?.diseaseOptions?.map((e) {
+      final diseaseOption = DiseaseOptions()
+        ..name = e.name.toString()
+        ..code = e.code;
+      return diseaseOption;
     }).toList();
 
     isar.writeTxnSync(() {
