@@ -924,6 +924,26 @@ DeliveryDoseCriteria? fetchProductVariantForSmcValidAge(
   return null;
 }
 
+DeliveryDoseCriteria? fetchProductVariantForProjectTypeBednet(
+  ProjectTypeModel? projectType,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+) {
+  if (projectType != null) {
+    var currentDelivery = projectType.cycles
+        ?.firstWhereOrNull((cycle) =>
+            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
+        ?.deliveries
+        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
+
+    return fetchProductVariant(
+        currentDelivery, individualModel, householdModel);
+  }
+
+  return null;
+}
+
 DeliveryDoseCriteria? fetchProductVariantLocal(
     ProjectCycleDelivery? currentDelivery,
     IndividualModel? individualModel,
@@ -1436,6 +1456,48 @@ bool assessmentOnchoPending(
   //return successfulTask == null;
 }
 
+bool assessmentBednetPending(
+    List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  // this task confirms eligibility and dose administrations is done
+  if (currentCycle == null) {
+    return true;
+  }
+  if ((tasks ?? []).isEmpty) {
+    return true;
+  }
+  var successfulTask = tasks!
+      .where((element) =>
+          element.status ==
+              reg_del_status.Status.administeredSuccess.toValue() &&
+          element.additionalFields?.fields.firstWhereOrNull(
+                (e) =>
+                    e.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    e.value == InterventionTypes.bednet.toValue(),
+              ) !=
+              null)
+      .lastOrNull;
+
+  final successfulTaskCreatedTime =
+      successfulTask?.clientAuditDetails?.createdTime;
+
+  if (successfulTaskCreatedTime == null) {
+    return true;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(successfulTaskCreatedTime);
+
+  final isLastCycleRunning =
+      successfulTaskCreatedTime >= currentCycle.startDate &&
+          successfulTaskCreatedTime <= currentCycle.endDate;
+
+  return !isLastCycleRunning;
+
+  //return successfulTask == null;
+}
+
 bool allDosesDelivered(
   List<TaskModel>? tasks,
   ProjectCycle? selectedCycle,
@@ -1623,6 +1685,29 @@ bool checkStatusBednet(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   return true;
 }
 
+bool checkIfBeneficiaryRefusedBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryRefused = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryRefused.toValue());
+
+  return isBeneficiaryRefused;
+}
+
 bool checkIfBeneficiaryRefusedOncho(
   List<TaskModel>? tasks,
 ) {
@@ -1669,6 +1754,50 @@ bool checkIfBeneficiaryIneligibleOncho(
   return isBeneficiaryIneligible;
 }
 
+bool checkIfBeneficiaryIneligibleBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+bool checkIfBeneficiaryReferredBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
+}
 bool checkIfBeneficiaryReferredOncho(
   List<TaskModel>? tasks,
 ) {
