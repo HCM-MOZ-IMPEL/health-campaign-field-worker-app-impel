@@ -771,6 +771,45 @@ bool checkEligibilityForAgeAndSideEffectOncho(
   return false;
 }
 
+///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
+bool checkEligibilityForAgeAndSideEffectBednet(
+  digit_ui_date_utils.DigitDOBAgeConvertor age,
+  ProjectTypeModel? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+) {
+  int totalAgeMonths = age.years * 12 + age.months;
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+    // Return null when no matching cycle is found
+  );
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
+      final lastTaskTime =
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
+      recordedSideEffect = lastTaskTime != null &&
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
+
+      return recordedSideEffect && !checkStatusBednet([tasks], currentCycle)
+                  ? false
+                  : true;
+            
+    } else {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 DeliveryDoseCriteria? fetchProductVariantForProjectType(
   ProjectTypeModel? projectType,
   IndividualModel? individualModel,

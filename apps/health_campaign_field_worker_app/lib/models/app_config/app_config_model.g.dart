@@ -134,11 +134,6 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
               .map((e) =>
                   DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
               .toList(),
-      deliveryCommentOptionsBednet:
-          (json['DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR'] as List<dynamic>)
-              .map((e) =>
-                  DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
-              .toList(),
       vaccineRefusalReasons: (json['VACCINE_REFUSAL_REASONS'] as List<dynamic>?)
           ?.map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -226,8 +221,6 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
           instance.deliveryCommentOptionsSmc,
       'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR':
           instance.deliveryCommentOptionsOncho,
-      'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR':
-          instance.deliveryCommentOptionsBednet,
       'VACCINE_REFUSAL_REASONS': instance.vaccineRefusalReasons,
       'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR':
           instance.deliveryCommentWastedOptionsSmc,

@@ -1197,7 +1197,7 @@ class CustomIndividualDetailsSMCPageState
   bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
-    if (context.isSmcAndOnchoFlow || context.isSmcAndBednetFlow) {
+    if (context.isSmcAndOnchoFlow) {
       return true;
     }
 

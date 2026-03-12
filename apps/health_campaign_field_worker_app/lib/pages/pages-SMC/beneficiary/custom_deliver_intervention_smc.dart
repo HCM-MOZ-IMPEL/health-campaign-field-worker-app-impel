@@ -38,7 +38,8 @@ import '../../../utils/utils_smc/utils_smc.dart'
     show
         fetchProductVariantForProjectType,
         fetchProductVariantLocal,
-        getIndividualAdditionalFields;
+        getIndividualAdditionalFields,
+        isSmcAndBednetFlow;
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_oncho.dart';
 import '../../../widgets/widgets_smc/beneficiary/custom_resource_beneficiary_card_smc.dart';
 import '../../../widgets/widgets_bednet/custom_digit_integer_form_picker.dart';
@@ -539,14 +540,21 @@ class CustomDeliverInterventionSMCPageState
           bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
                   onchoAdditionalProjectType, selectedIndividual, null, null) !=
               null;
+          bool isHeadOfHousehold =
+              householdMemberWrapper.headOfHousehold?.clientReferenceId ==
+                  selectedIndividual?.clientReferenceId;
+          bool isBednetDeliveryCards =
+              isHeadOfHousehold && isSmcAndBednetFlow(context);
 
-          // handles only smc and oncho , no other type
+          // handles only smc , oncho and bednet , no other type
 
           interventionType = isSmcDeliveryCards
               ? InterventionTypes.smc
               : isOnchoDeliveryCards
                   ? InterventionTypes.oncho
-                  : InterventionTypes.smc;
+                  : isBednetDeliveryCards
+                      ? InterventionTypes.bednet
+                      : InterventionTypes.smc;
 
           // Route to appropriate flow based on intervention type
           return switch (interventionType) {
@@ -1845,6 +1853,8 @@ class CustomDeliverInterventionSMCPageState
     final deliveryCommentWasted =
         form.control(_deliveryCommentWastedKey).value as String?;
     final quantityDistributed =
+        // (form.control(_quantityDistributedKey) as FormArray).value
+        //     as List<int?>;
         form.control(_quantityDistributedKey).value as int?;
     // Update the task with information from the form and other context
     task = task.copyWith(

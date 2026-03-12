@@ -30,6 +30,7 @@ import '../../utils/utils_smc/utils_smc.dart'
         assessmentBednetPending,
         assessmentOnchoPending,
         assessmentSMCPending,
+        checkEligibilityForAgeAndSideEffectBednet,
         checkEligibilityForAgeAndSideEffectOncho,
         checkIfBeneficiaryIneligibleBednet,
         checkIfBeneficiaryIneligibleOncho,
@@ -394,15 +395,20 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               individualModel: individual,
                                             ),
                                           );
-                                          bloc.add(HouseholdOverviewReloadEvent(
-                                            projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                            projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                        .beneficiaryType ??
-                                                    BeneficiaryType.individual,
-                                          ));
+                                          final projectId =
+                                              RegistrationDeliverySingleton()
+                                                  .projectId;
+                                          if (projectId != null) {
+                                            bloc.add(
+                                                HouseholdOverviewReloadEvent(
+                                              projectId: projectId,
+                                              projectBeneficiaryType:
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ??
+                                                      BeneficiaryType
+                                                          .individual,
+                                            ));
+                                          }
 
                                           if (smcAssessmentPendingStatus) {
                                             context.router.push(
@@ -486,22 +492,27 @@ class CustomMemberCardSMC extends StatelessWidget {
     bool bednetAssessmentPendingStatus =
         assessmentBednetPending(bednetTasks, context.selectedCycle);
 
-    bool isNotEligibleBednet =
-        (RegistrationDeliverySingleton().projectType?.cycles != null
-            ? !checkEligibilityForAgeAndSideEffectOncho(
-                digit_ui_date_utils.DigitDOBAgeConvertor(
-                  years: ageInYears,
-                  months: ageInMonths,
-                ),
-                bednetAdditionalProjectType,
-                (bednetTasks ?? []).isNotEmpty ? bednetTasks!.lastOrNull : null,
-                null,
-              )
-            : false);
-    isNotEligibleBednet = isNotEligibleBednet ||
-        fetchProductVariantForProjectTypeBednet(
-                bednetAdditionalProjectType, individual, null) ==
-            null;
+    bool isNotEligibleBednet = (bednetAdditionalProjectType?.cycles != null
+        ? checkEligibilityForAgeAndSideEffectBednet(
+            digit_ui_date_utils.DigitDOBAgeConvertor(
+              years: ageInYears,
+              months: ageInMonths,
+            ),
+            bednetAdditionalProjectType,
+            bednetTasks?.isNotEmpty == true ? bednetTasks!.lastOrNull : null,
+            null,
+          )
+        : false);
+
+    var currentDelivery = bednetAdditionalProjectType?.cycles
+        ?.firstWhereOrNull((cycle) =>
+            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
+        ?.deliveries
+        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
+
+    // isNotEligibleBednet = isNotEligibleBednet ||
+    //     fetchProductVariant(currentDelivery, individual, null) == null;
 
     bool isBeneficiaryEligibleBednet =
         checkIfBeneficiaryIneligibleBednet(bednetTasks);
@@ -513,12 +524,11 @@ class CustomMemberCardSMC extends StatelessWidget {
         bednetTasks.isNotEmpty &&
         !checkStatusBednet(bednetTasks, context.selectedCycle);
 
-    bool isSmcDeliveryCards = fetchProductVariantForProjectTypeBednet(
-            smcProjectType, individual, null) !=
+    bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+            smcProjectType, individual, null, smcTasks) !=
         null;
-    bool isBednetDeliveryCards = fetchProductVariantForProjectTypeBednet(
-            bednetAdditionalProjectType, individual, null) !=
-        null;
+    bool isBednetDeliveryCards = isHead;
+    // fetchProductVariant(currentDelivery, individual, null) != null;
 
     String? beneficiaryId = individual.identifiers
         ?.lastWhereOrNull(
@@ -730,7 +740,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                                     onPressed: beneficiaryId != null &&
                                             (projectBeneficiaries ?? [])
                                                 .isNotEmpty
-                                        ? () => _handleBeneficiaryActionBednet(
+                                        ? () => _handleBeneficiaryAction(
                                               context: context,
                                               isAssessmentPending:
                                                   smcAssessmentPendingStatus,
@@ -774,7 +784,7 @@ class CustomMemberCardSMC extends StatelessWidget {
               : Offstage(
                   offstage: beneficiaryType != BeneficiaryType.individual ||
                       _isErrorStatus(
-                        isNotEligible: !isNotEligibleBednet,
+                        isNotEligible: isNotEligibleBednet,
                         isBeneficiaryRefused: beneficiaryRefusedBednet,
                         isBeneficiaryIneligible: isBeneficiaryEligibleBednet,
                         isBeneficiaryReferred: beneficiaryReferredBednet,
@@ -787,9 +797,9 @@ class CustomMemberCardSMC extends StatelessWidget {
                                     beneficiaryRefusedBednet ||
                                     isBeneficiaryEligibleBednet ||
                                     beneficiaryReferredBednet) &&
-                                !checkBednetStatus
+                                checkBednetStatus
                             ? const Offstage()
-                            : isNotEligibleBednet
+                            : !isNotEligibleBednet
                                 ? DigitElevatedButton(
                                     onPressed: beneficiaryId != null &&
                                             (projectBeneficiaries ?? [])
@@ -865,7 +875,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                   months: ageInMonths,
                 ),
                 onchoAdditionalProjectType,
-                (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
+                onchoTasks?.isNotEmpty == true ? onchoTasks!.lastOrNull : null,
                 null,
               )
             : false);
@@ -1200,14 +1210,15 @@ class CustomMemberCardSMC extends StatelessWidget {
   }
 
   digit_ui_date_utils.DigitDOBAgeConvertor _getCalculatedAge() {
-    if (individual.dateOfBirth == null) {
+    final dateOfBirth = individual.dateOfBirth;
+    if (dateOfBirth == null || dateOfBirth.isEmpty) {
       return digit_ui_date_utils.DigitDOBAgeConvertor(
           years: 0, months: 0, days: 0);
     }
 
     final dateTime =
         digit_ui_date_utils.DigitDateUtils.getFormattedDateToDateTime(
-              individual.dateOfBirth!,
+              dateOfBirth,
             ) ??
             DateTime.now();
 
@@ -1249,11 +1260,15 @@ class CustomMemberCardSMC extends StatelessWidget {
     final bloc = context.read<HouseholdOverviewBloc>();
     bloc.add(
         HouseholdOverviewEvent.selectedIndividual(individualModel: individual));
-    bloc.add(HouseholdOverviewReloadEvent(
-      projectId: RegistrationDeliverySingleton().projectId!,
-      projectBeneficiaryType: RegistrationDeliverySingleton().beneficiaryType ??
-          BeneficiaryType.individual,
-    ));
+    final projectId = RegistrationDeliverySingleton().projectId;
+    if (projectId != null) {
+      bloc.add(HouseholdOverviewReloadEvent(
+        projectId: projectId,
+        projectBeneficiaryType:
+            RegistrationDeliverySingleton().beneficiaryType ??
+                BeneficiaryType.individual,
+      ));
+    }
 
     if (isAssessmentPending) {
       context.router.push(VaccineInformationCaptureRoute(
@@ -1281,11 +1296,15 @@ class CustomMemberCardSMC extends StatelessWidget {
     final bloc = context.read<HouseholdOverviewBloc>();
     bloc.add(
         HouseholdOverviewEvent.selectedIndividual(individualModel: individual));
-    bloc.add(HouseholdOverviewReloadEvent(
-      projectId: RegistrationDeliverySingleton().projectId!,
-      projectBeneficiaryType: RegistrationDeliverySingleton().beneficiaryType ??
-          BeneficiaryType.individual,
-    ));
+    final projectId = RegistrationDeliverySingleton().projectId;
+    if (projectId != null) {
+      bloc.add(HouseholdOverviewReloadEvent(
+        projectId: projectId,
+        projectBeneficiaryType:
+            RegistrationDeliverySingleton().beneficiaryType ??
+                BeneficiaryType.individual,
+      ));
+    }
 
     context.router.push(CustomDeliverInterventionSMCRoute());
   }
@@ -1447,7 +1466,7 @@ class CustomMemberCardSMC extends StatelessWidget {
     required BuildContext context,
     required ThemeData theme,
   }) {
-    final isErrorStatus = !isDelivered ||
+    final isErrorStatus = isDelivered ||
         isNotEligible ||
         isBeneficiaryRefused ||
         isBeneficiaryIneligible ||
@@ -1472,7 +1491,8 @@ class CustomMemberCardSMC extends StatelessWidget {
           iconColor: theme.colorScheme.error,
         ),
       );
-    } else if (isHead && interventionType == InterventionTypes.smc.toValue()) {
+    } else if (isHead &&
+        interventionType == InterventionTypes.bednet.toValue()) {
       return Align(
         alignment: Alignment.centerLeft,
         child: DigitIconButton(

@@ -86,8 +86,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
-    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
-    required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
+    // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+    // required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
     @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
     List<CommonMasterModel>? vaccineRefusalReasons,
     @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
