@@ -36,6 +36,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../../utils/utils_smc/utils_smc.dart'
     show
+        bednetDeliveryProductVariantFromProjectType,
         fetchProductVariantForProjectType,
         fetchProductVariantLocal,
         getIndividualAdditionalFields,
@@ -1477,21 +1478,27 @@ class CustomDeliverInterventionSMCPageState
                         ?.additionalDetails
                         ?.projectType;
 
-                List<DeliveryProductVariant>? productVariants =
-                    bednetProjectType?.cycles?.isNotEmpty == true
-                        ? (fetchProductVariant(
-                                bednetProjectType
-                                        ?.cycles![
-                                            deliveryInterventionState.cycle - 1]
-                                        .deliveries?[
-                                    deliveryInterventionState.dose - 1],
-                                state.selectedIndividual,
-                                state.householdMemberWrapper.household)
-                            ?.productVariants)
-                        : bednetProjectType?.resources
-                            ?.map((r) => DeliveryProductVariant(
-                                productVariantId: r.productVariantId))
-                            .toList();
+                DeliveryProductVariant? bednetDeliveryProductVariant =
+                    bednetDeliveryProductVariantFromProjectType(
+                        bednetProjectType);
+
+                List<DeliveryProductVariant>? productVariants = [];
+                productVariants.add(bednetDeliveryProductVariant);
+
+                // bednetProjectType?.cycles?.isNotEmpty == true
+                //     ? (fetchProductVariant(
+                //             bednetProjectType
+                //                     ?.cycles![
+                //                         deliveryInterventionState.cycle - 1]
+                //                     .deliveries?[
+                //                 deliveryInterventionState.dose - 1],
+                //             state.selectedIndividual,
+                //             state.householdMemberWrapper.household)
+                //         ?.productVariants)
+                //     : bednetProjectType?.resources
+                //         ?.map((r) => DeliveryProductVariant(
+                //             productVariantId: r.productVariantId))
+                //         .toList();
 
                 final int numberOfDoses =
                     (bednetProjectType?.cycles?.isNotEmpty == true)
@@ -1852,10 +1859,6 @@ class CustomDeliverInterventionSMCPageState
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
     final deliveryCommentWasted =
         form.control(_deliveryCommentWastedKey).value as String?;
-    final quantityDistributed =
-        // (form.control(_quantityDistributedKey) as FormArray).value
-        //     as List<int?>;
-        form.control(_quantityDistributedKey).value as int?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -1868,8 +1871,7 @@ class CustomDeliverInterventionSMCPageState
               taskId: task?.id,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: oldTask?.rowVersion ?? 1,
-              // quantity: _defaultQuantity.toString(),
-              quantity: (quantityDistributed ?? _defaultQuantity).toString(),
+              quantity: _defaultQuantity.toString(),
               clientAuditDetails: ClientAuditDetails(
                 createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                 createdTime: context.millisecondsSinceEpoch(),

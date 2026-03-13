@@ -64,150 +64,417 @@ class CustomBeneficiaryDetailsSMCPageState
     final router = context.router;
     final smcAndOnchoFlow = isSmcAndOnchoFlow(context);
     final smcAndBednetFlow = isSmcAndBednetFlow(context);
-    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
-        .selectedProject
-        ?.additionalDetails
-        ?.projectType;
+    if (smcAndOnchoFlow) {
+      ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.projectType;
 
-    ProjectTypeModel? onchoAdditionalProjectType =
-        RegistrationDeliverySingleton()
-            .selectedProject
-            ?.additionalDetails
-            ?.additionalProjectType;
+      ProjectTypeModel? onchoAdditionalProjectType =
+          RegistrationDeliverySingleton()
+              .selectedProject
+              ?.additionalDetails
+              ?.additionalProjectType;
+      return ProductVariantBlocWrapper(
+        child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+          builder: (context, state) {
+            final householdMemberWrapper = state.householdMemberWrapper;
+            final selectedIndividual = state.selectedIndividual;
 
-    return ProductVariantBlocWrapper(
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-        builder: (context, state) {
-          final householdMemberWrapper = state.householdMemberWrapper;
-          final selectedIndividual = state.selectedIndividual;
+            // Filtering project beneficiaries based on the selected individual
+            final projectBeneficiary =
+                RegistrationDeliverySingleton().beneficiaryType !=
+                        BeneficiaryType.individual
+                    ? [householdMemberWrapper.projectBeneficiaries?.first]
+                    : householdMemberWrapper.projectBeneficiaries
+                        ?.where(
+                          (element) =>
+                              element.beneficiaryClientReferenceId ==
+                              state.selectedIndividual?.clientReferenceId,
+                        )
+                        .toList();
 
-          // Filtering project beneficiaries based on the selected individual
-          final projectBeneficiary =
-              RegistrationDeliverySingleton().beneficiaryType !=
-                      BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries?.first]
-                  : householdMemberWrapper.projectBeneficiaries
-                      ?.where(
-                        (element) =>
-                            element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
-                      )
-                      .toList();
+            // Extracting task data related to the selected project beneficiary
+            final taskData = state.householdMemberWrapper.tasks
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first?.clientReferenceId)
+                .toList();
 
-          // Extracting task data related to the selected project beneficiary
-          final taskData = state.householdMemberWrapper.tasks
-              ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary?.first?.clientReferenceId)
-              .toList();
+            final smcTasks = _getSMCStatusData(taskData);
 
-          final smcTasks = _getSMCStatusData(taskData);
+            // Determine intervention type based on product variants
+            bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                    smcProjectType, state.selectedIndividual, null, smcTasks) !=
+                null;
+            bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
+                    onchoAdditionalProjectType,
+                    state.selectedIndividual,
+                    null,
+                    null) !=
+                null;
 
-          // Determine intervention type based on product variants
-          bool isSmcDeliveryCards = fetchProductVariantForProjectType(
-                  smcProjectType, state.selectedIndividual, null, smcTasks) !=
-              null;
-          bool isOnchoDeliveryCards = fetchProductVariantForProjectType(
-                  onchoAdditionalProjectType,
-                  state.selectedIndividual,
-                  null,
-                  null) !=
-              null;
+            InterventionTypes? interventionType = isSmcDeliveryCards
+                ? InterventionTypes.smc
+                : isOnchoDeliveryCards
+                    ? InterventionTypes.oncho
+                    : InterventionTypes.smc;
+            final bloc = context.read<DeliverInterventionBloc>();
+            final lastDose = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key == AdditionalFieldsType.doseIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '0';
+            final lastCycle = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key ==
+                              AdditionalFieldsType.cycleIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '1';
 
-          InterventionTypes? interventionType = isSmcDeliveryCards
-              ? InterventionTypes.smc
-              : isOnchoDeliveryCards
-                  ? InterventionTypes.oncho
-                  : InterventionTypes.smc;
-          final bloc = context.read<DeliverInterventionBloc>();
-          final lastDose = taskData != null && taskData.isNotEmpty
-              ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.doseIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
-              : '0';
-          final lastCycle = taskData != null && taskData.isNotEmpty
-              ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.cycleIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
-              : '1';
+            // [TODO] Need to move this to Bloc Lisitner or consumer
+            if (RegistrationDeliverySingleton().projectType != null &&
+                isSmcDeliveryCards) {
+              bloc.add(
+                DeliverInterventionEvent.setActiveCycleDose(
+                  lastDose: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastDose,
+                          ) ??
+                          1
+                      : 0,
+                  lastCycle: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastCycle,
+                          ) ??
+                          1
+                      : 1,
+                  individualModel: state.selectedIndividual,
+                  projectType: RegistrationDeliverySingleton().projectType!,
+                ),
+              );
+            }
 
-          // [TODO] Need to move this to Bloc Lisitner or consumer
-          if (RegistrationDeliverySingleton().projectType != null &&
-              isSmcDeliveryCards) {
-            bloc.add(
-              DeliverInterventionEvent.setActiveCycleDose(
-                lastDose: taskData != null && taskData.isNotEmpty
-                    ? int.tryParse(
-                          lastDose,
-                        ) ??
-                        1
-                    : 0,
-                lastCycle: taskData != null && taskData.isNotEmpty
-                    ? int.tryParse(
-                          lastCycle,
-                        ) ??
-                        1
-                    : 1,
-                individualModel: state.selectedIndividual,
-                projectType: RegistrationDeliverySingleton().projectType!,
-              ),
-            );
-          }
-
-          // Building the table content based on the DeliverInterventionState
-          return BlocBuilder<ProductVariantBloc, ProductVariantState>(
-            builder: (context, productState) {
-              return productState.maybeWhen(
-                  orElse: () => const Offstage(),
-                  fetched: (productVariantsValue) {
-                    return interventionType == InterventionTypes.oncho
-                        ? _buildBeneficiaryDetailsOnchoFlow(
-                            context,
-                            state,
-                            householdMemberWrapper,
-                            theme,
-                            localizations,
-                            bloc,
-                            interventionType,
-                            taskData,
-                            projectBeneficiary,
-                            productState,
-                          )
-                        : _buildBeneficiaryDetailsSmcFlow(
-                            context,
-                            state,
-                            householdMemberWrapper,
-                            theme,
-                            localizations,
-                            bloc,
-                            interventionType,
-                            taskData,
-                            projectBeneficiary,
-                            productState,
-                            smcTasks,
-                          );
-                  },
-                  empty: () => Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention
-                                .checkForProductVariantsConfig,
+            // Building the table content based on the DeliverInterventionState
+            return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+              builder: (context, productState) {
+                return productState.maybeWhen(
+                    orElse: () => const Offstage(),
+                    fetched: (productVariantsValue) {
+                      return interventionType == InterventionTypes.oncho
+                          ? _buildBeneficiaryDetailsOnchoFlow(
+                              context,
+                              state,
+                              householdMemberWrapper,
+                              theme,
+                              localizations,
+                              bloc,
+                              interventionType,
+                              taskData,
+                              projectBeneficiary,
+                              productState,
+                            )
+                          : _buildBeneficiaryDetailsSmcFlow(
+                              context,
+                              state,
+                              householdMemberWrapper,
+                              theme,
+                              localizations,
+                              bloc,
+                              interventionType,
+                              taskData,
+                              projectBeneficiary,
+                              productState,
+                              smcTasks,
+                            );
+                    },
+                    empty: () => Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention
+                                  .checkForProductVariantsConfig,
+                            ),
                           ),
-                        ),
-                      ));
-            },
-          );
-        },
-      ),
-    );
+                        ));
+              },
+            );
+          },
+        ),
+      );
+    } else if (smcAndBednetFlow) {
+      ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.projectType;
+
+      ProjectTypeModel? bednetAdditionalProjectType =
+          RegistrationDeliverySingleton()
+              .selectedProject
+              ?.additionalDetails
+              ?.additionalProjectType;
+
+      return ProductVariantBlocWrapper(
+        child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+          builder: (context, state) {
+            final householdMemberWrapper = state.householdMemberWrapper;
+            final selectedIndividual = state.selectedIndividual;
+            bool isHeadOfHousehold =
+                householdMemberWrapper.headOfHousehold?.clientReferenceId ==
+                    state.selectedIndividual?.clientReferenceId;
+            // Filtering project beneficiaries based on the selected individual
+            final projectBeneficiary =
+                RegistrationDeliverySingleton().beneficiaryType !=
+                        BeneficiaryType.individual
+                    ? [householdMemberWrapper.projectBeneficiaries?.first]
+                    : householdMemberWrapper.projectBeneficiaries
+                        ?.where(
+                          (element) =>
+                              element.beneficiaryClientReferenceId ==
+                              state.selectedIndividual?.clientReferenceId,
+                        )
+                        .toList();
+
+            // Extracting task data related to the selected project beneficiary
+            final taskData = state.householdMemberWrapper.tasks
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first?.clientReferenceId)
+                .toList();
+
+            final smcTasks = _getSMCStatusData(taskData);
+
+            // Determine intervention type based on product variants
+            bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                    smcProjectType, state.selectedIndividual, null, smcTasks) !=
+                null;
+            bool isBednetDeliveryCards = fetchProductVariantForProjectType(
+                        bednetAdditionalProjectType,
+                        state.selectedIndividual,
+                        null,
+                        null) !=
+                    null ||
+                isHeadOfHousehold;
+
+            InterventionTypes? interventionType = isSmcDeliveryCards
+                ? InterventionTypes.smc
+                : isBednetDeliveryCards
+                    ? InterventionTypes.bednet
+                    : InterventionTypes.smc;
+            final bloc = context.read<DeliverInterventionBloc>();
+            final lastDose = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key == AdditionalFieldsType.doseIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '0';
+            final lastCycle = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key ==
+                              AdditionalFieldsType.cycleIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '1';
+
+            // [TODO] Need to move this to Bloc Lisitner or consumer
+            if (RegistrationDeliverySingleton().projectType != null &&
+                isSmcDeliveryCards) {
+              bloc.add(
+                DeliverInterventionEvent.setActiveCycleDose(
+                  lastDose: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastDose,
+                          ) ??
+                          1
+                      : 0,
+                  lastCycle: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastCycle,
+                          ) ??
+                          1
+                      : 1,
+                  individualModel: state.selectedIndividual,
+                  projectType: RegistrationDeliverySingleton().projectType!,
+                ),
+              );
+            }
+
+            // Building the table content based on the DeliverInterventionState
+            return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+              builder: (context, productState) {
+                return productState.maybeWhen(
+                    orElse: () => const Offstage(),
+                    fetched: (productVariantsValue) {
+                      return interventionType == InterventionTypes.bednet
+                          ? _buildBeneficiaryDetailsBednetFlow(
+                              context,
+                              state,
+                              householdMemberWrapper,
+                              theme,
+                              localizations,
+                              bloc,
+                              interventionType,
+                              taskData,
+                              projectBeneficiary,
+                              productState,
+                            )
+                          : _buildBeneficiaryDetailsSmcFlow(
+                              context,
+                              state,
+                              householdMemberWrapper,
+                              theme,
+                              localizations,
+                              bloc,
+                              interventionType,
+                              taskData,
+                              projectBeneficiary,
+                              productState,
+                              smcTasks,
+                            );
+                    },
+                    empty: () => Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention
+                                  .checkForProductVariantsConfig,
+                            ),
+                          ),
+                        ));
+              },
+            );
+          },
+        ),
+      );
+    } else {
+      ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+          .selectedProject
+          ?.additionalDetails
+          ?.projectType;
+      return ProductVariantBlocWrapper(
+        child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+          builder: (context, state) {
+            final householdMemberWrapper = state.householdMemberWrapper;
+            final selectedIndividual = state.selectedIndividual;
+
+            // Filtering project beneficiaries based on the selected individual
+            final projectBeneficiary =
+                RegistrationDeliverySingleton().beneficiaryType !=
+                        BeneficiaryType.individual
+                    ? [householdMemberWrapper.projectBeneficiaries?.first]
+                    : householdMemberWrapper.projectBeneficiaries
+                        ?.where(
+                          (element) =>
+                              element.beneficiaryClientReferenceId ==
+                              state.selectedIndividual?.clientReferenceId,
+                        )
+                        .toList();
+
+            // Extracting task data related to the selected project beneficiary
+            final taskData = state.householdMemberWrapper.tasks
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first?.clientReferenceId)
+                .toList();
+
+            final smcTasks = _getSMCStatusData(taskData);
+
+            // Determine intervention type based on product variants
+            bool isSmcDeliveryCards = fetchProductVariantForProjectType(
+                    smcProjectType, state.selectedIndividual, null, smcTasks) !=
+                null;
+
+            InterventionTypes? interventionType = InterventionTypes.smc;
+            final bloc = context.read<DeliverInterventionBloc>();
+            final lastDose = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key == AdditionalFieldsType.doseIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '0';
+            final lastCycle = taskData != null && taskData.isNotEmpty
+                ? taskData.last.additionalFields?.fields
+                        .firstWhereOrNull(
+                          (e) =>
+                              e.key ==
+                              AdditionalFieldsType.cycleIndex.toValue(),
+                        )
+                        ?.value ??
+                    '1'
+                : '1';
+
+            // [TODO] Need to move this to Bloc Lisitner or consumer
+            if (RegistrationDeliverySingleton().projectType != null &&
+                isSmcDeliveryCards) {
+              bloc.add(
+                DeliverInterventionEvent.setActiveCycleDose(
+                  lastDose: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastDose,
+                          ) ??
+                          1
+                      : 0,
+                  lastCycle: taskData != null && taskData.isNotEmpty
+                      ? int.tryParse(
+                            lastCycle,
+                          ) ??
+                          1
+                      : 1,
+                  individualModel: state.selectedIndividual,
+                  projectType: RegistrationDeliverySingleton().projectType!,
+                ),
+              );
+            }
+
+            // Building the table content based on the DeliverInterventionState
+            return BlocBuilder<ProductVariantBloc, ProductVariantState>(
+              builder: (context, productState) {
+                return productState.maybeWhen(
+                    orElse: () => const Offstage(),
+                    fetched: (productVariantsValue) {
+                      return _buildBeneficiaryDetailsSmcFlow(
+                        context,
+                        state,
+                        householdMemberWrapper,
+                        theme,
+                        localizations,
+                        bloc,
+                        interventionType,
+                        taskData,
+                        projectBeneficiary,
+                        productState,
+                        smcTasks,
+                      );
+                    },
+                    empty: () => Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention
+                                  .checkForProductVariantsConfig,
+                            ),
+                          ),
+                        ));
+              },
+            );
+          },
+        ),
+      );
+    }
   }
 
   Widget _buildBeneficiaryDetailsSmcFlow(
@@ -461,6 +728,158 @@ class CustomBeneficiaryDetailsSMCPageState
                     : [],
               ),
             )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBeneficiaryDetailsBednetFlow(
+    BuildContext context,
+    HouseholdOverviewState state,
+    dynamic householdMemberWrapper,
+    ThemeData theme,
+    RegistrationDeliveryLocalization localizations,
+    DeliverInterventionBloc bloc,
+    InterventionTypes interventionType,
+    List<dynamic>? taskData,
+    List<dynamic>? projectBeneficiary,
+    ProductVariantState productState,
+  ) {
+    final ProjectTypeModel? bednetAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
+    final height =
+        getValueForTheKeyIndividual(Constants.height, state.selectedIndividual);
+
+    // [TODO] Need to move this to Bloc Lisitner or consumer
+    // Note : setting active cycle and dose for oncho flow as oncho cycle
+    // setting as last dose 0 and cycle 1, as there are no future cycles sceanrio currently
+    if (bednetAdditionalProjectType != null) {
+      bloc.add(
+        DeliverInterventionEvent.setActiveCycleDose(
+          lastDose: 0,
+          lastCycle: 1,
+          individualModel: state.selectedIndividual,
+          projectType: bednetAdditionalProjectType,
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: ScrollableContent(
+        enableFixedButton: true,
+        header: const Column(children: [
+          BackNavigationHelpHeaderWidget(
+            showHelp: false,
+            showcaseButton: null,
+          ),
+        ]),
+        footer: BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+          builder: (context, deliverState) {
+            final projectType = bednetAdditionalProjectType;
+            final cycles = projectType?.cycles;
+            // count only bednet successful delivered tasks to check if button should be shown or not
+
+            return Offstage();
+          },
+        ),
+        children: [
+          DigitCard(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        localizations.translate(i18
+                            .beneficiaryDetails.beneficiarysDetailsLabelText),
+                        style: theme.textTheme.displayMedium,
+                      ),
+                    ),
+                  ],
+                ),
+                DigitTableCard(
+                  element: {
+                    localizations.translate(
+                      RegistrationDeliverySingleton().beneficiaryType !=
+                              BeneficiaryType.individual
+                          ? i18.householdOverView
+                              .householdOverViewHouseholdHeadLabel
+                          : i18.common.coreCommonName,
+                    ): RegistrationDeliverySingleton().beneficiaryType !=
+                            BeneficiaryType.individual
+                        ? householdMemberWrapper
+                            .headOfHousehold?.name?.givenName
+                        : state.selectedIndividual?.name?.givenName ?? '--',
+                    localizations.translate(i18_local.beneficiaryDetails
+                        .beneficiaryId): state.selectedIndividual?.identifiers
+                            ?.lastWhere(
+                              (e) =>
+                                  e.identifierType ==
+                                  IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                              orElse: () => IdentifierModel(
+                                identifierId: localizations
+                                    .translate(i18.common.noResultsFound),
+                                identifierType: '',
+                                clientReferenceId: '',
+                              ),
+                            )
+                            .identifierId ??
+                        localizations.translate(i18.common.noResultsFound),
+                    localizations.translate(i18.common.coreCommonAge): () {
+                      final dob = RegistrationDeliverySingleton()
+                                  .beneficiaryType !=
+                              BeneficiaryType.individual
+                          ? householdMemberWrapper.headOfHousehold?.dateOfBirth
+                          : state.selectedIndividual?.dateOfBirth;
+                      if (dob == null || dob.isEmpty) {
+                        return '--';
+                      }
+
+                      final int years = DigitDateUtils.calculateAge(
+                        DigitDateUtils.getFormattedDateToDateTime(dob) ??
+                            DateTime.now(),
+                      ).years;
+                      final int months = DigitDateUtils.calculateAge(
+                        DigitDateUtils.getFormattedDateToDateTime(dob) ??
+                            DateTime.now(),
+                      ).months;
+
+                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                    }(),
+                    localizations.translate(i18.common.coreCommonGender):
+                        RegistrationDeliverySingleton().beneficiaryType !=
+                                BeneficiaryType.individual
+                            ? localizations.translate(householdMemberWrapper
+                                    .headOfHousehold?.gender?.name
+                                    .toUpperCase() ??
+                                '--')
+                            : localizations.translate(state
+                                    .selectedIndividual?.gender?.name
+                                    .toUpperCase() ??
+                                '--'),
+                    localizations.translate(
+                        i18.deliverIntervention.dateOfRegistrationLabel): () {
+                      final date =
+                          projectBeneficiary?.first?.dateOfRegistration;
+
+                      final registrationDate =
+                          DateTime.fromMillisecondsSinceEpoch(
+                        date ?? DateTime.now().millisecondsSinceEpoch,
+                      );
+
+                      return DateFormat('dd MMMM yyyy')
+                          .format(registrationDate);
+                    }(),
+                  },
+                ),
+              ],
+            ),
+          ),
+
         ],
       ),
     );

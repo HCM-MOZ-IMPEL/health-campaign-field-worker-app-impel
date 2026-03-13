@@ -799,9 +799,8 @@ bool checkEligibilityForAgeAndSideEffectBednet(
               lastTaskTime <= currentCycle.endDate!);
 
       return recordedSideEffect && !checkStatusBednet([tasks], currentCycle)
-                  ? false
-                  : true;
-            
+          ? false
+          : true;
     } else {
       return false;
     }
@@ -1815,6 +1814,7 @@ bool checkIfBeneficiaryIneligibleBednet(
 
   return isBeneficiaryIneligible;
 }
+
 bool checkIfBeneficiaryReferredBednet(
   List<TaskModel>? tasks,
 ) {
@@ -1837,6 +1837,7 @@ bool checkIfBeneficiaryReferredBednet(
 
   return isBeneficiaryReferred;
 }
+
 bool checkIfBeneficiaryReferredOncho(
   List<TaskModel>? tasks,
 ) {
@@ -1883,6 +1884,22 @@ Future<void> requestDisableBatteryOptimization() async {
   if (!isIgnoringBatteryOptimizations) {
     await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
   }
+}
+
+DeliveryProductVariant bednetDeliveryProductVariantFromProjectType(
+    ProjectTypeModel? bednetProjectType) {
+  final resource = bednetProjectType?.resources
+      ?.firstWhereOrNull((element) => element.name == 'SPAQ1');
+
+  return resource != null
+      ? DeliveryProductVariant(
+          quantity: 1,
+          productVariantId: resource.productVariantId,
+        )
+      : DeliveryProductVariant(
+          quantity: 1,
+          productVariantId: '',
+        );
 }
 
 class LocalizationParams {

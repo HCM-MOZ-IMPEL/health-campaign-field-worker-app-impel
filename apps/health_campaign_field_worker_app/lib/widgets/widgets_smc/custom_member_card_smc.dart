@@ -511,9 +511,6 @@ class CustomMemberCardSMC extends StatelessWidget {
         ?.deliveries
         ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
 
-    // isNotEligibleBednet = isNotEligibleBednet ||
-    //     fetchProductVariant(currentDelivery, individual, null) == null;
-
     bool isBeneficiaryEligibleBednet =
         checkIfBeneficiaryIneligibleBednet(bednetTasks);
     bool beneficiaryReferredBednet =
@@ -1305,8 +1302,11 @@ class CustomMemberCardSMC extends StatelessWidget {
                 BeneficiaryType.individual,
       ));
     }
-
-    context.router.push(CustomDeliverInterventionSMCRoute());
+    if (isAssessmentPending) {
+      context.router.push(CustomDeliverInterventionSMCRoute());
+    } else {
+      context.router.push(BeneficiaryDetailsRoute());
+    }
   }
 
   showGenerateBeneficiaryIdDialog(BuildContext context) {
@@ -1466,7 +1466,7 @@ class CustomMemberCardSMC extends StatelessWidget {
     required BuildContext context,
     required ThemeData theme,
   }) {
-    final isErrorStatus = isDelivered ||
+    final isErrorStatus = !isDelivered ||
         isNotEligible ||
         isBeneficiaryRefused ||
         isBeneficiaryIneligible ||
@@ -1487,19 +1487,6 @@ class CustomMemberCardSMC extends StatelessWidget {
                         ? _getBeneficiaryRefusedLabelBednet(interventionType)
                         : _getNotDeliveredLabelBednet(interventionType),
           ),
-          iconTextColor: theme.colorScheme.error,
-          iconColor: theme.colorScheme.error,
-        ),
-      );
-    } else if (isHead &&
-        interventionType == InterventionTypes.bednet.toValue()) {
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: DigitIconButton(
-          icon: Icons.info_rounded,
-          iconSize: 20,
-          iconText: localizations.translate(i18_local
-              .householdOverView.householdOverViewHouseholderHeadLabelSMC),
           iconTextColor: theme.colorScheme.error,
           iconColor: theme.colorScheme.error,
         ),
