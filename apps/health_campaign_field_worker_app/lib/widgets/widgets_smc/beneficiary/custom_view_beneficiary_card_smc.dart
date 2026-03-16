@@ -592,29 +592,31 @@ class _CustomViewBeneficiaryCardSMCState
       }
     }).firstOrNull;
 
-    final allFilteredByBeneficiary = householdMember.tasks
+    final allFilteredByBeneficiaryTasks = householdMember.tasks
         ?.where((t) =>
             t.projectBeneficiaryClientReferenceId ==
             projectBeneficiary?.clientReferenceId)
         .toList();
 
-    final tasks = _getTaskDataForCurrentFlow(
-      allFilteredByBeneficiary,
-      effectiveInterventionType,
-    );
+    // final tasks = _getTaskDataForCurrentFlow(
+    //   allFilteredByBeneficiary,
+    //   effectiveInterventionType,
+    // );
 
     final isNotEligible = !_checkEligibilityForAgeAndSideEffect(
       DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
       ),
-      (tasks ?? []).isNotEmpty ? tasks?.last : null,
+      (allFilteredByBeneficiaryTasks ?? []).isNotEmpty
+          ? allFilteredByBeneficiaryTasks?.last
+          : null,
       householdMember.sideEffects,
       effectiveInterventionType,
     );
 
-    final isBeneficiaryRefused =
-        _checkIfBeneficiaryRefused(tasks, effectiveInterventionType);
+    final isBeneficiaryRefused = _checkIfBeneficiaryRefused(
+        allFilteredByBeneficiaryTasks, effectiveInterventionType);
 
     return DigitCard(
       child: Column(
@@ -643,7 +645,7 @@ class _CustomViewBeneficiaryCardSMCState
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} m) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
-                      tasks ?? [],
+                      allFilteredByBeneficiaryTasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
                       RegistrationDeliverySingleton().beneficiaryType ==
                               BeneficiaryType.individual
