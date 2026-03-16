@@ -753,6 +753,26 @@ class CustomBeneficiaryDetailsSMCPageState
     final height =
         getValueForTheKeyIndividual(Constants.height, state.selectedIndividual);
 
+    final head = state.householdMemberWrapper.headOfHousehold;
+
+    final bednetTask = state.householdMemberWrapper.tasks
+        ?.where(
+          (element) =>
+              element.additionalFields?.fields.firstWhereOrNull(
+                (element) =>
+                    element.key == "individualClientReferenceId" &&
+                    element.value == head?.clientReferenceId,
+              ) !=
+              null,
+        )
+        .toList()
+        .firstOrNull;
+    final bednetQuantityDistributed = bednetTask?.additionalFields?.fields
+            .firstWhereOrNull(
+                (element) => element.key == "bednetQuantityDistributed")
+            ?.value ??
+        0;
+
     // [TODO] Need to move this to Bloc Lisitner or consumer
     // Note : setting active cycle and dose for oncho flow as oncho cycle
     // setting as last dose 0 and cycle 1, as there are no future cycles sceanrio currently
@@ -874,12 +894,16 @@ class CustomBeneficiaryDetailsSMCPageState
                       return DateFormat('dd MMMM yyyy')
                           .format(registrationDate);
                     }(),
+                    localizations.translate(i18_local
+                            .deliverIntervention.bednetQuantityDistributedText):
+                        bednetQuantityDistributed != null
+                            ? bednetQuantityDistributed.toString()
+                            : '--',
                   },
                 ),
               ],
             ),
           ),
-
         ],
       ),
     );

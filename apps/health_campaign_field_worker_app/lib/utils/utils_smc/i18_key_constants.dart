@@ -697,7 +697,7 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SMC';
   String get householdOverViewActionTextOncho =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_ONCHO';
-        String get householdOverViewActionTextBednet =>
+  String get householdOverViewActionTextBednet =>
       'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_BEDNET';
   String get tracomaDeliveryAction => 'DELIVER_TRACOMA';
   String get headBednetDeliveryAction => 'DELIVER_BEDNET';
@@ -887,6 +887,8 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+  String get quantityDistributedLabelBednet =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_BEDNET';
   String get quantityDistributedLabelONCHO =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_ONCHO';
   String get quantityDistributedLabelTracoma =>
@@ -906,6 +908,8 @@ class DeliverIntervention {
   String get bednetScannedCode => 'BEDNET_SCANNED_CODES';
   String get deliveryCommentLabelSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_SMC';
+  String get deliveryCommentLabelBednet =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL_BEDNET';
   String get deliveryCommentLabelWastedSMC =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_WASTED_LABEL_SMC';
   String get deliveryCommentLabelWastedRequiredSMC =>
@@ -926,6 +930,8 @@ class DeliverIntervention {
   String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
 
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
+  String get bednetQuantityDistributedText =>
+      'BEDNET_QUANTITY_DISTRIBUTED_TEXT';
 
   String get noOfResourcesForDelivery =>
       'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY_SPAQ';

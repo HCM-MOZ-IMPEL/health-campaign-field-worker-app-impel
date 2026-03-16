@@ -504,13 +504,6 @@ class CustomMemberCardSMC extends StatelessWidget {
           )
         : false);
 
-    var currentDelivery = bednetAdditionalProjectType?.cycles
-        ?.firstWhereOrNull((cycle) =>
-            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
-            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
-        ?.deliveries
-        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
-
     bool isBeneficiaryEligibleBednet =
         checkIfBeneficiaryIneligibleBednet(bednetTasks);
     bool beneficiaryReferredBednet =

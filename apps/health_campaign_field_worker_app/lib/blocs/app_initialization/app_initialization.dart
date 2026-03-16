@@ -116,6 +116,7 @@ class AppInitializationBloc
                     MasterEnums.vaccineRefusalReasons.toValue(),
                     MasterEnums.diseaseOptions.toValue(),
                     MasterEnums.deliveryCommentOptionsOncho.toValue(),
+                    MasterEnums.deliveryCommentOptionsBednet.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

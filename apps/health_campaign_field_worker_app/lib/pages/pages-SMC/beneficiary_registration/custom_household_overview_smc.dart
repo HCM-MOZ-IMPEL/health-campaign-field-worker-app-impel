@@ -28,6 +28,7 @@ import '../../../utils/utils_smc/utils_smc.dart' as utilsLocalSMC;
 import '../../../widgets/widgets_smc/custom_member_card_smc.dart';
 
 import '../../../models/entities/status.dart' as status_local;
+import '../../../utils/utils_smc/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomHouseholdOverviewSMCPage extends LocalizedStatefulWidget {
@@ -57,6 +58,7 @@ class CustomHouseholdOverviewSMCPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
+    var bednetQuantityDistributed = 0;
 
     return PopScope(
       onPopInvoked: (didPop) async {
@@ -68,6 +70,8 @@ class CustomHouseholdOverviewSMCPageState
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
+          // extract only when smc and bednet flow is active
+
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())

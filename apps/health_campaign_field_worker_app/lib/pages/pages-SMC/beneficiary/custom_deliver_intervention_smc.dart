@@ -37,7 +37,6 @@ import 'package:registration_delivery/widgets/localized.dart';
 import '../../../utils/utils_smc/utils_smc.dart'
     show
         bednetDeliveryProductVariantFromProjectType,
-        bednetDeliveryProductVariantFromProjectType1,
         fetchProductVariantForProjectType,
         fetchProductVariantLocal,
         getIndividualAdditionalFields,
@@ -1697,7 +1696,7 @@ class CustomDeliverInterventionSMCPageState
                                             form: form,
                                             label: localizations.translate(
                                               i18_local.deliverIntervention
-                                                  .quantityDistributedLabel,
+                                                  .quantityDistributedLabelBednet,
                                             ),
                                             minimum: 1,
                                             maximum: 20,
@@ -1721,14 +1720,14 @@ class CustomDeliverInterventionSMCPageState
 
                                               final deliveryCommentOptionsBednet =
                                                   state.appConfiguration
-                                                          .deliveryCommentOptionsSmc ??
+                                                          .deliveryCommentOptionsBednet ??
                                                       <DeliveryCommentOptions>[];
 
                                               return DigitReactiveDropdown<
                                                   String>(
                                                 label: localizations.translate(
                                                   i18_local.deliverIntervention
-                                                      .deliveryCommentLabelSMC,
+                                                      .deliveryCommentLabelBednet,
                                                 ),
                                                 menuItems:
                                                     deliveryCommentOptionsBednet
@@ -2212,6 +2211,12 @@ class CustomDeliverInterventionSMCPageState
                 .toValue(),
             InterventionTypes.bednet.toValue(),
           ),
+          if (quantityDistributed != null &&
+              quantityDistributed.toString().isNotEmpty)
+            AdditionalField(
+              "bednetQuantityDistributed",
+              quantityDistributed,
+            ),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),
