@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_ui_components/utils/date_utils.dart'
     as digit_ui_date_utils;
+import 'package:drift/drift.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -1886,10 +1887,24 @@ Future<void> requestDisableBatteryOptimization() async {
   }
 }
 
+DeliveryProductVariant bednetDeliveryProductVariantFromProjectType1(
+  List<ProductVariantModel?> productVariantModels,
+) {
+  // Pick the first product variant whose SKU contains 'LLIN'
+  final resource = productVariantModels.firstWhereOrNull(
+    (element) => (element?.sku ?? '').contains('LLIN'),
+  );
+
+  return DeliveryProductVariant(
+    quantity: 1,
+    productVariantId: resource?.id ?? '',
+  );
+}
+
 DeliveryProductVariant bednetDeliveryProductVariantFromProjectType(
     ProjectTypeModel? bednetProjectType) {
   final resource = bednetProjectType?.resources
-      ?.firstWhereOrNull((element) => element.name == 'SPAQ1');
+      ?.firstWhereOrNull((element) => element.name == "Rede Mosquiteira");
 
   return resource != null
       ? DeliveryProductVariant(

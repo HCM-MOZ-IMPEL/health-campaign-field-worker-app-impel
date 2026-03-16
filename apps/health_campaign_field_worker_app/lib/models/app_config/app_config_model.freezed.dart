@@ -946,8 +946,10 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsOncho =>
-      throw _privateConstructorUsedError; // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsBednet =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
   List<CommonMasterModel>? get vaccineRefusalReasons =>
       throw _privateConstructorUsedError;
@@ -1033,6 +1035,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
       @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
       List<CommonMasterModel>? vaccineRefusalReasons,
       @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
@@ -1087,6 +1091,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
     Object? deliveryCommentOptionsOncho = null,
+    Object? deliveryCommentOptionsBednet = null,
     Object? vaccineRefusalReasons = freezed,
     Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
@@ -1151,6 +1156,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       deliveryCommentOptionsOncho: null == deliveryCommentOptionsOncho
           ? _value.deliveryCommentOptionsOncho
           : deliveryCommentOptionsOncho // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsBednet: null == deliveryCommentOptionsBednet
+          ? _value.deliveryCommentOptionsBednet
+          : deliveryCommentOptionsBednet // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       vaccineRefusalReasons: freezed == vaccineRefusalReasons
           ? _value.vaccineRefusalReasons
@@ -1258,6 +1267,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
       @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
       List<CommonMasterModel>? vaccineRefusalReasons,
       @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
@@ -1310,6 +1321,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? deliveryCommentOptions = null,
     Object? deliveryCommentOptionsSmc = null,
     Object? deliveryCommentOptionsOncho = null,
+    Object? deliveryCommentOptionsBednet = null,
     Object? vaccineRefusalReasons = freezed,
     Object? deliveryCommentWastedOptionsSmc = null,
     Object? backendInterface = null,
@@ -1374,6 +1386,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
       deliveryCommentOptionsOncho: null == deliveryCommentOptionsOncho
           ? _value._deliveryCommentOptionsOncho
           : deliveryCommentOptionsOncho // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsBednet: null == deliveryCommentOptionsBednet
+          ? _value._deliveryCommentOptionsBednet
+          : deliveryCommentOptionsBednet // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       vaccineRefusalReasons: freezed == vaccineRefusalReasons
           ? _value._vaccineRefusalReasons
@@ -1478,6 +1494,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
       @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
       final List<CommonMasterModel>? vaccineRefusalReasons,
       @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
@@ -1525,6 +1543,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _deliveryCommentOptions = deliveryCommentOptions,
         _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
         _deliveryCommentOptionsOncho = deliveryCommentOptionsOncho,
+        _deliveryCommentOptionsBednet = deliveryCommentOptionsBednet,
         _vaccineRefusalReasons = vaccineRefusalReasons,
         _deliveryCommentWastedOptionsSmc = deliveryCommentWastedOptionsSmc,
         _backendInterface = backendInterface,
@@ -1657,11 +1676,17 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptionsOncho);
   }
 
-// @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
+  final List<DeliveryCommentOptions> _deliveryCommentOptionsBednet;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsBednet {
+    if (_deliveryCommentOptionsBednet is EqualUnmodifiableListView)
+      return _deliveryCommentOptionsBednet;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentOptionsBednet);
+  }
+
   final List<CommonMasterModel>? _vaccineRefusalReasons;
-// @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
   @override
   @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
   List<CommonMasterModel>? get vaccineRefusalReasons {
@@ -1867,7 +1892,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, deliveryCommentOptionsOncho: $deliveryCommentOptionsOncho, vaccineRefusalReasons: $vaccineRefusalReasons, deliveryCommentWastedOptionsSmc: $deliveryCommentWastedOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, vaccine: $vaccine, vaccineGroups: $vaccineGroups, diseaseOptions: $diseaseOptions, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, deliveryCommentOptionsOncho: $deliveryCommentOptionsOncho, deliveryCommentOptionsBednet: $deliveryCommentOptionsBednet, vaccineRefusalReasons: $vaccineRefusalReasons, deliveryCommentWastedOptionsSmc: $deliveryCommentWastedOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchHouseHoldFiltersSMC: $searchHouseHoldFiltersSMC, searchHouseHoldFiltersBednet: $searchHouseHoldFiltersBednet, vehicleTrackingTripReasons: $vehicleTrackingTripReasons, vehicleTrackingTripEvaluationReasons: $vehicleTrackingTripEvaluationReasons, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, vaccine: $vaccine, vaccineGroups: $vaccineGroups, diseaseOptions: $diseaseOptions, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1901,6 +1926,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptionsOncho,
                 _deliveryCommentOptionsOncho) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentOptionsBednet,
+                _deliveryCommentOptionsBednet) &&
             const DeepCollectionEquality()
                 .equals(other._vaccineRefusalReasons, _vaccineRefusalReasons) &&
             const DeepCollectionEquality().equals(
@@ -1958,6 +1986,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
         const DeepCollectionEquality().hash(_deliveryCommentOptionsOncho),
+        const DeepCollectionEquality().hash(_deliveryCommentOptionsBednet),
         const DeepCollectionEquality().hash(_vaccineRefusalReasons),
         const DeepCollectionEquality().hash(_deliveryCommentWastedOptionsSmc),
         const DeepCollectionEquality().hash(_backendInterface),
@@ -2018,6 +2047,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptionsOncho,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
       @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
       final List<CommonMasterModel>? vaccineRefusalReasons,
       @JsonKey(name: 'DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR')
@@ -2091,8 +2122,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptionsOncho;
-  @override // @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
-// required List<DeliveryCommentOptions> deliveryCommentOptionsBednet,
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsBednet;
+  @override
   @JsonKey(name: 'VACCINE_REFUSAL_REASONS')
   List<CommonMasterModel>? get vaccineRefusalReasons;
   @override

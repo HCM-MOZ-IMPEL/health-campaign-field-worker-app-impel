@@ -37,6 +37,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import '../../../utils/utils_smc/utils_smc.dart'
     show
         bednetDeliveryProductVariantFromProjectType,
+        bednetDeliveryProductVariantFromProjectType1,
         fetchProductVariantForProjectType,
         fetchProductVariantLocal,
         getIndividualAdditionalFields,
@@ -1476,8 +1477,7 @@ class CustomDeliverInterventionSMCPageState
                     RegistrationDeliverySingleton()
                         .selectedProject
                         ?.additionalDetails
-                        ?.projectType;
-
+                        ?.additionalProjectType;
                 DeliveryProductVariant? bednetDeliveryProductVariant =
                     bednetDeliveryProductVariantFromProjectType(
                         bednetProjectType);
@@ -1541,6 +1541,12 @@ class CustomDeliverInterventionSMCPageState
                     return productState.maybeWhen(
                       orElse: () => const Offstage(),
                       fetched: (productVariantsValue) {
+                        // DeliveryProductVariant? bednetDeliveryProductVariant =
+                        //     bednetDeliveryProductVariantFromProjectType1(
+                        //         productVariantsValue);
+
+                        // List<DeliveryProductVariant>? productVariants = [];
+                        // productVariants.add(bednetDeliveryProductVariant);
                         final variant = productState.whenOrNull(
                           fetched: (productVariants) {
                             return productVariants;
@@ -1694,14 +1700,7 @@ class CustomDeliverInterventionSMCPageState
                                                   .quantityDistributedLabel,
                                             ),
                                             minimum: 1,
-                                            maximum: min(
-                                                    (householdMemberWrapper
-                                                                .household
-                                                                ?.memberCount ??
-                                                            0) /
-                                                        2,
-                                                    Constants.maxBednetCount)
-                                                .round(),
+                                            maximum: 20,
                                             buttonWidth: 50,
                                           ),
                                         ],
@@ -2554,26 +2553,7 @@ class CustomDeliverInterventionSMCPageState
         ],
       ),
       _quantityDistributedKey: FormControl<int>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.last.resources?.isNotEmpty == true
-                ? int.tryParse(
-                    bloc.tasks?.last.resources?.first.quantity ?? '0',
-                  )
-                : min(
-                        (overViewbloc.householdMemberWrapper.household
-                                    ?.memberCount ??
-                                0) /
-                            2,
-                        Constants.maxBednetCount)
-                    .round())
-            : min(
-                    (overViewbloc.householdMemberWrapper.household
-                                ?.memberCount ??
-                            0) /
-                        2,
-                    Constants.maxBednetCount)
-                .round(),
+        value: 1,
         validators: [Validators.min(1)],
       ),
       // _quantityWastedKey: FormControl<String>(validators: []),
