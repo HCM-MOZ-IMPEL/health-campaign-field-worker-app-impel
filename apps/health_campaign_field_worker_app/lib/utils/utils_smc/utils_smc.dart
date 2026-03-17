@@ -1878,6 +1878,38 @@ bool isSmcAndBednetFlow(
   return isSmcAndBednetFlow;
 }
 
+/// Extracts quantity from a Task (assumes single resource).
+/// Handles int, double, null, and invalid values safely.
+num getTaskQuantity(
+  TaskModel? task, {
+  num defaultValue = 0,
+  bool returnInt = false,
+  bool round = true,
+}) {
+  final resource =
+      task?.resources?.isNotEmpty == true ? task!.resources!.first : null;
+
+  final raw = resource?.quantity;
+  final parsed = parseQuantity(raw);
+
+  return parsed;
+}
+
+int parseQuantity(dynamic rawQty) {
+  if (rawQty == null) return 0;
+  if (rawQty is int) return rawQty;
+  if (rawQty is double) return rawQty.round();
+  if (rawQty is String) {
+    // Try int first
+    final asInt = int.tryParse(rawQty);
+    if (asInt != null) return asInt;
+    // Fallback: parse as double like "1.0"
+    final asDouble = double.tryParse(rawQty);
+    if (asDouble != null) return asDouble.round();
+  }
+  return 0;
+}
+
 Future<void> requestDisableBatteryOptimization() async {
   bool isIgnoringBatteryOptimizations =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;

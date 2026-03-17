@@ -1499,27 +1499,6 @@ class CustomDeliverInterventionSMCPageState
                 //             productVariantId: r.productVariantId))
                 //         .toList();
 
-                final int numberOfDoses =
-                    (bednetProjectType?.cycles?.isNotEmpty == true)
-                        ? (bednetProjectType
-                                ?.cycles?[deliveryInterventionState.cycle - 1]
-                                .deliveries
-                                ?.length) ??
-                            0
-                        : 0;
-
-                List<StepsModel> generateSteps(int numberOfDoses) {
-                  return List.generate(numberOfDoses, (index) {
-                    return StepsModel(
-                      title:
-                          '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
-                      number: (index + 1).toString(),
-                    );
-                  });
-                }
-
-                final steps = generateSteps(numberOfDoses);
-
                 if ((productVariants ?? []).isEmpty && context.mounted) {
                   SchedulerBinding.instance.addPostFrameCallback((_) {
                     DigitToast.show(
@@ -1699,7 +1678,14 @@ class CustomDeliverInterventionSMCPageState
                                                   .quantityDistributedLabelBednet,
                                             ),
                                             minimum: 1,
-                                            maximum: 20,
+                                            maximum: min(
+                                                    (householdMemberWrapper
+                                                                .household
+                                                                ?.memberCount ??
+                                                            0) /
+                                                        2,
+                                                    Constants.maxBednetCount)
+                                                .round(),
                                             buttonWidth: 50,
                                           ),
                                         ],
@@ -2211,12 +2197,6 @@ class CustomDeliverInterventionSMCPageState
                 .toValue(),
             InterventionTypes.bednet.toValue(),
           ),
-          if (quantityDistributed != null &&
-              quantityDistributed.toString().isNotEmpty)
-            AdditionalField(
-              "bednetQuantityDistributed",
-              quantityDistributed,
-            ),
           if (latitude != null)
             AdditionalField(
               AdditionalFieldsType.latitude.toValue(),

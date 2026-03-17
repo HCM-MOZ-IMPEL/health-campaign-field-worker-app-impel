@@ -767,11 +767,8 @@ class CustomBeneficiaryDetailsSMCPageState
         )
         .toList()
         .firstOrNull;
-    final bednetQuantityDistributed = bednetTask?.additionalFields?.fields
-            .firstWhereOrNull(
-                (element) => element.key == "bednetQuantityDistributed")
-            ?.value ??
-        0;
+
+    final quantityDistributed = getTaskQuantity(bednetTask);
 
     // [TODO] Need to move this to Bloc Lisitner or consumer
     // Note : setting active cycle and dose for oncho flow as oncho cycle
@@ -896,8 +893,8 @@ class CustomBeneficiaryDetailsSMCPageState
                     }(),
                     localizations.translate(i18_local
                             .deliverIntervention.bednetQuantityDistributedText):
-                        bednetQuantityDistributed != null
-                            ? bednetQuantityDistributed.toString()
+                        quantityDistributed != null
+                            ? quantityDistributed.toString()
                             : '--',
                   },
                 ),
@@ -1279,26 +1276,11 @@ class CustomBeneficiaryDetailsSMCPageState
       final sku = variant?.sku;
       if (sku == null || sku.toString().trim().isEmpty) continue;
       // Safely parse quantity from different possible types
-      final qty = _parseQuantity(resource.quantity);
+      final qty = parseQuantity(resource.quantity);
       if (qty <= 0) continue;
       final key = sku.toString();
       result[key] = (result[key] ?? 0) + qty;
     }
     return result;
-  }
-
-  int _parseQuantity(dynamic rawQty) {
-    if (rawQty == null) return 0;
-    if (rawQty is int) return rawQty;
-    if (rawQty is double) return rawQty.round();
-    if (rawQty is String) {
-      // Try int first
-      final asInt = int.tryParse(rawQty);
-      if (asInt != null) return asInt;
-      // Fallback: parse as double like "1.0"
-      final asDouble = double.tryParse(rawQty);
-      if (asDouble != null) return asDouble.round();
-    }
-    return 0;
   }
 }
