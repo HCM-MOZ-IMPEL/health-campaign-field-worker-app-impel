@@ -74,6 +74,7 @@ class CustomDeliverInterventionSMCPageState
   static const _defaultQuantity = 1;
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
+  var defaultBednetQuantity = 0;
 
   InterventionTypes interventionType = InterventionTypes.smc;
 
@@ -1465,6 +1466,10 @@ class CustomDeliverInterventionSMCPageState
                 .toList();
 
     final selectedIndividual = state.selectedIndividual;
+    defaultBednetQuantity = min(
+            (householdMemberWrapper.household?.memberCount ?? 0) / 2,
+            Constants.maxBednetCount)
+        .round();
 
     return Scaffold(
       body: state.loading
@@ -2523,10 +2528,6 @@ class CustomDeliverInterventionSMCPageState
             : null,
         validators: [],
       ),
-      _deliveryCommentWastedKey: FormControl<String>(
-        value: null,
-        validators: [],
-      ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
@@ -2538,7 +2539,7 @@ class CustomDeliverInterventionSMCPageState
         ],
       ),
       _quantityDistributedKey: FormControl<int>(
-        value: 1,
+        value: defaultBednetQuantity,
         validators: [Validators.min(1)],
       ),
       // _quantityWastedKey: FormControl<String>(validators: []),
