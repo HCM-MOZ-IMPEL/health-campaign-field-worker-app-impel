@@ -231,7 +231,8 @@ class _CustomBeneficiaryProgressBarBednetState
 
     return DigitCard(
       child: ProgressIndicatorContainer(
-        label: '${max(target - current, 0).round()} ${widget.label}',
+        label:
+            widget.label.replaceAll("{}", max(target - current, 0).toString()),
         prefixLabel: '$current ${widget.prefixLabel}',
         suffixLabel: target.toStringAsFixed(0),
         value: target == 0 ? 0 : min(current / target, 1),
