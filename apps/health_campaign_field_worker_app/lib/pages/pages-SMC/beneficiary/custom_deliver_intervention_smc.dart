@@ -1368,7 +1368,10 @@ class CustomDeliverInterventionSMCPageState
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Número de membros',
+                                                localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .numberOfMembersLabelOncho,
+                                                ),
                                                 style: theme
                                                     .textTheme.headlineSmall,
                                               ),
@@ -1388,7 +1391,10 @@ class CustomDeliverInterventionSMCPageState
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Número de recursos para entrega',
+                                                localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .numberOfResourcesToBeDeliveredLabelOncho,
+                                                ),
                                                 style: theme
                                                     .textTheme.headlineSmall,
                                               ),
@@ -1637,7 +1643,10 @@ class CustomDeliverInterventionSMCPageState
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Número de membros',
+                                                localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .numberOfMembersLabelBednet,
+                                                ),
                                                 style: theme
                                                     .textTheme.headlineSmall,
                                               ),
@@ -1657,7 +1666,10 @@ class CustomDeliverInterventionSMCPageState
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Número de redes por entregar',
+                                                localizations.translate(
+                                                  i18_local.deliverIntervention
+                                                      .numberOfNetworksToDeliverLabelBednet,
+                                                ),
                                                 style: theme
                                                     .textTheme.headlineSmall,
                                               ),
