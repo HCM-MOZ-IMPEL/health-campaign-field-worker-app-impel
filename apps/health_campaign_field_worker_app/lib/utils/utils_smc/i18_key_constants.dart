@@ -889,6 +889,14 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
   String get quantityDistributedLabelBednet =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_BEDNET';
+  String get numberOfMembersLabelOncho =>
+      'DELIVER_INTERVENTION_NUMBER_OF_MEMBERS_LABEL_ONCHO';
+  String get numberOfResourcesToBeDeliveredLabelOncho =>
+      'DELIVER_INTERVENTION_NUMBER_OF_RESOURCES_TO_BE_DELIVERED_LABEL_ONCHO';
+  String get numberOfMembersLabelBednet =>
+      'DELIVER_INTERVENTION_NUMBER_OF_MEMBERS_LABEL_BEDNET';
+  String get numberOfNetworksToDeliverLabelBednet =>
+      'DELIVER_INTERVENTION_NUMBER_OF_NETWORKS_TO_DELIVER_LABEL_BEDNET';
   String get quantityDistributedLabelONCHO =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_ONCHO';
   String get quantityDistributedLabelTracoma =>
