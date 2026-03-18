@@ -227,7 +227,7 @@ class _CustomBeneficiaryProgressBarBednetState
   @override
   Widget build(BuildContext context) {
     // int target = context.isDistributor ? 60 : 40;
-    int target = 365;
+    int target = 200;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
