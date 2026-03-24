@@ -996,7 +996,9 @@ DeliveryDoseCriteria? fetchProductVariantLocal(
             DateTime.now(),
       );
       individualAgeInMonths =
-          changeAge ? 59 : (individualAge.years * 12 + individualAge.months);
+          (individualAge.years * 12 + individualAge.months) > 59 && changeAge
+              ? 59
+              : (individualAge.years * 12 + individualAge.months);
 
       gender = individualModel.gender?.index;
 
