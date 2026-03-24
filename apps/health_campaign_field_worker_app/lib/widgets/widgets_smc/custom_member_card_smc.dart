@@ -796,9 +796,10 @@ class CustomMemberCardSMC extends StatelessWidget {
         checkIfBeneficiaryIneligibleOncho(onchoTasks);
     bool beneficiaryReferredOncho = checkIfBeneficiaryReferredOncho(onchoTasks);
     bool beneficiaryRefusedOncho = checkIfBeneficiaryRefusedOncho(onchoTasks);
-    bool isOnchoDelivered = onchoTasks != null &&
-        onchoTasks.isNotEmpty &&
+    bool checkStatusForOncho =
         !checkStatusOncho(onchoTasks, context.selectedCycle);
+    bool isOnchoDelivered =
+        onchoTasks != null && onchoTasks.isNotEmpty && checkStatusForOncho;
 
     bool isSmcDeliveryCards = fetchProductVariantForProjectType(
             smcProjectType, individual, null, smcTasks) !=
