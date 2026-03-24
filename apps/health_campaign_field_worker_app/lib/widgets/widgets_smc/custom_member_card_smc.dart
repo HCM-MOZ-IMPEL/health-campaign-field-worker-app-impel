@@ -514,9 +514,13 @@ class CustomMemberCardSMC extends StatelessWidget {
         bednetTasks.isNotEmpty &&
         !checkStatusBednet(bednetTasks, context.selectedCycle);
 
-    bool isSmcDeliveryCards = fetchProductVariantForProjectType(
-            smcProjectType, individual, null, smcTasks) !=
-        null;
+    // here additional check added if not head then assume smc
+    // only valid for smc and bednet flow where if it is not head then it will always show smc card because bednet is given to head of the household but in case of smc and oncho flow, both head and non head can be eligible for both interventions so no need of additional check there
+
+    bool isSmcDeliveryCards = !isHead ||
+        fetchProductVariantForProjectType(
+                smcProjectType, individual, null, smcTasks) !=
+            null;
     bool isBednetDeliveryCards = isHead;
     // fetchProductVariant(currentDelivery, individual, null) != null;
 
