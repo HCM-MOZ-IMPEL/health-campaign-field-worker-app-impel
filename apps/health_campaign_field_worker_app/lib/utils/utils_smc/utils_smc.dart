@@ -1637,10 +1637,6 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
 }
 
 bool checkStatusOncho(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
-  if (currentCycle == null) {
-    return false;
-  }
-
   if (tasks == null || tasks.isEmpty) {
     return true;
   }
@@ -1659,26 +1655,10 @@ bool checkStatusOncho(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     return true;
   }
 
-  final lastTask = tasks.last;
-  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+  // if there is a task with oncho intervention type,
+  //then assume intervention for oncho was done,success or failure doesn't matter and return false to block next dose administration without checking the cycle
 
-  if (lastTaskCreatedTime == null) {
-    return false;
-  }
-
-  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
-  final diff = DateTime.now().difference(date);
-  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
-      lastTaskCreatedTime <= currentCycle.endDate;
-
-  if (isLastCycleRunning) {
-    if (lastTask.status == Status.delivered.name) {
-      return true;
-    }
-    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
-  }
-
-  return true;
+  return false;
 }
 
 bool checkStatusBednet(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
