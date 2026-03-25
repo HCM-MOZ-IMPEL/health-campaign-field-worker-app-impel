@@ -1572,6 +1572,10 @@ class CustomDeliverInterventionSMCPageState
                                                       _quantityDistributedKey)
                                                   .value as int?;
 
+                                              final deliveryComment = form
+                                                  .control(_deliveryCommentKey)
+                                                  .value as String?;
+
                                               if (quantity == null ||
                                                   quantity < 1) {
                                                 await DigitToast.show(
@@ -1589,7 +1593,11 @@ class CustomDeliverInterventionSMCPageState
                                               }
 
                                               if (quantity <
-                                                  defaultBednetQuantity) {
+                                                      defaultBednetQuantity &&
+                                                  (deliveryComment == null ||
+                                                      deliveryComment
+                                                          .trim()
+                                                          .isEmpty)) {
                                                 await DigitToast.show(
                                                   context,
                                                   options: DigitToastOptions(
