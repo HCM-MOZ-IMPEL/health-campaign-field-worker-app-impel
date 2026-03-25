@@ -1588,6 +1588,22 @@ class CustomDeliverInterventionSMCPageState
                                                 return;
                                               }
 
+                                              if (quantity <
+                                                  defaultBednetQuantity) {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                        i18_local
+                                                            .deliverIntervention
+                                                            .deliveryCommentRequired),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                                return;
+                                              }
+
                                               context.read<LocationBloc>().add(
                                                   const LoadLocationEvent());
                                               handleLocationStateBednet(
