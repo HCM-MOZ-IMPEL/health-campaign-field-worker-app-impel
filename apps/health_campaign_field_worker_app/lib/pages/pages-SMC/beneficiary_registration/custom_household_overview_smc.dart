@@ -2,7 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,7 +61,6 @@ class CustomHouseholdOverviewSMCPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
-    var bednetQuantityDistributed = 0;
 
     return PopScope(
       onPopInvoked: (didPop) async {
@@ -205,6 +207,118 @@ class CustomHouseholdOverviewSMCPageState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: [
+                              if ((state.householdMemberWrapper
+                                              .projectBeneficiaries ??
+                                          [])
+                                      .isNotEmpty &&
+                                  context.isSmcAndBednetFlow)
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DigitButton(
+                                    onPressed: () {
+                                      final projectId =
+                                          RegistrationDeliverySingleton()
+                                              .projectId!;
+
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
+                                      bloc.add(
+                                        HouseholdOverviewReloadEvent(
+                                          projectId: projectId,
+                                          projectBeneficiaryType:
+                                              beneficiaryType,
+                                        ),
+                                      );
+                                      showDialog(
+                                        context: context,
+                                        builder: (ctx) => DigitActionCard(
+                                          actions: [
+                                            DigitButton(
+                                              capitalizeLetters: false,
+                                              prefixIcon: Icons.edit,
+                                              label: localizations.translate(
+                                                i18.householdOverView
+                                                    .householdOverViewEditLabel,
+                                              ),
+                                              type: DigitButtonType.secondary,
+                                              size: DigitButtonSize.large,
+                                              onPressed: () async {
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop();
+
+                                                HouseholdMemberWrapper wrapper =
+                                                    state
+                                                        .householdMemberWrapper;
+
+                                                final timestamp = wrapper
+                                                    .headOfHousehold
+                                                    ?.clientAuditDetails
+                                                    ?.createdTime;
+                                                final date = DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                  timestamp ??
+                                                      DateTime.now()
+                                                          .millisecondsSinceEpoch,
+                                                );
+
+                                                final address =
+                                                    wrapper.household?.address;
+
+                                                if (address == null) return;
+
+                                                final projectBeneficiary = state
+                                                    .householdMemberWrapper
+                                                    .projectBeneficiaries
+                                                    ?.firstWhereOrNull(
+                                                  (element) =>
+                                                      element
+                                                          .beneficiaryClientReferenceId ==
+                                                      wrapper.household
+                                                          ?.clientReferenceId,
+                                                );
+
+                                                await context.router.root.push(
+                                                  BeneficiaryRegistrationWrapperRoute(
+                                                    initialState: BeneficiaryRegistrationEditHouseholdState(
+                                                        addressModel: address,
+                                                        individualModel: state
+                                                                .householdMemberWrapper
+                                                                .members ??
+                                                            [],
+                                                        householdModel: state
+                                                            .householdMemberWrapper
+                                                            .household!,
+                                                        registrationDate: date,
+                                                        projectBeneficiaryModel:
+                                                            projectBeneficiary,
+                                                        householdChecklists: state
+                                                            .householdMemberWrapper
+                                                            .householdChecklists),
+                                                    children: [
+                                                      HouseholdLocationRoute(),
+                                                    ],
+                                                  ),
+                                                );
+                                                callReloadEvent(
+                                                    offset: 0, limit: 10);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    label: localizations.translate(
+                                      i18.householdOverView
+                                          .householdOverViewEditIconText,
+                                    ),
+                                    type: DigitButtonType.tertiary,
+                                    size: DigitButtonSize.medium,
+                                    prefixIcon: Icons.edit,
+                                    capitalizeLetters: false,
+                                  ),
+                                ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   left: kPadding,
@@ -651,6 +765,22 @@ class CustomHouseholdOverviewSMCPageState
         },
       ),
     );
+  }
+
+  void callReloadEvent({
+    required int offset,
+    required int limit,
+  }) {
+    if (mounted) {
+      final bloc = context.read<HouseholdOverviewBloc>();
+
+      bloc.add(
+        HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!),
+      );
+    }
   }
 
   addIndividual(BuildContext context, HouseholdModel household) async {
