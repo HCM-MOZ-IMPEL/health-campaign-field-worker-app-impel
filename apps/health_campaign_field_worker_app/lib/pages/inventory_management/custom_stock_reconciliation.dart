@@ -84,6 +84,7 @@ class CustomStockReconciliationPageState
     final isHealthFacilitySupervisor = context.isSpaqManager;
     final isCommunitySupervisor = context.isCommunitySupervisor;
     final isCommunityDistributor = context.isCommunityDistributor;
+    final isBednetManager = context.isBednetManager;
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -477,6 +478,32 @@ class CustomStockReconciliationPageState
                                                       element.sku ==
                                                       Constants.vehicleSKU)
                                                   .toList();
+
+                                          if (context.isSmcAndBednetFlow &&
+                                              isBednetManager) {
+                                            filteredProductVariants =
+                                                filteredProductVariants
+                                                    .whereNot((variant) =>
+                                                        variant.sku!.contains(
+                                                            Constants
+                                                                .spaqConstantCapital) ||
+                                                        variant.sku!.contains(
+                                                            Constants
+                                                                .spaqConstant))
+                                                    .toList();
+                                          } else {
+                                            filteredProductVariants =
+                                                filteredProductVariants
+                                                    .where((variant) =>
+                                                        variant.sku!.contains(
+                                                            Constants
+                                                                .spaqConstantCapital) ||
+                                                        variant.sku!.contains(
+                                                            Constants
+                                                                .spaqConstant))
+                                                    .toList();
+                                          }
+
                                           return ReactiveWrapperField(
                                             formControlName: _productVariantKey,
                                             validationMessages: {

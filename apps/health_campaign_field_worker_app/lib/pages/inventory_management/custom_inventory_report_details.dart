@@ -123,6 +123,7 @@ class CustomInventoryReportDetailsPageState
   Widget build(BuildContext context) {
     final isCommunitySupervisor = context.isCommunitySupervisor;
     final isCommunityDistributor = context.isCommunityDistributor;
+    final isBednetManager = context.isBednetManager;
 
     return BlocProvider<CustomInventoryReportBloc>(
       create: (context) => CustomInventoryReportBloc(
@@ -355,6 +356,33 @@ class CustomInventoryReportDetailsPageState
                                                             Constants
                                                                 .vehicleSKU)
                                                         .toList();
+
+                                                if (context
+                                                        .isSmcAndBednetFlow &&
+                                                    isBednetManager) {
+                                                  filteredProductVariants =
+                                                      filteredProductVariants
+                                                          .whereNot((variant) =>
+                                                              variant.sku!.contains(
+                                                                  Constants
+                                                                      .spaqConstantCapital) ||
+                                                              variant.sku!.contains(
+                                                                  Constants
+                                                                      .spaqConstant))
+                                                          .toList();
+                                                } else {
+                                                  filteredProductVariants =
+                                                      filteredProductVariants
+                                                          .where((variant) =>
+                                                              variant.sku!.contains(
+                                                                  Constants
+                                                                      .spaqConstantCapital) ||
+                                                              variant.sku!.contains(
+                                                                  Constants
+                                                                      .spaqConstant))
+                                                          .toList();
+                                                }
+
                                                 if (filteredProductVariants
                                                     .isEmpty) {
                                                   return Container();

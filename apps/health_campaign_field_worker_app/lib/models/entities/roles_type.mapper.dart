@@ -55,6 +55,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.voucherAcceptor;
       case "LOCAL_MONITOR":
         return RolesType.localMonitor;
+      case "BEDNET_USER":
+        return RolesType.bednetUser;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -93,6 +95,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "VOUCHER_ACCEPTOR";
       case RolesType.localMonitor:
         return "LOCAL_MONITOR";
+      case RolesType.bednetUser:
+        return "BEDNET_USER";
     }
   }
 }

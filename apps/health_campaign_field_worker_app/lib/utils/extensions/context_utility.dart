@@ -197,6 +197,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isBednetManager {
+    try {
+      bool isBednetManager = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.bednetUser.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isBednetManager;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get isVoucherAcceptor {
     try {
       bool voucherAcceptor = loggedInUserRoles

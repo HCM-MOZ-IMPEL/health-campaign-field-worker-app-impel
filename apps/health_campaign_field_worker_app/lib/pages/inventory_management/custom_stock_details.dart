@@ -96,6 +96,7 @@ class CustomStockDetailsPageState
     final isCommunitySupervisor = context.isCommunitySupervisor;
     final isCommunityDistributor = context.isCommunityDistributor;
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    final isBednetManager = context.isBednetManager;
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -477,6 +478,27 @@ class CustomStockDetailsPageState
                                                   element.sku ==
                                                   Constants.vehicleSKU)
                                               .toList();
+
+                                      if (context.isSmcAndBednetFlow &&
+                                          isBednetManager) {
+                                        filteredProductVariants =
+                                            filteredProductVariants
+                                                .whereNot((variant) =>
+                                                    variant.sku!.contains(Constants
+                                                        .spaqConstantCapital) ||
+                                                    variant.sku!.contains(
+                                                        Constants.spaqConstant))
+                                                .toList();
+                                      } else {
+                                        filteredProductVariants =
+                                            filteredProductVariants
+                                                .where((variant) =>
+                                                    variant.sku!.contains(Constants
+                                                        .spaqConstantCapital) ||
+                                                    variant.sku!.contains(
+                                                        Constants.spaqConstant))
+                                                .toList();
+                                      }
                                       if (filteredProductVariants.isEmpty) {
                                         return Container();
                                       }
