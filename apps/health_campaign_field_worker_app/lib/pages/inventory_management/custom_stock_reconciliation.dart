@@ -478,30 +478,31 @@ class CustomStockReconciliationPageState
                                                       element.sku ==
                                                       Constants.vehicleSKU)
                                                   .toList();
-
-                                          if (context.isSmcAndBednetFlow &&
-                                              isBednetManager) {
-                                            filteredProductVariants =
-                                                filteredProductVariants
-                                                    .whereNot((variant) =>
-                                                        variant.sku!.contains(
-                                                            Constants
-                                                                .spaqConstantCapital) ||
-                                                        variant.sku!.contains(
-                                                            Constants
-                                                                .spaqConstant))
-                                                    .toList();
-                                          } else {
-                                            filteredProductVariants =
-                                                filteredProductVariants
-                                                    .where((variant) =>
-                                                        variant.sku!.contains(
-                                                            Constants
-                                                                .spaqConstantCapital) ||
-                                                        variant.sku!.contains(
-                                                            Constants
-                                                                .spaqConstant))
-                                                    .toList();
+                                          if (!context.isCommunitySupervisor) {
+                                            if (context.isSmcAndBednetFlow &&
+                                                isBednetManager) {
+                                              filteredProductVariants =
+                                                  filteredProductVariants
+                                                      .whereNot((variant) =>
+                                                          variant.sku!.contains(
+                                                              Constants
+                                                                  .spaqConstantCapital) ||
+                                                          variant.sku!.contains(
+                                                              Constants
+                                                                  .spaqConstant))
+                                                      .toList();
+                                            } else {
+                                              filteredProductVariants =
+                                                  filteredProductVariants
+                                                      .where((variant) =>
+                                                          variant.sku!.contains(
+                                                              Constants
+                                                                  .spaqConstantCapital) ||
+                                                          variant.sku!.contains(
+                                                              Constants
+                                                                  .spaqConstant))
+                                                      .toList();
+                                            }
                                           }
 
                                           return ReactiveWrapperField(
