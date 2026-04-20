@@ -23,15 +23,19 @@ import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils_smc/i18_key_constants.dart' as i18Local;
 import '../../../utils/utils_smc/utils_smc.dart'
     show
-        checkStatusSMC,
-        checkStatusOncho,
-        checkIfBeneficiaryRefusedOncho,
-        checkIfBeneficiaryIneligibleOncho,
-        checkIfBeneficiaryReferredOncho,
         checkEligibilityForAgeAndSideEffectOncho,
-        isSmcAndOnchoFlow,
+        checkIfBeneficiaryIneligibleBednet,
+        checkIfBeneficiaryIneligibleOncho,
+        checkIfBeneficiaryReferredBednet,
+        checkIfBeneficiaryReferredOncho,
+        checkIfBeneficiaryRefusedBednet,
+        checkIfBeneficiaryRefusedOncho,
+        checkStatusBednet,
+        checkStatusOncho,
+        checkStatusSMC,
+        fetchProductVariantForProjectType,
         isSmcAndBednetFlow,
-        fetchProductVariantForProjectType;
+        isSmcAndOnchoFlow;
 import '../../../models/entities/entities_smc/intervention_types.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
@@ -162,7 +166,7 @@ class _CustomViewBeneficiaryCardSMCState
       return checkIfBeneficiaryRefusedOncho(taskData);
     } else if (interventionType == InterventionTypes.bednet.toValue()) {
       // Bednet uses SMC logic
-      return checkIfBeneficiaryRefused(taskData);
+      return checkIfBeneficiaryRefusedBednet(taskData);
     } else {
       return checkIfBeneficiaryRefused(taskData);
     }
@@ -175,8 +179,7 @@ class _CustomViewBeneficiaryCardSMCState
     if (interventionType == InterventionTypes.oncho.toValue()) {
       return checkIfBeneficiaryIneligibleOncho(taskData);
     } else if (interventionType == InterventionTypes.bednet.toValue()) {
-      // Bednet uses SMC logic
-      return utilsLocal.checkIfBeneficiaryIneligible(taskData);
+      return checkIfBeneficiaryIneligibleBednet(taskData);
     } else {
       return utilsLocal.checkIfBeneficiaryIneligible(taskData);
     }
@@ -192,7 +195,7 @@ class _CustomViewBeneficiaryCardSMCState
       return checkIfBeneficiaryReferredOncho(taskData);
     } else if (interventionType == InterventionTypes.bednet.toValue()) {
       // Bednet uses SMC logic
-      return checkIfBeneficiaryReferred(referralData, currentCycle);
+      return checkIfBeneficiaryReferredBednet(taskData);
     } else {
       return checkIfBeneficiaryReferred(referralData, currentCycle);
     }
@@ -207,7 +210,7 @@ class _CustomViewBeneficiaryCardSMCState
       return checkStatusOncho(taskData, currentCycle);
     } else if (interventionType == InterventionTypes.bednet.toValue()) {
       // Bednet uses SMC logic
-      return checkStatusSMC(taskData, currentCycle);
+      return checkStatusBednet(taskData, currentCycle);
     } else {
       return checkStatusSMC(taskData, currentCycle);
     }
@@ -230,13 +233,7 @@ class _CustomViewBeneficiaryCardSMCState
         sideEffects,
       );
     } else if (interventionType == InterventionTypes.bednet.toValue()) {
-      // Bednet uses SMC logic
-      return checkEligibilityForAgeAndSideEffect(
-        age,
-        RegistrationDeliverySingleton().projectType,
-        lastTask,
-        sideEffects,
-      );
+      return true;
     } else {
       return checkEligibilityForAgeAndSideEffect(
         age,
@@ -282,6 +279,9 @@ class _CustomViewBeneficiaryCardSMCState
               // Return null when no matching cycle is found
             );
     final household = householdMember.household;
+    bool isHeadOfHousehold =
+        householdMember.headOfHousehold?.clientReferenceId ==
+            householdMember.members?.first.clientReferenceId;
     final childCount =
         getValueForTheKey(AdditionalFieldsType.children.toValue(), household);
     final pregnantWomenCount = getValueForTheKey(
@@ -316,8 +316,9 @@ class _CustomViewBeneficiaryCardSMCState
         null;
     bool isBednetDeliveryCards = _isSmcAndBednetFlow
         ? fetchProductVariantForProjectType(onchoAdditionalProjectType,
-                householdMember.headOfHousehold, null, null) !=
-            null
+                    householdMember.headOfHousehold, null, null) !=
+                null ||
+            isHeadOfHousehold
         : false;
 
     // For SMC+ONCHO flow, determine which one to show based on delivery cards availability
@@ -350,6 +351,11 @@ class _CustomViewBeneficiaryCardSMCState
                 .selectedProject
                 ?.additionalDetails
                 ?.additionalProjectType;
+        ProjectTypeModel? bednetAdditionalProjectType =
+            RegistrationDeliverySingleton()
+                .selectedProject
+                ?.additionalDetails
+                ?.additionalProjectType;
 
         bool isSmcDeliveryCards =
             fetchProductVariantForProjectType(smcProjectType, e, null, null) !=
@@ -359,8 +365,10 @@ class _CustomViewBeneficiaryCardSMCState
             null;
         bool isBednetDeliveryCards = _isSmcAndBednetFlow
             ? fetchProductVariantForProjectType(
-                    onchoAdditionalProjectType, e, null, null) !=
-                null
+                        bednetAdditionalProjectType, e, null, null) !=
+                    null ||
+                e.clientReferenceId ==
+                    householdMember.headOfHousehold?.clientReferenceId
             : false;
 
         // For SMC+ONCHO flow, determine which one to show based on delivery cards availability
@@ -483,17 +491,29 @@ class _CustomViewBeneficiaryCardSMCState
                     i18Local.householdOverView
                         .householdOverViewHouseholderHeadLabelSMC,
                   )
-                : getTableCellText(
-                    StatusKeys(
-                      isNotEligible,
-                      isBeneficiaryRefused,
-                      isBeneficiaryReferred,
-                      isStatusReset,
-                    ),
-                    filteredTaskData,
-                    isBeneficiaryIneligible,
-                    effectiveInterventionType,
-                  ),
+                : effectiveInterventionType ==
+                        InterventionTypes.bednet.toValue()
+                    ? getTableCellTextBednet(
+                        StatusKeys(
+                          isNotEligible,
+                          isBeneficiaryRefused,
+                          isBeneficiaryReferred,
+                          isStatusReset,
+                        ),
+                        filteredTaskData,
+                        isBeneficiaryIneligible,
+                        effectiveInterventionType)
+                    : getTableCellText(
+                        StatusKeys(
+                          isNotEligible,
+                          isBeneficiaryRefused,
+                          isBeneficiaryReferred,
+                          isStatusReset,
+                        ),
+                        filteredTaskData,
+                        isBeneficiaryIneligible,
+                        effectiveInterventionType,
+                      ),
             cellKey: 'delivery',
             style: TextStyle(
               color: getTableCellTextColor(
@@ -572,29 +592,31 @@ class _CustomViewBeneficiaryCardSMCState
       }
     }).firstOrNull;
 
-    final allFilteredByBeneficiary = householdMember.tasks
+    final allFilteredByBeneficiaryTasks = householdMember.tasks
         ?.where((t) =>
             t.projectBeneficiaryClientReferenceId ==
             projectBeneficiary?.clientReferenceId)
         .toList();
 
-    final tasks = _getTaskDataForCurrentFlow(
-      allFilteredByBeneficiary,
-      effectiveInterventionType,
-    );
+    // final tasks = _getTaskDataForCurrentFlow(
+    //   allFilteredByBeneficiary,
+    //   effectiveInterventionType,
+    // );
 
     final isNotEligible = !_checkEligibilityForAgeAndSideEffect(
       DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
       ),
-      (tasks ?? []).isNotEmpty ? tasks?.last : null,
+      (allFilteredByBeneficiaryTasks ?? []).isNotEmpty
+          ? allFilteredByBeneficiaryTasks?.last
+          : null,
       householdMember.sideEffects,
       effectiveInterventionType,
     );
 
-    final isBeneficiaryRefused =
-        _checkIfBeneficiaryRefused(tasks, effectiveInterventionType);
+    final isBeneficiaryRefused = _checkIfBeneficiaryRefused(
+        allFilteredByBeneficiaryTasks, effectiveInterventionType);
 
     return DigitCard(
       child: Column(
@@ -623,7 +645,7 @@ class _CustomViewBeneficiaryCardSMCState
                       '${noOfRooms != null ? ' | $noOfRooms ${localizations.translate(i18Local.beneficiaryDetails.roomsLabel)}' : ''}'
                       '${widget.distance != null ? '\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} m) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}' : ''}',
                   status: getStatus(
-                      tasks ?? [],
+                      allFilteredByBeneficiaryTasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
                       RegistrationDeliverySingleton().beneficiaryType ==
                               BeneficiaryType.individual
@@ -685,6 +707,73 @@ class _CustomViewBeneficiaryCardSMCState
         ],
       ),
     );
+  }
+
+  String getTableCellTextBednet(
+    StatusKeys statusKeys,
+    List<TaskModel>? taskData,
+    bool isBeneficiaryIneligible,
+    String interventionType,
+  ) {
+    if (statusKeys.isNotEligible || isBeneficiaryIneligible) {
+      return localizations.translate(
+        interventionType == InterventionTypes.bednet.toValue()
+            ? i18Local
+                .householdOverView.householdOverViewNotEligibleIconLabelBednet
+            : i18Local
+                .householdOverView.householdOverViewNotEligibleIconLabelSMC,
+      );
+    } else if (statusKeys.isBeneficiaryReferred) {
+      return localizations.translate(
+        interventionType == InterventionTypes.bednet.toValue()
+            ? i18Local.householdOverView
+                .householdOverViewBeneficiaryReferredLabelBednet
+            : i18Local
+                .householdOverView.householdOverViewBeneficiaryReferredLabelSMC,
+      );
+    } else if (taskData != null) {
+      if (taskData.isEmpty) {
+        return localizations.translate(
+          interventionType == InterventionTypes.bednet.toValue()
+              ? i18Local.householdOverView
+                  .householdOverViewNotDeliveredIconLabelBednet
+              : i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+        );
+      } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
+        return localizations.translate(
+          interventionType == InterventionTypes.bednet.toValue()
+              ? i18Local.householdOverView
+                  .householdOverViewBeneficiaryRefusedLabelBednet
+              : i18Local.householdOverView
+                  .householdOverViewBeneficiaryRefusedLabelSMC,
+        );
+      } else if (statusKeys.isStatusReset) {
+        return localizations.translate(
+          interventionType == InterventionTypes.bednet.toValue()
+              ? i18Local.householdOverView
+                  .householdOverViewNotDeliveredIconLabelBednet
+              : i18Local
+                  .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+        );
+      } else {
+        return localizations.translate(
+          interventionType == InterventionTypes.bednet.toValue()
+              ? i18Local
+                  .householdOverView.householdOverViewDeliveredIconLabelBednet
+              : i18Local
+                  .householdOverView.householdOverViewDeliveredIconLabelSMC,
+        );
+      }
+    } else {
+      return localizations.translate(
+        interventionType == InterventionTypes.bednet.toValue()
+            ? i18Local
+                .householdOverView.householdOverViewNotDeliveredIconLabelBednet
+            : i18Local
+                .householdOverView.householdOverViewNotDeliveredIconLabelSMC,
+      );
+    }
   }
 
   String getTableCellText(

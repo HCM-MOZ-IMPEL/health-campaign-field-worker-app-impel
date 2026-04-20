@@ -297,6 +297,15 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
+    final List<DeliveryCommentOptions>? deliveryCommentOptionsBednet =
+        element?.deliveryCommentOptionsBednet.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return deliveryCommentOption;
+    }).toList();
+
     final List<DeliveryCommentOptions>? deliveryCommentWastedOptionsSmc =
         element?.deliveryCommentWastedOptionsSmc.map((element) {
       final deliveryCommentWastedOption = DeliveryCommentOptions()
@@ -335,6 +344,8 @@ class MdmsRepository {
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
     appConfiguration.deliveryCommentOptionsOncho = deliveryCommentOptionsOncho;
+    appConfiguration.deliveryCommentOptionsBednet =
+        deliveryCommentOptionsBednet;
     appConfiguration.deliveryCommentWastedOptionsSmc =
         deliveryCommentWastedOptionsSmc;
     appConfiguration.householdDeletionReasonOptions =

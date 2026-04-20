@@ -15,6 +15,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../../../data/repositories/custom_task.dart';
 import '../../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
+import '../../../utils/utils_smc/utils_smc.dart';
 import '../../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBarSMC extends StatefulWidget {
@@ -140,7 +141,7 @@ class _CustomBeneficiaryProgressBarSMCState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const target = 65;
+    var target = isSmcAndBednetFlow(context) ? 52 : 65;
 
     return DigitCard(
       child: Column(

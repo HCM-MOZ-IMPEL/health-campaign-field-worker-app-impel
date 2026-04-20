@@ -170,7 +170,8 @@ class Constants {
   static const String eligibilityAssessmentKey = "ELIGIBLITY_ASSESSMENT";
   static const String eligibilityAssessmentTwoKey =
       "ELIGIBILITY_ASSESSMENT_TWO";
-
+  static const String spaqConstant = "spaq";
+  static const String spaqConstantCapital = "SPAQ";
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
