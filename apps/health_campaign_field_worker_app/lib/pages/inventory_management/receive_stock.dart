@@ -161,16 +161,6 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
       }
 
       // Proceed with final submission
-      context.read<RecordStockBloc>().add(
-            RecordStockSaveTransactionDetailsEvent(
-              dateOfRecord: DateTime.now(),
-              facilityModel: FacilityModel(
-                id: context.loggedInUserUuid,
-              ),
-              primaryId: context.loggedInUserUuid,
-              primaryType: "STAFF",
-            ),
-          );
 
       final updatedStocks = widget.stockRecords.map((stock) {
         final additionalFields = stock.additionalFields?.fields ?? [];
@@ -216,14 +206,33 @@ class _ReceiveStockPageState extends LocalizedState<ReceiveStockPage>
       }).toList();
 
       for (final stock in updatedStocks) {
-        context.read<RecordStockBloc>().add(
-              RecordStockSaveStockDetailsEvent(
-                stockModel: stock,
-              ),
-            );
-        context.read<RecordStockBloc>().add(
-              const RecordStockCreateStockEntryEvent(),
-            );
+        final bloc = RecordStockBloc(
+          RecordStockState.create(
+            entryType: StockRecordEntryType.receipt,
+            projectId: context.projectId,
+          ),
+          stockRepository: context.repository<StockModel, StockSearchModel>(),
+        );
+
+        bloc.add(
+          RecordStockSaveTransactionDetailsEvent(
+            dateOfRecord: DateTime.now(),
+            facilityModel: FacilityModel(
+              id: context.loggedInUserUuid,
+            ),
+            primaryId: context.loggedInUserUuid,
+            primaryType: "STAFF",
+          ),
+        );
+
+        bloc.add(
+          RecordStockSaveStockDetailsEvent(
+            stockModel: stock,
+          ),
+        );
+        bloc.add(
+          const RecordStockCreateStockEntryEvent(),
+        );
 
         String productName = stock.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == "productName")

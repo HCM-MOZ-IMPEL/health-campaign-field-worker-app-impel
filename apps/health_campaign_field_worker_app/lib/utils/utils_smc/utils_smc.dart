@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.init.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_ui_components/utils/date_utils.dart'
     as digit_ui_date_utils;
+import 'package:drift/drift.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -771,6 +772,44 @@ bool checkEligibilityForAgeAndSideEffectOncho(
   return false;
 }
 
+///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
+bool checkEligibilityForAgeAndSideEffectBednet(
+  digit_ui_date_utils.DigitDOBAgeConvertor age,
+  ProjectTypeModel? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+) {
+  int totalAgeMonths = age.years * 12 + age.months;
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+    // Return null when no matching cycle is found
+  );
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
+      final lastTaskTime =
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
+      recordedSideEffect = lastTaskTime != null &&
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
+
+      return recordedSideEffect && !checkStatusBednet([tasks], currentCycle)
+          ? false
+          : true;
+    } else {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 DeliveryDoseCriteria? fetchProductVariantForProjectType(
   ProjectTypeModel? projectType,
   IndividualModel? individualModel,
@@ -919,6 +958,26 @@ DeliveryDoseCriteria? fetchProductVariantForSmcValidAge(
     }).toList();
 
     return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
+}
+
+DeliveryDoseCriteria? fetchProductVariantForProjectTypeBednet(
+  ProjectTypeModel? projectType,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+) {
+  if (projectType != null) {
+    var currentDelivery = projectType.cycles
+        ?.firstWhereOrNull((cycle) =>
+            cycle.startDate! < DateTime.now().millisecondsSinceEpoch &&
+            cycle.endDate! > DateTime.now().millisecondsSinceEpoch)
+        ?.deliveries
+        ?.firstWhereOrNull((delivery) => delivery.doseCriteria != null);
+
+    return fetchProductVariant(
+        currentDelivery, individualModel, householdModel);
   }
 
   return null;
@@ -1438,6 +1497,48 @@ bool assessmentOnchoPending(
   //return successfulTask == null;
 }
 
+bool assessmentBednetPending(
+    List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  // this task confirms eligibility and dose administrations is done
+  if (currentCycle == null) {
+    return true;
+  }
+  if ((tasks ?? []).isEmpty) {
+    return true;
+  }
+  var successfulTask = tasks!
+      .where((element) =>
+          element.status ==
+              reg_del_status.Status.administeredSuccess.toValue() &&
+          element.additionalFields?.fields.firstWhereOrNull(
+                (e) =>
+                    e.key ==
+                        additional_fields_local
+                            .AdditionalFieldsType.interventionType
+                            .toValue() &&
+                    e.value == InterventionTypes.bednet.toValue(),
+              ) !=
+              null)
+      .lastOrNull;
+
+  final successfulTaskCreatedTime =
+      successfulTask?.clientAuditDetails?.createdTime;
+
+  if (successfulTaskCreatedTime == null) {
+    return true;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(successfulTaskCreatedTime);
+
+  final isLastCycleRunning =
+      successfulTaskCreatedTime >= currentCycle.startDate &&
+          successfulTaskCreatedTime <= currentCycle.endDate;
+
+  return !isLastCycleRunning;
+
+  //return successfulTask == null;
+}
+
 bool allDosesDelivered(
   List<TaskModel>? tasks,
   ProjectCycle? selectedCycle,
@@ -1605,6 +1706,29 @@ bool checkStatusBednet(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   return true;
 }
 
+bool checkIfBeneficiaryRefusedBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryRefused = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryRefused.toValue());
+
+  return isBeneficiaryRefused;
+}
+
 bool checkIfBeneficiaryRefusedOncho(
   List<TaskModel>? tasks,
 ) {
@@ -1651,6 +1775,52 @@ bool checkIfBeneficiaryIneligibleOncho(
   return isBeneficiaryIneligible;
 }
 
+bool checkIfBeneficiaryIneligibleBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferredBednet(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks
+              .where((element) =>
+                  element.additionalFields?.fields.firstWhereOrNull(
+                    (e) =>
+                        e.key ==
+                            additional_fields_local
+                                .AdditionalFieldsType.interventionType
+                                .toValue() &&
+                        e.value == InterventionTypes.bednet.toValue(),
+                  ) !=
+                  null)
+              .lastOrNull
+              ?.status ==
+          Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
+}
+
 bool checkIfBeneficiaryReferredOncho(
   List<TaskModel>? tasks,
 ) {
@@ -1690,6 +1860,38 @@ bool isSmcAndBednetFlow(
   return isSmcAndBednetFlow;
 }
 
+/// Extracts quantity from a Task (assumes single resource).
+/// Handles int, double, null, and invalid values safely.
+num getTaskQuantity(
+  TaskModel? task, {
+  num defaultValue = 0,
+  bool returnInt = false,
+  bool round = true,
+}) {
+  final resource =
+      task?.resources?.isNotEmpty == true ? task!.resources!.first : null;
+
+  final raw = resource?.quantity;
+  final parsed = parseQuantity(raw);
+
+  return parsed;
+}
+
+int parseQuantity(dynamic rawQty) {
+  if (rawQty == null) return 0;
+  if (rawQty is int) return rawQty;
+  if (rawQty is double) return rawQty.round();
+  if (rawQty is String) {
+    // Try int first
+    final asInt = int.tryParse(rawQty);
+    if (asInt != null) return asInt;
+    // Fallback: parse as double like "1.0"
+    final asDouble = double.tryParse(rawQty);
+    if (asDouble != null) return asDouble.round();
+  }
+  return 0;
+}
+
 Future<void> requestDisableBatteryOptimization() async {
   bool isIgnoringBatteryOptimizations =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
@@ -1697,6 +1899,36 @@ Future<void> requestDisableBatteryOptimization() async {
   if (!isIgnoringBatteryOptimizations) {
     await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
   }
+}
+
+DeliveryProductVariant bednetDeliveryProductVariantFromProjectType1(
+  List<ProductVariantModel?> productVariantModels,
+) {
+  // Pick the first product variant whose SKU contains 'LLIN'
+  final resource = productVariantModels.firstWhereOrNull(
+    (element) => (element?.sku ?? '').contains('LLIN'),
+  );
+
+  return DeliveryProductVariant(
+    quantity: 1,
+    productVariantId: resource?.id ?? '',
+  );
+}
+
+DeliveryProductVariant bednetDeliveryProductVariantFromProjectType(
+    ProjectTypeModel? bednetProjectType) {
+  final resource = bednetProjectType?.resources
+      ?.firstWhereOrNull((element) => element.name == "Rede Mosquiteira");
+
+  return resource != null
+      ? DeliveryProductVariant(
+          quantity: 1,
+          productVariantId: resource.productVariantId,
+        )
+      : DeliveryProductVariant(
+          quantity: 1,
+          productVariantId: '',
+        );
 }
 
 class LocalizationParams {
