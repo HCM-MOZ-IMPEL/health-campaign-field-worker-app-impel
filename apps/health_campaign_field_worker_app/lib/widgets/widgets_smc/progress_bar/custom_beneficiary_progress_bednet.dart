@@ -227,11 +227,12 @@ class _CustomBeneficiaryProgressBarBednetState
   @override
   Widget build(BuildContext context) {
     // int target = context.isDistributor ? 60 : 40;
-    int target = 365;
+    int target = 50;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
-        label: '${max(target - current, 0).round()} ${widget.label}',
+        label:
+            widget.label.replaceAll("{}", max(target - current, 0).toString()),
         prefixLabel: '$current ${widget.prefixLabel}',
         suffixLabel: target.toStringAsFixed(0),
         value: target == 0 ? 0 : min(current / target, 1),

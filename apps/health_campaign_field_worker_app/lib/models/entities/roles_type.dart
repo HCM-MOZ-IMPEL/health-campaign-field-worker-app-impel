@@ -35,5 +35,7 @@ enum RolesType {
   voucherAcceptor,
   @MappableValue("LOCAL_MONITOR")
   localMonitor,
+  @MappableValue("BEDNET_USER")
+  bednetUser,
   ;
 }

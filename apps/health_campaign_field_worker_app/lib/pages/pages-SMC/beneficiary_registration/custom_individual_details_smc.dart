@@ -74,6 +74,15 @@ class CustomIndividualDetailsSMCPageState
     // Updating the Value updateStatuseNotifier
     // Show height field only for smcAndOncho flow and if age is greater than or equal to onchoMinAge
 
+    // Hide height field if it's smcAndBednetFlow
+    if (context.isSmcAndBednetFlow) {
+      if (heightVisible.value != null) {
+        heightVisible.value = null;
+        form.control(_height).value = "";
+      }
+      return;
+    }
+
     // Check if it's smcAndOncho flow
     if (!context.isSmcAndOnchoFlow) {
       // Hide height field if not smcAndOncho flow
@@ -335,8 +344,9 @@ class CustomIndividualDetailsSMCPageState
 
                                 return;
                               }
-                              // Only validate height for smcAndOncho flow
-                              if (context.isSmcAndOnchoFlow) {
+                              // Only validate height for smcAndOncho flow (skip validation for smcAndBednetFlow)
+                              if (context.isSmcAndOnchoFlow &&
+                                  !context.isSmcAndBednetFlow) {
                                 final String checkCategory = utils.getCategory(
                                   utils.getAgeMonths(
                                     DigitDateUtils.calculateAge(
@@ -830,6 +840,11 @@ class CustomIndividualDetailsSMCPageState
                         ValueListenableBuilder<dynamic>(
                           valueListenable: heightVisible,
                           builder: (context, isVisible, child) {
+                            // Hide height field if it's smcAndBednetFlow
+                            if (context.isSmcAndBednetFlow) {
+                              return const SizedBox();
+                            }
+
                             // Show height field only for smcAndOncho flow
                             if (!context.isSmcAndOnchoFlow) {
                               return const SizedBox(); // Hide if not smcAndOncho flow
@@ -1182,7 +1197,7 @@ class CustomIndividualDetailsSMCPageState
   bool verifyIfChildAgeValid(BuildContext context, DigitDOBAge age) {
     final ageInMonths = (age.years * 12) + age.months;
     // set default from constants if config has null
-    if (context.isSmcAndOnchoFlow || context.isSmcAndBednetFlow) {
+    if (context.isSmcAndOnchoFlow) {
       return true;
     }
 

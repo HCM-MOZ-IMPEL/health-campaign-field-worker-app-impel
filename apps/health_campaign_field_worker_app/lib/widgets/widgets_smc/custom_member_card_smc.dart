@@ -27,18 +27,25 @@ import 'package:digit_ui_components/utils/date_utils.dart'
 import '../../utils/utils_smc/utils_smc.dart'
     show
         allDosesDelivered,
+        assessmentBednetPending,
         assessmentOnchoPending,
         assessmentSMCPending,
+        checkEligibilityForAgeAndSideEffectBednet,
+        checkEligibilityForAgeAndSideEffectOncho,
+        checkIfBeneficiaryIneligibleBednet,
         checkIfBeneficiaryIneligibleOncho,
+        checkIfBeneficiaryReferredBednet,
         checkIfBeneficiaryReferredOncho,
+        checkIfBeneficiaryRefusedBednet,
         checkIfBeneficiaryRefusedOncho,
+        checkStatusBednet,
+        checkStatusOncho,
         checkStatusSMC,
+        fetchProductVariantForProjectType,
+        fetchProductVariantForProjectTypeBednet,
         fetchProductVariantSMC,
         isSmcAndBednetFlow,
-        isSmcAndOnchoFlow,
-        checkEligibilityForAgeAndSideEffectOncho,
-        checkStatusOncho,
-        fetchProductVariantForProjectType;
+        isSmcAndOnchoFlow;
 
 class CustomMemberCardSMC extends StatelessWidget {
   final String name;
@@ -388,15 +395,20 @@ class CustomMemberCardSMC extends StatelessWidget {
                                               individualModel: individual,
                                             ),
                                           );
-                                          bloc.add(HouseholdOverviewReloadEvent(
-                                            projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                            projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                        .beneficiaryType ??
-                                                    BeneficiaryType.individual,
-                                          ));
+                                          final projectId =
+                                              RegistrationDeliverySingleton()
+                                                  .projectId;
+                                          if (projectId != null) {
+                                            bloc.add(
+                                                HouseholdOverviewReloadEvent(
+                                              projectId: projectId,
+                                              projectBeneficiaryType:
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ??
+                                                      BeneficiaryType
+                                                          .individual,
+                                            ));
+                                          }
 
                                           if (smcAssessmentPendingStatus) {
                                             context.router.push(
@@ -456,8 +468,61 @@ class CustomMemberCardSMC extends StatelessWidget {
 
   Container smcAndBednetFlowWidget(
       BuildContext context, ThemeData theme, BeneficiaryType? beneficiaryType) {
+    digit_ui_date_utils.DigitDOBAgeConvertor age = _getCalculatedAge();
+    final ageInYears = age.years;
+    final ageInMonths = age.months;
+    List<TaskModel>? smcTasks = _getSMCStatusData(context);
+    List<TaskModel>? bednetTasks = _getBednetStatusData();
+
+    ProjectTypeModel? smcProjectType = RegistrationDeliverySingleton()
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType;
+
+    // assumed it is bednetAdditionalProjectType , because above already checked if it is bednet flow or not
+
+    ProjectTypeModel? bednetAdditionalProjectType =
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.additionalProjectType;
     bool smcAssessmentPendingStatus =
-        assessmentSMCPending(tasks, context.selectedCycle);
+        assessmentSMCPending(smcTasks, context.selectedCycle);
+
+    bool bednetAssessmentPendingStatus =
+        assessmentBednetPending(bednetTasks, context.selectedCycle);
+
+    bool isNotEligibleBednet = (bednetAdditionalProjectType?.cycles != null
+        ? checkEligibilityForAgeAndSideEffectBednet(
+            digit_ui_date_utils.DigitDOBAgeConvertor(
+              years: ageInYears,
+              months: ageInMonths,
+            ),
+            bednetAdditionalProjectType,
+            bednetTasks?.isNotEmpty == true ? bednetTasks!.lastOrNull : null,
+            null,
+          )
+        : false);
+
+    bool isBeneficiaryEligibleBednet =
+        checkIfBeneficiaryIneligibleBednet(bednetTasks);
+    bool beneficiaryReferredBednet =
+        checkIfBeneficiaryReferredBednet(bednetTasks);
+    bool beneficiaryRefusedBednet =
+        checkIfBeneficiaryRefusedBednet(bednetTasks);
+    bool isBednetDelivered = bednetTasks != null &&
+        bednetTasks.isNotEmpty &&
+        !checkStatusBednet(bednetTasks, context.selectedCycle);
+
+    // here additional check added if not head then assume smc
+    // only valid for smc and bednet flow where if it is not head then it will always show smc card because bednet is given to head of the household but in case of smc and oncho flow, both head and non head can be eligible for both interventions so no need of additional check there
+
+    bool isSmcDeliveryCards = !isHead ||
+        fetchProductVariantForProjectType(
+                smcProjectType, individual, null, smcTasks) !=
+            null;
+    bool isBednetDeliveryCards = isHead;
+    // fetchProductVariant(currentDelivery, individual, null) != null;
 
     String? beneficiaryId = individual.identifiers
         ?.lastWhereOrNull(
@@ -465,6 +530,25 @@ class CustomMemberCardSMC extends StatelessWidget {
               e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
         )
         ?.identifierId;
+
+    final bednetAllDoseDelivered = allDosesDelivered(
+      bednetTasks,
+      context.selectedCycle,
+      sideEffects,
+      individual,
+    );
+    final checkBednetStatus = checkStatusBednet(
+      bednetTasks,
+      context.selectedCycle,
+    );
+
+    // handles only smc and bednet , no other type
+
+    InterventionTypes? interventionType = isSmcDeliveryCards
+        ? InterventionTypes.smc
+        : isBednetDeliveryCards
+            ? InterventionTypes.bednet
+            : InterventionTypes.smc;
 
     return Container(
       decoration: BoxDecoration(
@@ -533,15 +617,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                   ),
                 ],
               ),
-              ((!isCurrentCycleData(context, tasks ?? []) ||
-                      (tasks ?? [])
-                              .where(
-                                (element) =>
-                                    element.status ==
-                                    Status.administeredSuccess.toValue(),
-                              )
-                              .lastOrNull ==
-                          null))
+              _shouldShowEditButton(context)
                   ? Positioned(
                       child: Align(
                         alignment: Alignment.topRight,
@@ -606,144 +682,154 @@ class CustomMemberCardSMC extends StatelessWidget {
             ),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryIneligible ||
-                      isBeneficiaryReferred
-                  ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.info_rounded,
-                        iconSize: 20,
-                        iconText: localizations.translate(
-                          isHead
-                              ? i18_local.householdOverView
-                                  .householdOverViewHouseholderHeadLabelSMC
-                              : (isNotEligible || isBeneficiaryIneligible)
-                                  ? i18_local.householdOverView
-                                      .householdOverViewNotEligibleIconLabelSMC
-                                  : isBeneficiaryReferred
-                                      ? i18_local.householdOverView
-                                          .householdOverViewBeneficiaryReferredLabelSMC
-                                      : isBeneficiaryRefused
-                                          ? i18_local.householdOverView
-                                              .householdOverViewBeneficiaryRefusedLabelSMC
-                                          : i18_local.householdOverView
-                                              .householdOverViewNotDeliveredIconLabelSMC,
-                        ),
-                        iconTextColor: theme.colorScheme.error,
-                        iconColor: theme.colorScheme.error,
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.check_circle,
-                        iconText: localizations.translate(
-                          i18_local.householdOverView
-                              .householdOverViewDeliveredIconLabelSMC,
-                        ),
-                        iconSize: 20,
-                        iconTextColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        iconColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-            ),
-          ),
-          Offstage(
-            offstage: beneficiaryType != BeneficiaryType.individual ||
-                isNotEligible ||
-                isBeneficiaryRefused ||
-                isBeneficiaryIneligible ||
-                isBeneficiaryReferred,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  (isNotEligible ||
-                              isBeneficiaryRefused ||
-                              isBeneficiaryIneligible ||
-                              isBeneficiaryReferred) &&
-                          checkStatusSMC(tasks, context.selectedCycle)
-                      ? const Offstage()
-                      : !isNotEligible
-                          ? DigitElevatedButton(
-                              onPressed: beneficiaryId != null
-                                  ? ((projectBeneficiaries ?? []).isEmpty)
-                                      ? null
-                                      : () {
-                                          final bloc = context
-                                              .read<HouseholdOverviewBloc>();
-
-                                          bloc.add(
-                                            HouseholdOverviewEvent
-                                                .selectedIndividual(
-                                              individualModel: individual,
-                                            ),
-                                          );
-                                          bloc.add(HouseholdOverviewReloadEvent(
-                                            projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                            projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                        .beneficiaryType ??
-                                                    BeneficiaryType.individual,
-                                          ));
-                                          // TODO : pass valid intervention type based on the card type
-                                          if (smcAssessmentPendingStatus) {
-                                            context.router.push(
-                                                VaccineInformationCaptureRoute(
-                                                    projectBeneficiaryClientReferenceId:
-                                                        projectBeneficiaryClientReferenceId,
-                                                    individual: individual,
-                                                    interventionType:
-                                                        InterventionTypes.smc));
-                                            // context.router.push(
-                                            //     EligibilityChecklistViewRoute(
-                                            //   projectBeneficiaryClientReferenceId:
-                                            //       projectBeneficiaryClientReferenceId,
-                                            //   individual: individual,
-                                            // ));
-                                          } else {
-                                            context.router.push(
-                                                BeneficiaryDetailsRoute());
-                                          }
-                                        }
-                                  : () {
-                                      showGenerateBeneficiaryIdDialog(context);
-                                    },
-                              child: Center(
-                                child: Text(
-                                  allDosesDelivered(
-                                            tasks,
-                                            context.selectedCycle,
-                                            sideEffects,
-                                            individual,
-                                          ) &&
-                                          !checkStatusSMC(
-                                            tasks,
-                                            context.selectedCycle,
-                                          )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
-                                      : localizations.translate(
-                                          i18_local.householdOverView
-                                              .householdOverViewActionTextSMC,
-                                        ),
-                                ),
-                              ),
-                            )
-                          : const Offstage(),
+                  _buildStatusIndicatorBednet(
+                    isDelivered:
+                        isSmcDeliveryCards ? isDelivered : isBednetDelivered,
+                    isNotEligible: isSmcDeliveryCards
+                        ? isNotEligible
+                        : isNotEligibleBednet,
+                    isBeneficiaryRefused: isSmcDeliveryCards
+                        ? isBeneficiaryRefused
+                        : beneficiaryRefusedBednet,
+                    isBeneficiaryIneligible: isSmcDeliveryCards
+                        ? isBeneficiaryIneligible
+                        : isBeneficiaryEligibleBednet,
+                    isBeneficiaryReferred: isSmcDeliveryCards
+                        ? isBeneficiaryReferred
+                        : beneficiaryReferredBednet,
+                    isHead: isHead,
+                    interventionType: isSmcDeliveryCards
+                        ? InterventionTypes.smc.toValue()
+                        : InterventionTypes.bednet.toValue(),
+                    context: context,
+                    theme: theme,
+                  ),
                 ],
               ),
             ),
           ),
+          isSmcDeliveryCards
+              ? Offstage(
+                  offstage: beneficiaryType != BeneficiaryType.individual ||
+                      _isErrorStatus(
+                        isNotEligible: isNotEligible,
+                        isBeneficiaryRefused: isBeneficiaryRefused,
+                        isBeneficiaryIneligible: isBeneficiaryIneligible,
+                        isBeneficiaryReferred: isBeneficiaryReferred,
+                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      children: [
+                        (isNotEligible ||
+                                    isBeneficiaryRefused ||
+                                    isBeneficiaryIneligible ||
+                                    isBeneficiaryReferred) &&
+                                checkStatusSMC(tasks, context.selectedCycle)
+                            ? const Offstage()
+                            : !isNotEligible
+                                ? DigitElevatedButton(
+                                    onPressed: beneficiaryId != null &&
+                                            (projectBeneficiaries ?? [])
+                                                .isNotEmpty
+                                        ? () => _handleBeneficiaryAction(
+                                              context: context,
+                                              isAssessmentPending:
+                                                  smcAssessmentPendingStatus,
+                                              beneficiaryId: beneficiaryId,
+                                              interventionType:
+                                                  interventionType,
+                                            )
+                                        : beneficiaryId == null
+                                            ? () =>
+                                                showGenerateBeneficiaryIdDialog(
+                                                    context)
+                                            : null,
+                                    child: Center(
+                                      child: Text(
+                                        allDosesDelivered(
+                                                  tasks,
+                                                  context.selectedCycle,
+                                                  sideEffects,
+                                                  individual,
+                                                ) &&
+                                                !checkStatusSMC(
+                                                  tasks,
+                                                  context.selectedCycle,
+                                                )
+                                            ? localizations.translate(
+                                                i18.householdOverView
+                                                    .viewDeliveryLabel,
+                                              )
+                                            : localizations.translate(
+                                                i18_local.householdOverView
+                                                    .householdOverViewActionTextSMC,
+                                              ),
+                                      ),
+                                    ),
+                                  )
+                                : const Offstage(),
+                      ],
+                    ),
+                  ),
+                )
+              : Offstage(
+                  offstage: beneficiaryType != BeneficiaryType.individual ||
+                      _isErrorStatus(
+                        isNotEligible: isNotEligibleBednet,
+                        isBeneficiaryRefused: beneficiaryRefusedBednet,
+                        isBeneficiaryIneligible: isBeneficiaryEligibleBednet,
+                        isBeneficiaryReferred: beneficiaryReferredBednet,
+                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      children: [
+                        (isNotEligibleBednet ||
+                                    beneficiaryRefusedBednet ||
+                                    isBeneficiaryEligibleBednet ||
+                                    beneficiaryReferredBednet) &&
+                                checkBednetStatus
+                            ? const Offstage()
+                            : !isNotEligibleBednet
+                                ? DigitElevatedButton(
+                                    onPressed: beneficiaryId != null &&
+                                            (projectBeneficiaries ?? [])
+                                                .isNotEmpty
+                                        ? () => _handleBeneficiaryActionBednet(
+                                              context: context,
+                                              isAssessmentPending:
+                                                  bednetAssessmentPendingStatus,
+                                              beneficiaryId: beneficiaryId,
+                                              interventionType:
+                                                  interventionType,
+                                            )
+                                        : beneficiaryId == null
+                                            ? () =>
+                                                showGenerateBeneficiaryIdDialog(
+                                                    context)
+                                            : null,
+                                    child: Center(
+                                      child: Text(
+                                        !checkBednetStatus
+                                            ? localizations.translate(
+                                                i18.householdOverView
+                                                    .viewDeliveryLabel,
+                                              )
+                                            : localizations.translate(
+                                                i18_local.householdOverView
+                                                    .householdOverViewActionTextBednet,
+                                              ),
+                                      ),
+                                    ),
+                                  )
+                                : const Offstage(),
+                      ],
+                    ),
+                  ),
+                ),
         ],
       ),
     );
@@ -783,7 +869,7 @@ class CustomMemberCardSMC extends StatelessWidget {
                   months: ageInMonths,
                 ),
                 onchoAdditionalProjectType,
-                (onchoTasks ?? []).isNotEmpty ? onchoTasks!.lastOrNull : null,
+                onchoTasks?.isNotEmpty == true ? onchoTasks!.lastOrNull : null,
                 null,
               )
             : false);
@@ -796,9 +882,10 @@ class CustomMemberCardSMC extends StatelessWidget {
         checkIfBeneficiaryIneligibleOncho(onchoTasks);
     bool beneficiaryReferredOncho = checkIfBeneficiaryReferredOncho(onchoTasks);
     bool beneficiaryRefusedOncho = checkIfBeneficiaryRefusedOncho(onchoTasks);
-    bool isOnchoDelivered = onchoTasks != null &&
-        onchoTasks.isNotEmpty &&
+    bool checkStatusForOncho =
         !checkStatusOncho(onchoTasks, context.selectedCycle);
+    bool isOnchoDelivered =
+        onchoTasks != null && onchoTasks.isNotEmpty && checkStatusForOncho;
 
     bool isSmcDeliveryCards = fetchProductVariantForProjectType(
             smcProjectType, individual, null, smcTasks) !=
@@ -1118,14 +1205,15 @@ class CustomMemberCardSMC extends StatelessWidget {
   }
 
   digit_ui_date_utils.DigitDOBAgeConvertor _getCalculatedAge() {
-    if (individual.dateOfBirth == null) {
+    final dateOfBirth = individual.dateOfBirth;
+    if (dateOfBirth == null || dateOfBirth.isEmpty) {
       return digit_ui_date_utils.DigitDOBAgeConvertor(
           years: 0, months: 0, days: 0);
     }
 
     final dateTime =
         digit_ui_date_utils.DigitDateUtils.getFormattedDateToDateTime(
-              individual.dateOfBirth!,
+              dateOfBirth,
             ) ??
             DateTime.now();
 
@@ -1167,11 +1255,15 @@ class CustomMemberCardSMC extends StatelessWidget {
     final bloc = context.read<HouseholdOverviewBloc>();
     bloc.add(
         HouseholdOverviewEvent.selectedIndividual(individualModel: individual));
-    bloc.add(HouseholdOverviewReloadEvent(
-      projectId: RegistrationDeliverySingleton().projectId!,
-      projectBeneficiaryType: RegistrationDeliverySingleton().beneficiaryType ??
-          BeneficiaryType.individual,
-    ));
+    final projectId = RegistrationDeliverySingleton().projectId;
+    if (projectId != null) {
+      bloc.add(HouseholdOverviewReloadEvent(
+        projectId: projectId,
+        projectBeneficiaryType:
+            RegistrationDeliverySingleton().beneficiaryType ??
+                BeneficiaryType.individual,
+      ));
+    }
 
     if (isAssessmentPending) {
       context.router.push(VaccineInformationCaptureRoute(
@@ -1180,6 +1272,36 @@ class CustomMemberCardSMC extends StatelessWidget {
         individual: individual,
         interventionType: interventionType,
       ));
+    } else {
+      context.router.push(BeneficiaryDetailsRoute());
+    }
+  }
+
+  void _handleBeneficiaryActionBednet({
+    required BuildContext context,
+    required bool isAssessmentPending,
+    required String? beneficiaryId,
+    required InterventionTypes interventionType,
+  }) {
+    if (beneficiaryId == null) {
+      showGenerateBeneficiaryIdDialog(context);
+      return;
+    }
+
+    final bloc = context.read<HouseholdOverviewBloc>();
+    bloc.add(
+        HouseholdOverviewEvent.selectedIndividual(individualModel: individual));
+    final projectId = RegistrationDeliverySingleton().projectId;
+    if (projectId != null) {
+      bloc.add(HouseholdOverviewReloadEvent(
+        projectId: projectId,
+        projectBeneficiaryType:
+            RegistrationDeliverySingleton().beneficiaryType ??
+                BeneficiaryType.individual,
+      ));
+    }
+    if (isAssessmentPending) {
+      context.router.push(CustomDeliverInterventionSMCRoute());
     } else {
       context.router.push(BeneficiaryDetailsRoute());
     }
@@ -1327,6 +1449,94 @@ class CustomMemberCardSMC extends StatelessWidget {
     return interventionType == InterventionTypes.oncho.toValue()
         ? i18_local
             .householdOverView.householdOverViewBeneficiaryRefusedLabelOncho
+        : i18_local
+            .householdOverView.householdOverViewBeneficiaryRefusedLabelSMC;
+  }
+
+  Widget _buildStatusIndicatorBednet({
+    required bool isDelivered,
+    required bool isNotEligible,
+    required bool isBeneficiaryRefused,
+    required bool isBeneficiaryIneligible,
+    required bool isBeneficiaryReferred,
+    required bool isHead,
+    required String interventionType,
+    required BuildContext context,
+    required ThemeData theme,
+  }) {
+    final isErrorStatus = !isDelivered ||
+        isNotEligible ||
+        isBeneficiaryRefused ||
+        isBeneficiaryIneligible ||
+        isBeneficiaryReferred;
+
+    if (isErrorStatus) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: DigitIconButton(
+          icon: Icons.info_rounded,
+          iconSize: 20,
+          iconText: localizations.translate(
+            (isNotEligible || isBeneficiaryIneligible)
+                ? _getNotEligibleLabelBednet(interventionType)
+                : isBeneficiaryReferred
+                    ? _getBeneficiaryReferredLabelBednet(interventionType)
+                    : isBeneficiaryRefused
+                        ? _getBeneficiaryRefusedLabelBednet(interventionType)
+                        : _getNotDeliveredLabelBednet(interventionType),
+          ),
+          iconTextColor: theme.colorScheme.error,
+          iconColor: theme.colorScheme.error,
+        ),
+      );
+    } else {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: DigitIconButton(
+          icon: Icons.check_circle,
+          iconText: localizations.translate(
+            _getDeliveredLabelBednet(interventionType),
+          ),
+          iconSize: 20,
+          iconTextColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
+          iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
+        ),
+      );
+    }
+  }
+
+  String _getDeliveredLabelBednet(String interventionType) {
+    return interventionType == InterventionTypes.bednet.toValue()
+        ? i18_local.householdOverView.householdOverViewDeliveredIconLabelBednet
+        : i18_local.householdOverView.householdOverViewDeliveredIconLabelSMC;
+  }
+
+  String _getNotDeliveredLabelBednet(String interventionType) {
+    return interventionType == InterventionTypes.bednet.toValue()
+        ? i18_local
+            .householdOverView.householdOverViewNotDeliveredIconLabelBednet
+        : i18_local.householdOverView.householdOverViewNotDeliveredIconLabelSMC;
+  }
+
+  String _getNotEligibleLabelBednet(String interventionType) {
+    return interventionType == InterventionTypes.bednet.toValue()
+        ? i18_local
+            .householdOverView.householdOverViewNotEligibleIconLabelBednet
+        : i18_local.householdOverView.householdOverViewNotEligibleIconLabelSMC;
+  }
+
+  String _getBeneficiaryReferredLabelBednet(String interventionType) {
+    return interventionType == InterventionTypes.bednet.toValue()
+        ? i18_local
+            .householdOverView.householdOverViewBeneficiaryReferredLabelBednet
+        : i18_local
+            .householdOverView.householdOverViewBeneficiaryReferredLabelSMC;
+  }
+
+  String _getBeneficiaryRefusedLabelBednet(String interventionType) {
+    return interventionType == InterventionTypes.bednet.toValue()
+        ? i18_local
+            .householdOverView.householdOverViewBeneficiaryRefusedLabelBednet
         : i18_local
             .householdOverView.householdOverViewBeneficiaryRefusedLabelSMC;
   }

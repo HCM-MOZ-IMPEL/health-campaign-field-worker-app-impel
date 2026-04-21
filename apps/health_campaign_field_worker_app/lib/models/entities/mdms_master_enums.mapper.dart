@@ -51,6 +51,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.idTypes;
       case "DELIVERY_COMMENT_OPTIONS_POPULATOR":
         return MasterEnums.deliveryComments;
+      case "DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR":
+        return MasterEnums.deliveryCommentOptionsBednet;
       case "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR":
         return MasterEnums.deliveryCommentsSMC;
       case "DELIVERY_COMMENT_WASTED_OPTIONS_SMC_POPULATOR":
@@ -129,6 +131,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ID_TYPE_OPTIONS_POPULATOR";
       case MasterEnums.deliveryComments:
         return "DELIVERY_COMMENT_OPTIONS_POPULATOR";
+      case MasterEnums.deliveryCommentOptionsBednet:
+        return "DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR";
       case MasterEnums.deliveryCommentsSMC:
         return "DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR";
       case MasterEnums.deliveryCommentsWastedSMC:

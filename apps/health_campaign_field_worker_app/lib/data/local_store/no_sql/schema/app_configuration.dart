@@ -64,6 +64,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_ONCHO_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptionsOncho;
 
+  @Name('DELIVERY_COMMENT_OPTIONS_BEDNET_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptionsBednet;
+
   @Name('VACCINE_REFUSAL_REASONS')
   late List<RefusalReasons>? vaccineRefusalReasons;
 
